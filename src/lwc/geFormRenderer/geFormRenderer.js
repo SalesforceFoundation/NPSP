@@ -454,9 +454,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
+        const fieldsWithBlankValues =
+            this.getFieldsWithBlankValues(dataImportRecord);
+
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
                 dataImportRecord,
+                fieldsWithNullValues: fieldsWithBlankValues,
                 success: () => {
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
@@ -469,6 +473,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }
         }));
+    }
+
+    getFieldsWithBlankValues(dataImportRecord) {
+        return Object.entries(dataImportRecord)
+            .map(([key, value]) => {
+                if (value === null || value === undefined || value === '') {
+                    return key;
+                }
+            })
+            .filter(field => field !== undefined);
     }
 
     @api
@@ -1553,7 +1567,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             //relevant field mappings
             this.fieldMappingsFor(objectMappingName).forEach(fieldMapping => {
                 const valueObject = record.fields[fieldMapping.Target_Field_API_Name];
-                dataImport[fieldMapping.Source_Field_API_Name] = valueObject.value;
+                const sourceField = fieldMapping.Source_Field_API_Name;
+                // If the retrieved selected lookup record has a blank value for any
+                // fields that have defaults configured, apply the default value.  Otherwise
+                // load the database value for that field.
+                dataImport[sourceField] = valueObject.value === null ?
+                    this.defaultValueFor(fieldMapping.DeveloperName) :
+                    valueObject.value;
             });
         });
 
@@ -2065,7 +2085,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     flatten(obj) {
         let flatObj = {};
-        for(const [key, value] of Object.entries(obj)) {
+        for (const [key, value] of Object.entries(obj)) {
             if (value !== null && value !== undefined && value.hasOwnProperty('value')) {
                 flatObj[key] = value.value;
             } else {
@@ -2073,6 +2093,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
         return flatObj;
+    }
+
+    defaultValueFor(fieldMappingDevName) {
+        const element = this.sections.flat()
+            .map(({elements}) => elements)
+            .flat()
+            .find(fm =>
+                fm.dataImportFieldMappingDevNames[0] === fieldMappingDevName);
+        return element && element.defaultValue;
     }
 
 }

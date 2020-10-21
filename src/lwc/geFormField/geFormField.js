@@ -454,14 +454,13 @@ export default class GeFormField extends LightningElement {
      * */
     @api
     load(data) {
-        let value;
+        // As of W-8017324 picklists get their value from formState
+        if (this.isPicklist) {
+            return;
+        }
+
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
-            value = data[this.sourceFieldAPIName];
-            if (value === null || value.value === null) {
-                this.reset();
-            } else {
-                this.value = value.value || value;
-            }
+            this.value = data[this.sourceFieldAPIName];
 
             if (this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
                 // fire event for reactive widget component containing the Data Import field API name and Value
