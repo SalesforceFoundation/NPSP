@@ -528,15 +528,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    renderedCallback() {
-        if (this.value && this.isLookup) {
-            // If this field is a Lookup and has a value when connected,
-            // fire event so that the form knows to populate related fields
-            // and set recordTypeId on sibling fields.
-            this.fireLookupRecordSelectEvent();
-        }
-    }
-
     get qaLocatorBase() {
         const rowIndex = this.getAttribute('data-qa-row');
         if (rowIndex) {
