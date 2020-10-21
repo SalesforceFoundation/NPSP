@@ -162,6 +162,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         }
 
         validateStatusField();
+
         String query = getRDBatchQuery();
 
         if (isBatchInProgress) {
