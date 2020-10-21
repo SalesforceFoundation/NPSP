@@ -390,17 +390,30 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     handleSubmit(event) {
+        const dataImportRowFromTable = event.detail.dataImportRecord;
+        const fieldsWithNullValues = event.detail.fieldsWithNullValues;
         saveAndDryRunDataImport({
             batchId: this.batchId,
-            dataImport: event.detail.dataImportRecord
+            dataImport: dataImportRowFromTable
         })
             .then(result => {
                 let dataImportModel = JSON.parse(result);
-                let row = dataImportModel.dataImportRows[0];
-                Object.assign(row,
-                    this.appendUrlColumnProperties.call(row.record,
+                let insertedDataImportModelRow = dataImportModel.dataImportRows[0];
+
+                //This step creates fields on the object that are used to display links
+                // in the table.
+                Object.assign(insertedDataImportModelRow,
+                    this.appendUrlColumnProperties.call(insertedDataImportModelRow.record,
                         this._dataImportObjectInfo));
-                this.upsertData(row, 'Id');
+
+                //This step re-appends fields that had null values to this object.  Fields
+                // passed to saveAndDryRunDataImport with null values currently are not
+                // included in the response.
+                fieldsWithNullValues.forEach(fieldName => {
+                   insertedDataImportModelRow[fieldName] = null;
+                })
+
+                this.upsertData(insertedDataImportModelRow, 'Id');
                 this._count = dataImportModel.totalCountOfRows;
                 this._total = dataImportModel.totalRowAmount;
                 event.detail.success(); //Re-enable the Save button
