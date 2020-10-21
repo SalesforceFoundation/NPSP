@@ -915,7 +915,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         sectionsList.forEach(section => {
             section.load(
                 getSubsetObject(
-                    dataImport,
+                    this.flatten(dataImport),
                     section.sourceFields));
         });
 
