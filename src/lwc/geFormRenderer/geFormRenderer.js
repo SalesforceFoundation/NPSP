@@ -1880,7 +1880,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             isDonationRecordTypeName =
                 sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName,
             isDonationDonor =
-                sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName;
+                sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName,
+            isDonationImported =
+                sourceField === DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
 
         this.updateFormState({
             [sourceField]: isDonationRecordTypeName ? label : value
@@ -1892,6 +1894,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (isDonationDonor) {
             this.handleDonationDonorChange(value)
+        }
+
+        if (isDonationImported) {
+            this.updateFormState({
+                [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName]:
+                    value ? userSelectedMatch : null
+            });
+
+            this.selectedDonationDataImportFieldValues
+                [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName] =
+                value ? userSelectedMatch : null;
         }
     }
 
