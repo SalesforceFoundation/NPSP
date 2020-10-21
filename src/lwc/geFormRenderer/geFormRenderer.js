@@ -1915,11 +1915,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setInitialValueInFormStateForElement(element) {
-        this.updateFormState(
-            {
-                [this.getSourceFieldApiNameFor(element)]: this.getValueFrom(element)
-            }
-        );
+        const sourceField = this.getSourceFieldApiNameFor(element);
+        const value = this.getValueFrom(element);
+        const isLookupWithDefaultValue = value &&
+            GeFormService.importedRecordFieldNames.includes(sourceField);
+
+        this.updateFormState({[sourceField]: value});
+
+        if (isLookupWithDefaultValue) {
+            this.loadSelectedRecordFieldValues(sourceField, value);
+        }
     }
 
     setInitialValueInFormStateForFieldMappings(fieldMappingDevNames) {
