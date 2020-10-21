@@ -377,6 +377,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             'npe03__Recurring_Donation_Campaign__c',
             'npe03__Total_Paid_Installments__c',
             'Ownerid',
+            'CreatedDate',
             'Always_Use_Last_Day_of_Month__c',
             'Day_of_Month__c',
             'StartDate__c',
