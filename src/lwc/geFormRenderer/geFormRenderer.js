@@ -1805,8 +1805,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     /*******************************************************************************
      * @description Updates the formState object that holds the current value
      * of all fields on the form.
-     * @param fields An object with key-value pairs where value is an object
-     * with value and displayValue (optional) properties.
+     * @param fields An object with key-value pairs.
      */
     updateFormState(fields) {
         Object.assign(this.formState, fields);
