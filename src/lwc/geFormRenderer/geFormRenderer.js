@@ -1576,9 +1576,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get donorId() {
         switch (this.donorType()) {
             case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
-                return this._account1Imported;
+                return this.getFieldValueFromFormState(
+                    DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName);
             case DONATION_DONOR_TYPE_ENUM.CONTACT1:
-                return this._contact1Imported;
+                return this.getFieldValueFromFormState(
+                    DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName);
             default:
                 return null;
         }
