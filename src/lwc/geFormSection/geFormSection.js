@@ -145,28 +145,29 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    reset(fieldMappingDevNames = null, setDefaults = true) {
+    reset(applyDefaultValues = true) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
         fields.forEach(field => {
-            if (fieldMappingDevNames) {
-                // reset the fields elements related to
-                // these field mappings
-                if (fieldMappingDevNames.includes(
-                    field.element.dataImportFieldMappingDevNames[0]
-                )) {
-                    field.reset(setDefaults);
-                }
-            } else {
-                // reset all field elements in this section
-                field.reset(setDefaults);
-            }
+            field.reset(applyDefaultValues);
         });
 
         widgetList.forEach(widget => {
             widget.reset();
         });
+    }
+
+    @api
+    resetFieldsForFieldMappingsApplyDefaults(fieldMappingDevNames) {
+        this.template.querySelectorAll('c-ge-form-field')
+            .forEach(field => {
+                if (fieldMappingDevNames.includes(
+                    field.element.dataImportFieldMappingDevNames[0]
+                )) {
+                    field.reset();
+                }
+            });
     }
 
     handleLookupRecordSelect(event) {
@@ -177,13 +178,6 @@ export default class GeFormSection extends LightningElement {
                 objectMappingDevName: event.objectMappingDevName
             });
         this.dispatchEvent(selectEvent);
-    }
-
-    handleChangeDonationDonor(event) {
-        const changeDonationDonorEvent = new CustomEvent(
-            'changedonationdonor',
-            { detail: event.detail });
-        this.dispatchEvent(changeDonationDonorEvent);
     }
 
     /**

@@ -125,13 +125,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track isAccessible = true;
 
     @track selectedDonorId;
-    @track selectedDonorType;
     @track selectedDonation;
     @track selectedDonationDataImportFieldValues = {};
 
     @track hasPurchaseCallTimedout = false;
 
-    _donationDonor;
     _account1Imported;
     _contact1Imported;
     _account1Name;
@@ -192,10 +190,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // check if there is a record id in the url
             this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
-            this.donorApiName = getQueryParameters().c__apiName;
-            this.selectedDonorType =
-                this.donorApiName === 'Account' ? DONATION_DONOR_TYPE_ENUM.ACCOUNT1 :
-                    this.donorApiName === 'Contact' ? DONATION_DONOR_TYPE_ENUM.CONTACT1 : null;
+            const donorApiName = getQueryParameters().c__apiName;
+            this.initializeDonationDonorTypeInFormState(donorApiName);
 
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
@@ -211,8 +207,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // get the target field names to be used by getRecord
                 let fieldNamesFromTemplate =
-                    getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
-                this.fieldNames = [ ...this.fieldNames, ...fieldNamesFromTemplate ];
+                    getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
+                this.fieldNames = [...this.fieldNames, ...fieldNamesFromTemplate];
                 if (isEmpty(this.donorRecordId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
@@ -220,6 +216,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }
         });
+    }
+
+    initializeDonationDonorTypeInFormState(donorApiName) {
+        if (donorApiName === 'Account') {
+            this.updateFormState({
+                [DATA_IMPORT_DONATION_DONOR_FIELD]: DONATION_DONOR_TYPE_ENUM.ACCOUNT1
+            });
+        }
+        if (donorApiName === 'Contact') {
+            this.updateFormState({
+                [DATA_IMPORT_DONATION_DONOR_FIELD]: DONATION_DONOR_TYPE_ENUM.CONTACT1
+            });
+        }
     }
 
     initializeForm(formTemplate, fieldMappings) {
@@ -251,7 +260,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     appendRecordTypeLocationInfoToPicklistElements(sections) {
-        let updatedSections = JSON.parse(JSON.stringify(sections));
+        let updatedSections = deepClone(sections);
 
         updatedSections
             .forEach(section => {
@@ -265,12 +274,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     appendRecordTypeLocationInfoToElement(element) {
-        const fieldMappingDevName = element.dataImportFieldMappingDevNames[0];
+        const fieldMappingDevName =
+            element.dataImportFieldMappingDevNames &&
+            element.dataImportFieldMappingDevNames[0];
 
-        element.siblingRecordTypeField =
-            this.siblingRecordTypeFieldFor(fieldMappingDevName);
-        element.parentRecordField =
-            this.parentRecordFieldFor(fieldMappingDevName);
+        if (fieldMappingDevName) {
+            element.siblingRecordTypeField =
+                this.siblingRecordTypeFieldFor(fieldMappingDevName);
+            element.parentRecordField =
+                this.parentRecordFieldFor(fieldMappingDevName);
+        }
     }
 
     setPermissionsError(errorObject) {
@@ -922,14 +935,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset(objectMappingDeveloperName = null) {
-        if (objectMappingDeveloperName === null) {
-            this.resetFieldsApplyDefaults();
-            this.resetFormState();
-        } else {
-            this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
-            this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
-        }
+    reset(applyDefaultValues = true) {
+        this.resetFields(applyDefaultValues);
+        this.resetFormState();
         this.widgetData = {};
     }
 
@@ -940,18 +948,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.initializeFormState();
     }
 
-    resetFieldsApplyDefaults() {
+    resetFields(applyDefaultValues) {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset();
+                section.reset(applyDefaultValues);
             });
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset(this.fieldMappingDevNamesFor(objectMappingDeveloperName));
+                section.resetFieldsForFieldMappingsApplyDefaults(
+                    this.fieldMappingDevNamesFor(objectMappingDeveloperName));
             });
+
+        this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
     }
 
     fieldMappingDevNamesFor(objectMappingDeveloperName) {
@@ -963,7 +974,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     resetStoredDonationDonorProperties() {
-        this._donationDonor = null;
         this._account1Imported = null;
         this._contact1Imported = null;
         this._account1Name = null;
@@ -999,7 +1009,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
         const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
-        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
+        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             return {
                 firstName: accountName,
                 lastName: accountName
@@ -1207,7 +1217,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // 3. Return the list of fields from those mappings
 
         const objectMapping =
-            GeFormService.getObjectMappingWrapper(objectMappingDeveloperName);
+            GeFormService.getObjectMapping(objectMappingDeveloperName);
 
         const relevantFieldMappings =
             Object.values(GeFormService.fieldMappings)
@@ -1232,7 +1242,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
             // Reset all fields related to this lookup field's object mapping
-            this.reset(this.objectMappingDeveloperNameFor(fieldApiName));
+            this.resetFieldsForObjMappingApplyDefaults(
+                this.objectMappingDeveloperNameFor(fieldApiName));
         }
 
         this.handleDonorLookupFieldsChange(fieldApiName, recordId);
@@ -1252,24 +1263,22 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setReviewDonationsDonorProperties(recordId) {
-        if (recordId && this._donationDonor) {
+        if (recordId && this.donorType()) {
             const isDonorAccount1 =
-                this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1 &&
+                this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1 &&
                 recordId.startsWith(this.accountKeyPrefix);
             const isDonorContact1 =
-                this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1 &&
+                this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1 &&
                 recordId.startsWith(this.contactKeyPrefix);
 
             if (isDonorAccount1 || isDonorContact1) {
                 this.selectedDonorId = recordId;
-                this.selectedDonorType = this._donationDonor;
                 return;
             }
         }
 
-        // If _donationDonor and recordId don't align or aren't set,
+        // If donationDonor and recordId don't align or aren't set,
         // reset all selected donation properties and form fields
-        this.selectedDonorType = null;
         this.selectedDonorId = null;
         if (!!this.selectedDonation) {
             this.resetDonationAndPaymentImportedFields();
@@ -1331,7 +1340,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // Load the "imported" and "imported status" fields in case they are on the form
-        this.load(this.selectedDonationDataImportFieldValues);
+        this.load(this.flatten(this.selectedDonationDataImportFieldValues));
 
         if (this.selectedDonation.Id) {
             // Load the sibling field values (parented by the same object mapping)
@@ -1346,7 +1355,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
                 // If the selected donation is an Opportunity, reset form fields that have
                 // field mappings parented by PaymentImported__c
-                this.reset(
+                this.resetFieldsForObjMappingApplyDefaults(
                     GeFormService.objectMappingWrapperFor(
                         DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
                     ).DeveloperName);
@@ -1371,13 +1380,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonationDataImportFieldValues, false);
 
         // Reset form fields that have field mappings parented by DonationImported__c
-        this.reset(
+        this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
                 DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
             ).DeveloperName);
 
         // Reset form fields that have field mappings parented by PaymentImported__c
-        this.reset(
+        this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
                 DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
             ).DeveloperName);
@@ -1565,16 +1574,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
     }
 
-    handleChangeDonationDonor(event) {
-        this.handleDonationDonorChange(event.detail.value);
-    }
-
     get donorId() {
-        switch (this._donationDonor) {
+        switch (this.donorType()) {
             case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
-                return this._account1Imported;
+                return this.getFieldValueFromFormState(
+                    DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName);
             case DONATION_DONOR_TYPE_ENUM.CONTACT1:
-                return this._contact1Imported;
+                return this.getFieldValueFromFormState(
+                    DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName);
             default:
                 return null;
         }
@@ -1585,9 +1592,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (selectedRecordId == null) {
             this._account1Name = null;
         }
-        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
+        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             this.setReviewDonationsDonorProperties(this._account1Imported);
-        } else if (this._donationDonor === null) {
+        } else if (this.donorType() === null) {
             // TODO: Maybe auto-set to 'Account1'?
         }
     }
@@ -1598,15 +1605,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this._contact1LastName = null;
             this._contact1FirstName = null;
         }
-        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
+        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
-        } else if (this._donationDonor === null) {
+        } else if (this.donorType() === null) {
             // TODO: Maybe auto-set to 'Contact1'?
         }
     }
 
     handleDonationDonorChange(donationDonorValue) {
-        this._donationDonor = donationDonorValue;
         if (!!this.selectedDonation) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
@@ -1644,16 +1650,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let fieldList = {};
         if (!isUndefined(sectionsList) && this.isSingleGiftEntry) {
             fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
-            this.selectedDonorType = fieldList[
-                DONATION_DONOR_FIELDS.donationDonorField
-                ].value === DONATION_DONOR.isContact1 ?
-                DONATION_DONOR_TYPE_ENUM.CONTACT1 : DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
 
             this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
                     this._hasCreditCardWidget = true;
-                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
+                    section.setCardHolderName(this.fabricatedCardholderNames);
                 }
             });
         }
@@ -1688,7 +1690,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    if (this.selectedDonorType === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
+                    if (this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
                         return {
                             firstName: firstName,
                             lastName: lastName,
@@ -1803,8 +1805,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     /*******************************************************************************
      * @description Updates the formState object that holds the current value
      * of all fields on the form.
-     * @param fields An object with key-value pairs where value is an object
-     * with value and displayValue (optional) properties.
+     * @param fields An object with key-value pairs.
      */
     updateFormState(fields) {
         Object.assign(this.formState, fields);
@@ -1818,7 +1819,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // Re-assign to prompt reactivity
-        this.formState = JSON.parse(JSON.stringify(this.formState));
+        this.formState = deepClone(this.formState);
     }
 
     updateFormStateForDonationRecordType(fields) {
@@ -1830,7 +1831,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.opportunityRecordTypeNameFor(val);
+            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] =
+                this.opportunityRecordTypeNameFor(val);
+
             this.setDonationRecordTypeIdInFormState(val);
         }
     }
@@ -1872,18 +1875,38 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleFormFieldChange(event) {
-        const value = event.detail.value;
-        const label = event.detail.label;
-        const sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName);
+        const value = event.detail.value,
+            label = event.detail.label,
+            sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
+            isDonationRecordTypeName =
+                sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName,
+            isDonationDonor =
+                sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName,
+            isDonationImported =
+                sourceField === DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
 
-        let valueForFormState = value;
-        if (sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName) {
-            valueForFormState = label;
+        this.updateFormState({
+            [sourceField]: isDonationRecordTypeName ? label : value
+        });
+
+        if (isDonationRecordTypeName) {
             this.setDonationRecordTypeIdInFormState(value);
-        } else if (sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName) {
+        }
+
+        if (isDonationDonor) {
             this.handleDonationDonorChange(value)
         }
-        this.updateFormState({[sourceField]: valueForFormState});
+
+        if (isDonationImported) {
+            this.updateFormState({
+                [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName]:
+                    value ? userSelectedMatch : null
+            });
+
+            this.selectedDonationDataImportFieldValues
+                [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName] =
+                value ? userSelectedMatch : null;
+        }
     }
 
     sourceFieldFor(fieldMappingDevName) {
@@ -1909,11 +1932,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setInitialValueInFormStateForElement(element) {
-        this.updateFormState(
-            {
-                [this.getSourceFieldApiNameFor(element)]: this.getValueFrom(element)
-            }
-        );
+        const sourceField = this.getSourceFieldApiNameFor(element);
+        const value = this.getValueFrom(element);
+        const isLookupWithDefaultValue = value &&
+            GeFormService.importedRecordFieldNames.includes(sourceField);
+
+        this.updateFormState({[sourceField]: value});
+
+        if (isLookupWithDefaultValue) {
+            this.loadSelectedRecordFieldValues(sourceField, value);
+        }
     }
 
     setInitialValueInFormStateForFieldMappings(fieldMappingDevNames) {
@@ -1978,11 +2006,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setDonationRecordTypeIdInFormState(opportunityRecordTypeId) {
         const donationImportedRelatedRecordField =
             relatedRecordFieldNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName);
+        const relatedRecord =
+            this.getFieldValueFromFormState(donationImportedRelatedRecordField);
 
-        const relatedRecord = this.formState[donationImportedRelatedRecordField];
         let updatedRecord;
         if (relatedRecord) {
-            updatedRecord = Object.assign(relatedRecord, {recordTypeId: opportunityRecordTypeId});
+            updatedRecord = Object.assign(
+                relatedRecord,
+                {recordTypeId: opportunityRecordTypeId});
         } else {
             updatedRecord = {recordTypeId: opportunityRecordTypeId};
         }
@@ -2005,17 +2036,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     objectMappingDevNameFor(fieldMappingDevName) {
-        return this.fieldMappingFor(fieldMappingDevName).Target_Object_Mapping_Dev_Name;
-    }
-
-    fieldMappingFor(fieldMappingDevName) {
-        return GeFormService.getFieldMappingWrapper(fieldMappingDevName);
+        const fieldMapping = GeFormService.getFieldMappingWrapper(fieldMappingDevName);
+        return fieldMapping && fieldMapping.Target_Object_Mapping_Dev_Name;
     }
 
     parentRecordFieldFor(fieldMappingDevName) {
-        return GeFormService
-            .objectMappings[this.objectMappingDevNameFor(fieldMappingDevName)]
-            .Imported_Record_Field_Name;
+        const objMapping =
+            GeFormService.getObjectMapping(
+                this.objectMappingDevNameFor(fieldMappingDevName));
+
+        return objMapping && objMapping.Imported_Record_Field_Name;
+    }
+
+    donorType() {
+        return this.getFieldValueFromFormState(
+            DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName);
+    }
+
+    /**
+     * @description Pass in a DataImport field's api to get that field's current
+     * value from the formState object.
+     * @param fieldApiName
+     * @returns {*} Current value stored in formState for the passed-in field.
+     */
+    getFieldValueFromFormState(fieldApiName) {
+        return this.formState[fieldApiName];
+    }
+
+    flatten(obj) {
+        let flatObj = {};
+        for(const [key, value] of Object.entries(obj)) {
+            if (value !== null && value !== undefined && value.hasOwnProperty('value')) {
+                flatObj[key] = value.value;
+            } else {
+                flatObj[key] = value;
+            }
+        }
+        return flatObj;
     }
 
 }

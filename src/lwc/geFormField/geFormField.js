@@ -5,7 +5,6 @@ import GeLabelService from 'c/geLabelService';
 import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
 import {fireEvent} from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
-import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -83,10 +82,6 @@ export default class GeFormField extends LightningElement {
             this.fireLookupRecordSelectedEvent(event);
         }
 
-        if (this.isPicklist) {
-            this.handlePicklistChange();
-        }
-
         if (this.isRichText) {
             this.checkRichTextValidity();
         }
@@ -103,7 +98,7 @@ export default class GeFormField extends LightningElement {
         }
     };
 
-    fireLookupRecordSelectedEvent(event) {
+    fireLookupRecordSelectedEvent() {
         const lookupDetail = {
             fieldApiName: this.element.fieldApiName,
             value: this.value
@@ -125,15 +120,6 @@ export default class GeFormField extends LightningElement {
     }
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
-
-    handlePicklistChange() {
-        if (this.targetFieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
-            const changeDonationDonorEvent = new CustomEvent(
-                'changedonationdonor',
-                {detail: {value: this.value}});
-            this.dispatchEvent(changeDonationDonorEvent);
-        }
-    }
 
     /**
      * Retrieve object metadata. Used to configure how fields are displayed on the form.
@@ -159,7 +145,6 @@ export default class GeFormField extends LightningElement {
             // and no record value.
             this._defaultValue = defaultValue;
             this.value = defaultValue;
-            this.handlePicklistChange();
         }
     }
 
@@ -316,7 +301,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get objectMapping() {
-        return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
+        return GeFormService.getObjectMapping(this.targetObjectMappingDevName);
     }
 
     get fieldType() {
@@ -498,21 +483,16 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    reset(setDefaults = true) {
-        if (setDefaults) {
+    reset(applyDefaultValue = true) {
+        // As of W-8017324 picklists get their value from formState
+        if (this.isPicklist) {
+            return;
+        }
+
+        if (applyDefaultValue) {
             this.value = this._defaultValue;
         } else {
             this.value = null;
-        }
-
-        // reset lookups and recordtype fields
-        if (this.isLookup) {
-            const lookup = this.template.querySelector('[data-id="inputComponent"]');
-            lookup.reset(setDefaults);
-        }
-
-        if (this.isPicklist) {
-            this.handlePicklistChange();
         }
     }
 
@@ -545,15 +525,6 @@ export default class GeFormField extends LightningElement {
             return this.objectDescribeInfo.recordTypeInfos[Id].name;
         } else {
             return null;
-        }
-    }
-
-    renderedCallback() {
-        if (this.value && this.isLookup) {
-            // If this field is a Lookup and has a value when connected,
-            // fire event so that the form knows to populate related fields
-            // and set recordTypeId on sibling fields.
-            this.fireLookupRecordSelectEvent();
         }
     }
 

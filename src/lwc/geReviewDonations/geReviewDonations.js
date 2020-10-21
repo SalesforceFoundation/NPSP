@@ -228,7 +228,9 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     handleResetReviewDonationsComponent() {
         this._selectedDonation = null;
         this._donationType = null;
-        this.opportunities = [];
+        if (!this.donorId) {
+            this.opportunities = [];
+        }
     }
 
     // ================================================================================
