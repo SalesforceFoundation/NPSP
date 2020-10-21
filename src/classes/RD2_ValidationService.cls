@@ -204,7 +204,6 @@ public with sharing class RD2_ValidationService {
             }
 
             validateActiveRecurringDonation(rd);
-            validatePauseRecurringDonationStatus(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
             validateRecurringDonationEndDate(rd);
