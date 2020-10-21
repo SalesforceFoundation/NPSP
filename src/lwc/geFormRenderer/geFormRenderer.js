@@ -179,6 +179,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
+        registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -1304,7 +1305,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleChangeSelectedDonation(event) {
-        this.selectedDonation = event.detail.selectedDonation;
+        this.selectedDonation = event.detail.payment || event.detail.opportunity;
 
         const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
