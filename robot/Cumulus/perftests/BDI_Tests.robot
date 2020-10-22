@@ -135,4 +135,4 @@ BGE/BDI Import - CO - 1000000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 
     [Setup]     Setup For Test    1000000    Data Import Field Mapping
     [Teardown]     Validate Data      1000000
     [Tags]    ultra-long     advanced-mapping
-    Batch Data Import   250]
+    Batch Data Import   250
