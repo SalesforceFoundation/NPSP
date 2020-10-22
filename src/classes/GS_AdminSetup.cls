@@ -61,7 +61,7 @@ public with sharing class GS_AdminSetup {
             SELECT Id, Title_Label__c, Description_Label__c, Position__c, 
                 (
                     SELECT Id, Title_Label__c, Description_Label__c, Image__c, Position__c,
-                        Has_Link__c, Link_Label__c, Link_href__c,
+                        Has_Link__c, Link_Label__c, Link_href__c, Extra_Info_Label__c,
                         Principal_Button_Type__c, Principal_Button_Label__c, Principal_Button_Value__c,
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
                     FROM GS_Admin_Checklist_Items__r ORDER BY Position__c ASC
@@ -97,6 +97,7 @@ public with sharing class GS_AdminSetup {
         ci.Id = item.Id;
         ci.title = item.Title_Label__c;
         ci.description = item.Description_Label__c;
+        ci.extraInfo = item.Extra_Info_Label__c;
         ci.image = item.Image__c;
         ci.pos = item.Position__c.intValue();
         if (item.Has_Link__c) {
@@ -141,6 +142,8 @@ public with sharing class GS_AdminSetup {
         public String description;
         @AuraEnabled
         public String image;
+        @AuraEnabled
+        public String extraInfo;
         @AuraEnabled
         public ChecklistItemLink link;
         @AuraEnabled

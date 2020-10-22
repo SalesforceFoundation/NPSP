@@ -17,6 +17,7 @@ import gsChecklistItemCreateDonationTitle from '@salesforce/label/c.gsChecklistI
 import gsChecklistItemCreateDonationDesc from '@salesforce/label/c.gsChecklistItemCreateDonationDesc';
 import gsChecklistItemCreateDonationLinkLabel from '@salesforce/label/c.gsChecklistItemCreateDonationLinkLabel';
 import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChecklistItemCreateDonationPriBtnLabel'; 
+import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 
 const mapValue = {
     gsChecklistExploreNPSPTitle,
@@ -38,6 +39,7 @@ const mapValue = {
     gsChecklistItemCreateDonationDesc,
     gsChecklistItemCreateDonationLinkLabel,
     gsChecklistItemCreateDonationPriBtnLabel,
+    gsChecklistItemExtraOneMinuteVideo,
 }
 
 

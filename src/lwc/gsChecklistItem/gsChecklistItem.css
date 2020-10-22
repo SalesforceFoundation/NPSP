@@ -1,17 +1,24 @@
 .step-card {
     position: relative;
-    height: 185px;
+    min-height: 185px;
     border: 1px solid lightgray;
     width: 100%;
     margin: 1.5rem 0;
-    padding: 1rem;
+    padding: 18px;
     box-shadow: 0 3px 2px 0 rgba(176,173,171,.48);
-    display: flex;
+    display: grid;
+    grid-template-columns: 185px auto;
+    grid-template-rows: auto auto;
 
 }
 
 .step-card > .card-image {
     width: 185px;
+    grid-column: 1/ 2;
+    grid-row: 1 / 3;
+    padding-left: 6px;
+    padding-right: 24px;
+    border-right: 1px solid lightgray;
 }
 
 .step-card > .card-image img {
@@ -21,10 +28,9 @@
 
 .step-card > .card-content {
     position: relative;
-    border-left: 1px solid lightgray;
-    padding-left: 1rem;
-    flex: 1 0 0;
-    display: flex;
+    padding-left: 14px;
+    grid-column: 2/ 3;
+    grid-row: 1 / 2;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -61,17 +67,30 @@
     padding-right: 3rem;
  }
 
- .step-card > .card-content .content-footer a {
+ .step-card > .content-footer {
+    display: flex;
+    align-items: flex-end;
+ }
+
+ .step-card > .content-footer a {
     color: #2E79DC;
     font-family: "Salesforce Sans";
     font-size: 12.98px;
     font-weight: bold;
     letter-spacing: 0;
     line-height: 19.97px;
+    min-width: 10rem;
+    flex: 1 0 0;
+ }
+
+ .step-card > .content-footer .footer-buttons {
+    display: flex;
  }
  
- .step-card > .card-content .content-footer {
+ .step-card > .content-footer .content-footer-aux {
+    flex: 1 0 0;
     padding-top: 0.5rem;
+    padding-left: 14px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;

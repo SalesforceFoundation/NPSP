@@ -1389,6 +1389,7 @@
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Description_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Extra_Info_Label__c</members>
         <members>GS_Admin_Checklist_Item__mdt.GS_Admin_Checklist_Section__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Has_Link__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Image__c</members>
@@ -2460,6 +2461,7 @@
         <members>gsChecklistItemCreateDonationLinkLabel</members>
         <members>gsChecklistItemCreateDonationPriBtnLabel</members>
         <members>gsChecklistItemCreateDonationTitle</members>
+        <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>

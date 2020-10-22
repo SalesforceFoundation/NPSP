@@ -4,17 +4,19 @@
             <img if:true={hasLink} src={imgSrc}/>
         </div>
         <div class="card-content">
-            <p class="content-time">{item.time}</p>
+            <p class="content-time">{item.extraInfo}</p>
             <h1 class="content-title">{item.title}</h1>
             <div  class="content-text">
                 {item.description}
             </div>
-            <div class="content-footer">
+        </div>
+        <div class="content-footer">
+            <div class="content-footer-aux">
                 <a if:true={hasLink} href={item.link.href} target="_blank">
                     {item.link.label}
                 </a>
                 <div if:false={hasLink}></div>
-                <div class="contet-footer-buttons">
+                <div class="footer-buttons">
                     <button if:true={hasSecondaryBtn} 
                         onclick={onClickSecondaryBtn}
                         class="slds-button slds-button_outline-brand">

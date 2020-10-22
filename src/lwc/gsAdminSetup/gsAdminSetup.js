@@ -47,6 +47,7 @@ export default class gsAdminSetup extends LightningElement {
         const tItem = {...item};
         tItem.title = translate(item.title);
         tItem.description = translate(item.description);
+        tItem.extraInfo = translate(item.extraInfo);
         if (item.principalBtn) {
             tItem.principalBtn = {...(item.principalBtn)};
             tItem.principalBtn.label = translate(item.principalBtn.label);

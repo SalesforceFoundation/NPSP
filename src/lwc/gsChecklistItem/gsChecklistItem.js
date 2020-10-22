@@ -36,7 +36,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
 
     buttonAction(button) {
         switch(button.type) {
-            case 'sfdc:link': {
+            case 'sfdc:new-tab': {
                 this.sfdcLinkAction(button.value);
                 break;
             }
@@ -48,7 +48,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     }
 
     sfdcLinkAction(value) {
-        const values = value.split(':');
+        const values = value.split(':');     
         this[NavigationMixin.GenerateUrl]({
             type: `standard__${values[0]}`,
             attributes: {

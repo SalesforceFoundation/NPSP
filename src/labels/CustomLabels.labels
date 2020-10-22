@@ -6623,78 +6623,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
         <value>This form contains fields that can't be found. Please check with your administrator.</value>
     </labels>
-    <labels>
-        <fullName>gsAdminSetupTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title in Get Started</shortDescription>
-        <value>ADMIN SETUP CHECKLIST</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistArrowDownAlterText</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Arrow Icon alter text to expand state</shortDescription>
-        <value>Click to expand contents</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistArrowRightAlterText</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Arrow Icon alter text to collapse state</shortDescription>
-        <value>Click to collapse contents</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistExploreNPSPDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Explore Nonprofit in Get Started</shortDescription>
-        <value>Get comfortable with key concepts and features.</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistExploreNPSPTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of checklist Explore Nonprofit in Get Started</shortDescription>
-        <value>Explore the Nonprofit Success Pack (NPSP)</value>
-    </labels>
-     <labels>
-        <fullName>gsChecklistMakeItYourDesc</fullName>
-        <categories>Adoption, Group, Description</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Make Your in Get Started</shortDescription>
-        <value>Customize Salesforce with information that&apos;s unique to your organization.</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistMakeItYourTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of checklist Make Your in Get Started</shortDescription>
-        <value>Make it Your Own</value>
-    </labels>
-       <labels>
-        <fullName>gsChecklistOnboardUsersDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist User Onboard in Get Started</shortDescription>
-        <value>Add your users to Salesforce and plan your rollout.</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistOnboardUsersTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
-        <value>Onboard Your Users</value>
-    </labels>
+
     <labels>
         <fullName>commonFieldsNotFound</fullName>
         <categories>Gift Entry</categories>
@@ -7709,7 +7638,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
-        <value>Watch Video</value>
+        <value>Create Donation</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemCreateDonationTitle</fullName>
@@ -7718,6 +7647,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of checklist item Create Donation in Get Started</shortDescription>
         <value>Create a Donation</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;1 Minute Video&apos;</shortDescription>
+        <value>1 Minute Video</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
