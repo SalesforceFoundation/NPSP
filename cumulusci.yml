@@ -218,6 +218,13 @@ tasks:
             options:
                 outputdir: robot/Cumulus/results
 
+    test_insert_performance:
+        description: Runs Robot Framework performance tests for BDI Complex Objects
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/Insert_Tests.robot
+
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Org Config
