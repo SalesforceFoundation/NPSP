@@ -67,4 +67,9 @@ class SetBDIMappingMode(AnonymousApexTask):
         soql = "SELECT {token}Field_Mapping_Method__c FROM {token}Data_Import_Settings__c"
         soql = soql.format(token=self.get_org_namespace_prefix())
         res = self.sf.query_all(soql)
-        return res['records'][0]['{token}Field_Mapping_Method__c'.format(token=self.get_org_namespace_prefix())]
+        if res["records"]:
+            return res["records"][0][
+                "{token}Field_Mapping_Method__c".format(
+                    token=self.get_org_namespace_prefix()
+                )
+            ]
