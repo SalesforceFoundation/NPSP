@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 Setup Test Data
@@ -17,7 +17,7 @@ Setup Test Data
     Setupdata   contact2   ${contact2_fields}
     &{contact3_fields} =	Create Dictionary  Email=test3@example.com  AccountId=${data}[contact1][AccountId]
     Setupdata   contact3   ${contact3_fields}
-    
+
 *** Variables ***
 
 &{contact1_fields}  Email=test1@example.com
@@ -30,22 +30,22 @@ Create ASC for Related Contact
     ...                            Create a relation with contact3 with type as Coworker and Related OCR as solicitor. From Contact1 create an opp
     ...                            verify contact roles. Run donations batch and verify contact2 has soft credits and contact3 does not have soft credits
     [tags]                         feature:Automated Soft Credits       W-039819
-    Go To Page                              Details                              Contact                                
+    Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact1][Id]
     Select Tab                              Related
     Click Related List Button               Relationships                        New
     Wait For Modal                          New                                  Relationship
     Populate Lookup Field                   Related Contact                      ${data}[contact2][FirstName] ${data}[contact2][LastName]
-    Select Value From Dropdown              Type                                 Employer
-    Select Value From Dropdown              Related Opportunity Contact Role     Soft Credit
-    Click Modal Button                      Save
+    Click Flexipage Dropdown                Type                                 Employer
+    Click Flexipage Dropdown                Related Opportunity Contact Role     Soft Credit
+    Click Button                            Save
     Wait Until Modal Is Closed
     ${ns} =                                 Get NPSP Namespace Prefix
     API Create Relationship                 ${data}[contact1][Id]    ${data}[contact3][Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Solicitor
-    &{opportunity} =                        API Create Opportunity               ${data}[contact1][AccountId]    Donation    
-    ...                                     Name=${data}[contact1][FirstName] $100 donation    
+    &{opportunity} =                        API Create Opportunity               ${data}[contact1][AccountId]    Donation
+    ...                                     Name=${data}[contact1][FirstName] $100 donation
     ...                                     Amount=100
-    Go To Page                              Details                              Opportunity                                
+    Go To Page                              Details                              Opportunity
     ...                                     object_id=${opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
@@ -54,20 +54,20 @@ Create ASC for Related Contact
     ...                                     ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
     ...                                     ${data}[contact2][FirstName] ${data}[contact2][LastName]=Soft Credit
     ...                                     ${data}[contact3][FirstName] ${data}[contact3][LastName]=Solicitor
-    Go To Page                              Details                              Contact                                
+    Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact2][Id]
     Select Tab                              Related
     Check Record Related Item               Opportunities                        ${opportunity}[Name]
-    Go To Page                              Details                              Contact                                
+    Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact3][Id]
     Select Tab                              Related
     Check Record Related Item               Opportunities                        ${opportunity}[Name]
     Run Donations Batch Process
-    Go To Page                              Details                              Contact                                
+    Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact2][Id]
     Navigate To And Validate Field Value    Soft Credit This Year    contains    $100.00    section=Soft Credit Total
     Navigate To And Validate Field Value    Soft Credit Total        contains    $100.00    section=Soft Credit Total
-    Go To Page                              Details                              Contact                                
+    Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact3][Id]
     Navigate To And Validate Field Value    Soft Credit This Year    contains    $0.00    section=Soft Credit Total
     Navigate To And Validate Field Value    Soft Credit Total        contains    $0.00    section=Soft Credit Total
