@@ -31,7 +31,7 @@
 * @description Unit tests for the Enhanced RD Opportunity Evaluation Services
 *
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 private class RD2_OpportunityEvaluationService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
