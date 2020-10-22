@@ -8,11 +8,11 @@ import translate from './labelTranslate';
 */
 export default class gsAdminSetup extends LightningElement {
 
-
     /*
     *   @description This var contain a list of checklist to render
     */
     @track checklists;
+
 
     /*
     * @description This function load and translate all checklist sections and his items
@@ -20,7 +20,7 @@ export default class gsAdminSetup extends LightningElement {
     @wire(getChecklist)
     wiredGetChecklist({ data, error }) {
         // Hold on to the provisioned value so we can refresh it later.
-        if(data) {
+        if (data) {
             this.checklists = data.map(this.translateSection);
         }
     }

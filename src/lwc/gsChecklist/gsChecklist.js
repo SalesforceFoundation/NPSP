@@ -27,7 +27,7 @@ export default class gsChecklist extends LightningElement {
     */
     get infoClass() {
         const classNames = ['slds-media', 'info'];
-        if(this.displaySteps) {
+        if (this.displaySteps) {
             classNames.push('open');
         }
         return classNames.join(' '); 
