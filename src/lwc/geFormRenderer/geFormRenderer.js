@@ -872,6 +872,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     load(dataImport, applySelectedDonationFieldValues = true) {
         this.updateFormState(dataImport);
         if (dataImport.Id) {
+            this.appendNullValuesForMissingFields(dataImport);
             // Set this.dataImport when the record Id is present so
             // the form knows it is in update mode
             this.dataImport = dataImport;
@@ -2082,12 +2083,44 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     defaultValueFor(fieldMappingDevName) {
-        const element = this.sections.flat()
-            .map(({elements}) => elements)
-            .flat()
-            .find(fm =>
-                fm.dataImportFieldMappingDevNames[0] === fieldMappingDevName);
+        const element = this.formElements()
+            .find(element =>
+                element.dataImportFieldMappingDevNames[0] === fieldMappingDevName);
+
         return element && element.defaultValue;
+    }
+
+    appendNullValuesForMissingFields(dataImport) {
+        this.applyNullValuesForMissingFields(this.sourceFieldsUsedInTemplate(), dataImport);
+        return dataImport;
+    }
+
+    applyNullValuesForMissingFields(sourceFieldsOnForm, dataImport) {
+        sourceFieldsOnForm.forEach(sourceFieldOnForm => {
+            if (!dataImport.hasOwnProperty(sourceFieldOnForm)) {
+                dataImport[sourceFieldOnForm] = null;
+            }
+        });
+    }
+
+    sourceFieldsUsedInTemplate() {
+        return Object.values(GeFormService.fieldMappings)
+            .filter(fieldMapping =>
+                this.fieldMappingDevNamesUsedInTemplate()
+                    .includes(fieldMapping.DeveloperName))
+            .map(fieldMapping => fieldMapping.Source_Field_API_Name);
+    }
+
+    fieldMappingDevNamesUsedInTemplate() {
+        return this.formElements()
+            .filter(element => element.elementType === 'field')
+            .map(element => element.dataImportFieldMappingDevNames[0]);
+    }
+
+    formElements() {
+        return this.sections.flat()
+            .map(({elements}) => elements)
+            .flat();
     }
 
 }
