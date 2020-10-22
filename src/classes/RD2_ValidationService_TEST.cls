@@ -34,7 +34,7 @@
 * @description Recurring Donations Validation Service tests
 *
 */
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 private with sharing class RD2_ValidationService_TEST {
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
