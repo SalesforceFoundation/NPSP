@@ -680,30 +680,6 @@ tasks:
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 
-    assign_permset:
-        description: Assign a specific Permission Set to the current user. Pass the Perm Set name as a parameter ('-o param1 HardDeletePermSet')
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        group: Org Config
-        options:
-            apex: >-
-                String permSetName = '%%%PARAM_1%%%';
-                PermissionSet p = [
-                    SELECT Id, Name
-                    FROM PermissionSet
-                    WHERE Name = :permSetName
-                ];
-
-                Boolean alreadyAssigned = [SELECT Count()
-                        FROM PermissionSetAssignment
-                        WHERE PermissionSetId = :p.Id
-                        AND AssigneeId = :UserInfo.getUserId()] > 0;
-                if (!alreadyAssigned) {
-                    insert new PermissionSetAssignment(
-                        PermissionSetId = p.Id,
-                        AssigneeId = UserInfo.getUserId()
-                    );
-                }
-
     generate_and_load_from_yaml_hack:
         class_path: cumulusci.tasks.bulkdata.generate_and_load_data_from_yaml.GenerateAndLoadDataFromYaml
 

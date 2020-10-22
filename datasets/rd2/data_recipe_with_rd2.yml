@@ -9,7 +9,9 @@
 - include_file: recurring_donation_macros.yml
 - include_file: opportunity_macros.yml
 
+## ===============================================================================
 ## Create "constants" for GAU's and Campaign to use when creating RD's and Opps
+## ===============================================================================
 - object: General_Accounting_Unit__c
   nickname: theRdGau
   just_once: True
@@ -60,6 +62,7 @@
     MailingPostalCode:
       fake: zipcode
 
+## ===============================================================================
 # For each contact:
 #   - 95% of all Contacts will have an Recurring Donation created (in RD2 format)
 #       - 95% of them are for this Household Contact, the rest have this Contact and an Organization Account
@@ -69,26 +72,10 @@
 #       - There is a random distribution of Installment Periods, DayOfMonth, etc.
 #   - Create 0 to 5 non-RD related Opportunities for each Contact
 #       - CloseDate between 3 years ago and 6 months in the future (ClosedWon if in the past)
+## ===============================================================================
 - macro: ContactWithRecurringDonationAndOpps
   ## Assign a random "fake" value for the following fields on the Contact
-  ## include: ContactName, ContactAddress
-  fields:
-    FirstName:
-      fake: first_name
-    LastName:
-      fake: last_name
-    Email:
-      fake: free_email
-    Phone:
-      fake: phone_number
-    MailingStreet:
-      fake: street_address
-    MailingCity:
-      fake: city
-    MailingState:
-      fake: state_abbr
-    MailingPostalCode:
-      fake: zipcode
+  include: ContactName, ContactAddress
   friends:
     - object: npe03__Recurring_Donation__c
       ## 95% of the Contacts will have RD and 5% will not
@@ -100,95 +87,13 @@
           - choice:
               probability: 5%
               pick: 0
-      ## include: RD_RandomDonor, RD_RandomSchedule
+      include: RD_RandomDonor, RD_RandomSchedule
       fields:
         Status__c: Active
-        npe03__Contact__c:
-          reference: Contact
-        npe03__Organization__c:
-          ## 95% of the RDs will use a Household Contact and 5% will use an Organization Account
-          random_choice:
-            - choice:
-                probability: 95%
-                pick: ""
-            - choice:
-                probability: 5%
-                pick:
-                  - object: Account
-                    fields:
-                      Name: ${{ fake.company }} ${{ fake.company_suffix }}
-                      Description: Org Account related to Recurring Donation
-                      Phone:
-                        fake: phone_number
-                    friends:
-                      - object: npe5__Affiliation__c
-                        ## Create an Affiliation between the Contact and this Org Account
-                        fields:
-                          npe5__Primary__c: true
-                          npe5__Contact__c:
-                            reference: Contact
-                          npe5__Organization__c:
-                            reference: Account
-                          npe5__Role__c: Employee
-                          Related_Opportunity_Contact_Role__c: Soft Credit
         npe03__Amount__c:
           random_number:
             min: 1
             max: 100
-        npe03__Date_Established__c:
-          ## Set the DateEstablished and StartDate to a random date up to 2 years ago
-          date_between:
-            start_date: -2y
-            end_date: -14d
-        StartDate__c: ${{this.npe03__Date_Established__c}}
-        PaymentMethod__c:
-          random_choice:
-            - Credit Card
-            - Check
-            - ACH/EFT
-        RecurringType__c:
-          ## 95% of the RD's will be Open Ended and 5% will be Fixed Length
-          random_choice:
-            - choice:
-                probability: 95%
-                pick: Open
-            - choice:
-                probability: 5%
-                pick: Fixed
-        npe03__Installment_Period__c:
-          ## 90% of the RD's are Monthly, 5% Weekly, and 5% 1st & 15th
-          random_choice:
-            - choice:
-                probability: 90%
-                pick: Monthly
-            - choice:
-                probability: 5%
-                pick: Weekly
-            - choice:
-                probability: 5%
-                pick: 1st and 15th
-        InstallmentFrequency__c: 1
-        Day_of_Month__c:
-          ## For Monthly RD's, set the DayOfMonth randomly to either 1, 15, 30 or LastDay
-          if:
-            - choice:
-                when: ${{npe03__Installment_Period__c=='Monthly'}}
-                pick:
-                  random_choice:
-                    - 1
-                    - 15
-                    - 30
-                    - Last_Day
-            - choice:
-                pick: ""
-        npe03__Installments__c:
-          ## Fixed Length RD's will all get 24 installments
-          if:
-            - choice:
-                when: ${{RecurringType__c=='Fixed'}}
-                pick: 24
-            - choice:
-                pick:
         npe03__Recurring_Donation_Campaign__c:
           ## 5% of the RD's will be linked to a Campaign
           random_choice:
@@ -225,32 +130,8 @@
         - object: Opportunity
           ## All RD's will have exactly 1 historical (ClosedWon) Opportunity
           count: 1
-          ## include: RD_RelatedClosedWonOpp
+          include: RD_RelatedClosedWonOpp
           fields:
-            RecordType: Donation
-            ## Calculate the CloseDate for this historical Opp to be relative to the InstallmentPeriod
-            ## and DayOfMonth (for monthly).
-            CloseDate:
-              if:
-                - choice:
-                    when: ${{ npe03__Recurring_Donation__c.npe03__Installment_Period__c == 'Monthly' }}
-                    pick:
-                      if:
-                        - choice:
-                            when: ${{ npe03__Recurring_Donation__c.Day_of_Month__c == 'Last_Day' }}
-                            pick: ${{ today + relativedelta(day=1, months=-2) + relativedelta(months=1) }}
-                        - choice:
-                            pick: ${{ today + relativedelta(day=npe03__Recurring_Donation__c.Day_of_Month__c, months=-1) }}
-                - choice:
-                    when: ${{ npe03__Recurring_Donation__c.npe03__Installment_Period__c == 'Weekly' }}
-                    pick: ${{ today + relativedelta(days=-7) }}
-                - choice:
-                    pick: ${{ today + relativedelta(months=-1, day=15) }}
-            Amount: ${{ npe03__Recurring_Donation__c.npe03__Amount__c }}
-            Name: ${{Contact.FirstName}} ${{Contact.LastName}} Donation (0) ${{this.CloseDate}}
-            StageName: "Closed Won"
-            Primary_Contact__c:
-              reference: Contact
             npe03__Recurring_Donation__c:
               reference: npe03__Recurring_Donation__c
     - object: Opportunity
@@ -270,9 +151,11 @@
   nickname: Contact2
   include: ContactWithRecurringDonationAndOpps
 
+## ===============================================================================
 ## Generate Relationship records between two contacts, by using the Contact1 and Contact2 sets above.
 ## Everything above that defines macros (used by those) and one-time lookup records.
 ## The Related_Opportunity_Contact_Role__c value will cause an additional OCR to be created on Opps for these contacts
+## ===============================================================================
 - object: npe4__Relationship__c
   fields:
     npe4__Contact__c:
@@ -295,7 +178,9 @@
             probability: 50%
             pick:
 
-## Generate a 10 households that has two household members and a single closed won opportunity
+## ===============================================================================
+## Generate 10 households that has two household members and a single closed won opportunity
+## ===============================================================================
 - object: Account
   count: 10
   just_once: true

@@ -1,3 +1,7 @@
+## ===============================================================================
+## Assign a random donor to the Recurring Donation
+## Will either be the parent Contact OR an organization account with the parent Contact
+## ===============================================================================
 - macro: RD_RandomDonor
   fields:
     npe03__Contact__c:
@@ -13,8 +17,8 @@
             pick:
               - object: Account
                 fields:
-                  Description: Org Account related to Recurring Donation
                   Name: ${{ fake.company }} ${{ fake.company_suffix }}
+                  Description: Org Account related to Recurring Donation
                   Phone:
                     fake: phone_number
                 friends:
@@ -29,6 +33,14 @@
                       npe5__Role__c: Employee
                       Related_Opportunity_Contact_Role__c: Soft Credit
 
+## ===============================================================================
+## Generate a random "schedule" for a recurring donation:
+## - Date Established/Start Date: 2 Years ago through 14 Days ago
+## - RecurringType: Open (95%), Fixed (5%)
+## - Installment Period: Monthly (90%), Weekly (5%), or "1st and 15th" (5%)
+## - DayOfMonth: 1, 15, 30 or Last_Day (Monthly only)
+## - NumberOfInstalllments: 24 (if fixed)
+## ===============================================================================
 - macro: RD_RandomSchedule
   fields:
     npe03__Date_Established__c:
@@ -86,6 +98,11 @@
         - choice:
             pick:
 
+## ===============================================================================
+## Create a single associated ClosedWon historical Opportunity for a Recurring Donation
+## - CloseDate: Calculate (roughly) based on the installment period and day of month
+## - Stage: ClosedWon
+## ===============================================================================
 - macro: RD_RelatedClosedWonOpp
   fields:
     RecordType: Donation
@@ -112,7 +129,8 @@
     StageName: "Closed Won"
     Primary_Contact__c:
       reference: Contact
-    npe03__Recurring_Donation__c:
-      reference: npe03__Recurring_Donation__c
 
+## ===============================================================================
+## TBD: Create a related Allocation record for a recurring donation
+## ===============================================================================
 - macro: RD_RelatedAllocation

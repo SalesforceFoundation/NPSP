@@ -1,3 +1,9 @@
+## ===============================================================================
+## Define an Opportunity associated with a parent contact
+## - CloseDate: Random between 900 days in the past through 90 days in the future
+## - Stage: ClosedWon if in the past; Pledged if in the future
+## - Creates a single allocation record associated with the Opp
+## ===============================================================================
 - macro: ContactOpportunity
   fields:
     RecordType: Donation

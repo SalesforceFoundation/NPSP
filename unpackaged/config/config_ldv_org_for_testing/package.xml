@@ -22,10 +22,6 @@
         <name>ListView</name>
     </types>
     <types>
-        <members>HardDelete</members>
-        <name>PermissionSet</name>
-    </types>
-    <types>
         <members>Admin</members>
         <name>Profile</name>
     </types>
