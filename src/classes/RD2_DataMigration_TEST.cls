@@ -34,7 +34,7 @@
 * @description Unit Test for the data migration batch job
 *
 */
-@IsTest(isParallel=true)
+@IsTest(isParallel=false)
 private class RD2_DataMigration_TEST {
 
     private static final Date TODAY = System.today();
