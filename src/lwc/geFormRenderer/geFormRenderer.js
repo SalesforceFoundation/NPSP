@@ -454,13 +454,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
-        const fieldsWithBlankValues =
-            this.getFieldsWithBlankValues(dataImportRecord);
-
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
                 dataImportRecord,
-                fieldsWithNullValues: fieldsWithBlankValues,
                 success: () => {
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
@@ -473,16 +469,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }
         }));
-    }
-
-    getFieldsWithBlankValues(dataImportRecord) {
-        return Object.entries(dataImportRecord)
-            .map(([key, value]) => {
-                if (value === null || value === undefined || value === '') {
-                    return key;
-                }
-            })
-            .filter(field => field !== undefined);
     }
 
     @api
