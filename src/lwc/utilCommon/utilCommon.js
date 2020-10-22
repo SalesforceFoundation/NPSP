@@ -323,7 +323,7 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
 * e.g. hasNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
 */
 const hasNestedProperty = (object, property, ...remainingProperties) => {
-    if (object === undefined) return false
+    if (object === undefined || object === null) return false
     if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
     return hasNestedProperty(object[property], ...remainingProperties)
 }
