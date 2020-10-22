@@ -2,8 +2,6 @@
 ${database_url} =    
 ${persistent_org} =     ${False}
 
-${data_generation_task} =       tasks.generate_bdi_data.GenerateBDIData
-
 *** Settings ***
 
 Resource  cumulusci/robotframework/CumulusCI.robot
