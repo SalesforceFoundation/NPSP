@@ -39,18 +39,18 @@ Create Relationships for contacts
     Click Related List Button           Relationships                                               New
     Wait For Modal                      New                                                         Relationship
 
-    Populate Modal Form
-    ...                                 Related Contact=${contact1}[FirstName] ${contact1}[LastName]
-    ...                                 Type=Parent
-    Click Modal Button                  Save
+    Populate Lookup Field               Related Contact         ${contact1}[FirstName] ${contact1}[LastName]
+    Click Flexipage Dropdown            Type                    Parent
+    Click Button                        Save
     Current Page Should Be              Details                                                     Contact
     Validate Relation Status Message    ${contact1}[FirstName] ${contact1}[LastName]
     ...                                 ${contact2}[FirstName] ${contact2}[LastName]
     ...                                 Parent
 
-    Click More Actions Button
-    Click Link                          link=Relationships Viewer
+    Open Relationships Viewer
     Wait Until Loading Is Complete
+    #sleep for 5 seconds to allow image to load before trying to capture screenshot
+    Sleep                               5
     Capture Page Screenshot
     Go To Page                          Details                                                     Contact                                     object_id=${contact1}[Id]
     Current Page Should Be              Details                                                     Contact

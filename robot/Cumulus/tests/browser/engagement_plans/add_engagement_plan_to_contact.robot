@@ -10,7 +10,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 # Setup a contact with parameters specified
@@ -25,7 +25,7 @@ Create a Contact and Add Engagement Plan
     [Documentation]                      Create an Engagement plan Template with two tasks and one subtask. And  a contact
     ...                                  Link the  engagement plan for the contact and verify
     ...                                  There is one engagement plan set up for the contact
-    [tags]                               W-038641                 feature:Engagements
+    [tags]                               W-038641                 feature:Engagements   unstable
 
 
     Go To Page                                       Listing                            Engagement_Plan_Template__c
@@ -51,8 +51,9 @@ Create a Contact and Add Engagement Plan
 
     Select Tab                                       Related
     Click Related List Button                        Engagement Plans               New
+    Wait Until Modal Is Open
     Populate Lookup Field                            Engagement Plan Template       Automation_Plan
-    Click Modal Button                               Save
+    Click Button                                     Save
     Wait Until Modal Is Closed
     Current Page Should Be                           Detail                         Contact
     Validate Related Record Count                    Engagement Plans               1
