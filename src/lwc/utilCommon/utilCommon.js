@@ -552,7 +552,18 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
     return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
 }
 
+const apiNameFor = (objectOrFieldReference) => {
+    if (Object.hasOwnProperty('fieldApiName')) {
+        return objectOrFieldReference.fieldApiName;
+    } else if (Object.hasOwnProperty('objectApiName')) {
+        return objectOrFieldReference.objectApiName;
+    } else {
+        return null;
+    }
+}
+
 export {
+    apiNameFor,
     constructErrorMessage,
     debouncify,
     deepClone,
