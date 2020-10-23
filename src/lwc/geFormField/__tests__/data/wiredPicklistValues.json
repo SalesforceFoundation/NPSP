@@ -1,0 +1,19 @@
+{
+    "controllerValues": {},
+    "defaultValue": null,
+    "url": "",
+    "values": [
+        {
+          "attributes": null,
+          "label": "Picklist Option 1",
+          "validFor": [],
+          "value": "Picklist_Option_1"
+        },
+        {
+          "attributes": null,
+          "label": "Picklist Option 2",
+          "validFor": [],
+          "value": "Picklist_Option_2"
+        }
+    ]
+  }
