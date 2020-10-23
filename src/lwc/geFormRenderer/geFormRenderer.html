@@ -55,7 +55,8 @@
                     <lightning-layout-item size='12'>
                         <c-ge-review-donations ontogglemodal={toggleModal}
                                                onchangeselecteddonation={handleChangeSelectedDonation}
-                                               donor-id={selectedDonorId}>
+                                               donor-id={donorId}
+                                               selected-donation={selectedDonation}>
                         </c-ge-review-donations>
                     </lightning-layout-item>
                 </template>
@@ -105,9 +106,10 @@
                         <c-ge-form-section key={section.id}
                                            section={section}
                                            onlookuprecordselect={handleLookupRecordSelect}
-                                           onchangedonationdonor={handleChangeDonationDonor}
                                            onchangenameoncardfield={handleNameOnCardFieldChange}
-                                           widget-data={widgetData}>
+                                           widget-data={widgetData}
+                                           onformfieldchange={handleFormFieldChange}
+                                           form-state={formState}>
                         </c-ge-form-section>
                     </template>
 
