@@ -298,6 +298,7 @@
         <members>GE_Template_TEST</members>
         <members>GS_ApplicationStatusController</members>
         <members>GS_ApplicationStatusControllerTest</members>
+        <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -1352,7 +1353,6 @@
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
         <members>Schedulable__c.Last_Time_Run__c</members>
-        <members>Testing_Configuration__c.Configuration__c</members>
         <members>Trigger_Handler__c.Active__c</members>
         <members>Trigger_Handler__c.Asynchronous__c</members>
         <members>Trigger_Handler__c.Class__c</members>
@@ -3259,7 +3259,6 @@
         <members>RecurringDonationSchedule__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
-        <members>Testing_Configuration__c</members>
         <members>Trigger_Handler__c</members>
         <members>Data_Import_Field_Mapping_Set__mdt</members>
         <members>Data_Import_Field_Mapping__mdt</members>

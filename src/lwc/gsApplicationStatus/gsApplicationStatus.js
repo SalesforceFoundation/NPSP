@@ -91,7 +91,7 @@ export default class GsApplicationStatus extends LightningElement {
      * @returns True if data has an applicationDate field, false otherwise.
      */
     checkApplicationSubmitted(result) {
-        return result.applicationDate != null;
+        return result.applicationDate !== null;
     }
 
     /**

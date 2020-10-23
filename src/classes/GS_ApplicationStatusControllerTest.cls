@@ -29,6 +29,8 @@
 */
 /**
  * @author Salesforce.org
+ * @date 2020
+ * @group Getting Started
  * @description TestClass for GS_ApplicationStatusController.
  */
 @IsTest
@@ -41,7 +43,7 @@ public with sharing class GS_ApplicationStatusControllerTest {
         Map<String, Object> testingConfiguration = new Map<String, Object> { 'Sandbox' => false, 
                                                                              'TrialExpiration' => '10/15/2020, 00:01 AM'};
 
-        GS_ApplicationStatusController.testingConfiguration = testingConfiguration;
+        GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
         
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
         System.assert(status != null, 'Status should not be null');
@@ -60,7 +62,7 @@ public with sharing class GS_ApplicationStatusControllerTest {
                                                                              'TrialExpiration' => '10/15/2020, 00:01 AM',
                                                                              'Application' => '10/02/2020'};
         
-        GS_ApplicationStatusController.testingConfiguration = testingConfiguration;
+        GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
         
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
         System.assert(status != null, 'Status should not be null');
