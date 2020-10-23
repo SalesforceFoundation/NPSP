@@ -90,7 +90,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
-    Click Special Button             Save & Enter New Gift
+    Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        ${CONTACT}[Name]   True
     ...                              Status=Dry Run - Validated
 
@@ -120,7 +120,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
-    Click Special Button             Save & Enter New Gift
+    Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        ${CONTACT2}[Name]   True
     ...                              Status=Dry Run - Error
     Process And Validate Batch       Errors
