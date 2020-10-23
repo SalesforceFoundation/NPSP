@@ -165,7 +165,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
             Map<String, RD2_StatusMapper.Mapping> mappingByStatus = statusMapper.getAll();
 
             //get read-only mapping records first
-            for (String status : RD2_StatusMapper.READ_ONLY_STATUS_VALUES) {
+            for (String status : RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.keySet()) {
                 RD2_StatusMapper.Mapping mapping = mappingByStatus.get(status);
                 if (mapping != null) {
                     mappings.add(new Mapping(mapping));
@@ -174,7 +174,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
             //get other mapping records next
             for (String status : mappingByStatus.keySet()) {
-                if (!RD2_StatusMapper.READ_ONLY_STATUS_VALUES.contains(status)) {
+                if (!RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.keySet().contains(status)) {
                     mappings.add(new Mapping(mappingByStatus.get(status)));
                 }
             }
@@ -226,7 +226,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     /**
      * @description Builds custom metadata records from status to state mapping records.
      * Only admin added Status field picklist values are saved while
-     * Active, Lapsed and Closed read-only status mapping are not stored into the CMT.
+     * Active, Lapsed, Paused and Closed read-only status mapping are not stored into the CMT.
      * @param jsonMapping JSON representation of mapping records
      * @return List<Metadata.CustomMetadata>
      */
@@ -238,7 +238,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         List<Metadata.CustomMetadata> records = new List<Metadata.CustomMetadata>();
         for (Mapping mapping : mappings) {
-            if (!RD2_StatusMapper.READ_ONLY_STATUS_VALUES.contains(mapping.status)) {
+            if (!RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.keySet().contains(mapping.status)) {
                 records.add(buildCustomMetadata(mapping));
             }
         }

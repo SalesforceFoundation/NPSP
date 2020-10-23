@@ -460,6 +460,11 @@
                     <default>false</default>
                     <label>Closed</label>
                 </value>
+                <value>
+                    <fullName>Paused</fullName>
+                    <default>false</default>
+                    <label>Paused</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
