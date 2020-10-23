@@ -473,6 +473,14 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Recurring Donation Status to Paused
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusPaused() {
+        return withStatus(RD2_Constants.STATUS_PAUSED);
+    }
+
+    /***
     * @description Sets Status field
     * @param status Status value
     * @return TEST_RecurringDonationBuilder Builder instance

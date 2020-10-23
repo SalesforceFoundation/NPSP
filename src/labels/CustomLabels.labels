@@ -1513,7 +1513,7 @@
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2390,6 +2390,14 @@
         <protected>true</protected>
         <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
         <value>You&apos;ve selected 1 installment.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseStatusMustExist</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
+        <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
