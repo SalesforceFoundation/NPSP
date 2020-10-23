@@ -43,6 +43,7 @@ public with sharing class RD2_ScheduleService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final String PAYMENT_ACH_EFT = 'ACH/EFT';
     private static final Integer NUM_INSTALLMENTS = 12;
+    public static final String PAUSE_REASON = 'Unknown';
 
 
     /****
@@ -2276,7 +2277,7 @@ public with sharing class RD2_ScheduleService_TEST {
             StartDate__c = startDate,
             EndDate__c = endDate,
             IsPause__c = true,
-            StatusReason__c = 'Unknown'
+            StatusReason__c = PAUSE_REASON
         );
     }
 
