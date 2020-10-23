@@ -1,20 +1,24 @@
 .container > h1 {
     margin-bottom: 1rem;
-    font-size: 16pt;
+    font-size: 15px;
     font-weight: bold;
+    color: #2B2B26;
 }
 
 .container {
-    padding: 1.5rem;
+    padding: 28px 24px;
     background-color: #ffffff;
     border: solid 1px #DDDBDA;
     box-shadow: 1px 5px 3px -3px #b0adab7a;
 }
 
 .container .resource-list .resource-item {
-    padding: 1rem 0;
+    height: 80px;
     border-top: solid 1px  #DDDBDA;
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -28,12 +32,39 @@
 }
 
 .container .link > a {
-    color: #006DDC;
-    font-size: 16pt;
+    color: #0070DC;
+}
+
+.container .label {
+    padding-right: 2rem;
+}
+
+.container .label > span, .container .link > a  {
+    font-size: 15px;
     font-weight: 400;
 }
 
-.container .label > span {
-    font-size: 16pt;
-    font-weight: 400;
+@media(max-width: 1345px) {
+    .container .resource-list .resource-item {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-evenly;
+    }
+}
+
+
+@media(max-width: 760px) {
+    .container .resource-list .resource-item {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media(max-width: 500px) {
+    .container .resource-list .resource-item {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-evenly;
+    }
 }
