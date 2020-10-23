@@ -2434,6 +2434,21 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsResourcesItemFundraisingLabel</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
+        <members>gsResourcesItemHubLabel</members>
+        <members>gsResourcesItemHubLinkLabel</members>
+        <members>gsResourcesItemMarketingEngagementLabel</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
+        <members>gsResourcesItemNonprofitCloudLabel</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
+        <members>gsResourcesItemPartnersLabel</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
+        <members>gsResourcesItemProgramManagementLabel</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
+        <members>gsResourcesItemWebinarsLabel</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
+        <members>gsResourcesTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3845,6 +3860,7 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsResources</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>
