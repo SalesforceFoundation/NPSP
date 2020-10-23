@@ -1891,6 +1891,154 @@ private class RD2_OpportunityEvaluationService_TEST {
             'No Opportunity should be created when the Disable First Installment is true');
     }
 
+    /**
+    * @description Verifies that when RD's next installment is skipped(paused),
+    * the RD status will be updated to Pause when the nightly batch job runs
+    */
+    @isTest
+    private static void shouldUpdateRDToPauseStatusWhenNextInstallmentIsPaused() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseDate = Date.newInstance(2020, 2, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .build();
+
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseDate, pauseDate);
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .withCurrentDate(today.addDays(10))
+            .evaluateOpportunities();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, rd.Status__c,
+            'Rd status should be paused when the next installment is paused');
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
+            'The pause reason shuold be updated according to the user selection');
+    }
+
+    /**
+    * @description Verifies that when the RD is in the middle of pause period
+    * the RD status should stay as Paused when the nightly batch job runs
+    */
+    @isTest
+    private static void shouldStayInPauseWhenRDIsInPausedPeriod() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseStartDate = Date.newInstance(2020, 2, 1);
+        Date pauseEndDate = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .withStatusPaused()
+            .build();
+
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .withCurrentDate(pauseStartDate.addDays(10))
+            .evaluateOpportunities();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, rd.Status__c,
+            'Rd status should be paused when the next installment is paused');
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
+            'The pause reason shuold be updated according to the user selection');
+    }
+
+    /**
+    * @description Verifies that when RD pause period is over,
+    * RD status should be updated to Active when the nightly batch job runs
+    */
+    @isTest
+    private static void shouldUpdateRDToActiveWhenPausedPeriodIsOver() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseStartDate = Date.newInstance(2020, 2, 1);
+        Date pauseEndDate = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .withStatusPaused()
+            .build();
+
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .withCurrentDate(pauseEndDate.addDays(1))
+            .evaluateOpportunities();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'Rd status should be updated to Active when the next pause is over');
+        System.assertEquals(null, rd.ClosedReason__c,
+            'The pause reason shuold be clear out when pause is over');
+    }
+
+        /**
+    * @description Verifies that when RD is entering the paused,
+    * the next installment will be created with close date after the pause
+    */
+    @isTest
+    private static void shouldSkippedPausedInstallmentsWhenRDStatusIsPause() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseStartDate = Date.newInstance(2020, 2, 1);
+        Date pauseEndDate = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .withStatusPaused()
+            .build();
+
+        insert rd;
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .withCurrentDate(today.addDays(1))
+            .evaluateOpportunities();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+        Set<Datetime> installmentsClosedDate = UTIL_SObject.extractDatetime(installments, Opportunity.CloseDate);
+
+        System.assert(installmentsClosedDate.contains(pauseEndDate.addMonths(1)),
+            'An installment with close date after pause shuold be created');
+
+            System.assert(!installmentsClosedDate.contains(pauseStartDate),
+            'No installment should be created with close date during the pause');
+    }
+
     // Helpers
     ///////////////////
 
