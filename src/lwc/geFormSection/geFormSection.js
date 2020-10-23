@@ -7,8 +7,8 @@ const COLLAPSED_DISPLAY_MODE = 'collapsed';
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
+    @api formState;
     @track hasCreditCardWidget = false;
-
 
     renderedCallback() {
         this.registerCreditCardWidget();
@@ -22,7 +22,6 @@ export default class GeFormSection extends LightningElement {
     get altTextLabel() {
         return 'Toggle ' + this.section.label;
     }
-
 
     get isCollapsed() {
         return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
@@ -137,10 +136,6 @@ export default class GeFormSection extends LightningElement {
                         data,
                         [fieldCmp.sourceFieldAPIName]));
             }
-
-            if (data.recordTypeId || data.recordTypeId === null) {
-                fieldCmp.recordTypeId = data.recordTypeId;
-            }
         });
 
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
@@ -150,28 +145,29 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    reset(fieldMappingDevNames = null, setDefaults = true) {
+    reset(applyDefaultValues = true) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
         fields.forEach(field => {
-            if (fieldMappingDevNames) {
-                // reset the fields elements related to
-                // these field mappings
-                if (fieldMappingDevNames.includes(
-                    field.element.dataImportFieldMappingDevNames[0]
-                )) {
-                    field.reset(setDefaults);
-                }
-            } else {
-                // reset all field elements in this section
-                field.reset(setDefaults);
-            }
+            field.reset(applyDefaultValues);
         });
 
         widgetList.forEach(widget => {
             widget.reset();
         });
+    }
+
+    @api
+    resetFieldsForFieldMappingsApplyDefaults(fieldMappingDevNames) {
+        this.template.querySelectorAll('c-ge-form-field')
+            .forEach(field => {
+                if (fieldMappingDevNames.includes(
+                    field.element.dataImportFieldMappingDevNames[0]
+                )) {
+                    field.reset();
+                }
+            });
     }
 
     handleLookupRecordSelect(event) {
@@ -182,13 +178,6 @@ export default class GeFormSection extends LightningElement {
                 objectMappingDevName: event.objectMappingDevName
             });
         this.dispatchEvent(selectEvent);
-    }
-
-    handleChangeDonationDonor(event) {
-        const changeDonationDonorEvent = new CustomEvent(
-            'changedonationdonor',
-            { detail: event.detail });
-        this.dispatchEvent(changeDonationDonorEvent);
     }
 
     /**
@@ -262,18 +251,8 @@ export default class GeFormSection extends LightningElement {
         return fieldData;
     }
 
-    @api
-    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
-        this.template.querySelectorAll('c-ge-form-field')
-            .forEach(field => {
-                // Currently only picklists need their selected record's RecordType Id,
-                // since they use it to update their available options
-                if (field.isPicklist) {
-                    if (field.targetObjectMappingDevName === objectMappingDevName) {
-                        field.recordTypeId = recordTypeId;
-                    }
-                }
-            });
+    handleFormFieldChange(event) {
+        this.dispatchEvent(new CustomEvent('formfieldchange', {detail: event.detail}));
     }
 
 }
