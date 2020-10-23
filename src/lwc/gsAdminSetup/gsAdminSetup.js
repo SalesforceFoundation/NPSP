@@ -2,7 +2,6 @@ import { LightningElement, track } from 'lwc';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
 import data from './data';
 
-
 /*
 * @description This class control all the Admin Checklist information
 */
@@ -13,7 +12,7 @@ export default class gsAdminSetup extends LightningElement {
     /**
     * Return title to display in UI
     * @return      Title text
-    * @see         Label
+    * @see         labels
     */
     get title() {
         return gsAdminSetupTitle;

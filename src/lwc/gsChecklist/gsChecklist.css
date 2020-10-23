@@ -48,3 +48,15 @@ c-gs-checklist-icon {
 .slds-media.info.open  .steps {
     display: inline;
 }
+
+.slds-m-left_x-small {
+    color: #706e6b;
+}
+
+.slds-setup-assistant__step-summary-title {
+    cursor: pointer;
+}
+
+.slds-m-left_x-small:focus {
+    box-shadow: none;
+}

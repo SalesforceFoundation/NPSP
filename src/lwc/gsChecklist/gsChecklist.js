@@ -2,17 +2,20 @@ import { LightningElement, api, track } from 'lwc';
 import gsChecklistArrowRightAlterText from '@salesforce/label/c.gsChecklistArrowRightAlterText';
 import gsChecklistArrowDownAlterText from '@salesforce/label/c.gsChecklistArrowDownAlterText';
 
+/*
+*  @description This class controller the checklist to render and his items
+*/
 export default class gsChecklist extends LightningElement {
     
     /**
-    * Group of step in a checklist
+    * @description Group of step in a checklist
     * @type      Checklist
     */
     @api group;
     @track open = false;
 
     /**
-    * Return if display the checklist item step
+    * @description Return if display the checklist item step
     * @return      Boolean
     * @see         Boolean
     */
@@ -21,7 +24,7 @@ export default class gsChecklist extends LightningElement {
     }
 
     /**
-    * Return css class to display info section
+    * @description Return css class to display info section
     * @return      String
     * @see         Css class
     */
@@ -34,7 +37,7 @@ export default class gsChecklist extends LightningElement {
     }
 
     /**
-    * Click event handler to display or not info section
+    * @description Click event handler to display or not info section
     * @return      void
     * @see         Action
     */
@@ -42,22 +45,42 @@ export default class gsChecklist extends LightningElement {
         this.open = !this.open;
     }
     
+    /**
+    * @description This method return a expanded Id
+    * @return      String
+    */
     get expandedId() {
         return `section-${this.group ? this.group.id : '0'}`;
     }
 
+    /**
+    * @description Return to display the the collapsable panel
+    * @return      Boolean
+    */
     get notOpen() {
         return !this.open;
     }
 
+    /**
+    * @description Return alterText to arrow button
+    * @return      String
+    */
     get arrowAlterText() {
         return this.open ? gsChecklistArrowRightAlterText :  gsChecklistArrowDownAlterText;
     }
 
+    /**
+    * @description Return icon to arrow button
+    * @return      String
+    */
     get arrowIcon() {
         return this.open ? 'utility:chevrondown' :  'utility:chevronright';
     }
 
+    /**
+    * @description Return id to arrow button
+    * @return      String
+    */
     get arrowId() {
         return `arrow-${this.group ? this.group.id : '0'}`;
     }
