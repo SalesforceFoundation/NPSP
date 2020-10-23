@@ -18,7 +18,7 @@
         let domain = arr[0].replace('--npsp', '');
         domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
-        
+
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         let nameOnCard = DEFAULT_NAME_ON_CARD;
 
@@ -27,6 +27,7 @@
             id: 'payments',
             clientId: '{!productId}',
             gatewayId: '{!gatewayIds}',
+            merchantId: '{!merchantIds}',
             designSystem: 'Lightning',
             styles: '' +
                 '.logo {' +
@@ -87,10 +88,13 @@
         * @description Creates a token and posts the response to a credit card widget LWC
         */
         function handleTokenCreation() {
-// TODO Remove this line in W-8021204
-console.log('>>> Tokenize with Name On Card: "' + nameOnCard + '"');
+            const auth = {
+                jwt: '{!jwtForToken}',
+                userName: '{!$User.Username}'
+            }
             sfdo
                 .createToken({
+                    auth: auth,
                     nameOnCard: nameOnCard
                 })
                 .then(function response(resp) {
