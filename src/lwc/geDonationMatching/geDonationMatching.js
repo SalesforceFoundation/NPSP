@@ -46,7 +46,7 @@ export default class geDonationMatching extends LightningElement {
     */
     handlePayment(fields) {
         const detail = { receiverComponent: this.receiverComponent, payment: fields };
-        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, { detail });
     }
 
     /*******************************************************************************
@@ -56,7 +56,7 @@ export default class geDonationMatching extends LightningElement {
     */
     handleOpportunity(fields) {
         const detail = { receiverComponent: this.receiverComponent, opportunity: fields };
-        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, { detail });
     }
 
     /*******************************************************************************
@@ -65,8 +65,14 @@ export default class geDonationMatching extends LightningElement {
     * component that listening to pubsub channel this.dedicatedListenerEventName.
     */
     handleNewOpportunity() {
-        const detail = { receiverComponent: this.receiverComponent, opportunity: { new: true } };
-        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
+        const detail = {
+            receiverComponent: this.receiverComponent,
+            opportunity: {
+                new: true,
+                attributes: {type: OPPORTUNITY_OBJECT.objectApiName}
+            }
+        };
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, { detail });
     }
 
     // ================================================================================
