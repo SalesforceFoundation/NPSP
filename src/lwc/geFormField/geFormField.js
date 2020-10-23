@@ -78,10 +78,6 @@ export default class GeFormField extends LightningElement {
         this.fireValueChangeEvent();
         this.fireFormFieldChangeEvent(value);
 
-        if (this.isLookup) {
-            this.fireLookupRecordSelectedEvent(event);
-        }
-
         if (this.isRichText) {
             this.checkRichTextValidity();
         }
@@ -97,17 +93,6 @@ export default class GeFormField extends LightningElement {
             this.dispatchEvent(evt);
         }
     };
-
-    fireLookupRecordSelectedEvent() {
-        const lookupDetail = {
-            fieldApiName: this.element.fieldApiName,
-            value: this.value
-        };
-        const selectRecordEvent = new CustomEvent('lookuprecordselect', {
-            detail: lookupDetail
-        });
-        this.dispatchEvent(selectRecordEvent);
-    }
 
     fireValueChangeEvent() {
         const detail = {
@@ -493,20 +478,6 @@ export default class GeFormField extends LightningElement {
         } else {
             this.value = null;
         }
-    }
-
-    fireLookupRecordSelectEvent() {
-        this.dispatchEvent(new CustomEvent(
-            'lookuprecordselect',
-            {
-                detail: {
-                    value: this.value,
-                    displayValue: this.value,
-                    fieldApiName: this.targetFieldApiName,
-                    objectMappingDevName: this.targetObjectMappingDevName
-                }
-            }
-        ));
     }
 
     /**

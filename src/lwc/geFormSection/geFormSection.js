@@ -170,16 +170,6 @@ export default class GeFormSection extends LightningElement {
             });
     }
 
-    handleLookupRecordSelect(event) {
-        const selectEvent = new CustomEvent(
-            'lookuprecordselect',
-            {
-                detail: event.detail,
-                objectMappingDevName: event.objectMappingDevName
-            });
-        this.dispatchEvent(selectEvent);
-    }
-
     /**
      * @description Inspects all fields and widgets in the section and
      *              returns a list of DataImport__c field api names used as

@@ -1232,25 +1232,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
     }
 
-    handleLookupRecordSelect(event) {
-        const recordId = event.detail.value; // Reset the field if null
-        const fieldApiName = event.detail.fieldApiName;
-
-        if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
-            return false;
-        }
-
-        if (event.detail.hasOwnProperty('value') && recordId !== null) {
-            this.loadSelectedRecordFieldValues(fieldApiName, recordId);
-        } else {
-            // Reset all fields related to this lookup field's object mapping
-            this.resetFieldsForObjMappingApplyDefaults(
-                this.objectMappingDeveloperNameFor(fieldApiName));
-        }
-
-        this.handleDonorLookupFieldsChange(fieldApiName, recordId);
-    }
-
     handleDonorLookupFieldsChange(fieldApiName, recordId) {
         if (fieldApiName === DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName) {
             this.handleDonorAccountChange(recordId);
@@ -1886,10 +1867,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const value = event.detail.value,
             label = event.detail.label,
             sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
-            isDonationRecordTypeName =
-                sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName,
-            isDonationDonor =
-                sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName;
+            isDonationRecordTypeName = this.isDonationRecordTypeName(sourceField),
+            isDonationDonor = this.isDonationDonor(sourceField),
+            isImportedRecordField = this.isImportedRecordField(sourceField);
 
         this.updateFormState({
             [sourceField]: isDonationRecordTypeName ? label : value
@@ -1901,6 +1881,35 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (isDonationDonor) {
             this.handleDonationDonorChange(value)
+        }
+
+        if (isImportedRecordField) {
+            this.handleImportedRecordFieldChange(sourceField, value);
+        }
+    }
+
+    isDonationDonor(fieldApiName) {
+        return fieldApiName === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName;
+    }
+
+    isDonationRecordTypeName(fieldApiName) {
+        return fieldApiName === DONATION_RECORD_TYPE_NAME.fieldApiName;
+    }
+
+    handleImportedRecordFieldChange(sourceField, value) {
+        this.populateRelatedFieldsForSelectedLookupRecord(sourceField, value);
+
+        if (this.isDonorLookupField(sourceField)) {
+            this.handleDonorLookupFieldsChange(sourceField, value);
+        }
+    }
+
+    populateRelatedFieldsForSelectedLookupRecord(sourceField, value) {
+        if (value && value !== null) {
+            this.loadSelectedRecordFieldValues(sourceField, value);
+        } else {
+            this.resetFieldsForObjMappingApplyDefaults(
+                this.objectMappingDeveloperNameFor(sourceField));
         }
     }
 
@@ -2109,6 +2118,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.sections.flat()
             .map(({elements}) => elements)
             .flat();
+    }
+
+    isImportedRecordField(fieldApiName) {
+        return GeFormService.importedRecordFieldNames.includes(fieldApiName);
+    }
+
+    isDonorLookupField(fieldApiName) {
+        return this.isDonorAccountField(fieldApiName) ||
+            this.isDonorContactField(fieldApiName);
+    }
+
+    isDonorAccountField(fieldApiName) {
+        return fieldApiName === DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+    }
+
+    isDonorContactField(fieldApiName) {
+        return fieldApiName === DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
     }
 
 }
