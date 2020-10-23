@@ -1,0 +1,27 @@
+{
+    "apiName": "TestObject__c",
+    "defaultRecordTypeId": "000000000000000001",
+    "recordTypeInfos": {
+        "000000000000000000": {
+            "available": false,
+            "defaultRecordTypeMapping": false,
+            "master": true,
+            "name": "Master",
+            "recordTypeId": "000000000000000000"
+        },
+        "000000000000000001": {
+            "available": true,
+            "defaultRecordTypeMapping": true,
+            "master": false,
+            "name": "Record Type 1",
+            "recordTypeId": "000000000000000001"
+        },
+        "000000000000000002": {
+            "available": true,
+            "defaultRecordTypeMapping": false,
+            "master": false,
+            "name": "Record Type 2",
+            "recordTypeId": "000000000000000002"
+        }
+    }
+}
