@@ -922,6 +922,48 @@ public without sharing class RD2_ScheduleService {
         return endDate;
     }
 
+    /**
+    * @description Indicate if on the reference date, the schedule is currently in paused
+    * @param referenceDate Reference Date
+    * @param schedules Recurring Donation Schedules
+    * @return Boolean
+    */
+    public Boolean isCurrentlyPaused(Date referenceDate, List<RecurringDonationSchedule__c> schedules) {
+        RecurringDonationSchedule__c nextPauseSchedule = getNextActivePauseSchedule(referenceDate, schedules);
+        
+        if (nextPauseSchedule == null) {
+            return false;
+        }
+
+        List<RD2_ScheduleService.Installment> installments = getVisualizedInstallments(
+            referenceDate,
+            nextPauseSchedule.StartDate__c.addDays(-1),
+            schedules
+        );
+
+        return installments.isEmpty();
+    }
+
+    /**
+    * @description Get the next active paused schedule
+    * @param referenceDate Reference Date
+    * @param rdSchedules Recurring Donation Schedules
+    * @return RecurringDonationSchedule__c
+    */
+    public RecurringDonationSchedule__c getNextActivePauseSchedule(Date referenceDate, List<RecurringDonationSchedule__c> rdSchedules) {
+        RecurringDonationSchedule__c nextActive;
+
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (pauseHandler.isActivePause(schedule, referenceDate)
+                && ( nextActive == null || schedule.StartDate__c <= nextActive.StartDate__c)
+            ) {
+                nextActive = schedule;
+            }
+        }
+
+        return nextActive;
+    }
+
     /***
     * @description Wrapper class for Recurring Donation Installment data
     */
