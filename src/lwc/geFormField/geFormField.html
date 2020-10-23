@@ -1,15 +1,15 @@
 <template>
     <template if:true={isLightningInput}>
         <lightning-input data-id='inputComponent'
-            value={value}
-            type={inputType}
-            formatter={formatter}
-            step={granularity}
-            required={required}
-            onchange={handleValueChange}
-            label={fieldLabel}
-            disabled={disabled}
-            data-qa-locator={qaLocatorInput}>
+                         value={value}
+                         type={inputType}
+                         formatter={formatter}
+                         step={granularity}
+                         required={required}
+                         onchange={handleValueChange}
+                         label={fieldLabel}
+                         disabled={disabled}
+                         data-qa-locator={qaLocatorInput}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
@@ -18,67 +18,53 @@
                 <abbr class="slds-required" title="required" if:true={required}>* </abbr>
                 {fieldLabel}
             </label>
-            <lightning-input-field
-                    data-id='inputComponent'
-                    field-name={lookupFieldApiName}
-                    onchange={handleValueChange}
-                    required={required}
-                    variant="label-hidden"
-                    class="help-text-hidden"
-                    value={element.defaultValue}
-                    data-qa-locator={qaLocatorLookup}
-            ></lightning-input-field>
+            <lightning-input-field data-id='inputComponent'
+                                   field-name={lookupFieldApiName}
+                                   onchange={handleValueChange}
+                                   required={required}
+                                   variant="label-hidden"
+                                   class="help-text-hidden"
+                                   value={value}
+                                   data-qa-locator={qaLocatorLookup}>
+            </lightning-input-field>
         </lightning-record-edit-form>
-    </template>
-    <template if:true={isLookupRecordType}>
-        <c-ge-form-field-lookup data-id='inputComponent'
-                                field-api-name={targetFieldApiName}
-                                object-api-name={objectApiName}
-                                onchange={handleValueChange}
-                                default-value={element.defaultValue}
-                                required={required}
-                                id={element.id}
-                                object-describe-info={objectDescribeInfo}
-                                label={fieldLabel}
-                                disabled={disabled}
-                                qa-locator-base={qaLocatorBase}>
-        </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
-            <abbr class="slds-required" title="required" if:true={required}>*</abbr>
+            <abbr class="slds-required"
+                  title="required"
+                  if:true={required}>
+                *
+            </abbr>
             {fieldLabel}
         </label>
         <lightning-input-rich-text data-id='inputComponent'
-            formats={richTextFormats}
-            value={value}
-            onblur={handleValueChangeSync}
-            label={fieldLabel}
-            valid={richTextValid}
-            message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
-            data-qa-locator={qaLocatorRichText}>
+                                   formats={richTextFormats}
+                                   value={value}
+                                   onblur={handleValueChangeSync}
+                                   label={fieldLabel}
+                                   valid={richTextValid}
+                                   message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
+                                   data-qa-locator={qaLocatorRichText}>
         </lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
-        <c-ge-form-field-picklist data-id='inputComponent'
-            value={value}
-            required={required}
-            field-name={targetFieldApiName}
-            object-name={objectApiName}
-            onchange={handleValueChange}
-            label={fieldLabel}
-            object-describe-info={objectDescribeInfo}
-            record-type-id={recordTypeId}
-            qa-locator-base={qaLocatorBase}>
-        </c-ge-form-field-picklist>
+        <lightning-combobox data-id='inputComponent'
+                            value={value}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            options={picklistValues}
+                            data-qa-locator={qaLocatorPicklist}
+                            required={required}>
+        </lightning-combobox>
     </template>
     <template if:true={isTextArea}>
         <lightning-textarea data-id='inputComponent'
-            value={value}
-            required={required}
-            onchange={handleValueChange}
-            label={fieldLabel}
-            data-qa-locator={qaLocatorTextArea}>
+                            value={value}
+                            required={required}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            data-qa-locator={qaLocatorTextArea}>
         </lightning-textarea>
     </template>
 </template>
