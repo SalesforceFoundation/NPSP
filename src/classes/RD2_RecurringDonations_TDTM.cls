@@ -184,7 +184,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd, oppsByRDId.get(rd.Id))
                     .revisePlannedInstallments()
-                    .reviseStatus(currentDate)
+                    .reviseStatus(currentDate, scheduleService)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
 
                 preventScheduleChangeWhenPaused(rdRecord, oldRdsById.get(rd.Id), schedulesByRdId.get(rd.Id));
