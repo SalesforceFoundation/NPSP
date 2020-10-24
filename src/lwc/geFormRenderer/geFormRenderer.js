@@ -28,7 +28,7 @@ import {
     getNamespace,
     getSubsetObject,
     validateJSONString,
-    relatedRecordFieldNameFor
+    relatedRecordFieldNameFor, apiNameFor
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -118,13 +118,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _hasCreditCardWidget = false;
 
     erroredFields = [];
-    CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
+    CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
     @track dataImport = {}; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
-    @track selectedDonorId;
+    // @track selectedDonorId;
+
     @track selectedDonation;
     @track selectedDonationDataImportFieldValues = {};
 
@@ -1441,7 +1442,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     lookupFieldApiNameBySelectedRecordId = {};
-    
+
     getQualifiedFieldName(objectInfo, fieldInfo) {
         return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
     }
@@ -1997,7 +1998,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const recordTypeInfo = Object.values(this.opportunityRecordTypeInfos)
             .find(recordTypeInfo =>
                 recordTypeInfo.name === opportunityRecordTypeName);
-        
+
         if (!recordTypeInfo) return null;
         return recordTypeInfo.recordTypeId;
     }
@@ -2135,6 +2136,40 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     isDonorContactField(fieldApiName) {
         return fieldApiName === DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+    }
+
+    selectedDonorId() {
+        if (this.isDonorTypeContact()) {
+            return this.donorContactId();
+        } else if (this.isDonorTypeAccount()) {
+            return this.donorAccountId();
+        } else {
+            return null;
+        }
+    }
+
+    isDonorTypeContact() {
+        return this.getFieldValueFromFormState(
+            apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)
+        ) === DONATION_DONOR_TYPE_ENUM.CONTACT1;
+    }
+
+    isDonorTypeAccount() {
+        return this.getFieldValueFromFormState(
+            apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)
+        ) === DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+    }
+
+    donorContactId() {
+        return this.getFieldValueFromFormState(
+            apiNameFor(DATA_IMPORT_CONTACT1_IMPORTED_FIELD)
+        );
+    }
+
+    donorAccountId() {
+        return this.getFieldValueFromFormState(
+            apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD)
+        );
     }
 
 }
