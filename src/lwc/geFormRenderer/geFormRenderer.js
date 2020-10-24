@@ -2055,7 +2055,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     donorType() {
         return this.getFieldValueFromFormState(
-            DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName);
+            apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD));
     }
 
     /**
@@ -2149,15 +2149,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     isDonorTypeContact() {
-        return this.getFieldValueFromFormState(
-            apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)
-        ) === DONATION_DONOR_TYPE_ENUM.CONTACT1;
+        return this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1;
     }
 
     isDonorTypeAccount() {
-        return this.getFieldValueFromFormState(
-            apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)
-        ) === DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+        return this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
     }
 
     donorContactId() {
