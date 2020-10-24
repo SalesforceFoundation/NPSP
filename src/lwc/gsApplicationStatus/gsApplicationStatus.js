@@ -77,8 +77,8 @@ export default class GsApplicationStatus extends LightningElement {
      */
     calculateTrialRemainingDays(result) {
         if (result.trialExpirationDate) {
-            const date = new Date(result.trialExpirationDate)
-            const oneDay = 24 * 60 * 60 * 1000
+            const date = new Date(result.trialExpirationDate);
+            const oneDay = 24 * 60 * 60 * 1000;
             const today = new Date();
             return Math.ceil(Math.abs(date - today)/oneDay);
         }
@@ -91,7 +91,7 @@ export default class GsApplicationStatus extends LightningElement {
      * @returns True if data has an applicationDate field, false otherwise.
      */
     checkApplicationSubmitted(result) {
-        return result.applicationDate !== null;
+        return result.applicationDate !== undefined && result.applicationDate !== null;
     }
 
     /**

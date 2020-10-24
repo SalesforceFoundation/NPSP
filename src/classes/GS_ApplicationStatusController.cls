@@ -59,8 +59,7 @@ public with sharing class GS_ApplicationStatusController {
         ApplicationStatus status = new ApplicationStatus();
         status.isSandbox = GS_NonprofitTrialOrgService.isSandbox();
         status.trialExpirationDate = GS_NonprofitTrialOrgService.getExpirationDate();
-        Date applicationDate = GS_NonprofitTrialOrgService.getApplicationDate();
-        status.applicationDate = applicationDate;
+        status.applicationDate = GS_NonprofitTrialOrgService.getApplicationDate();
         return status;
     }
     

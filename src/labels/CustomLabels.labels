@@ -7577,7 +7577,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsApplicationStatus</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Application Status label for the application status component</shortDescription>
@@ -7585,7 +7585,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsApplicationStatusModalHeader</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header of the modal label for the application status component</shortDescription>
@@ -7593,7 +7593,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsApplyForFreeLicenses</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Apply for licencses button label for the application status component</shortDescription>
@@ -7601,7 +7601,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsCheckStatus</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Check Status label for the application status component</shortDescription>
@@ -7609,7 +7609,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsClose</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Close label in the modal for the application status component</shortDescription>
@@ -7617,7 +7617,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsDaysAdded</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Days added label for the application status component</shortDescription>
@@ -7625,7 +7625,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsDaysRemainingInFreeTrial</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsDaysRemainingInFreeTrial</shortDescription>
@@ -7633,7 +7633,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Follow up Application Status label for the application status component</shortDescription>
@@ -7641,7 +7641,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsLearnMore</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Learn more label for the application status component</shortDescription>
@@ -7649,7 +7649,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>No application submitted label for the application status component</shortDescription>
@@ -7657,7 +7657,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>gsSubmitted</fullName>
-        <categories>gettingStarted</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Submitted Status label for the application status component</shortDescription>
