@@ -33,7 +33,7 @@
 * @group Elevate Payment Services
 * @description Tests verifying Elevate payment services commitment request
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 private with sharing class PS_CommitmentRequest_TEST {
 
     private static final String PAYMENT_TOKEN = 'token-abcd-efgh-ijkl-mnop-qrst';
