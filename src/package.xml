@@ -1788,6 +1788,7 @@
         <members>RD2_PauseSaveSuccessMessage</members>
         <members>RD2_PauseSelectedInstallmentTextPlural</members>
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
@@ -2433,6 +2434,7 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+<<<<<<< HEAD
         <members>gsAdminSetupTitle</members>
         <members>gsChecklistArrowDownAlterText</members>
         <members>gsChecklistArrowRightAlterText</members>
@@ -2442,6 +2444,23 @@
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
         <members>gsChecklistOnboardUsersTitle</members>
+=======
+        <members>gsResourcesItemFundraisingLabel</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
+        <members>gsResourcesItemHubLabel</members>
+        <members>gsResourcesItemHubLinkLabel</members>
+        <members>gsResourcesItemMarketingEngagementLabel</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
+        <members>gsResourcesItemNonprofitCloudLabel</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
+        <members>gsResourcesItemPartnersLabel</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
+        <members>gsResourcesItemProgramManagementLabel</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
+        <members>gsResourcesItemWebinarsLabel</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
+        <members>gsResourcesTitle</members>
+>>>>>>> 880d36a5364f6e337797426078858247081de0fb
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3853,9 +3872,13 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+<<<<<<< HEAD
         <members>gsAdminSetup</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
+=======
+        <members>gsResources</members>
+>>>>>>> 880d36a5364f6e337797426078858247081de0fb
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>
