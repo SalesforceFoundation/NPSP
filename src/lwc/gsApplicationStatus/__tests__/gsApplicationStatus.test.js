@@ -1,13 +1,15 @@
-import { createElement} from 'lwc';
+import { createElement } from 'lwc';
+import { registerSa11yMatcher } from '@sa11y/jest'
+
 import GsApplicationStatus from 'c/gsApplicationStatus'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
+
+registerSa11yMatcher();
 
 /**
  * @description Unit testing for gsApplicationStatus components.
  * It checks that elements that has to be rendered are present according to the information about application status
  */
-
-
 jest.mock('@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus', () => {
     return {
         default: jest.fn()
@@ -60,6 +62,7 @@ describe('c-application-status', () => {
         then(() => {
             const button = element.shadowRoot.querySelector('.slds-button');
             expect(button.innerHTML).toBe('c.gsApplyForFreeLicenses');
+            expect(button).toBeAccessible();
             const daysLeft = element.shadowRoot.querySelector(".daysLeft");
             expect(daysLeft.innerHTML).toContain('15');
             const img = element.shadowRoot.querySelector('img').getAttribute('src');
@@ -84,6 +87,7 @@ describe('c-application-status', () => {
         then(() => {
             const button = element.shadowRoot.querySelector('.slds-button');
             expect(button.innerHTML).toBe('c.gsCheckStatus');
+            expect(button).toBeAccessible();
             const daysLeft = element.shadowRoot.querySelector(".daysLeft");
             expect(daysLeft.innerHTML).toContain('15');
             const img = element.shadowRoot.querySelector('img').getAttribute('src');
