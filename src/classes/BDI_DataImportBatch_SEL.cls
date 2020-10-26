@@ -61,7 +61,8 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Records_Successfully_Processed__c,
                     Post_Process_Implementing_Class__c,
                     Run_Opportunity_Rollups_while_Processing__c,
-                    Batch_Status__c
+                    Batch_Status__c,
+                    Batch_Number__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }
