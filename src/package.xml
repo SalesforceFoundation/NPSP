@@ -2434,7 +2434,6 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
-<<<<<<< HEAD
         <members>gsAdminSetupTitle</members>
         <members>gsChecklistArrowDownAlterText</members>
         <members>gsChecklistArrowRightAlterText</members>
@@ -2444,7 +2443,6 @@
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
         <members>gsChecklistOnboardUsersTitle</members>
-=======
         <members>gsResourcesItemFundraisingLabel</members>
         <members>gsResourcesItemFundraisingLinkLabel</members>
         <members>gsResourcesItemHubLabel</members>
@@ -2460,7 +2458,6 @@
         <members>gsResourcesItemWebinarsLabel</members>
         <members>gsResourcesItemWebinarsLinkLabel</members>
         <members>gsResourcesTitle</members>
->>>>>>> 880d36a5364f6e337797426078858247081de0fb
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3872,13 +3869,12 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
-<<<<<<< HEAD
+        <members>gsAccordionLabel</members>
+        <members>gsAccordionSection</members>
         <members>gsAdminSetup</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
-=======
         <members>gsResources</members>
->>>>>>> 880d36a5364f6e337797426078858247081de0fb
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>

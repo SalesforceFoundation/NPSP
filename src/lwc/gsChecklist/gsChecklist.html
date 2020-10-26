@@ -14,32 +14,18 @@
             <div class="slds-container_fluid">
                 <div class="slds-summary-detail__title">
                     <div class="slds-setup-assistant__step-summary">
-                        <div class="slds-media">
-                            <c-gs-checklist-icon label={group.id}>
-                            </c-gs-checklist-icon>
-                            <div class="slds-media__body slds-m-top_x-small">
-                                <div class="slds-media">
-                                    <div class="slds-setup-assistant__step-summary-content slds-media__body">
-                                        <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small"
-                                            onclick={onClickOpenOrClose}>
-                                                {group.title}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class={infoClass}>
-                            <div class="border">
-                                <div class="gap"></div>
-                            </div>
-                            <div class="container">
-                                <p>{group.desc}</p>
-                                <div aria-hidden={notOpen} id={expandedId} class="slds-section steps">
-                                    <!--Mock to add in another spring more info-->
-                                    <p style="margin:3rem;height: 10rem;">Items</p>
-                                </div>
-                            </div>
-                        </div>
+                        <c-gs-accordion-label
+                            number={group.id}
+                            title={group.title}
+                            onclicktitle={onClickOpenOrClose}>
+                        </c-gs-accordion-label>
+                        <c-gs-accordion-section
+                            open={open}
+                            expanded-id={expandedId}
+                            label={group.desc}>
+                            <!--Mock to add in another spring more info-->
+                            <p style="margin:3rem;height: 10rem;">Items</p>
+                        </c-gs-accordion-section>
                     </div>
                 </div>
             </div>

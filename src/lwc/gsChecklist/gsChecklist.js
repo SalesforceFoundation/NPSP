@@ -14,27 +14,6 @@ export default class gsChecklist extends LightningElement {
     @api group;
     @track open = false;
 
-    /**
-    * @description Return if display the checklist item step
-    * @return      Boolean
-    * @see         Boolean
-    */
-    get displaySteps() {
-        return this.open;
-    }
-
-    /**
-    * @description Return css class to display info section
-    * @return      String
-    * @see         Css class
-    */
-    get infoClass() {
-        const classNames = ['slds-media', 'info'];
-        if (this.displaySteps) {
-            classNames.push('open');
-        }
-        return classNames.join(' '); 
-    }
 
     /**
     * @description Click event handler to display or not info section
@@ -51,14 +30,6 @@ export default class gsChecklist extends LightningElement {
     */
     get expandedId() {
         return `section-${this.group ? this.group.id : '0'}`;
-    }
-
-    /**
-    * @description Return to display the the collapsable panel
-    * @return      Boolean
-    */
-    get notOpen() {
-        return !this.open;
     }
 
     /**
