@@ -34,7 +34,7 @@
  * @description TestClass for GS_ApplicationStatusController.
  */
 @IsTest
-public with sharing class GS_ApplicationStatusControllerTest {
+public with sharing class GS_ApplicationStatusController_TEST {
     /**
      * @description Test returning data when trial Org and no application submitted
      */
