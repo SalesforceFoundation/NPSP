@@ -438,16 +438,15 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 
         elements.forEach(element => {
             if (element.elementType === 'field') {
-                // set an empty default value
-                element.recordValue = '';
 
                 for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                    const fieldMapping = fieldMappings[fieldMappingDevName];
+                    const objectName = fieldMapping && fieldMapping.Target_Object_API_Name;
 
                     // set the field values for contact and account
                     if (objectName === record.apiName) {
                         // field name from the mappings
-                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                        let fieldName = fieldMapping.Target_Field_API_Name;
 
                         // get the record value and store it in the element
                         element.recordValue = record.fields[fieldName].value;

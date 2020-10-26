@@ -61,13 +61,14 @@ Edit An Enhanced Recurring donation record of type open
 
     #Get the next payment installment date and pause the recurring donation for the next payment date
     ${date}                                       Get Next Payment Date Number        1     False
+    ${PAUSE_DATES}=                               Create List           ${date}
     Pause Recurring Donation
     # Verify user is able to enter the paused reason and check the date and hit submit button
     Populate Pause Modal
     ...	                                          Paused Reason=Card Expired
-    ...	                                          Date=${date}
+    ...	                                          Date=@{PAUSE_DATES}
 
     # Verify Paused text appears next to the date specified
-    Verify Pause Text Next To Installment Date	  ${date}
+    Verify Pause Text Next To Installment Date	  @{PAUSE_DATES}
     # Verify the calculations for current and next year payments
     Validate Current And Next Year values         100

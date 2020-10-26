@@ -297,7 +297,7 @@
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
         <members>GS_ApplicationStatusController</members>
-        <members>GS_ApplicationStatusControllerTest</members>
+        <members>GS_ApplicationStatusController_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -1455,6 +1455,7 @@
         <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
+        <members>npe03__Recurring_Donation__c.LastElevateEventPlayed__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
@@ -1790,6 +1791,7 @@
         <members>RD2_PauseSaveSuccessMessage</members>
         <members>RD2_PauseSelectedInstallmentTextPlural</members>
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
@@ -2445,6 +2447,21 @@
         <members>gsFollowUpApplicationStatus</members>
         <members>gsLearnMore</members>
         <members>gsNoApplicationSubmitted</members>
+        <members>gsResourcesItemFundraisingLabel</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
+        <members>gsResourcesItemHubLabel</members>
+        <members>gsResourcesItemHubLinkLabel</members>
+        <members>gsResourcesItemMarketingEngagementLabel</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
+        <members>gsResourcesItemNonprofitCloudLabel</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
+        <members>gsResourcesItemPartnersLabel</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
+        <members>gsResourcesItemProgramManagementLabel</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
+        <members>gsResourcesItemWebinarsLabel</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
+        <members>gsResourcesTitle</members>
         <members>gsSubmitted</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
@@ -3863,6 +3880,8 @@
         <members>geWidgetService</members>
         <members>gsApplicationStatus</members>
         <members>gsModal</members>
+        <members>gsResources</members>
+        <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
@@ -3976,7 +3995,6 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>DefaultGiftEntryTemplate</members>
-        <members>gsResources</members>
         <name>StaticResource</name>
     </types>
     <types>
