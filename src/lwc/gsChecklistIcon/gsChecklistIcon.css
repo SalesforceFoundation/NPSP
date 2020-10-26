@@ -1,0 +1,9 @@
+.slds-media__figure span {
+    position: absolute;
+    left: 38%;
+    top: 20%;
+}
+
+.slds-media__figure {
+    position: relative;
+}
