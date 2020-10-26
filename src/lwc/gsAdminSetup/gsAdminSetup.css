@@ -1,9 +1,8 @@
-.slds-card.container {
-    padding: 1rem;
+.slds-card__header-title, ol {
     padding-left: 2rem;
 }
 
-.slds-card.container > .slds-card__header-title {
+lightning-card > .slds-card__header-title {
     margin: 1rem;
 }
 

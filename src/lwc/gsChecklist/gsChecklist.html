@@ -1,54 +1,33 @@
 <template>
     <article class="slds-setup-assistant__step">
         <div class="slds-summary-detail">
-            <button class="slds-button slds-button_icon slds-m-right_x-small slds-m-top_x-small"
+            <lightning-button-icon 
+                variant="container"
                 id={arrowId}
+                icon-name={arrowIcon}
+                class="slds-m-left_x-small"
                 onclick={onClickOpenOrClose}
                 aria-controls={expandedId}
                 aria-expanded={open}
                 title={group.title}>
-                <lightning-icon  
-                    alternative-text=""
-                    icon-name={arrowIcon}
-                    size="x-small"
-                    title={group.title}>
-                </lightning-icon>
-            </button>
+            </lightning-button-icon>
             <div class="slds-container_fluid">
                 <div class="slds-summary-detail__title">
                     <div class="slds-setup-assistant__step-summary">
-                        <div class="slds-media">
-                            <c-gs-checklist-icon label={group.pos}>
-                            </c-gs-checklist-icon>
-                            <div class="slds-media__body slds-m-top_x-small">
-                                <div class="slds-media">
-                                    <div class="slds-setup-assistant__step-summary-content slds-media__body">
-                                        <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small">
-                                            <button onclick={onClickOpenOrClose}
-                                                tabindex="0"
-                                                title={group.title}
-                                                class="slds-button slds-button_reset">
-                                                {group.title}
-                                            </button>
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class={infoClass}>
-                            <div class="border">
-                                <div class="gap"></div>
-                            </div>
-                            <div class="container">
-                                <p>{group.description}</p>
-                                <div aria-hidden={notOpen} id={expandedId} class="slds-section steps">
-                                    <template iterator:item={group.items}>
-                                        <c-gs-checklist-item key={item.value.id} item={item.value}>
-                                        </c-gs-checklist-item>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
+                        <c-gs-accordion-label
+                            number={group.pos}
+                            title={group.title}
+                            onclicktitle={onClickOpenOrClose}>
+                        </c-gs-accordion-label>
+                        <c-gs-accordion-section
+                            open={open}
+                            expanded-id={expandedId}
+                            label={group.desc}>
+                            <template iterator:item={group.items}>
+                                <c-gs-checklist-item key={item.value.id} item={item.value}>
+                                </c-gs-checklist-item>
+                            </template>
+                        </c-gs-accordion-section>
                     </div>
                 </div>
             </div>

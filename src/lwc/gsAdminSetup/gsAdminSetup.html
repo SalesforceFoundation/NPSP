@@ -1,16 +1,13 @@
 <template>
-    <div class="slds-card container">
+    <lightning-card>
         <p class="slds-card__header-title">{title}</p>
-        <lightning-card>
-            <ol class="slds-setup-assistant">
-                <template iterator:checklist={checklists}>
-                    <li class="slds-setup-assistant__item" key={checklist.value.id}>
-                    <c-gs-checklist
-                        group={checklist.value}>
-                    </c-gs-checklist>
-                    </li>
-                </template>
-            </ol>
-        </lightning-card>
-    </div>
+        <ol class="slds-setup-assistant">
+            <template iterator:checklist={checklists}>
+                <li class="slds-setup-assistant__item" key={checklist.value.id}>
+                <c-gs-checklist group={checklist.value}>
+                </c-gs-checklist>
+                </li>
+            </template>
+        </ol>
+    </lightning-card>
 </template>

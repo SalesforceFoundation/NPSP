@@ -66,7 +66,7 @@ export default class gsAdminSetup extends LightningElement {
     /**
     * Return title to display in UI
     * @return      Title text
-    * @see         Label
+    * @see         labels
     */
     get title() {
         return gsAdminSetupTitle;
