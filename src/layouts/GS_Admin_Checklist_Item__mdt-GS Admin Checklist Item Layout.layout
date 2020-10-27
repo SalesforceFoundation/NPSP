@@ -55,6 +55,10 @@
                 <behavior>Edit</behavior>
                 <field>Image__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Extra_Info_Label__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>

@@ -55,6 +55,7 @@ public with sharing class GS_AdminSetup {
     /**
      * @description This method return a list of GS_Admin_Checklist_Section__mdt and his Items 
      * @return List<GS_Admin_Checklist_Section__mdt>
+     * @note [ORDER BY Position__c ASC]  don't work well in the inner query I need sort Outside SOQL
      */
     private static List<GS_Admin_Checklist_Section__mdt> getSectionsAndSubsections() {
         return [ 
@@ -64,7 +65,7 @@ public with sharing class GS_AdminSetup {
                         Has_Link__c, Link_Label__c, Link_href__c, Extra_Info_Label__c,
                         Principal_Button_Type__c, Principal_Button_Label__c, Principal_Button_Value__c,
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
-                    FROM GS_Admin_Checklist_Items__r ORDER BY Position__c ASC
+                    FROM GS_Admin_Checklist_Items__r
                 ) 
             FROM GS_Admin_Checklist_Section__mdt ORDER BY Position__c ASC 
         ];
@@ -84,6 +85,8 @@ public with sharing class GS_AdminSetup {
         for (GS_Admin_Checklist_Item__mdt item:section.GS_Admin_Checklist_Items__r) {
             cs.items.add(wrapChecklistItem(item));
         }
+        //I need sort manualy to not work well in SOQL [ORDER BY]
+        cs.items.sort();
         return cs;
     }
 
@@ -131,7 +134,7 @@ public with sharing class GS_AdminSetup {
     /*
     * @description This Class is to wrap GS_Admin_Checklist_Item__mdt information
     */
-    public class ChecklistItem {
+    public class ChecklistItem implements Comparable {
         @AuraEnabled
         public Id id;
         @AuraEnabled
@@ -150,6 +153,20 @@ public with sharing class GS_AdminSetup {
         public ChecklistItemButton principalBtn;
         @AuraEnabled
         public ChecklistItemButton secondaryBtn;
+
+        /*
+        * @description Compare ChecklistItem to short using position
+        * @note I need make that to not work well inner order in SOQL
+        */
+        public Integer compareTo(Object compareTo) {
+            ChecklistItem compare = (ChecklistItem) compareTo;
+            if(this.pos > compare.pos) {
+                return 1;
+            } else if(this.pos < compare.pos) {
+                return -1;
+            }
+            return 0;
+        }
 
     }
 
