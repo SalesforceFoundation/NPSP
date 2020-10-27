@@ -379,7 +379,8 @@ public with sharing class BDI_DataImportAPI_TEST {
         // get the list of existing di records with all the fields
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
         List<npsp__DataImport__c> listDI = 
-            Database.query('SELECT '+ String.escapeSingleQuotes(allDIFields) +' FROM npsp__DataImport__c WHERE Id = :diObjId');
+            Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
+                + ' FROM npsp__DataImport__c WHERE Id = :diObjId');
 
         // process
         Test.startTest();
@@ -399,7 +400,7 @@ public with sharing class BDI_DataImportAPI_TEST {
     }
 
     /*********************************************************************************************************
-    * @description process di records selecting all the fields
+    * @description process di records and check if the opportunity is created
     * verify:
     *     no errors occurred
     **********************************************************************************************************/
@@ -417,16 +418,18 @@ public with sharing class BDI_DataImportAPI_TEST {
         // get the list of existing di records with all the fields
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
         List<npsp__DataImport__c> listDI = 
-            Database.query('SELECT '+ String.escapeSingleQuotes(allDIFields) +' FROM npsp__DataImport__c WHERE Id = :diObjId');
+            Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
+                + ' FROM npsp__DataImport__c WHERE Id = :diObjId');
 
         // process
         Test.startTest();
         BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
         Test.stopTest();
 
-        List<Opportunity> opps = [Select Id
-            from Opportunity 
-            where Name =: donationName
+        List<Opportunity> opps = [
+            SELECT Id
+            FROM Opportunity 
+            WHERE Name =: donationName
         ];
         System.assertEquals(1, opps.size(), 'Opportunity record was not created');
 
