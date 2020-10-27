@@ -1,9 +1,9 @@
 <template>
     <lightning-card>
-        <p class="slds-card__header-title">{title}</p>
-        <ol class="slds-setup-assistant">
+        <p class="slds-card__header-title slds-p-left_medium">{title}</p>
+        <ol class="slds-setup-assistant slds-p-left_medium slds-m-around_small">
             <template iterator:checklist={checklists}>
-                <li class="slds-setup-assistant__item" key={checklist.value.id}>
+                <li class="slds-setup-assistant__item slds-p-bottom_none" key={checklist.value.id}>
                 <c-gs-checklist group={checklist.value}>
                 </c-gs-checklist>
                 </li>
