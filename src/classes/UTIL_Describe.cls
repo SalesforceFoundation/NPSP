@@ -272,7 +272,6 @@ public class UTIL_Describe {
     /*******************************************************************************************************
      * @description Returns a comma delimited string with all accessible fields of an object, used for queries.
      * @param sobjectname Name of the object to retrieve field list for.
-     * @throws UTIL_CrudFLS.AccessException when the supplied sObject is not readable by the current user
      * @return String A comma delimited String with all fields of an object.
      */
     public static String getAllFieldsQueryStringFromObject(String sObjectName) {

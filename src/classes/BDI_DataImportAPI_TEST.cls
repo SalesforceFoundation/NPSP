@@ -55,12 +55,14 @@ public with sharing class BDI_DataImportAPI_TEST {
     * @return data Import object
     */
     private static DataImport__c newDataImport(Id batchId,
-        String firstName, String lastName, Decimal donationAmount, String stage) {
+        String firstName, String lastName, String donationName, 
+        Decimal donationAmount, String stage) {
+
         DataImport__c dataImport = new DataImport__c(
             Contact1_Firstname__c = firstName,
             Contact1_Lastname__c = lastName,
             Donation_Amount__c = donationAmount,
-            Donation_Name__c = 'Test Opp',
+            Donation_Name__c = donationName,
             Donation_Stage__c = stage,
             Donation_Date__c = Date.today(),
             NPSP_Data_Import_Batch__c = batchId
@@ -367,7 +369,7 @@ public with sharing class BDI_DataImportAPI_TEST {
     @isTest
     private static void processRecordsWithAllFields() {
         // create the data import record
-        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', 1000, 'Closed Won');
+        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', 'TestOpp', 1000, 'Closed Won');
         insert dataImport;
         Id diObjId = dataImport.Id;
     
@@ -380,7 +382,9 @@ public with sharing class BDI_DataImportAPI_TEST {
             Database.query('SELECT '+ String.escapeSingleQuotes(allDIFields) +' FROM npsp__DataImport__c WHERE Id = :diObjId');
 
         // process
+        Test.startTest();
         BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
 
         // check the results
         dataImport = [
@@ -392,5 +396,39 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         System.assertEquals(null, 
             dataImport.npsp__FailureInformation__c, 'Data Import process errors.');
+    }
+
+    /*********************************************************************************************************
+    * @description process di records selecting all the fields
+    * verify:
+    *     no errors occurred
+    **********************************************************************************************************/
+    @isTest
+    private static void processRecordsCreateOpportunity() {
+        // create the data import record
+        String donationName = 'TestOpp';
+        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', donationName, 1000, 'Closed Won');
+        insert dataImport;
+        Id diObjId = dataImport.Id;
+    
+        npsp__Data_Import_Settings__c diSettings = npsp__Data_Import_Settings__c.getOrgDefaults();
+        diSettings.npsp__Donation_Matching_Behavior__c = npsp.BDI_DataImport_API.DoNotMatch;
+
+        // get the list of existing di records with all the fields
+        String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
+        List<npsp__DataImport__c> listDI = 
+            Database.query('SELECT '+ String.escapeSingleQuotes(allDIFields) +' FROM npsp__DataImport__c WHERE Id = :diObjId');
+
+        // process
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
+
+        List<Opportunity> opps = [Select Id
+            from Opportunity 
+            where Name =: donationName
+        ];
+        System.assertEquals(1, opps.size(), 'Opportunity record was not created');
+
     }
 }
