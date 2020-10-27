@@ -55,7 +55,7 @@ export default class GeFormField extends LightningElement {
 
     get value() {
         // As of W-8017324 picklists get their value from formState
-        return this.isPicklist ? this.valueFromFormState : this._value;
+        return this.isUsingFormState() ? this.valueFromFormState : this._value;
     }
 
     set value(val) {
@@ -71,7 +71,7 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         const value = this.getValueFromChangeEvent(event);
-        if (!this.isPicklist) {
+        if (!this.isUsingFormState()) {
             // As of W-8017324 picklists get their value from formState
             this.value = value;
         }
@@ -440,7 +440,7 @@ export default class GeFormField extends LightningElement {
     @api
     load(data) {
         // As of W-8017324 picklists get their value from formState
-        if (this.isPicklist) {
+        if (this.isUsingFormState()) {
             return;
         }
 
@@ -469,7 +469,8 @@ export default class GeFormField extends LightningElement {
     @api
     reset(applyDefaultValue = true) {
         // As of W-8017324 picklists get their value from formState
-        if (this.isPicklist) {
+        //todo: temp function isUsingFormState() ?
+        if (this.isUsingFormState()) {
             return;
         }
 
@@ -478,6 +479,10 @@ export default class GeFormField extends LightningElement {
         } else {
             this.value = null;
         }
+    }
+
+    isUsingFormState() {
+        return this.isPicklist || this.isLookup;
     }
 
     /**
