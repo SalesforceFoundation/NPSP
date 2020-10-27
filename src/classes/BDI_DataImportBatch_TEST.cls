@@ -158,7 +158,7 @@ public with sharing class BDI_DataImportBatch_TEST {
 
         // check the status
         for (DataImportBatch__c batch : batches) {
-            System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, 
+            System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN,
                                 batch.Batch_Status__c,
                                 'Batch Status should be Open for new batches.');
         }
