@@ -28,7 +28,8 @@ import {
     getNamespace,
     getSubsetObject,
     validateJSONString,
-    relatedRecordFieldNameFor, apiNameFor
+    relatedRecordFieldNameFor,
+    apiNameFor
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -126,8 +127,108 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // @track selectedDonorId;
 
-    @track selectedDonation;
-    @track selectedDonationDataImportFieldValues = {};
+    get selectedDonationOrPaymentRecord() {
+        //todo: replace all .Ids with call to new function
+        return this.selectedPaymentRecord() && this.selectedPaymentRecord().Id ?
+            this.selectedPaymentRecord() :
+            this.selectedDonationRecord() && this.selectedDonationRecord().Id ?
+                this.selectedDonationRecord() :
+                null;
+    }
+
+    selectedDonationRecord() {
+        return this.getRelatedRecordFromFormStateFor(
+            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)
+        );
+    }
+
+    selectedPaymentRecord() {
+        return this.getRelatedRecordFromFormStateFor(
+            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
+        );
+    }
+
+    getRelatedRecordFromFormStateFor(fieldApiName) {
+        return this.getFieldValueFromFormState(
+            relatedRecordFieldNameFor(fieldApiName)
+        );
+    }
+
+    set selectedDonationOrPaymentRecord(record) {
+        //todo: why was this id check in there before?
+        // if (record.hasOwnProperty('Id') && record.new === true) {
+        if (record.new === true) {
+            //todo: make sure setting to null clears out sibling fields
+            this.setCreateNewOpportunityInFormState();
+        } else if (this.isAPaymentId(record.Id)) {
+            this.setSelectedPaymentInFormState(record);
+        } else if (this.isAnOpportunityId(record.Id)) {
+            this.setSelectedDonationInFormState(record, record.applyPayment);
+        } else {
+            throw 'Unsupported selected donation type!';
+        }
+    }
+
+    setSelectedPaymentInFormState(record) {
+        //todo: this should be done in response to pmtImported and donImported changing...
+        // except for "new"...
+        const updatedData = {
+            //todo: remove data import from these field names
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]: record.Id,
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
+                record[PARENT_OPPORTUNITY_FIELD.fieldApiName],
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]: userSelectedMatch,
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch
+        };
+        this.updateFormState(updatedData);
+
+        //todo: work with objects.  push this apiNameFor down into the lowest method that
+        // needs it
+        this.loadSelectedRecordFieldValues(
+            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD), record.Id);
+
+        this.loadSelectedRecordFieldValues(
+            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD),
+            record[PARENT_OPPORTUNITY_FIELD.fieldApiName]);
+    }
+
+    setSelectedDonationInFormState(record, isApplyNewPayment = false) {
+        //todo: work with objects.  push this apiNameFor down into the lowest method that
+        // needs it
+        //todo: update so only clearing these out when necessary, like dont need to clear
+        // out opps before re-writing, but doing now to validate pmt clears
+        this.resetDonationAndPaymentImportedFields();
+//if pmt is populated, clear it
+
+        this.loadSelectedRecordFieldValues(
+            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), record.Id);
+
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]: record.Id,
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]:
+                isApplyNewPayment ? applyNewPayment : userSelectedMatch
+        });
+
+    }
+
+    get selectedDonationDataImportFieldValues() {
+        return {
+            //todo: this used to be an object
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]:
+                this.getFieldValueFromFormState(
+                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)),
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]:
+                this.getFieldValueFromFormState(
+                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)),
+            //todo: used to be an object
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
+                this.getFieldValueFromFormState(
+                    apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)),
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]:
+                this.getFieldValueFromFormState(
+                    apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD))
+        };
+    }
 
     @track hasPurchaseCallTimedout = false;
 
@@ -191,7 +292,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
 
             // check if there is a record id in the url
-            this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
             const donorApiName = getQueryParameters().c__apiName;
             this.initializeDonationDonorTypeInFormState(donorApiName);
 
@@ -886,18 +986,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // If there is a currently selected Donation and the caller wants those values
         // applied to the dataImport record, add them (used during save operation)
-        if (this.selectedDonation && applySelectedDonationFieldValues) {
+        if (this.selectedDonationOrPaymentRecord && applySelectedDonationFieldValues) {
             dataImport = {...dataImport, ...this.selectedDonationDataImportFieldValues};
         }
 
-        if (this.selectedDonation && this.selectedDonation.Id &&
-            this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix)) {
+        if (this.selectedDonationOrPaymentRecord && this.selectedDonationOrPaymentRecord.Id &&
+            this.selectedDonationOrPaymentRecord.Id.startsWith(this.oppPaymentKeyPrefix)) {
             // If the selected donation is a Payment, set Donation Amount
             // and Donation Date to the values from the selected Payment.
             dataImport[DONATION_AMOUNT.fieldApiName] =
-                this.selectedDonation[OPP_PAYMENT_AMOUNT.fieldApiName];
+                this.selectedDonationOrPaymentRecord[OPP_PAYMENT_AMOUNT.fieldApiName];
             dataImport[DONATION_DATE.fieldApiName] =
-                this.selectedDonation[SCHEDULED_DATE.fieldApiName];
+                this.selectedDonationOrPaymentRecord[SCHEDULED_DATE.fieldApiName];
         }
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
@@ -1256,124 +1356,133 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 recordId.startsWith(this.contactKeyPrefix);
 
             if (isDonorAccount1 || isDonorContact1) {
-                this.selectedDonorId = recordId;
+                //todo: use selectedDonorId() elsewhere no need for this method
+                // this.selectedDonorId = recordId;
                 return;
             }
         }
 
         // If donationDonor and recordId don't align or aren't set,
         // reset all selected donation properties and form fields
-        this.selectedDonorId = null;
-        if (!!this.selectedDonation) {
+        // this.selectedDonorId = null;
+        if (!!this.selectedDonationOrPaymentRecord) {
             this.resetDonationAndPaymentImportedFields();
             // moved this below because we previously would never actually reach inside this
             // condition otherwise. Even in scenarios we're we've definitely selected a donation
             // prior to needing to reset.
-            this.selectedDonation = null;
+            // this.selectedDonationOrPayment = null;
         }
     }
 
     handleChangeSelectedDonation(event) {
-        this.selectedDonation = event.detail.payment || event.detail.opportunity;
+        this.selectedDonationCopyForReviewDonationsModal =
+            event.detail.payment || event.detail.opportunity;
 
+        this.selectedDonationOrPaymentRecord =
+            this.selectedDonationCopyForReviewDonationsModal;
+        //both of these things vvv now done upon setting selectedDonOrPmt above ^^^
+        //
+        // // Load the "imported" and "imported status" fields in case they are on the form
+        // //todo: remove once lookups (and text fields) are getting their value from formState
+        // this.load(this.flatten(this.selectedDonationDataImportFieldValues));
+        //
+        // if (this.hasSelectedDonationOrPayment()) {
+        //     //todo: will setting the lookups in formstate automatically do this?
+        //     // or just pass this to handle Lookup Selected ... ?
+        //     this.loadFieldValuesForSelectedDonation(paymentImported, donationImported);
+        // }
+    }
+    @track selectedDonationCopyForReviewDonationsModal;
+
+    loadFieldValuesForSelectedDonation(paymentImported, donationImported) {
+        // Load the sibling field values (parented by the same object mapping)
+        // for the donation and payment "imported" fields
+        this.loadSelectedRecordFieldValues(
+            this.selectedDonationOrPaymentRecord.Id.startsWith(this.oppPaymentKeyPrefix) ?
+                paymentImported :
+                donationImported,
+            this.selectedDonationOrPaymentRecord.Id
+        );
+
+        if (this.selectedDonationOrPaymentRecord.Id.startsWith(this.opportunityKeyPrefix)) {
+            // If the selected donation is an Opportunity, reset form fields that have
+            // field mappings parented by PaymentImported__c
+            this.resetFieldsForObjMappingApplyDefaults(
+                GeFormService.objectMappingWrapperFor(
+                    DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+                ).DeveloperName);
+        }
+    }
+
+    hasSelectedDonationOrPayment() {
+        return this.selectedDonationOrPaymentRecord &&
+        this.selectedDonationOrPaymentRecord.Id ? true : false;
+    }
+
+    setCreateNewOpportunityInFormState() {
+        this.resetDonationAndPaymentImportedFields();
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedNewOpp
+        });
+    }
+
+    handlePaymentSelected() {
+        this.updateFormState({}
+        );
+    }
+
+    handleOpportunitySelected() {
         const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
         const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
+        //todo: set all these in formState
+        this.selectedDonationDataImportFieldValues[donationImported] =
+            {
+                value: this.selectedDonationOrPaymentRecord.Id,
+                displayValue: this.selectedDonationOrPaymentRecord.Name
+            };
 
-        if (!this.selectedDonation.hasOwnProperty('Id')) {
-            this.resetDonationAndPaymentImportedFields();
-            if (this.selectedDonation.new === true) {
-                this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                    userSelectedNewOpp;
-            }
+        if (this.selectedDonationOrPaymentRecord.applyPayment) {
+            this.selectedDonationDataImportFieldValues[donationImportStatus] =
+                applyNewPayment;
         } else {
-            if (this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix)) {
-                this.selectedDonationDataImportFieldValues[paymentImported] =
-                    {
-                        value: this.selectedDonation.Id,
-                        displayValue: this.selectedDonation.Name
-                    };
-                this.selectedDonationDataImportFieldValues[paymentImportStatus] =
-                    userSelectedMatch;
-                this.selectedDonationDataImportFieldValues[donationImported] =
-                    {
-                        value: this.selectedDonation.npe01__Opportunity__c,
-                        displayValue: this.selectedDonation.npe01__Opportunity__r.Name
-                    };
-                this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                    userSelectedMatch;
-            } else if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
-                this.selectedDonationDataImportFieldValues[donationImported] =
-                    {
-                        value: this.selectedDonation.Id,
-                        displayValue: this.selectedDonation.Name
-                    };
-
-                if (this.selectedDonation.applyPayment) {
-                    this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                        applyNewPayment;
-                } else {
-                    this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                        userSelectedMatch;
-                }
-
-                this.selectedDonationDataImportFieldValues[paymentImported] = null;
-                this.selectedDonationDataImportFieldValues[paymentImportStatus] = null;
-            }
+            this.selectedDonationDataImportFieldValues[donationImportStatus] =
+                userSelectedMatch;
         }
 
-        // Load the "imported" and "imported status" fields in case they are on the form
-        this.load(this.flatten(this.selectedDonationDataImportFieldValues));
-
-        if (this.selectedDonation.Id) {
-            // Load the sibling field values (parented by the same object mapping)
-            // for the donation and payment "imported" fields
-            this.loadSelectedRecordFieldValues(
-                this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix) ?
-                    paymentImported :
-                    donationImported,
-                this.selectedDonation.Id
-            );
-
-            if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
-                // If the selected donation is an Opportunity, reset form fields that have
-                // field mappings parented by PaymentImported__c
-                this.resetFieldsForObjMappingApplyDefaults(
-                    GeFormService.objectMappingWrapperFor(
-                        DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
-                    ).DeveloperName);
-            }
-        }
+        this.selectedDonationDataImportFieldValues[paymentImported] = null;
+        this.selectedDonationDataImportFieldValues[paymentImportStatus] = null;
     }
 
     resetDonationAndPaymentImportedFields() {
+        this.resetSelectedPaymentFieldsInFormState();
+        this.resetSelectedDonationFieldsInFormState();
+        //todo: reset these in formState, and make users of
+        // this.selectedDonationDataImportFieldValues reference formState instead,
+        // then remove this.selectedDonationDataImportFieldValues
+
         // Reset the stored values for selected donation
-        this.selectedDonationDataImportFieldValues
-            [DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName] = null;
-        this.selectedDonationDataImportFieldValues
-            [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName] = null;
-        this.selectedDonationDataImportFieldValues
-            [DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName] = null;
-        this.selectedDonationDataImportFieldValues
-            [DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName] = null;
+        // this.selectedDonationDataImportFieldValues
+        //     [DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName] = null;
+        // this.selectedDonationDataImportFieldValues
+        //     [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName] = null;
+        // this.selectedDonationDataImportFieldValues
+        //     [DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName] = null;
+        // this.selectedDonationDataImportFieldValues
+        //     [DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName] = null;
+        //
+        // // Reset the "imported" and "imported status" donation fields if they are on the
+        // // form by loading the stored (now null) values for those fields
+        // // this.load(
+        // //     this.selectedDonationDataImportFieldValues, false);
+        // //
+        // // Reset form fields that have field mappings parented by DonationImported__c
+        // this.resetFieldsForObjMappingApplyDefaults(
+        //     GeFormService.objectMappingWrapperFor(
+        //         DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
+        //     ).DeveloperName);
 
-        // Reset the "imported" and "imported status" donation fields if they are on the
-        // form by loading the stored (now null) values for those fields
-        this.load(
-            this.selectedDonationDataImportFieldValues, false);
-
-        // Reset form fields that have field mappings parented by DonationImported__c
-        this.resetFieldsForObjMappingApplyDefaults(
-            GeFormService.objectMappingWrapperFor(
-                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
-            ).DeveloperName);
-
-        // Reset form fields that have field mappings parented by PaymentImported__c
-        this.resetFieldsForObjMappingApplyDefaults(
-            GeFormService.objectMappingWrapperFor(
-                DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
-            ).DeveloperName);
     }
 
     /**
@@ -1423,14 +1532,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let selectedRecordFields =
             this.getSiblingFieldsForSourceField(lookupFieldApiName);
 
-        if (selectedRecordId &&
-            selectedRecordId.startsWith(this.oppPaymentKeyPrefix) &&
-            this.selectedDonation.Id === selectedRecordId) {
-            // This is the selected payment, so add in the parent opp field so
-            // it can be used to populate the parent Opportunities' fields.
-            selectedRecordFields.push(
-                this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
-        }
+        // const needsParentOpportunityLoaded = selectedRecordId &&
+        //     this.isAPaymentId(selectedRecordId);
+        //
+        // if (needsParentOpportunityLoaded) {
+        //     // This is the selected payment, so add in the parent opp field so
+        //     // it can be used to populate the parent Opportunities' fields.
+        //     selectedRecordFields.push(
+        //         this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
+        // }
 
         this.storeSelectedRecordIdByObjectMappingName(
             this.getObjectMapping(lookupFieldApiName).DeveloperName,
@@ -1449,6 +1559,20 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     get oppPaymentKeyPrefix() {
         return this.oppPaymentObjectInfo.data.keyPrefix;
+    }
+
+    isAnOpportunityId(id) {
+        if (!id || typeof id !== 'string') {
+            return false;
+        }
+        return id.startsWith(this.opportunityKeyPrefix);
+    }
+
+    isAPaymentId(id) {
+        if (!id || typeof id !== 'string') {
+            return false;
+        }
+        return id.startsWith(this.oppPaymentKeyPrefix);
     }
 
     get opportunityKeyPrefix() {
@@ -1485,13 +1609,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
 
-            const needsParentOpportunityLoaded =
-                this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
-                data.id === this.selectedDonation.Id;
-
-            if (needsParentOpportunityLoaded) {
-                this.loadParentOpportunityForSelectedPayment(this.parentOpportunityIdFor(data));
-            }
+            //just call from setSelectedPmt
+            // const needsParentOpportunityLoaded =
+            //     this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
+            //     data.id === this.selectedDonationOrPaymentRecord.Id;
+            //
+            // if (needsParentOpportunityLoaded) {
+            //     this.loadParentOpportunityForSelectedPayment(this.parentOpportunityIdFor(data));
+            // }
         }
         this.loadNextSelectedRecordFromQueue();
     }
@@ -1603,7 +1728,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleDonationDonorChange(donationDonorValue) {
-        if (!!this.selectedDonation) {
+        if (!!this.selectedDonationOrPaymentRecord) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
         }
@@ -2010,7 +2135,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     setDonationRecordTypeIdInFormState(opportunityRecordTypeId) {
         const donationImportedRelatedRecordField =
-            relatedRecordFieldNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName);
+            relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD));
         const relatedRecord =
             this.getFieldValueFromFormState(donationImportedRelatedRecordField);
 
@@ -2166,6 +2291,39 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.getFieldValueFromFormState(
             apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD)
         );
+    }
+
+    selectedDonationOrPaymentRecordId() {
+        return this.selectedDonationOrPaymentRecord() &&
+            this.selectedDonationOrPaymentRecord.Id;
+    }
+
+    resetSelectedPaymentFieldsInFormState() {
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]: null,
+            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]: null,
+            [relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD))]: null
+        });
+
+        // Reset form fields that have field mappings parented by PaymentImported__c
+        this.resetFieldsForObjMappingApplyDefaults(
+            GeFormService.objectMappingWrapperFor(
+                DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+            ).DeveloperName);
+    }
+
+    resetSelectedDonationFieldsInFormState() {
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]: null,
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: null,
+            [relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD))]: null
+        });
+
+        // Reset form fields that have field mappings parented by PaymentImported__c
+        this.resetFieldsForObjMappingApplyDefaults(
+            GeFormService.objectMappingWrapperFor(
+                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
+            ).DeveloperName);
     }
 
 }
