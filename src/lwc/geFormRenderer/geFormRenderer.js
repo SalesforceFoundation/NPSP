@@ -2191,10 +2191,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     /**
      * @description Pass in a DataImport field's api to get that field's current
      * value from the formState object.
-     * @param fieldApiName
+     * @param fieldApiName, or an imported field reference object
      * @returns {*} Current value stored in formState for the passed-in field.
      */
-    getFieldValueFromFormState(fieldApiName) {
+    getFieldValueFromFormState(fieldApiNameOrFieldReference) {
+        const fieldApiName =
+            typeof fieldApiNameOrFieldReference === 'string' ?
+                fieldApiNameOrFieldReference :
+                apiNameFor(fieldApiNameOrFieldReference);
+
         return this.formState[fieldApiName];
     }
 
