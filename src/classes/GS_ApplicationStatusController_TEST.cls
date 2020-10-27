@@ -33,7 +33,7 @@
  * @group Getting Started
  * @description TestClass for GS_ApplicationStatusController.
  */
-@IsTest
+@IsTest(isParallel=true)
 public with sharing class GS_ApplicationStatusController_TEST {
     /**
      * @description Test returning data when trial Org and no application submitted
