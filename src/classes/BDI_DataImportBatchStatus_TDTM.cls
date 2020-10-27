@@ -86,7 +86,9 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
                 }
             } else if (diOld.Status__c != diNew.Status__c) {
                 // status was changed; same parent
-                batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+                if(diNew.NPSP_Data_Import_Batch__c != null) {
+                    batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
+                }
             }
         }
         setBatchStatus(batchIdSet);
