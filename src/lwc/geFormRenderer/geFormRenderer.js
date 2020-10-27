@@ -1,4 +1,25 @@
 import { LightningElement, api, track, wire } from 'lwc';
+
+import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
+import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
+import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
+import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
+import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
+
+import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
+import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
+import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
+import PAYMENT_GATEWAY_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
+import PAYMENT_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
+import PAYMENT_AUTHORIZED_AT from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
+import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
+import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
+import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
+
+
 import {getObjectInfo} from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
@@ -58,7 +79,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES, LABEL_NEW_LINE } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -89,6 +110,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+    savedDataImportRecord = {};
     @api donorRecordId;
     @api donorApiName;
     @api donorRecord;
@@ -278,6 +300,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
+        getPaymentTransactionStatusValues()
+            .then(response => {
+                this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
+            });
+
         registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
@@ -438,33 +465,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
     }
-
-    /*******************************************************************************
-    * @description Dispatches a 'submit' event for Single Gift Entry mode.
-    *
-    * @param {object} inMemoryDataImport: DataImport__c object built from the form
-    * fields.
-    * @param {object} formControls: An object holding methods that control
-    * the form save button enablement and lightning spinner toggler.
-    */
-    handleSaveSingleGiftEntry = async (inMemoryDataImport, formControls) => {
-        if (inMemoryDataImport) {
-            const isWidgetInDoNotChargeState = this._isCreditCardWidgetInDoNotChargeState;
-            const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
-            this.dispatchEvent(new CustomEvent('submit', {
-                detail: {
-                    inMemoryDataImport,
-                    hasUserSelectedDonation,
-                    isWidgetInDoNotChargeState,
-                    errorCallback: (error) => {
-                        formControls.enableSaveButton();
-                        formControls.toggleSpinner();
-                        this.handleSingleGiftErrors(error);
-                    }
-                }
-            }));
-        }
-    };
 
     /*******************************************************************************
     * @description Handles errors for the Single Gift Entry save flow.
@@ -694,6 +694,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
+            // TODO: Victor will likely remove lines 619 - 628
             let inMemoryDataImport;
             try {
                 inMemoryDataImport = await this.buildDataImportFromSections(
@@ -705,11 +706,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 return;
             }
 
+            let dataImportFromFormState = this.saveableFormState();
+            // TODO: Workaround to retrieve the token if available, purge later
+            this.TEMPORARY_forceTokenOntoDataImport(dataImportFromFormState, inMemoryDataImport);
+
             // handle save depending mode
             if (this.batchId) {
-                this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
+                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
             } else {
-                await this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
+                await this.singleGiftSubmit(dataImportFromFormState);
             }
         }
     }
@@ -2326,4 +2331,406 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             ).DeveloperName);
     }
 
+    // ================================================================================
+    // TODO: Save flow functions below. Remove header later
+    // ================================================================================
+    /**
+     * @description Returns the data import record id from form state
+     */
+    getDataImportId() {
+        return this.getFieldValueFromFormState('id');
+    }
+
+    /**
+     * @description Returns a saveable data import record
+     * derived from the formState object.
+     */
+    saveableFormState() {
+        let dataImportRecord = deepClone(this.formState);
+        this.removeRelationshipFieldsFrom(dataImportRecord);
+        return dataImportRecord;
+    }
+
+    /**
+     * @description Removes all relationships fields ('__r') from the
+     * provided object.
+     *
+     * @param object: A map of sObject fields
+     */
+    removeRelationshipFieldsFrom = (object) => {
+        Object.keys(object).forEach(key => {
+            if (key.includes('__r')) {
+                delete object[key];
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Handles a single gift entry submit. Saves a Data Import record,
+    * makes an elevate payment if needed, and processes the Data Import through
+    * BDI.
+    *
+    * @param {object} event: Custom Event containing the Data Import record and a
+    * callback for handling and displaying errors in the form.
+    */
+    singleGiftSubmit = async (dataImportFromFormState) => {
+        try {
+            await this.saveDataImport(dataImportFromFormState);
+
+            const hasPaymentToProcess = this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName);
+            if (isNotEmpty(hasPaymentToProcess)) {
+                await this.processPayment();
+            }
+
+            if (!this.isFailedPurchase || this._isCreditCardWidgetInDoNotChargeState) {
+                await this.processDataImport();
+            }
+        } catch (error) {
+            this.disabled = false;
+            this.toggleSpinner();
+            this.handleSingleGiftErrors(error);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Upserts the provided data import record. Attempts to retrieve
+    * an Elevate token for a purchase call if needed.
+    *
+    * @param {object} dataImportFromFormState: DataImport__c object built from the form
+    * fields.
+    *
+    * @return {object} dataImportRecord: A DataImport__c record
+    */
+    saveDataImport = async (dataImportFromFormState) => {
+        if (this.getDataImportId()) {
+            this.loadingText = this.CUSTOM_LABELS.geTextUpdating;
+            //dataImportFromFormState = this.prepareDataImportFromFormStateForUpdate(dataImportFromFormState);
+        } else {
+            this.loadingText = this.CUSTOM_LABELS.geTextSaving;
+        }
+
+        const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
+        this.updateFormState(upsertResponse);
+    };
+
+    /*******************************************************************************
+    * @description Re-apply Data Import id and relevant payment/elevate fields.
+    * The dataImportFromFormState is built new from the form on every save click. We
+    * need to catch it up with the correct id to make sure we update instead of
+    * inserting a new record on re-save attempts.
+    *
+    * @param {object} dataImportFromFormState: DataImport__c object built from the form
+    * fields.
+    *
+    * @return {object} dataImportFromFormState: DataImport__c object built from the form
+    * fields.
+    */
+    // prepareDataImportFromFormStateForUpdate() {
+    //     dataImportFromFormState.Id = this.savedDataImportRecord.Id;
+    //     dataImportFromFormState[PAYMENT_METHOD.fieldApiName] = this.savedDataImportRecord[PAYMENT_METHOD.fieldApiName];
+
+    //     dataImportFromFormState[PAYMENT_STATUS.fieldApiName] =
+    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_STATUS.fieldApiName];
+
+    //     dataImportFromFormState[PAYMENT_DECLINED_REASON.fieldApiName] =
+    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_DECLINED_REASON.fieldApiName];
+
+    //     dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
+    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
+
+    //     return dataImportFromFormState;
+    // }
+
+    /*******************************************************************************
+    * @description Method attempts to make a purchase call to Payment
+    * Services. Immediately attempts to the charge the card provided in the Payment
+    * Services iframe (GE_TokenizeCard).
+    */
+    processPayment = async () => {
+        this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
+
+        const isReadyToCharge = this.checkPaymentTransactionStatus(this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName));
+        if (isReadyToCharge) {
+
+            const purchaseResponse = await this.makePurchaseCall();
+            if (purchaseResponse) {
+
+                let errors = this.processPurchaseResponse(purchaseResponse);
+
+                const upsertResponse = await upsertDataImport({ dataImport: this.saveableFormState() });
+                this.updateFormState(upsertResponse);
+
+                if (isNotEmpty(errors)) {
+                    this.isFailedPurchase = true;
+                    this.handleFailedPurchaseCall(purchaseResponse);
+                } else {
+                    this.isFailedPurchase = false;
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************
+     * @description Updates the dataImportRecord fields with response values from
+     * payment services.
+     *
+     * @param {object} response The response object from payment services returned when
+     * purchase call is made.
+     *
+     * @return {string} A concatenated string of errors returned from the purchase call to
+     * payment services
+     */
+    processPurchaseResponse(response) {
+        let errors = '';
+        let responseBody = response.body;
+
+        this.updateFormState({
+            [PAYMENT_STATUS.fieldApiName]: this.getPaymentStatus(response),
+            [PAYMENT_ELEVATE_ID.fieldApiName]: responseBody.id
+        });
+
+        if (response.statusCode === HTTP_CODES.Created) {
+
+            if (isNotEmpty(responseBody.cardData)) {
+                this.updateFormState({
+                    [PAYMENT_CARD_NETWORK.fieldApiName]: responseBody.cardData.brand,
+                    [PAYMENT_LAST_4.fieldApiName]: responseBody.cardData.last4,
+                    [PAYMENT_EXPIRATION_MONTH.fieldApiName]: responseBody.cardData.expirationMonth,
+                    [PAYMENT_EXPIRATION_YEAR.fieldApiName]: responseBody.cardData.expirationYear
+                });
+            }
+
+            this.updateFormState({
+                [PAYMENT_DECLINED_REASON.fieldApiName]: '',
+                [PAYMENT_GATEWAY_ID.fieldApiName]: responseBody.gatewayId,
+                [PAYMENT_TRANSACTION_ID.fieldApiName]: responseBody.gatewayTransactionId,
+                [PAYMENT_AUTHORIZED_AT.fieldApiName]: responseBody.authorizedAt
+            });
+
+        } else {
+            this.updateFormState({
+                [PAYMENT_DECLINED_REASON.fieldApiName]: this.getPaymentDeclinedReason(response)
+            });
+
+            errors = this.getFailedPurchaseMessage(response);
+        }
+
+        return errors;
+    }
+
+    /*******************************************************************************
+    * @description Method attempts to handle a failed purchase call response.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    handleFailedPurchaseCall(purchaseResponse) {
+        const hasPurchaseCallValidationErrors = purchaseResponse.statusCode === HTTP_CODES.Bad_Request;
+        if (hasPurchaseCallValidationErrors) {
+            this.catchPurchaseCallValidationErrors(purchaseResponse);
+        } else {
+            this.throwHttpRequestError(purchaseResponse);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Dispatch an event to the form renderer whenever we have a field
+    * validation error from the purchase call. Various http 400 errors. Thus far
+    * the body of the response from these calls have had an errors array property.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    catchPurchaseCallValidationErrors(purchaseResponse) {
+        let errors = this.getFailedPurchaseMessage(purchaseResponse);
+        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+        // We use the hex value for line feed (new line) 0x0A
+        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
+
+        this.showSpinner = false;
+        fireEvent(null, 'paymentError', {
+            error: {
+                message: splitErrorResponse,
+                isObject: true
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Throw an HttpRequestError for non-400 and non-200 responses from
+    * a purchase call.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    throwHttpRequestError(purchaseResponse) {
+        const errorMessage =
+            this.CUSTOM_LABELS.commonPaymentServices + ': ' +
+            this.getFailedPurchaseMessage(purchaseResponse)
+
+        throw new HttpRequestError(
+            errorMessage,
+            purchaseResponse.status,
+            purchaseResponse.statusCode);
+    }
+
+    /*******************************************************************************
+    * @description Method checks the current payment transaction's status and
+    * returns true if the card is in a 'chargeable' status.
+    *
+    * @param {string} paymentStatus: Payment transaction status
+    *
+    * @return {boolean}: True if card is in a 'chargeable' status
+    */
+    checkPaymentTransactionStatus = (paymentStatus) => {
+        switch (paymentStatus) {
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
+            default: return true;
+        }
+    }
+
+    /*******************************************************************************
+    * @description Posts an http request through the `sendPurchaseRequest` apex
+    * method and parses the response.
+    *
+    * @return {object} response: An http response object
+    */
+    makePurchaseCall = async () => {
+        let purchaseResponseString = await sendPurchaseRequest({
+            requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
+            dataImportRecordId: this.getDataImportId()
+        });
+        let response = JSON.parse(purchaseResponseString);
+        if (response.body && validateJSONString(response.body)) {
+            response.body = JSON.parse(response.body);
+        }
+
+        return response;
+    }
+
+    /*******************************************************************************
+    * @description Builds parts of the purchase request body that requires data
+    * from the Data Import record upfront. We pass this into the `sendPurchaseRequest`
+    * method and is eventually merged in with the rest of the purchase request body.
+    *
+    * @return {object}: Object that we can deserialize and apply to the purchase
+    * request body in apex.
+    */
+    buildPurchaseRequestBodyParameters() {
+        const { firstName, lastName } = this.getCardholderNames();
+        const metadata = {
+            campaignCode: this.getFieldValueFromFormState(DONATION_CAMPAIGN_NAME.fieldApiName)
+        };
+
+        return JSON.stringify({
+            amount: getCurrencyLowestCommonDenominator(this.getFieldValueFromFormState(DONATION_AMOUNT.fieldApiName)),
+            firstName: firstName,
+            lastName: lastName,
+            metadata: metadata,
+            paymentMethodToken: this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName),
+        });
+    }
+
+    /*******************************************************************************
+    * @description Get the value for DataImport__c.Payment_Status__c from the
+    * purchase call response.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Status of the payment charge request
+    */
+    getPaymentStatus(response) {
+        return response.body.status || response.status || this.CUSTOM_LABELS.commonUnknownError;
+    }
+
+    /*******************************************************************************
+    * @description Get the value for DataImport__c.Payment_Declined_Reason__c from
+    * the purchase call response.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Reason the payment was declined
+    */
+    getPaymentDeclinedReason(response) {
+        const isSuccessfulPurchase = response.statusCode === HTTP_CODES.Created;
+        return isSuccessfulPurchase ? null : this.getFailedPurchaseMessage(response);
+    }
+
+    /*******************************************************************************
+    * @description Get the message or errors from a failed purchase call.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Message from a failed purchase call response
+    */
+    getFailedPurchaseMessage(response) {
+        // For some reason the key in the body object for 'Message'
+        // in the response we receive from Elevate is capitalized.
+        // Also checking for lowercase M in message in case they fix it.
+        return response.body.Message ||
+            response.body.message ||
+            response.errorMessage ||
+            JSON.stringify(response.body.errors.map(error => error.message)) ||
+            this.CUSTOM_LABELS.commonUnknownError;
+    }
+
+    /*******************************************************************************
+    * @description Sends the Data Import into BDI for processing and navigates to
+    * the opportunity record detail page on success.
+    */
+    processDataImport = async () => {
+        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+        const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
+
+        submitDataImportToBDI({ dataImport: this.saveableFormState(), updateGift: hasUserSelectedDonation })
+            .then(opportunityId => {
+                this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
+                this.navigateToRecordPage(opportunityId);
+            })
+            .catch(error => {
+                this.catchBDIProcessingError(error);
+            });
+    }
+
+    /*******************************************************************************
+    * @description Catches a BDI processing error and transforms the error into
+    * something we can ingest in the form renderer.
+    */
+    catchBDIProcessingError(error) {
+        const hasPaymentBeenCaptured = this.checkForCapturedPayment();
+        if (hasPaymentBeenCaptured) {
+            error = new CardChargedBDIError(error);
+        }
+        this.disabled = false;
+        this.toggleSpinner();
+        this.handleSingleGiftErrors(error);
+    }
+
+    /*******************************************************************************
+    * @description Method checks to see if the current data import record has a
+    * successful payment transaction.
+    *
+    * TODO: Update to check for the elevate transaction id in the future.
+    */
+    checkForCapturedPayment() {
+        return this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName) ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
+            isNotEmpty(this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName));
+    }
+
+    // TODO: Temp method for retrieving payment auth token, purge later
+    TEMPORARY_forceTokenOntoDataImport = (dataImportFromFormState, inMemoryDataImport) => {
+        if (!inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName]) return;
+        dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
+            inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
+    }
 }
