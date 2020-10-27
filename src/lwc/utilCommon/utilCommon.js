@@ -553,9 +553,9 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
 }
 
 const apiNameFor = (objectOrFieldReference) => {
-    if (Object.hasOwnProperty('fieldApiName')) {
+    if (objectOrFieldReference.hasOwnProperty('fieldApiName')) {
         return objectOrFieldReference.fieldApiName;
-    } else if (Object.hasOwnProperty('objectApiName')) {
+    } else if (objectOrFieldReference.hasOwnProperty('objectApiName')) {
         return objectOrFieldReference.objectApiName;
     } else {
         return null;
