@@ -33,7 +33,7 @@ export default class gsChecklist extends LightningElement {
     }
 
     /**
-    * @description Return alterText to arrow button
+    * @description Return alter Text to arrow button
     * @return      String
     */
     get arrowAlterText() {
