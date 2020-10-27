@@ -51,6 +51,23 @@ public with sharing class BDI_DataImportAPI_TEST {
     }
 
     /*********************************************************************************************************
+    * @description utility to create a new DI record for the specified batch
+    * @return data Import object
+    */
+    private static DataImport__c newDataImport(Id batchId,
+        String firstName, String lastName, Decimal donationAmount, String stage) {
+        DataImport__c dataImport = new DataImport__c(
+            Contact1_Firstname__c = firstName,
+            Contact1_Lastname__c = lastName,
+            Donation_Amount__c = donationAmount,
+            Donation_Name__c = 'Test Opp',
+            Donation_Stage__c = stage,
+            Donation_Date__c = Date.today(),
+            NPSP_Data_Import_Batch__c = batchId
+        );
+        return dataImport;
+    }
+    /*********************************************************************************************************
     * @description utility to create & save a new DI batch
     */
     public static DataImportBatch__c newBatch(String name, boolean autoProcess) {
@@ -340,5 +357,40 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiDryRunValidated];
         system.assertEquals(3, listDI.size());
+    }
+
+    /*********************************************************************************************************
+    * @description process di records selecting all the fields
+    * verify:
+    *     no errors occurred
+    **********************************************************************************************************/
+    @isTest
+    private static void processRecordsWithAllFields() {
+        // create the data import record
+        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', 1000, 'Closed Won');
+        insert dataImport;
+        Id diObjId = dataImport.Id;
+    
+        npsp__Data_Import_Settings__c diSettings = npsp__Data_Import_Settings__c.getOrgDefaults();
+        diSettings.npsp__Donation_Matching_Behavior__c = npsp.BDI_DataImport_API.DoNotMatch;
+
+        // get the list of existing di records with all the fields
+        String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
+        List<npsp__DataImport__c> listDI = 
+            Database.query('SELECT '+ String.escapeSingleQuotes(allDIFields) +' FROM npsp__DataImport__c WHERE Id = :diObjId');
+
+        // process
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+
+        // check the results
+        dataImport = [
+            SELECT npsp__DonationImported__c,
+                    npsp__FailureInformation__c
+            FROM npsp__DataImport__c
+            WHERE Id = :diObjId
+        ];
+
+        System.assertEquals(null, 
+            dataImport.npsp__FailureInformation__c, 'Data Import process errors.');
     }
 }
