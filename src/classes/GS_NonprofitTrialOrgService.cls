@@ -35,12 +35,9 @@
  */
 public with sharing class GS_NonprofitTrialOrgService {
 
-    private static final String STATIC_RESOURCE_NAME = 'gsApplicationConfiguration';
+    private static final String STATIC_RESOURCE_NAME = 'GettingStartedTestingConfigurationJSON';
     private static final String APPLICATION_DATE = 'P10_Application_Date';
-    private static final String SANDBOX_PARAMETER = 'Sandbox';
-    private static final String APPLICATION_PARAMETER = 'Application';
-    private static final String TRIAL_EXPIRATION_PARAMETER = 'TrialExpiration';
-    private static final Date DEFAULT_NON_APPLICATED_DATE = Date.parse('01/01/1970');
+    private static final Date DEFAULT_NON_APPLICATED_DATE = Date.newInstance(1970,01,01);
 
     /**
      * @description Property for asking if the returned values has to be overriden for testing
@@ -58,7 +55,7 @@ public with sharing class GS_NonprofitTrialOrgService {
      * @return Map<String,Object> with the parsed test configuration loaded from the Static Resource.
      */
     @TestVisible
-    private static Map<String, Object> testingConfiguration {
+    private static TestingConfig testingConfiguration {
         get {
             if (testingConfiguration != null) {
                 return testingConfiguration;
@@ -92,27 +89,26 @@ public with sharing class GS_NonprofitTrialOrgService {
 
     /**
      * @description Return if the org is a Sandbox(Sandbox or Scratch).
-     * @return return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Static Resource gsApplicationConfiguration.
+     * @return return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Static Resource GettingStartedTestingConfigurationJSON.
      */
     public static Boolean isSandbox() {
-        return overrideValuesForTesting ? (Boolean) testingConfiguration.get(SANDBOX_PARAMETER) 
-                                                    : org.IsSandbox;
+        return overrideValuesForTesting ? testingConfiguration.isSandbox : org.IsSandbox;
     }
 
     /**
      * @description Retrieves the application date.
      * On prod this is populated using the FeatureParameter "P10_Application_Date"
-     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the Static Resource gsApplicationConfiguration
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the Static Resource GettingStartedTestingConfigurationJSON
      * @return   return Application date gotten of the P10_Application_Date FeatureParameter OR the testing configuration object.
      */
     public static Date getApplicationDate() {
         
         if (UTIL_Namespace.isScratchOrg() && testingConfiguration != null) { 
-            return testingConfiguration.get(APPLICATION_PARAMETER) == null ? null: Date.parse(testingConfiguration.get(APPLICATION_PARAMETER).toString());
+            return testingConfiguration.applicationDate;
         }
 
         try {
-            Date featureParameterDate = System.FeatureManagement.checkPackageDateValue(APPLICATION_DATE);
+            Date featureParameterDate = new UTIL_FeatureManagement().checkPackageDateValue(APPLICATION_DATE);
             return featureParameterDate == null || DEFAULT_NON_APPLICATED_DATE == featureParameterDate ? null : featureParameterDate;
         } catch (System.NoDataFoundException ex) {
             return null;
@@ -122,40 +118,39 @@ public with sharing class GS_NonprofitTrialOrgService {
     /**
      * @description Retrieves the Trial expiration date.
      * On prod this is populated quering the Organization object.
-     * For QA purpose this values can be overriden if this is running on a Scratch org and there is static resource called gsApplicationConfiguration
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is static resource called GettingStartedTestingConfigurationJSON
      * @return   DateTime with the expirationDate.
      */
     public static DateTime getExpirationDate() {
         if (overrideValuesForTesting) {
-            return  (testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER) == null ? null : 
-                    DateTime.parse(testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER).toString()));
+            return  testingConfiguration.trialExpiration;
         } else {
             return org.TrialExpirationDate;
         }
     }
 
     /**
-     * @description Returns a Map<String,Object> retrieved from a Static Resource called 'gsApplicationConfiguration'
-     * @return   Map<String, Object> testing configuration after parsing the Static Resource Json
+     * @description Returns a Map<String,Object> retrieved from a Static Resource called 'GettingStartedTestingConfigurationJSON'
+     * @return   TestingConfig testing configuration after parsing the Static Resource Json
      * Examples: 
      * {"Sandbox":false} simulates an Active org.
      * {"Sandbox":false,"TrialExpiration":"10/15/2020, 00:01 am”} simulates a trial org which is not applied for licenses.
      * {"Sandbox":false,"TrialExpiration":"10/15/2020","Application":"10/02/2020"} Simulates a trial org which has applied for licenses.
      */
-    private static Map<String, Object> getTestingConfiguration() {
+    private static TestingConfig getTestingConfiguration() {
         List<StaticResource> staticResources = [SELECT Body
                                                 FROM StaticResource
                                                 WHERE Name = :STATIC_RESOURCE_NAME
                                                ];
         if (!staticResources.isEmpty()) {
-            return (Map<String, Object>) JSON.deserializeUntyped(staticResources[0].Body.toString());
+            return (TestingConfig) JSON.deserialize(staticResources[0].Body.toString(), TestingConfig.class);
         }
         return null;
     }
 
     /**
-     * @description For better testeability, we allow to override some values if the Org is a scratch org and there is an static resource called gsApplicationConfiguration.
-     * @return   true if org is sandbox and there is a static resource gsApplicationConfiguration which could be parsed into Map<String, Object>
+     * @description For better testeability, we allow to override some values if the Org is a scratch org and there is an static resource called GettingStartedTestingConfigurationJSON.
+     * @return   true if org is sandbox and there is a static resource GettingStartedTestingConfigurationJSON which could be parsed into Map<String, Object>
      */
     private static Boolean shouldOverrideValuesWithTestData() { 
          return UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
@@ -169,5 +164,19 @@ public with sharing class GS_NonprofitTrialOrgService {
         return [SELECT TrialExpirationDate,
                        IsSandbox
                 FROM   Organization];
+    }
+
+    public class TestingConfig {
+        public Date applicationDate;
+        public Boolean isSandbox;
+        public DateTime trialExpiration;
+
+        public TestingConfig() {}
+
+        public TestingConfig(Date applicationDate, Boolean isSandbox, DateTime trialExpiration) {
+            this.applicationDate = applicationDate;
+            this.isSandbox = isSandbox;
+            this.trialExpiration = trialExpiration;
+        }
     }
 }

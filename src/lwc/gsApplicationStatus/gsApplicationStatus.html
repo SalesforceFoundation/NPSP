@@ -1,9 +1,8 @@
 <template >
     <template if:false={isActiveInstance}>
         <lightning-card>
-            <div class="spinner" >
-                <lightning-spinner alternative-text="Loading" if:true={isLoading}></lightning-spinner>
-            </div>
+            <lightning-spinner alternative-text="Loading" if:true={isLoading}></lightning-spinner>
+            
             <lightning-layout horizontal-align="space">
                 <lightning-layout-item >
                     <img class="image" src={img} alt=""/>

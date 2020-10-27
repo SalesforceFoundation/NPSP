@@ -39,35 +39,30 @@ public with sharing class GS_ApplicationStatusController_TEST {
      * @description Test returning data when trial Org and no application submitted
      */
     @IsTest 
-    public static void testGetApplicationStatusTrialOrgNonApplicated() {
-        Map<String, Object> testingConfiguration = new Map<String, Object> { 'Sandbox' => false, 
-                                                                             'TrialExpiration' => '10/15/2020, 00:01 AM'};
-
+    private static void testGetApplicationStatusTrialOrgNonApplicated() {
+        
+        GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(null, false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
         
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
-        System.assert(status != null, 'Status should not be null');
-        System.assert(!status.isSandbox, 'Status should not be sandbox');
-        System.assertEquals(Date.parse('10/15/2020'), date.newInstance(status.trialExpirationDate.year(), status.trialExpirationDate.month(), status.trialExpirationDate.day()), 'Trial expiration date not equal');
-        System.assert(status.applicationDate == null, 'application date should be null');
+        System.assertNotEquals(null, status, 'Status should not be null');
+        System.assertEquals(false, status.isSandbox, 'Status should not be sandbox');
+        System.assertEquals(Date.newInstance(2020,10,15), date.newInstance(status.trialExpirationDate.year(), status.trialExpirationDate.month(), status.trialExpirationDate.dayGMT()), 'Trial expiration date not equal');
+        System.assertEquals(null, status.applicationDate, 'application date should be null');
     }
     /**
      * @description Test returning data when trial Org and application submitted
      */
     @IsTest 
-    public static void testGetApplicationStatusTrialOrgApplicated() {
+    private static void testGetApplicationStatusTrialOrgApplicated() {
        
-
-        Map<String, Object> testingConfiguration = new Map<String, Object> { 'Sandbox' => false, 
-                                                                             'TrialExpiration' => '10/15/2020, 00:01 AM',
-                                                                             'Application' => '10/02/2020'};
-        
+        GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(Date.newInstance(2020,10,02), false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
-        
+       
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
-        System.assert(status != null, 'Status should not be null');
-        System.assert(!status.isSandbox, 'Status should not be sandbox');
-        System.assertEquals(Date.parse('10/15/2020'), date.newInstance(status.trialExpirationDate.year(), status.trialExpirationDate.month(), status.trialExpirationDate.day()), 'Trial expiration date not equal');
-        System.assertEquals(Date.parse('10/02/2020'), status.applicationDate, 'ApplicationDate is not equals to 10/02/2020');
+        System.assertNotEquals(null, status, 'Status should not be null');
+        System.assertEquals(false, status.isSandbox, 'Status should not be sandbox');
+        System.assertEquals(Date.newInstance(2020,10,15), Date.newInstance(status.trialExpirationDate.year(), status.trialExpirationDate.month(), status.trialExpirationDate.dayGMT()), 'Trial expiration date not equal');
+        System.assertEquals(Date.newInstance(2020,10,02), status.applicationDate, 'ApplicationDate is not equals to 10/02/2020');
     }
 }

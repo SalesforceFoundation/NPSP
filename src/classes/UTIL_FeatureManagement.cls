@@ -64,4 +64,11 @@ public with sharing class UTIL_FeatureManagement {
     public Integer checkPackageIntegerValue(String apiName) {
         return System.FeatureManagement.checkPackageIntegerValue(apiName);
     }
+
+    /**
+     * @description Wrapper for System.FeatureManagement
+     */
+    public Date checkPackageDateValue(String apiName) {
+        return System.FeatureManagement.checkPackageDateValue(apiName);
+    }
 }
