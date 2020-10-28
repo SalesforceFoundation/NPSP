@@ -721,6 +721,64 @@ public class RD2_ElevateIntegrationService_TEST {
         assertCancelCommitmentError(UTIL_Http_TEST.MESSAGE_DATA_CONFLICT, rd.Id);
     }
 
+    /***
+    * @description Should determine that transaction is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyTransactionFromElevateWhenLastElevateEventPlayedChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+        newRd.LastElevateEventPlayed__c = 'event-v2';
+        oldRd.LastElevateEventPlayed__c = 'event-v1';
+
+        System.assertEquals(
+            true,
+            RD2_ElevateIntegrationService.isFromElevate(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the transaction is from Elevate');
+    }
+
+    /***
+    * @description Should determine that transaction is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyTransactionNotFromElevateWhenLastElevateEventPlayedUnchanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+        newRd.LastElevateEventPlayed__c = 'event-v1';
+        oldRd.LastElevateEventPlayed__c = 'event-v1';
+
+        System.assertEquals(
+            false,
+            RD2_ElevateIntegrationService.isFromElevate(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the transaction is not from Elevate');
+    }
+
+    /***
+    * @description Should determine that transaction is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyTransactionNotFromElevateWhenLastElevateEventPlayedEmpty() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+
+        System.assertEquals(
+            false,
+            RD2_ElevateIntegrationService.isFromElevate(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the transaction is not from Elevate');
+    }
+
 
     // Helpers
     ///////////////////

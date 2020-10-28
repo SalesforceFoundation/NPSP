@@ -93,6 +93,26 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Determines whether a Recurring Donation transaction is from the Elevate integration
+    * @param rd Changed Recurring Donation
+    * @param oldRd Old Recurring Donation
+    * @return Boolean
+    */
+    public static Boolean isFromElevate(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
+        Boolean isFromElevate = false;
+
+        npe03__Recurring_Donation__c closedRd = rd.getSObject();
+        npe03__Recurring_Donation__c previousRD = oldRd.getSObject();
+        if (String.isNotEmpty(closedRd.LastElevateEventPlayed__c)
+            && closedRd.LastElevateEventPlayed__c != previousRd.LastElevateEventPlayed__c
+            ) {
+            isFromElevate = true;
+        }
+
+        return isFromElevate;
+    }
+
+    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
