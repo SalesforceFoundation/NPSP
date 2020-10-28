@@ -180,25 +180,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     set selectedDonationOrPaymentRecord(record) {
-        //todo: why was this id check in there before?
-        // if (record.hasOwnProperty('Id') && record.new === true) {
         if (record.new === true) {
-            //todo: make sure setting to null clears out sibling fields
             this.setCreateNewOpportunityInFormState();
         } else if (this.isAPaymentId(record.Id)) {
             this.setSelectedPaymentInFormState(record);
+            this.loadPaymentAndParentDonationFieldValues(record);
         } else if (this.isAnOpportunityId(record.Id)) {
             this.setSelectedDonationInFormState(record, record.applyPayment);
+            this.loadSelectedDonationFieldValues(record);
         } else {
             throw 'Unsupported selected donation type!';
         }
     }
 
     setSelectedPaymentInFormState(record) {
-        //todo: this should be done in response to pmtImported and donImported changing...
-        // except for "new"...
         const updatedData = {
-            //todo: remove data import from these field names
             [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]: record.Id,
             [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
                 record[PARENT_OPPORTUNITY_FIELD.fieldApiName],
@@ -206,9 +202,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch
         };
         this.updateFormState(updatedData);
+    }
 
-        //todo: work with objects.  push this apiNameFor down into the lowest method that
-        // needs it
+    loadPaymentAndParentDonationFieldValues(record) {
         this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD), record.Id);
 
@@ -218,22 +214,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setSelectedDonationInFormState(record, isApplyNewPayment = false) {
-        //todo: work with objects.  push this apiNameFor down into the lowest method that
-        // needs it
-        //todo: update so only clearing these out when necessary, like dont need to clear
-        // out opps before re-writing, but doing now to validate pmt clears
         this.resetDonationAndPaymentImportedFields();
-//if pmt is populated, clear it
-
-        this.loadSelectedRecordFieldValues(
-            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), record.Id);
 
         this.updateFormState({
             [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]: record.Id,
             [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]:
                 isApplyNewPayment ? applyNewPayment : userSelectedMatch
         });
+    }
 
+    loadSelectedDonationFieldValues(record) {
+        this.loadSelectedRecordFieldValues(
+            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), record.Id);
     }
 
     @track hasPurchaseCallTimedout = false;
