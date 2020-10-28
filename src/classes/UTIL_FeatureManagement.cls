@@ -66,9 +66,16 @@ public with sharing class UTIL_FeatureManagement {
     }
 
     /**
-     * @description Wrapper for System.FeatureManagement
+     * @description Wrapper for System.FeatureManagement.checkPackageDateValue
      */
     public Date checkPackageDateValue(String apiName) {
         return System.FeatureManagement.checkPackageDateValue(apiName);
+    }
+
+    /**
+     * @description Wrapper for System.FeatureManagement.setPackageDateValue
+     */
+    public void setPackageDateValue(String apiName, Date value) {
+        System.FeatureManagement.setPackageDateValue(apiName, value);
     }
 }
