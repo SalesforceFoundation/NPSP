@@ -278,8 +278,8 @@ public class UTIL_Describe {
     	Map<String, Schema.DescribeFieldResult> fields = getAllFieldsDescribe(sObjectName);
     	Set<String> accessibleFields = new Set<String>();
   
-    	for(Schema.DescribeFieldResult field : fields.values()){
-            if(field.getType() == Schema.DisplayType.Location){
+    	for (Schema.DescribeFieldResult field : fields.values()) {
+            if (field.getType() == Schema.DisplayType.Location) {
                 // Since Geolocation fields return an object, including them was causing an internal server error
                 // The Latitude and Longitude fields are still included in the list and can be referenced
                 continue;
@@ -289,10 +289,10 @@ public class UTIL_Describe {
     	}
   
     	String allFields = '';
-    	for(String fieldName : accessibleFields){
-      		allFields += fieldName+',';
+    	for (String fieldName : accessibleFields) {
+            allFields += fieldName + ','; 
         }
-    	allFields = allFields.substring(0, allFields.length()-1);
+        allFields = allFields.substring(0, allFields.length() - 1);
     	return allFields;
   	}
 
