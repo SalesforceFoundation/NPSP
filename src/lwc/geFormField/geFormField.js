@@ -482,7 +482,7 @@ export default class GeFormField extends LightningElement {
     }
 
     isUsingFormState() {
-        return this.isPicklist || this.isLookup;
+        return this.isPicklist || this.isLookup && this.element.elementType === 'field';
     }
 
     /**
