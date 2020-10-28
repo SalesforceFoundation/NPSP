@@ -8,11 +8,10 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
     @api formState;
-    @track hasCreditCardWidget = false;
+    _hasCreditCardWidget = false;
 
     renderedCallback() {
         this.registerCreditCardWidget();
-        this.handleChangeNameOnCardField();
     }
 
     /**
@@ -194,32 +193,36 @@ export default class GeFormSection extends LightningElement {
         if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
                 if (element.componentName === 'geFormWidgetTokenizeCard') {
-                    this.hasCreditCardWidget = true;
+                    this._hasCreditCardWidget = true;
                 }
             })
         }
-    }
+        if (this._hasCreditCardWidget) {
+            const registerCreditCardWidgetEvent = new CustomEvent(
+                'registercreditcardwidget'
+            );
+            this.dispatchEvent(registerCreditCardWidgetEvent)
+        }
 
-    handleChangeNameOnCardField() {
-        const changeNameOnCardFieldEvent = new CustomEvent(
-            'changenameoncardfield'
-        );
-        this.dispatchEvent(changeNameOnCardFieldEvent);
     }
 
     @api
-    setCardHolderName(value) {
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget => {
-            if (widget.isElevateTokenizeCard) {
-                widget.setCardHolderName(value);
-            }
-        });
+    get paymentToken() {
+        let widgetValues = [];
+        const widgets = this.template.querySelectorAll('c-ge-form-widget');
+        if (widgets !== null && typeof widgets !== 'undefined') {
+            widgets.forEach(widget => {
+                if (widget.isElevateTokenizeCard) {
+                    widgetValues.push(widget.paymentToken);
+                }
+            });
+        }
+        return widgetValues;
     }
 
     @api
     get isCreditCardWidgetAvailable() {
-        return this.hasCreditCardWidget;
+        return this._hasCreditCardWidget;
     }
 
     get renderableElements() {

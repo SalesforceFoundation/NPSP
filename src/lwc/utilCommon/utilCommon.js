@@ -12,7 +12,7 @@ const OBJECT = 'object';
  * @description 'Debouncifies' any function.
  *
  * @param {object} anyFunction: Function to be debounced.
- * @param {integer} wait: Time to wait by in milliseconds.
+ * @param {number} wait: Time to wait by in milliseconds.
  * @returns {function<Promise>} A debounced version of the function originally
  * passed to debouncify
  */

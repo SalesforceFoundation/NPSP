@@ -86,9 +86,11 @@ export default class GeFormWidget extends LightningElement {
     }
 
     @api
-    setCardHolderName(value) {
-        let creditCardWidget = this.template.querySelector('c-ge-form-widget-tokenize-card');
-        creditCardWidget.setNameOnCard(value);
+    get paymentToken(){
+        const thisWidget = this.widgetComponent;
+        if (this.isValid) {
+            return thisWidget.paymentToken;
+        }
     }
 
 }
