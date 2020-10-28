@@ -318,10 +318,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 return;
             }
 
-            // check if there is a record id in the url
-            const donorApiName = getQueryParameters().c__apiName;
-            this.initializeDonationDonorTypeInFormState(donorApiName);
-
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
                 this.formTemplate = response.formTemplate;
@@ -338,7 +334,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 let fieldNamesFromTemplate =
                     getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
                 this.fieldNames = [...this.fieldNames, ...fieldNamesFromTemplate];
-                if (isEmpty(this.donorRecordId)) {
+                if (isEmpty(this.donorId())) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
                     this.initializeForm(this.formTemplate);
@@ -348,15 +344,20 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     initializeDonationDonorTypeInFormState(donorApiName) {
-        if (donorApiName === 'Account') {
-            this.updateFormState({
-                [DATA_IMPORT_DONATION_DONOR_FIELD]: DONATION_DONOR_TYPE_ENUM.ACCOUNT1
-            });
-        }
-        if (donorApiName === 'Contact') {
-            this.updateFormState({
-                [DATA_IMPORT_DONATION_DONOR_FIELD]: DONATION_DONOR_TYPE_ENUM.CONTACT1
-            });
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)]:
+                this.getDonationDonorTypeFor(donorApiName)
+        });
+    }
+
+    getDonationDonorTypeFor(donorApiName) {
+        switch (donorApiName) {
+            case 'Account':
+                return DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+            case 'Contact':
+                return DONATION_DONOR_TYPE_ENUM.CONTACT1;
+            default:
+                throw `Unsupported donorApiName of: ${donorApiName}`;
         }
     }
 
@@ -456,9 +457,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // if not in batch mode, go back to point of origin
         if (isEmpty(this.batchId)) {
-            if (isNotEmpty(this.donorRecordId)) {
+            if (isNotEmpty(this.donorId())) {
                 // go back to the donor record page
-                this.navigateToRecordPage(this.donorRecordId);
+                this.navigateToRecordPage(this.donorId());
             } else {
                 // go back to the gift entry landing page;
                 this.navigateToLandingPage();
@@ -1694,14 +1695,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
     }
 
+    set donorId(id) {
+        const lookupFieldApiName = this.isAnAccountId(id) ?
+            apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD) :
+            this.isAContactId(id) ?
+                apiNameFor(DATA_IMPORT_CONTACT1_IMPORTED_FIELD) : null;
+
+        this.updateFormState({
+            [lookupFieldApiName]: id
+        });
+        this.loadSelectedRecordFieldValues(lookupFieldApiName, id);
+    }
+
     get donorId() {
         switch (this.donorType()) {
             case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
-                return this.getFieldValueFromFormState(
-                    DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName);
+                return this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD);
             case DONATION_DONOR_TYPE_ENUM.CONTACT1:
-                return this.getFieldValueFromFormState(
-                    DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName);
+                return this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_IMPORTED_FIELD);
             default:
                 return null;
         }
@@ -1919,7 +1930,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     lookupFieldApiNameFor(recordId) {
-        return this.lookupFieldApiNameBySelectedRecordId[recordId];
+        const valueForKeyByStartsWith =
+            this.getValueForKeyByStartsWith(recordId,
+                this.lookupFieldApiNameBySelectedRecordId);
+
+        return this.lookupFieldApiNameBySelectedRecordId[recordId] || valueForKeyByStartsWith;
     }
 
     /*******************************************************************************
@@ -2064,6 +2079,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     }
                 });
         }
+
+        //todo: if we do this here, can take it out of connected callback?
+        // check if there is a record id and donor apiName in the url
+        const donorApiName = getQueryParameters().c__apiName;
+        this.initializeDonationDonorTypeInFormState(donorApiName);
+        this.donorId = getQueryParameters().c__donorRecordId;
     }
 
     setInitialValueInFormStateForElement(element) {
@@ -2183,7 +2204,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return objMapping && objMapping.Imported_Record_Field_Name;
     }
 
-    donorType() {
+    get donorType() {
         return this.getFieldValueFromFormState(
             apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD));
     }
@@ -2737,5 +2758,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (!inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName]) return;
         dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
             inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
+    }
+
+    isAnAccountId(id) {
+        return id && typeof id === 'string' &&
+            id.startsWith(this.accountKeyPrefix);
+    }
+
+    isAContactId(id) {
+        return id && typeof id === 'string' &&
+            id.startsWith(this.contactKeyPrefix);
+    }
+
+    getValueForKeyByStartsWith(longKey, keyValueMap) {
+        for (const [key, value] of Object.entries(keyValueMap)) {
+            if (longKey.startsWith(key)) {
+                return value;
+            }
+        }
     }
 }
