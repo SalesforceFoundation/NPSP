@@ -33,8 +33,6 @@ import {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     checkPermissionErrors,
-    CONTACT_FIRST_NAME_INFO,
-    CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -61,7 +59,6 @@ import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
-import DATA_IMPORT_ACCOUNT1_NAME_FIELD from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
 import DATA_IMPORT_CONTACT1_LASTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
@@ -90,6 +87,7 @@ import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
+import DATA_IMPORT_ACCOUNT1_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
@@ -295,7 +293,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // check if there is a record id in the url
             this.donorRecordId = getQueryParameters().c__donorRecordId;
             const donorApiName = getQueryParameters().c__apiName;
-            this.initializeDonationDonorTypeInFormState(donorApiName);
+            if(donorApiName) {
+                this.initializeDonationDonorTypeInFormState(donorApiName);
+            }
 
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
@@ -453,7 +453,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     handleSingleGiftErrors(error) {
         this.loadingText = null;
-
+        this.updateFormState({[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)] : ''});
         const hasHttpRequestError = error instanceof HttpRequestError;
         if (hasHttpRequestError) {
             return this.catchHttpRequestError(error);
@@ -720,10 +720,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // clean errors present on form
         this.clearErrors();
         // apply custom and standard field validation
-        if (!this.isFormValid(sectionsList)) {
-            return false;
-        }
-        return true;
+        return this.isFormValid(sectionsList);
+
     }
 
     /*******************************************************************************
@@ -1063,7 +1061,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     @api
     getCardholderNames() {
-        const names = this.fabricatedCardholderNames;
+        const names = {
+            firstName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD),
+            lastName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_LASTNAME_FIELD),
+            accountName: this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_NAME)
+        };
         const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
         const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
@@ -1658,13 +1660,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleRegisterCreditCardWidget() {
        this._hasCreditCardWidget = true;
     }
-
-    /**
-     * Function that fabricates the cardholder name for the credit card widget
-     * @param fieldList (List of fields displayed on the form)
-     * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
-     */
-    fabricateCardHolderName(fieldList){ }
 
     getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
         let allFields = {};
