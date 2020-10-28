@@ -89,7 +89,7 @@ import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
-
+import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
@@ -1537,6 +1537,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @wire(getObjectInfo, {objectApiName: CONTACT_OBJECT.objectApiName})
     contactObjectInfo;
 
+    @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT_OBJECT)})
+    dataImportObjectInfo;
+
     mapRecordValuesToDataImportFields(record) {
         //reverse map to create an object with relevant source field api names to values
         let dataImport = {};
@@ -2250,22 +2253,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     saveableFormState() {
         let dataImportRecord = deepClone(this.formState);
-        this.removeRelationshipFieldsFrom(dataImportRecord);
+        dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
         return dataImportRecord;
-    }
-
-    /**
-     * @description Removes all relationships fields ('__r') from the
-     * provided object.
-     *
-     * @param object: A map of sObject fields
-     */
-    removeRelationshipFieldsFrom = (object) => {
-        Object.keys(object).forEach(key => {
-            if (key.includes('__r')) {
-                delete object[key];
-            }
-        });
     }
 
     /*******************************************************************************
@@ -2655,5 +2644,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 return value;
             }
         }
+    }
+
+    removeFieldsNotInObjectInfo(dataImportRecord) {
+        const diFields = Object.keys(this.dataImportObjectInfo.data.fields);
+        for(const key of Object.keys(dataImportRecord)) {
+            if(!diFields.includes(key)) {
+                delete dataImportRecord[key];
+            }
+        }
+        return dataImportRecord;
     }
 }
