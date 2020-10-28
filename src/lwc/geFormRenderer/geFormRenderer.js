@@ -233,25 +233,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     }
 
-    get selectedDonationDataImportFieldValues() {
-        return {
-            //todo: this used to be an object
-            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]:
-                this.getFieldValueFromFormState(
-                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)),
-            [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]:
-                this.getFieldValueFromFormState(
-                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)),
-            //todo: used to be an object
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
-                this.getFieldValueFromFormState(
-                    apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)),
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]:
-                this.getFieldValueFromFormState(
-                    apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD))
-        };
-    }
-
     @track hasPurchaseCallTimedout = false;
 
     _account1Imported;
@@ -334,7 +315,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 let fieldNamesFromTemplate =
                     getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
                 this.fieldNames = [...this.fieldNames, ...fieldNamesFromTemplate];
-                if (isEmpty(this.donorId())) {
+                if (isEmpty(this.donorId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
                     this.initializeForm(this.formTemplate);
@@ -457,9 +438,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // if not in batch mode, go back to point of origin
         if (isEmpty(this.batchId)) {
-            if (isNotEmpty(this.donorId())) {
+            if (isNotEmpty(this.donorId)) {
                 // go back to the donor record page
-                this.navigateToRecordPage(this.donorId());
+                this.navigateToRecordPage(this.donorId);
             } else {
                 // go back to the gift entry landing page;
                 this.navigateToLandingPage();
@@ -698,9 +679,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // TODO: Victor will likely remove lines 619 - 628
             let inMemoryDataImport;
             try {
-                inMemoryDataImport = await this.buildDataImportFromSections(
-                    sectionsList, this.selectedDonationDataImportFieldValues
-                );
+                inMemoryDataImport = await this.buildDataImportFromSections(sectionsList);
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
                 this.handleAsyncWidgetError(ex);
@@ -986,16 +965,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.dataImport = dataImport;
         }
 
-        // If the dataImport being loaded has Donation Donor, Contact1Imported,
-        // or Account1Imported set, set the Renderer's stored property values
-        this.setStoredDonationDonorProperties(dataImport);
-
-        // If there is a currently selected Donation and the caller wants those values
-        // applied to the dataImport record, add them (used during save operation)
-        if (this.selectedDonationOrPaymentRecord && applySelectedDonationFieldValues) {
-            dataImport = {...dataImport, ...this.selectedDonationDataImportFieldValues};
-        }
-
         if (this.selectedDonationOrPaymentRecord && this.selectedDonationOrPaymentRecord.Id &&
             this.selectedDonationOrPaymentRecord.Id.startsWith(this.oppPaymentKeyPrefix)) {
             // If the selected donation is a Payment, set Donation Amount
@@ -1017,32 +986,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.handleNameOnCardFieldChange();
     }
 
-    setStoredDonationDonorProperties(dataImport) {
-        const donationDonor = dataImport[DONATION_DONOR_FIELDS.donationDonorField];
-        if (donationDonor) {
-            this.handleDonationDonorChange(
-                dataImport[DONATION_DONOR_FIELDS.donationDonorField]
-            );
-        }
-        if (dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]) {
-            this.handleDonorAccountChange(dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]);
-        }
-        if (dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]) {
-            this.handleDonorContactChange(
-                dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]
-            );
-        }
-        if (dataImport[DATA_IMPORT_CONTACT1_LASTNAME_FIELD.fieldApiName]) {
-            this._contact1LastName = dataImport[DATA_IMPORT_CONTACT1_LASTNAME_FIELD.fieldApiName].value;
-        }
-        if (dataImport[DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD.fieldApiName]) {
-            this._contact1FirstName = dataImport[DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD.fieldApiName].value;
-        }
-        if (dataImport[DATA_IMPORT_ACCOUNT1_NAME_FIELD.fieldApiName]) {
-            this._account1Name = dataImport[DATA_IMPORT_ACCOUNT1_NAME_FIELD.fieldApiName].value;
-        }
-    }
-
     @api
     reset(applyDefaultValues = true) {
         this.resetFields(applyDefaultValues);
@@ -1052,7 +995,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     resetFormState() {
         this.dataImport = null;
-        this.setReviewDonationsDonorProperties(null);
+        fireEvent(this, 'resetReviewDonationsEvent', {});
         this.resetStoredDonationDonorProperties();
         this.initializeFormState();
     }
@@ -1088,7 +1031,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._account1Name = null;
         this._contact1LastName = null;
         this._contact1FirstName = null;
-        fireEvent(this, 'resetReviewDonationsEvent', {});
     }
 
     get mode() {
@@ -1118,13 +1060,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
         const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
-        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
+        if (this.donorType === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             return {
                 firstName: accountName,
                 lastName: accountName
             }
         } else {
-            return { firstName, lastName };
+            return {firstName, lastName};
         }
 
     }
@@ -1193,15 +1135,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * @description Builds a full DataImport__c record from the provided form sections
-    * and potential donor data selected from the review donations modal.
-    *
-    * @param {list} sections: List of all form sections
-    * @param {object} dataImportWithDonorData: Object holding data import values from
-    * the 'Review Donations' modal.
-    */
-    async buildDataImportFromSections(sections, dataImportWithDonorData) {
-        let dataImportRecord = await this.buildDataImportRecord(sections, dataImportWithDonorData);
+     * @description Builds a full DataImport__c record from the provided form sections
+     * and potential donor data selected from the review donations modal.
+     *
+     * @param {list} sections: List of all form sections
+     * @param {object} dataImportWithDonorData: Object holding data import values from
+     * the 'Review Donations' modal.
+     */
+    async buildDataImportFromSections(sections) {
+        let dataImportRecord = await this.buildDataImportRecord(sections);
 
         if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
@@ -1219,7 +1161,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param dataImportWithDonorData        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    async buildDataImportRecord(sectionList, dataImportWithDonorData) {
+    async buildDataImportRecord(sectionList) {
         let fieldData = {};
         let widgetValues = [];
 
@@ -1339,46 +1281,38 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
     }
 
-    handleDonorLookupFieldsChange(fieldApiName, recordId) {
-        if (fieldApiName === DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName) {
-            this.handleDonorAccountChange(recordId);
-        } else if (fieldApiName === DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName) {
-            this.handleDonorContactChange(recordId);
-        }
-    }
-
     objectMappingDeveloperNameFor(fieldApiName) {
         const objectMapping = this.getObjectMapping(fieldApiName);
         return objectMapping && objectMapping.DeveloperName;
     }
 
-    setReviewDonationsDonorProperties(recordId) {
-        if (recordId && this.donorType()) {
-            const isDonorAccount1 =
-                this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1 &&
-                recordId.startsWith(this.accountKeyPrefix);
-            const isDonorContact1 =
-                this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1 &&
-                recordId.startsWith(this.contactKeyPrefix);
+    //todo: just set these four fields in formState:
+    // Opp selected:
+    // npsp__DonationImportStatus__c: "User-Selected Match"
+    // npsp__DonationImported__c: {value: "0061700000Ol4QcAAJ", displayValue: "Test Grant"}
+    // npsp__PaymentImportStatus__c: null
+    // npsp__PaymentImported__c: null
+    // Apply new Pmt:
+    // npsp__DonationImportStatus__c: "Apply New Payment"
+    // npsp__DonationImported__c: {value: "0061700000Ol4QcAAJ", displayValue: "Test Grant"}
+    // npsp__PaymentImportStatus__c: null
+    // npsp__PaymentImported__c: null
+    // Update a Pmt:
+    // npsp__DonationImportStatus__c: "User-Selected Match"
+    // npsp__DonationImported__c: {value: "0061700000Ol5n9AAB", displayValue: "Carl Harvey Donation (1) 1/15/2020"}
+    // npsp__PaymentImportStatus__c: "User-Selected Match"
+    // npsp__PaymentImported__c: {value: "a011700000K9VNhAAN", displayValue: "PMT-00000"}
+    // New Opp:
+    // npsp__DonationImportStatus__c: "User-Selected New Opportunity"
+    // npsp__DonationImported__c: null
+    // npsp__PaymentImportStatus__c: null
+    // npsp__PaymentImported__c: null
 
-            if (isDonorAccount1 || isDonorContact1) {
-                //todo: use selectedDonorId() elsewhere no need for this method
-                // this.selectedDonorId = recordId;
-                return;
-            }
-        }
-
-        // If donationDonor and recordId don't align or aren't set,
-        // reset all selected donation properties and form fields
-        // this.selectedDonorId = null;
-        if (!!this.selectedDonationOrPaymentRecord) {
-            this.resetDonationAndPaymentImportedFields();
-            // moved this below because we previously would never actually reach inside this
-            // condition otherwise. Even in scenarios we're we've definitely selected a donation
-            // prior to needing to reset.
-            // this.selectedDonationOrPayment = null;
-        }
-    }
+    // attributes: {type: "Opportunity"}
+    // new: true
+    //todo: either pass all of formState to review donations modal, OR
+    // generate message for its ui in renderer and pass that - no need to
+    // store this local copy just for its "new", "applyPayment" attributes...
 
     handleChangeSelectedDonation(event) {
         this.selectedDonationCopyForReviewDonationsModal =
@@ -1422,7 +1356,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     hasSelectedDonationOrPayment() {
         return this.selectedDonationOrPaymentRecord &&
-        this.selectedDonationOrPaymentRecord.Id ? true : false;
+        this.selectedDonationOrPaymentRecordId() ? true : false;
     }
 
     setCreateNewOpportunityInFormState() {
@@ -1432,63 +1366,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
     }
 
-    handlePaymentSelected() {
-        this.updateFormState({}
-        );
-    }
-
-    handleOpportunitySelected() {
-        const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
-        const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
-        const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
-        const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
-        //todo: set all these in formState
-        this.selectedDonationDataImportFieldValues[donationImported] =
-            {
-                value: this.selectedDonationOrPaymentRecord.Id,
-                displayValue: this.selectedDonationOrPaymentRecord.Name
-            };
-
-        if (this.selectedDonationOrPaymentRecord.applyPayment) {
-            this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                applyNewPayment;
-        } else {
-            this.selectedDonationDataImportFieldValues[donationImportStatus] =
-                userSelectedMatch;
-        }
-
-        this.selectedDonationDataImportFieldValues[paymentImported] = null;
-        this.selectedDonationDataImportFieldValues[paymentImportStatus] = null;
-    }
 
     resetDonationAndPaymentImportedFields() {
         this.resetSelectedPaymentFieldsInFormState();
         this.resetSelectedDonationFieldsInFormState();
-        //todo: reset these in formState, and make users of
-        // this.selectedDonationDataImportFieldValues reference formState instead,
-        // then remove this.selectedDonationDataImportFieldValues
-
-        // Reset the stored values for selected donation
-        // this.selectedDonationDataImportFieldValues
-        //     [DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName] = null;
-        // this.selectedDonationDataImportFieldValues
-        //     [DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName] = null;
-        // this.selectedDonationDataImportFieldValues
-        //     [DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName] = null;
-        // this.selectedDonationDataImportFieldValues
-        //     [DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName] = null;
-        //
-        // // Reset the "imported" and "imported status" donation fields if they are on the
-        // // form by loading the stored (now null) values for those fields
-        // // this.load(
-        // //     this.selectedDonationDataImportFieldValues, false);
-        // //
-        // // Reset form fields that have field mappings parented by DonationImported__c
-        // this.resetFieldsForObjMappingApplyDefaults(
-        //     GeFormService.objectMappingWrapperFor(
-        //         DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
-        //     ).DeveloperName);
-
     }
 
     /**
@@ -1708,7 +1589,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get donorId() {
-        switch (this.donorType()) {
+        switch (this.donorType) {
             case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
                 return this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD);
             case DONATION_DONOR_TYPE_ENUM.CONTACT1:
@@ -1723,11 +1604,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (selectedRecordId == null) {
             this._account1Name = null;
         }
-        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
-            this.setReviewDonationsDonorProperties(this._account1Imported);
-        } else if (this.donorType() === null) {
-            // TODO: Maybe auto-set to 'Account1'?
-        }
     }
 
     handleDonorContactChange(selectedRecordId) {
@@ -1736,19 +1612,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this._contact1LastName = null;
             this._contact1FirstName = null;
         }
-        if (this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
-            this.setReviewDonationsDonorProperties(this._contact1Imported);
-        } else if (this.donorType() === null) {
-            // TODO: Maybe auto-set to 'Contact1'?
-        }
     }
 
-    handleDonationDonorChange(donationDonorValue) {
+    handleDonationDonorChange() {
         if (!!this.selectedDonationOrPaymentRecord) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
         }
-        this.setReviewDonationsDonorProperties(this.donorId);
     }
 
     getObjectMappingsForSourceField(fieldApiName) {
@@ -1821,7 +1691,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    if (this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
+                    if (this.donorType === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
                         return {
                             firstName: firstName,
                             lastName: lastName,
@@ -2044,10 +1914,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleImportedRecordFieldChange(sourceField, value) {
         this.populateRelatedFieldsForSelectedLookupRecord(sourceField, value);
-
-        if (this.isDonorLookupField(sourceField)) {
-            this.handleDonorLookupFieldsChange(sourceField, value);
-        }
     }
 
     populateRelatedFieldsForSelectedLookupRecord(sourceField, value) {
@@ -2085,6 +1951,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const donorApiName = getQueryParameters().c__apiName;
         this.initializeDonationDonorTypeInFormState(donorApiName);
         this.donorId = getQueryParameters().c__donorRecordId;
+    }
+
+    setFormStateForURLQueryParameters() {
+        const donorApiName = getQueryParameters().c__apiName;
+        const donorId = getQueryParameters().c__donorRecordId;
+
+        if (donorApiName) {
+            this.initializeDonationDonorTypeInFormState(donorApiName);
+        }
+        if (donorId) {
+            this.donorId = donorId;
+        }
     }
 
     setInitialValueInFormStateForElement(element) {
@@ -2305,11 +2183,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     isDonorTypeContact() {
-        return this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1;
+        return this.donorType === DONATION_DONOR_TYPE_ENUM.CONTACT1;
     }
 
     isDonorTypeAccount() {
-        return this.donorType() === DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+        return this.donorType === DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
     }
 
     donorContactId() {
@@ -2715,9 +2593,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
 
-        submitDataImportToBDI({ dataImport: this.saveableFormState(), updateGift: hasUserSelectedDonation })
+        submitDataImportToBDI({
+            dataImport: this.saveableFormState(),
+            updateGift: this.hasSelectedDonationOrPayment()
+        })
             .then(opportunityId => {
                 this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
                 this.navigateToRecordPage(opportunityId);
