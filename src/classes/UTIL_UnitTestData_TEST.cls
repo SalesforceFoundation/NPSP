@@ -473,31 +473,31 @@ public class UTIL_UnitTestData_TEST {
     }
 
     //Utility method for creating a sample template.
-    public static FORM_Template createSampleTemplate () {
+    public static GE_Template.Template createSampleTemplate () {
 
-        FORM_Element field = new FORM_Element('field',
+        GE_Template.Element field = new GE_Template.Element('field',
                                               'True',
                                                null,
                                                'CustomLabel',
                                                new List<String>{'Account_1_Name','Account_1_Country'});
 
-        FORM_Element widget = new FORM_Element('widget',
+        GE_Template.Element widget = new GE_Template.Element('widget',
                                                'DisplayRule',
                                                'ComponentName',
                                                 new List<String>{'Contact_1_First_Name','Contact_1_Last_Name'});
 
-        FORM_Element[] elements = new FORM_Element[]{field,widget};
+        GE_Template.Element[] elements = new GE_Template.Element[]{field,widget};
 
-        FORM_Section section = new FORM_Section('SectionLabel',
+        GE_Template.Section section = new GE_Template.Section('SectionLabel',
                                                 'Accordion',
                                                 'Expanded',
                                                 'True',
                                                 elements);
 
-        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
-                                            new FORM_Section[]{section});
+        GE_Template.Layout layout = new GE_Template.Layout('DefaultMappingSet',
+                                            new GE_Template.Section[]{section});
 
-        FORM_Template template = new FORM_Template('Sample Template',
+        GE_Template.Template template = new GE_Template.Template('Sample Template',
                                                    'This is the description.',
                                                    '1.0',
                                                    layout);
@@ -704,9 +704,25 @@ public class UTIL_UnitTestData_TEST {
 
     /**
       * @description Generate a unique string to append to indexed fields to make them unique
+      * @return A unique string that uses the crypto class to generate a unique long value
       */
     public static String getUniqueString() {
-        return String.valueOf(Math.abs(Crypto.getRandomLong()));
+        return String.valueOf(Math.abs(getRandomLong));
+    }
+
+    /**
+     * @description Rather than call the Crypto class multiple times, call it only once and then
+     * increment the random long value to keep it unique without incurring the extra CPU cycles.
+     */
+    private static Long getRandomLong {
+        get {
+            if (getRandomLong == null) {
+                getRandomLong = Crypto.getRandomLong();
+            } else {
+                getRandomLong += 1;
+            }
+            return getRandomLong;
+        } set;
     }
 
     /**
@@ -902,8 +918,8 @@ public class UTIL_UnitTestData_TEST {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Validator_TDTM', false);
         turnOffAutomaticHHNaming();
     }
 

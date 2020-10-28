@@ -12,9 +12,9 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 Setup Test Data
     &{contact1} =                        API Create Contact    Email=automation@example.com
-    Store Session record                 Account               &{contact1}[AccountId] 
+    Store Session record                 Account               ${contact1}[AccountId] 
     Set suite variable                   &{contact1}
-    &{contact2} =                        API Create Contact    AccountId=&{contact1}[AccountId]
+    &{contact2} =                        API Create Contact    AccountId=${contact1}[AccountId]
     Set suite variable                   &{contact2}
 
 
@@ -26,11 +26,11 @@ Delete Contact from Household
     ...                                  Now try to delete the primary household account and verify that a warning message is displayed.
     [tags]                               W-037650              feature:Contacts And Accounts
     Go To Page                           Listing               Contact
-    Delete Record                        &{Contact2}[FirstName] &{Contact2}[LastName]
-    Go To Page                           Details               Account                                object_id=&{contact1}[Id]
-    Page Should Contain                  &{contact1}[LastName] Household
+    Delete Record                        ${Contact2}[FirstName] ${Contact2}[LastName]
+    Go To Page                           Details               Account                                object_id=${contact1}[Id]
+    Page Should Contain                  ${contact1}[LastName] Household
     Go To Page                           Listing               Contact
-    Select Row                           &{Contact1}[FirstName] &{Contact1}[LastName]
+    Select Row                           ${Contact1}[FirstName] ${Contact1}[LastName]
     Click Link                           title=Delete
     Wait Until Page Contains             Warning
 

@@ -558,9 +558,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         cs.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         cs.Opp_RecTypes_Excluded_for_Payments__c = null;
         cs.Opp_Types_Excluded_for_Payments__c = null;
-        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        if(householdAccount != null)
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(CAO_Constants.HH_ACCOUNT_RT_DEVELOPER_NAME);
+        if (householdAccount != null) {
             cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+        }
     }
 
     private static void configHouseholdSettings(npo02__Households_Settings__c hs) {
@@ -634,6 +635,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
             settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+            settings.InstallmentOppFirstCreateMode__c = RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
             settings.DisableRollupsWhenCreatingInstallments__c = false;
             settings.NextDonationDateMatchRangeDays__c = RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS;
 
@@ -848,6 +850,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         errorSettings.OverrideFeature_PilotEnabled__c = mySettings.OverrideFeature_PilotEnabled__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
         errorSettings.Respect_Duplicate_Rule_Settings__c = mySettings.Respect_Duplicate_Rule_Settings__c;
+        errorSettings.DisableRecordDataHealthChecks__c = mySettings.DisableRecordDataHealthChecks__c == true;
+
         orgErrorSettings = errorSettings;
         return errorSettings;
     }
@@ -897,6 +901,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.UseFiscalYearForRecurringDonationValue__c = settings.UseFiscalYearForRecurringDonationValue__c;
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
+        recurringDonationsSettings.InstallmentOppFirstCreateMode__c = settings.InstallmentOppFirstCreateMode__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
         recurringDonationsSettings.NextDonationDateMatchRangeDays__c = settings.NextDonationDateMatchRangeDays__c;

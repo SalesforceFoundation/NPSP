@@ -19,7 +19,7 @@ Verify Error Message with GE Disabled and enable GE
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry
     Enable Advanced Mapping If Not Enabled
     Verify Gift Entry Is Not Enabled
-    Go To Page                                Landing              GE_Gift_Entry
+    Go To Page                                Landing              GE_Gift_Entry        default=error
     Wait Until Page Contains                  This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.
     Go To Page                                Custom              NPSP_Settings
     Open Main Menu                            System Tools

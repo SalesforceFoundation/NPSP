@@ -354,4 +354,10 @@ public with sharing class RD2_Settings_TEST {
         UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
+
+    public static void configureForASyncFirstOpportunityCreate() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'InstallmentOppFirstCreateMode__c' => RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name() }
+        );
+    }
 }

@@ -246,6 +246,11 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     /***********************************************************************************************
+    * @description Aria Column heading map
+    */
+    public Map<Id, String> ariaNameMap { get; private set; }
+
+    /***********************************************************************************************
     * @description List of readonly fields
     */
     public static List<String> readOnlyFields = new List<String>{
@@ -362,7 +367,7 @@ public with sharing class CON_ContactMerge_CTRL {
         * @description Constructor that initializes the values property.
         * @param fieldName The name of the field.
         * @param fieldLabel The field label.
-        * @param showRadio Wether a radio button should be displayed for the row.
+        * @param showRadio Whether a radio button should be displayed for the row.
         * @param styleClass The style class.
         */
         public FieldRow(String fieldName, String fieldLabel, Boolean showRadio, String styleClass) {
@@ -744,9 +749,13 @@ public with sharing class CON_ContactMerge_CTRL {
         List<String> values = new List<String>();
         DateTime lastModifiedDate = null;
         String prev;
+        ariaNameMap = new Map<Id, String>();
 
         // Iterate over all contacts to find the field values and add them to row values
         for (SObject c : objs) {
+            // Add name to aria name map
+            ariaNameMap.put(c.Id, String.valueOf(c.get('Name')));
+
             // For lookup fields set the name as the values
             if (fieldDesc.getRelationshipName() != null) {
                 Sobject obj = c.getSObject(fieldDesc.getRelationshipName());

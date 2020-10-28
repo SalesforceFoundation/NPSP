@@ -1,6 +1,6 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { isEmpty, isNotEmpty, deepClone } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, deepClone, showToast } from 'c/utilCommon';
 
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
@@ -20,6 +20,7 @@ import DI_BATCH_LAST_VIEWED_DATE from '@salesforce/schema/DataImportBatch__c.Las
 import DI_BATCH_SYSTEM_MODSTAMP from '@salesforce/schema/DataImportBatch__c.SystemModstamp';
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
+import DI_BATCH_STATUS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Status__c';
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
 import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
 import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
@@ -75,13 +76,13 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import getGiftEntrySettings from
-        '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings';
+        '@salesforce/apex/GE_GiftEntryController.getGiftEntrySettings';
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
 
-// cache custom labels 
+// cache custom labels
 const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -122,6 +123,7 @@ Object.freeze(DEFAULT_BATCH_HEADER_FIELDS);
 const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_PROCESS_SIZE_INFO.fieldApiName,
     DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO.fieldApiName,
+    DI_BATCH_STATUS_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_RULE_INFO.fieldApiName,
@@ -293,28 +295,6 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 }
 
 /*******************************************************************************
-* @description Creates and dispatches a ShowToastEvent
-*
-* @param {string} title: Title of the toast, displayed as a heading.
-* @param {string} message: Message of the toast. It can contain placeholders in
-* the form of {0} ... {N}. The placeholders are replaced with the links from
-* messageData param
-* @param {string} mode: Mode of the toast
-* @param {array} messageData: List of values that replace the {index} placeholders
-* in the message param
-*/
-const showToast = (title, message, variant, mode, messageData) => {
-    const event = new ShowToastEvent({
-        title: title,
-        message: message,
-        variant: variant,
-        mode: mode,
-        messageData: messageData
-    });
-    dispatchEvent(event);
-}
-
-/*******************************************************************************
 * @description Creates and dispatches an error toast.
 *
 * @param {object} error: Event holding error details
@@ -394,7 +374,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
                             let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
                             fieldNames.push(`${objectName}.${fieldName}`);
                         }
-                    }                
+                    }
                 }
             }
 
@@ -426,10 +406,10 @@ const checkPermissionErrors = (formTemplate) => {
 
     if (template.permissionErrorType === CRUD_ERROR_TYPE) {
         errorObject.errorTitle = CUSTOM_LABELS.geErrorObjectCRUDHeader;
-        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);   
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);
     } else if (template.permissionErrorType === FLS_ERROR_TYPE) {
         errorObject.errorTitle = CUSTOM_LABELS.geErrorFLSHeader;
-        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody, permissionErrors); 
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody, permissionErrors);
     }
 
     return errorObject;
@@ -455,19 +435,18 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 
     sections.forEach(section => {
         const elements = section.elements;
-  
+
         elements.forEach(element => {
             if (element.elementType === 'field') {
-                // set an empty default value
-                element.recordValue = '';
 
                 for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                    const fieldMapping = fieldMappings[fieldMappingDevName];
+                    const objectName = fieldMapping && fieldMapping.Target_Object_API_Name;
 
                     // set the field values for contact and account
                     if (objectName === record.apiName) {
                         // field name from the mappings
-                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                        let fieldName = fieldMapping.Target_Field_API_Name;
 
                         // get the record value and store it in the element
                         element.recordValue = record.fields[fieldName].value;
@@ -545,7 +524,6 @@ export {
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
     dispatch,
-    showToast,
     handleError,
     generateId,
     inputTypeByDescribeType,

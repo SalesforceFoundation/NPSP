@@ -13,16 +13,16 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Custom Fields and data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Custom Fields and data
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=Account
     ...                                                    Field_Type=Currency
     ...                                                    Field_Name=This Year Payments on Past Year Pledges
 
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=Payment
     ...                                                    Field_Type=Formula
     ...                                                    Field_Name=Is Opportunity From Prior Year

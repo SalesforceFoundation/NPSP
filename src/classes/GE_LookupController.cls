@@ -47,8 +47,49 @@ public with sharing class GE_LookupController {
      *
      * @return              A List<LookupResult> containing records that match the search criteria.
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
+        Boolean isSearchable = UTIL_Describe.getObjectDescribe(sObjectType).isSearchable();
+        if (isSearchable) {
+            return doSearchSOSL(searchValue, sObjectType);
+        } else {
+            return doSearchSOQL(searchValue, sObjectType);
+        }
+    }
+
+    /**
+     * @description Search for RecordTypes for the given SObject
+     *
+     * @param searchValue   Value to search RecordType Names with
+     * @param sObjectType   Parent SObject Type to search Record Types for
+     *
+     * @return              A List<LookupResult> containing Record Types that match the search criteria.
+     */
+    @AuraEnabled
+    public static List<LookupResult> doSearchRecordType(String searchValue, String sObjectType) {
+        String formattedValue = '%' + String.escapeSingleQuotes(searchValue) + '%';
+        String queryTemplate = 'SELECT Id, Name FROM RecordType WHERE SObjectType = :sObjectType AND Name LIKE :formattedValue LIMIT {0}';
+        List<String> args = new List<String> {String.valueOf(RESULTS_LIMIT)};
+        String query = String.format(queryTemplate, args);
+
+        List<LookupResult> results = new List<LookupResult>();
+        for (SObject result : Database.query(query)) {
+            results.add(new LookupResult(result));
+        }
+
+        return results;
+    }
+
+    /**
+     * @description Search for an SObject by its name field using SOSL
+     *     Objects without Name fields (Case, Task, Event...) are not compatible with this component.
+     *
+     * @param searchValue   Value to search for
+     * @param sObjectType   Type of SObject to Search
+     *
+     * @return              A List<LookupResult> containing records that match the search criteria.
+     */
+    private static List<LookupResult> doSearchSOSL(String searchValue, String sObjectType) {
         String formattedValue = '\'' + String.escapeSingleQuotes(searchValue) + '\'';
         String searchTemplate = 'FIND {0} IN NAME FIELDS Returning {1} LIMIT {2}';
         List<String> args = new List<String>{formattedValue, sObjectType + '(Name)', String.valueOf(RESULTS_LIMIT)};
@@ -60,9 +101,33 @@ public with sharing class GE_LookupController {
                 results.add(new LookupResult(queryResult));
             }
         }
+        return results;
+    }
+
+    /**
+     * @description  Search for an SObject by its name field using SOQL
+     *      Objects without Name fields (Case, Task, Event...) are not compatible with this component.
+     *
+     * @param searchValue   Value to search for
+     * @param sObjectType   Type of SObject to Search
+     *
+     * @return              A List<LookupResult> containing records that match the search criteria.
+     */
+    @TestVisible
+    private static List<LookupResult> doSearchSOQL(String searchValue, String sObjectType) {
+        String formattedValue = '%' + searchValue + '%';
+        String queryTemplate = 'SELECT Id, Name FROM {0} WHERE Name LIKE :formattedValue LIMIT {1}';
+        List<String> args = new List<String>{sObjectType, String.valueOf(RESULTS_LIMIT)};
+        String query = String.format(queryTemplate, args);
+
+        List<LookupResult> results = new List<LookupResult>();
+        for (SObject result : Database.query(query)) {
+            results.add(new LookupResult(result));
+        }
 
         return results;
     }
+
 
     /**
      * Class representing an option for a lookup search result in Gift Entry

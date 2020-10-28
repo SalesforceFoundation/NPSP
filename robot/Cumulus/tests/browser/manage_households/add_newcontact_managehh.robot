@@ -14,7 +14,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Setup Test Data
     &{contact} =         API Create Contact                    Email=${EMAIL1}
-    Store Session Record  Account                               &{contact}[AccountId]
+    Store Session Record  Account                               ${contact}[AccountId]
     Set suite variable    &{contact}
     ${first_name} =       Generate Random String
     Set suite variable    ${first_name}
@@ -26,18 +26,18 @@ ${EMAIL1}       user1@automation.com
 
 *** Test Cases ***
 
-Add New Contact to Existing Household 
-
+Add New Contact to Existing Household
+    [tags]                              unstable
     Go To Page                          Details
     ...                                 Account
-    ...                                 object_id=&{contact}[AccountId]
+    ...                                 object_id=${contact}[AccountId]
 
-    Click Actions Link                  Manage Household
-    Go To Page                          Custom                            ManageHousehold
-
+    Click Button                        Manage Household
+    Go To Page                          Custom                             ManageHousehold
+    Current Page Should Be              Custom                             ManageHousehold
     Add contact                         New                               ${first_name} ${last_name}
     Current Page Should Be              Details                           Account
     Wait Until Page Contains            Account Owner
-    Wait For Record To Update           &{contact}[AccountId]             &{contact}[LastName] and ${last_name} Household
+    Wait For Record To Update           ${contact}[AccountId]             ${contact}[LastName] and ${last_name} Household
     Select Tab                          Related
     Verify Related List Items           Contacts                          ${first_name} ${last_name}

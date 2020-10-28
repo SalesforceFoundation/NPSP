@@ -210,7 +210,6 @@ public class CRLP_RollupCMT {
                 this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? Schema.SObjectType.Contact.getLabel()+' '+System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
-                this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
         }
@@ -218,31 +217,69 @@ public class CRLP_RollupCMT {
         /**
          * @description Convert the value label to a readable format based on the developer name for record types
          * or split with new lines
-         * @param value the API value
-         * @param objectName the API name of the object
-         * @param fieldName the API name of the field
-         * @return Metadata.CustomMetadata instance for deployment
          */
-        private String getValueLabel (String value, String objectName, String fieldName) {
-            String valueLabel;
-            List<String> rtLabels = new List<String>();
+        public void setValueLabel () {
+            String label = this.value;
+
             if (fieldName == 'RecordTypeId') {
+                List<String> rtLabels = new List<String>();
                 SObjectType objType = UTIL_Describe.getSObjectType(objectName);
                 Map<String,Schema.RecordTypeInfo> rtMapByDevName = objType.getDescribe().getRecordTypeInfosByDeveloperName();
-                Map<String, String> rtDeveloperNameToName = new Map<String,String>();
+                Map<String, String> rtDeveloperNameToLabel = new Map<String,String>();
                 for (String devName : rtMapByDevName.keySet()) {
-                    rtDeveloperNameToName.put(devName, rtMapByDevName.get(devName).getName());
+                    rtDeveloperNameToLabel.put(devName, rtMapByDevName.get(devName).getName());
                 }
                 for (String val : value.split(';')) {
                     //val is the RT dev name
-                    rtLabels.add(rtDeveloperNameToName.get(val));
+                    rtLabels.add(rtDeveloperNameToLabel.get(val));
                 }
-                valueLabel = String.join(rtLabels,';');
-            } else {
-                valueLabel = value;
+                label = String.join(rtLabels,';');
+
+            } else if (this.value != null) {
+
+                DescribeFieldResult fld = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+
+                if (fld.getType() == DisplayType.BOOLEAN
+                    || fld.getType() == DisplayType.PICKLIST
+                    || fld.getType() == DisplayType.MULTIPICKLIST
+                ) {
+                    label = getPickistLabel();
+                }
             }
-            valueLabel = (valueLabel != null ? valueLabel.replace(';', ';\n') : null);
-            return valueLabel;
+            this.valueLabel = (label != null ? label.replace(';', ';\n') : null);
+        }
+
+        /**
+         * @description Returns the correct picklist labels for the picklist api names, including translations,
+         * and supporting semi-colon separated values
+         * @return String translated/correct picklist label
+         */
+        private String getPickistLabel() {
+            String label = this.value;
+            if (this.value == 'True') {
+                label = System.Label.labelBooleanTrue;
+
+            } else if (this.value == 'False') {
+                label = System.Label.labelBooleanFalse;
+
+            } else if (this.value != null) {
+                try {
+                    // Wrapped in a Try-Catch on the off-chance the describe or lookup fails.
+                    // The error is ignored though because the picklist label is still set
+                    SObjectType objType = UTIL_Describe.getSObjectType(this.objectName);
+                    SObjectField fldType = UTIL_Describe.getFieldDescribe(this.objectName, this.fieldName).getSobjectField();
+
+                    List<String> translatedValues = new List<String>();
+                    for (String v : this.value.split(';')) {
+                        String lbl = UTIL_Describe.getTranslatedPicklistLabel(objType, fldType, v);
+                        translatedValues.add(lbl);
+                    }
+                    if (!translatedValues.isEmpty()) {
+                        label = String.join(translatedValues, ';');
+                    }
+                } catch (Exception ex) { }
+            }
+            return label;
         }
 
         /**

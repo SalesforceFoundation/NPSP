@@ -180,6 +180,19 @@ private class BDE_BatchEntry_TEST {
         ext2.currentItem = b2;
         ext2.save();
         ext2.clear();         
-    }   
+    }
+
+    @IsTest
+    private static void shouldGetBatchDataEntrySettings () {
+        Batch_Data_Entry_Settings__c settings = BDE_BatchEntry_CTRL.getBatchDataEntrySettings();
+        System.assertNotEquals(settings, null, 'Batch Data Entry Setting should not be null');
+    }
+
+    @IsTest
+    private static void shouldUpsertRetirementAlert () {
+        BDE_BatchEntry_CTRL.upsertRetirementAlert(true);
+        Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getValues(UserInfo.getUserId());
+        System.assertEquals(settings.Viewed_Retirement_Alert__c, true, 'The retirement alert should be checked');
+    }
 
 }

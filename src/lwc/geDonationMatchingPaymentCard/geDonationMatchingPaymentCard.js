@@ -135,4 +135,12 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
         const detail = { objectApiName: PAYMENT_OBJECT.objectApiName, fields: deepClone(this.payment) };
         this.dispatchEvent(new CustomEvent('updatepayment', { detail }));
     }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorUpdatePayment() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdatePayment} ${this.paymentNameDetails.value}`;
+    }
 }

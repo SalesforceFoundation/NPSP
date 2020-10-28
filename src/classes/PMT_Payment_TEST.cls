@@ -35,6 +35,7 @@
 */
 @isTest
 private class PMT_Payment_TEST {
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
     @TestSetup
     static void createTestData() {
@@ -836,6 +837,90 @@ private class PMT_Payment_TEST {
         System.assertEquals(closedWonStage, opp.StageName);
     }
 
+    /**
+    * @description Verifies that when auto payment is not enabled and payments are fully received
+    *    the Opp will be updated to the Closed per Payment Auto Close State settings
+    */
+    @isTest
+    private static void oppStageShouldClosedWhenPaymentsAreFullyReceivedAndAutoPaymentNotEnabled() {
+        UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c = false;
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withAccount(acc.Id)
+            .withOpenStage()
+            .withCloseDate(System.today())
+            .withAMount(500)
+            .build();
+
+        insert opp;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>{
+            new npe01__OppPayment__c(
+                    npe01__Paid__c = true,
+                    npe01__Payment_Amount__c = 250,
+                    npe01__Opportunity__c = opp.Id
+            ),
+            new npe01__OppPayment__c(
+                    npe01__Paid__c = true,
+                    npe01__Payment_Amount__c = 250,
+                    npe01__Opportunity__c = opp.Id
+            )
+        };
+
+        Test.startTest();
+        insert pmts;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+
+        System.assertEquals(UTIL_UnitTestData_TEST.getClosedWonStage(), opp.StageName,
+            'Opportunity should be automatically closed when payments are fully received and payment enabled is off');
+    }
+
+    /**
+    * @description Verifies that when auto payment is enabled and payments are fully received,
+    *    the Opp will be updated to the Closed per Payment Auto Close State settings
+    */
+    @isTest
+    private static void oppStageShouldClosedWhenPaymentsAreFullyReceivedAndAutoPaymentEnabled() {
+        UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c = true;
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withAccount(acc.Id)
+            .withOpenStage()
+            .withCloseDate(System.today())
+            .withAMount(500)
+            .build();
+
+        insert opp;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>{
+            new npe01__OppPayment__c(
+                    npe01__Paid__c = true,
+                    npe01__Payment_Amount__c = 250,
+                    npe01__Opportunity__c = opp.Id
+            ),
+            new npe01__OppPayment__c(
+                    npe01__Paid__c = true,
+                    npe01__Payment_Amount__c = 250,
+                    npe01__Opportunity__c = opp.Id
+            )
+        };
+
+        Test.startTest();
+        insert pmts;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+
+        System.assertEquals(UTIL_UnitTestData_TEST.getClosedWonStage(), opp.StageName,
+            'Opportunity should be automatically closed when payments are fully received and payment enabled is off');
+    }
 
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity

@@ -20,6 +20,7 @@ import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonFieldsNotFound from '@salesforce/label/c.commonFieldsNotFound';
 import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
 import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
@@ -47,6 +48,8 @@ import commonYes from '@salesforce/label/c.commonYes';
 import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
+import geAssistiveDescriptionFieldRequired from '@salesforce/label/c.geAssistiveDescriptionFieldRequired';
+import geAssistiveDescriptionFieldOptional from '@salesforce/label/c.geAssistiveDescriptionFieldOptional';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
 import geAssistiveFieldUp from '@salesforce/label/c.geAssistiveFieldUp';
 import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
@@ -55,6 +58,7 @@ import geAssistiveFormFieldsRemoveField from '@salesforce/label/c.geAssistiveFor
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
 import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
 import geAssistiveRemoveSelectedOption from '@salesforce/label/c.geAssistiveRemoveSelectedOption';
+import geAssistiveRequireField from '@salesforce/label/c.geAssistiveRequireField';
 import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
@@ -134,6 +138,7 @@ import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertai
 import geErrorUncertainCardChargePart3 from '@salesforce/label/c.geErrorUncertainCardChargePart3';
 import geErrorUncertainCardChargePart4 from '@salesforce/label/c.geErrorUncertainCardChargePart4';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
+import geFieldsNotFoundMessage from '@salesforce/label/c.geFieldsNotFoundMessage';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
@@ -184,6 +189,7 @@ import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
+import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabBatchSettings from '@salesforce/label/c.geTabBatchSettings';
@@ -208,6 +214,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
 
 class GeLabelService {
 
@@ -237,6 +244,8 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonFieldNotFound,
+        commonFieldsNotFound,
         commonGauAllocations,
         commonGeneralAccountUnit,
         commonLabelNone,
@@ -264,6 +273,8 @@ class GeLabelService {
         geAddNewAllocation,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
+        geAssistiveDescriptionFieldOptional,
+        geAssistiveDescriptionFieldRequired,
         geAssistiveFieldDown,
         geAssistiveFieldUp,
         geAssistiveFormFieldsCollapseAll,
@@ -274,6 +285,7 @@ class GeLabelService {
         geAssistiveRemoveSelectedOption,
         geAssistiveSectionDown,
         geAssistiveSectionUp,
+        geAssistiveRequireField,
         geAssistiveShowMenu,
         geAssistiveSpinner,
         geBodyAdvancedFieldMapping,
@@ -350,6 +362,7 @@ class GeLabelService {
         geErrorUncertainCardChargePart2,
         geErrorUncertainCardChargePart3,
         geErrorUncertainCardChargePart4,
+        geFieldsNotFoundMessage,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
@@ -401,6 +414,7 @@ class GeLabelService {
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
         geSearchPlaceholder,
+        geSelectBatchTableColumns,
         geSelectPlaceholder,
         geTabBatchHeader,
         geTabBatchSettings,

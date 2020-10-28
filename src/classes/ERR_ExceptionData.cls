@@ -67,7 +67,7 @@ public with sharing class ERR_ExceptionData {
                 }
             }
         } else {
-            errorMessage = e.getMessage();
+            this.errorMessage = e.getMessage();
         }
     }
 

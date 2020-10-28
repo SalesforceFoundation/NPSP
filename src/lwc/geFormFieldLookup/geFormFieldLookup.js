@@ -2,8 +2,10 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
+import doSearchRecordType from '@salesforce/apex/GE_LookupController.doSearchRecordType';
 import { isNotEmpty } from 'c/utilCommon';
 import { handleError } from 'c/utilTemplateBuilder';
+import RECORD_TYPE from '@salesforce/schema/RecordType';
 
 const DELAY = 300;
 
@@ -46,9 +48,9 @@ export default class GeFormFieldLookup extends LightningElement {
     /**
      * Retrieve information about the object the lookup points to.
      */
-    @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
+    @wire(getObjectInfo, {objectApiName: '$targetObjectApiName'})
     wiredTargetObjectInfo(response) {
-        if(response.data) {
+        if (response.data) {
             this.targetObjectInfo = response;
             this.queryFields = this.getQueryFields();
         }
@@ -85,7 +87,7 @@ export default class GeFormFieldLookup extends LightningElement {
      */
     @api
     checkValidity() {
-        if(this.required) {
+        if (this.required) {
             return isNotEmpty(this.value);
         }
         return true;
@@ -145,7 +147,7 @@ export default class GeFormFieldLookup extends LightningElement {
      * When field gains focus, re-run search if no option is currently selected.
      */
     handleFocusIn() {
-        if(!this.value && this.displayValue && this.displayValue.length > 1) {
+        if (!this.value && this.displayValue && this.displayValue.length > 1) {
             this.retrieveLookupOptions(this.displayValue, this.targetObjectApiName);
         }
     }
@@ -153,7 +155,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api
     set objectDescribeInfo(newVal) {
         this._objectDescribeInfo = newVal;
-        if(typeof newVal !== 'undefined') {
+        if (typeof newVal !== 'undefined') {
             // needed for @wire reactive property
             this.targetObjectApiName = this.fieldInfo.referenceToInfos[0].apiName;
         }
@@ -169,7 +171,7 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     get fieldInfo() {
-        if(this.objectDescribeInfo && this.objectDescribeInfo) {
+        if (this.objectDescribeInfo && this.objectDescribeInfo) {
             return this.objectDescribeInfo.fields[this.fieldApiName];
         }
     }
@@ -179,14 +181,14 @@ export default class GeFormFieldLookup extends LightningElement {
      * @returns {string}
      */
     get targetObjectIconName() {
-        if(this.targetObjectInfo && this.targetObjectInfo.data) {
-            if(this.targetObjectInfo.data.themeInfo) {
+        if (this.targetObjectInfo && this.targetObjectInfo.data) {
+            if (this.targetObjectInfo.data.themeInfo) {
                 const {iconUrl} = this.targetObjectInfo.data.themeInfo;
                 const re = /\/(standard|custom)\/([a-zA-Z0-9]+)/;
                 const result = re.exec(iconUrl);
 
                 // explicitly handle only standard and custom icon sets
-                if(result !== null) {
+                if (result !== null) {
                     if (result[1] === 'standard') {
                         return 'standard:' + result[2];
                     } else if (result[1] === 'custom') {
@@ -204,7 +206,12 @@ export default class GeFormFieldLookup extends LightningElement {
      * @returns {Promise<void>}
      */
     retrieveLookupOptions = async (searchValue, sObjectType) => {
-        this.options = await doSearch({searchValue, sObjectType});
+        if (sObjectType === RECORD_TYPE.objectApiName) {
+            // if searching RecordTypes, set WHERE SObjectType clause to filter results.
+            this.options = await doSearchRecordType({searchValue, sObjectType: this.objectApiName});
+        } else {
+            this.options = await doSearch({searchValue, sObjectType});
+        }
     };
 
     @api
@@ -227,12 +234,26 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     @api
-    reset() {
-        this.value = this.defaultValue;
-        this.displayValue = this._defaultDisplayValue;
+    reset(setDefaults = true) {
+        if (setDefaults) {
+            this.value = this.defaultValue;
+            this.displayValue = this._defaultDisplayValue;
+        } else {
+            this.value = null;
+            this.displayValue = '';
+        }
 
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+
+        if (this.value) {
+            this.dispatchChangeEvent({
+                value: this.value,
+                displayValue:
+                this.displayValue,
+                fieldApiName: this.fieldApiName
+            });
+        }
     }
 
     dispatchChangeEvent(data) {

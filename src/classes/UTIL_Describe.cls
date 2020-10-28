@@ -293,6 +293,34 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+     * @description Provides the field used to retrieve the name of the related record for
+     *              a lookup when querying the child record.
+     * @return The dot-notation field name to use in SOQL queries for the field
+     *          represented by the arguments. Ex: Account.Name, Case.CaseNumber,
+     *          CustomObject__r.Name.
+     *
+     */
+    public static String getReferenceObjectNameField(SObjectField field) {
+        List<SObjectType> relatedObjects = field.getDescribe().getReferenceTo();
+        if (relatedObjects.isEmpty()) {
+            return null;
+        }
+
+        String childFieldName = String.valueOf(field);
+        if (childFieldName.endsWithIgnoreCase('__c')) {
+            childFieldName = childFieldName.removeEndIgnoreCase('c') + 'r';
+        } else if (childFieldName.endsWithIgnoreCase('Id')) {
+            childFieldName = childFieldName.removeEndIgnoreCase('Id');
+        }
+
+        return String.join(new List<String>{
+                childFieldName,
+                UTIL_Describe.getNameField(
+                        String.valueOf(relatedObjects[0]))
+        }, '.');
+    }
+
+    /*******************************************************************************************************
     * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE,
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
     * @param objectName the name of the object to look up

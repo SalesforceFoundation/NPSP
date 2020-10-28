@@ -15,6 +15,10 @@
         "click_through_agreement": {
             "message": "The Nonprofit Success Pack (\u201cNPSP\u201d) is an open-source package licensed by Salesforce.org (\u201cSFDO\u201d) under the BSD-3 Clause License, found at [https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause). ANY MASTER SUBSCRIPTION AGREEMENT YOU OR YOUR ENTITY MAY HAVE WITH SFDO DOES NOT APPLY TO YOUR USE OF NPSP. NPSP is provided \u201cAS IS\u201d AND AS AVAILABLE, AND SFDO MAKES NO WARRANTY OF ANY KIND REGARDING NPSP, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, FREEDOM FROM DEFECTS OR NON-INFRINGEMENT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.\r\n\r\nSFDO WILL HAVE NO LIABILITY ARISING OUT OF OR RELATED TO YOUR USE OF NPSP FOR ANY DIRECT DAMAGES OR FOR ANY LOST PROFITS, REVENUES, GOODWILL OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, COVER, BUSINESS INTERRUPTION OR PUNITIVE DAMAGES, WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES OR IF A REMEDY OTHERWISE FAILS OF ITS ESSENTIAL PURPOSE. THE FOREGOING DISCLAIMER WILL NOT APPLY TO THE EXTENT PROHIBITED BY LAW. SFDO DISCLAIMS ALL LIABILITY AND INDEMNIFICATION OBLIGATIONS FOR ANY HARM OR DAMAGES CAUSED BY ANY THIRD-PARTY HOSTING PROVIDERS.",
             "description": "legal text shown in modal dialog"
+        },
+        "error_message": {
+            "message": "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "description": "shown after failed installation (markdown)"
         }
     },
     "plan:existing_org": {
@@ -75,6 +79,54 @@
         "Enhanced Recurring Donations Metadata Updates": {
             "message": "Enhanced Recurring Donations Metadata Updates",
             "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Add Relationships for Trailhead",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "Ensure Opportunity Record Types",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Trailhead Playground Configuration",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "Remove Default Metadata",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "Update Administrator Profile",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "Prepare for Data Load",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Load Trailhead Data Set",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "Finalize Data Load",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "Create User",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "Assign Task Ownership",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "Configure Users",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "Assign Event Ownership",
+            "description": "title of installation step"
         }
     },
     "plan:new_org": {
@@ -112,6 +164,10 @@
     "checks": {
         "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
             "message": "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.",
+            "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "Please enable My Domain in your org prior to installing.",
             "description": "shown if validation fails"
         }
     },

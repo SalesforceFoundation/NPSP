@@ -780,6 +780,111 @@ private with sharing class STG_SettingsManager_TEST {
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
+    /***
+    * @description Verifies that RD Naming Options include all options for selection 
+    */
+    @isTest
+    private static void shouldHaveAllRDNamingFormatOptionsForSelection() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        Set<String> rdNamingApiValues = new Set<String>();
+
+        Test.startTest();
+        for (SelectOption option : panel.rdNamingOptions) {
+            rdNamingApiValues.add(option.getValue());
+        }
+        Test.stopTest();
+
+        List<String> expectedApiValues = new List<String> {
+            '',
+            RD2_NamingService.RD_NAMING_OPTION_1,
+            RD2_NamingService.RD_NAMING_OPTION_2,
+            RD2_NamingService.RD_NAMING_OPTION_3
+        };
+
+        for (String exptectedValue : expectedApiValues) {
+            System.assert(rdNamingApiValues.contains(exptectedValue),
+                exptectedValue + ' should be include as one of the rd naming option');
+        }
+    }
+
+    /**
+    * @description Verifies that when RD Auto Naming is off, Disable label should be displayed 
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenAutoNamingIsOff() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = false;
+
+        Test.startTest();
+        String displayedFormat = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgRDNamingDisable, displayedFormat, 'RD naming Disable Label should be displayed. ' + displayedFormat);
+        System.assertEquals('', selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 1 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption1() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_1;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_1.replace('$RECURRING_NAME_SUFFIX$', System.Label.RecurringDonationNameSuffix);
+
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_1, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 2 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption2() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_2;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel =
+            RD2_NamingService.RD_NAMING_OPTION_2.replace('$RECURRING_OBJECT_NAME$', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
+
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_2, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 3 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption3() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_3;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_3;
+
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_3, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
+    }
+
     /**
     * @description Should prevent read only user to delete opportunity naming settings
     * as they do not have delete permission
@@ -1076,6 +1181,26 @@ private with sharing class STG_SettingsManager_TEST {
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
             System.assertEquals(1, npe4__Relationship_Auto_Create__c.getAll().size());
             System.assertEquals(1, panel.listRelAutoCreate.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verifies that the user cannot update Error Settings without update permission 
+    */
+    @isTest
+    private static void shouldPreventUpdateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelHealthCheck);
+            STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+            STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
+            panel.saveSettings();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(Schema.SObjectType.Error_Settings__c.getLabel());
         }
 
         Test.stopTest();
@@ -1722,8 +1847,9 @@ private with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
-        system.assertEquals('idPanelHealthCheck', panel.idPanel());
-        system.assertEquals(null, panel.runDetector());
+        
+        System.assertEquals('idPanelHealthCheck', panel.idPanel());
+        System.assertEquals(null, panel.runDetector());
     }
 
     /*********************************************************************************************************
@@ -1808,6 +1934,35 @@ private with sharing class STG_SettingsManager_TEST {
             'User with Read Only Profile should not be abled to update RD Setting: ' + error.Full_Message__c);
 
 
+    }
+
+    /**
+    * @description Verifies that when DisableRecordDataHealthChecks__c is enabled,
+    *    all data record health checks should be disabled and have warning records created
+    */
+    @isTest
+    private static void shouldCreateWarningRecordsWhenDisabledRecordHealthCheckIsEnabled() {
+        STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+        STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
+        
+        Test.startTest();
+        panel.runDetector();
+        Test.stopTest();
+
+        List<STG_PAnelHealthCheck_CTRL.DetectResult> results = panel.listDR;
+        Boolean hasDisabledHealthCheckWarningMessage = false;
+
+        for (STG_PAnelHealthCheck_CTRL.DetectResult result : results) {
+            if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && result.strName == System.Label.healthLabelDataBatchNotRun) {
+                hasDisabledHealthCheckWarningMessage = true;
+                break;
+            }
+        }
+
+        System.assert(hasDisabledHealthCheckWarningMessage,
+            'A Warning message indicates Record Data Health Checks are not run should exist'
+        );
     }
 
     //Helper Methods

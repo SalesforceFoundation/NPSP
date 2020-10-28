@@ -19,7 +19,7 @@ Setup Test Data
     ...                     MailingState=CA
     ...                     MailingCountry=USA
 
-    Store Session Record  Account                               &{contact1}[AccountId]
+    Store Session Record  Account                               ${contact1}[AccountId]
     Set suite variable    &{contact1}
 
 *** Variables ***
@@ -35,13 +35,13 @@ Add New Address to Household
     ...                                  Verify the new address persists under both Mailing and Billing address details
     ...                                  Verify Same address should be present on Account and Contacts
 
-    [tags]                               W-038348             feature: Manage Households
+    [tags]                               unstable             W-038348             feature: Manage Households
 
     Go To Page                           Details
     ...                                  Account
-    ...                                  object_id=&{contact1}[AccountId]
+    ...                                  object_id=${contact1}[AccountId]
 
-    Click Actions Link                   Manage Household
+    Click Button                         Manage Household
     Current Page Should Be               Custom                             ManageHousehold
     Select Frame And Click Element       Manage Household
     ...                                  span_button
@@ -54,7 +54,7 @@ Add New Address to Household
 
     Go To Page                          Details
     ...                                 Contact
-    ...                                 object_id=&{contact1}[Id]
+    ...                                 object_id=${contact1}[Id]
 
     Scroll Element Into View            text:Mailing Address
     Verify Address Details              Mailing Address
@@ -62,7 +62,7 @@ Add New Address to Household
     ...                                 &{Address}
 
     Go To Page                          Listing                             Account
-    Click Link                          link=&{contact1}[LastName] Household
+    Click Link                          link=${contact1}[LastName] Household
     Select Tab                          Details
     Scroll Element Into View            text:Billing Address
 

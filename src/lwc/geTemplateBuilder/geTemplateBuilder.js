@@ -1,14 +1,13 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
-import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
+import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeFormTemplate';
+import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     dispatch,
     handleError,
-    showToast,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
@@ -23,6 +22,7 @@ import {
     getQueryParameters,
     shiftToIndex,
     sort,
+    showToast,
     getNamespace,
     removeByProperty,
     removeFromArray,
@@ -85,10 +85,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     /*******************************************************************************
     * @description Enums used for navigating and flagging active lightning-tabs.
     */
-    TabEnums = Object.freeze({
-        INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
-        FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
-        BATCH_SETTINGS_TAB: this.CUSTOM_LABELS.geTabBatchSettings
+    tabs = Object.freeze({
+        INFO: { id: "infoTab", label: this.CUSTOM_LABELS.geTabTemplateInfo },
+        FORM_FIELDS: { id: "formFieldsTab", label: this.CUSTOM_LABELS.geTabFormFields },
+        BATCH_SETTINGS: { id: "batchSettingsTab", label: this.CUSTOM_LABELS.geTabBatchSettings }
     });
 
     @api formTemplateRecordId;
@@ -97,7 +97,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     currentNamespace;
     @api isClone = false;
     @track isLoading = true;
-    @track activeTab = this.TabEnums.INFO_TAB;
+    @track activeTab = this.tabs.INFO.id;
     @track formTemplate = {
         name: null,
         description: null,
@@ -174,15 +174,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inTemplateInfoTab() {
-        return this.activeTab === this.TabEnums.INFO_TAB ? true : false;
+        return this.activeTab === this.tabs.INFO.id;
     }
 
     get inBatchHeaderTab() {
-        return this.activeTab === this.TabEnums.BATCH_SETTINGS_TAB ? true : false;
+        return this.activeTab === this.tabs.BATCH_SETTINGS.id;
     }
 
     get inSelectFieldsTab() {
-        return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
+        return this.activeTab === this.tabs.FORM_FIELDS.id;
     }
 
     get disableBatchTableColumnsSubtab() {
@@ -248,7 +248,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         try {
             this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
             const queryParameters = getQueryParameters();
-            await this.checkForFormTemplateRecordId(queryParameters);
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
+            await this.loadFormTemplateRecord(queryParameters);
 
             this.buildBatchHeaderFields();
             this.buildDefaultFormFields();
@@ -295,7 +296,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     *
     * @param {object} queryParameters: Object containing query parameters
     */
-    checkForFormTemplateRecordId = async (queryParameters) => {
+    loadFormTemplateRecord = async (queryParameters) => {
         if (!this.formTemplateRecordId) {
             this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
         }
@@ -310,7 +311,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.batchHeaderFields = formTemplate.batchHeaderFields;
             this.formLayout = formTemplate.layout;
             this.formSections = this.formLayout.sections;
-            this.selectedBatchTableColumnOptions = formTemplate.defaultBatchTableColumns;
+
+            this.selectedBatchTableColumnOptions = isEmpty(formTemplate.defaultBatchTableColumns) ?
+                [] : formTemplate.defaultBatchTableColumns;
 
             this.catalogFieldsForTemplateEdit();
         }
@@ -403,7 +406,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             const fieldMapping =
                 TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
-            if (SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) return;
+
+            if (isEmpty(fieldMapping) ||
+                SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+
+                return;
+            }
 
             this.availableBatchTableColumnOptions = [
                 ...this.availableBatchTableColumnOptions,
@@ -525,17 +533,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const tabValue = event.target.value;
 
         switch (tabValue) {
-            case this.TabEnums.INFO_TAB:
-                this.activeTab = this.TabEnums.INFO_TAB;
-                break;
-            case this.TabEnums.FORM_FIELDS_TAB:
-                this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
-                break;
-            case this.TabEnums.BATCH_SETTINGS_TAB:
-                this.activeTab = this.TabEnums.BATCH_SETTINGS_TAB;
+            case this.tabs.INFO.id:
+            case this.tabs.FORM_FIELDS.id:
+            case this.tabs.BATCH_SETTINGS.id:
+                // intentional fall-through
+                // if clicked tab id matches any of the above, switch to that tab
+                this.activeTab = tabValue;
                 break;
             default:
-                this.activeTab = this.TabEnums.INFO_Tab;
+                this.activeTab = this.tabs.INFO.id;
         }
     }
 
@@ -1197,9 +1203,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasTemplateInfoTabError) {
-            tabsWithErrors.add(this.TabEnums.INFO_TAB);
+            tabsWithErrors.add(this.tabs.INFO.label);
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Method checks for errors in the Select Fields tab. Currently only
@@ -1225,7 +1231,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasSelectFieldsTabError) {
-            tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
+            tabsWithErrors.add(this.tabs.FORM_FIELDS.label);
         }
     }
 
@@ -1256,7 +1262,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (isMissingBatchTableColumns) {
                 this.hasBatchSettingsTabError = true;
-                tabsWithErrors.add(this.TabEnums.BATCH_SETTINGS_TAB);
+                tabsWithErrors.add(this.tabs.BATCH_SETTINGS.label);
             } else {
                 this.hasBatchSettingsTabError = false;
             }

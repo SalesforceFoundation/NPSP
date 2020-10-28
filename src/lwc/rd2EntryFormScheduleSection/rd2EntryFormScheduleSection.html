@@ -1,0 +1,101 @@
+<template>
+
+    <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c">
+
+        <div class="slds-section slds-is-open">
+
+            <template if:false={isLoading}>
+
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
+                                           flexibility="shrink" if:true={fields.recurringType}>
+                        <lightning-input-field field-name={fields.recurringType.apiName}
+                                               onchange={onHandleRecurringTypeChange}
+                                               data-id='{fields.recurringType.apiName}'>
+                                               required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <template if:true={showNumPlannedInstallments}>
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}
+                                               if:true={fields.plannedInstallments}>
+                            <lightning-input-field field-name={fields.plannedInstallments.apiName} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
+                                           if:false={hidePeriodPicklistField}>
+                        <lightning-combobox
+                                name="CustomPeriodSelect"
+                                label={customLabels.fieldLabelPeriod}
+                                class="advanced-mode-fields rd2-entry-custom-field-padding"
+                                value={customPeriod}
+                                options={customPeriodOptions}
+                                onchange={onHandleRecurringPeriodChange}
+                                field-level-help={customLabels.customPeriodHelpText}
+                                disabled={disablePeriodPicklistField}
+                                required
+                        >
+                        </lightning-combobox>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:false={hideInstallmentFrequencyField}>
+                        <template if:true={isAdvancedMode}>
+                            <lightning-input label={customLabels.fieldLabelEvery}
+                                             name="installmentFrequency"
+                                             class="advanced-mode-fields rd2-entry-custom-field-padding"
+                                             value={inputFieldInstallmentFrequency}
+                                             type="number"
+                                             field-level-help={fields.installmentFrequency.inlineHelpText}
+                                             step="1"
+                                             min="1"
+                                             max="20"
+                                             disabled={disableInstallmentFrequencyField}
+                                             required
+                            >
+                            </lightning-input>
+                        </template>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:false={hidePeriodPicklistField}>
+                        <template if:true={isAdvancedMode}>
+                            <lightning-combobox
+                                name="advancedPeriodSelect"
+                                class="advanced-mode-fields rd2-entry-custom-field-padding"
+                                label={fields.period.label}
+                                value={customPeriodAdvancedMode}
+                                field-level-help={fields.period.inlineHelpText}
+                                options={advancedPeriodOptions}
+                                onchange={onHandleAdvancedPeriodChange}
+                                disabled={disablePeriodPicklistField}
+                                required>
+                            </lightning-combobox>
+                        </template>
+                    </lightning-layout-item>
+
+                    <template if:true={showDayOfMonth}>
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                               if:true={fields.dayOfMonth}>
+                            <lightning-input-field field-name={fields.dayOfMonth.apiName} value={defaultDayOfMonth} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:true={fields.startDate}>
+                        <lightning-input-field field-name={fields.startDate.apiName} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </template>
+
+        </div>
+
+    </lightning-record-edit-form>
+
+</template>

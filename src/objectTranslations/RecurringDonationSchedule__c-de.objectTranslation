@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplans für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplänen für wiederkehrende Spenden</value>
     </caseValues>
     <fields>
         <help>Bestimmt anhand des Enddatums, ob der Zeitplan für wiederkehrende Spenden aktiv oder inaktiv ist. Schreibgeschützt.</help>
@@ -140,8 +140,16 @@
             <translation>28</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -174,7 +182,7 @@
     </fields>
     <fields>
         <help>Das Enddatum für diesen Zeitplan-Datensatz, sofern erforderlich.</help>
-        <label>Enddatum</label>
+        <label>Enddatum des Zeitplans</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
@@ -218,6 +226,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Festlegen, wenn der Zeitplan-Datensatz einen Aufschub-Datumsbereich für die wiederkehrende Spende darstellt</help>
+        <label>Stellt Aufschub dar</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>Die Zahlungsform für diese wiederkehrende Spende. NPSP kopiert den ausgewählten Wert automatisch in jeden ausgewählten Zahlungsdatensatz.</help>
         <label>Zahlungsmethode</label>
         <name>PaymentMethod__c</name>
@@ -245,7 +258,12 @@
         <label>Inkrafttreten</label>
         <name>StartDate__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <fields>
+        <help>Enthält weitere Details zum Zeitplan. Beispielsweise einen Grund für einen Aufschub.</help>
+        <label>Grund für Status</label>
+        <name>StatusReason__c</name>
+    </fields>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>

@@ -1,3 +1,4 @@
+import { isNotEmpty, validateJSONString } from 'c/utilCommon';
 class ExceptionDataError extends Error {
 
     /*******************************************************************************
@@ -9,22 +10,21 @@ class ExceptionDataError extends Error {
     */
     constructor(apexException) {
         super();
-        if (apexException.body && apexException.body.exceptionType) {
-            this.exceptionType = apexException.body.exceptionType;
-            this.errorMessage = apexException.body.message;
+
+        if (isNotEmpty(apexException.body)) {
+            const apexExceptionWrapper = validateJSONString(apexException.body.message);
+
             this.stackTrace = apexException.body.stackTrace;
             this.isUserDefinedException = apexException.body.isUserDefinedException;
-            this.DMLErrorMessageMapping = {};
-            this.DMLErrorFieldNameMapping = {};
 
-        } else if (apexException.body && apexException.body.message) {
-            // This looks like an instance of the apex wrapper class ERR_ExceptionData
-            const apexExceptionWrapper = JSON.parse(apexException.body.message);
-            this.exceptionType = apexExceptionWrapper.exceptionType;
-            this.errorMessage = apexExceptionWrapper.errorMessage;
-            this.DMLErrorMessageMapping = apexExceptionWrapper.DMLErrorMessageMapping;
-            this.DMLErrorFieldNameMapping = apexExceptionWrapper.DMLErrorFieldNameMapping;
-
+            if (apexExceptionWrapper) {
+                this.exceptionType = apexExceptionWrapper.exceptionType;
+                this.DMLErrorMessageMapping = apexExceptionWrapper.DMLErrorMessageMapping;
+                this.DMLErrorFieldNameMapping = apexExceptionWrapper.DMLErrorFieldNameMapping;
+                this.errorMessage = apexExceptionWrapper.errorMessage;
+            } else {
+                this.errorMessage = apexException.body.message;
+            }
         } else {
             this.message = apexException;
         }

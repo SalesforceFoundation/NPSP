@@ -214,18 +214,55 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-    * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
-    * @return Map<Id, Boolean> isScheduleChangedById maps Recurring Donation Id to a boolean
-    * indicating whether the Recurring Donation update results in a new schedule.
+    * @description Contains all mandatory Recurring Donation fields required for the Opportunity Evaluation Service
+    */
+    private Set<String> rdFields = new Set<String> {
+        'CreatedDate',
+        'CreatedById',
+        'Id',
+        'LastModifiedDate',
+        'LastModifiedById',
+        'Name',
+        'OwnerId',
+        'npe03__Organization__c',
+        'npe03__Amount__c',
+        'npe03__Contact__c',
+        'npe03__Contact__r.AccountId',
+        'npe03__Date_Established__c',
+        'npe03__Donor_Name__c',
+        'npe03__Installments__c',
+        'npe03__Installment_Period__c',
+        'npe03__Last_Payment_Date__c',
+        'npe03__Next_Payment_Date__c',
+        'npe03__Paid_Amount__c',
+        'npe03__Recurring_Donation_Campaign__c',
+        'npe03__Total_Paid_Installments__c',
+        String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
+        String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
+        String.valueOf(npe03__Recurring_Donation__c.CurrentYearValue__c),
+        String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+        String.valueOf(npe03__Recurring_Donation__c.DisableFirstInstallment__c),
+        String.valueOf(npe03__Recurring_Donation__c.EndDate__c),
+        String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
+        String.valueOf(npe03__Recurring_Donation__c.NextYearValue__c),
+        String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c),
+        String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
+        String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
+        String.valueOf(npe03__Recurring_Donation__c.Status__c)
+    };
+
+    /**
+    * @description Recurring Donation Ids for which schedule has been changed
     */
     @TestVisible
-    private Map<Id, Boolean> isScheduleChangedById {
+    private Set<Id> rdIdsWhereScheduleChanged {
         get {
-            if (isScheduleChangedById == null) {
-                isScheduleChangedById = new Map<Id, Boolean>();
+            if (rdIdsWhereScheduleChanged == null) {
+                rdIdsWhereScheduleChanged = new Set<Id>();
             }
-            return isScheduleChangedById;
-        } set;
+            return rdIdsWhereScheduleChanged;
+        } 
+        set;
     }
 
     /**
@@ -274,12 +311,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
-     * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
+     * @description Set Recurring Donation Ids to indicate a changed schedule
+     * @param rdIds Recurring Donation Ids for which schedule has been changed
      * @return RD2_OpportunityEvaluationService The service instance
      */
-    public RD2_OpportunityEvaluationService withIsScheduleChangedById(Map<Id, Boolean> isScheduleChangedById) {
-        this.isScheduleChangedById = isScheduleChangedById;
+    public RD2_OpportunityEvaluationService withScheduleChanged(Set<Id> rdIds) {
+        this.rdIdsWhereScheduleChanged = rdIds;
         return this;
     }
 
@@ -353,7 +390,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
                 .revisePaidInstallments(paidInstallmentsByRDId.get(rd.Id))
-                .reviseStatus(currentDate)
+                .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
             //evaluate Opportunities
@@ -376,7 +413,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs, isScheduleChangedById)
+            .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);
@@ -456,7 +493,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-            return rdSettings.isFirstInstallmentEnabled;
+            return !rd.isFirstInstallmentDisabled() && rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
             return rdSettings.isNextInstallmentEnabled;
@@ -486,30 +523,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     public List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
-        final String parentAccountField = 'npe03__Contact__r.AccountId';
-
-        Map<String, Schema.DescribeFieldResult> allRdFields = UTIL_Describe.getAllFieldsDescribe(
-            npe03__Recurring_Donation__c.SObjectType.getDescribe().name
-        );
-
-        //Query all fields on the Recurring Donation SObject except CLOB fields.
-        //Thus, there is no need to include fields from the custom field mapping since
-        //they should be already included.
         Set<String> queryFields = new Set<String>();
-        for (String fld : allRdFields.keySet()) {
-            DescribeFieldResult fldResult = allRdFields.get(fld);
-            if (fldResult.getType() == DisplayType.BASE64 ||
-                fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
-                (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)
-            ) {
-                continue;
-            }
-            queryFields.add(fld);
-        }
 
-        queryFields.add(parentAccountField);
+        queryFields.addAll(rdFields);
+        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+        queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
         queryFields.add(getOpportunitySubQuery());
         queryFields.add(getScheduleSubQuery());
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            queryFields.add('CurrencyIsoCode');
+        }
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -520,6 +544,31 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return Database.query(soql);
     }
 
+    /***
+    * @description Retrieves Recurring Donation current and future closed and open Opportunities
+    * required to calculate Next Donation Date
+    * @param rdIds Recurring Donation Ids
+    * @return Map<Id, List<Opportunity>>
+    */
+    public Map<Id, List<Opportunity>> getOpportunitiesByRDId(Set<Id> rdIds) { 
+        Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
+
+        Set<String> queryFields = new Set<String>{ 'Id' };
+        queryFields.add(getOpportunitySubQuery());
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id IN :rdIds')
+            .build();
+
+        for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
+            oppsByRDId.put(rd.Id, rd.npe03__Donations__r);
+        }
+    
+        return oppsByRDId;
+    }
+
     /**
      * @description Returns query on Recurring Donation Schedule
      * Return all schedules for the RD Schedule visualization.
@@ -527,16 +576,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return String RD Schedule subquery used in the Recurring Donation SOQL
      */
     public String getScheduleSubQuery() {
-        return '(SELECT Id, InstallmentAmount__c, ' +
-            'Campaign__c, ' +
-            'Campaign__r.Name, ' +
-            'InstallmentFrequency__c, ' +
-            'InstallmentPeriod__c, ' +
-            'DayOfMonth__c, ' +
-            'PaymentMethod__c, ' +
-            'StartDate__c, ' +
-            'EndDate__c ' +
-            'FROM RecurringDonationSchedules__r)';
+        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
+
+        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
     /**

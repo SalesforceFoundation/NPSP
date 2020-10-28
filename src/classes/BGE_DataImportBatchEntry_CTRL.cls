@@ -59,11 +59,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
+        Boolean canDelete = UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
+        if(!canDelete) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
+        }
+        
         try {
             delete new DataImport__c(Id = dataImportId);
-
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
             return JSON.serialize(dataImportModel);
+        } catch (DmlException ex) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -94,11 +100,44 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
-        // check permissions on hard coded fields
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-            UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-            BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
-        );
+        DataImportBatch__c batch;
+        Boolean isQueryException = false;
+        try {
+            batch = [
+                    SELECT Batch_Gift_Entry_Version__c
+                    FROM DataImportBatch__c
+                    WHERE Id = :batchId
+                    WITH SECURITY_ENFORCED
+            ];
+        } catch (QueryException qe) {
+            // If User doesn't have access to Version field, treat as 1.0.
+            isQueryException = true;
+        }
+
+        if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+            );
+        } else {
+            List<String> fields =
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+            List<String> nonNameFields = new List<String>();
+            for (String str : fields) {
+                Boolean isNameField = str.contains('.');
+                if (isNameField) {
+                    continue;
+                } else if (!nonNameFields.contains(str)) {
+                    nonNameFields.add(str);
+                }
+            }
+
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    nonNameFields
+            );
+        }
 
         return JSON.serialize(dataImportModel);
     }
@@ -159,7 +198,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     'WHERE npe01__Written_Off__c = false) ' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
-                'AND IsClosed = false';
+                'AND IsClosed = false ' +
+                'WITH SECURITY_ENFORCED';
 
         try {
             List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
@@ -167,7 +207,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 opportunityWrappers.add(new OpportunityWrapper(opportunity));
             }
             return JSON.serialize(opportunityWrappers);
-        } catch (Exception ex){
+        } catch (QueryException ex) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
+        } catch (Exception ex) {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
     }
@@ -409,14 +451,28 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 // User defined match, so we do nothing and retain the values
             } else {
                 // Clear Dry Run fields before running Dry Run so new field values are accounted for
-                dataImportRecord.Status__c = null;
-                dataImportRecord.FailureInformation__c = null;
-                dataImportRecord.DonationImported__c = null;
-                dataImportRecord.DonationImportStatus__c = null;
-                dataImportRecord.PaymentImported__c = null;
-                dataImportRecord.PaymentImportStatus__c = null;
+                if (dataImportRecord.Status__c != null) {
+                    dataImportRecord.Status__c = null;
+                }
+                if (dataImportRecord.FailureInformation__c != null) {
+                    dataImportRecord.FailureInformation__c = null;
+                }
+                if (dataImportRecord.DonationImported__c != null) {
+                    dataImportRecord.DonationImported__c = null;
+                }
+                if (dataImportRecord.DonationImportStatus__c != null) {
+                    dataImportRecord.DonationImportStatus__c = null;
+                }
+                if (dataImportRecord.PaymentImported__c != null) {
+                    dataImportRecord.PaymentImported__c = null;
+                }
+                if (dataImportRecord.PaymentImportStatus__c != null) {
+                    dataImportRecord.PaymentImportStatus__c = null;
+                }
+
             }
         }
+
         update dataImportRecords;
 
         return dataImportRecords;

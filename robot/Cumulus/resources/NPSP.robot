@@ -18,7 +18,7 @@ Capture Screenshot and Delete Records and Close Browser
     Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
-    
+
 API Create Contact
     [Documentation]  If no arguments are passed, this keyword will create a contact with Firstname and Lastname
     ...              as random strings with no additional info. This keyword returns the contact dictonary when called
@@ -51,8 +51,25 @@ API Modify Contact
     &{contact} =  Get From List  ${records}  0
     [return]         &{contact}
 
+API Modify Recurring Donation
+    [Documentation]  This keyword is used to update an existing recurring donation record by passing id and
+    ...              This keyword returns the recurring donation dictonary after the update, when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | Recurring Donation ID   |
+
+    [Arguments]             ${rd_id}      &{fields}
+    ${ns} =                 Get NPSP Namespace Prefix
+    Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      npe03__Recurring_Donation__c
+    ...              select=${ns}StartDate__c,npe03__Amount__c
+    ...              Id=${rd_id}
+    &{rd} =          Get From List  ${records}  0
+    [return]         &{rd}
+
 API Create Campaign
-    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
+    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name
     ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
     ...              Syntax for passing parameters:
     ...
@@ -64,7 +81,7 @@ API Create Campaign
     ...                  &{fields}
     &{campaign} =     Salesforce Get  Campaign  ${campaign_id}
     [return]         &{campaign}
-    
+
 API Create Opportunity
     [Documentation]  Creates opportunity of specified type for specified account. Opportunity details can be passed as key, value pairs
     ...              Sets defaults of StageName=Closed Won,CloseDate=current date,Amount=100, do not create payments as true if no values are passed.
@@ -86,9 +103,9 @@ API Create Opportunity
     ...               Name=Test Donation
     ...               npe01__Do_Not_Automatically_Create_Payment__c=true
     ...               &{fields}
-    &{opportunity} =     Salesforce Get  Opportunity  ${opp_id} 
-    [return]         &{opportunity}  
- 
+    &{opportunity} =     Salesforce Get  Opportunity  ${opp_id}
+    [return]         &{opportunity}
+
 API Create Organization Account
     [Documentation]  If no arguments are passed, this keyword will create an account of type organization with just Name
     ...              as random string and no additional info. This keyword returns the account dictonary when called
@@ -164,6 +181,15 @@ API Create Recurring Donation
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
     [return]           &{recurringdonation}
 
+API Create Payment
+    [Documentation]   Creates a payment record for the specified opportunity record with given parameters passed
+    [Arguments]       ${opportunity}     &{fields}
+    ${pay_id} =       Salesforce Insert  npe01__OppPayment__c
+    ...               npe01__Opportunity__c=${opportunity}
+    ...               &{fields}
+    &{payment} =      Salesforce Get  npe01__OppPayment__c  ${pay_id}
+    [return]          &{payment}
+
 API Query Installment
     [Documentation]         Queries for record on opportunity object using recurring donation id, installment and other specified fields
     ...                     This keyword returns the record found when called
@@ -193,7 +219,7 @@ API Create GAU
     ...               Name=${name}
     ...               &{fields}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
-    [return]         &{gau}  
+    [return]         &{gau}
 
 API Create GAU Allocation
     [Documentation]  Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation
@@ -207,9 +233,9 @@ API Create GAU Allocation
     ${all_id} =      Salesforce Insert  ${ns}Allocation__c
     ...              ${ns}General_Accounting_Unit__c=${gau_id}
     ...              ${ns}Opportunity__c=${opp_id}
-    ...              &{fields} 
+    ...              &{fields}
     &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
-    [return]         &{gau_alloc} 
+    [return]         &{gau_alloc}
 
 API Modify Allocations Setting
     [Documentation]     Can be used to modify either Default Allocations or Payment Allocations.
@@ -221,9 +247,9 @@ API Modify Allocations Setting
     @{records} =        Salesforce Query      ${ns}Allocations_Settings__c
     ...                 select=Id
     &{setting} =        Get From List  ${records}  0
-    Salesforce Update  ${ns}Allocations_Settings__c     &{setting}[Id]
-    ...                 &{fields} 
-    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  &{setting}[Id]
+    Salesforce Update  ${ns}Allocations_Settings__c     ${setting}[Id]
+    ...                 &{fields}
+    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  ${setting}[Id]
     [return]            &{alloc_setting}
 
 API Create DataImportBatch
@@ -239,7 +265,7 @@ API Create DataImportBatch
     ...                  &{fields}
     &{batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
     [return]         &{batch}
-    
+
 API Create DataImport
     [Documentation]     Creates a data import with specified key,value pairs and return the data import record when keyword is called.
     ...                 Required parameters are:
@@ -261,37 +287,61 @@ API Query Opportunity For Recurring Donation
     ...                &{fields}
     [return]           @{object}
 
-Validate Batch Process When CRLP Unchecked
-    [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
-    Open NPSP Settings           Bulk Data Processes                Rollup Donations Batch
-    Click Settings Button        idPanelOppBatch                    Run Batch
-    Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
-    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
-    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
-    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+# Validate Batch Process When CRLP Unchecked
+#     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
+#     Open NPSP Settings           Bulk Data Processes                Rollup Donations Batch
+#     Click Settings Button        idPanelOppBatch                    Run Batch
+#     Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+#     Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+#     Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+#     Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
 
-Validate Batch Process When CRLP Checked
-    [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled
-    Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
-    Click Settings Button        idPanelOppBatch                          Run Batch
-    Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
-    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
-    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
-    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
-    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
-    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+# Validate Batch Process When CRLP Checked
+#     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled
+#     Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
+#     Click Settings Button        idPanelOppBatch                          Run Batch
+#     Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+#     Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+#     Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+#     Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+#     Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+#     Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+
+# Run Donations Batch Process
+#     [Documentation]              Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked
+#     ...                          else runs Validate Batch Process When CRLP UnChecked
+#     Open NPSP Settings           Donations                     Customizable Rollups
+#     ${crlp_enabled} =            Check Crlp Not Enabled By Default
+
+#     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
+#     Run Keyword if      ${crlp_enabled} != True
+#         ...             Validate Batch Process When CRLP Unchecked
+#         ...     ELSE    Validate Batch Process When CRLP Checked
 
 Run Donations Batch Process
-    [Documentation]              Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked
-    ...                          else runs Validate Batch Process When CRLP UnChecked
-    Open NPSP Settings           Donations                     Customizable Rollups
-    ${crlp_enabled} =            Check Crlp Not Enabled By Default
-
+    [Documentation]    Checks if customizable rollups is enabled via API and if enabled runs CRLP batch processes
+    ...                else runs RLLP Batch Processes
+    ${ns} =            Get NPSP Namespace Prefix
+    @{records} =       Salesforce Query           ${ns}Customizable_Rollup_Settings__c
+    ...                select=${ns}Customizable_Rollups_Enabled__c
+    &{crlp} =          Get From List              ${records}  0
     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
-    Run Keyword if      ${crlp_enabled} != True
-        ...             Validate Batch Process When CRLP Unchecked
-        ...     ELSE    Validate Batch Process When CRLP Checked
-     
+    Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
+    Click Settings Button        idPanelOppBatch                          Run Batch
+    Run Keyword if     '${crlp}[${ns}Customizable_Rollups_Enabled__c]'!='True'
+    ...                Run Keywords
+    ...                Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+    ...         ELSE   Run Keywords
+    ...                Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+    ...         AND    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+    ...         AND    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+    ...         AND    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+    ...         AND    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+    ...         AND    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+
 Scroll Page To Location
     [Documentation]     Scrolls window by pixels using javascript
     ...                 Required parameters are:
@@ -311,8 +361,8 @@ Open NPSP Settings
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            ${topmenu}
     Open Sub Link             ${submenu}
-    Sleep  1
-    
+    Sleep  2
+
 Click Data Import Button
     [Documentation]   Switches to the frame and clicks the button identified by path
     ...               Ex: Click Data Import Button  NPSP Data Import  button  Begin Data Import Process
@@ -323,8 +373,8 @@ Click Data Import Button
     ...               |   others    |   parameters to identify button   |
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
-       
-     
+
+
 Process Data Import Batch
     [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch
     ...                    | status | expected status of batch processing Ex:'Completed' 'Errors' |
@@ -333,7 +383,7 @@ Process Data Import Batch
     Change View To                                     To Be Imported
     Click                                              Start Data Import
     Begin Data Import Process And Verify Status        BDI_DataImport_BATCH    ${status}
-    Click Close Button    
+    Click Close Button
 
 Enable Customizable Rollups
     [Documentation]        Go to NPSP Settings and check if Customizable Rollups are enabled
@@ -350,24 +400,20 @@ Enable Advanced Mapping
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Advanced Mapping If Not Enabled
 
-Validate And Create Required CustomField
+Create Customfield In Object Manager
     [Documentation]        Reads key value pair arguments.
-    ...                    Go to Object Manager page and load fields and relationships for the specific object
-    ...                    Run keyword to create custom field based on the field type selection
+    ...                    Navigates to Object Manager page and load fields and relationships for the specific object
+    ...                    Runs keyword to create custom field
+    ...                    Example key,value pairs
+    ...                            Object=Payment
+    ...                            Field_Type=Formula
+    ...                            Field_Name=Is Opportunity From Prior Year
+    ...                            Formula=YEAR( npe01__Opportunity__r.CloseDate ) < YEAR( npe01__Payment_Date__c )
     [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
-    Open Fields And Relationships                        &{fields}[Object]
-    Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      &{fields}[Related_To]
-    Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    Run Keyword If     '&{fields}[Field_Type]' == "Formula"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      formula=&{fields}[Formula]
+    Open Fields And Relationships                        ${fields}[Object]
+    Create Custom Field                                  &{fields}
+
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
@@ -416,13 +462,28 @@ Enable RD2QA
     Run Task       execute_anon
     ...            apex= ${apex3}
 
+API Query Recurrring Donation Settings For RD2 Enablement
+    [Documentation]    Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value
+    ${ns} =            Get Npsp Namespace Prefix
+    @{record} =        Salesforce Query      npe03__Recurring_Donations_Settings__c
+    ...                select=${ns}IsRecurringDonations2Enabled__c
+    &{rd2_enabled} =                 Get From List  ${record}  0
+    [return]           ${rd2_enabled}[${ns}IsRecurringDonations2Enabled__c]
+
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
-    Go To Page                Custom         NPSP_Settings
-    Open Main Menu            Recurring Donations
-    ${rd2_enabled} =          Check Rd2 Is Enabled
-    Run Keyword if            "${rd2_enabled}"!="True"
+    ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
+    Run Keyword if            "${is_rd2_enabled}"!="True"
     ...                       Enable RD2QA
+
+Run Recurring Donations Batch
+    [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
+    [Arguments]                  ${type}
+    Open NPSP Settings           Bulk Data Processes               Recurring Donations Batch
+    Click Settings Button        idPanelRDBatch                    Run Batch
+    Run Keyword if               "${type}"!="RD2"
+    ...                          Wait For Batch To Process         RD_RecurringDonations_BATCH       Completed
+    ...     ELSE                 Wait For Batch To Process         RD2_OpportunityEvaluation_BATCH   Completed
 
 API Get Id
     [Documentation]         Returns the ID of a record identified by the given field_name and field_value input for a specific object
@@ -431,11 +492,51 @@ API Get Id
     ...                         select=Id
     ...                         &{fields}
     &{Id} =                 Get From List  ${records}  0
-    [return]                &{Id}[Id]
+    [return]                ${Id}[Id]
 
 Enable Gift Entry
     [Documentation]    This keyword enables advanced mapping(prerequisite) and gift entry if not already enabled.
     Go To Page                              Custom          NPSP_Settings
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
-    Enable Gift Entry If Not Enabled    
+    Enable Gift Entry If Not Enabled
+
+API Query Record
+    [Documentation]    Queries the given object table by using key,value pair passed and returns the entire record
+    [Arguments]        ${object_name}             &{fields}
+    @{records} =       Salesforce Query           ${object_name}
+    ...                select=Id
+    ...                &{fields}
+    &{Id} =            Get From List  ${records}  0
+    &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
+    [return]           &{myrecord}
+
+API Check And Enable Gift Entry
+    [Documentation]    Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing.
+    ...                If either of them are not enabled then calls the Enable Gift Entry keyword to enable them
+    ${ns} =             Get NPSP Namespace Prefix
+    @{records} =       Salesforce Query           ${ns}Data_Import_Settings__c
+    ...                select=${ns}Field_Mapping_Method__c
+    &{am} =            Get From List  ${records}  0
+    @{records} =       Salesforce Query           ${ns}Gift_Entry_Settings__c
+    ...                select=${ns}Enable_Gift_Entry__c
+    &{ge} =            Get From List  ${records}  0
+    Run Keyword if     '${am}[${ns}Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[${ns}Enable_Gift_Entry__c]'!='True'
+    ...                Enable Gift Entry
+
+Add instance to suite metadata
+    [Documentation]     Logs the org instance number in the metadata on the log
+    &{org_info} =       Get Org Info
+    Set suite metadata  Org Instance:  ${org_info['instance_name']}  top=True
+
+API Create Lead
+    [Documentation]     creates a lead record using given field api name and value pairs and
+    ...                 returns the lead dictionary when called.
+    ...                 Syntax for passing parameters:
+    ...
+    ...                 | field_api_name=value   | Ex: MobilePhone=1234567098    |
+    [Arguments]         &{fields}
+    ${lead_id} =        Salesforce Insert  Lead
+    ...                 &{fields}
+    &{lead} =           Salesforce Get  Lead  ${lead_id}
+    [return]            &{lead}

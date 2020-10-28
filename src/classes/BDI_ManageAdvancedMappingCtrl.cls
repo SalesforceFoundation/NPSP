@@ -74,13 +74,15 @@ public class BDI_ManageAdvancedMappingCtrl {
     * when creating a new object mappping.  This is necessary since there are hundreds of standard objects
     * and including them all would negatively impact performance and make the list unusable.
     */ 
-    private static final Set<String> STANDARD_OBJECT_WHITELIST = new Set<String>{'account', 'asset', 'assetrelationship', 
-                                                            'campaign', 'campaignmember', 'case', 
-                                                            'contact', 'contract', 'event', 'lead', 
-                                                            'opportunity', 'opportunitylineitem', 
-                                                            'order', 'orderitem', 'pricebook2', 
-                                                            'pricebookEntry', 'product2', 'task', 
-                                                            'user','opportunitycontactrole','contactrole','workorder'};
+    private static final Set<String> STANDARD_OBJECT_ALLOWED_LIST = new Set<String>{
+        'account', 'asset', 'assetrelationship', 
+        'campaign', 'campaignmember', 'case', 
+        'contact', 'contract', 'event', 'lead', 
+        'opportunity', 'opportunitylineitem', 
+        'order', 'orderitem', 'pricebook2', 
+        'pricebookEntry', 'product2', 'task', 
+        'user','opportunitycontactrole','contactrole','workorder'
+    };
 
     /**
      * @description Checks if the running user has system admin permissions
@@ -101,7 +103,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @return String: Default Field Mapping Set name
     */
-    @AuraEnabled(cacheable=true)
     public static String getFieldMappingSetName() {
         return bdiMsAdv.fieldMappingSet.DeveloperName;
     }
@@ -117,21 +118,60 @@ public class BDI_ManageAdvancedMappingCtrl {
     * component
     * @return List: List of Data Import Object Mapping
     */
-    @AuraEnabled(cacheable=false)
-    public static BDI_ObjectMapping[] getObjectMappings(){
+    @TestVisible
+    private static BDI_ObjectMapping[] getObjectMappings(){
 
         BDI_ObjectMapping[] objMappings = bdiMsAdv.objectMappingByDevName.values();
 
-        //Assign the label name field for the predecessor using the constructed map by dev name.
-        for (BDI_ObjectMapping objMapping : objMappings) {
-
-            BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get(objMapping.Predecessor);
-            if(predecessorObjMapping != null) {
-                objMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
+        for (BDI_ObjectMapping objectMapping : objMappings) {
+            BDI_FieldMapping [] fieldMappings =
+                bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+            if (fieldMappings == null) {
+                fieldMappings = new BDI_FieldMapping[]{};
+            }
+            if (!fieldMappings.isEmpty()) {
+               for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                   if (!fieldMapping.isDescribable && !fieldMapping.Is_Deleted) {
+                       objectMapping.Field_Mappings.add(fieldMapping);
+                   }
+               }
+            }
+            BDI_ObjectMapping predecessorObjMapping =
+                bdiMsAdv.objectMappingByDevName.get(objectMapping.Predecessor);
+            //Assign the label name field for the predecessor using the constructed map by dev name.
+            if (predecessorObjMapping != null) {
+                objectMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
             }
         }
-
         return objMappings;
+    }
+
+    /*******************************************************************************************************
+     * @description This method gathers and returns data required to use the Advanced Mapping Object Mapping
+     * Component
+     * @return AdvancedMappingObjectData
+     */
+    @AuraEnabled
+    public static AdvancedMappingObjectData getAdvancedMappingObjectData () {
+        return new AdvancedMappingObjectData(getObjectMappings(), getObjectOptions());
+    }
+
+    /*******************************************************************************************************
+    * @description This method gathers and returns data required to use the Advanced Mapping Fields Mapping
+    * Component
+    * @param targetObjectApiName Target Object ApiName
+    * @param sourceObjectApiName Source Object ApiName
+    * @return AdvancedMappingFieldData
+    */
+    @AuraEnabled(Cacheable = true)
+    public static AdvancedMappingFieldData getAdvancedMappingFieldsData (String targetObjectApiName,
+        String sourceObjectApiName) {
+        String fieldMappingSetName = getFieldMappingSetName();
+        FieldInfo[] sourceObjectFieldDescribes = getObjectFieldDescribes(sourceObjectApiName, false);
+        FieldInfo[] targetObjectFieldDescribes = getObjectFieldDescribes(targetObjectApiName, false);
+        List<String> mappedDISourceFields = getMappedDISourceFields();
+        return new AdvancedMappingFieldData(
+            fieldMappingSetName, sourceObjectFieldDescribes, targetObjectFieldDescribes, mappedDISourceFields);
     }
 
     /*******************************************************************************************************
@@ -200,25 +240,34 @@ public class BDI_ManageAdvancedMappingCtrl {
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
         String objectName, String fieldMappingSetname) {
-
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
-
-        BDI_FieldMapping[] fieldMappings =
-            bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
-
-        if (fieldMappings != null) {
-            for (BDI_FieldMapping fieldMapping : fieldMappings) {
-
-                if (bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
-                    fieldMapping.Is_Deleted == false) {
-
-                    fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
-                }
+        BDI_FieldMapping[] fieldMappings = extractInvalidFieldMappings(
+            bdiMsAdv.objectMappingByDevName.get(objectName));
+        for (BDI_FieldMapping fieldMapping : fieldMappings) {
+            if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
+                fieldMapping.Is_Deleted == false)) {
+                DataImportFieldMappingWrapper wrapper = new DataImportFieldMappingWrapper(fieldMapping);
+                fieldMappingWrappers.add(wrapper);
             }
         }
-
         return fieldMappingWrappers;
+    }
+
+    /**
+     * @description Adds invalid field mappings to list of valid field mappings to be returned
+     * to Advanced Mapping Fields Mapping component
+     * @param objectMapping Object Mapping that contains invalid field mappings
+     *
+     * @return {BDI_FieldMapping[]} fieldMappings
+     */
+    private static BDI_FieldMapping[] extractInvalidFieldMappings (BDI_ObjectMapping objectMapping) {
+        BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+        if (!objectMapping.Field_Mappings.isEmpty()) {
+            //Add possible invalid field mappings
+            fieldMappings.addAll(objectMapping.Field_Mappings);
+        }
+        return fieldMappings == null ? new BDI_FieldMapping[]{} : fieldMappings;
     }
 
     /*******************************************************************************************************
@@ -524,6 +573,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping_Dev_Name;
             this.Required = fieldMapping.Required;
             this.Is_Deleted = fieldMapping.Is_Deleted;
+            this.isDescribable = fieldMapping.isDescribable;
         }
     }
 
@@ -665,8 +715,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @description Returns a list of combobox options for the valid objects to chooose from.
     * @return objectOptions List of combobox options for the valid objects to chooose from.
     */
-    @AuraEnabled(cacheable=true)
-    public static List<ComboboxOption> getObjectOptions(){
+    private static List<ComboboxOption> getObjectOptions() {
         List<ComboboxOption> objectOptions = new List<ComboboxOption>();
         Map<String, Schema.SObjectType> allObjectMap = Schema.getGlobalDescribe(); 
         List<String> filteredObjectNames = new List<String>();
@@ -674,8 +723,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         // Removing custom metadata types and knowledge article versions from the list of object names
         // Also restricting to only an predefined list of standard objects to keep the list manageable
         for (String objectName : allObjectMap.keySet()) { 
-            if (!objectName.endsWith('__mdt') && !objectName.endsWith('__kav') 
-                && (objectName.endsWith('__c') || STANDARD_OBJECT_WHITELIST.contains(objectName))) {
+            if (!objectName.endsWith('__mdt')
+                && !objectName.endsWith('__kav') 
+                && (objectName.endsWith('__c') || STANDARD_OBJECT_ALLOWED_LIST.contains(objectName))
+            ) {
                 filteredObjectNames.add(objectName);
             }
         }
@@ -797,5 +848,42 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.currentNamespace = UTIL_Namespace.getNamespace();
             this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
         }
+    }
+
+    /******************************************************************************************************
+     * @description Inner class representation of the data needed to render Advanced Mapping Object Mapping
+     * component
+     */
+    public class AdvancedMappingObjectData {
+        @AuraEnabled
+        public BDI_ObjectMapping[] objectMappings;
+        @AuraEnabled
+        public List<ComboboxOption> objectOptions;
+
+        public AdvancedMappingObjectData (BDI_ObjectMapping [] objectMappings,
+            List<ComboboxOption> objectOptions) {
+            this.objectMappings = objectMappings;
+            this.objectOptions = objectOptions;
+        }
+    }
+
+    /******************************************************************************************************
+    * @description Inner class representation of the data needed to render Advanced Mapping Fields Mapping
+    * component
+    */
+    public class AdvancedMappingFieldData {
+        @AuraEnabled public String fieldMappingSetName;
+        @AuraEnabled public FieldInfo[] sourceObjectFieldDescribes;
+        @AuraEnabled public FieldInfo[] targetObjectFieldDescribes;
+        @AuraEnabled public List<String> mappedDISourceFields;
+
+        public AdvancedMappingFieldData (String fieldMappingSetName, FieldInfo[] sourceObjectFieldDescribes,
+            FieldInfo[] targetObjectFieldDescribes, List<String> mappedDISourceFields) {
+            this.fieldMappingSetName = fieldMappingSetName;
+            this.sourceObjectFieldDescribes = sourceObjectFieldDescribes;
+            this.targetObjectFieldDescribes = targetObjectFieldDescribes;
+            this.mappedDISourceFields = mappedDISourceFields;
+        }
+
     }
 }

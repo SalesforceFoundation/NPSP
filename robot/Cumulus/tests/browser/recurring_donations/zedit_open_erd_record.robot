@@ -7,14 +7,17 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
+...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
 Setup Test Data
+        ${NS} =             Get NPSP Namespace Prefix
+        Set Suite Variable  ${NS}
+
         #Create a Recurring Donation
         &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
@@ -22,10 +25,10 @@ Setup Test Data
         ...                                                         npe03__Amount__c=100
         ...                                                         npe03__Open_Ended_Status__c=Open
         ...                                                         npe03__Date_Established__c=2019-07-08
-        ...                                                         Status__c=Active
-        ...                                                         Day_of_Month__c=15
-        ...                                                         InstallmentFrequency__c=1
-        ...                                                         PaymentMethod__c=Check
+        ...                                                         ${NS}Status__c=Active
+        ...                                                         ${NS}Day_of_Month__c=15
+        ...                                                         ${NS}InstallmentFrequency__c=1
+        ...                                                         ${NS}PaymentMethod__c=Check
 
         Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
 
@@ -40,16 +43,26 @@ Edit An Enhanced Recurring donation record of type open
 
     [tags]                                 unstable               W-040346            feature:RD2
 
+    Go To Page                              Listing                                   npe03__Recurring_Donation__c
+
+    Click Object Button                     New
+    Wait For Modal                          New                                       Recurring Donation
+    # Reload page is a temporary fix till the developers fix the ui-modal
+    Reload Page
+
     Go To Page                             Details
     ...                                    npe03__Recurring_Donation__c
     ...                                    object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    Edit Recurring Donation
+    Current Page Should be                 Details    npe03__Recurring_Donation__c
+    Edit Recurring Donation Status
     ...                                    Status=Closed
     ...                                    Status Reason=Commitment Completed
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-
+    Reload Page
+    Wait Until Loading Is Complete
+    Current Page Should be                 Details    npe03__Recurring_Donation__c
     # Verify that "no active schedules are present" messages appear
     Verify Schedule Warning Messages Present
 
@@ -61,4 +74,5 @@ Edit An Enhanced Recurring donation record of type open
     #validate the stage on opportunity is Closed Lost
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
     Wait Until Loading Is Complete
+    Current Page Should Be                  Details                        Opportunity
     Navigate To And Validate Field Value    Stage                          contains                        Closed Lost

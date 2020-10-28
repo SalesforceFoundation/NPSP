@@ -152,6 +152,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
         //enable enhanced Recurring Donations during the batch transaction
         if (!RD2_EnablementService.isRecurringDonations2Enabled && isDryRunMode) {
             RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+            RD2_EnablementService.isMetadataDeployed = true;
         }
 
         //ensure enhanced RD enablement flag is enabled
@@ -376,6 +377,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             'npe03__Recurring_Donation_Campaign__c',
             'npe03__Total_Paid_Installments__c',
             'Ownerid',
+            'CreatedDate',
             'Always_Use_Last_Day_of_Month__c',
             'Day_of_Month__c',
             'StartDate__c',

@@ -1513,7 +1513,7 @@
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1602,12 +1602,60 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateDisableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
+        <value>Do Not Use Elevate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisabledMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation will not be committed to Elevate</shortDescription>
+        <value>You are not using Elevate for this Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateEnableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
+        <value>Alternatively, use Elevate now.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateNotSupported</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the functionality is not supported for Elevate Recurring Donation.</shortDescription>
+        <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePendingStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
+        <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevatePermissionRequired</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -1752,6 +1800,14 @@
         <protected>true</protected>
         <shortDescription>Enablement section warning</shortDescription>
         <value>&lt;b&gt;WARNING: NPSP doesn't provide a way to revert back to legacy Recurring Donations.&lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementIncomplete</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enhanced Recurring Donations enablement incomplete</shortDescription>
+        <value>You cannot create or update Recurring Donations because you haven&apos;t finished enabling Enhanced Recurring Donations. Go to NPSP Settings | Recurring Donations | Upgrade to Enhanced Recurring Donations and complete all enablement steps.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
@@ -1951,7 +2007,6 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
-
     <labels>
         <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
         <categories>Recurring Donations Error</categories>
@@ -1967,6 +2022,198 @@
         <protected>true</protected>
         <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate connected Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Custom Field section header</shortDescription>
+        <value>Custom Fields</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonationSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donation Information section header</shortDescription>
+        <value>Donation Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donor Information section header</shortDescription>
+        <value>Donor Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Inline HelpText for the Donor Type picklist</shortDescription>
+        <value>Select the type of donor for this Recurring Donation. If you select Account, enter an Organization Account, and optionally a related Contact. If you select Contact, enter a Contact related to a Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Label for the Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form header</shortDescription>
+        <value>New Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormInsertSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is inserted</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was created.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormMissingPermissions</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Field Permissions Error</shortDescription>
+        <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodAdvanced</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist value for the RD2 Entry Form custom period picklist</shortDescription>
+        <value>Advanced</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Inline Help Text for the Monthly and Advanced Picklist</shortDescription>
+        <value>Select Advanced to enter other schedule types such as weekly, yearly, every 6 months, etc.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Label for the Monthly and Advanced Picklist</shortDescription>
+        <value>Recurring Period</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralDaily</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Daily</shortDescription>
+        <value>Days</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralMonthly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Monthly</shortDescription>
+        <value>Months</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralWeekly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Weekly</shortDescription>
+        <value>Weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralYearly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Yearly</shortDescription>
+        <value>Years</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCommitmentMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
+        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
+        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Validating credit card...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveRecurringDonationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Recurring Donation record is being saved</shortDescription>
+        <value>Saving Recurring Donation...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show as Every</shortDescription>
+        <value>Every</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormStatusSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Status Information section header</shortDescription>
+        <value>Status Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was saved.</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
@@ -1985,6 +2232,14 @@
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
     <labels>
+        <fullName>RD2_ErrorRDIdIsMissingForCommitment</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Id must be specified</shortDescription>
+        <value>There was an error creating the Recurring Donation record. No Recurring payment request was sent to Elevate. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1999,6 +2254,14 @@
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
+    </labels>
+     <labels>
+        <fullName>RD2_InstallmentStatusSkipped</fullName>
+        <categories>Recurring-Donations, Info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status of an installment that is skipped</shortDescription>
+        <value>Paused</value>
     </labels>
     <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
@@ -2039,6 +2302,102 @@
         <protected>true</protected>
         <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseCannotExistOnScheduleChange</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change specific fields causing schedule change when a pause exists</shortDescription>
+        <value>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseClosedRDErrorMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to pause Closed Recurring Donation.</shortDescription>
+        <value>You can&apos;t Pause a Closed Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseDeactivationSuccessMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating a pause has been removed successfully</shortDescription>
+        <value>Pause on {0} was removed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseDescription</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Pause description</shortDescription>
+        <value>Select installments from the list below. You can pause for up to 12 consecutive installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PausePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>User does not have a permission to edit or create Recurring Donations</shortDescription>
+        <value>You don&apos;t have the required permissions to pause a Recurring Donation. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PausedReasonLabel</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Paused Reason field label on the Recurring Donation Pause page</shortDescription>
+        <value>Paused Reason</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause first donation date after the pause</shortDescription>
+        <value>The first donation date after the pause period will be {0}.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseHeader</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause Header containing the Recurring Donation name</shortDescription>
+        <value>Pause {0}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSaveSuccessMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating a pause has been saved successfully</shortDescription>
+        <value>Pause on {0} was saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSelectedInstallmentTextPlural</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating multiple installments have been selected to skip</shortDescription>
+        <value>You&apos;ve selected {0} installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSelectedInstallmentTextSingular</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
+        <value>You&apos;ve selected 1 installment.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseStatusMustExist</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
+        <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -2539,6 +2898,22 @@
         <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
     </labels>
     <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelDate</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Date Picker icon</shortDescription>
+        <value>Date Picker</value>
+    </labels>
+    <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelLookup</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Lookup icon</shortDescription>
+        <value>Lookup</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -2966,6 +3341,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>alloUnallocated</shortDescription>
         <value>unallocated</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementBlockerHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header about Batch Data Entry being unsupported</shortDescription>
+        <value>Batch Data Entry Not Supported</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementBlockerMessage</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Data Entry not being supported &amp; recommendations</shortDescription>
+        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can't process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementWarningBody</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Data Entry retirement &amp; recommendations</shortDescription>
+        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementWarningHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for warning about Batch Data Entry retiring</shortDescription>
+        <value>Retiring Batch Data Entry</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
@@ -4044,6 +4451,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>. Create new fields on the NPSP Data Import object if needed.</value>
     </labels>
     <labels>
+        <fullName>bdiOMUIFieldMappingProblemHeader</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast warning header about Field Mapping issues</shortDescription>
+        <value>Check Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemMessagePart1</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body, first part, about Field Mapping issues</shortDescription>
+        <value>There is a problem with the Field Mappings listed below.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemMessagePart2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body, second part, about Field Mapping issues</shortDescription>
+        <value>Make sure the NPSP Data Import and target fields still exist and edit or delete the Field Mapping.</value>
+    </labels>
+    <labels>
         <fullName>bdiPositiveNumber</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -4682,6 +5113,136 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>batchNumberSettingsDescActivation</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of how to use the batch number format table</shortDescription>
+        <value>Activate or deactivate batch number formats. One batch number format can be active at time.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderFormats</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for table of batch number formats</shortDescription>
+        <value>Batch Number Formats</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsActivate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to save and activate the new batch number format</shortDescription>
+        <value>Save &amp; Activate</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Display Format options</shortDescription>
+        <value>Display Format allows you to control the appearance of your auto-numbered
+            field. It must be unique and include the number of digits as well as a prefix, if
+            desired. Your format can be up to 30 characters.&lt;/br&gt;&lt;/br&gt;
+            Examples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as {00000} with a starting number of 9 displays as 00009,
+            00010, 00011, etc.&#10;
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as ABC-{0000} with a starting number of 9 displays as
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsError</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for auto-number format setting</shortDescription>
+        <value>Cannot save auto-number format. Please review the errors and try again.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for explanation of Display Format options</shortDescription>
+        <value>Learn more about display formats.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescriptionCreate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for creating a batch number format</shortDescription>
+        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format. Only one batch number format can be active at a time. </value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when auto-number Display Format is invalid</shortDescription>
+        <value>Invalid Display Format.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorDuplicate</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for duplicate auto-number format</shortDescription>
+        <value>This Display Format is already in use.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsConfigureHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number configuration</shortDescription>
+        <value>Configure Batch Number</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescription</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of the batch number settings</shortDescription>
+        <value>Batch numbers are unique identifiers used in Gift Entry and NPSP Data Importer. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number settings in NPSP Settings</shortDescription>
+        <value>Batch Number Settings</value>
+    </labels>
+    <labels>
+        <fullName>commonActivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activate</shortDescription>
+        <value>Activate</value>
+    </labels>
+    <labels>
+        <fullName>commonDeactivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivate</shortDescription>
+        <value>Deactivate</value>
+    </labels>
+    <labels>
         <fullName>commonAmount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4738,6 +5299,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
+        <fullName>commonCardholderName</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
+        <value>Cardholder Name</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4768,6 +5337,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>commonConcurrentBatchError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
+        <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
+        <fullName>commonContactSystemAdminMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message indicating user should contact the system administrator for help</shortDescription>
+        <value>Contact your system administrator for help.</value>
     </labels>
     <labels>
         <fullName>commonCreditNumber</fullName>
@@ -4842,6 +5427,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>General Account Unit</value>
     </labels>
     <labels>
+        <fullName>commonInsufficientPermissions</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates user does not have permissions for the action</shortDescription>
+        <value>Insufficient Permissions</value>
+    </labels>
+    <labels>
         <fullName>commonJWTInvalidKey</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4906,6 +5499,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No items to display.</value>
     </labels>
     <labels>
+        <fullName>commonOkay</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Okay</shortDescription>
+        <value>Okay</value>
+    </labels>
+    <labels>
         <fullName>commonOpen</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4928,6 +5529,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Percent</shortDescription>
         <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>commonPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the necessary access to use this feature. Please check with your Salesforce Administrator.</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>
@@ -4986,6 +5595,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>commonSelectOptionPlaceholder</fullName>
+        <categories>Combobox</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
+        <value>Select an Option</value>
+    </labels>
+    <labels>
         <fullName>commonTemplate</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5032,6 +5649,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Unknown Error</shortDescription>
         <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWaitMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text displayed to indicate process might take long time</shortDescription>
+        <value>Please wait...</value>
     </labels>
     <labels>
         <fullName>commonWarning</fullName>
@@ -5389,6 +6014,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} field down.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveRequireField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: explains the function of the required checkbox</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>Require {0}.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveFieldUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5464,13 +6098,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>geAssistiveShowMenu</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
         <value>Show menu.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as required.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldOptional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field is optional</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
@@ -5618,7 +6270,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields sidebar text block</shortDescription>
-        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main Configure Form Fields screen where you want the fields to go. In this Form Fields &amp; Field Bundles sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsDescLeftCol</fullName>
@@ -5661,7 +6313,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields main section text block</shortDescription>
-        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
+        <value>Select a section, then select a field in the Form Fields &amp; Field Bundles sidebar to add it to this section in the main Configure Form Fields screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the Gift Entry form by creating sections and reordering sections or fields.</value>
     </labels>
     <labels>
         <fullName>geBodyGiftEntryHelp</fullName>
@@ -5978,6 +6630,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for batch gift table column that links to the Account or Contact.</shortDescription>
         <value>Donor Name</value>
+    </labels>
+    <labels>
+        <fullName>geFieldsNotFoundMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
+        <value>This form contains fields that can't be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldsNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fields Not Found</shortDescription>
+        <value>Fields Not Found</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field not found</shortDescription>
+        <value>Field not found</value>
     </labels>
     <labels>
         <fullName>geEnableGiftEntrySuccess</fullName>
@@ -6647,7 +7323,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure messge if invalid configuration params was provided for onboarding</shortDescription>
+        <shortDescription>Failure message if invalid configuration params was provided for onboarding</shortDescription>
         <value>Invalid configuration parameters were provided</value>
     </labels>
     <labels>
@@ -6656,6 +7332,13 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Gift Entry lookup placeholder text</shortDescription>
         <value>Search...</value>
+    </labels>
+    <labels>
+        <fullName>geSelectBatchTableColumns</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to select batch table columns</shortDescription>
+        <value>Select Batch Table Columns</value>
     </labels>
     <labels>
         <fullName>geSelectPlaceholder</fullName>
@@ -6885,6 +7568,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required fields</shortDescription>
         <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
+    </labels>
+    <labels>
+        <fullName>geWarningGauAllocFieldUpdatesDisabled</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about some fields when donation already has a GAU Allocation assigned</shortDescription>
+        <value>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
@@ -7412,6 +8103,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelDataBatchNotRun</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when Data Health Check does not run</shortDescription>
+        <value>Record data health checks were not run.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Setting label to disable Sobject batch</shortDescription>
+        <value>Disable Record Data Health Checks</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatchDescription</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -7465,7 +8180,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your Account-related data. When complete, you can view the results below, including detailed information for any failures.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your record data. When complete, you can view the results below, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -8033,6 +8748,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>First</value>
     </labels>
     <labels>
+        <fullName>labelBooleanFalse</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for False</shortDescription>
+        <value>False</value>
+    </labels>
+    <labels>
+        <fullName>labelBooleanTrue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for True</shortDescription>
+        <value>True</value>
+    </labels>
+    <labels>
         <fullName>labelListViewLast</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
@@ -8134,6 +8865,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblCountry</shortDescription>
         <value>Country</value>
+    </labels>
+     <labels>
+        <fullName>lblCurrency</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Override CurrencyIsoCode label</shortDescription>
+        <value>Currency</value>
     </labels>
     <labels>
         <fullName>lblDeleteContact</fullName>
@@ -9879,7 +10618,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
             &lt;b&gt;This message won't be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
+            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
         </value>
     </labels>
     <labels>
@@ -12169,6 +12908,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDescription</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Description</shortDescription>
+        <value>When you create a Recurring Donation, NPSP automatically populates the Name using the specified name format. Choose Disable Automatic Naming to turn this feature off.</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDisable</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming disable option</shortDescription>
+        <value>Disable Auto Naming</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingOptionLabel</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Option Label</shortDescription>
+        <value>Recurring Donation Name Format</value>
     </labels>
     <labels>
         <fullName>stgReset</fullName>

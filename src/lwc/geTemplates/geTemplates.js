@@ -1,6 +1,7 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
+import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import { showToast } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';

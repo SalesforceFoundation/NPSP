@@ -39,7 +39,27 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     * @description Returns the string Id of the Relationships panel. 
     */
     public override string idPanel() { return 'idPanelRel'; }
-    
+
+    /*********************************************************************************************************
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) return 'c';
+        return namespace;
+    }
+
+    /*********************************************************************************************************
+    * @description Returns true if user has full CRUD access to Relationship_Sync_Excluded_Fields__c
+    */
+    public Boolean getHasAccess() {
+        String relationshipObjectName = Schema.SObjectType.Relationship_Sync_Excluded_Fields__c.getName();
+        return UTIL_Permissions.canRead(relationshipObjectName, false) &&
+            UTIL_Permissions.canCreate(relationshipObjectName, false) &&
+            UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
+            UTIL_Permissions.canDelete(relationshipObjectName, false);
+    }
+
     /*********************************************************************************************************
     * @description The list of SelectOptions for the Gender field 
     */

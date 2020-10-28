@@ -14,10 +14,10 @@ Suite Teardown  Delete Records and Close Browser
 
 Setup Test Data
     &{contact1} =         API Create Contact                    Email=${EMAIL1}
-    Store Session Record  Account                               &{contact1}[AccountId]
+    Store Session Record  Account                               ${contact1}[AccountId]
     Set suite variable    &{contact1}
     &{contact2} =         API Create Contact
-    Store Session Record  Account                               &{contact2}[AccountId]
+    Store Session Record  Account                               ${contact2}[AccountId]
     Set suite variable    &{contact2}
 
 *** Variables ***
@@ -32,20 +32,21 @@ Add Existing Contact to Existing Household through Manage Household Page
     ...                                  From the manage household page's lookup field, try to find and add exisitng contact, contact#2
     ...                                  Verify the new address persists under both Mailing and Billing address details.
 
-    [tags]                               W-038348             feature: Manage Households
+    [tags]                               unstable             W-038348             feature: Manage Households
 
 
     Go To Page                           Details
     ...                                  Account
-    ...                                  object_id=&{contact2}[AccountId]
+    ...                                  object_id=${contact2}[AccountId]
 
-    Click Actions Link                   Manage Household
+    Click Button                         Manage Household
+    Go To Page                           Custom                             ManageHousehold
     Current Page Should Be               Custom                             ManageHousehold
-    Add contact                          Existing                           &{contact1}[FirstName] &{contact1}[LastName]
+    Add contact                          Existing                           ${contact1}[FirstName] ${contact1}[LastName]
     Current Page Should Be               Details                            Account
 
     Wait Until Page Contains             Account Owner
-    Wait For Record To Update            &{contact2}[AccountId]             &{contact2}[LastName] and &{contact1}[LastName] Household
+    Wait For Record To Update            ${contact2}[AccountId]             ${contact2}[LastName] and ${contact1}[LastName] Household
     Select Tab                           Related
     Load Related List                    Contacts
-    Verify Related List Items            Contacts                           &{contact1}[FirstName] &{contact1}[LastName]
+    Verify Related List Items            Contacts                           ${contact1}[FirstName] ${contact1}[LastName]

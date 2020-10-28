@@ -13,6 +13,7 @@ const TEXT_ERROR = 'slds-text-color_error';
 export default class utilPageLevelMessage extends LightningElement {
     @api title;
     @api subtitle;
+    @api subtitleClassOverride;
     @api errors;
     @api iconName;
     @api iconSize;
@@ -65,7 +66,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get subtitleClass() {
-        let classNames = 'slds-p-top_x-small ';
+        let classNames = (this.subtitleClassOverride || 'slds-p-top_x-small') + ' ';
         if (this.variant === ERROR) {
             classNames += TEXT_ERROR;
         }

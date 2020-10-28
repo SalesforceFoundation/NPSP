@@ -70,19 +70,26 @@
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
+        <members>AN_AutoNumberService</members>
+        <members>AN_AutoNumberService_TEST</members>
+        <members>AN_AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
         <members>BDI_AdditionalObjectService_TEST</members>
+        <members>BDI_BatchNumberSettingsController</members>
+        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
         <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
+        <members>BDI_DataImportBatchStatus_TDTM</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
+        <members>BDI_DataImportBatch_TDTM</members>
         <members>BDI_DataImportBatch_TEST</members>
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
@@ -279,32 +286,16 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
-        <members>FORM_BatchHeaderField</members>
-        <members>FORM_Element</members>
-        <members>FORM_Layout</members>
-        <members>FORM_PermissionValidator</members>
-        <members>FORM_PermissionsValidator_TEST</members>
-        <members>FORM_RenderWrapper</members>
-        <members>FORM_Section</members>
-        <members>FORM_Service</members>
-        <members>FORM_ServiceGiftEntry</members>
-        <members>FORM_ServiceGiftEntry_TEST</members>
-        <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_DefaultTemplate</members>
-        <members>GE_DefaultTemplate_TEST</members>
-        <members>GE_FormRendererService</members>
-        <members>GE_FormRendererService_TEST</members>
-        <members>GE_FormServiceController</members>
         <members>GE_GiftEntryController</members>
         <members>GE_GiftEntryController_TEST</members>
-        <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
         <members>GE_PaymentServices_TEST</members>
-        <members>GE_TemplateBuilderCtrl</members>
+        <members>GE_Template</members>
+        <members>GE_Template_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -383,10 +374,16 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_CommitmentRequest</members>
+        <members>PS_CommitmentRequest_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
         <members>PS_IntegrationService_TEST</members>
+        <members>PS_Request</members>
+        <members>PS_Request_TEST</members>
+        <members>RD2_ApiService</members>
+        <members>RD2_ApiService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -405,6 +402,8 @@
         <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
+        <members>RD2_EntryFormController</members>
+        <members>RD2_EntryFormController_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
@@ -415,6 +414,8 @@
         <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
+        <members>RD2_PauseForm_CTRL</members>
+        <members>RD2_PauseForm_TEST</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
@@ -510,6 +511,7 @@
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelOpps_TEST</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
+        <members>STG_PanelPaymentMapping_CTRL_TEST</members>
         <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
@@ -518,8 +520,11 @@
         <members>STG_PanelRDHealthCheck_TEST</members>
         <members>STG_PanelRD_CTRL</members>
         <members>STG_PanelRelAuto_CTRL</members>
+        <members>STG_PanelRelAuto_CTRL_TEST</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
+        <members>STG_PanelRelReciprocal_CTRL_TEST</members>
         <members>STG_PanelRel_CTRL</members>
+        <members>STG_PanelRel_CTRL_TEST</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
         <members>STG_PanelSchedule_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
@@ -560,6 +565,8 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
+        <members>UTIL_AuraEnabledCommon</members>
+        <members>UTIL_AuraEnabledCommon_TEST</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
@@ -587,6 +594,8 @@
         <members>UTIL_FiscalYearInfo_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
+        <members>UTIL_Http</members>
+        <members>UTIL_Http_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
@@ -802,11 +811,16 @@
         <members>HH_Container</members>
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
+        <members>HH_KeypressEvent</members>
+        <members>HH_NewFocussedElement</members>
+        <members>HH_ReachFooter</members>
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
         <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
+        <members>RD2_EntryForm</members>
+        <members>RD2_PauseForm</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -928,8 +942,16 @@
         <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
+        <members>AutoNumber__c.Description__c</members>
+        <members>AutoNumber__c.Display_Format__c</members>
+        <members>AutoNumber__c.Field_API_Name__c</members>
+        <members>AutoNumber__c.IsActive__c</members>
+        <members>AutoNumber__c.Max_Used_Number__c</members>
+        <members>AutoNumber__c.Object_API_Name__c</members>
+        <members>AutoNumber__c.Starting_Number__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
+        <members>Batch_Data_Entry_Settings__c.Viewed_Retirement_Alert__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
@@ -986,7 +1008,9 @@
         <members>DataImportBatch__c.Batch_Defaults__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
+        <members>DataImportBatch__c.Batch_Number__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Status__c</members>
         <members>DataImportBatch__c.Batch_Table_Columns__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
@@ -1081,6 +1105,7 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
+        <members>DataImport__c.Elevate_Custom_Metadata__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -1120,6 +1145,7 @@
         <members>DataImport__c.Payment_Card_Network__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
+        <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
@@ -1179,6 +1205,7 @@
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
+        <members>Error_Settings__c.DisableRecordDataHealthChecks__c</members>
         <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
@@ -1253,6 +1280,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
+        <members>Opportunity.Batch_Number__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.CommitmentId__c</members>
@@ -1313,9 +1341,11 @@
         <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
         <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
         <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
+        <members>RecurringDonationSchedule__c.IsPause__c</members>
         <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
         <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
         <members>RecurringDonationSchedule__c.StartDate__c</members>
+        <members>RecurringDonationSchedule__c.StatusReason__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -1393,10 +1423,12 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Batch_Number__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
         <members>npe01__OppPayment__c.Card_Last_4__c</members>
         <members>npe01__OppPayment__c.Card_Network__c</members>
+        <members>npe01__OppPayment__c.Donor_Cover_Amount__c</members>
         <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
@@ -1410,12 +1442,17 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.Type__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationMonth__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationYear__c</members>
+        <members>npe03__Recurring_Donation__c.CardLast4__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
+        <members>npe03__Recurring_Donation__c.LastElevateEventPlayed__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
@@ -1425,9 +1462,11 @@
         <members>npe03__Recurring_Donations_Settings__c.DisableRollupsWhenCreatingInstallments__c</members>
         <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppAutoCreateOption__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.InstallmentOppFirstCreateMode__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.NextDonationDateMatchRangeDays__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
@@ -1653,7 +1692,13 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledMessage</members>
+        <members>RD2_ElevateEnableButtonLabel</members>
+        <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
@@ -1672,6 +1717,7 @@
         <members>RD2_EnablementEnableSimpleIntro</members>
         <members>RD2_EnablementEnableTitle</members>
         <members>RD2_EnablementEnableWarning</members>
+        <members>RD2_EnablementIncomplete</members>
         <members>RD2_EnablementIntro</members>
         <members>RD2_EnablementMetaDeployConfirm</members>
         <members>RD2_EnablementMetaDeployConfirmError</members>
@@ -1695,17 +1741,55 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
+        <members>RD2_EndDateElevateCannotBeInFuture</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
+        <members>RD2_EntryFormCustomFieldsSectionHeader</members>
+        <members>RD2_EntryFormDonationSectionHeader</members>
+        <members>RD2_EntryFormDonorSectionHeader</members>
+        <members>RD2_EntryFormDonorTypeHelpText</members>
+        <members>RD2_EntryFormDonorTypeLabel</members>
+        <members>RD2_EntryFormHeader</members>
+        <members>RD2_EntryFormInsertSuccessMessage</members>
+        <members>RD2_EntryFormMissingPermissions</members>
+        <members>RD2_EntryFormOtherSectionHeader</members>
+        <members>RD2_EntryFormPeriodAdvanced</members>
+        <members>RD2_EntryFormPeriodHelpText</members>
+        <members>RD2_EntryFormPeriodLabel</members>
+        <members>RD2_EntryFormPeriodPluralDaily</members>
+        <members>RD2_EntryFormPeriodPluralMonthly</members>
+        <members>RD2_EntryFormPeriodPluralWeekly</members>
+        <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
+        <members>RD2_EntryFormSaveCommitmentMessage</members>
+        <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
+        <members>RD2_EntryFormSaveRecurringDonationMessage</members>
+        <members>RD2_EntryFormScheduleEveryLabel</members>
+        <members>RD2_EntryFormStatusSectionHeader</members>
+        <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
+        <members>RD2_ErrorRDIdIsMissingForCommitment</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_InstallmentStatusSkipped</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_PauseCannotExistOnScheduleChange</members>
+        <members>RD2_PauseClosedRDErrorMessage</members>
+        <members>RD2_PauseDeactivationSuccessMessage</members>
+        <members>RD2_PauseDescription</members>
+        <members>RD2_PauseFirstDonationDateDynamicText</members>
+        <members>RD2_PauseHeader</members>
+        <members>RD2_PausePermissionRequired</members>
+        <members>RD2_PauseSaveSuccessMessage</members>
+        <members>RD2_PauseSelectedInstallmentTextPlural</members>
+        <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PauseStatusMustExist</members>
+        <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -1771,6 +1855,8 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
+        <members>UTIL_InputFormFormFieldAltLabelDate</members>
+        <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
@@ -1824,6 +1910,22 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>autoNumberErrorDuplicate</members>
+        <members>autoNumberErrorInvalidDisplayFormat</members>
+        <members>batchNumberSettingsActivate</members>
+        <members>batchNumberSettingsConfigureHeader</members>
+        <members>batchNumberSettingsDescActivation</members>
+        <members>batchNumberSettingsDescDisplayFormat</members>
+        <members>batchNumberSettingsDescription</members>
+        <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsError</members>
+        <members>batchNumberSettingsHeader</members>
+        <members>batchNumberSettingsHeaderDisplayFormat</members>
+        <members>batchNumberSettingsHeaderFormats</members>
+        <members>bdeRetirementBlockerHeader</members>
+        <members>bdeRetirementBlockerMessage</members>
+        <members>bdeRetirementWarningBody</members>
+        <members>bdeRetirementWarningHeader</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
@@ -1938,6 +2040,9 @@
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIFieldMappingProblemHeader</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart1</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart2</members>
         <members>bdiOMUIGroupNameHelp</members>
         <members>bdiOMUIGroupNameLabel</members>
         <members>bdiOMUIImportDetailsTitle</members>
@@ -2041,6 +2146,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonActivate</members>
         <members>commonAdminPermissionErrorMessage</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
@@ -2053,17 +2159,24 @@
         <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
+        <members>commonCardholderName</members>
         <members>commonClone</members>
+        <members>commonConcurrentBatchError</members>
+        <members>commonContactSystemAdminMessage</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
+        <members>commonDeactivate</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonFieldNotFound</members>
+        <members>commonFieldsNotFound</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
+        <members>commonInsufficientPermissions</members>
         <members>commonJWTInvalidKey</members>
         <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>
@@ -2072,20 +2185,24 @@
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
+        <members>commonOkay</members>
         <members>commonOpen</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
+        <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonSelectOptionPlaceholder</members>
         <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
         <members>commonUpdate</members>
         <members>commonViewAll</members>
         <members>commonViewMore</members>
+        <members>commonWaitMessage</members>
         <members>commonWarning</members>
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
@@ -2130,6 +2247,8 @@
         <members>geAddNewAllocation</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
+        <members>geAssistiveDescriptionFieldOptional</members>
+        <members>geAssistiveDescriptionFieldRequired</members>
         <members>geAssistiveFieldDown</members>
         <members>geAssistiveFieldUp</members>
         <members>geAssistiveFormFieldsCollapseAll</members>
@@ -2138,6 +2257,7 @@
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
         <members>geAssistiveRemoveSelectedOption</members>
+        <members>geAssistiveRequireField</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
@@ -2226,6 +2346,7 @@
         <members>geErrorUncertainCardChargePart2</members>
         <members>geErrorUncertainCardChargePart3</members>
         <members>geErrorUncertainCardChargePart4</members>
+        <members>geFieldsNotFoundMessage</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
@@ -2281,6 +2402,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
+        <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabBatchSettings</members>
@@ -2309,6 +2431,7 @@
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
+        <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -2375,6 +2498,9 @@
         <members>healthLabelAllTestsPassed</members>
         <members>healthLabelAutoRelValid</members>
         <members>healthLabelContactData</members>
+        <members>healthLabelDataBatchNotRun</members>
+        <members>healthLabelDisableRecordBatch</members>
+        <members>healthLabelDisableRecordBatchDescription</members>
         <members>healthLabelErrorRecipientValid</members>
         <members>healthLabelFailed</members>
         <members>healthLabelFiscalYearsValid</members>
@@ -2452,6 +2578,8 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
+        <members>labelBooleanFalse</members>
+        <members>labelBooleanTrue</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
@@ -2466,6 +2594,7 @@
         <members>lblCity</members>
         <members>lblCloned</members>
         <members>lblCountry</members>
+        <members>lblCurrency</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
         <members>lblDeprecated</members>
@@ -2955,6 +3084,9 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgRDNamingDescription</members>
+        <members>stgRDNamingDisable</members>
+        <members>stgRDNamingOptionLabel</members>
         <members>stgReset</members>
         <members>stgSelectOne</members>
         <members>stgStatusDisabled</members>
@@ -3052,6 +3184,7 @@
         <members>Data_Import_Field_Mapping.Payment_Card_Last_4</members>
         <members>Data_Import_Field_Mapping.Payment_Card_Network</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
+        <members>Data_Import_Field_Mapping.Payment_Donor_Cover_Amount</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_ID</members>
@@ -3086,6 +3219,7 @@
         <members>Address__c</members>
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
+        <members>AutoNumber__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
         <members>Custom_Column_Header__c</members>
@@ -3181,6 +3315,13 @@
         <members>Allocations_Settings__c-iw</members>
         <members>Allocations_Settings__c-ja</members>
         <members>Allocations_Settings__c-nl_NL</members>
+        <members>AutoNumber__c-de</members>
+        <members>AutoNumber__c-en_US</members>
+        <members>AutoNumber__c-es</members>
+        <members>AutoNumber__c-fr</members>
+        <members>AutoNumber__c-iw</members>
+        <members>AutoNumber__c-ja</members>
+        <members>AutoNumber__c-nl_NL</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
@@ -3195,6 +3336,11 @@
         <members>Batch__c-iw</members>
         <members>Batch__c-ja</members>
         <members>Batch__c-nl_NL</members>
+        <members>Campaign-de</members>
+        <members>Campaign-es</members>
+        <members>Campaign-fr</members>
+        <members>Campaign-ja</members>
+        <members>Campaign-nl_NL</members>
         <members>Contact-de</members>
         <members>Contact-es</members>
         <members>Contact-fr</members>
@@ -3599,6 +3745,7 @@
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
         <members>npe01__OppPayment__c.Payment_WizardFS</members>
+        <members>npe03__Recurring_Donation__c.RD2_Entry_Form_Custom_Fields</members>
         <name>FieldSet</name>
     </types>
     <types>
@@ -3611,6 +3758,7 @@
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
+        <members>AutoNumber__c-AutoNumber Layout</members>
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
@@ -3653,6 +3801,8 @@
     </types>
     <types>
         <members>batchProgress</members>
+        <members>bdeRetirementAlert</members>
+        <members>bdiBatchNumberSettings</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
@@ -3697,7 +3847,14 @@
         <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
+        <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2ElevateCreditCardForm</members>
+        <members>rd2EntryForm</members>
+        <members>rd2EntryFormCustomFieldsSection</members>
+        <members>rd2EntryFormDonorSection</members>
+        <members>rd2EntryFormScheduleSection</members>
+        <members>rd2PauseForm</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
@@ -3716,6 +3873,7 @@
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>
+        <members>utilPrompt</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
         <members>utilTemplateBuilder</members>
@@ -3738,6 +3896,7 @@
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.All</members>
         <name>ListView</name>
     </types>
     <types>
@@ -3767,6 +3926,7 @@
         <members>npe01__OppPayment__c.Quick_Update</members>
         <members>npe03__Recurring_Donation__c.Close_Recurring_Donation</members>
         <members>npe03__Recurring_Donation__c.New_Opportunity</members>
+        <members>npe03__Recurring_Donation__c.Pause</members>
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>
         <name>QuickAction</name>

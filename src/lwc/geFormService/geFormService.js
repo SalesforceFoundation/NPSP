@@ -1,13 +1,14 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import getFormRenderWrapper from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
-import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
+import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
+import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
+
 
 import { handleError } from 'c/utilTemplateBuilder';
-import { api } from 'lwc';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -43,9 +44,8 @@ class GeFormService {
 
     /**
      * Retrieve the default form render wrapper.
-     * @returns {Promise<FORM_RenderWrapper>}
+     * @returns {Promise<GE_GiftEntryController.RenderWrapper>}
      */
-    @api
     getFormTemplate() {
         return new Promise((resolve, reject) => {
             getRenderWrapper({})
@@ -109,12 +109,12 @@ class GeFormService {
     }
 
     /**
-     * Get a object info object by dev name from the render wrapper object
-     * @param objectDevName
+     * Get a object info object by dev name
+     * @param objectMappingDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectMappingWrapper(objectDevName) {
-        return this.objectMappings[objectDevName];
+    getObjectMapping(objectMappingDevName) {
+        return this.objectMappings[objectMappingDevName];
     }
 
     /**
@@ -173,16 +173,31 @@ class GeFormService {
     }
 
     get importedRecordFieldNames() {
-        return Object.values(this.objectMappings).map(
-            ({ Imported_Record_Field_Name }) =>
-                Imported_Record_Field_Name
-        );
+        return this.objectMappings && Object.values(this.objectMappings)
+            .map(
+                ({Imported_Record_Field_Name}) => Imported_Record_Field_Name
+            );
     }
 
-    getObjectMappingWrapperByImportedFieldName(importedFieldName) {
-        return Object.values(this.objectMappings)
-            .find(({ Imported_Record_Field_Name }) =>
+    fieldMappingsForImportedRecordFieldName(importedRecordFieldName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(
+                fieldMapping =>
+                    fieldMapping.Target_Object_Mapping_Dev_Name ===
+                    this.objectMappingWrapperFor(importedRecordFieldName).DeveloperName
+            );
+    }
+
+    objectMappingWrapperFor(importedFieldName) {
+        return this.objectMappings && Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
                 Imported_Record_Field_Name === importedFieldName);
+    }
+
+    fieldMappingsForObjectMappingDevName(objectMappingDevName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(fieldMapping =>
+                fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
     }
 
 }

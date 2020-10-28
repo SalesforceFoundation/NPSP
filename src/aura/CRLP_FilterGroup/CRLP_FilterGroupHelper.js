@@ -277,7 +277,7 @@
                                 cmp.set("v.filterRuleList", filterRuleList);
                                 cmp.set("v.cachedFilterRuleList", filterRuleListCached);
                                 cmp.set("v.deletedRuleList", []);
-                                
+
                                 var rollupList = cmp.get("v.rollupList");
 
                                 // need to send back an object with the following properties
@@ -340,7 +340,7 @@
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
-        
+
         var fieldName = cmp.get("v.activeFilterRule.fieldName");
         if (fieldName === 'RecordTypeId') {
             var labelList = [];
@@ -383,7 +383,10 @@
         if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
             filterRuleFieldType = 'picklist';
-            var options = [{value: 'true', label: 'True'}, {value: 'false', label: 'False'}];
+            var options = [
+                {value: 'true', label: cmp.get("v.labels.labelBooleanTrue")},
+                {value: 'false', label: cmp.get("v.labels.labelBooleanFalse")}
+            ];
             cmp.set("v.filterRuleConstantPicklist", options);
         } else if (type === 'date') {
             filterRuleFieldType = 'date';

@@ -57,6 +57,11 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Recurring Donation record current and future Opportunities
+    */
+    List<Opportunity> opportunities = new List<Opportunity>();
+
+    /**
     * @description A list of the fields that have been changed by one of the revise methods.
     */
     private Set<Schema.SObjectField> changedFields = new Set<Schema.SObjectField>();
@@ -66,7 +71,28 @@ public inherited sharing class RD2_RecurringDonation {
     * @param rd Recurring Donation record
     */
     public RD2_RecurringDonation(npe03__Recurring_Donation__c rd) {
+        this(rd, rd.npe03__Donations__r);
+    }
+
+    /**
+    * @description Constructor
+    * @param rd Recurring Donation record
+    * @param opportunities Recurring Donation current and future Opportunities
+    */
+    public RD2_RecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> opportunities) {
         this.rd = rd;
+
+        this.opportunities = opportunities == null 
+            ? new List<Opportunity>()
+            : opportunities;
+    }
+
+    /**
+    * @description Returns current and future Opportunities on the Recurring Donation
+    * @param List<Opportunity>
+    */
+    public List<Opportunity> getOpportunities() {
+        return this.opportunities;
     }
 
     /**
@@ -100,7 +126,7 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
         return setNextDonationDate(
-            scheduleService.getNextDonationDate(rd, rdSchedules)
+            scheduleService.getNextDonationDate(this, rdSchedules)
         );
     }
 
@@ -125,13 +151,13 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseYearValues(RD2_YearValueProcessor processor) {
-        Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+        Decimal value = processor.calcCurrentYearValue(opportunities, rd.RecurringDonationSchedules__r);
         if (value != rd.CurrentYearValue__c) {
             rd.CurrentYearValue__c = value;
             changedFields.add(npe03__Recurring_Donation__c.CurrentYearValue__c);
         }
 
-        value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+        value = processor.calcNextYearValue(opportunities, rd.RecurringDonationSchedules__r);
         if (value != rd.NextYearValue__c) {
             rd.NextYearValue__c = value;
             changedFields.add(npe03__Recurring_Donation__c.NextYearValue__c);
@@ -143,15 +169,23 @@ public inherited sharing class RD2_RecurringDonation {
     /**
     * @description Revises and modifies the Recurring Donation status
     * @param currentDate Used to determined current date
+    * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatus(Date currentDate) {
+    public RD2_RecurringDonation reviseStatus(Date currentDate, RD2_ScheduleService scheduleService) {
+        if (!isActive()) {
+            return this;
+        }
+
         if (isFixedLength()) {
             reviseStatusForFixedLength();
 
         } else if (isOpenEnded()) {
             reviseStatusForOpenEnded(currentDate);
         }
+
+        reviseStatusForPaused(currentDate, scheduleService);
+
         return this;
     }
 
@@ -160,9 +194,8 @@ public inherited sharing class RD2_RecurringDonation {
     * based on the Number of Planned Installments as compared to the Number of Paid Installments.
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatusForFixedLength() {
-        if (isActive()
-            && isFixedLength()
+    private RD2_RecurringDonation reviseStatusForFixedLength() {
+        if (isFixedLength()
             && isFixedLengthComplete()
         ) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
@@ -178,19 +211,54 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     *@description Revises and modifies the Recurring Donation if it is Open Ended and it past the RD End Date
+    * @param currentDate Used to determined current date
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
-        if (isActive()
-            && isOpenEnded()
+    private RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
+        if (isOpenEnded()
             && rd.EndDate__c != null
             && rd.EndDate__c < currentDate
         ) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
-
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
+
         }
+
         return this;
+    }
+
+    /**
+    * @description Revises and modifies for paused and unpaused Recurring Donation
+    * @param currentDate Used to determined current date
+    * @param scheduleService RD Schedule Service
+    */
+    private void reviseStatusForPaused(Date currentDate, RD2_ScheduleService scheduleService) {
+        if (isClosed() || !hasSchedule()) {
+            return;
+        }
+    
+        if (scheduleService.isCurrentlyPaused(currentDate, rd.RecurringDonationSchedules__r)) {
+
+            if (rd.Status__c != RD2_Constants.STATUS_PAUSED && RD2_ValidationService.isStatusPausedActive()) {
+                RecurringDonationSchedule__c nextPauseSchedule = scheduleService.getNextActivePauseSchedule(
+                    currentDate,
+                    rd.RecurringDonationSchedules__r
+                );
+
+                rd.Status__c = RD2_Constants.STATUS_PAUSED;
+                rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+            }
+        } else {
+
+            if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
+                rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+                rd.ClosedReason__c = '';
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+            }
+        }
     }
 
     /**
@@ -382,8 +450,16 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean isNew() {
         return isNew == null
-            ? rd.npe03__Donations__r.isEmpty()
+            ? opportunities.isEmpty()
             : isNew;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation has first installment creation disabled.
+    * @return Boolean 
+    */
+    public Boolean isFirstInstallmentDisabled() {
+        return rd.DisableFirstInstallment__c == true;
     }
 
     /**
@@ -393,7 +469,7 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean hasCurrentOpenOpportunity(Date currentDate) {
         return new RD2_OpportunityMatcher(currentDate)
-            .includeCurrent(rd.npe03__Donations__r)
+            .includeCurrent(opportunities)
             .hasOpenOpportunity();
     }
 
@@ -402,7 +478,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean hasOpenOpportunity() {
-        for (Opportunity opp : rd.npe03__Donations__r) {
+        for (Opportunity opp : opportunities) {
             if (opp.IsClosed == false) {
                 return true;
             }

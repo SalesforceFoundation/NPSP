@@ -1,5 +1,4 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
-import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
@@ -10,7 +9,6 @@ class GeTemplateBuilderService {
     fieldMappingByDevName = null;
     fieldMappingsByObjMappingDevName = null;
     objectMappingByDevName = null;
-    namespaceWrapper = null;
 
     init = async (fieldMappingSetName, refresh) => {
         if (this.fieldMappingByDevName === null ||
@@ -18,10 +16,6 @@ class GeTemplateBuilderService {
             this.objectMappingByDevName === null ||
             refresh === true) {
             await this.handleGetFieldMappingSet(fieldMappingSetName);
-        }
-
-        if (this.namespaceWrapper === null || refresh === true) {
-            await this.handleGetNamespaceWrapper();
         }
     }
 
@@ -64,37 +58,14 @@ class GeTemplateBuilderService {
     }
 
     /*******************************************************************************
-    * @description Method makes an imperative apex call and populates the
-    * namespaceWrapper property.
+    * @description Method will strip off the NPSP prefix of a field or object
+    * name and replace it with the passed in namespace if appropriate.
     *
-    * @return {object} promise: Promise from the imperative apex call
-    * getNamespaceWrapper.
+    * @return {string} newName: String aligned with the passed in namespace
     */
-    handleGetNamespaceWrapper = () => {
-        return new Promise((resolve, reject) => {
-            getNamespaceWrapper()
-                .then(data => {
-                    this.namespaceWrapper = data;
-                    resolve(data);
-                })
-                .catch(error => {
-                    handleError(error);
-                    reject(error);
-                })
-        });
-    }
-
-    /*******************************************************************************
-    * @description Method checks if running in non-namespaced or non-npsp namespaced
-    * environment, this method will strip off the NPSP prefix of a field or object
-    * name and replace it with the current namespace of the UTIL_Namespace if
-    * appropriate.
-    *
-    * @return {string} newName: String aligned with the current environment namespace
-    */
-    alignSchemaNSWithEnvironment = (name) => {
-        if (this.namespaceWrapper && this.namespaceWrapper.currentNamespace) {
-            const namespacePrefix = `${this.namespaceWrapper.currentNamespace}__`;
+    alignSchemaNSWithEnvironment = (name, namespace) => {
+        if (namespace) {
+            const namespacePrefix = `${namespace}__`;
             let newName = name.replace('npsp__', '');
 
             return newName.includes(namespacePrefix) ? newName : `${namespacePrefix}${newName}`;

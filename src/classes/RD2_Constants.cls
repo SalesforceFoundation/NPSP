@@ -54,6 +54,15 @@ public inherited sharing class RD2_Constants {
     }
 
     /**
+    * @description Enum to specify asynchronous behavior for the creation of the first installment opportunity
+    */
+    public enum FirstInstallmentOppCreateOptions {
+        Synchronous,
+        Asynchronous,
+        Asynchronous_When_Bulk
+    }
+
+    /**
     * @description Recurring Donation "Installment Period" picklist API values
     */
     public static final String INSTALLMENT_PERIOD_YEARLY = 'Yearly';
@@ -75,6 +84,7 @@ public inherited sharing class RD2_Constants {
     public static final String STATUS_ACTIVE = 'Active';
     public static final String STATUS_LAPSED = 'Lapsed';
     public static final String STATUS_CLOSED = 'Closed';
+    public static final String STATUS_PAUSED = 'Paused';
 
     /**
     * @description Recurring Donation "Recurring Type" picklist API values
@@ -115,5 +125,4 @@ public inherited sharing class RD2_Constants {
     * @description Contains default value for the Next Donation Date Match Range Days field
     */
     public static final Integer DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS = 3;
-
 }

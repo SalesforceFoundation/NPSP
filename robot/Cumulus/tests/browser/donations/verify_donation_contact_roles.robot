@@ -13,8 +13,6 @@ Suite Setup     Run keywords
 Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
-
-
 # Set up all the required data for the test based on the keyword requests
 Setup Test Data
     # Create contact1
@@ -45,33 +43,32 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
 
-
     Select Tab                             Related
 
     Verify Related List Field Values       Contact Roles           ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
     ...                                                            ${data}[contact2][FirstName] ${data}[contact2][LastName]=Household Member
 
     Go To Page                             Details
-    ...                                    Contact
+    ...                                    Account
     ...                                    object_id=${data}[contact1][AccountId]
 
     Select Tab                             Details
 
-    # Perform the below Validations
-
+    # Perform the below Validations on the Account details page
     Navigate To And Validate Field Value         Total Gifts               contains          $150.00    Membership Information
     Navigate To And Validate Field Value         Total Number of Gifts     contains          2          Membership Information
 
     # Run the batch process to obtain all the soft credits
     Run Donations Batch Process
 
+    # Navigate to the contact details page of the non primary contact and perform the below validations
     Go To Page                             Details
-    ...                                    Contact
+    ...                                    Account
     ...                                    object_id=${data}[contact1][Id]
 
-    Navigate To And Validate Field Value     Total Gifts              contains     $100.00  Soft Credit Total
-    Navigate To And Validate Field Value     Total Number of Gifts    contains     1    Soft Credit Total
+    Navigate To And Validate Field Value     Total Gifts              contains     $100.00            Soft Credit Total
+    Navigate To And Validate Field Value     Total Number of Gifts    contains     1                  Soft Credit Total
 
-    Navigate To And Validate Field Value     Soft Credit Total        contains      $50.00  Household Donation Info
-    Navigate To And Validate Field Value     Total Number of Gifts    contains      1       Household Donation Info
+    Navigate To And Validate Field Value     Soft Credit Total        contains      $50.00            Household Donation Info
+    Navigate To And Validate Field Value     Total Number of Gifts    contains      1                 Household Donation Info
 

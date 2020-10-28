@@ -1,32 +1,79 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { handleError } from 'c/utilTemplateBuilder';
-import { deepClone } from 'c/utilCommon';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import geLabelService from 'c/geLabelService';
-
-const PAYMENT = 'payment';
-const OPPORTUNITY = 'opportunity';
+import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
+import OPPORTUNITY from '@salesforce/schema/Opportunity';
+import PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
+import { hasNestedProperty } from 'c/utilCommon';
 
 export default class geReviewDonations extends NavigationMixin(LightningElement) {
 
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
     @api donorId;
-    @api dedicatedListenerEventName = 'geDonationMatchingEvent';
-    @api selectedDonation;
-    @api opportunities;
 
-    @track donationType;
-    @track donor;
+    _donor;
+    _donorType;
+    _donationType;
+    _selectedDonation;
+    _opportunities = [];
+    _dedicatedListenerEventName = 'geDonationMatchingEvent';
+
+    connectedCallback() {
+        registerListener('resetReviewDonationsEvent', this.handleResetReviewDonationsComponent, this);
+    }
+
+    disconnectedCallback() {
+        unregisterListener('resetReviewDonationsEvent', this.handleResetReviewDonationsComponent, this);
+    }
 
     @wire(getRecord, { recordId: '$donorId', optionalFields: ['Account.Name', 'Contact.Name'] })
-    wiredGetRecordMethod({ error, data }) {
+    wiredGetRecord({ error, data }) {
+        if (error) return handleError(error);
         if (data) {
-            this.donor = data;
-        } else if (error) {
-            handleError(error);
+            this._donor = data;
+            this._donorType = this._donor.apiName;
         }
+    }
+
+    @wire(getOpenDonations, { donorId: '$donorId', donorType: '$_donorType' })
+    wiredGetOpenDonations({ error, data }) {
+        if (error) return handleError(error);
+        if (data) return this.opportunities = JSON.parse(data);
+    }
+
+    @api
+    get selectedDonation() {
+        return this._selectedDonation;
+    }
+
+    set selectedDonation(donation) {
+        this._selectedDonation = donation;
+
+        const hasNestedTypeProperty = hasNestedProperty(donation, 'attributes', 'type');
+        if (hasNestedTypeProperty && donation.attributes.type === PAYMENT.objectApiName) {
+            this._donationType = PAYMENT.objectApiName;
+        } else if (hasNestedTypeProperty && donation.attributes.type === OPPORTUNITY.objectApiName) {
+            this._donationType = OPPORTUNITY.objectApiName;
+        } else {
+            this._donationType = null;
+        }
+    }
+
+    set opportunities(value) {
+        this._opportunities = value;
+    }
+
+    get opportunities() {
+        return this._opportunities;
+    }
+
+    get hasPendingDonations() {
+        if (!this.donorId) return false;
+        return this.opportunities && this.opportunities.length > 0 ? true : false;
     }
 
     get reviewDonationsComputedClass() {
@@ -42,11 +89,11 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     get isUpdatingPayment() {
-        return this.donationType === PAYMENT ? true : false;
+        return this._donationType === PAYMENT.objectApiName ? true : false;
     }
 
     get isUpdatingOpportunity() {
-        return this.donationType === OPPORTUNITY &&
+        return this._donationType === OPPORTUNITY.objectApiName &&
             !this.selectedDonation.hasOwnProperty('applyPayment') &&
             !this.selectedDonation.hasOwnProperty('new') ?
             true :
@@ -54,25 +101,25 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     get isApplyingNewPayment() {
-        return this.donationType === OPPORTUNITY &&
+        return this._donationType === OPPORTUNITY.objectApiName &&
             this.selectedDonation.hasOwnProperty('applyPayment') ?
             true :
             false;
     }
 
     get isCreatingNewOpportunity() {
-        return this.donationType === OPPORTUNITY &&
+        return this._donationType === OPPORTUNITY.objectApiName &&
             this.selectedDonation.hasOwnProperty('new') ?
             true :
             false;
     }
 
     get hasSelectedDonation() {
-        return this.donationType ? true : false;
+        return this.selectedDonation ? true : false;
     }
 
     get reviewDonationsMessage() {
-        if (this.donor) {
+        if (this._donor) {
             if (this.isCreatingNewOpportunity) {
                 return this.CUSTOM_LABELS.geBodyMatchingNewOpportunity;
             }
@@ -89,7 +136,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         return this.CUSTOM_LABELS.geBodyMatchingPendingDonation;
     }
 
-    get hasDonorLink() {
+    get showDonorLink() {
         return this.isApplyingNewPayment ||
             this.isUpdatingOpportunity ||
             this.isUpdatingPayment ?
@@ -109,15 +156,15 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * body. modalProperties holds all the data for the actual modal created by the 
     * overlay library.
     */
-    handleReviewDonations() {
-        const donorRecordName = this.donor ? this.donor.fields.Name.value : '';
+    openReviewDonationsModal() {
+        const donorRecordName = this._donor ? this._donor.fields.Name.value : '';
         const modalHeader = geLabelService.format(
             this.CUSTOM_LABELS.geHeaderMatchingReviewDonations,
             [donorRecordName]);
         const modalConfig = {
             componentProperties: {
-                opportunities: deepClone(this.opportunities),
-                dedicatedListenerEventName: this.dedicatedListenerEventName,
+                opportunities: this.opportunities,
+                dedicatedListenerEventName: this._dedicatedListenerEventName,
                 selectedDonationId: this.hasSelectedDonation ? this.selectedDonation.Id : undefined
             },
             modalProperties: {
@@ -129,31 +176,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         };
 
         this.dispatchEvent(new CustomEvent('togglemodal', { detail: modalConfig }));
-    }
-
-    /*******************************************************************************
-    * @description Method receives an event from the child geDonationMatching
-    * component and sets the currently selected donation along with its type.
-    * 
-    * @param {object} event: Custom Event object received from child component.
-    */
-    handleReceiveEvent(event) {
-        if (event.detail.hasOwnProperty(PAYMENT)) {
-            this.selectedDonation = event.detail.payment;
-            this.donationType = PAYMENT;
-        } else if (event.detail.hasOwnProperty(OPPORTUNITY)) {
-            this.selectedDonation = event.detail.opportunity;
-            this.donationType = OPPORTUNITY;
-        } else {
-            this.selectedDonation = this.donationType = undefined;
-        }
-
-        const detail = {
-            selectedDonation: deepClone(this.selectedDonation),
-            donationType: deepClone(this.donationType)
-        }
-
-        this.dispatchEvent(new CustomEvent('changeselecteddonation', { detail }));
     }
 
     /*******************************************************************************
@@ -177,8 +199,30 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
             });
     }
 
-    @api
-    resetDonationType() {
-        this.donationType = undefined;
+    /*******************************************************************************
+    * @description Resets properties for the currently selected donation and type.
+    */
+    handleResetReviewDonationsComponent() {
+        this.selectedDonation = null;
+        this._donationType = null;
+        if (!this.donorId) {
+            this.opportunities = [];
+        }
+    }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorSelectedDonation() {
+        return `button ${this.selectedDonation.Name}`;
+    }
+
+    get qaLocatorReviewDonations() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingReviewDonations}`;
+    }
+
+    get qaLocatorDifferentSelection() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}`;
     }
 }

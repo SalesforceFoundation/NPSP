@@ -3,46 +3,46 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnung für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnungen für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnung für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnungen für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnung für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnungen für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnung für wiederkehrende Spende</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Status Mapping --></value>
+        <value>Statuszuordnungen für wiederkehrende Spende</value>
     </caseValues>
     <fields>
-        <help><!-- Valid entries are Active, Lapsed, and Closed. --></help>
-        <label><!-- Recurring Donation State --></label>
+        <help>Die gültigen Einträge sind Aktiv, Ausgesetzt und Geschlossen.</help>
+        <label>Status der wiederkehrenden Spende</label>
         <name>State__c</name>
         <picklistValues>
             <masterLabel>Active</masterLabel>
@@ -58,9 +58,9 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- API name of the Recurring Donation Status that is mapped to a State. --></help>
-        <label><!-- Recurring Donation Status --></label>
+        <help>API-Name des Status der wiederkehrenden Spende, die einem Status zugeordnet ist.</help>
+        <label>Status der wiederkehrenden Spende</label>
         <name>Status__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

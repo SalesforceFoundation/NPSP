@@ -101,7 +101,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void userIsAdmin() {
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
         System.runAs(adminUser) {
             Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());
@@ -115,7 +115,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void userIsNotAdmin() {
-        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Standard User');
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         System.runAs(standardUser) {
             Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());
@@ -321,33 +321,6 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
             null,
             objectMapping.Relationship_To_Predecessor__c,
             'Object Mapping Relationship_To_Predecessor__c is null');
-    }
-
-    /*******************************************************************************************************
-    * @description Test that we're able to create a Deployment Container containing Custom Metadata records
-    */
-    @isTest
-    static void shouldCreateDeploymentContainerWithCustomMetadataRecords() {
-        Data_Import_Object_Mapping__mdt objectMapping =
-            (Data_Import_Object_Mapping__mdt)JSON.deserialize(
-                BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping(OBJECT_MAPPING_MDT),
-                Data_Import_Object_Mapping__mdt.class);
-        Data_Import_Field_Mapping__mdt fieldMapping =
-            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
-                BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping(FIELD_MAPPING_MDT),
-                Data_Import_Field_Mapping__mdt.class);
-
-        sObject[] customMetadataList = new List<sObject>{objectMapping, fieldMapping};
-        String deploymentContainerString =
-            BDI_ManageAdvancedMappingCtrl.enqueueMetadataRecords(customMetadataList);
-
-        Metadata.DeployContainer deploymentContainer =
-            (Metadata.DeployContainer)JSON.deserialize(
-                deploymentContainerString,
-                Metadata.DeployContainer.class);
-
-        Metadata.Metadata[] metadataList = deploymentContainer.getMetadata();
-        System.assertEquals(metadataList.size(), 2);
     }
 
     /*******************************************************************************************************

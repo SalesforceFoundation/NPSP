@@ -8,6 +8,20 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>lightningcomponent</type>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <comment>Custom Recurring Donation Entry Form</comment>
+     </actionOverrides>
+     <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>lightningcomponent</type>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <comment>Custom Recurring Donation Entry Form</comment>
+     </actionOverrides>
     <compactLayoutAssignment>Enhanced_Recurring_Donations</compactLayoutAssignment>
     <compactLayouts>
         <fullName>Enhanced_Recurring_Donations</fullName>
@@ -307,6 +321,43 @@
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Status__c</fullName>
+        <description>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</inlineHelpText>
+        <label>Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Active</fullName>
+                    <default>true</default>
+                    <label>Active</label>
+                </value>
+                <value>
+                    <fullName>Lapsed</fullName>
+                    <default>false</default>
+                    <label>Lapsed</label>
+                </value>
+                <value>
+                    <fullName>Closed</fullName>
+                    <default>false</default>
+                    <label>Closed</label>
+                </value>
+                <value>
+                    <fullName>Paused</fullName>
+                    <default>false</default>
+                    <label>Paused</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>npe03__Installment_Period__c</fullName>

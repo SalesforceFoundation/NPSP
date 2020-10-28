@@ -5,7 +5,7 @@
                                is-collapsed={isCollapsed}
                                body-class="slds-m-bottom_large">
         <lightning-layout multiple-rows='true'>
-            <template for:each={section.elements}
+            <template for:each={renderableElements}
                       for:item='element'>
                 <!-- TODO: It would be great to make the layout sizing more dynamic,
                     but the lightning-layout-item needs to be in the same component as the lightning-layout.
@@ -18,7 +18,8 @@
                             <c-ge-form-field element={element}
                                              oncreditcardvaluechange={handleChangeNameOnCardField}
                                              onlookuprecordselect={handleLookupRecordSelect}
-                                             onchangedonationdonor={handleChangeDonationDonor}>
+                                             onformfieldchange={handleFormFieldChange}
+                                             form-state={formState}>
                             </c-ge-form-field>
                         </article>
                     </lightning-layout-item>
