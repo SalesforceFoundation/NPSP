@@ -144,20 +144,29 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting
-    * a token. Response for this request is found and handled in
-    * registerPostMessageListener.
-    */
+     * @description Method sends a message to the visualforce page iframe requesting
+     * a token. Response for this request is found and handled in
+     * registerPostMessageListener.
+     */
     requestToken() {
         this.clearError();
 
-        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        const iframe = this.template.querySelector(
+            `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
 
         //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
         //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
         const nameOnCard = null;
+          return tokenHandler.requestToken(iframe, nameOnCard, this.handleError,
+               this.resolveToken)
 
-        return tokenHandler.requestToken(iframe, nameOnCard, this.handleError, this.resolveToken);
+    }
+
+    @api
+    get paymentToken() {
+        return {
+            payload: this.requestToken()
+        }
     }
 
     /**

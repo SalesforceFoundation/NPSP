@@ -280,7 +280,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get isSingleGiftEntry() {
-        return this.batchId ? false : true;
+        return !this.batchId;
     }
 
     get cancelButtonText() {
@@ -694,12 +694,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
-            // TODO: Victor will likely remove lines 619 - 628
-            let inMemoryDataImport;
             try {
-                inMemoryDataImport = await this.buildDataImportFromSections(
-                    sectionsList, this.selectedDonationDataImportFieldValues
-                );
+                if (this.showPaymentSaveNotice) {
+                    let widgetValues = [];
+                    sectionsList.forEach(section => {
+                        if (section.isCreditCardWidgetAvailable) {
+                            widgetValues = widgetValues.concat(section.paymentToken);
+                        }
+                    });
+                    if (widgetValues) {
+                        const tokenResponse = await Promise.all(
+                            [widgetValues[0].payload]
+                        );
+                        if (tokenResponse) {
+                            this.updateFormState(tokenResponse[0]);
+                        }
+                    }
+                }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
                 this.handleAsyncWidgetError(ex);
@@ -707,8 +718,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
 
             let dataImportFromFormState = this.saveableFormState();
-            // TODO: Workaround to retrieve the token if available, purge later
-            this.TEMPORARY_forceTokenOntoDataImport(dataImportFromFormState, inMemoryDataImport);
 
             // handle save depending mode
             if (this.batchId) {
@@ -1012,8 +1021,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     this.flatten(dataImport),
                     section.sourceFields));
         });
-
-        this.handleNameOnCardFieldChange();
     }
 
     setStoredDonationDonorProperties(dataImport) {
@@ -1765,68 +1772,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleNameOnCardFieldChange() {
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        let fieldList = {};
-        if (!isUndefined(sectionsList) && this.isSingleGiftEntry) {
-            fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
-
-            this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
-            sectionsList.forEach(section => {
-                if (section.isCreditCardWidgetAvailable) {
-                    this._hasCreditCardWidget = true;
-                    section.setCardHolderName(this.fabricatedCardholderNames);
-                }
-            });
-        }
+    handleRegisterCreditCardWidget() {
+       this._hasCreditCardWidget = true;
     }
-
 
     /**
      * Function that fabricates the cardholder name for the credit card widget
      * @param fieldList (List of fields displayed on the form)
      * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
      */
-    fabricateCardHolderName(fieldList){
-        let accountName, firstName, lastName;
-        let index = 0;
-
-        for (let field in fieldList) {
-            index++;
-            if (fieldList.hasOwnProperty(field)) {
-                let value = fieldList[field].value ? fieldList[field].value : '';
-                let fieldApiName = fieldList[field].apiName;
-
-                switch (fieldApiName) {
-                    case CONTACT_FIRST_NAME_INFO.fieldApiName :
-                        firstName = value;
-                        break;
-                    case CONTACT_LAST_NAME_INFO.fieldApiName :
-                        lastName = value;
-                        break;
-                    case ACCOUNT_NAME_FIELD.fieldApiName :
-                        accountName = value;
-                        break;
-                }
-
-                if (index === Object.keys(fieldList).length) {
-                    if (this.donorType() === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
-                        return {
-                            firstName: firstName,
-                            lastName: lastName,
-                            accountName: ''
-                        };
-                    } else {
-                        return {
-                            firstName: '',
-                            lastName: '',
-                            accountName: accountName
-                        };
-                    }
-                }
-            }
-        }
-    }
+    fabricateCardHolderName(fieldList){ }
 
     getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
         let allFields = {};
@@ -1929,7 +1884,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     updateFormState(fields) {
         Object.assign(this.formState, fields);
-
         if (fields.hasOwnProperty(DONATION_RECORD_TYPE_NAME.fieldApiName)) {
             this.updateFormStateForDonationRecordType(fields);
         }
@@ -2375,6 +2329,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     singleGiftSubmit = async (dataImportFromFormState) => {
         try {
+            console.log(JSON.parse(JSON.stringify(dataImportFromFormState)));
             await this.saveDataImport(dataImportFromFormState);
 
             const hasPaymentToProcess = this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName);
@@ -2386,6 +2341,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 await this.processDataImport();
             }
         } catch (error) {
+            console.log('Error: '+JSON.stringify(error));
             this.disabled = false;
             this.toggleSpinner();
             this.handleSingleGiftErrors(error);
@@ -2727,10 +2683,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             isNotEmpty(this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName));
     }
 
+
+
     // TODO: Temp method for retrieving payment auth token, purge later
-    TEMPORARY_forceTokenOntoDataImport = (dataImportFromFormState, inMemoryDataImport) => {
-        if (!inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName]) return;
-        dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
-            inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
+    updateFormStateWithToken = (dataImportFromFormState, token) => {
+        dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] = token[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
+        return dataImportFromFormState;
     }
 }
