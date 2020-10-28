@@ -331,9 +331,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def validate_current_and_next_year_values(self, amount, rdtype=None):
-        """Takes in the parameter current installment payment (amount)
-        calculates the current and next year value payments and
-        validates them with the values displayed on the UI. """
+        """Takes in the parameter current installment payment (amount) and an optional field of the rd type
+        calculates the current and next year value payments and validates them with the values displayed on the UI. """
         installmentrow = npsp_lex_locators["erd"]["installment_row"]
         installments = self.selenium.get_webelements(installmentrow)
         count = len(installments)
@@ -354,13 +353,18 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 year = datetime.strptime(actual_date, "%m/%d/%Y").year
                 curr_year = datetime.now().year
                 next_year = (datetime.now() + relativedelta(years=1)).year
+                # increment the current year value if there is no paused text next to installment date
                 if curr_year == year and not self.npsp.check_if_element_exists(paused_locator):
                     curr_year_value = curr_year_value + int(amount)
+                # increment the next year value if there is no paused text next to installment date
                 elif next_year == year and not self.npsp.check_if_element_exists(paused_locator):
                     next_year_value = next_year_value + int(amount)
                 if next_year == year:
                     next_year_count = next_year_count + 1
                 i = i + 1
+                
+             # This logic handles the scenario if the recurring donation is of type open, the entire year installments
+             # are accounted in the calculation for next year value
             if rdtype == "Open":
                 next_year_value = next_year_value + (12-next_year_count)*int(amount)
             values['Current Year Value']=f"${curr_year_value}.00"
