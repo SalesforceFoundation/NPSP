@@ -204,11 +204,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     loadPaymentAndParentDonationFieldValues(record) {
         this.loadSelectedRecordFieldValues(
-            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD), record.Id);
-
-        this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD),
             record[PARENT_OPPORTUNITY_FIELD.fieldApiName]);
+
+        this.loadSelectedRecordFieldValues(
+            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD), record.Id);
     }
 
     setSelectedDonationInFormState(record, isApplyNewPayment = false) {
@@ -963,16 +963,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.dataImport = dataImport;
         }
 
-        if (this.selectedDonationOrPaymentRecord && this.selectedDonationOrPaymentRecord.Id &&
-            this.selectedDonationOrPaymentRecord.Id.startsWith(this.oppPaymentKeyPrefix)) {
-            // If the selected donation is a Payment, set Donation Amount
-            // and Donation Date to the values from the selected Payment.
-            dataImport[DONATION_AMOUNT.fieldApiName] =
-                this.selectedDonationOrPaymentRecord[OPP_PAYMENT_AMOUNT.fieldApiName];
-            dataImport[DONATION_DATE.fieldApiName] =
-                this.selectedDonationOrPaymentRecord[SCHEDULED_DATE.fieldApiName];
-        }
-
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
             section.load(
@@ -1274,9 +1264,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     Target_Object_Mapping_Dev_Name === objectMapping.DeveloperName);
 
         // Return the sibling fields used by Advanced Mapping
-        return relevantFieldMappings.map(
+        const relevantFields = relevantFieldMappings.map(
             ({Target_Field_API_Name}) =>
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
+
+        if (this.isPaymentImportedField(objectMapping.Imported_Record_Field_Name)) {
+            const pmtAmountField =
+                `${objectMapping.Object_API_Name}.${apiNameFor(OPP_PAYMENT_AMOUNT)}`;
+            const pmtScheduledDate =
+                `${objectMapping.Object_API_Name}.${apiNameFor(SCHEDULED_DATE)}`;
+            relevantFields.push(pmtAmountField, pmtScheduledDate);
+        }
+        return relevantFields;
     }
 
     objectMappingDeveloperNameFor(fieldApiName) {
@@ -1549,17 +1548,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         objectMappingDevNames.forEach(objectMappingName => {
             //relevant field mappings
             this.fieldMappingsFor(objectMappingName).forEach(fieldMapping => {
-                const valueObject = record.fields[fieldMapping.Target_Field_API_Name];
+                const valueObjectFromRecord = record.fields[fieldMapping.Target_Field_API_Name];
                 const sourceField = fieldMapping.Source_Field_API_Name;
                 // If the retrieved selected lookup record has a blank value for any
                 // fields that have defaults configured, apply the default value.  Otherwise
                 // load the database value for that field.
-                dataImport[sourceField] = valueObject.value === null ?
-                    this.defaultValueFor(fieldMapping.DeveloperName) :
-                    valueObject.value;
+                dataImport[sourceField] =
+                    this.getFieldValueForFormState(valueObjectFromRecord, fieldMapping);
             });
+
+            const objectMapping = GeFormService.getObjectMapping(objectMappingName);
+            if (this.isPaymentImportedObjectMapping(objectMapping)) {
+                dataImport =
+                    this.overwriteDonationAmountAndDateWithPaymentInfo(dataImport, record);
+            }
+
         });
 
+        return dataImport;
+    }
+
+    getFieldValueForFormState(valueObject, fieldMapping) {
+        return valueObject.value === null ?
+            this.defaultValueFor(fieldMapping.DeveloperName) :
+            valueObject.value;
+    }
+
+    isPaymentImportedObjectMapping(objectMapping) {
+        return objectMapping &&
+            objectMapping.Imported_Record_Field_Name ===
+            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
+    }
+
+    overwriteDonationAmountAndDateWithPaymentInfo(dataImport, record) {
+        dataImport[apiNameFor(DONATION_AMOUNT)] =
+            record.fields[apiNameFor(OPP_PAYMENT_AMOUNT)].value;
+        dataImport[apiNameFor(DONATION_DATE)] =
+            record.fields[apiNameFor(SCHEDULED_DATE)].value;
         return dataImport;
     }
 
@@ -2648,11 +2673,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     removeFieldsNotInObjectInfo(dataImportRecord) {
         const diFields = Object.keys(this.dataImportObjectInfo.data.fields);
-        for(const key of Object.keys(dataImportRecord)) {
-            if(!diFields.includes(key)) {
+        for (const key of Object.keys(dataImportRecord)) {
+            if (!diFields.includes(key)) {
                 delete dataImportRecord[key];
             }
         }
         return dataImportRecord;
+    }
+
+    isPaymentImportedField(sourceField) {
+        return sourceField === apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
     }
 }
