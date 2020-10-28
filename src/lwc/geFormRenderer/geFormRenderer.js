@@ -110,8 +110,6 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-    savedDataImportRecord = {};
-
     // these three fields are used to query the donor record
     // when opened from an Account or Contact
     @api donorRecordId;
