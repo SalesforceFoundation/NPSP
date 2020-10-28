@@ -79,7 +79,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES, LABEL_NEW_LINE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -1283,53 +1283,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return objectMapping && objectMapping.DeveloperName;
     }
 
-    //todo: just set these four fields in formState:
-    // Opp selected:
-    // npsp__DonationImportStatus__c: "User-Selected Match"
-    // npsp__DonationImported__c: {value: "0061700000Ol4QcAAJ", displayValue: "Test Grant"}
-    // npsp__PaymentImportStatus__c: null
-    // npsp__PaymentImported__c: null
-    // Apply new Pmt:
-    // npsp__DonationImportStatus__c: "Apply New Payment"
-    // npsp__DonationImported__c: {value: "0061700000Ol4QcAAJ", displayValue: "Test Grant"}
-    // npsp__PaymentImportStatus__c: null
-    // npsp__PaymentImported__c: null
-    // Update a Pmt:
-    // npsp__DonationImportStatus__c: "User-Selected Match"
-    // npsp__DonationImported__c: {value: "0061700000Ol5n9AAB", displayValue: "Carl Harvey Donation (1) 1/15/2020"}
-    // npsp__PaymentImportStatus__c: "User-Selected Match"
-    // npsp__PaymentImported__c: {value: "a011700000K9VNhAAN", displayValue: "PMT-00000"}
-    // New Opp:
-    // npsp__DonationImportStatus__c: "User-Selected New Opportunity"
-    // npsp__DonationImported__c: null
-    // npsp__PaymentImportStatus__c: null
-    // npsp__PaymentImported__c: null
-
-    // attributes: {type: "Opportunity"}
-    // new: true
-    //todo: either pass all of formState to review donations modal, OR
-    // generate message for its ui in renderer and pass that - no need to
-    // store this local copy just for its "new", "applyPayment" attributes...
-
+    @track selectedDonationCopyForReviewDonationsModal;
     handleChangeSelectedDonation(event) {
         this.selectedDonationCopyForReviewDonationsModal =
             event.detail.payment || event.detail.opportunity;
 
         this.selectedDonationOrPaymentRecord =
             this.selectedDonationCopyForReviewDonationsModal;
-        //both of these things vvv now done upon setting selectedDonOrPmt above ^^^
-        //
-        // // Load the "imported" and "imported status" fields in case they are on the form
-        // //todo: remove once lookups (and text fields) are getting their value from formState
-        // this.load(this.flatten(this.selectedDonationDataImportFieldValues));
-        //
-        // if (this.hasSelectedDonationOrPayment()) {
-        //     //todo: will setting the lookups in formstate automatically do this?
-        //     // or just pass this to handle Lookup Selected ... ?
-        //     this.loadFieldValuesForSelectedDonation(paymentImported, donationImported);
-        // }
     }
-    @track selectedDonationCopyForReviewDonationsModal;
 
     loadFieldValuesForSelectedDonation(paymentImported, donationImported) {
         // Load the sibling field values (parented by the same object mapping)
@@ -1416,16 +1377,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let selectedRecordFields =
             this.getSiblingFieldsForSourceField(lookupFieldApiName);
 
-        // const needsParentOpportunityLoaded = selectedRecordId &&
-        //     this.isAPaymentId(selectedRecordId);
-        //
-        // if (needsParentOpportunityLoaded) {
-        //     // This is the selected payment, so add in the parent opp field so
-        //     // it can be used to populate the parent Opportunities' fields.
-        //     selectedRecordFields.push(
-        //         this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
-        // }
-
         this.storeSelectedRecordIdByObjectMappingName(
             this.getObjectMapping(lookupFieldApiName).DeveloperName,
             selectedRecordId
@@ -1492,15 +1443,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
-
-            //just call from setSelectedPmt
-            // const needsParentOpportunityLoaded =
-            //     this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
-            //     data.id === this.selectedDonationOrPaymentRecord.Id;
-            //
-            // if (needsParentOpportunityLoaded) {
-            //     this.loadParentOpportunityForSelectedPayment(this.parentOpportunityIdFor(data));
-            // }
         }
         this.loadNextSelectedRecordFromQueue();
     }
@@ -2321,7 +2263,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     saveDataImport = async (dataImportFromFormState) => {
         if (this.getDataImportId()) {
             this.loadingText = this.CUSTOM_LABELS.geTextUpdating;
-            //dataImportFromFormState = this.prepareDataImportFromFormStateForUpdate(dataImportFromFormState);
         } else {
             this.loadingText = this.CUSTOM_LABELS.geTextSaving;
         }
@@ -2329,34 +2270,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
         this.updateFormState(upsertResponse);
     };
-
-    /*******************************************************************************
-    * @description Re-apply Data Import id and relevant payment/elevate fields.
-    * The dataImportFromFormState is built new from the form on every save click. We
-    * need to catch it up with the correct id to make sure we update instead of
-    * inserting a new record on re-save attempts.
-    *
-    * @param {object} dataImportFromFormState: DataImport__c object built from the form
-    * fields.
-    *
-    * @return {object} dataImportFromFormState: DataImport__c object built from the form
-    * fields.
-    */
-    // prepareDataImportFromFormStateForUpdate() {
-    //     dataImportFromFormState.Id = this.savedDataImportRecord.Id;
-    //     dataImportFromFormState[PAYMENT_METHOD.fieldApiName] = this.savedDataImportRecord[PAYMENT_METHOD.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_STATUS.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_STATUS.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_DECLINED_REASON.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_DECLINED_REASON.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
-
-    //     return dataImportFromFormState;
-    // }
 
     /*******************************************************************************
     * @description Method attempts to make a purchase call to Payment
