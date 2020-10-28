@@ -99,6 +99,10 @@ export default class GsApplicationStatus extends LightningElement {
      * In this iteration is showing a pop up with an email address to ask it
      */
     onCheckStatusClick() {
-        this.template.querySelector("c-gs-modal").openModal();
+        this.template.querySelector("c-modal").show();
+    }
+
+    onClickCloseModal() {
+        this.template.querySelector("c-modal").hide();
     }
 }

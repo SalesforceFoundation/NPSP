@@ -37,9 +37,18 @@
             </lightning-layout>
         </lightning-card>
     
-        <c-gs-modal header={labels.gsApplicationStatusModalHeader}  button-label={labels.gsClose}>
-            <p>{labels.gsFollowUpApplicationStatus}</p>
-        </c-gs-modal>
+        <c-modal header={labels.gsApplicationStatusModalHeader}>
+            <lightning-layout horizontal-align="center">
+                <lightning-layout-item size="12" class="slds-text-align_center">
+                    <p>{labels.gsFollowUpApplicationStatus}</p>
+                </lightning-layout-item>
+            </lightning-layout>
+            
+            <div slot="footer">
+                <lightning-button variant="brand" label={labels.gsClose} onclick={onClickCloseModal}>
+                </lightning-button>
+            </div>
+        </c-modal>
     </template>
    
 </template>

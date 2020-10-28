@@ -817,6 +817,14 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>Close</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close button description</shortDescription>
+        <value>Close</value>
+    </labels>
+    <labels>
         <fullName>ClosedWonOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>

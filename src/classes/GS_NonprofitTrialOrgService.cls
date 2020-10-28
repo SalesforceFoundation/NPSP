@@ -52,7 +52,7 @@ public with sharing class GS_NonprofitTrialOrgService {
 
     /**
      * @description Property to get the testing configuration from Static Resource.
-     * @return Map<String,Object> with the parsed test configuration loaded from the Static Resource.
+     * @return TestingConfig object with the parsed test configuration loaded from the Static Resource.
      */
     @TestVisible
     private static TestingConfig testingConfiguration {
@@ -130,12 +130,12 @@ public with sharing class GS_NonprofitTrialOrgService {
     }
 
     /**
-     * @description Returns a Map<String,Object> retrieved from a Static Resource called 'GettingStartedTestingConfigurationJSON'
+     * @description Returns a TestingConfig object retrieved from a Static Resource called 'GettingStartedTestingConfigurationJSON'
      * @return   TestingConfig testing configuration after parsing the Static Resource Json
      * Examples: 
      * {"Sandbox":false} simulates an Active org.
-     * {"Sandbox":false,"TrialExpiration":"10/15/2020, 00:01 am”} simulates a trial org which is not applied for licenses.
-     * {"Sandbox":false,"TrialExpiration":"10/15/2020","Application":"10/02/2020"} Simulates a trial org which has applied for licenses.
+     * {"Sandbox":false,"TrialExpiration":"2020-11-29T00:00:00.000Z"} simulates a trial org which is not applied for licenses.
+     * {"Sandbox":false,"TrialExpiration":"2020-11-29T00:00:00.000Z", "applicationDate":"2020-10-20"} Simulates a trial org which has applied for licenses.
      */
     private static TestingConfig getTestingConfiguration() {
         List<StaticResource> staticResources = [SELECT Body
@@ -150,7 +150,7 @@ public with sharing class GS_NonprofitTrialOrgService {
 
     /**
      * @description For better testeability, we allow to override some values if the Org is a scratch org and there is an static resource called GettingStartedTestingConfigurationJSON.
-     * @return   true if org is sandbox and there is a static resource GettingStartedTestingConfigurationJSON which could be parsed into Map<String, Object>
+     * @return   true if org is sandbox and there is a static resource GettingStartedTestingConfigurationJSON which could be deserialized as an instance of TestingConfig class.
      */
     private static Boolean shouldOverrideValuesWithTestData() { 
          return UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
@@ -166,14 +166,35 @@ public with sharing class GS_NonprofitTrialOrgService {
                 FROM   Organization];
     }
 
+    /**
+     * Class used for serializing the testing configuration.
+     * Which is needed to simulate several testing scenarios
+     */
     public class TestingConfig {
+        /**
+         * Simulates the P10 licenses application date.
+         */
         public Date applicationDate;
+        /**
+         * Indicates if a sandbox org is being simulated.
+         */
         public Boolean isSandbox;
+        /**
+         * Simulates the trial expiration date.
+         */
         public DateTime trialExpiration;
 
         public TestingConfig() {}
 
-        public TestingConfig(Date applicationDate, Boolean isSandbox, DateTime trialExpiration) {
+        /**
+         * @description Constructor with properties. It is meant to be used in 
+         * @param  applicationDate P10 application date(if it has not applied could be null)
+         * @param  isSandbox       true if simulates a Sandbox, false otherwise.
+         * @param  trialExpiration Simulates the trial expiration date
+         * @return                 TestingConfig instance.
+         */
+        @TestVisible
+        private TestingConfig(Date applicationDate, Boolean isSandbox, DateTime trialExpiration) {
             this.applicationDate = applicationDate;
             this.isSandbox = isSandbox;
             this.trialExpiration = trialExpiration;
