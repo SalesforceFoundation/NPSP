@@ -1946,11 +1946,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 });
         }
 
-        //todo: if we do this here, can take it out of connected callback?
-        // check if there is a record id and donor apiName in the url
-        const donorApiName = getQueryParameters().c__apiName;
-        this.initializeDonationDonorTypeInFormState(donorApiName);
-        this.donorId = getQueryParameters().c__donorRecordId;
+        if (this.batchId) {
+            this.updateFormState({
+                [NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]: this.batchId
+            });
+        }
+
+        this.setFormStateForURLQueryParameters();
     }
 
     setFormStateForURLQueryParameters() {
