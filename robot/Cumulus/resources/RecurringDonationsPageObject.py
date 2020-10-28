@@ -124,7 +124,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         self.salesforce.wait_until_modal_is_open()
         self.selenium.reload_page()
         self.selenium.reload_page()
-        time.sleep(2)
+        time.sleep(3)
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.wait_until_element_is_visible(btnlocator,60)
         self._populate_edit_status_values(**kwargs)
@@ -330,7 +330,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         return newString
 
     @capture_screenshot_on_error
-    def validate_current_and_next_year_values(self, amount):
+    def validate_current_and_next_year_values(self, amount, rdtype=None):
         """Takes in the parameter current installment payment (amount)
         calculates the current and next year value payments and
         validates them with the values displayed on the UI. """
@@ -344,19 +344,25 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             i = 1
             curr_year_value = 0
             next_year_value = 0
+            next_year_count = 0
             values = {}
-            while i < count:
+            while i <= count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
                 actual_date = self.selenium.get_webelement(installment_date).text
+                paused_locator = npsp_lex_locators["erd"]["date_with_paused_txt"].format(actual_date)
                 year = datetime.strptime(actual_date, "%m/%d/%Y").year
                 curr_year = datetime.now().year
                 next_year = (datetime.now() + relativedelta(years=1)).year
-                if curr_year == year:
+                if curr_year == year and not self.npsp.check_if_element_exists(paused_locator):
                     curr_year_value = curr_year_value + int(amount)
-                elif next_year == year:
+                elif next_year == year and not self.npsp.check_if_element_exists(paused_locator):
                     next_year_value = next_year_value + int(amount)
+                if next_year == year:
+                    next_year_count = next_year_count + 1
                 i = i + 1
+            if rdtype == "Open":
+                next_year_value = next_year_value + (12-next_year_count)*int(amount)
             values['Current Year Value']=f"${curr_year_value}.00"
             values['Next Year Value']=f"${ next_year_value}.00"
             self.validate_field_values_under_section("Statistics",**values)
