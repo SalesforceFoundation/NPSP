@@ -6506,6 +6506,14 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <label>Het Accountmodel is ingesteld op &apos;Huishoudenaccount&apos;, waardoor Huishoudenregels ingesteld moeten zijn op &apos;Geen Contactpersonen&apos;. Bij het gebruiken van Huishoudenaccounts, is het niet nodig een bijkomend Huishoudenobject te hebben.</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Klik om de sectie te openen of te sluiten. Deze sectie is open.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Klik om de sectie te openen of te sluiten. Deze sectie is gesloten.</label>
+    </customLabels>
     <customPageWebLinks>
         <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>

@@ -6505,6 +6505,14 @@
         <label>[取引先モデル] が [世帯取引先] に設定されているため、[世帯ルール] を [取引先責任者なし] に設定する必要があります。世帯取引先を使用している場合、追加の世帯オブジェクトを設定する必要はありません。</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>クリックするとセクションが切り替わります。このセクションは開いています。</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>クリックするとセクションが切り替わります。このセクションは開いていません。</label>
+    </customLabels>
     <customPageWebLinks>
         <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>

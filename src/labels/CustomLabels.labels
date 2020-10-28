@@ -13173,4 +13173,20 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Resource Partners link label in Get Started Resources section</shortDescription>
         <value>Find a Partner</value>
     </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Click to toggle the section. This section is open.</shortDescription>
+        <value>Click to toggle the section. This section is open.</value>
+    </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenClosed</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Click to toggle the section. This section is not open.</shortDescription>
+        <value>Click to toggle the section. This section is not open.</value>
+    </labels>
 </CustomLabels>

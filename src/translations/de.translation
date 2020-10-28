@@ -6513,6 +6513,14 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Das Accountmodell ist auf &quot;Haushalt-Account&quot; festgelegt. Daher müssen Haushalt-Regeln auf &quot;Keine Kontakte&quot; festgelegt sein. Bei der Verwendung von Haushalt-Accounts ist kein zusätzliches Haushalt-Objekt erforderlich.</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist geöffnet.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist nicht geöffnet.</label>
+    </customLabels>
     <customPageWebLinks>
         <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>

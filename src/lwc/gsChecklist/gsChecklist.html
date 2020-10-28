@@ -1,35 +1,22 @@
 <template>
     <article class="slds-setup-assistant__step">
-        <div class="slds-summary-detail">
-            <lightning-button-icon 
-                variant="container"
-                id={arrowId}
-                icon-name={arrowIcon}
-                class="slds-m-left_x-small"
-                onclick={onClickOpenOrClose}
-                alternative-text={arrowAlterText}
-                aria-controls={expandedId}
-                aria-expanded={open}
-                title={group.title}>
-            </lightning-button-icon>
-            <div class="slds-container_fluid">
-                <div class="slds-summary-detail__title">
-                    <div class="slds-setup-assistant__step-summary">
-                        <c-gs-accordion-label
-                            number={group.id}
-                            title={group.title}
-                            onclicktitle={onClickOpenOrClose}>
-                        </c-gs-accordion-label>
-                        <c-gs-accordion-section
-                            open={open}
-                            expanded-id={expandedId}
-                            label={group.desc}>
-                            <!--Mock to add in another spring more info-->
-                            <p style="margin:3rem;height: 10rem;">Items</p>
-                        </c-gs-accordion-section>
-                    </div>
-                </div>
+        <c-accordion-section>
+            <div slot="clickableHeaderSection"
+                class="slds-m-left_medium">
+                <c-gs-accordion-label
+                    number={group.id}
+                    title={group.title}>
+                </c-gs-accordion-label>
             </div>
-        </div>
+            <div slot="extraInfoSection">
+                <p class="slds-m-left_x-large slds-p-left_large">{group.desc}</p>
+            </div>
+            <div class="slds-m-left_x-large">
+                <c-gs-accordion-section open="true">
+                    <p style="margin:3rem;height: 10rem;">Items</p>
+                    <p style="margin:3rem;height: 10rem;">Items</p>
+                </c-gs-accordion-section>
+            </div>
+        </c-accordion-section>
     </article>
 </template>
