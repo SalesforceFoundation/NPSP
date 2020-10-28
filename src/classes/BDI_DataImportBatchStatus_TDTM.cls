@@ -46,18 +46,14 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
      ********************************************************************************************************************/
     public override TDTM_Runnable.DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
+
         switch on triggerAction {
-            when AfterInsert {
+            when AfterInsert, AfterUndelete {
                 setBatchStatus(newSObjects);
             }
 
             when AfterUpdate {
                 setBatchStatus(oldSObjects, newSObjects);
-            }
-
-            when AfterUndelete {
-                setBatchStatus(newSObjects);
             }
 
             when AfterDelete {
