@@ -111,9 +111,12 @@ const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     savedDataImportRecord = {};
+
+    // these three fields are used to query the donor record
+    // when opened from an Account or Contact
     @api donorRecordId;
-    @api donorApiName;
     @api donorRecord;
+
     @api fabricatedCardholderNames;
     @api loadingText;
 
@@ -299,6 +302,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 return;
             }
 
+            // check if there is a record id in the url
+            this.donorRecordId = getQueryParameters().c__donorRecordId;
+            const donorApiName = getQueryParameters().c__apiName;
+            this.initializeDonationDonorTypeInFormState(donorApiName);
+
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
                 this.formTemplate = response.formTemplate;
@@ -315,7 +323,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 let fieldNamesFromTemplate =
                     getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
                 this.fieldNames = [...this.fieldNames, ...fieldNamesFromTemplate];
-                if (isEmpty(this.donorId)) {
+                if (isEmpty(this.donorRecordId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
                     this.initializeForm(this.formTemplate);
@@ -1585,7 +1593,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.updateFormState({
             [lookupFieldApiName]: id
         });
-        this.loadSelectedRecordFieldValues(lookupFieldApiName, id);
     }
 
     get donorId() {
