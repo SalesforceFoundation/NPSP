@@ -1929,6 +1929,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     }
                 });
         }
+
+        if (this.batchId) {
+            this.updateFormState({
+                [NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]: this.batchId
+            });
+        }
     }
 
     setInitialValueInFormStateForElement(element) {
