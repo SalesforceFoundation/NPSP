@@ -2194,7 +2194,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     saveDataImport = async (dataImportFromFormState) => {
         if (this.getDataImportId()) {
             this.loadingText = this.CUSTOM_LABELS.geTextUpdating;
-            //dataImportFromFormState = this.prepareDataImportFromFormStateForUpdate(dataImportFromFormState);
         } else {
             this.loadingText = this.CUSTOM_LABELS.geTextSaving;
         }
@@ -2202,34 +2201,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
         this.updateFormState(upsertResponse);
     };
-
-    /*******************************************************************************
-    * @description Re-apply Data Import id and relevant payment/elevate fields.
-    * The dataImportFromFormState is built new from the form on every save click. We
-    * need to catch it up with the correct id to make sure we update instead of
-    * inserting a new record on re-save attempts.
-    *
-    * @param {object} dataImportFromFormState: DataImport__c object built from the form
-    * fields.
-    *
-    * @return {object} dataImportFromFormState: DataImport__c object built from the form
-    * fields.
-    */
-    // prepareDataImportFromFormStateForUpdate() {
-    //     dataImportFromFormState.Id = this.savedDataImportRecord.Id;
-    //     dataImportFromFormState[PAYMENT_METHOD.fieldApiName] = this.savedDataImportRecord[PAYMENT_METHOD.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_STATUS.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_STATUS.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_DECLINED_REASON.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_DECLINED_REASON.fieldApiName];
-
-    //     dataImportFromFormState[PAYMENT_AUTHORIZE_TOKEN.fieldApiName] =
-    //         this._isCreditCardWidgetInDoNotChargeState ? '' : this.savedDataImportRecord[PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
-
-    //     return dataImportFromFormState;
-    // }
 
     /*******************************************************************************
     * @description Method attempts to make a purchase call to Payment
