@@ -65,9 +65,9 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     }
 
     /**
-     * @description updates the batch status on di records update
-     * @param diOldList
-     * @param diNewList
+     * @description Update Batch Status if a relevant field on the Data Import has been updated.
+     * @param diOldList Trigger.old
+     * @param diNewList Trigger.new
      */
     private void setBatchStatus(List<DataImport__c> diOldList,
             List<DataImport__c> diNewList) {
@@ -78,23 +78,30 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         // build a set of batch ids
         for (DataImport__c diOld : diOldList) {
             DataImport__c diNew = diNewMap.get(diOld.Id);
-
-            if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
-                // di records changed parents
-                if (diOld.NPSP_Data_Import_Batch__c != null) {
-                    batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
-                }
-                if (diNew.NPSP_Data_Import_Batch__c != null) {
-                    batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
-                }
-            } else if (diOld.Status__c != diNew.Status__c) {
-                // status was changed; same parent
-                if(diNew.NPSP_Data_Import_Batch__c != null) {
-                    batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
-                }
+            if(needsStatusUpdate(diOld, diNew)) {
+                batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
             }
         }
         setBatchStatus(batchIdSet);
+    }
+
+    private Boolean needsStatusUpdate(DataImport__c diOld, DataImport__c diNew) {
+        if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
+            // di records changed parents
+            if (diOld.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+            if (diNew.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+        } else if (diOld.Status__c != diNew.Status__c) {
+            // status was changed; same parent
+            if(diNew.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
