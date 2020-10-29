@@ -50,7 +50,7 @@ import {
     relatedRecordFieldNameFor,
     apiNameFor
 } from 'c/utilCommon';
-import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
+import ExceptionDataError from './exceptionDataError';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -76,7 +76,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -442,61 +442,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * @description Handles errors for the Single Gift Entry save flow.
-    *
-    * @param {object} error: Object containing errors
-    */
-    handleSingleGiftErrors(error) {
-        this.loadingText = null;
-        const hasHttpRequestError = error instanceof HttpRequestError;
-        if (hasHttpRequestError) {
-            return this.catchHttpRequestError(error);
-        }
-
-        const cardHasBeenChargedErrorButBDIFailed = error instanceof CardChargedBDIError;
-        if (cardHasBeenChargedErrorButBDIFailed) {
-            return this.catchCardChargedBDIFailedError(error);
-        }
-
-        const hasAuraErrors = error.body && error.body.message;
-        if (hasAuraErrors) {
-            return this.handleCatchOnSave(error);
-        }
-
-        // Handle any other error
-        handleError(error);
-    }
-
-    catchHttpRequestError(error) {
-        this.hasPurchaseCallTimedout = error.statusCode === HTTP_CODES.Request_Timeout;
-        if (this.hasPurchaseCallTimedout) {
-            this.formatTimeoutCustomLabels(error.dataImportRecord);
-        }
-
-        this.displayPageLevelErrorMessages([error]);
-
-        return;
-    }
-
-    catchCardChargedBDIFailedError(error) {
-        this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
-        this.toggleModalByComponentName('gePurchaseCallModalError');
-
-        const apexException = new ExceptionDataError(error.apexException);
-        this.pageLevelErrorMessageList = [{
-            index: 0,
-            errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-            multilineMessages: [{
-                message: apexException.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
-                index: 0
-            }]
-        }];
-        this.hasPageLevelError = true;
-
-        return;
-    }
-
-    /*******************************************************************************
     * @description Dispatches an event to the geFormWidgetTokenizeCard component
     * to disable itself and display the provided message.
     *
@@ -571,7 +516,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         errorMessage = errorMessageObject.errorMessage;
                     }
 
-                    this.addPageLevelErrorMessage(errorMessage, this.pageLevelErrorMessageList.length);
+                    this.addPageLevelErrorMessage({ errorMessage, index: this.pageLevelErrorMessageList.length });
                 }
 
                 // If there are no specific fields the error has to go to,
@@ -579,7 +524,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
                     const errorMessage = exceptionWrapper.DMLErrorMessageMapping[dmlIndex];
                     const index = dmlIndex + 1;
-                    this.addPageLevelErrorMessage(errorMessage, index);
+                    this.addPageLevelErrorMessage({ errorMessage, index });
                 }
 
             } else {
@@ -613,29 +558,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // With the fields noted.
                     if (hiddenFieldList.length > 0) {
                         let combinedFields = hiddenFieldList.join(', ');
-                        this.addPageLevelErrorMessage(`${errorMessage} [${combinedFields}]`, key);
+                        this.addPageLevelErrorMessage({
+                            errorMessage: `${errorMessage} [${combinedFields}]`,
+                            index: key
+                        });
                     }
                 }
             }
         } else {
-            this.addPageLevelErrorMessage(exceptionWrapper.errorMessage, 0);
+            this.addPageLevelErrorMessage({ errorMessage: exceptionWrapper.errorMessage, index: 0 });
         }
 
         // focus either the page level or field level error messsage somehow
         window.scrollTo(0, 0);
-    }
-
-    /*******************************************************************************
-    * @description Add a list of error messages to the page level error message
-    * array.
-    *
-    * @param {array} errors: List of error mesages
-    */
-    displayPageLevelErrorMessages(errors) {
-        errors.forEach((error, index) => {
-            this.addPageLevelErrorMessage(error.message, index);
-        });
-        this.hasPageLevelError = true;
     }
 
     /*******************************************************************************
@@ -645,11 +580,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {string} errorMessage: Error message to be displayed
     * @param {integer} index: Position of the corresponding row in a DML exception
     */
-    addPageLevelErrorMessage(errorMessage, index = 0) {
+    addPageLevelErrorMessage(errorObject) {
+        errorObject.index = errorObject.index ? errorObject.index : 0;
         this.pageLevelErrorMessageList = [
             ...this.pageLevelErrorMessageList,
-            { index: index, errorMessage: errorMessage }
+            { ...errorObject }
         ];
+        this.hasPageLevelError = true;
     }
 
     /*******************************************************************************
@@ -699,7 +636,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
             } else {
-                await this.singleGiftSubmit(dataImportFromFormState);
+                await this.submitSingleGift(dataImportFromFormState);
             }
         }
     }
@@ -1647,7 +1584,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {object} dataImportRecord: Data Import record related to the error
     * received from geGiftEntryFormApp.
     */
-    formatTimeoutCustomLabels(dataImportRecord) {
+    formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
         const donationAmountFormField = this.getFormFieldBySourceName(DONATION_AMOUNT.fieldApiName);
         const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
@@ -2158,16 +2095,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             ).DeveloperName);
     }
 
-    // ================================================================================
-    // TODO: Save flow functions below. Remove header later
-    // ================================================================================
-    /**
-     * @description Returns the data import record id from form state
-     */
-    getDataImportId() {
-        return this.getFieldValueFromFormState('id');
-    }
-
     /**
      * @description Returns a saveable data import record
      * derived from the formState object.
@@ -2186,194 +2113,38 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * callback for handling and displaying errors in the form.
      * @param dataImportFromFormState
      */
-    singleGiftSubmit = async (dataImportFromFormState) => {
-        try {
-            await this.saveDataImport(dataImportFromFormState);
-
-            const hasPaymentToProcess = this.getFieldValueFromFormState(
-                PAYMENT_AUTHORIZE_TOKEN.fieldApiName
-            );
-            if (isNotEmpty(hasPaymentToProcess)) {
-                await this.processPayment();
-            }
-
-            if (!this.isFailedPurchase ||
-                this._isCreditCardWidgetInDoNotChargeState) {dataImportFromFormState
-                await this.processDataImport();
-            }
-        } catch (error) {
-            this.disabled = false;
-            this.toggleSpinner();
-            this.handleSingleGiftErrors(error);
-        }
-    }
-
-    /*******************************************************************************
-    * @description Upserts the provided data import record. Attempts to retrieve
-    * an Elevate token for a purchase call if needed.
-    *
-    * @param {object} dataImportFromFormState: DataImport__c object built from the form
-    * fields.
-    *
-    * @return {object} dataImportRecord: A DataImport__c record
-    */
-    saveDataImport = async (dataImportFromFormState) => {
-        if (this.getDataImportId()) {
-            this.loadingText = this.CUSTOM_LABELS.geTextUpdating;
-        } else {
-            this.loadingText = this.CUSTOM_LABELS.geTextSaving;
-        }
-
-        const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
-        this.updateFormState(upsertResponse);
-    };
-
-    /*******************************************************************************
-    * @description Method attempts to make a purchase call to Payment
-    * Services. Immediately attempts to the charge the card provided in the Payment
-    * Services iframe (GE_TokenizeCard).
-    */
-    processPayment = async () => {
-        this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
-
-        const isReadyToCharge = this.checkPaymentTransactionStatus(
-            this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName)
-        );
-        if (isReadyToCharge) {
-
-            const purchaseResponse = await this.makePurchaseCall();
-            if (purchaseResponse) {
-
-                let errors = this.processPurchaseResponse(purchaseResponse);
-
-                const upsertResponse = await upsertDataImport({ dataImport: this.saveableFormState() });
-                this.updateFormState(upsertResponse);
-
-                if (isNotEmpty(errors)) {
-                    this.isFailedPurchase = true;
-                    this.handleFailedPurchaseCall(purchaseResponse);
-                } else {
-                    this.isFailedPurchase = false;
-                }
-            }
-        }
-    }
-
-    /*******************************************************************************
-     * @description Updates the dataImportRecord fields with response values from
-     * payment services.
-     *
-     * @param {object} response The response object from payment services returned when
-     * purchase call is made.
-     *
-     * @return {string} A concatenated string of errors returned from the purchase call to
-     * payment services
-     */
-    processPurchaseResponse(response) {
-        let errors = '';
-        let responseBody = response.body;
-
-        this.updateFormState({
-            [PAYMENT_STATUS.fieldApiName]: this.getPaymentStatus(response),
-            [PAYMENT_ELEVATE_ID.fieldApiName]: responseBody.id
-        });
-
-        if (response.statusCode === HTTP_CODES.Created) {
-
-            if (isNotEmpty(responseBody.cardData)) {
-                this.updateFormState({
-                    [PAYMENT_CARD_NETWORK.fieldApiName]: responseBody.cardData.brand,
-                    [PAYMENT_LAST_4.fieldApiName]: responseBody.cardData.last4,
-                    [PAYMENT_EXPIRATION_MONTH.fieldApiName]: responseBody.cardData.expirationMonth,
-                    [PAYMENT_EXPIRATION_YEAR.fieldApiName]: responseBody.cardData.expirationYear
-                });
-            }
-
-            this.updateFormState({
-                [PAYMENT_DECLINED_REASON.fieldApiName]: '',
-                [PAYMENT_GATEWAY_ID.fieldApiName]: responseBody.gatewayId,
-                [PAYMENT_TRANSACTION_ID.fieldApiName]: responseBody.gatewayTransactionId,
-                [PAYMENT_AUTHORIZED_AT.fieldApiName]: responseBody.authorizedAt
-            });
-
-        } else {
-            this.updateFormState({
-                [PAYMENT_DECLINED_REASON.fieldApiName]: this.getPaymentDeclinedReason(response)
-            });
-
-            errors = this.getFailedPurchaseMessage(response);
-        }
-
-        return errors;
-    }
-
-    /*******************************************************************************
-    * @description Method attempts to handle a failed purchase call response.
-    *
-    * @param {object} purchaseResponse: Response from
-    * GE_GiftEntryController.sendPurchaseRequest()
-    */
-    handleFailedPurchaseCall(purchaseResponse) {
-        const hasPurchaseCallValidationErrors = purchaseResponse.statusCode === HTTP_CODES.Bad_Request;
-        if (hasPurchaseCallValidationErrors) {
-            this.catchPurchaseCallValidationErrors(purchaseResponse);
-        } else {
-            this.throwHttpRequestError(purchaseResponse);
-        }
-    }
-
-    /*******************************************************************************
-    * @description Dispatch an event to the form renderer whenever we have a field
-    * validation error from the purchase call. Various http 400 errors. Thus far
-    * the body of the response from these calls have had an errors array property.
-    *
-    * @param {object} purchaseResponse: Response from
-    * GE_GiftEntryController.sendPurchaseRequest()
-    */
-    catchPurchaseCallValidationErrors(purchaseResponse) {
-        let errors = this.getFailedPurchaseMessage(purchaseResponse);
-        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
-        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
-
-        // We use the hex value for line feed (new line) 0x0A
-        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
-
-        this.showSpinner = false;
-        fireEvent(null, 'paymentError', {
-            error: {
-                message: splitErrorResponse,
-                isObject: true
+    removeRelationshipFieldsFrom = (object) => {
+        Object.keys(object).forEach(key => {
+            if (key.includes('__r')) {
+                delete object[key];
             }
         });
     }
 
-    /*******************************************************************************
-    * @description Throw an HttpRequestError for non-400 and non-200 responses from
-    * a purchase call.
-    *
-    * @param {object} purchaseResponse: Response from
-    * GE_GiftEntryController.sendPurchaseRequest()
-    */
-    throwHttpRequestError(purchaseResponse) {
-        const errorMessage =
-            this.CUSTOM_LABELS.commonPaymentServices + ': ' +
-            this.getFailedPurchaseMessage(purchaseResponse)
-
-        throw new HttpRequestError(
-            errorMessage,
-            purchaseResponse.status,
-            purchaseResponse.statusCode);
+    get hasDataImportId() {
+        return this.getFieldValueFromFormState('id') ? true : false;
     }
 
-    /*******************************************************************************
-    * @description Method checks the current payment transaction's status and
-    * returns true if the card is in a 'chargeable' status.
-    *
-    * @param {string} paymentStatus: Payment transaction status
-    *
-    * @return {boolean}: True if card is in a 'chargeable' status
-    */
-    checkPaymentTransactionStatus = (paymentStatus) => {
+    hasProcessableDataImport() {
+        return !this.hasFailedPurchaseRequest || this._isCreditCardWidgetInDoNotChargeState;
+    }
+
+    hasAuthorizationToken() {
+        return this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName) ?
+            true :
+            false;
+    }
+
+    shouldMakePurchaseRequest() {
+        return this.hasAuthorizationToken() &&
+            this.hasChargeableTransactionStatus() &&
+            !this._isCreditCardWidgetInDoNotChargeState ?
+                true :
+                false;
+    }
+
+    hasChargeableTransactionStatus = () => {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
         switch (paymentStatus) {
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
@@ -2388,32 +2159,51 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * @description Posts an http request through the `sendPurchaseRequest` apex
-    * method and parses the response.
+    * @description Saves a Data Import record, makes an elevate payment if needed,
+    * and processes the Data Import through BDI.
     *
-    * @return {object} response: An http response object
+    * @param {object} event: Custom Event containing the Data Import record and a
+    * callback for handling and displaying errors in the form.
     */
-    makePurchaseCall = async () => {
-        let purchaseResponseString = await sendPurchaseRequest({
-            requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
-            dataImportRecordId: this.getDataImportId()
-        });
-        let response = JSON.parse(purchaseResponseString);
-        if (response.body && validateJSONString(response.body)) {
-            response.body = JSON.parse(response.body);
-        }
+    submitSingleGift = async (dataImportFromFormState) => {
+        try {
+            await this.saveDataImport(dataImportFromFormState);
 
-        return response;
+            if (this.shouldMakePurchaseRequest()) {
+                await this.makePurchaseRequest()
+            }
+
+            if (this.hasProcessableDataImport()) {
+                await this.processDataImport();
+            }
+        } catch (error) {
+            this.disabled = false;
+            this.toggleSpinner();
+            handleError(error);
+        }
     }
 
-    /*******************************************************************************
-    * @description Builds parts of the purchase request body that requires data
-    * from the Data Import record upfront. We pass this into the `sendPurchaseRequest`
-    * method and is eventually merged in with the rest of the purchase request body.
-    *
-    * @return {object}: Object that we can deserialize and apply to the purchase
-    * request body in apex.
-    */
+    saveDataImport = async (dataImportFromFormState) => {
+        this.loadingText = this.hasDataImportId ?
+            this.CUSTOM_LABELS.geTextUpdating :
+            this.CUSTOM_LABELS.geTextSaving;
+
+        const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
+        this.updateFormState(upsertResponse);
+    };
+
+    makePurchaseRequest = async () => {
+        this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
+
+        const responseBodyString = await sendPurchaseRequest({
+            requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
+            dataImportRecordId: this.getFieldValueFromFormState('id')
+        });
+
+        const responseBody = JSON.parse(responseBodyString);
+        this.processPurchaseResponse(responseBody);
+    }
+
     buildPurchaseRequestBodyParameters() {
         const { firstName, lastName } = this.getCardholderNames();
         const metadata = {
@@ -2421,61 +2211,86 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         };
 
         return JSON.stringify({
-            amount: getCurrencyLowestCommonDenominator(this.getFieldValueFromFormState(DONATION_AMOUNT.fieldApiName)),
             firstName: firstName,
             lastName: lastName,
             metadata: metadata,
-            paymentMethodToken: this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName),
+            amount: getCurrencyLowestCommonDenominator(
+                this.getFieldValueFromFormState(DONATION_AMOUNT.fieldApiName)
+            ),
+            paymentMethodToken:
+                this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName),
         });
     }
 
-    /*******************************************************************************
-    * @description Get the value for DataImport__c.Payment_Status__c from the
-    * purchase call response.
-    *
-    * @param {object} response: Http response object
-    *
-    * @return {string}: Status of the payment charge request
-    */
-    getPaymentStatus(response) {
-        return response.body.status || response.status || this.CUSTOM_LABELS.commonUnknownError;
+    processPurchaseResponse = async (responseBody) => {
+        const isPurchaseFailed = responseBody.errors;
+        if (isPurchaseFailed) {
+            this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
+            this.handlePurchaseCallValidationErrors(responseBody.errors);
+            this.hasFailedPurchaseRequest = true;
+        }
+
+        const isPurchaseTimedout = !responseBody.id && responseBody.message && responseBody.status;
+        if (isPurchaseTimedout) {
+            this.updateFormStateWithTimedoutPurchaseCall(responseBody);
+            this.hasFailedPurchaseRequest = true;
+            this.hasPurchaseCallTimedout = true;
+            this.formatTimeoutErrorMessage();
+        }
+
+        const isPurchaseCreated =
+            responseBody.id && responseBody.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+        if (isPurchaseCreated) {
+            this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
+            this.hasFailedPurchaseRequest = false;
+        }
+
+        await this.saveDataImport(this.saveableFormState());
     }
 
-    /*******************************************************************************
-    * @description Get the value for DataImport__c.Payment_Declined_Reason__c from
-    * the purchase call response.
-    *
-    * @param {object} response: Http response object
-    *
-    * @return {string}: Reason the payment was declined
-    */
-    getPaymentDeclinedReason(response) {
-        const isSuccessfulPurchase = response.statusCode === HTTP_CODES.Created;
-        return isSuccessfulPurchase ? null : this.getFailedPurchaseMessage(response);
+    updateFormStateWithFailedPurchaseCall(errors) {
+        if (errors && errors[0]) {
+            this.updateFormState({
+                [PAYMENT_DECLINED_REASON.fieldApiName]: errors[0].message,
+                [PAYMENT_STATUS.fieldApiName]: errors[0].localizedPaymentsMessage,
+            });
+        }
     }
 
-    /*******************************************************************************
-    * @description Get the message or errors from a failed purchase call.
-    *
-    * @param {object} response: Http response object
-    *
-    * @return {string}: Message from a failed purchase call response
-    */
-    getFailedPurchaseMessage(response) {
-        // For some reason the key in the body object for 'Message'
-        // in the response we receive from Elevate is capitalized.
-        // Also checking for lowercase M in message in case they fix it.
-        return response.body.Message ||
-            response.body.message ||
-            response.errorMessage ||
-            JSON.stringify(response.body.errors.map(error => error.message)) ||
-            this.CUSTOM_LABELS.commonUnknownError;
+    handlePurchaseCallValidationErrors(errors) {
+        const errorMessage = JSON.stringify(errors.map(error => error.message)) || this.CUSTOM_LABELS.commonUnknownError;
+        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorMessage];
+        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+        const error = {
+            message: formattedErrorResponse.split(LABEL_NEW_LINE),
+            isObject: true
+        };
+        this.handleAsyncWidgetError({ error });
     }
 
-    /*******************************************************************************
-    * @description Sends the Data Import into BDI for processing and navigates to
-    * the opportunity record detail page on success.
-    */
+    updateFormStateWithTimedoutPurchaseCall(responseBody) {
+        this.updateFormState({
+            [PAYMENT_DECLINED_REASON.fieldApiName]: responseBody.message,
+            [PAYMENT_STATUS.fieldApiName]: responseBody.status,
+        });
+    }
+
+    updateFormStateWithSuccessfulPurchaseCall(responseBody) {
+        this.updateFormState({
+            [PAYMENT_ELEVATE_ID.fieldApiName]: responseBody.id,
+            [PAYMENT_STATUS.fieldApiName]: responseBody.status,
+            [PAYMENT_CARD_NETWORK.fieldApiName]: responseBody.cardData.brand,
+            [PAYMENT_LAST_4.fieldApiName]: responseBody.cardData.last4,
+            [PAYMENT_EXPIRATION_MONTH.fieldApiName]: responseBody.cardData.expirationMonth,
+            [PAYMENT_EXPIRATION_YEAR.fieldApiName]: responseBody.cardData.expirationYear,
+            [PAYMENT_DECLINED_REASON.fieldApiName]: '',
+            [PAYMENT_GATEWAY_ID.fieldApiName]: responseBody.gatewayId,
+            [PAYMENT_TRANSACTION_ID.fieldApiName]: responseBody.gatewayTransactionId,
+            [PAYMENT_AUTHORIZED_AT.fieldApiName]: responseBody.authorizedAt,
+        });
+    }
+
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
 
@@ -2488,34 +2303,42 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.navigateToRecordPage(opportunityId);
             })
             .catch(error => {
-                this.catchBDIProcessingError(error);
+                this.handleBdiProcessingError(error);
             });
     }
 
-    /*******************************************************************************
-    * @description Catches a BDI processing error and transforms the error into
-    * something we can ingest in the form renderer.
-    */
-    catchBDIProcessingError(error) {
-        const hasPaymentBeenCaptured = this.checkForCapturedPayment();
-        if (hasPaymentBeenCaptured) {
-            error = new CardChargedBDIError(error);
+    handleBdiProcessingError(error) {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
+        const hasCapturedPayment = paymentStatus && paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+        if (hasCapturedPayment) {
+            const exceptionDataError = new ExceptionDataError(error);
+            this.handleCardChargedBDIFailedError(exceptionDataError);
+        } else {
+            handleError(error);
         }
-        this.disabled = false;
-        this.toggleSpinner();
-        this.handleSingleGiftErrors(error);
     }
 
-    /*******************************************************************************
-    * @description Method checks to see if the current data import record has a
-    * successful payment transaction.
-    *
-    * TODO: Update to check for the elevate transaction id in the future.
-    */
-    checkForCapturedPayment() {
-        return this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName) ===
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
-            isNotEmpty(this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName));
+    handleCardChargedBDIFailedError(exceptionDataError) {
+        this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
+        this.toggleModalByComponentName('gePurchaseCallModalError');
+
+        const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
+        this.addPageLevelErrorMessage(pageLevelError);
+
+        this.disabled = false;
+        this.toggleSpinner();
+    }
+
+    buildCardChargedBDIFailedError(exceptionDataError) {
+        const error = {
+            index: 0,
+            errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
+            multilineMessages: [{
+                message: exceptionDataError.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
+                index: 0
+            }]
+        };
+        return error;
     }
 
 
