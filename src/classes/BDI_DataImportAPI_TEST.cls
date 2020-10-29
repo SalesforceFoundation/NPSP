@@ -389,14 +389,14 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         // check the results
         dataImport = [
-            SELECT npsp__DonationImported__c,
-                    npsp__FailureInformation__c
-            FROM npsp__DataImport__c
+            SELECT DonationImported__c,
+                    FailureInformation__c
+            FROM DataImport__c
             WHERE Id = :diObjId
         ];
 
         System.assertEquals(null, 
-            dataImport.npsp__FailureInformation__c, 'Data Import process errors.');
+            dataImport.FailureInformation__c, 'Data Import process errors.');
     }
 
     /*********************************************************************************************************
