@@ -1,0 +1,23 @@
+Insert Account:
+  sf_object: Account
+  table: Account
+  api: rest
+  fields:
+    Name: Name
+Insert Contact:
+  sf_object: Contact
+  table: Contact
+  api: rest
+  fields:
+    FirstName: FirstName
+    LastName: LastName
+    Email: Email
+    Phone: Phone
+    MailingStreet: MailingStreet
+    MailingCity: MailingCity
+    MailingState: MailingState
+    MailingPostalCode: MailingPostalCode
+  lookups:
+    AccountId:
+      table: Account
+      key_field: AccountId
