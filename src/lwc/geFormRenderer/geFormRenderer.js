@@ -51,7 +51,7 @@ import {
     validateJSONString,
     relatedRecordFieldNameFor
 } from 'c/utilCommon';
-import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
+import { ExceptionDataError } from './exceptionDataError';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -496,7 +496,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         errorMessage = errorMessageObject.errorMessage;
                     }
 
-                    this.addPageLevelErrorMessage(errorMessage, this.pageLevelErrorMessageList.length);
+                    this.addPageLevelErrorMessage({ errorMessage, index: this.pageLevelErrorMessageList.length });
                 }
 
                 // If there are no specific fields the error has to go to,
@@ -504,7 +504,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
                     const errorMessage = exceptionWrapper.DMLErrorMessageMapping[dmlIndex];
                     const index = dmlIndex + 1;
-                    this.addPageLevelErrorMessage(errorMessage, index);
+                    this.addPageLevelErrorMessage({ errorMessage, index });
                 }
 
             } else {
@@ -538,29 +538,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // With the fields noted.
                     if (hiddenFieldList.length > 0) {
                         let combinedFields = hiddenFieldList.join(', ');
-                        this.addPageLevelErrorMessage(`${errorMessage} [${combinedFields}]`, key);
+                        this.addPageLevelErrorMessage({
+                            errorMessage: `${errorMessage} [${combinedFields}]`,
+                            index: key
+                        });
                     }
                 }
             }
         } else {
-            this.addPageLevelErrorMessage(exceptionWrapper.errorMessage, 0);
+            this.addPageLevelErrorMessage({ errorMessage: exceptionWrapper.errorMessage, index: 0 });
         }
 
         // focus either the page level or field level error messsage somehow
         window.scrollTo(0, 0);
-    }
-
-    /*******************************************************************************
-    * @description Add a list of error messages to the page level error message
-    * array.
-    *
-    * @param {array} errors: List of error mesages
-    */
-    displayPageLevelErrorMessages(errors) {
-        errors.forEach((error, index) => {
-            this.addPageLevelErrorMessage(error.message, index);
-        });
-        this.hasPageLevelError = true;
     }
 
     /*******************************************************************************
@@ -570,11 +560,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {string} errorMessage: Error message to be displayed
     * @param {integer} index: Position of the corresponding row in a DML exception
     */
-    addPageLevelErrorMessage(errorMessage, index = 0) {
+    addPageLevelErrorMessage(errorObject) {
+        errorObject.index = errorObject.index ? errorObject.index : 0;
         this.pageLevelErrorMessageList = [
             ...this.pageLevelErrorMessageList,
-            { index: index, errorMessage: errorMessage }
+            { ...errorObject }
         ];
+        this.hasPageLevelError = true;
     }
 
     /*******************************************************************************
