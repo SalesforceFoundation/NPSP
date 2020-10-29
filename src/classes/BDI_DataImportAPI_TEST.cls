@@ -377,8 +377,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
 
         // get the list of existing di records with all the fields
-        String objectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject(objectName);
+        String allDIFields = String.join(BDI_DataImportService.listStrDataImportFields, ',');
         List<DataImport__c> listDI = 
             Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
                 + ' FROM DataImport__c WHERE Id = :diObjId');
@@ -417,8 +416,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
 
         // get the list of existing di records with all the fields
-        String objectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject(objectName);
+        String allDIFields = String.join(BDI_DataImportService.listStrDataImportFields, ',');
         List<DataImport__c> listDI = 
             Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
                 + ' FROM DataImport__c WHERE Id = :diObjId');

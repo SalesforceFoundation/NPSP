@@ -270,33 +270,6 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-     * @description Returns a comma delimited string with all accessible fields of an object, used for queries.
-     * @param sobjectname Name of the object to retrieve field list for.
-     * @return String A comma delimited String with all fields of an object.
-     */
-    public static String getAllFieldsQueryStringFromObject(String sObjectName) {
-    	Map<String, Schema.DescribeFieldResult> fields = getAllFieldsDescribe(sObjectName);
-    	Set<String> accessibleFields = new Set<String>();
-  
-    	for (Schema.DescribeFieldResult field : fields.values()) {
-            if (field.getType() == Schema.DisplayType.Location) {
-                // Since Geolocation fields return an object, including them was causing an internal server error
-                // The Latitude and Longitude fields are still included in the list and can be referenced
-                continue;
-            } else {
-                accessibleFields.add(field.getName());
-            }
-        }
-        
-    	String allFields = '';
-    	for (String fieldName : accessibleFields) {
-            allFields += fieldName + ','; 
-        }
-        allFields = allFields.substring(0, allFields.length() - 1);
-        return allFields;
-  	}
-
-    /*******************************************************************************************************
     * @description Returns the Name field of any given object.
     * @param objectName the name of the object to look up
     * @return String the API name of the Name field
