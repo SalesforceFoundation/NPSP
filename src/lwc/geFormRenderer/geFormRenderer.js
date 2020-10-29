@@ -51,7 +51,7 @@ import {
     validateJSONString,
     relatedRecordFieldNameFor
 } from 'c/utilCommon';
-import { ExceptionDataError } from './exceptionDataError';
+import ExceptionDataError from './exceptionDataError';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -78,7 +78,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES, LABEL_NEW_LINE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -2097,12 +2097,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
-            this.hasChargeableTransactionStatus(this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName)) ?
+            this.hasChargeableTransactionStatus() &&
+            !this._isCreditCardWidgetInDoNotChargeState ?
                 true :
                 false;
     }
 
-    hasChargeableTransactionStatus = (paymentStatus) => {
+    hasChargeableTransactionStatus = () => {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
         switch (paymentStatus) {
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
@@ -2196,7 +2198,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.formatTimeoutErrorMessage();
         }
 
-        const isPurchaseCreated = responseBody.id && responseBody.status === 'CAPTURED';
+        const isPurchaseCreated =
+            responseBody.id && responseBody.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
         if (isPurchaseCreated) {
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
@@ -2223,8 +2226,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             message: formattedErrorResponse.split(LABEL_NEW_LINE),
             isObject: true
         };
-
-        this.toggleSpinner();
         this.handleAsyncWidgetError({ error });
     }
 
@@ -2260,25 +2261,38 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.navigateToRecordPage(opportunityId);
             })
             .catch(error => {
-                this.handleCardChargedBDIFailedError(error);
+                this.handleBdiProcessingError(error);
             });
     }
 
-    handleCardChargedBDIFailedError(errorWrapper) {
+    handleBdiProcessingError(error) {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
+        const hasCapturedPayment = paymentStatus && paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+        if (hasCapturedPayment) {
+            const exceptionDataError = new ExceptionDataError(error);
+            this.handleCardChargedBDIFailedError(exceptionDataError);
+        } else {
+            handleError(error);
+        }
+    }
+
+    handleCardChargedBDIFailedError(exceptionDataError) {
         this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
-        this.addPageLevelErrorMessage(this.buildCardChargedBDIFailedError(errorWrapper));
+
+        const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
+        this.addPageLevelErrorMessage(pageLevelError);
+
         this.disabled = false;
         this.toggleSpinner();
     }
 
-    buildCardChargedBDIFailedError(errorWrapper) {
-        const exception = new ExceptionDataError(errorWrapper);
+    buildCardChargedBDIFailedError(exceptionDataError) {
         const error = {
             index: 0,
             errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
             multilineMessages: [{
-                message: exception.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
+                message: exceptionDataError.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
                 index: 0
             }]
         };
