@@ -146,14 +146,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
-    // @track selectedDonorId;
-
     get selectedDonationOrPaymentRecord() {
-        //todo: replace all .Ids with call to new function
-        return this.selectedPaymentRecord() && this.selectedPaymentRecord().Id ?
-            this.selectedPaymentRecord() :
-            this.selectedDonationRecord() && this.selectedDonationRecord().Id ?
-                this.selectedDonationRecord() :
+        return this.selectedPaymentRecord() ? this.selectedPaymentRecord() :
+            this.selectedDonationRecord() ? this.selectedDonationRecord() :
                 null;
     }
 
