@@ -76,7 +76,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -453,7 +453,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     handleSingleGiftErrors(error) {
         this.loadingText = null;
-        this.updateFormState({[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)] : ''});
+        this.invalidatePaymentToken();
         const hasHttpRequestError = error instanceof HttpRequestError;
         if (hasHttpRequestError) {
             return this.catchHttpRequestError(error);
@@ -679,7 +679,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     let widgetValues = [];
                     sectionsList.forEach(section => {
                         if (section.isCreditCardWidgetAvailable) {
-                            widgetValues = widgetValues.concat(section.paymentToken);
+                            widgetValues = widgetValues.concat(
+                                section.paymentToken
+                            );
                         }
                     });
                     if (widgetValues) {
@@ -2176,23 +2178,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * @description Handles a single gift entry submit. Saves a Data Import record,
-    * makes an elevate payment if needed, and processes the Data Import through
-    * BDI.
-    *
-    * @param {object} event: Custom Event containing the Data Import record and a
-    * callback for handling and displaying errors in the form.
-    */
+     * @description Handles a single gift entry submit. Saves a Data Import record,
+     * makes an elevate payment if needed, and processes the Data Import through
+     * BDI.
+     *
+     * callback for handling and displaying errors in the form.
+     * @param dataImportFromFormState
+     */
     singleGiftSubmit = async (dataImportFromFormState) => {
         try {
             await this.saveDataImport(dataImportFromFormState);
 
-            const hasPaymentToProcess = this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName);
+            const hasPaymentToProcess = this.getFieldValueFromFormState(
+                PAYMENT_AUTHORIZE_TOKEN.fieldApiName
+            );
             if (isNotEmpty(hasPaymentToProcess)) {
                 await this.processPayment();
             }
 
-            if (!this.isFailedPurchase || this._isCreditCardWidgetInDoNotChargeState) {
+            if (!this.isFailedPurchase ||
+                this._isCreditCardWidgetInDoNotChargeState) {
                 await this.processDataImport();
             }
         } catch (error) {
@@ -2230,7 +2235,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     processPayment = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
 
-        const isReadyToCharge = this.checkPaymentTransactionStatus(this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName));
+        const isReadyToCharge = this.checkPaymentTransactionStatus(
+            this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName)
+        );
         if (isReadyToCharge) {
 
             const purchaseResponse = await this.makePurchaseCall();
@@ -2243,6 +2250,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 if (isNotEmpty(errors)) {
                     this.isFailedPurchase = true;
+                    this.invalidatePaymentToken();
                     this.handleFailedPurchaseCall(purchaseResponse);
                 } else {
                     this.isFailedPurchase = false;
@@ -2545,5 +2553,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     isPaymentImportedField(sourceField) {
         return sourceField === apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
+    }
+
+    invalidatePaymentToken() {
+        this.updateFormState({[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]:''});
     }
 }
