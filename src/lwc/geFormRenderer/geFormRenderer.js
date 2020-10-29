@@ -453,7 +453,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     handleSingleGiftErrors(error) {
         this.loadingText = null;
-        this.invalidatePaymentToken();
         const hasHttpRequestError = error instanceof HttpRequestError;
         if (hasHttpRequestError) {
             return this.catchHttpRequestError(error);
@@ -1125,6 +1124,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     handleDoNotChargeCardState (event) {
         this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
+        if (this._isCreditCardWidgetInDoNotChargeState) {
+            this.removePaymentFieldsFromFormState([
+                apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
+                apiNameFor(PAYMENT_DECLINED_REASON),
+                apiNameFor(PAYMENT_STATUS)
+            ]);
+        }
     }
 
     /**
@@ -2197,7 +2203,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
 
             if (!this.isFailedPurchase ||
-                this._isCreditCardWidgetInDoNotChargeState) {
+                this._isCreditCardWidgetInDoNotChargeState) {dataImportFromFormState
                 await this.processDataImport();
             }
         } catch (error) {
@@ -2250,7 +2256,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 if (isNotEmpty(errors)) {
                     this.isFailedPurchase = true;
-                    this.invalidatePaymentToken();
                     this.handleFailedPurchaseCall(purchaseResponse);
                 } else {
                     this.isFailedPurchase = false;
@@ -2519,10 +2524,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
 
-
-    // TODO: Temp method for retrieving payment auth token, purge later
-
-
     isAnAccountId(id) {
         return id && typeof id === 'string' &&
             id.startsWith(this.accountKeyPrefix);
@@ -2555,7 +2556,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return sourceField === apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
     }
 
-    invalidatePaymentToken() {
-        this.updateFormState({[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]:''});
+    removePaymentFieldsFromFormState(paymentFields) {
+        paymentFields.forEach(field => {
+            this.deleteFieldFromFormState(field);
+        });
     }
 }
