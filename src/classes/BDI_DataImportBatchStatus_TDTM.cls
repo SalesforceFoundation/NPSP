@@ -53,7 +53,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
             }
 
             when AfterUpdate {
-                setBatchStatus(oldSObjects, newSObjects);
+                setBatchStatusOnUpdate(oldSObjects, newSObjects);
             }
 
             when AfterDelete {
@@ -69,20 +69,11 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
      * @param diOldList Trigger.old
      * @param diNewList Trigger.new
      */
-    private void setBatchStatus(List<DataImport__c> diOldList,
+    private void setBatchStatusOnUpdate(List<DataImport__c> diOldList,
             List<DataImport__c> diNewList) {
 
-        Set<Id> batchIdSet = new Set<Id>();
-        Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
-
-        // build a set of batch ids
-        for (DataImport__c diOld : diOldList) {
-            DataImport__c diNew = diNewMap.get(diOld.Id);
-            if(needsStatusUpdate(diOld, diNew)) {
-                batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
-            }
-        }
-        setBatchStatus(batchIdSet);
+        Set<Id> batchIdSet = getBatchIdsToUpdate(diOldList, diNewList);
+        updateBatchStatus(batchIdSet);
     }
 
     private Boolean needsStatusUpdate(DataImport__c diOld, DataImport__c diNew) {
@@ -96,7 +87,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
             }
         } else if (diOld.Status__c != diNew.Status__c) {
             // status was changed; same parent
-            if(diNew.NPSP_Data_Import_Batch__c != null) {
+            if (diNew.NPSP_Data_Import_Batch__c != null) {
                 return true;
             }
         }
@@ -104,20 +95,40 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         return false;
     }
 
+    private void setBatchStatus(List<DataImport__c> diList) {
+        Set<Id> batchIdSet = getBatchIdsToUpdate(diList);
+        updateBatchStatus(batchIdSet);
+    }
+
     /**
      * @description updates the batch status on di records insert, delete or undelete
      * @param diList the old or new list
+     * @return {Set<Id>} A set of Batch Ids that need to have their status updated.
      */
-    private void setBatchStatus(List<DataImport__c> diList) {
+    private Set<Id> getBatchIdsToUpdate(List<DataImport__c> diList) {
         Set<Id> batchIdSet = new Set<Id>();
 
-        // build a set of batch ids
         for (DataImport__c di : diList) {
             if (di.NPSP_Data_Import_Batch__c != null) {
                 batchIdSet.add(di.NPSP_Data_Import_Batch__c);
             }
         }
-        setBatchStatus(batchIdSet);
+
+        return batchIdSet;
+    }
+
+    private Set<Id> getBatchIdsToUpdate(List<DataImport__c> diOldList, List<DataImport__c> diNewList) {
+        Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
+        Set<Id> batchIdSet = new Set<Id>();
+
+        for (DataImport__c diOld : diOldList) {
+            DataImport__c diNew = diNewMap.get(diOld.Id);
+            if (needsStatusUpdate(diOld, diNew)) {
+                batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
+            }
+        }
+
+        return batchIdSet;
     }
 
     /**
@@ -128,7 +139,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
      * when any DI is Failed -> then the Batch Status is Failed - needs review
      *
      */
-    private void setBatchStatus(Set<Id> batchIdSet) {
+    private void updateBatchStatus(Set<Id> batchIdSet) {
 
         BatchDataImportStatusAggregator aggregator = getBatchAggregates(batchIdSet);
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
