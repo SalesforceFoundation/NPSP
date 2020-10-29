@@ -2180,7 +2180,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
     }
 
-    processPurchaseResponse(responseBody) {
+    processPurchaseResponse = async (responseBody) => {
         const isPurchaseFailed = responseBody.errors;
         if (isPurchaseFailed) {
             this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
@@ -2201,6 +2201,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
+
+        await this.saveDataImport(this.saveableFormState());
     }
 
     updateFormStateWithFailedPurchaseCall(errors) {
