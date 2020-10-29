@@ -3,8 +3,6 @@ import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { format } from 'c/utilCommon';
-import { isNull } from 'c/util';
-
 import {
     fireEvent,
     registerListener,
@@ -21,7 +19,6 @@ import DATA_IMPORT_PAYMENT_STATUS_FIELD
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
-    WIDGET_TYPE_DI_FIELD_VALUE,
 } from 'c/geConstants';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
@@ -41,7 +38,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
-        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(await getPaymentTransactionStatusValues()));
+        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
+            JSON.parse(await getPaymentTransactionStatusValues())
+        );
 
         const domainInfo = await getOrgDomainInfo()
             .catch(error => {
@@ -218,18 +217,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 message: splitErrorResponse,
                 isObject: isObject
             }
-        };
-    }
-
-    /**
-     * Requests a payment token when the form is saved
-     * @return {paymentToken: Promise<*>} Promise that will resolve to the token
-     */
-    @api
-    returnValues() {
-        return {
-            type: WIDGET_TYPE_DI_FIELD_VALUE,
-            payload: this.requestToken()
         };
     }
 
