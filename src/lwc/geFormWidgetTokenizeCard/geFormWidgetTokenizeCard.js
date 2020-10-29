@@ -25,10 +25,7 @@ import {
 } from 'c/geConstants';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
-    @api cardHolderName;
-
     @track domain;
-
     @track isLoading = true;
     @track alert = {};
     @track disabledMessage;
@@ -245,14 +242,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api
     get allFieldsByAPIName() {
         return [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName];
-    }
-
-    /**
-     * @description Sets name on the card based on the donor selection
-     */
-    @api
-    setNameOnCard(cardHolderName) {
-        this.cardHolderName = cardHolderName;
     }
 
     dispatchApplicationEvent(eventName, payload) {

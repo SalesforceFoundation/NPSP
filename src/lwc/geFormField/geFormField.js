@@ -1,12 +1,14 @@
-import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify, relatedRecordFieldNameFor} from 'c/utilCommon';
+import {api, LightningElement, track, wire} from 'lwc';
+import {debouncify, isNotEmpty, relatedRecordFieldNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
+import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
-import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
-import CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import ACCOUNT1_IMPORTED
+    from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import CONTACT1_IMPORTED
+    from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import ACCOUNT_ID from '@salesforce/schema/Opportunity.AccountId';
 import PRIMARY_CONTACT from '@salesforce/schema/Opportunity.Primary_Contact__c';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
@@ -30,12 +32,12 @@ const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track objectDescribeInfo;
-    @track richTextValid = true;
     @track _disabled = false;
     @api element;
     @api targetFieldName;
     _recordTypeId;
     _picklistValues;
+    _isRichTextValid = true;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -120,12 +122,12 @@ export default class GeFormField extends LightningElement {
                 return inputField.checkValidity();
         } else if (this.isRichText) {
             this.checkRichTextValidity();
-            if (!this.richTextValid) {
+            if (!this._isRichTextValid) {
                 // workaround, field will not display as invalid if it is untouched
                 inputField.focus();
                 inputField.blur();
             }
-            return this.richTextValid;
+            return this._isRichTextValid;
         }
         return true;
     }
@@ -133,7 +135,7 @@ export default class GeFormField extends LightningElement {
     checkRichTextValidity() {
         if (this.element.required) {
             const isValid = isNotEmpty(this.value) && this.value.length > 0;
-            this.richTextValid = isValid;
+            this._isRichTextValid = isValid;
             return isValid;
         }
         return true;
@@ -595,15 +597,15 @@ export default class GeFormField extends LightningElement {
     }
 
     getPicklistOptionsForRecordTypeIds() {
-        if (!this.accessibleRecordTypes || this.accessibleRecordTypes.length <= 0) {
+        if (!this.accessibleRecordTypes ||
+            this.accessibleRecordTypes.length <= 0) {
             return [this.PICKLIST_OPTION_NONE];
         }
 
-        const recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
-            return this.createPicklistOption(recordType.name, recordType.recordTypeId);
+        return this.accessibleRecordTypes.map(recordType => {
+            return this.createPicklistOption(recordType.name,
+                recordType.recordTypeId);
         });
-
-        return recordTypeIdPicklistOptions;
     }
 
     createPicklistOption = (label, value, attributes = null, validFor = []) => ({
