@@ -373,8 +373,8 @@ public with sharing class BDI_DataImportAPI_TEST {
         insert dataImport;
         Id diObjId = dataImport.Id;
     
-        npsp__Data_Import_Settings__c diSettings = npsp__Data_Import_Settings__c.getOrgDefaults();
-        diSettings.npsp__Donation_Matching_Behavior__c = npsp.BDI_DataImport_API.DoNotMatch;
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
 
         // get the list of existing di records with all the fields
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
@@ -412,8 +412,8 @@ public with sharing class BDI_DataImportAPI_TEST {
         insert dataImport;
         Id diObjId = dataImport.Id;
     
-        npsp__Data_Import_Settings__c diSettings = npsp__Data_Import_Settings__c.getOrgDefaults();
-        diSettings.npsp__Donation_Matching_Behavior__c = npsp.BDI_DataImport_API.DoNotMatch;
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
 
         // get the list of existing di records with all the fields
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
