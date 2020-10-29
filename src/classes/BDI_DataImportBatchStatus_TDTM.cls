@@ -64,11 +64,6 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    /**
-     * @description Update Batch Status if a relevant field on the Data Import has been updated.
-     * @param diOldList Trigger.old
-     * @param diNewList Trigger.new
-     */
     private void setBatchStatusOnUpdate(List<DataImport__c> diOldList,
             List<DataImport__c> diNewList) {
 
@@ -76,35 +71,11 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         updateBatchStatus(batchIdSet);
     }
 
-    private Boolean needsStatusUpdate(DataImport__c diOld, DataImport__c diNew) {
-        if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
-            // di records changed parents
-            if (diOld.NPSP_Data_Import_Batch__c != null) {
-                return true;
-            }
-            if (diNew.NPSP_Data_Import_Batch__c != null) {
-                return true;
-            }
-        } else if (diOld.Status__c != diNew.Status__c) {
-            // status was changed; same parent
-            if (diNew.NPSP_Data_Import_Batch__c != null) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void setBatchStatus(List<DataImport__c> diList) {
         Set<Id> batchIdSet = getBatchIdsToUpdate(diList);
         updateBatchStatus(batchIdSet);
     }
 
-    /**
-     * @description updates the batch status on di records insert, delete or undelete
-     * @param diList the old or new list
-     * @return {Set<Id>} A set of Batch Ids that need to have their status updated.
-     */
     private Set<Id> getBatchIdsToUpdate(List<DataImport__c> diList) {
         Set<Id> batchIdSet = new Set<Id>();
 
@@ -131,12 +102,31 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         return batchIdSet;
     }
 
+    private Boolean needsStatusUpdate(DataImport__c diOld, DataImport__c diNew) {
+        if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
+            // di records changed parents
+            if (diOld.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+            if (diNew.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+        } else if (diOld.Status__c != diNew.Status__c) {
+            // status was changed; same parent
+            if (diNew.NPSP_Data_Import_Batch__c != null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @description Update the batch status based on statuses of the data import records associated with that batch
      * @param batchIdSet
-     * when one DI is imported, and none are failed or open -> then the Batch Status is Completed
-     * when one DI status is blank or Dry Run Validated or Dry Run error, and none are failed -> then the Batch Status is Open
-     * when any DI is Failed -> then the Batch Status is Failed - needs review
+     * When one DI is imported, and none are failed or open -> then the Batch Status is Completed
+     * When one DI status is blank or Dry Run Validated or Dry Run error, and none are failed -> then the Batch Status is Open
+     * When any DI is Failed -> then the Batch Status is Failed - Needs Review
      *
      */
     private void updateBatchStatus(Set<Id> batchIdSet) {
