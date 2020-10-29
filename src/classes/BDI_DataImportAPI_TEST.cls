@@ -380,9 +380,9 @@ public with sharing class BDI_DataImportAPI_TEST {
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
         List<npsp__DataImport__c> listDI = 
             Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
-                + ' FROM npsp__DataImport__c WHERE Id = :diObjId');
+                + ' FROM DataImport__c WHERE Id = :diObjId');
 
-        // process
+        // process no dry run
         Test.startTest();
         BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
         Test.stopTest();
@@ -405,7 +405,7 @@ public with sharing class BDI_DataImportAPI_TEST {
     *     no errors occurred
     **********************************************************************************************************/
     @isTest
-    private static void processRecordsCreateOpportunity() {
+    private static void processRecordsAndCreateOpportunity() {
         // create the data import record
         String donationName = 'TestOpp';
         DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', donationName, 1000, 'Closed Won');
@@ -419,9 +419,9 @@ public with sharing class BDI_DataImportAPI_TEST {
         String allDIFields = UTIL_Describe.getAllFieldsQueryStringFromObject('npsp__DataImport__c');
         List<npsp__DataImport__c> listDI = 
             Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
-                + ' FROM npsp__DataImport__c WHERE Id = :diObjId');
+                + ' FROM DataImport__c WHERE Id = :diObjId');
 
-        // process
+        // process no dry run
         Test.startTest();
         BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
         Test.stopTest();
