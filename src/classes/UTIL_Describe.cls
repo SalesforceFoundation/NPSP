@@ -286,14 +286,14 @@ public class UTIL_Describe {
             } else {
                 accessibleFields.add(field.getName());
             }
-    	}
-  
+        }
+        
     	String allFields = '';
     	for (String fieldName : accessibleFields) {
             allFields += fieldName + ','; 
         }
         allFields = allFields.substring(0, allFields.length() - 1);
-    	return allFields;
+        return allFields;
   	}
 
     /*******************************************************************************************************
