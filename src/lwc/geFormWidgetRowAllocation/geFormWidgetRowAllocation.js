@@ -210,7 +210,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * Merge row-level properties with field level properties.
      * If the whole row is disabled (default GAU) then all fields in the row should be disabled
      */
-    get mergedFieldList() {
+    get fieldsWithElementMetadata() {
         return this.fieldList.map(field => {
             const { element } = field;
             return {

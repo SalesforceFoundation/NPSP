@@ -1,6 +1,6 @@
 <template>
     <lightning-layout>
-        <template for:each={mergedFieldList} for:item='field'>
+        <template for:each={fieldsWithElementMetadata} for:item='field'>
             <lightning-layout-item key={field.mappedField}
                                    size='3'>
                 <article class='slds-p-horizontal_small'>
