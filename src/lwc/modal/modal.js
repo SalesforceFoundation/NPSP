@@ -3,7 +3,9 @@ import closeLabel from "@salesforce/label/c.Close";
 
 const CSS_CLASS = "modal-hidden";
 const ESCAPE = "Escape";
-
+/*
+ * Modal copied form CaseMan: https://github.com/SalesforceFoundation/CaseMan/tree/master/force-app/main/default/lwc/modal
+ */
 export default class Modal extends LightningElement {
     @api doInsteadOfHide;
 
