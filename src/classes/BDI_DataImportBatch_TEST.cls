@@ -164,4 +164,50 @@ public with sharing class BDI_DataImportBatch_TEST {
         }
         
     }
+
+    /**
+     * Verifies that when multiple data import records from separate batches are updated,
+     * their respective batch statuses are updated.
+     */
+    @IsTest
+    static void shouldHandleStatusUpdateAcrossMultipleBatches() {
+        final Integer numberOfBatches = 3;
+        List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        // create batches
+        for (Integer i = 0; i < numberOfBatches; i++) {
+            DataImportBatch__c batch = BDI_DataImportAPI_TEST.newBatch('b' + i, true);
+            DataImport__c di = BDI_DataImportAPI_TEST.newDI(batch.Id, 'Testing', 'Testerson');
+            dataImports.add(di);
+            batches.add(batch);
+        }
+
+        insert dataImports;
+
+        Test.startTest();
+
+        List<DataImportBatch__c> queriedBatches = [SELECT Id, Batch_Status__c from DataImportBatch__c];
+
+        // assert that our data import batches are present and in the correct status
+        System.assertEquals(3, queriedBatches.size());
+        for(DataImportBatch__c batch : queriedBatches) {
+            System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, batch.Batch_Status__c, 'Expected batch to be open.');
+        }
+
+        // update data imports from earlier to be failed
+        for(DataImport__c di : dataImports) {
+            di.Status__c = BDI_DataImport_API.bdiFailed;
+        }
+        update dataImports;
+
+        queriedBatches = [SELECT Id, Batch_Status__c from DataImportBatch__c];
+
+        for(DataImportBatch__c batch : queriedBatches) {
+            System.assertEquals(BDI_DataImport_API.BATCH_STATUS_FAILED, batch.Batch_Status__c, 'Expected batch to be failed.');
+        }
+
+        Test.stopTest();
+
+    }
 }
