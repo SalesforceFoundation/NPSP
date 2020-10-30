@@ -22,7 +22,6 @@ import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Ca
 
 import {getObjectInfo} from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
-import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
@@ -100,14 +99,13 @@ const mode = {
     CREATE: 'create',
     UPDATE: 'update'
 };
-const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     ACCOUNT1: 'Account1',
     CONTACT1: 'Contact1'
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
-export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
     // when opened from an Account or Contact
     @api donorRecordId;
@@ -246,12 +244,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.CUSTOM_LABELS.commonNewGift;
     }
 
-    get isSingleGiftEntry() {
+    isSingleGiftEntry() {
         return !this.batchId;
     }
 
     get cancelButtonText() {
-        return this.isSingleGiftEntry ?
+        return this.isSingleGiftEntry() ?
             this.CUSTOM_LABELS.commonCancel :
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
@@ -353,7 +351,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.sections = formTemplate.layout.sections;
             }
 
-            if (!this.isSingleGiftEntry) {
+            if (!this.isSingleGiftEntry()) {
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
@@ -429,16 +427,34 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.reset();
         this.initializeFormState();
 
-        // if not in batch mode, go back to point of origin
-        if (isEmpty(this.batchId)) {
-            if (isNotEmpty(this.donorId)) {
-                // go back to the donor record page
-                this.navigateToRecordPage(this.donorId);
+        if (this.isSingleGiftEntry()) {
+            const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
+            if (originatedFromRecordDetailPage) {
+                this.goToRecordDetailPage(originatedFromRecordDetailPage);
             } else {
-                // go back to the gift entry landing page;
-                this.navigateToLandingPage();
+                this.goToLandingPage();
             }
         }
+    }
+
+    goToRecordDetailPage(recordId) {
+        if (!recordId) return;
+        const navigateEvent = new CustomEvent('navigate', {
+            detail: {
+                to: 'recordPage',
+                recordId: recordId
+            }
+        });
+        this.dispatchEvent(navigateEvent);
+    }
+
+    goToLandingPage() {
+        const navigateEvent = new CustomEvent('navigate', {
+            detail: {
+                to: 'landingPage'
+            }
+        });
+        this.dispatchEvent(navigateEvent);
     }
 
     /*******************************************************************************
@@ -853,16 +869,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return dataImportRecord;
     }
 
-    navigateToRecordPage(recordId) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: recordId,
-                actionName: 'view'
-            }
-        });
-    }
-
     // change showSpinner to the opposite of its current value
     toggleSpinner() {
         this.showSpinner = !this.showSpinner;
@@ -967,7 +973,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     get saveActionLabel() {
-        return this.isSingleGiftEntry ?
+        return this.isSingleGiftEntry() ?
             this.CUSTOM_LABELS.commonSave :
             this.mode === mode.UPDATE ?
                 this.CUSTOM_LABELS.commonUpdate :
@@ -1071,27 +1077,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     handleWidgetData(payload) {
         this.widgetData = {...this.widgetData, ...payload};
-    }
-
-    /*******************************************************************************
-     * @description Navigates to Gift Entry landing page.
-     */
-    navigateToLandingPage() {
-        const giftEntryTabName =
-            TemplateBuilderService.alignSchemaNSWithEnvironment(
-                GIFT_ENTRY_TAB_NAME,
-                this.namespace
-            );
-        let url = `/lightning/n/${giftEntryTabName}`;
-
-        this[NavigationMixin.Navigate]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: url
-                }
-            },
-            true
-        );
     }
 
     /*******************************************************************************
@@ -2212,7 +2197,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         })
             .then(opportunityId => {
                 this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
-                this.navigateToRecordPage(opportunityId);
+                this.goToRecordDetailPage(opportunityId);
             })
             .catch(error => {
                 this.handleBdiProcessingError(error);
