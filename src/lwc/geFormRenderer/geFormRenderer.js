@@ -245,12 +245,12 @@ export default class GeFormRenderer extends LightningElement{
             this.CUSTOM_LABELS.commonNewGift;
     }
 
-    isSingleGiftEntry() {
+    get isSingleGiftEntry() {
         return !this.batchId;
     }
 
     get cancelButtonText() {
-        return this.isSingleGiftEntry() ?
+        return this.isSingleGiftEntry ?
             this.CUSTOM_LABELS.commonCancel :
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
@@ -352,7 +352,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.sections = formTemplate.layout.sections;
             }
 
-            if (!this.isSingleGiftEntry()) {
+            if (!this.isSingleGiftEntry) {
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
@@ -428,7 +428,7 @@ export default class GeFormRenderer extends LightningElement{
         this.reset();
         this.initializeFormState();
 
-        if (this.isSingleGiftEntry()) {
+        if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
             if (originatedFromRecordDetailPage) {
                 this.goToRecordDetailPage(originatedFromRecordDetailPage);
@@ -974,7 +974,7 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     get saveActionLabel() {
-        return this.isSingleGiftEntry() ?
+        return this.isSingleGiftEntry ?
             this.CUSTOM_LABELS.commonSave :
             this.mode === mode.UPDATE ?
                 this.CUSTOM_LABELS.commonUpdate :
