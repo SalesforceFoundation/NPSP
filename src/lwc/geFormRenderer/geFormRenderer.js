@@ -1085,6 +1085,10 @@ export default class GeFormRenderer extends LightningElement{
         this.widgetData = {...this.widgetData, ...payload};
     }
 
+    handleFormWidgetChange(event) {
+        this.updateFormState(event.detail);
+    }
+
     /*******************************************************************************
      * @description Pass through method that receives an event from geReviewDonations
      * to notify the parent component to construct a modal for reviewing donations.

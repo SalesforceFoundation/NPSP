@@ -9,6 +9,7 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
+    @api formState;
 
     @api
     reset() {
@@ -68,6 +69,10 @@ export default class GeFormWidget extends LightningElement {
 
     get totalAmount() {
         return hasNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
+    }
+
+    handleFormWidgetChange(event) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}))
     }
 
     /**

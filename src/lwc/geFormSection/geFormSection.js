@@ -244,6 +244,10 @@ export default class GeFormSection extends LightningElement {
         return fieldData;
     }
 
+    handleFormWidgetChange(event) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}));
+    }
+
     handleFormFieldChange(event) {
         this.dispatchEvent(new CustomEvent('formfieldchange', {detail: event.detail}));
     }
