@@ -533,12 +533,15 @@ const stripNamespace = (apiName , namespacePrefix) => {
  * Useful when referencing the related record field on objects
  * in the lightning/uiRecordApi Record format:
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
- * @param fieldApiName The ApiName of the relationship field for
- * which the related record field name is desired.
+ * @param customFieldApiNameOrFieldReference
+ * The ApiName of the relationship field for which the related record
+ * field name is desired, or the field reference object.
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
  */
-const relatedRecordFieldNameFor = (customFieldApiName) => {
-    return replaceLastInstanceOfWith(customFieldApiName, '__c', '__r');
+const relatedRecordFieldNameFor = (customFieldApiNameOrFieldReference) => {
+    const fieldApiName =
+        getFieldApiNameForFieldApiNameOrObjectReference(customFieldApiNameOrFieldReference);
+    return replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
 }
 
 /**
@@ -562,6 +565,16 @@ const apiNameFor = (objectOrFieldReference) => {
     }
 }
 
+const isString = (val) => {
+    return typeof val === 'string' || val instanceof String;
+}
+
+const getFieldApiNameForFieldApiNameOrObjectReference = (fieldApiNameOrFieldReference) => {
+    return isString(fieldApiNameOrFieldReference) ?
+        fieldApiNameOrFieldReference :
+        apiNameFor(fieldApiNameOrFieldReference);
+}
+
 export {
     apiNameFor,
     constructErrorMessage,
@@ -580,6 +593,7 @@ export {
     isUndefined,
     isPrimative,
     isNull,
+    isString,
     mutable,
     sort,
     shiftToIndex,

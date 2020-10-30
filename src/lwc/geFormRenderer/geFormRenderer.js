@@ -1983,7 +1983,7 @@ export default class GeFormRenderer extends LightningElement{
         const updates = new Map();
         updates.set(DATA_IMPORT_DONATION_IMPORTED_FIELD, null);
         updates.set(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD, null);
-        updates.set(relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)), null);
+        updates.set(relatedRecordFieldNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), null);
         this.updateFormStateFromMap(updates);
 
         // Reset form fields that have field mappings parented by PaymentImported__c
