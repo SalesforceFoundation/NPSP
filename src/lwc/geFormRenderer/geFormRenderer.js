@@ -186,7 +186,7 @@ export default class GeFormRenderer extends LightningElement{
         const updatedData = {
             [apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)]: record.Id,
             [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
-                record[PARENT_OPPORTUNITY_FIELD.fieldApiName],
+                record[apiNameFor(PARENT_OPPORTUNITY_FIELD)],
             [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]: userSelectedMatch,
             [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch
         };
@@ -196,7 +196,7 @@ export default class GeFormRenderer extends LightningElement{
     loadPaymentAndParentDonationFieldValues(record) {
         this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD),
-            record[PARENT_OPPORTUNITY_FIELD.fieldApiName]);
+            record[apiNameFor(PARENT_OPPORTUNITY_FIELD)]);
 
         this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD), record.Id);
@@ -402,8 +402,8 @@ export default class GeFormRenderer extends LightningElement{
     })
     wiredBatch({data, error}) {
         if (data) {
-            this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
-            this._batchDefaults = data.fields[BATCH_DEFAULTS_FIELD.fieldApiName].value;
+            this.formTemplateId = data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value;
+            this._batchDefaults = data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;
@@ -982,7 +982,7 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     get isUpdateActionDisabled() {
-        return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
+        return this.dataImport && this.dataImport[apiNameFor(STATUS_FIELD)] === 'Imported';
     }
 
     /**
@@ -1155,7 +1155,7 @@ export default class GeFormRenderer extends LightningElement{
             // field mappings parented by PaymentImported__c
             this.resetFieldsForObjMappingApplyDefaults(
                 GeFormService.objectMappingWrapperFor(
-                    DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
                 ).DeveloperName);
         }
     }
@@ -1296,7 +1296,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     loadParentOpportunityForSelectedPayment(oppId) {
-        this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
+        this.loadSelectedRecordFieldValues(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), oppId);
     }
 
     loadNextSelectedRecordFromQueue() {
@@ -1483,7 +1483,7 @@ export default class GeFormRenderer extends LightningElement{
     */
     formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
-        const donationAmountFormField = this.getFormFieldBySourceName(DONATION_AMOUNT.fieldApiName);
+        const donationAmountFormField = this.getFormFieldBySourceName(apiNameFor(DONATION_AMOUNT));
         const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
 
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
@@ -1526,7 +1526,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get namespace() {
-        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+        return getNamespace(apiNameFor(FORM_TEMPLATE_FIELD));
     }
 
     // ================================================================================
@@ -1570,7 +1570,7 @@ export default class GeFormRenderer extends LightningElement{
      */
     updateFormState(fields) {
         Object.assign(this.formState, fields);
-        if (fields.hasOwnProperty(DONATION_RECORD_TYPE_NAME.fieldApiName)) {
+        if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
             this.updateFormStateForDonationRecordType(fields);
         }
 
@@ -1583,7 +1583,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     updateFormStateForDonationRecordType(fields) {
-        const opportunityRecordTypeValue = fields[DONATION_RECORD_TYPE_NAME.fieldApiName];
+        const opportunityRecordTypeValue = fields[apiNameFor(DONATION_RECORD_TYPE_NAME)];
 
         if (opportunityRecordTypeValue) {
             const isId = opportunityRecordTypeValue.startsWith('012');
@@ -1591,7 +1591,7 @@ export default class GeFormRenderer extends LightningElement{
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] =
+            this.formState[apiNameFor(DONATION_RECORD_TYPE_NAME)] =
                 this.opportunityRecordTypeNameFor(val);
 
             this.setDonationRecordTypeIdInFormState(val);
@@ -1660,11 +1660,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isDonationDonor(fieldApiName) {
-        return fieldApiName === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName;
+        return fieldApiName === apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD);
     }
 
     isDonationRecordTypeName(fieldApiName) {
-        return fieldApiName === DONATION_RECORD_TYPE_NAME.fieldApiName;
+        return fieldApiName === apiNameFor(DONATION_RECORD_TYPE_NAME);
     }
 
     handleImportedRecordFieldChange(sourceField, value) {
@@ -1703,7 +1703,7 @@ export default class GeFormRenderer extends LightningElement{
 
         if (this.batchId) {
             this.updateFormState({
-                [NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]: this.batchId
+                [apiNameFor(NPSP_DATA_IMPORT_BATCH_FIELD)]: this.batchId
             });
         }
 
@@ -1922,11 +1922,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isDonorAccountField(fieldApiName) {
-        return fieldApiName === DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        return fieldApiName === apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD);
     }
 
     isDonorContactField(fieldApiName) {
-        return fieldApiName === DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+        return fieldApiName === apiNameFor(DATA_IMPORT_CONTACT1_IMPORTED_FIELD);
     }
 
     selectedDonorId() {
@@ -1974,7 +1974,7 @@ export default class GeFormRenderer extends LightningElement{
         // Reset form fields that have field mappings parented by PaymentImported__c
         this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
-                DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+                apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
             ).DeveloperName);
     }
 
@@ -1988,7 +1988,7 @@ export default class GeFormRenderer extends LightningElement{
         // Reset form fields that have field mappings parented by PaymentImported__c
         this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
-                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
+                apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)
             ).DeveloperName);
     }
 
@@ -2027,7 +2027,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasAuthorizationToken() {
-        return this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName) ?
+        return this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)) ?
             true :
             false;
     }
@@ -2041,7 +2041,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
+        const paymentStatus = this.getFieldValueFromFormState(apiNameFor(PAYMENT_STATUS));
         switch (paymentStatus) {
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
@@ -2104,7 +2104,7 @@ export default class GeFormRenderer extends LightningElement{
     buildPurchaseRequestBodyParameters() {
         const { firstName, lastName } = this.getCardholderNames();
         const metadata = {
-            campaignCode: this.getFieldValueFromFormState(DONATION_CAMPAIGN_NAME.fieldApiName)
+            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
         };
 
         return JSON.stringify({
@@ -2112,10 +2112,10 @@ export default class GeFormRenderer extends LightningElement{
             lastName: lastName,
             metadata: metadata,
             amount: getCurrencyLowestCommonDenominator(
-                this.getFieldValueFromFormState(DONATION_AMOUNT.fieldApiName)
+                this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT))
             ),
             paymentMethodToken:
-                this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN.fieldApiName),
+                this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
         });
     }
 
@@ -2148,8 +2148,8 @@ export default class GeFormRenderer extends LightningElement{
     updateFormStateWithFailedPurchaseCall(errors) {
         if (errors && errors[0]) {
             this.updateFormState({
-                [PAYMENT_DECLINED_REASON.fieldApiName]: errors[0].message,
-                [PAYMENT_STATUS.fieldApiName]: errors[0].localizedPaymentsMessage,
+                [apiNameFor(PAYMENT_DECLINED_REASON)]: errors[0].message,
+                [apiNameFor(PAYMENT_STATUS)]: errors[0].localizedPaymentsMessage,
             });
         }
     }
@@ -2168,23 +2168,23 @@ export default class GeFormRenderer extends LightningElement{
 
     updateFormStateWithTimedoutPurchaseCall(responseBody) {
         this.updateFormState({
-            [PAYMENT_DECLINED_REASON.fieldApiName]: responseBody.message,
-            [PAYMENT_STATUS.fieldApiName]: responseBody.status,
+            [apiNameFor(PAYMENT_DECLINED_REASON)]: responseBody.message,
+            [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
         });
     }
 
     updateFormStateWithSuccessfulPurchaseCall(responseBody) {
         this.updateFormState({
-            [PAYMENT_ELEVATE_ID.fieldApiName]: responseBody.id,
-            [PAYMENT_STATUS.fieldApiName]: responseBody.status,
-            [PAYMENT_CARD_NETWORK.fieldApiName]: responseBody.cardData.brand,
-            [PAYMENT_LAST_4.fieldApiName]: responseBody.cardData.last4,
-            [PAYMENT_EXPIRATION_MONTH.fieldApiName]: responseBody.cardData.expirationMonth,
-            [PAYMENT_EXPIRATION_YEAR.fieldApiName]: responseBody.cardData.expirationYear,
-            [PAYMENT_DECLINED_REASON.fieldApiName]: '',
-            [PAYMENT_GATEWAY_ID.fieldApiName]: responseBody.gatewayId,
-            [PAYMENT_TRANSACTION_ID.fieldApiName]: responseBody.gatewayTransactionId,
-            [PAYMENT_AUTHORIZED_AT.fieldApiName]: responseBody.authorizedAt,
+            [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
+            [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
+            [apiNameFor(PAYMENT_CARD_NETWORK)]: responseBody.cardData.brand,
+            [apiNameFor(PAYMENT_LAST_4)]: responseBody.cardData.last4,
+            [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: responseBody.cardData.expirationMonth,
+            [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: responseBody.cardData.expirationYear,
+            [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
+            [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
+            [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
+            [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
         });
     }
 
@@ -2205,7 +2205,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleBdiProcessingError(error) {
-        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS.fieldApiName);
+        const paymentStatus = this.getFieldValueFromFormState(apiNameFor(PAYMENT_STATUS));
         const hasCapturedPayment = paymentStatus && paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
         if (hasCapturedPayment) {
             const exceptionDataError = new ExceptionDataError(error);
