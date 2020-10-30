@@ -541,7 +541,8 @@ const stripNamespace = (apiName , namespacePrefix) => {
 const relatedRecordFieldNameFor = (customFieldApiNameOrFieldReference) => {
     const fieldApiName =
         getFieldApiNameForFieldApiNameOrObjectReference(customFieldApiNameOrFieldReference);
-    return replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
+    return fieldApiName &&
+        replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
 }
 
 /**
@@ -556,6 +557,9 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
 }
 
 const apiNameFor = (objectOrFieldReference) => {
+    if (objectOrFieldReference === null || objectOrFieldReference === undefined) {
+       return objectOrFieldReference;
+    }
     if (objectOrFieldReference.hasOwnProperty('fieldApiName')) {
         return objectOrFieldReference.fieldApiName;
     } else if (objectOrFieldReference.hasOwnProperty('objectApiName')) {
