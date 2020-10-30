@@ -1,35 +1,35 @@
 <template>
-    <lightning-layout vertical-align="center">
-        <lightning-layout-item size="12">
+    <lightning-layout>
+        <lightning-layout-item size="9">
                 <lightning-record-edit-form object-api-name={allocationObjectApiName}>
                     <div class="slds-grid">
-                        <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={gauFieldApiName}
                                                     required='true'
                                                     onchange={handleFieldValueChange}>
                             </lightning-input-field>
                         </div>
-                        <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={allocationAmountFieldApiName}
                                                    onchange={handleFieldValueChange}>
                             </lightning-input-field>
                         </div>
-                        <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={allocationPercentageFieldApiName}
                                                    onchange={handleFieldValueChange}>
                             </lightning-input-field>
                         </div>
-                        <div class="slds-col slds-size_1-of-4 slds-align-middle slds-p-top_small">
-                             <span if:true={isRemovable}>
-                                <lightning-button variant='destructive'
-                                                  onclick={remove}
-                                                  label={CUSTOM_LABELS.commonDelete}
-                                                  data-qa-locator={qaLocatorDeleteRow}>
-                                </lightning-button>
-                            </span>
-                        </div>
                     </div>
                 </lightning-record-edit-form>
+        </lightning-layout-item>
+        <lightning-layout-item size="3" class="slds-align-middle">
+            <span if:true={isRemovable}>
+                <lightning-button variant='destructive'
+                                  onclick={remove}
+                                  label={CUSTOM_LABELS.commonDelete}
+                                  data-qa-locator={qaLocatorDeleteRow}>
+                </lightning-button>
+            </span>
         </lightning-layout-item>
     </lightning-layout>
 </template>
