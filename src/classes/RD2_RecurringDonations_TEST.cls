@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations trigger handler tests
 *
 */
-@isTest(IsParallel=true)
+@isTest
 private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
@@ -880,7 +880,6 @@ private with sharing class RD2_RecurringDonations_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withStatusActive()
             .withStatusClosed()
             .withEndDate(Date.today().addDays(-1))
             .build();
@@ -904,8 +903,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldClearDayOfMonthWhenSpecifiedOnUpdateAndRDIsNotMonthly() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .build();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         insert rd;
         
         rd = rdGateway.getRecord(rd.Id);
