@@ -33,6 +33,7 @@ import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTo
 * @description Constants
 */
 const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
+const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -136,14 +137,38 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
     }
 
+    handleNavigateEvent(event) {
+        if (event.detail.to === 'recordPage') {
+            this.navigateToRecordPage(event.detail.recordId);
+        }
+
+        if (event.detail.to === 'landingPage') {
+            this.navigateToLandingPage();
+        }
+    }
+
     navigateToRecordPage(recordId) {
-        this[NavigationMixin.Navigate]({
+        const pageReference = {
             type: 'standard__recordPage',
             attributes: {
                 recordId: recordId,
                 actionName: 'view'
             }
-        });
+        };
+        this[NavigationMixin.Navigate](pageReference);
+    }
+
+    navigateToLandingPage() {
+        const giftEntryTabName = this.namespace ?
+            `${this.namespace}__${GIFT_ENTRY_TAB_NAME}` :
+            GIFT_ENTRY_TAB_NAME;
+        const url = `/lightning/n/${giftEntryTabName}`;
+
+        const pageReference = {
+            type: 'standard__webPage',
+            attributes: { url: url }
+        };
+        this[NavigationMixin.Navigate](pageReference, true);
     }
 
     get expectedCountOfGifts() {
