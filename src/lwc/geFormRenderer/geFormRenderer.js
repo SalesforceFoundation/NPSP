@@ -1288,9 +1288,8 @@ export default class GeFormRenderer extends LightningElement{
         if (error) {
             handleError(error);
         } else if (data) {
-            const dataImport = this.mapRecordValuesToDataImportFields(data);
-            this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
-            this.load(dataImport, false);
+            const updates = this.getFormStateUpdatesFromSelectedRecord(data);
+            this.updateFormState(updates);
         }
         this.loadNextSelectedRecordFromQueue();
     }
@@ -1547,12 +1546,6 @@ export default class GeFormRenderer extends LightningElement{
 
     set formState(formState) {
         this._formState = formState;
-    }
-
-    updateFormStateForRecordIdWithRelatedRecord(recordId, record) {
-        const relatedRecordFieldName =
-            relatedRecordFieldNameFor(this.lookupFieldApiNameFor(recordId));
-        this.updateFormState({[relatedRecordFieldName]: record});
     }
 
     lookupFieldApiNameFor(recordId) {
@@ -2256,4 +2249,13 @@ export default class GeFormRenderer extends LightningElement{
             this.deleteFieldFromFormState(field);
         });
     }
+
+    getFormStateUpdatesFromSelectedRecord(record) {
+        const formStateUpdates = this.mapRecordValuesToDataImportFields(record);
+        const relatedRecordFieldName =
+            relatedRecordFieldNameFor(this.lookupFieldApiNameFor(record.id));
+        formStateUpdates[relatedRecordFieldName] = record;
+        return formStateUpdates;
+    }
+
 }
