@@ -224,6 +224,30 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
+    * @description Verifies user is allowed to close an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned
+    */
+    @isTest
+    private static void shouldAllowElevateRDUpdateWhenNonElevateUserClosesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        final Date startDate = Date.today().addMonths(-2);
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStartDate(startDate)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withStartDate(startDate)
+            .withStatusClosed()
+            .withEndDate(Date.today())
+            .withClosedReason('test')
+            .build();
+
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have permission to close an active Elevate RD');
+    }
+
+    /***
     * @description Verifies user cannot update Closed Reason on an active RD originated in Elevate when
     * integration is enabled and user does not have permissions assigned
     */
