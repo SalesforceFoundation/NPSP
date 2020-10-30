@@ -323,7 +323,7 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
 * e.g. hasNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
 */
 const hasNestedProperty = (object, property, ...remainingProperties) => {
-    if (object === undefined) return false
+    if (object === undefined || object === null) return false
     if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
     return hasNestedProperty(object[property], ...remainingProperties)
 }
@@ -528,6 +528,30 @@ const stripNamespace = (apiName , namespacePrefix) => {
     return apiNameParts[1];
 }
 
+/**
+ * @description Replaces the last instance of "__c" with "__r".
+ * Useful when referencing the related record field on objects
+ * in the lightning/uiRecordApi Record format:
+ * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
+ * @param fieldApiName The ApiName of the relationship field for
+ * which the related record field name is desired.
+ * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
+ */
+const relatedRecordFieldNameFor = (customFieldApiName) => {
+    return replaceLastInstanceOfWith(customFieldApiName, '__c', '__r');
+}
+
+/**
+ * @description Replaces the last instance of a string pattern with another pattern.
+ * @param subject The original string.
+ * @param toRemove The pattern for which the last instance should be removed.
+ * @param replacement The pattern used to replace the last instance of toRemove.
+ * @returns {*|void|string} A new string with the last instance replaced.
+ */
+const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
+    return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
+}
+
 export {
     constructErrorMessage,
     debouncify,
@@ -558,5 +582,6 @@ export {
     arraysMatch,
     getValueFromDotNotationString,
     validateJSONString,
-    stripNamespace
+    stripNamespace,
+    relatedRecordFieldNameFor
 };

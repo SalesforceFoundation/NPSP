@@ -390,7 +390,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
                 .revisePaidInstallments(paidInstallmentsByRDId.get(rd.Id))
-                .reviseStatus(currentDate)
+                .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
             //evaluate Opportunities
