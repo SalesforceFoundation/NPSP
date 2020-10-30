@@ -1315,19 +1315,19 @@ export default class GeFormRenderer extends LightningElement{
         return getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
     }
 
-    @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
+    @wire(getObjectInfo, { objectApiName: OPP_PAYMENT_OBJECT })
     oppPaymentObjectInfo;
 
-    @wire(getObjectInfo, {objectApiName: OPPORTUNITY_OBJECT.objectApiName})
+    @wire(getObjectInfo, { objectApiName: OPPORTUNITY_OBJECT })
     opportunityObjectInfo;
 
-    @wire(getObjectInfo, {objectApiName: ACCOUNT_OBJECT.objectApiName})
+    @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
     accountObjectInfo;
 
-    @wire(getObjectInfo, {objectApiName: CONTACT_OBJECT.objectApiName})
+    @wire(getObjectInfo, { objectApiName: CONTACT_OBJECT })
     contactObjectInfo;
 
-    @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT_OBJECT)})
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_OBJECT })
     dataImportObjectInfo;
 
     mapRecordValuesToDataImportFields(record) {
