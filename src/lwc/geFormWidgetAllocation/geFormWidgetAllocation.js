@@ -1,9 +1,16 @@
 import {LightningElement, api, track, wire} from 'lwc';
+
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import {
+    isNumeric,
+    isNotEmpty,
+    isEmpty,
+    getSubsetObject,
+    apiNameFor } from 'c/utilCommon';
+import { registerListener } from 'c/pubsubNoPageRef';
+
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import { isNumeric, isNotEmpty, isEmpty } from 'c/utilCommon';
-import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
@@ -19,16 +26,31 @@ const ALLOC_SETTINGS_DEFAULT = ALLOC_DEFAULT_FIELD.fieldApiName;
 const ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED = ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD.fieldApiName;
 
 export default class GeFormWidgetAllocation extends LightningElement {
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api element;
     @track alertBanner = {}; // { level: ('error', 'warning'), message: String }
     @track rowList = [];
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    @track widgetDataFromState = {};
 
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
-    // need labels for field list
+    _formState;
+    @api
+    get formState() {
+        return this._formState;
+    }
+    set formState(formState) {
+        this._formState = formState;
+        this.sliceWidgetDataFromState();
+    }
+    sliceWidgetDataFromState() {
+        this.widgetDataFromState = getSubsetObject(this.formState, [apiNameFor(DI_ADDITIONAL_OBJECT)]);
+    }
+
+
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
     wiredObjectInfo({data}) {
         // Represents the fields in a row of the widget
@@ -39,7 +61,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     size: 4,
                     element: {
                         required: true,
-                        customLabel: data.fields[GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName].label
+                        customLabel: data.fields[GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName].label,
+                        type: 'text'
                     }
                 },
                 {
@@ -47,6 +70,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     size: 3,
                     element: {
                         customLabel: data.fields[AMOUNT_FIELD.fieldApiName].label,
+                        type: 'number',
+                        formatter: 'currency'
                     }
                 },
                 {
@@ -95,7 +120,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.reallocateByPercent(value);
             if(this.hasDefaultGAU) {
                 // assign remainder to default GAU if enabled
-                this.allocateDefaultGAU();
+                this.allocateRemainingAmountToDefaultGAU();
             }
             this.validate();
         }
@@ -115,40 +140,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             }
         }
         return true;
-    }
-
-    /**
-     * Expected to return a map of Object API Name to array of records to be created from this widget
-     * @return {'GAU_Allocation_1_abc123' : [record1, record2, ...] }
-     */
-    @api
-    returnValues() {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        let widgetData = {};
-        let widgetRowValues = [];
-
-        if(rows !== null && typeof rows !== 'undefined') {
-            rows.forEach(row => {
-                // no need to send back default GAU, automatically allocated by trigger
-                // dataset attributes are always strings
-                if(row.dataset.defaultgau !== 'true') {
-                    let rowRecord = row.getValues();
-                    // need attributes to be able to deserialize this later.
-                    const rowWithAttributes = {
-                        attributes: { type: ALLOCATION_OBJECT.objectApiName },
-                        ...rowRecord
-                    };
-                    widgetRowValues.push(rowWithAttributes);
-                }
-            });
-        }
-
-        // use custom metadata record name as key
-        widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
-        return {
-            type: WIDGET_TYPE_DI_FIELD_VALUE,
-            payload: { [DI_ADDITIONAL_OBJECT.fieldApiName]: widgetData }
-        }
     }
 
     @api
@@ -215,7 +206,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     addRow(isDefaultGAU, properties) {
         let element = {};
         element.key = this.rowList.length;
-        const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
+        const record = { ...properties };
         let row = {};
         if(isDefaultGAU === true) {
             // default GAU should be locked.
@@ -233,26 +224,85 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
+     * Expected to return a map of Object API Name to array of records to be created from this widget
+     * @return {'GAU_Allocation_1_abc123' : [record1, record2, ...] }
+     */
+    @api
+    returnValues() {
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
+        let widgetData = {};
+        let widgetRowValues = [];
+
+        if(rows !== null && typeof rows !== 'undefined') {
+            rows.forEach(row => {
+                // no need to send back default GAU, automatically allocated by trigger
+                // dataset attributes are always strings
+                if(row.isDefaultGAU !== 'true') {
+                    let rowRecord = row.getValues();
+                    // need attributes to be able to deserialize this later.
+                    const rowWithAttributes = {
+                        attributes: { type: ALLOCATION_OBJECT.objectApiName },
+                        ...rowRecord
+                    };
+                    widgetRowValues.push(rowWithAttributes);
+                }
+            });
+        }
+
+        // use custom metadata record name as key
+        widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
+        return {
+            type: WIDGET_TYPE_DI_FIELD_VALUE,
+            payload: { [DI_ADDITIONAL_OBJECT.fieldApiName]: widgetData }
+        }
+    }
+
+    /**
      * Handle an allocation value change event.
      * rowIndex - Index of the record firing the event
      * payload - Object where key is the field that was updated, and value is the updated value
      * @param event { rowIndex: Number, payload: Object }
      */
-    handleValueChange(event) {
-        const { rowIndex, payload } = event;
-        const record = this.rowList[rowIndex].record;
-        this.rowList[rowIndex].record = {...record, ...payload}; // update record in rowList with new values
+    handleRowValueChange(event) {
+        const detail = event.detail;
+        const record = this.rowList[detail.rowIndex].record;
+        this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
-        const hasRemainingAmount =
-            this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
-            this.remainingAmount >= 0;
+        this.allocateRemainingAmountToDefaultGAU();
 
-        if(hasRemainingAmount) {
-            this.allocateDefaultGAU();
-        }
-
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {
+            detail: {
+                [apiNameFor(DI_ADDITIONAL_OBJECT)]: JSON.stringify(this.convertRowListToSObjectJSON())
+            }
+        }));
         this.validate();
     }
+
+    convertRowListToSObjectJSON() {
+        let widgetRowValues = [];
+
+        this.rowList.forEach(row => {
+            // no need to send back default GAU, automatically allocated by the trigger
+            if (row.isDefaultGAU) {
+                return;
+            }
+            widgetRowValues.push({
+                attributes: { type: ALLOCATION_OBJECT.objectApiName },
+                ...row.record
+            });
+        });
+
+        return {
+            [this.element.dataImportObjectMappingDevName]: widgetRowValues
+        };
+    }
+
+    get hasRemainingAmount() {
+        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
+            this.remainingAmount >= 0;
+    }
+
+
 
     /**
      * Reallocate all percent-based allocations with the updated donation total.
@@ -269,7 +319,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * Whenever the total amount or any GAU allocation is adjusted and the default GAU amount should be updated
      * with the total of unallocated funds.
      */
-    allocateDefaultGAU() {
+    allocateRemainingAmountToDefaultGAU() {
+        if (!this.hasRemainingAmount) {
+            return;
+        }
+
         const defaultRow = this.template.querySelector('[data-defaultgau=true]');
         defaultRow.setFieldValue(
             `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,

@@ -1,7 +1,8 @@
 import {LightningElement, api} from 'lwc';
 import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
-import {isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
+import {apiNameFor, isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
+
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -17,6 +18,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api disabled;
     @api totalAmount;
     @api remainingAmount;
+    @api widgetDataFromState;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -137,22 +139,26 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param event
      * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
      */
-    handleChange(event, total) {
-        let payload;
-        // if a total was passed in, use it for calculating percent allocations, otherwise use this.totalAmount
-        const totalForCalculation = isNumeric(total) ? total : this.totalAmount;
-        if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
-            // handle the percent field being updated
-            payload = this.handlePercentChange(event.detail, totalForCalculation);
-        } else if(event.detail.targetFieldName === ALLOCATION_AMOUNT) {
-            // handle the Amount field being updated
-            payload = this.handleAmountChange(event.detail);
-        }
+    handleFieldValueChange(event) {
+        this.dispatchEvent(new CustomEvent('rowvaluechange', {
+            detail: {
+                rowIndex: this.rowIndex,
+                changedFieldAndValue: {
+                    [event.target.fieldName] : event.target.value
+                }
+            }
+        }));
 
-        if(isNotEmpty(payload)) {
-            // notify listeners of the new allocation values
-            fireEvent(null, 'allocationValueChange', {rowIndex: this.rowIndex, payload});
-        }
+        // if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
+        //     // payload = this.handlePercentChange(event.detail, totalForCalculation);
+        // } else if(event.detail.targetFieldName === ALLOCATION_AMOUNT) {
+        //     payload = this.handleAmountChange(event.detail);
+        // }
+        //
+        // if(isNotEmpty(payload)) {
+        //     // notify listeners of the new allocation values
+        //     fireEvent(null, 'allocationValueChange', {rowIndex: this.rowIndex, payload});
+        // }
     }
 
     getFieldByName(fieldName) {
@@ -204,6 +210,22 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         if(parts && parts.length === 2) {
             return parts[1];
         }
+    }
+
+    get allocationObjectApiName() {
+        return apiNameFor(ALLOCATION_OBJECT);
+    }
+
+    get gauFieldApiName() {
+        return apiNameFor(GAU_FIELD);
+    }
+
+    get allocationAmountFieldApiName() {
+        return apiNameFor(AMOUNT_FIELD);
+    }
+
+    get allocationPercentageFieldApiName() {
+        return apiNameFor(PERCENT_FIELD);
     }
 
     /**

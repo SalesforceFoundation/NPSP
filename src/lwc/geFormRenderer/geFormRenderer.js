@@ -621,7 +621,7 @@ export default class GeFormRenderer extends LightningElement{
             formControls.toggleSpinner();
 
             try {
-                if (this.showPaymentSaveNotice) {
+                if (this.shouldTokenize()) {
                     let widgetValues = [];
                     sectionsList.forEach(section => {
                         if (section.isCreditCardWidgetAvailable) {
@@ -654,6 +654,13 @@ export default class GeFormRenderer extends LightningElement{
                 await this.submitSingleGift(dataImportFromFormState);
             }
         }
+    }
+
+    shouldTokenize() {
+        return this.showPaymentSaveNotice &&
+            this.hasChargeableTransactionStatus() ?
+            true :
+            false;
     }
 
     /*******************************************************************************
@@ -1073,6 +1080,10 @@ export default class GeFormRenderer extends LightningElement{
      */
     handleWidgetData(payload) {
         this.widgetData = {...this.widgetData, ...payload};
+    }
+
+    handleFormWidgetChange(event) {
+        this.updateFormState(event.detail);
     }
 
     /*******************************************************************************
@@ -2191,7 +2202,8 @@ export default class GeFormRenderer extends LightningElement{
             const exceptionDataError = new ExceptionDataError(error);
             this.handleCardChargedBDIFailedError(exceptionDataError);
         } else {
-            handleError(error);
+            this.handleCatchOnSave(error);
+            this.toggleSpinner();
         }
     }
 
