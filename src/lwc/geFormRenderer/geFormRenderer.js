@@ -5,6 +5,7 @@ import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertData
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
+import * as helper from './geFormRendererHelper';
 
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
@@ -915,7 +916,7 @@ export default class GeFormRenderer extends LightningElement{
         sectionsList.forEach(section => {
             section.load(
                 getSubsetObject(
-                    this.flatten(dataImport),
+                    helper.flatten(dataImport),
                     section.sourceFields));
         });
     }
@@ -1859,18 +1860,6 @@ export default class GeFormRenderer extends LightningElement{
         return this.formState[fieldApiName];
     }
 
-    flatten(obj) {
-        let flatObj = {};
-        for (const [key, value] of Object.entries(obj)) {
-            if (value !== null && value !== undefined && value.hasOwnProperty('value')) {
-                flatObj[key] = value.value;
-            } else {
-                flatObj[key] = value;
-            }
-        }
-        return flatObj;
-    }
-
     defaultValueFor(fieldMappingDevName) {
         const element = this.formElements()
             .find(element =>
@@ -1992,30 +1981,10 @@ export default class GeFormRenderer extends LightningElement{
             ).DeveloperName);
     }
 
-    /**
-     * @description Returns a saveable data import record
-     * derived from the formState object.
-     */
     saveableFormState() {
         let dataImportRecord = deepClone(this.formState);
-        dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+        dataImportRecord = helper.removeFieldsNotInObjectInfo(dataImportRecord);
         return dataImportRecord;
-    }
-
-    /*******************************************************************************
-     * @description Handles a single gift entry submit. Saves a Data Import record,
-     * makes an elevate payment if needed, and processes the Data Import through
-     * BDI.
-     *
-     * callback for handling and displaying errors in the form.
-     * @param dataImportFromFormState
-     */
-    removeRelationshipFieldsFrom = (object) => {
-        Object.keys(object).forEach(key => {
-            if (key.includes('__r')) {
-                delete object[key];
-            }
-        });
     }
 
     get hasDataImportId() {
@@ -2238,7 +2207,6 @@ export default class GeFormRenderer extends LightningElement{
         return error;
     }
 
-
     isAnAccountId(id) {
         return id && typeof id === 'string' &&
             id.startsWith(this.accountKeyPrefix);
@@ -2255,16 +2223,6 @@ export default class GeFormRenderer extends LightningElement{
                 return value;
             }
         }
-    }
-
-    removeFieldsNotInObjectInfo(dataImportRecord) {
-        const diFields = Object.keys(this.dataImportObjectInfo.data.fields);
-        for (const key of Object.keys(dataImportRecord)) {
-            if (!diFields.includes(key)) {
-                delete dataImportRecord[key];
-            }
-        }
-        return dataImportRecord;
     }
 
     isPaymentImportedField(sourceField) {
