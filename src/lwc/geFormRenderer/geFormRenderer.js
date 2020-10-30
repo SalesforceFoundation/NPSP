@@ -317,10 +317,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     initializeDonationDonorTypeInFormState(donorApiName) {
-        this.updateFormState({
-            [apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD)]:
-                this.getDonationDonorTypeFor(donorApiName)
-        });
+        const updates = new Map();
+        updates.set(DATA_IMPORT_DONATION_DONOR_FIELD, donorApiName);
+        this.updateFormState(updates);
     }
 
     getDonationDonorTypeFor(donorApiName) {
@@ -1583,6 +1582,18 @@ export default class GeFormRenderer extends LightningElement{
         this.formState = deepClone(this.formState);
     }
 
+    updateFormStateFromMap(fieldReferenceToValueMap) {
+        let updates = {};
+        for (const [key, value] of fieldReferenceToValueMap.entries()) {
+            if (typeof key === 'string' || key instanceof String) {
+                updates[key] = value;
+            } else {
+                updates[apiNameFor(key)] = value;
+            }
+        }
+        this.updateFormState(updates);
+    }
+
     updateFormStateForDonationRecordType(fields) {
         const opportunityRecordTypeValue = fields[apiNameFor(DONATION_RECORD_TYPE_NAME)];
 
@@ -1969,11 +1980,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     resetSelectedDonationFieldsInFormState() {
-        this.updateFormState({
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]: null,
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: null,
-            [relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD))]: null
-        });
+        const updates = new Map();
+        updates.set(DATA_IMPORT_DONATION_IMPORTED_FIELD, null);
+        updates.set(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD, null);
+        updates.set(relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)), null);
+        this.updateFormStateFromMap(updates);
 
         // Reset form fields that have field mappings parented by PaymentImported__c
         this.resetFieldsForObjMappingApplyDefaults(
