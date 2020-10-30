@@ -166,6 +166,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
                         FROM NPSP_Data_Imports__r
                         WHERE Status__c = :BDI_DataImport_API.bdiDryRunValidated
                         OR Status__c = :BDI_DataImport_API.bdiDryRunError
+                        OR Status__c = NULL
                         LIMIT 1
                 )
                 FROM DataImportBatch__c
