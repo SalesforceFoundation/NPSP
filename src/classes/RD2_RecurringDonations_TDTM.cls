@@ -566,7 +566,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             if (rd.isElevateRecord() && rd.isClosed() && !oldRd.isClosed()) {
 
-                if (RD2_ElevateIntegrationService.isFromElevate(rd, oldRd)) {
+                if (RD2_ElevateIntegrationService.isElevateEvent(rd, oldRd)) {
                     continue;
                 }
 
