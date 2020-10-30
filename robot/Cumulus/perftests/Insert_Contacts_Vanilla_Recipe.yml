@@ -1,6 +1,7 @@
 ## For use with the Insert_Contact_Tests_VanillaOrg robot performance test
 ## This defines a fake contact and a single parent fake Account to attach to
 ## The related mapping file is (currently) required to force the api to use Rest vs. Bulk Parallel
+- plugin: datasets.plugins.fast_faker.AccelerateFaker
 - object: Contact
   fields:
     FirstName:

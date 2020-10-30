@@ -11,118 +11,75 @@ ${COUNTER} =      ${0}
 *** Settings ***
 Documentation   Test Inserting Contact & Parent Account records in a vanilla Salesforce org
 Library         DateTime
+Library         robot/Cumulus/perftests/GenerateData.py
 Resource        cumulusci/robotframework/Salesforce.robot
+Suite Setup     Disable Duplicate Matching
 
 *** Keywords ***
+Create Data File
+    [Arguments]     ${count}
+    Generate Data
+    ...     recipe=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
+    ...     num_records_tablename=Contact
+    ...     num_records=${count}
+    ...     outfile=contacts.db
+
+Load Dataset Rest
+    Run Task    load_dataset
+    ...         database_url=sqlite:///contacts.db
+    ...         mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_Rest.yml
+
+Load Dataset Bulk
+    Run Task    load_dataset
+    ...         database_url=sqlite:///contacts.db
+    ...         mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_BulkApi.yml
+
 
 Disable Duplicate Matching
     [Documentation]  Disable Salesforce duplicate matching
     Run Task        set_duplicate_rule_status
         ...         active=${False}
 
-Insert 1M Contacts With CCI (Bulk)
-    [Documentation]  Create 1M Contacts and parent Accounts using SnowFakery via Bulk API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=1000000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_BulkApi.yml
-
-Insert 500K Contacts With CCI (Rest)
-    [Documentation]  Create 500K Contacts and parent Accounts using SnowFakery via Rest API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=500000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_Rest.yml
-
-Insert 500K Contacts With CCI (Bulk)
-    [Documentation]  Create 500K Contacts and parent Accounts using SnowFakery via Bulk API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=500000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_BulkApi.yml
-
-Insert 100K Contacts With CCI (Rest)
-    [Documentation]  Create 100K Contacts and parent Accounts using SnowFakery via Rest API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=100000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_Rest.yml
-
-Insert 100K Contacts With CCI (Bulk)
-    [Documentation]  Create 100K Contacts and parent Accounts using SnowFakery via Bulk API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=100000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_BulkApi.yml
-
-Insert 10K Contacts With CCI (Rest)
-    [Documentation]  Create 10K Contacts and parent Accounts using SnowFakery via Rest API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=10000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_Rest.yml
-
-Insert 10K Contacts With CCI (Bulk)
-    [Documentation]  Create 10K Contacts and parent Accounts using SnowFakery via Bulk API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=10000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_BulkApi.yml
-
-Insert 1K Contacts With CCI (Rest)
-    [Documentation]  Create 1K Contacts and parent Accounts using SnowFakery via Rest API
-    Run Task    generate_and_load_from_yaml
-    ...                 num_records=1000
-    ...                 num_records_tablename=Contact
-    ...                 generator_yaml=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Recipe.yml
-    ...                 mapping=robot/Cumulus/perftests/Insert_Contacts_Vanilla_Mapping_Rest.yml
-
 *** Test Cases ***
 
 Insert Contact Perf Test 1K Rest
-    [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        1000
     [Tags]      1k_rest      insertions
-    Insert 1K Contacts With CCI (Rest)
+    Load Dataset Rest
+
 
 Insert Contact Perf Test 10K Rest
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        10_000
     [Tags]      10k_rest      insertions
-    Insert 10K Contacts With CCI (Rest)
+    Load Dataset Rest
 
 Insert Contact Perf Test 10K Bulk
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        10_000
     [Tags]      10k_bulk      insertions
-    Insert 10K Contacts With CCI (Bulk)
+    Load Dataset Bulk
 
 Insert Contact Perf Test 100K Rest
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        100_000
     [Tags]      100k_rest      insertions
-    Insert 100K Contacts With CCI (Rest)
+    Load Dataset Rest
 
 Insert Contact Perf Test 100K Bulk
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        100_000
     [Tags]      100k_bulk      insertions
-    Insert 100K Contacts With CCI (Bulk)
+    Load Dataset Bulk
 
 Insert Contact Perf Test 500K Bulk
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        500_000
     [Tags]      500k_bulk      insertions
-    Insert 500K Contacts With CCI (Bulk)
+    Load Dataset Bulk
 
 Insert Contact Perf Test 500K Rest
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        500_000
     [Tags]      500k_rest      insertions
-    Insert 500K Contacts With CCI (Rest)
+    Load Dataset Rest
 
 Insert Contact Perf Test 1M Bulk
-    # [Setup]     Disable Duplicate Matching
+    [Setup]     Create Data File        1_000_000
     [Tags]      1M_bulk      insertions
-    Insert 1M Contacts With CCI (Bulk)
+    Load Dataset Bulk
 
