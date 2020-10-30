@@ -44,10 +44,6 @@ describe("c-modal", () => {
             // Query header slot element
             const headerSlotEl = element.shadowRoot.querySelector('slot[name="header"]');
             expect(headerSlotEl).not.toBeNull();
-
-            // TODO: Determine if we can require either the slot or header be populated?
-            //       Also see if we can populate the slot in the test?
-            // await expect(element).toBeAccessible();
         });
     });
 
