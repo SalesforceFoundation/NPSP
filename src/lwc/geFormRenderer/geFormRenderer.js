@@ -658,7 +658,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenize() {
-        return this.hasChargeableTransactionStatus() && !this._isCreditCardWidgetInDoNotChargeState ?
+        return this.showPaymentSaveNotice &&
+            this.hasChargeableTransactionStatus() ?
             true :
             false;
     }
