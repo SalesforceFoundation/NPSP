@@ -301,6 +301,7 @@ npsp_lex_locators={
         'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
         'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']",
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
+        'alert':'//div[@role="alert"][./span[text()="{}"]]/h2[text()="{}"]',
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
