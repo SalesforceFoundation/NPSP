@@ -206,7 +206,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     addRow(isDefaultGAU, properties) {
         let element = {};
         element.key = this.rowList.length;
-        const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
+        const record = { ...properties };
         let row = {};
         if(isDefaultGAU === true) {
             // default GAU should be locked.
@@ -288,14 +288,15 @@ export default class GeFormWidgetAllocation extends LightningElement {
             }
             widgetRowValues.push({
                 attributes: { type: ALLOCATION_OBJECT.objectApiName },
-                ...row
+                ...row.record
             });
         });
 
         return {
-            payload: { [this.element.dataImportObjectMappingDevName]: widgetRowValues }
-        }
+            [this.element.dataImportObjectMappingDevName]: widgetRowValues
+        };
     }
+
     get hasRemainingAmount() {
         return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
             this.remainingAmount >= 0;
