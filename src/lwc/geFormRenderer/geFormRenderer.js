@@ -902,14 +902,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     @api
-    load(dataImport, applySelectedDonationFieldValues = true) {
-        this.updateFormState(dataImport);
-        if (dataImport.Id) {
+    loadDataImportRecord(dataImport) {
+        const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
-            // Set this.dataImport when the record Id is present so
-            // the form knows it is in update mode
-            this.dataImport = dataImport;
-        }
+        this.dataImport = dataImportWithNullValuesAppended;
+        this.updateFormState(dataImportWithNullValuesAppended);
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {

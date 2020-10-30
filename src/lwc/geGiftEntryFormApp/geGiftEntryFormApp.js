@@ -123,7 +123,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
-        form.load(event.detail);
+        form.loadDataImportRecord(event.detail);
     }
 
     handlePermissionErrors() {
