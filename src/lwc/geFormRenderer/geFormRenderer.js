@@ -141,7 +141,6 @@ export default class GeFormRenderer extends LightningElement{
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track dataImport = {}; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
@@ -905,7 +904,6 @@ export default class GeFormRenderer extends LightningElement{
     loadDataImportRecord(dataImport) {
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
-        this.dataImport = dataImportWithNullValuesAppended;
         this.updateFormState(dataImportWithNullValuesAppended);
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
@@ -925,7 +923,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     resetFormState() {
-        this.dataImport = null;
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.resetStoredDonationDonorProperties();
         this.initializeFormState();
@@ -965,7 +962,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get mode() {
-        return this.dataImport && this.dataImport.Id ? mode.UPDATE : mode.CREATE;
+        return this.getFieldValueFromFormState('Id') ?
+            mode.UPDATE :
+            mode.CREATE;
     }
 
     @api
@@ -979,7 +978,7 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     get isUpdateActionDisabled() {
-        return this.dataImport && this.dataImport[apiNameFor(STATUS_FIELD)] === 'Imported';
+        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported';
     }
 
     /**
