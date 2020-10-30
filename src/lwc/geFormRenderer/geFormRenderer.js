@@ -1849,6 +1849,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * in the formState property.
      */
     initializeFormState() {
+        this.formState = {};
         if (this.sections) {
             this.sections
                 .forEach(section => {
