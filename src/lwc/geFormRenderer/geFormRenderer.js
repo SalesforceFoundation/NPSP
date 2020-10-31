@@ -621,23 +621,8 @@ export default class GeFormRenderer extends LightningElement{
             formControls.toggleSpinner();
 
             try {
-                if (this.shouldTokenize()) {
-                    let widgetValues = [];
-                    sectionsList.forEach(section => {
-                        if (section.isCreditCardWidgetAvailable) {
-                            widgetValues = widgetValues.concat(
-                                section.paymentToken
-                            );
-                        }
-                    });
-                    if (widgetValues) {
-                        const tokenResponse = await Promise.all(
-                            [widgetValues[0].payload]
-                        );
-                        if (tokenResponse) {
-                            this.updateFormState(tokenResponse[0]);
-                        }
-                    }
+                if (this.shouldTokenizeCard()) {
+                    await this.tokenizeCard(sectionsList)
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
@@ -656,11 +641,28 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    shouldTokenize() {
-        return this.showPaymentSaveNotice &&
-            this.hasChargeableTransactionStatus() ?
-            true :
-            false;
+    tokenizeCard = async (sections) => {
+        let widgetValues = [];
+        sections.forEach(section => {
+            if (section.isCreditCardWidgetAvailable) {
+                widgetValues = widgetValues.concat(
+                    section.paymentToken
+                );
+            }
+        });
+        if (widgetValues) {
+            const tokenResponse = await Promise.all(
+                [widgetValues[0].payload]
+            );
+            if (tokenResponse) {
+                this.updateFormState(tokenResponse[0]);
+            }
+        }
+    }
+
+    shouldTokenizeCard() {
+        return !!(this.showPaymentSaveNotice &&
+            this.hasChargeableTransactionStatus());
     }
 
     /*******************************************************************************
