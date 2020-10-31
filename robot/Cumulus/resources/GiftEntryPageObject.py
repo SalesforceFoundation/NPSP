@@ -4,6 +4,7 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementNotInteractableException
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -313,7 +314,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(field_locator,value)
                 option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
-                self.selenium.click_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
@@ -407,3 +411,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             locator=npsp_lex_locators["gift_entry"]["alert"].format(key,value)
             self.selenium.wait_until_page_contains_element(locator)
 
+    def verify_allocation_remaining_balance(self,amount):
+        """Validates that the GAU allocation remaining balance is correct"""
+        locator=npsp_lex_locators["gift_entry"]["element_text"].format("Remaining Allocation Amount",amount)
+        self.selenium.wait_until_page_contains_element(locator,error=f'Remaining allocation amount of {amount} could not be found on page')

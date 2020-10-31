@@ -302,6 +302,7 @@ npsp_lex_locators={
         'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']",
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
         'alert':'//div[@role="alert"][./span[text()="{}"]]/h2[text()="{}"]',
+        'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
