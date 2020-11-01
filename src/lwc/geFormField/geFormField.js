@@ -141,6 +141,10 @@ export default class GeFormField extends LightningElement {
         return true;
     }
 
+    get isRichTextValid () {
+        return this._isRichTextValid;
+    }
+
     @api
     disable() {
         this._disabled = true;
