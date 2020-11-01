@@ -16,23 +16,6 @@ export default class GeFormWidget extends LightningElement {
         this.widgetComponent.reset();
     }
 
-    @api
-    load(data) {
-        this.widgetComponent.load(data);
-    }
-
-    @api
-    get widgetAndValues() {
-        let widgetAndValues = {};
-        const thisWidget = this.widgetComponent;
-        // Need to make sure all widget components support returnValue()
-        if(this.isValid && typeof thisWidget.returnValues === 'function') {
-            // thisWidget.returnValues() can return promises
-            widgetAndValues = thisWidget.returnValues();
-        }
-        return widgetAndValues;
-    }
-
     get isValid() {
         const thisWidget = this.widgetComponent;
         let isValid = false;

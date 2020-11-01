@@ -1,5 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
-import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
+import {LightningElement, api} from 'lwc';
+import { isUndefined } from 'c/utilCommon';
 import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
@@ -24,18 +24,6 @@ export default class GeFormSection extends LightningElement {
 
     get isCollapsed() {
         return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
-    }
-
-    @api
-    get values() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let dataImportFieldAndValues = {};
-        if(fields !== null && typeof fields !== 'undefined') {
-            fields.forEach(field => {
-                dataImportFieldAndValues = { ...dataImportFieldAndValues, ...(field.fieldAndValue) };
-            });
-        }
-        return dataImportFieldAndValues;
     }
 
     /**
@@ -81,20 +69,6 @@ export default class GeFormSection extends LightningElement {
 
     }
 
-    @api
-    get widgetValues() {
-        const widgets = this.template.querySelectorAll('c-ge-form-widget');
-        let widgetValues = [];
-
-        if (widgets !== null && typeof widgets !== 'undefined') {
-            widgets.forEach(widget => {
-                widgetValues.push(widget.widgetAndValues);
-            });
-        }
-
-        return widgetValues;
-    }
-
     /**
      * Get a list of fields that are required, but are null/undefined or otherwise blank in the dynamic form
      * @returns {Array} of invalid fields. If all fields are ok, the array is empty.
@@ -126,47 +100,11 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    load(data) {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        fields.forEach(fieldCmp => {
-            if (Object.keys(data).includes(fieldCmp.sourceFieldAPIName)) {
-                fieldCmp.load(
-                    getSubsetObject(
-                        data,
-                        [fieldCmp.sourceFieldAPIName]));
-            }
-        });
-
+    reset() {
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget => {
-            widget.load(data);
-        });
-    }
-
-    @api
-    reset(applyDefaultValues = true) {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-
-        fields.forEach(field => {
-            field.reset(applyDefaultValues);
-        });
-
         widgetList.forEach(widget => {
             widget.reset();
         });
-    }
-
-    @api
-    resetFieldsForFieldMappingsApplyDefaults(fieldMappingDevNames) {
-        this.template.querySelectorAll('c-ge-form-field')
-            .forEach(field => {
-                if (fieldMappingDevNames.includes(
-                    field.element.dataImportFieldMappingDevNames[0]
-                )) {
-                    field.reset();
-                }
-            });
     }
 
     /**
@@ -224,24 +162,11 @@ export default class GeFormSection extends LightningElement {
     get isCreditCardWidgetAvailable() {
         return this._hasCreditCardWidget;
     }
-
     get renderableElements() {
         if (isUndefined(this.section)) {
             return [];
         }
         return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
-    }
-
-    @api
-    getAllFieldsByFieldAPIName() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let fieldData = {};
-        if (isNotEmpty(fields)) {
-            fields.forEach(field => {
-                fieldData = { ...fieldData, ...(field.fieldValueAndFieldApiName) };
-            });
-        }
-        return fieldData;
     }
 
     handleFormWidgetChange(event) {

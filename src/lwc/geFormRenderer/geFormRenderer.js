@@ -914,19 +914,11 @@ export default class GeFormRenderer extends LightningElement{
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
         this.updateFormState(dataImportWithNullValuesAppended);
-
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        sectionsList.forEach(section => {
-            section.load(
-                getSubsetObject(
-                    helper.flatten(dataImport),
-                    section.sourceFields));
-        });
     }
 
     @api
-    reset(applyDefaultValues = true) {
-        this.resetFields(applyDefaultValues);
+    reset() {
+        this.resetFields();
         this.resetFormState();
         this.widgetData = {};
     }
@@ -937,20 +929,14 @@ export default class GeFormRenderer extends LightningElement{
         this.initializeFormState();
     }
 
-    resetFields(applyDefaultValues) {
+    resetFields() {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset(applyDefaultValues);
+                section.reset();
             });
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
-        this.template.querySelectorAll('c-ge-form-section')
-            .forEach(section => {
-                section.resetFieldsForFieldMappingsApplyDefaults(
-                    this.fieldMappingDevNamesFor(objectMappingDeveloperName));
-            });
-
         this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
     }
 
@@ -1170,8 +1156,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasSelectedDonationOrPayment() {
-        return this.selectedDonationOrPaymentRecord &&
-        this.selectedDonationOrPaymentRecordId() ? true : false;
+        return !!(this.selectedDonationOrPaymentRecord &&
+            this.selectedDonationOrPaymentRecordId());
     }
 
     setCreateNewOpportunityInFormState() {
@@ -1282,7 +1268,7 @@ export default class GeFormRenderer extends LightningElement{
     getObjectMapping(fieldApiName) {
         return Object.values(GeFormService.objectMappings)
             .find(({Imported_Record_Field_Name}) =>
-                Imported_Record_Field_Name == fieldApiName);
+                Imported_Record_Field_Name === fieldApiName);
     }
 
     // Properties used to manage retrieval of fields for selected records
@@ -1460,7 +1446,7 @@ export default class GeFormRenderer extends LightningElement{
      * @param selectedRecordFields Fields list to be retrieved.
      */
     queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields) {
-        if (this.getSelectedRecordStatus == 'ready') {
+        if (this.getSelectedRecordStatus === 'ready') {
             this.getSelectedRecordStatus = 'pending';
             this.selectedRecordId = selectedRecordId;
             this.selectedRecordFields = selectedRecordFields;
@@ -1473,22 +1459,10 @@ export default class GeFormRenderer extends LightningElement{
        this._hasCreditCardWidget = true;
     }
 
-    getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
-        let allFields = {};
-        sectionsList.forEach(section => {
-            const fields = section.getAllFieldsByFieldAPIName();
-            allFields = Object.assign(allFields, fields);
-        });
-        return allFields;
-    }
-
     /*******************************************************************************
-    * @description Method formats custom labels for the purchase call timeout error
-    * scenario.
-    *
-    * @param {object} dataImportRecord: Data Import record related to the error
-    * received from geGiftEntryFormApp.
-    */
+     * @description Method formats custom labels for the purchase call timeout error
+     * scenario.
+     */
     formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
         const donationAmountFormField = this.getFormFieldBySourceName(apiNameFor(DONATION_AMOUNT));
@@ -1686,7 +1660,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     populateRelatedFieldsForSelectedLookupRecord(sourceField, value) {
-        if (value && value !== null) {
+        if (value) {
             this.loadSelectedRecordFieldValues(sourceField, value);
         } else {
             this.resetFieldsForObjMappingApplyDefaults(

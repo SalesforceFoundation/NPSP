@@ -49,7 +49,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     isFailedPurchase = false;
-    _isCreditCardWidgetInDoNotChargeState = false;
 
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
@@ -378,7 +377,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.CUSTOM_LABELS.geErrorFLSBody, [errorFieldName]
         );
         const message = `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns}  ${errorFLSBody}`;
-        const modalConfig = {
+        return {
             componentProperties: {
                 name: 'noaccessmodal',
                 illustrationClass: 'slds-p-around_large',
@@ -395,7 +394,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showCloseButton: true
             }
         };
-        return modalConfig;
     }
 
 }

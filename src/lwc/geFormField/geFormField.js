@@ -31,6 +31,7 @@ const DATETIME = 'datetime-local';
 const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
+    @track _formState;
     @track objectDescribeInfo;
     @track _disabled = false;
     @api element;
@@ -69,8 +70,6 @@ export default class GeFormField extends LightningElement {
             this._recordTypeId = this.recordTypeId();
         }
     }
-
-    connectedCallback() { }
 
     getValueFromChangeEvent(event) {
         if (this.fieldType === BOOLEAN_TYPE) {
@@ -143,44 +142,6 @@ export default class GeFormField extends LightningElement {
 
     get isRichTextValid () {
         return this._isRichTextValid;
-    }
-
-    @api
-    disable() {
-        this._disabled = true;
-    }
-
-    @api
-    enable() {
-        this._disabled = false;
-    }
-
-    @api
-    get fieldAndValue() {
-        let fieldAndValue = {};
-
-        // KIET TBD: This is where we are keeping the field mapping
-        // CMT record name at, element.value.
-        // However, it may change to the array dataImportFieldMappingDevNames
-        // If so, we need to update this to reflect that.
-        // In the Execute Anonymous code, both fields are populated.
-
-        if (this.value &&
-            this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName &&
-            Object.keys(this.objectDescribeInfo.recordTypeInfos).includes(this.value)) {
-            // value is the RecordType Id, but the DataImport's source field expects
-            // the RecordType Name
-            fieldAndValue[this.formElementName] =
-                this.objectDescribeInfo.recordTypeInfos[this.value].name;
-        } else if (this.isPicklist){
-            // If the displayed value of the picklist is '--None--' treat the value as blank.
-            fieldAndValue[this.formElementName] =
-                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
-        } else {
-            fieldAndValue[this.formElementName] = this.value;
-        }
-
-        return fieldAndValue;
     }
 
     get formElementName() {
@@ -366,20 +327,6 @@ export default class GeFormField extends LightningElement {
     }
 
     /**
-     * Load a value into the form field.
-     * @param data  An sObject potentially containing a value to load.
-     * */
-    @api
-    load(data) { }
-
-    @api
-    reset(applyDefaultValue = true) { }
-
-    isUsingFormState() {
-        return this.isPicklist || this.isLookup && this.element.elementType === 'field';
-    }
-
-    /**
      * @description Returns the name of the RecordType that corresponds to a RecordType Id.
      *              This method references this component's objectInfo.recordTypeInfos
      *              property.
@@ -433,9 +380,6 @@ export default class GeFormField extends LightningElement {
     get qaLocatorTextArea() {
         return `textarea ${this.qaLocatorBase}`;
     }
-
-    @track
-    _formState;
 
     @api
     get formState() {
