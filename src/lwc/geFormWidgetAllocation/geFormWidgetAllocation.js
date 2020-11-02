@@ -224,40 +224,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
-     * Expected to return a map of Object API Name to array of records to be created from this widget
-     * @return {'GAU_Allocation_1_abc123' : [record1, record2, ...] }
-     */
-    @api
-    returnValues() {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        let widgetData = {};
-        let widgetRowValues = [];
-
-        if(rows !== null && typeof rows !== 'undefined') {
-            rows.forEach(row => {
-                // no need to send back default GAU, automatically allocated by trigger
-                // dataset attributes are always strings
-                if(row.isDefaultGAU !== 'true') {
-                    let rowRecord = row.getValues();
-                    // need attributes to be able to deserialize this later.
-                    const rowWithAttributes = {
-                        attributes: { type: ALLOCATION_OBJECT.objectApiName },
-                        ...rowRecord
-                    };
-                    widgetRowValues.push(rowWithAttributes);
-                }
-            });
-        }
-
-        // use custom metadata record name as key
-        widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
-        return {
-            type: WIDGET_TYPE_DI_FIELD_VALUE,
-            payload: { [DI_ADDITIONAL_OBJECT.fieldApiName]: widgetData }
-        }
-    }
-
-    /**
      * Handle an allocation value change event.
      * rowIndex - Index of the record firing the event
      * payload - Object where key is the field that was updated, and value is the updated value
@@ -275,7 +241,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 [apiNameFor(DI_ADDITIONAL_OBJECT)]: JSON.stringify(this.convertRowListToSObjectJSON())
             }
         }));
-        this.validate();
+        // this.validate();
     }
 
     convertRowListToSObjectJSON() {
