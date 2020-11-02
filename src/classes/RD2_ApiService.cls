@@ -167,9 +167,13 @@ public inherited sharing class RD2_ApiService {
     }
 
     /**
-     * @description Retrieve a map of scheduled installments by Rd.id.
+     * @description Retrieve a map of scheduled installments by Rd.id.  Paused installments
+     * are not included by getVisualizedInstallments();
+     * @param startDate Begin date of range for installments.  RD2_ScheduleService defaults
+     * startDate to current date if null.
+     * @param endDate End date of range for installments
      * @param rdIds Recurring Donation Ids to retrieve schedules for
-     * @return JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
+     * @return String JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
      */
     public String queryInstallments(Date startDate, Date endDate, Set<Id> rdIds) {
         Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId = new Map<Id, List<RD2_ApiService.Installment>>();
