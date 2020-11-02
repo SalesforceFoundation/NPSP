@@ -973,7 +973,7 @@ public with sharing class RD2_ScheduleService_TEST {
         Date nextDonationDate = Date.newInstance(2020, 10, 1);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_ScheduleService service = new RD2_ScheduleService();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withStartDate(startDate)
