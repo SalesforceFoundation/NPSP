@@ -808,4 +808,32 @@ export default class rd2EntryForm extends LightningElement {
         return data;
     }
 
+    /**
+     * @description Close the modal when Escape key is pressed
+     */
+    keyUpHandler(event) {
+        if (event.keyCode === 27 || event.code === 'Escape') {
+            this.handleCancel();
+        }
+    }
+
+    /**
+     * @description Trap focus onto the modal when the focus reaches the top
+     */
+    handleClosedButtonTrapFocus(event) {
+        if (event.shiftKey && event.code === 'Tab') {
+            event.stopPropagation();
+            this.template.querySelector('[data-id="submitButton"]').focus();
+        }
+    }
+
+    /**
+     * @description Trap focus onto the modal when the focus reaches the end
+     */
+    handleSaveButtonTrapFocus(event) {
+        if (event.code === 'Tab') {
+            event.stopPropagation();
+            this.template.querySelector('[data-id="closeButton"]').focus();
+        }
+    }
 }

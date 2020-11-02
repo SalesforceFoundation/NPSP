@@ -1,14 +1,15 @@
 <template>
     <section
             role="dialog"
-            tabindex="-1"
+            tabindex="0"
             aria-labelledby="modal-heading-01"
             aria-modal="true"
             aria-describedby="modal-content-id-1"
             class="slds-modal slds-fade-in-open"
+            onkeyup={keyUpHandler}
             style="height:auto"
         >
-        <div class="slds-modal__container">
+        <div class="slds-modal__container" data-id="testmodalcon">
            
     <header class="slds-modal__header slds-clearfix">
         <lightning-button-icon
@@ -17,16 +18,18 @@
                         icon-name="utility:close"
                         icon-class="slds-button_icon-inverse"
                         onclick={handleCancel}
+                        onkeydown={handleClosedButtonTrapFocus}
+                        data-id="closeButton"
                     ></lightning-button-icon>
         <h2
-            class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
+            class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
             {header}
         </h2>
     </header>
 
     <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c"
         onsubmit={handleSubmit} onerror={handleSaveError} onsuccess={handleSuccess} data-id="outerRecordEditForm">
-        <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium">
+        <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
             <template if:true={isLoading}>
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-is-relative slds-size_1-of-1">
@@ -183,7 +186,7 @@
                     variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
                 </lightning-button>
                 <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
-                    variant="brand" onclick={handleSubmit} data-id="submitButton" disabled={isSaveButtonDisabled}>
+                    variant="brand" onclick={handleSubmit} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton" disabled={isSaveButtonDisabled}>
                 </lightning-button>
             </div>
         </footer>
