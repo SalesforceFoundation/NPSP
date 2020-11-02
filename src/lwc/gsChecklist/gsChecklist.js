@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
-import gsChecklistArrowRightAlterText from '@salesforce/label/c.gsChecklistArrowRightAlterText';
-import gsChecklistArrowDownAlterText from '@salesforce/label/c.gsChecklistArrowDownAlterText';
+import gsChecklistArrowRightAltText from '@salesforce/label/c.gsChecklistArrowRightAlterText';
+import gsChecklistArrowDownAltText from '@salesforce/label/c.gsChecklistArrowDownAlterText';
 
 /*
 *  @description This class controller the checklist to render and his items
