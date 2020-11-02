@@ -106,8 +106,6 @@ export default class GeFormRenderer extends LightningElement{
     // when opened from an Account or Contact
     @api donorRecordId;
     @api donorRecord;
-
-    @api fabricatedCardholderNames;
     @api loadingText;
 
     fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
@@ -968,16 +966,8 @@ export default class GeFormRenderer extends LightningElement{
         return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported';
     }
 
-    /**
-     * Combine fabricated names and lookup names, giving priority to non-empty fabricated names
-     */
-    @api
-    getCardholderNames() {
-        const names = {
-            firstName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD),
-            lastName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_LASTNAME_FIELD),
-            accountName: this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_NAME)
-        };
+    get cardholderNames() {
+        const names = this.donorNames;
         const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
         const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
@@ -989,7 +979,14 @@ export default class GeFormRenderer extends LightningElement{
         } else {
             return {firstName, lastName};
         }
+    }
 
+    get donorNames () {
+        return {
+            firstName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD),
+            lastName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_LASTNAME_FIELD),
+            accountName: this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_NAME)
+        };
     }
 
     /**
@@ -1466,7 +1463,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     getDonorName() {
-        const names = this.fabricatedCardholderNames;
+        const names = this.donorNames;
         if (names.firstName && names.lastName) {
             return `${names.firstName} ${names.lastName}`;
         } else {
@@ -2049,7 +2046,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     buildPurchaseRequestBodyParameters() {
-        const { firstName, lastName } = this.getCardholderNames();
+        const { firstName, lastName } = this.cardholderNames;
         const metadata = {
             campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
         };
