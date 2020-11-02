@@ -212,8 +212,6 @@ export default class GeFormRenderer extends LightningElement{
 
     @track hasPurchaseCallTimedout = false;
 
-    _account1Imported;
-    _contact1Imported;
     _account1Name;
     _contact1LastName;
     _contact1FirstName;
@@ -939,8 +937,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     resetStoredDonationDonorProperties() {
-        this._account1Imported = null;
-        this._contact1Imported = null;
         this._account1Name = null;
         this._contact1LastName = null;
         this._contact1FirstName = null;
@@ -1392,14 +1388,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleDonorAccountChange(selectedRecordId) {
-        this._account1Imported = selectedRecordId;
         if (selectedRecordId == null) {
             this._account1Name = null;
         }
     }
 
     handleDonorContactChange(selectedRecordId) {
-        this._contact1Imported = selectedRecordId;
         if (selectedRecordId == null) {
             this._contact1LastName = null;
             this._contact1FirstName = null;
