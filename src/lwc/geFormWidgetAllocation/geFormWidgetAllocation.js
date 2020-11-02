@@ -5,23 +5,23 @@ import {
     isNumeric,
     isNotEmpty,
     isEmpty,
-    getSubsetObject,
     apiNameFor } from 'c/utilCommon';
-import { registerListener } from 'c/pubsubNoPageRef';
 
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
+
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
-const GENERAL_ACCOUNT_UNIT = GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName;
 
 import ALLOC_DEFAULT_FIELD from '@salesforce/schema/Allocations_Settings__c.Default__c';
 import ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD from '@salesforce/schema/Allocations_Settings__c.Default_Allocations_Enabled__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+
+const GENERAL_ACCOUNT_UNIT = GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName;
 const ALLOC_SETTINGS_DEFAULT = ALLOC_DEFAULT_FIELD.fieldApiName;
 const ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED = ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD.fieldApiName;
 
@@ -35,7 +35,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
-    @track widgetDataFromState = {};
 
     _formState;
     @api
@@ -44,10 +43,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
     set formState(formState) {
         this._formState = formState;
-        this.sliceWidgetDataFromState();
-    }
-    sliceWidgetDataFromState() {
-        this.widgetDataFromState = getSubsetObject(this.formState, [apiNameFor(DI_ADDITIONAL_OBJECT)]);
     }
 
     connectedCallback() {
@@ -221,7 +216,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         const record = this.rowList[detail.rowIndex].record;
         this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
-        this.allocateRemainingAmountToDefaultGAU();
+        // this.allocateRemainingAmountToDefaultGAU();
 
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
             detail: {
@@ -229,6 +224,21 @@ export default class GeFormWidgetAllocation extends LightningElement {
             }
         }));
         // this.validate();
+    }
+
+    allocateRemainingAmountToDefaultGAU() {
+        if (!this.hasRemainingAmount) {
+            return;
+        }
+
+        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
+        defaultRow.setFieldValue(
+            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
+            this.remainingAmount);
+    }
+    get hasRemainingAmount() {
+        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
+            this.remainingAmount >= 0;
     }
 
     convertRowListToSObjectJSON() {
@@ -250,11 +260,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         };
     }
 
-    get hasRemainingAmount() {
-        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
-            this.remainingAmount >= 0;
-    }
-
     /**
      * Reallocate all percent-based allocations with the updated donation total.
      * @param totalDonation
@@ -266,20 +271,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
-    /**
-     * Whenever the total amount or any GAU allocation is adjusted and the default GAU amount should be updated
-     * with the total of unallocated funds.
-     */
-    allocateRemainingAmountToDefaultGAU() {
-        if (!this.hasRemainingAmount) {
-            return;
-        }
-
-        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
-        defaultRow.setFieldValue(
-            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
-            this.remainingAmount);
-    }
 
     /**
      * Handle removing a GAU from the list.
