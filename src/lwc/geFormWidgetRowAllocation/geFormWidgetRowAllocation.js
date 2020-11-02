@@ -169,29 +169,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return this.disabled !== true;
     }
 
-    /**
-     * If a value is populated for the field in this.rowRecord, return it.
-     * @param fullFieldName e.g. Allocation__c.General_Accounting_Unit__c
-     */
-    getDefaultForField(fullFieldName) {
-        const localFieldName = this.getLocalFieldName(fullFieldName);
-        if (localFieldName) {
-            return this.rowRecord[localFieldName];
-        }
-    }
-
-    /**
-     * Extract the local field name from a full field name
-     * @param fullFieldName example: 'Allocation__c.General_Accounting_Unit__c'
-     * @return {*|string}   example: 'General_Accounting_Unit__c'
-     */
-    getLocalFieldName(fullFieldName) {
-        const parts = fullFieldName.split('.');
-        if(parts && parts.length === 2) {
-            return parts[1];
-        }
-    }
-
     get allocationObjectApiName() {
         return apiNameFor(ALLOCATION_OBJECT);
     }
@@ -208,16 +185,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return apiNameFor(PERCENT_FIELD);
     }
 
-    /*******************************************************************************
-     * Start getters for data-qa-locator attributes
-     */
-
     get qaLocatorDeleteRow() {
         return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
     }
-
-    /*******************************************************************************
-     * End getters for data-qa-locator attributes
-     */
-
 }
