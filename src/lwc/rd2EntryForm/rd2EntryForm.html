@@ -1,5 +1,23 @@
 <template>
+    <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open"
+            style="height:auto"
+        >
+        <div class="slds-modal__container">
+           
     <header class="slds-modal__header slds-clearfix">
+        <lightning-button-icon
+                        class="slds-modal__close"
+                        title={close}
+                        icon-name="utility:close"
+                        icon-class="slds-button_icon-inverse"
+                        onclick={handleCancel}
+                    ></lightning-button-icon>
         <h2
             class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
             {header}
@@ -8,7 +26,6 @@
 
     <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c"
         onsubmit={handleSubmit} onerror={handleSaveError} onsuccess={handleSuccess} data-id="outerRecordEditForm">
-
         <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium">
             <template if:true={isLoading}>
                 <div class="slds-grid slds-grid_align-center">
@@ -172,5 +189,8 @@
         </footer>
 
     </lightning-record-edit-form>
+    </div>
 
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
 </template>

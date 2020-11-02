@@ -549,7 +549,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the cancel action
     */
     handleCancel() {
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel', recordId: this.recordId });
+        this.closeModal(this.recordId);
     }
 
     /***
@@ -724,7 +724,10 @@ export default class rd2EntryForm extends LightningElement {
      * @description Dispatches an event to close the Recurring Donation entry form modal
      */
     closeModal(recordId) {
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: recordId });
+        const closeModalEvent = new CustomEvent('closemodal', {
+            detail :{recordId: recordId},
+        });
+        this.dispatchEvent(closeModalEvent);
     }
 
     /**
