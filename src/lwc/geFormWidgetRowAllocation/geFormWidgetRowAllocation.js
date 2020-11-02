@@ -70,32 +70,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return (amountInCents / 100);
     }
 
-    /**
-     * Handle a change in the percent amount of an Allocation
-     * In some cases, we're not changing the percent, but the total donation amount was updated and we need to update it.
-     * @param detail    Event Detail
-     * @param total  New total to calculate against. Only needed when the total is updating.
-     * @returns {{}}
-     */
-    handlePercentChange(detail, total) {
-        const { targetFieldName, value } = detail;
-        let payload = { [targetFieldName]: value };
-        if(isNumeric(value) && value > 0 && !this.isFieldDisabled(ALLOCATION_AMOUNT)) {
-            // if a percent is entered, the amount field should be disabled
-            this.disableField(ALLOCATION_AMOUNT);
-        } else if(isEmpty(value) || value === 0) {
-            if(this.isFieldDisabled(ALLOCATION_AMOUNT)) {
-                this.enableField(ALLOCATION_AMOUNT);
-            }
-        }
-
-        // calculate what percent of the total we should set this row's allocation to
-        const amount = this.calculateAmount(value, total);
-        this.setFieldValue({ALLOCATION_AMOUNT, amount});
-        // add the allocation amount to the update event
-        payload[ALLOCATION_AMOUNT] = amount;
-        return payload;
-    }
 
 
     /**
@@ -113,8 +87,12 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
             }
         }));
 
-        if (event.target.fieldName === apiNameFor(AMOUNT_FIELD)) {
+        if (event.target.fieldName === this.allocationAmountFieldApiName) {
             this.disablePercentFieldIfAmountHasValue(event.target);
+        }
+
+        if (event.target.fieldName === this.allocationPercentageFieldApiName) {
+            this.disableAmountFieldIfPercentHasValue(event.target);
         }
 
         // if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
@@ -130,11 +108,41 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         let percentFieldElement = this.template.querySelector(
     `[data-id=${this.allocationPercentageFieldApiName}]`
         );
-        if(isNumeric(changedField.value) && changedField.value > 0 && !changedField.disabled) {
+        if(isNumeric(changedField.value) && changedField.value > 0 && !percentFieldElement.disabled) {
             percentFieldElement.disabled = true;
         } else if(isEmpty(changedField.value) || changedField.value === 0) {
             percentFieldElement.disabled = false;
         }
+    }
+
+    disableAmountFieldIfPercentHasValue(changedField) {
+        let amountFieldElement = this.template.querySelector(
+            `[data-id=${this.allocationAmountFieldApiName}]`
+        );
+        if(isNumeric(changedField.value) && changedField.value > 0 && !amountFieldElement.disabled) {
+            amountFieldElement.disabled = true;
+        } else if(isEmpty(changedField.value) || changedField.value === 0) {
+            amountFieldElement.disabled = false;
+        }
+    }
+
+    /**
+     * Handle a change in the percent amount of an Allocation
+     * In some cases, we're not changing the percent, but the total donation amount was updated and we need to update it.
+     * @param detail    Event Detail
+     * @param total  New total to calculate against. Only needed when the total is updating.
+     * @returns {{}}
+     */
+    handlePercentChange(detail, total) {
+        const { targetFieldName, value } = detail;
+        let payload = { [targetFieldName]: value };
+
+        // calculate what percent of the total we should set this row's allocation to
+        const amount = this.calculateAmount(value, total);
+        this.setFieldValue({ALLOCATION_AMOUNT, amount});
+        // add the allocation amount to the update event
+        payload[ALLOCATION_AMOUNT] = amount;
+        return payload;
     }
 
     getFieldByName(fieldName) {
