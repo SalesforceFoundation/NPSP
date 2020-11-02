@@ -97,22 +97,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return payload;
     }
 
-    /**
-     * When the amount in a GAU Allocation is updated, the percent field should be disabled.
-     * @param detail    Detail parameter from the change event in the ge-form-field
-     * @returns Object where keys are field names, and values are field values
-     */
-    handleAmountChange(detail) {
-        const { targetFieldName, value } = detail;
-        let payload = { [targetFieldName]: value };
-        if(isNumeric(value) && value > 0 && !this.isFieldDisabled(ALLOCATION_PERCENT)) {
-            this.disableField(ALLOCATION_PERCENT);
-        } else if(isEmpty(value) || value === 0) {
-            this.enableField(ALLOCATION_PERCENT);
-        }
-
-        return payload;
-    }
 
     /**
      * Handle field updates inside this allocation row.
@@ -129,16 +113,28 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
             }
         }));
 
+        if (event.target.fieldName === apiNameFor(AMOUNT_FIELD)) {
+            this.disablePercentFieldIfAmountHasValue(event.target);
+        }
+
         // if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
         //     // payload = this.handlePercentChange(event.detail, totalForCalculation);
-        // } else if(event.detail.targetFieldName === ALLOCATION_AMOUNT) {
-        //     payload = this.handleAmountChange(event.detail);
         // }
-        //
         // if(isNotEmpty(payload)) {
         //     // notify listeners of the new allocation values
         //     fireEvent(null, 'allocationValueChange', {rowIndex: this.rowIndex, payload});
         // }
+    }
+
+    disablePercentFieldIfAmountHasValue(changedField) {
+        let percentFieldElement = this.template.querySelector(
+    `[data-id=${this.allocationPercentageFieldApiName}]`
+        );
+        if(isNumeric(changedField.value) && changedField.value > 0 && !changedField.disabled) {
+            percentFieldElement.disabled = true;
+        } else if(isEmpty(changedField.value) || changedField.value === 0) {
+            percentFieldElement.disabled = false;
+        }
     }
 
     getFieldByName(fieldName) {
