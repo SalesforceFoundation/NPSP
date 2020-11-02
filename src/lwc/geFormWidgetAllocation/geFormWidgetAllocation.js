@@ -89,7 +89,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     * @description Initializes the component
     */
     connectedCallback() {
-        registerListener('allocationValueChange', this.handleValueChange, this);
         this.init();
     }
 
@@ -186,9 +185,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.addRows(rowList);
     }
 
-    /**
-     * Handle Add Row being clicked
-     */
     handleAddRow() {
         this.addRow(false);
     }
@@ -199,10 +195,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         });
     }
 
-    /**
-     * Add a new record to the list
-     * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
-     */
     addRow(isDefaultGAU, properties) {
         let element = {};
         element.key = this.rowList.length;
