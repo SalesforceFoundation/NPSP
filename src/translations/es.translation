@@ -5,6 +5,14 @@
         <name>Nonprofit_CRM</name>
     </customApplications>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Haga clic para alternar la sección. Esta sección está abierta.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Haga clic para alternar la sección. Esta sección no está abierta.</label>
+    </customLabels>
+    <customLabels>
         <label>El Id. de autenticación no puede estar en blanco.</label>
         <name>Addr_Id_Error</name>
     </customLabels>
@@ -6508,14 +6516,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>Al establecer el modelo de cuenta en &quot;Cuenta de Hogar&quot;, se requieren que las reglas de hogares se establezcan en &quot;Sin contactos&quot;. Al utilizar este modelo, no hay necesidad de tener un objeto adicional Hogar.</label>
         <name>stgValidationHHAccountHHRules</name>
-    </customLabels>
-     <customLabels>
-        <name>accordionSection_ToggleInstructionsWhenOpen</name>
-        <label>Haga clic para alternar la sección. Esta sección está abierta.</label>
-    </customLabels>
-    <customLabels>
-        <name>accordionSection_ToggleInstructionsWhenClosed</name>
-        <label>Haga clic para alternar la sección. Esta sección no está abierta.</label>
     </customLabels>
     <customPageWebLinks>
         <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>

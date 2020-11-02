@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it's open</shortDescription>
+        <value>Click to toggle the section. This section is open.</value>
+    </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenClosed</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it's closed</shortDescription>
+        <value>Click to toggle the section. This section is not open.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Id_Error</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -13172,21 +13188,5 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Resource Partners link label in Get Started Resources section</shortDescription>
         <value>Find a Partner</value>
-    </labels>
-    <labels>
-        <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
-        <categories>accordionSection</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Click to toggle the section. This section is open.</shortDescription>
-        <value>Click to toggle the section. This section is open.</value>
-    </labels>
-    <labels>
-        <fullName>accordionSection_ToggleInstructionsWhenClosed</fullName>
-        <categories>accordionSection</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Click to toggle the section. This section is not open.</shortDescription>
-        <value>Click to toggle the section. This section is not open.</value>
     </labels>
 </CustomLabels>
