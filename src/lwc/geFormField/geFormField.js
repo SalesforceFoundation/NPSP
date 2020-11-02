@@ -72,12 +72,26 @@ export default class GeFormField extends LightningElement {
     }
 
     getValueFromChangeEvent(event) {
-        if (this.fieldType === BOOLEAN_TYPE) {
+        const eventDetailValue = event.detail.value;
+
+        if (this.isPicklist) {
+            const isSelectedValueNone =
+                eventDetailValue === this.CUSTOM_LABELS.commonLabelNone;
+            if (isSelectedValueNone) {
+                return null;
+            }
+        }
+
+        if (this.isCheckbox) {
             return event.detail.checked.toString();
-        } else if (this.isRichText) {
+        }
+
+        if (this.isRichText) {
             return event.target.value;
-        } else if (this.isLookup && event.detail.value) {
-            const val = event.detail.value;
+        }
+
+        if (this.isLookup && eventDetailValue) {
+            const val = eventDetailValue;
             if (typeof val === 'string') {
                 return val;
             } else if (Array.isArray(val)) {
@@ -85,7 +99,7 @@ export default class GeFormField extends LightningElement {
             }
         }
 
-        return event.detail.value;
+        return eventDetailValue;
     }
 
     /**
@@ -224,6 +238,10 @@ export default class GeFormField extends LightningElement {
     @api
     get isPicklist() {
         return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist;
+    }
+
+    get isCheckbox() {
+        return this.fieldType === BOOLEAN_TYPE;
     }
 
     get isTextArea() {
@@ -393,13 +411,23 @@ export default class GeFormField extends LightningElement {
 
     get valueFromFormState() {
         const value = this.formState[this.sourceFieldAPIName];
-        const isDonationRecordTypeName = () => {
-            return this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
+
+        const isDonationRecordTypeName =
+            this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
+        if (isDonationRecordTypeName) {
+            return this.recordTypeIdFor(value);
         }
 
-        return isDonationRecordTypeName() ?
-            this.recordTypeIdFor(value) :
-            value;
+        if (this.isPicklist && value === null) {
+            const hasNoneOptionAvailable =
+                this.isValueInOptions(
+                    this.CUSTOM_LABELS.commonLabelNone,
+                    this.picklistValues
+                );
+            return hasNoneOptionAvailable ? this.CUSTOM_LABELS.commonLabelNone : '';
+        }
+
+        return value;
     }
 
     fireFormFieldChangeEvent(value) {
@@ -523,14 +551,6 @@ export default class GeFormField extends LightningElement {
     wiredPicklistValues({error, data}) {
         if (data) {
             this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
-
-            const isCurrentValueValid =
-                this.value &&
-                this.isValueInOptions(this.value, this.picklistValues);
-
-            if (!isCurrentValueValid) {
-                this.fireFormFieldChangeEvent(this.PICKLIST_OPTION_NONE.value);
-            }
         }
         if (error) {
             console.error(error);
