@@ -5,8 +5,6 @@ import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertData
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
-import * as helper from './geFormRendererHelper';
-
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
@@ -21,7 +19,7 @@ import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_De
 import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
 
 
-import {getObjectInfo} from 'lightning/uiObjectInfoApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
@@ -45,13 +43,11 @@ import {
     hasNestedProperty,
     deepClone,
     getNamespace,
-    getSubsetObject,
     validateJSONString,
     relatedRecordFieldNameFor,
     apiNameFor
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
@@ -66,7 +62,6 @@ import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
-import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DATA_IMPORT_DONATION_DONOR_FIELD
     from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -76,7 +71,7 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
+import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -85,16 +80,16 @@ import CONTACT_OBJECT from '@salesforce/schema/Contact';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
-import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+import PARENT_OPPORTUNITY_FIELD
+    from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
-import DATA_IMPORT_ACCOUNT1_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DATA_IMPORT_ACCOUNT1_NAME
+    from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
-
-const ADDITIONAL_OBJECT_JSON__C = DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
 
 const mode = {
     CREATE: 'create',
@@ -269,8 +264,6 @@ export default class GeFormRenderer extends LightningElement{
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
-
-        registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
         registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
@@ -462,7 +455,7 @@ export default class GeFormRenderer extends LightningElement{
     *
     * @param {string} message: Message to display in the UI
     */
-    dispatchdDisablePaymentServicesWidgetEvent(message) {
+    dispatchDisablePaymentServicesWidgetEvent(message) {
         fireEvent(this, DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
             { detail: { message: message } });
     }
@@ -589,12 +582,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     /*******************************************************************************
-    * @description Add an error message to the overall page level error messages
-    * array.
-    *
-    * @param {string} errorMessage: Error message to be displayed
-    * @param {integer} index: Position of the corresponding row in a DML exception
-    */
+     * @description Add an error message to the overall page level error messages
+     * array.
+     *
+     * @param errorObject
+     */
     addPageLevelErrorMessage(errorObject) {
         errorObject.index = errorObject.index ? errorObject.index : 0;
         this.pageLevelErrorMessageList = [
@@ -1060,14 +1052,6 @@ export default class GeFormRenderer extends LightningElement{
                 apiNameFor(PAYMENT_STATUS)
             ]);
         }
-    }
-
-    /**
-     * Track widget data so that our widgets can react to the overall state of the form
-     * @param payload   An object to store in widgetData
-     */
-    handleWidgetData(payload) {
-        this.widgetData = {...this.widgetData, ...payload};
     }
 
     handleFormWidgetChange(event) {
@@ -1986,7 +1970,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get hasDataImportId() {
-        return this.getFieldValueFromFormState('id') ? true : false;
+        return !!this.getFieldValueFromFormState('id');
     }
 
     hasProcessableDataImport() {
@@ -1994,17 +1978,14 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasAuthorizationToken() {
-        return this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)) ?
-            true :
-            false;
+        return !!this.getFieldValueFromFormState(
+            apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
     }
 
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
             this.hasChargeableTransactionStatus() &&
-            !this._isCreditCardWidgetInDoNotChargeState ?
-                true :
-                false;
+            !this._isCreditCardWidgetInDoNotChargeState;
     }
 
     hasChargeableTransactionStatus = () => {
@@ -2023,12 +2004,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     /*******************************************************************************
-    * @description Saves a Data Import record, makes an elevate payment if needed,
-    * and processes the Data Import through BDI.
-    *
-    * @param {object} event: Custom Event containing the Data Import record and a
-    * callback for handling and displaying errors in the form.
-    */
+     * @description Saves a Data Import record, makes an elevate payment if needed,
+     * and processes the Data Import through BDI.
+     *
+     * @param dataImportFromFormState
+     */
     submitSingleGift = async (dataImportFromFormState) => {
         try {
             await this.saveDataImport(dataImportFromFormState);
@@ -2065,7 +2045,7 @@ export default class GeFormRenderer extends LightningElement{
         });
 
         const responseBody = JSON.parse(responseBodyString);
-        this.processPurchaseResponse(responseBody);
+        await this.processPurchaseResponse(responseBody);
     }
 
     buildPurchaseRequestBodyParameters() {
@@ -2184,7 +2164,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCardChargedBDIFailedError(exceptionDataError) {
-        this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
+        this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
 
         const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
@@ -2195,15 +2175,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     buildCardChargedBDIFailedError(exceptionDataError) {
-        const error = {
+        return {
             index: 0,
             errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-            multilineMessages: [{
-                message: exceptionDataError.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
-                index: 0
-            }]
+            multilineMessages: [
+                {
+                    message: exceptionDataError.errorMessage ||
+                        this.CUSTOM_LABELS.commonUnknownError,
+                    index: 0
+                }]
         };
-        return error;
     }
 
     isAnAccountId(id) {

@@ -52,8 +52,8 @@ export default class GeFormSection extends LightningElement {
 
     /**
      * Sets custom validity on fields inside fieldsArray
-     * @param {fieldsArray},Array with sourceFieldAPIName field property
-     * @param {errorMessage}, String custom error message for fields
+     * @param fieldsArray
+     * @param errorMessage
      */
     @api
     setCustomValidityOnFields( fieldsArray, errorMessage ) {
@@ -107,26 +107,6 @@ export default class GeFormSection extends LightningElement {
         });
     }
 
-    /**
-     * @description Inspects all fields and widgets in the section and
-     *              returns a list of DataImport__c field api names used as
-     *              source fields.  Helps to only send relevant data down from
-     *              geFormRenderer to each section during load() flow.
-     */
-    @api
-    get sourceFields() {
-        let fields = Object.keys(this.getAllFieldsByAPIName());
-
-        this.template.querySelectorAll('c-ge-form-widget')
-            .forEach(widgetCmp => {
-                if (isNotEmpty(widgetCmp.allFieldsByAPIName)) {
-                    fields.push(...widgetCmp.allFieldsByAPIName);
-                }
-            });
-
-        return fields;
-    }
-
     registerCreditCardWidget() {
         if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
@@ -166,7 +146,9 @@ export default class GeFormSection extends LightningElement {
         if (isUndefined(this.section)) {
             return [];
         }
-        return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
+        return this.section.elements.filter(
+            element => new GeFormElementHelper(
+                element).isRenderable());
     }
 
     handleFormWidgetChange(event) {
