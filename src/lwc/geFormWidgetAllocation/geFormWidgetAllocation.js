@@ -50,6 +50,18 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.widgetDataFromState = getSubsetObject(this.formState, [apiNameFor(DI_ADDITIONAL_OBJECT)]);
     }
 
+    connectedCallback() {
+        this.init();
+    }
+
+    init = async () => {
+        if(!this.allocationSettings) {
+            this.allocationSettings = await GeFormService.getAllocationSettings();
+        }
+        if(this.hasDefaultGAU) {
+            this.addRow(true);
+        }
+    };
 
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
     wiredObjectInfo({data}) {
@@ -84,23 +96,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             ];
         }
     }
-
-    /**
-    * @description Initializes the component
-    */
-    connectedCallback() {
-        this.init();
-    }
-
-
-    init = async () => {
-        if(!this.allocationSettings) {
-            this.allocationSettings = await GeFormService.getAllocationSettings();
-        }
-        if(this.hasDefaultGAU) {
-            this.addRow(true);
-        }
-    };
 
     @api
     get totalAmount() {
@@ -259,8 +254,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
             this.remainingAmount >= 0;
     }
-
-
 
     /**
      * Reallocate all percent-based allocations with the updated donation total.
@@ -451,29 +444,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
             : 'slds-p-top--medium slds-m-top--medium';
     }
 
-    /**
-     * TODO: Retrieve the custom label for donation amount from the form template JSON
-     */
     get donationAmountCustomLabel() {
         return GeFormService.donationFieldTemplateLabel;
     }
 
-    @api
-    get allFieldsByAPIName() {
-        return [DI_ADDITIONAL_OBJECT.fieldApiName];
-    }
-
-
-    /*******************************************************************************
-     * Start getters for data-qa-locator attributes
-     */
-
     get qaLocatorAddNewAllocation() {
         return `button ${this.CUSTOM_LABELS.geAddNewAllocation}`;
     }
-
-    /*******************************************************************************
-     * End getters for data-qa-locator attributes
-     */
-
 }
