@@ -172,7 +172,7 @@ public inherited sharing class RD2_ApiService {
      * @param startDate Begin date of range for installments.  RD2_ScheduleService defaults
      * startDate to current date if null.
      * @param endDate End date of range for installments
-     * @param rdIds Recurring Donation Ids to retrieve schedules for
+     * @param rdIds Recurring Donation Ids to retrieve installments for
      * @return String JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
      */
     public String queryInstallments(Date startDate, Date endDate, Set<Id> rdIds) {
