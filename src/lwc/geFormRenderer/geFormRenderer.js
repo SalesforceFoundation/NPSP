@@ -1137,8 +1137,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasSelectedDonationOrPayment() {
-        return !!(this.selectedDonationOrPaymentRecord &&
-            this.selectedDonationOrPaymentRecordId());
+        return !!this.selectedDonationOrPaymentRecordId();
     }
 
     setCreateNewOpportunityInFormState() {
@@ -1408,7 +1407,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleDonationDonorChange() {
-        if (!!this.selectedDonationOrPaymentRecord) {
+        if (this.hasSelectedDonationOrPayment()) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
         }
@@ -1921,7 +1920,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     selectedDonationOrPaymentRecordId() {
-        return this.selectedDonationOrPaymentRecord() &&
+        return this.selectedDonationOrPaymentRecord &&
             this.selectedDonationOrPaymentRecord.Id;
     }
 
