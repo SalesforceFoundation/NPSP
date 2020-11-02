@@ -220,17 +220,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         };
     }
 
-    @api
-    load() { }
-
-    @api
-    reset() { }
-
-    @api
-    get allFieldsByAPIName() {
-        return [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName];
-    }
-
     dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
     }
