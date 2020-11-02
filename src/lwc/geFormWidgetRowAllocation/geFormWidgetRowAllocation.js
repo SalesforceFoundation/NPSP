@@ -3,10 +3,13 @@ import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import {apiNameFor, isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
 
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
 import GAU_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
+
 const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
 const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
 const ALLOCATION_GAU = `${ALLOCATION_OBJECT.objectApiName}.${GAU_FIELD.fieldApiName}`;
@@ -18,7 +21,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api disabled;
     @api totalAmount;
     @api remainingAmount;
-    @api widgetDataFromState;
+    @api widgetRowDataFromState;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -78,6 +81,15 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
      */
     handleFieldValueChange(event) {
+        if (event.target.fieldName === this.allocationAmountFieldApiName) {
+            this.disablePercentFieldIfAmountHasValue(event.target);
+        }
+
+        if (event.target.fieldName === this.allocationPercentageFieldApiName) {
+            this.disableAmountFieldIfPercentHasValue(event.target);
+            this.calculateAmountFromPercent(event.target.value)
+        }
+
         this.dispatchEvent(new CustomEvent('rowvaluechange', {
             detail: {
                 rowIndex: this.rowIndex,
@@ -86,15 +98,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 }
             }
         }));
-
-        if (event.target.fieldName === this.allocationAmountFieldApiName) {
-            this.disablePercentFieldIfAmountHasValue(event.target);
-        }
-
-        if (event.target.fieldName === this.allocationPercentageFieldApiName) {
-            this.disableAmountFieldIfPercentHasValue(event.target);
-        }
-
         // if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
         //     // payload = this.handlePercentChange(event.detail, totalForCalculation);
         // }
@@ -126,23 +129,14 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         }
     }
 
-    /**
-     * Handle a change in the percent amount of an Allocation
-     * In some cases, we're not changing the percent, but the total donation amount was updated and we need to update it.
-     * @param detail    Event Detail
-     * @param total  New total to calculate against. Only needed when the total is updating.
-     * @returns {{}}
-     */
-    handlePercentChange(detail, total) {
-        const { targetFieldName, value } = detail;
-        let payload = { [targetFieldName]: value };
+    calculateAmountFromPercent(percentValue) {
+        const percentDecimal = parseFloat(percentValue) / 100;
+        // convert to cents instead of dollars, avoids floating point problems
+        const totalInCents = this.widgetRowDataFromState[this.donationAmountFieldApiName] * 100;
 
-        // calculate what percent of the total we should set this row's allocation to
-        const amount = this.calculateAmount(value, total);
-        this.setFieldValue({ALLOCATION_AMOUNT, amount});
-        // add the allocation amount to the update event
-        payload[ALLOCATION_AMOUNT] = amount;
-        return payload;
+        this.template.querySelector(
+            `[data-id=${this.allocationAmountFieldApiName}]`
+        ).value = Math.round(totalInCents * percentDecimal) / 100;
     }
 
     getFieldByName(fieldName) {
@@ -171,6 +165,10 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     get isRemovable() {
         return this.disabled !== true;
+    }
+
+    get donationAmountFieldApiName() {
+        return apiNameFor(DI_DONATION_AMOUNT_FIELD);
     }
 
     get allocationObjectApiName() {
