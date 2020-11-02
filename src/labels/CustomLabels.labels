@@ -2935,7 +2935,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Accordion instruction when it's closed</shortDescription>
-        <value>Click to toggle the section. This section is not open.</value>
+        <value>Click to expand this section.</value>
     </labels>
     <labels>
         <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
@@ -2943,7 +2943,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Accordion instruction when it's open</shortDescription>
-        <value>Click to toggle the section. This section is open.</value>
+        <value>Click to close this section.</value>
     </labels>
     <labels>
         <fullName>adapterException</fullName>
