@@ -22,26 +22,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @api
-    getValues() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let widgetFieldAndValues = {};
-        if(fields !== null && typeof fields !== 'undefined') {
-            fields.forEach(field => {
-                const { fieldAndValue } = field;
-                // convert full field names to local field names for processing
-                Object.entries(fieldAndValue).forEach(([fieldName,fieldValue]) => {
-                    const localFieldName = this.getLocalFieldName(fieldName);
-                    if(isNotEmpty(fieldValue)) {
-                        // no need to populate fields with values that are blank / empty
-                        widgetFieldAndValues = {...widgetFieldAndValues, ...{[localFieldName]: fieldValue}};
-                    }
-                });
-            });
-        }
-        return widgetFieldAndValues;
-    }
-
     /**
      * Given a field, set a value on that ge-form-field by calling ge-form-field.setFieldValue
      * @param field Field name to set the value for
@@ -226,25 +206,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     get allocationPercentageFieldApiName() {
         return apiNameFor(PERCENT_FIELD);
-    }
-
-    /**
-     * Merge row-level properties with field level properties.
-     * If the whole row is disabled (default GAU) then all fields in the row should be disabled
-     */
-    get fieldsWithElementMetadata() {
-        return this.fieldList.map(field => {
-            const { element } = field;
-            return {
-                ...field,
-                element: {
-                    ...element,
-                    disabled: this.disabled ? this.disabled : element.disabled,
-                    defaultValue: this.getDefaultForField(field.mappedField),
-                    dataImportFieldMappingDevNames: [field.mappedField]
-                }
-            };
-        });
     }
 
     /*******************************************************************************
