@@ -91,8 +91,8 @@ Test GAU Allocations with Default Allocations Disabled
 Test GAU Allocations with Default Allocations Enabled
     [Documentation]       Enable GAU allocations and add a default if disabled and navigate to Gift Entry page, click New Single Gift
     ...                   create a gift with account info and verify default gau allocation equals donation amount, add new allocations
-    ...                   with percent and amount with total allocation equal to donation amount. Verify default allocation changes to $0
-    ...                   and on saving opportunity and account are created, GAU allocations are created for two allocations correctly
+    ...                   with percent and amount. Verify default allocation changes to remaining amount after the two allocations
+    ...                   and on saving opportunity and account are created, GAU allocations are created for all allocations correctly
     [tags]                feature:GE        unstable          W-8158171
     API Modify Allocations Setting
     ...        ${NS}Default_Allocations_Enabled__c=true
@@ -120,10 +120,10 @@ Test GAU Allocations with Default Allocations Enabled
     Click Gift Entry Button                 Add New Allocation
     Fill Gift Entry Form
     ...        General Accounting Unit 2=${GAU2}[Name]
-    ...        Amount 2=40
+    ...        Amount 2=30
     Verify Field Default Value
     ...        General Accounting Unit 0=${DEFAULT_GAU}[Name]
-    ...        Amount 0=$0.00
+    ...        Amount 0=$10.00
     Click Gift Entry Button                 Save
     ${date} =                               Get Current Date                result_format=%Y-%m-%d
     Current Page Should Be                  Details                         Opportunity
@@ -138,4 +138,5 @@ Test GAU Allocations with Default Allocations Enabled
     Select Tab                              Related
     Verify Allocations                      GAU Allocations
     ...        ${GAU1}[Name]=60.000000%
-    ...        ${GAU2}[Name]=$40.00
+    ...        ${GAU2}[Name]=$30.00
+    ...        ${DEFAULT_GAU}[Name]=$10.00
