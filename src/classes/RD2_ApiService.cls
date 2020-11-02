@@ -127,7 +127,7 @@ public inherited sharing class RD2_ApiService {
         public Datetime createdDate { get ;set; }
         public Datetime lastModifiedDate { get ;set; }
 
-        public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd, String cCode) {
+        public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd, String currCode) {
             isActive = rdSchedule.Active__c;
             isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate
                 && (rdSchedule.EndDate__c == null || RD2_ScheduleService.currentDate <= rdSchedule.EndDate__c);
@@ -145,7 +145,7 @@ public inherited sharing class RD2_ApiService {
             statusReason = rdSchedule.StatusReason__c;
             createdDate = rdSchedule.CreatedDate;
             lastModifiedDate = rdSchedule.LastModifiedDate;
-            currencyCode = cCode;
+            currencyCode = currCode;
         }
     }
 
@@ -214,14 +214,14 @@ public inherited sharing class RD2_ApiService {
         public String currencyCode { get; set; }
         public String paymentMethod { get; set; }
 
-        public Installment(RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd, String cCode) {
+        public Installment(RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd, String currCode) {
             recurringDonationId = rd.Id;
             scheduleId = installment.scheduleId;
             campaignId = installment.campaignId;
             closeDate = installment.nextDonationDate;
             installmentAmount = installment.installmentAmount;
             paymentMethod = installment.paymentMethod;
-            currencyCode = cCode;
+            currencyCode = currCode;
         }
     }
 }
