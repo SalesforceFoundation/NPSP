@@ -417,6 +417,10 @@ export default class GeFormField extends LightningElement {
     get valueFromFormState() {
         const value = this.formState[this.sourceFieldAPIName];
 
+        if (value === undefined) {
+           return null;
+        }
+
         const isDonationRecordTypeName =
             this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
         if (isDonationRecordTypeName) {
