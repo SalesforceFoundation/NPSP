@@ -1708,9 +1708,21 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     setInitialValueInFormStateForFieldMappings(fieldMappingDevNames) {
+        this.resetFieldsToNullInFormStateIfPresent(fieldMappingDevNames);
+
         this.elementsFor(fieldMappingDevNames)
             .forEach(el => this.setInitialValueInFormStateForElement(el));
+    }
 
+    resetFieldsToNullInFormStateIfPresent(fieldMappingDevNames) {
+        const updates = {};
+        fieldMappingDevNames.forEach(fieldMappingDevName => {
+            const sourceField = this.sourceFieldFor(fieldMappingDevName);
+            if (this.formState.hasOwnProperty(sourceField)) {
+                updates[sourceField] = null;
+            }
+        });
+        this.updateFormState(updates);
     }
 
     elementsFor(fieldMappingDevNames) {
@@ -1931,11 +1943,11 @@ export default class GeFormRenderer extends LightningElement{
             [relatedRecordFieldNameFor(apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD))]: null
         });
 
-        // Reset form fields that have field mappings parented by PaymentImported__c
         this.resetFieldsForObjMappingApplyDefaults(
-            GeFormService.objectMappingWrapperFor(
-                apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
-            ).DeveloperName);
+            this.objectMappingDeveloperNameForFieldReference(
+                DATA_IMPORT_PAYMENT_IMPORTED_FIELD
+            )
+        );
     }
 
     resetSelectedDonationFieldsInFormState() {
@@ -1945,11 +1957,17 @@ export default class GeFormRenderer extends LightningElement{
         updates.set(relatedRecordFieldNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), null);
         this.updateFormStateFromMap(updates);
 
-        // Reset form fields that have field mappings parented by PaymentImported__c
         this.resetFieldsForObjMappingApplyDefaults(
-            GeFormService.objectMappingWrapperFor(
-                apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)
-            ).DeveloperName);
+            this.objectMappingDeveloperNameForFieldReference(
+                DATA_IMPORT_DONATION_IMPORTED_FIELD
+            )
+        );
+    }
+
+    objectMappingDeveloperNameForFieldReference(fieldReference) {
+        const objectMapping =
+            this.getObjectMapping(apiNameFor(fieldReference));
+        return objectMapping && objectMapping.DeveloperName;
     }
 
     saveableFormState() {
