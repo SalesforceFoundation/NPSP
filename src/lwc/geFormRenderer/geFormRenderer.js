@@ -1368,14 +1368,17 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     set donorId(id) {
-        const lookupFieldApiName = this.isAnAccountId(id) ?
-            apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD) :
-            this.isAContactId(id) ?
-                apiNameFor(DATA_IMPORT_CONTACT1_IMPORTED_FIELD) : null;
+        this.updateFormStateFromMap(new Map([
+            [this.lookupFieldForDonorId(id), id]
+        ]));
+    }
 
-        this.updateFormState({
-            [lookupFieldApiName]: id
-        });
+    lookupFieldForDonorId(id) {
+        return this.isAnAccountId(id) ?
+            DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD :
+            this.isAContactId(id) ?
+                DATA_IMPORT_CONTACT1_IMPORTED_FIELD :
+                null;
     }
 
     get donorId() {
