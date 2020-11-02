@@ -121,8 +121,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.StartDate__c != oldRd.StartDate__c
             || rd.Day_of_Month__c != oldRd.Day_of_Month__c
             || rd.RecurringType__c != oldRd.RecurringType__c
-            || rd.PaymentMethod__c != oldRd.PaymentMethod__c
-            || rd.Status__c != oldRd.Status__c;
+            || rd.PaymentMethod__c != oldRd.PaymentMethod__c;
 
         if (!isChanged) {
             String oldCommitmentId = oldRd.CommitmentId__c;
