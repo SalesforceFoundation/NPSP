@@ -5,7 +5,8 @@ import {
     isNumeric,
     isNotEmpty,
     isEmpty,
-    apiNameFor } from 'c/utilCommon';
+    apiNameFor,
+    getSubsetObject} from 'c/utilCommon';
 
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
@@ -35,6 +36,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    @track widgetRowDataFromState = {};
 
     _formState;
     @api
@@ -43,6 +45,12 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
     set formState(formState) {
         this._formState = formState;
+        this.sliceWidgetRowDataFromState();
+    }
+    sliceWidgetRowDataFromState() {
+        this.widgetRowDataFromState = getSubsetObject(
+            this.formState,
+            [apiNameFor(DI_DONATION_AMOUNT_FIELD)]);
     }
 
     connectedCallback() {

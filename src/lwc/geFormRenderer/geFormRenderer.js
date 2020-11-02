@@ -212,10 +212,6 @@ export default class GeFormRenderer extends LightningElement{
 
     @track hasPurchaseCallTimedout = false;
 
-    _account1Name;
-    _contact1LastName;
-    _contact1FirstName;
-
     /*******************************************************************************
      * @description Object used to hold current values for all fields on the form.
      */
@@ -936,12 +932,6 @@ export default class GeFormRenderer extends LightningElement{
             .map(({DeveloperName}) => DeveloperName);
     }
 
-    resetStoredDonationDonorProperties() {
-        this._account1Name = null;
-        this._contact1LastName = null;
-        this._contact1FirstName = null;
-    }
-
     get mode() {
         return this.getFieldValueFromFormState('Id') ?
             mode.UPDATE :
@@ -964,9 +954,9 @@ export default class GeFormRenderer extends LightningElement{
 
     get cardholderNames() {
         const names = this.donorNames;
-        const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
-        const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
-        const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
+        const firstName = isNotEmpty(names.firstName) ? names.firstName : '';
+        const lastName = isNotEmpty(names.lastName) ? names.lastName : '';
+        const accountName = isNotEmpty(names.accountName) ? names.accountName : '';
         if (this.donorType === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             return {
                 firstName: accountName,
@@ -979,9 +969,15 @@ export default class GeFormRenderer extends LightningElement{
 
     get donorNames () {
         return {
-            firstName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD),
-            lastName: this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_LASTNAME_FIELD),
-            accountName: this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_NAME)
+            firstName: this.getFieldValueFromFormState(
+                DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD
+            ),
+            lastName: this.getFieldValueFromFormState(
+                DATA_IMPORT_CONTACT1_LASTNAME_FIELD
+            ),
+            accountName: this.getFieldValueFromFormState(
+                DATA_IMPORT_ACCOUNT1_NAME
+            )
         };
     }
 
