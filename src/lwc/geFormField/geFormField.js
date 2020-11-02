@@ -328,11 +328,16 @@ export default class GeFormField extends LightningElement {
 
     @api
     setCustomValidity(errorMessage) {
+        const inputField = this.template.querySelector('[data-id="inputComponent"]');
 
-        let inputField = this.template.querySelector('[data-id="inputComponent"]');
-        inputField.setCustomValidity(errorMessage);
-        inputField.reportValidity();
-
+        const canSetCustomValidity =
+            inputField &&
+            typeof inputField.reportValidity === 'function' &&
+            typeof inputField.checkValidity === 'function';
+        if (canSetCustomValidity) {
+            inputField.setCustomValidity(errorMessage);
+            inputField.reportValidity();
+        }
     }
 
     @api
