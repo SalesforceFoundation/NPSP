@@ -533,7 +533,7 @@ export default class rd2EntryForm extends LightningElement {
         this.isLoading = disableBtn;
         this.isSaveButtonDisabled = disableBtn;
 
-        this.template.querySelector(".slds-modal__header").scrollIntoView();
+        this.template.querySelector(".error-container").scrollIntoView();
     }
 
     /**
@@ -811,7 +811,7 @@ export default class rd2EntryForm extends LightningElement {
     /**
      * @description Close the modal when Escape key is pressed
      */
-    keyUpHandler(event) {
+    handleKeyUp(event) {
         if (event.keyCode === 27 || event.code === 'Escape') {
             this.handleCancel();
         }
