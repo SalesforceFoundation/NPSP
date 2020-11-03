@@ -293,7 +293,7 @@ public class CallableApiParameters {
     }
 
     /**
-     * @description Retrieve the specified Parameter as a map of data where the outter map key is the parent record
+     * @description Retrieve the specified Parameter as a map of data where the outer map key is the parent record
      * id (i.e., Opportunity), and the inner map is each related SObjectName where the first SObject Name is "Opportunity".
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
      * @param paramName Map key for the params collection

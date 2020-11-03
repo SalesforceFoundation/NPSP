@@ -149,6 +149,10 @@ public inherited sharing class RD2_ApiService {
         }
     }
 
+    /**
+     * @description Retrieves the currency from the RD or the org
+     * @return currencyCode
+     */
     private String getCurrencyCode(npe03__Recurring_Donation__c rd) {
         String currencyCode;
 
@@ -167,12 +171,10 @@ public inherited sharing class RD2_ApiService {
     }
 
     /**
-     * @description Retrieve a map of scheduled installments by Rd.id.  Paused installments
-     * are not included by getVisualizedInstallments();
-     * @param startDate Begin date of range for installments.  RD2_ScheduleService defaults
-     * startDate to current date if null.
+     * @description Retrieve a map of scheduled installments by Rd.id.  Paused installments are omitted.
+     * @param startDate Begin date of range for installments. Defaults to current date if null.
      * @param endDate End date of range for installments
-     * @param rdIds Recurring Donation Ids to retrieve installments for
+     * @param rdIds Recurring Donation Ids for which to retrieve installments
      * @return String JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
      */
     public String queryInstallments(Date startDate, Date endDate, Set<Id> rdIds) {
@@ -180,6 +182,14 @@ public inherited sharing class RD2_ApiService {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return JSON.serialize(installmentsByRdId);
+        }
+
+        if (startDate == null) {
+            startDate = Date.today();
+        }
+
+        if (endDate == null) {
+            endDate = getDefaultEndDate(startDate);
         }
 
         RD2_ScheduleService service = new RD2_ScheduleService();
@@ -199,6 +209,21 @@ public inherited sharing class RD2_ApiService {
         }
 
         return JSON.serialize(installmentsByRdId);
+    }
+
+    /**
+     * @description Calculates endDate to produce 1 year of installment data (startDate + 1 year - 1 day).
+     * One day is subtracted to ensure that one year of installments is included. Without the adjustment,
+     * an extra installment is reported in most scenarios.
+     * @param startDate Date
+     * @return endDate Date
+     */
+    private Date getDefaultEndDate(Date startDate) {
+        Date endDate = startDate.addYears(1);
+        if (startDate.day() == endDate.day()) {
+            endDate.addDays(-1);
+        }
+        return endDate;
     }
 
     /***

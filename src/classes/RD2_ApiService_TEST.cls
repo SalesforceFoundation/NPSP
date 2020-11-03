@@ -334,23 +334,34 @@ private class RD2_ApiService_TEST {
      */
     @IsTest
     private static void shouldReturnValidInstallmentsWithValidParameters() {
+        final Date startDate = Date.newInstance(2018, 11, 1);
+        final Date endDate = Date.newInstance(2020, 11, 1);
+        final Date pauseStart = Date.newInstance(2019, 12, 1);
+        final Date pauseEnd = Date.newInstance(2020, 2, 1);
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
+        Test.startTest();
+        rd.npe03__Date_Established__c = startDate;
+        rd.StartDate__c = startDate;
+        update rd;
+        Test.stopTest();
+
         Map<Id, List<Installment>> installmentsByRd = retrieveInstallmentsUsingApi(
-            date.today(),
-            date.today().addYears(2),
+            startDate,
+            endDate,
             rd.Id);
         System.assertEquals(25, installmentsByRd.get(rd.Id).size(),
             '25 Recurring donation installments should be returned when there is no pause schedule');
 
-        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.today().addMonths(1), Date.today().addMonths(2));
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStart, pauseEnd);
         installmentsByRd = retrieveInstallmentsUsingApi(
-            date.today(),
-            date.today().addYears(2),
+            startDate,
+            endDate,
             rd.Id);
-        System.assertEquals(23, installmentsByRd.get(rd.Id).size(),
-            '23 Recurring donation installments should be returned when there is a two month pause');
+        System.assertEquals(22, installmentsByRd.get(rd.Id).size(),
+            '22 Recurring donation installments should be returned when there is a three month pause');
 
         for (Installment ins : installmentsByRd.get(rd.Id)) {
             System.debug(ins);
