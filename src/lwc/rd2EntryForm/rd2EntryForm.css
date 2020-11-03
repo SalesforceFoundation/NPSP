@@ -17,3 +17,7 @@
     height: auto !important;
     max-height: 60vh !important;
 }
+
+.slds-modal {
+    height:auto;
+}
