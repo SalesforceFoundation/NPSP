@@ -14,8 +14,12 @@
     <aura:dependency resource="c:rd2EntryFormDonorSection" />
     <aura:dependency resource="c:rd2EntryFormCustomFieldsSection" />
 
-    <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if open from related list" />
+    <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if opened from related list" />
+    <aura:attribute name="renderModal" type="Boolean" default="false" description="Boolean to render Modal" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <c:rd2EntryForm parentId="{!v.parentId}" recordId="{!v.recordId}" onclosemodal="{!c.handleModalEvent}"/>
+ 
+    <aura:if isTrue="{!v.renderModal}">
+        <c:rd2EntryForm parentId="{!v.parentId}" recordId="{!v.recordId}" onclosemodal="{!c.handleModalEvent}"/>
+    </aura:if>
 </aura:component>
