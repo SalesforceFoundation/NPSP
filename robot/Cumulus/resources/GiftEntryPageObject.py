@@ -404,11 +404,11 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 if not (actual_value == None or actual_value == False):
                     raise Exception (f"Expected {key} status to be {value} but found {actual_value}")
 
-    def validate_error_message(self,**kwargs):
-        """Validates that page contains specified error message
-        Example: Validate Error Message | Allocations Error=Test Error Message"""
+    def validate_error_message(self,type,**kwargs):
+        """Validates that page contains specified type of message.
+        Example: Validate Error Message |error |Allocations Error=Test Error Message"""
         for key,value in kwargs.items():
-            locator=npsp_lex_locators["gift_entry"]["alert"].format(key,value)
+            locator=npsp_lex_locators["gift_entry"]["alert"].format(type,key,value)
             self.selenium.wait_until_page_contains_element(locator)
 
     def verify_allocation_remaining_balance(self,amount):

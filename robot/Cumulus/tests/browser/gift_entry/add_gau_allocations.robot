@@ -1,5 +1,5 @@
 *** Settings ***
-
+Documentation   These tests assumes that Default Gift Entry Template already has GAU widget included in the template
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
@@ -65,12 +65,17 @@ Test GAU Allocations with Default Allocations Disabled
     ...         General Accounting Unit 0=${GAU1}[Name]
     ...         Percent 0=70
     Verify Allocation Remaining Balance     $30.00
+    Validate Error Message                  warning
+    ...         Allocation Error=Total amount doesn't match the Donation Amount
     Click Gift Entry Button                 Add New Allocation
     Fill Gift Entry Form
     ...         General Accounting Unit 1=${GAU2}[Name]
     ...         Amount 1=50
     Verify Allocation Remaining Balance     -$20.00
-    Validate Error Message                  Allocation Error=Total amount doesn't match the Donation Amount
+    Validate Error Message                  error
+    ...         Allocation Error=Total amount doesn't match the Donation Amount
+    Click Gift Entry Button                 Save
+    Wait Until Page Contains Element        npsp:gift_entry.page_error
     Fill Gift Entry Form                    Amount 1=20
     Click Gift Entry Button                 Save
     ${date} =                               Get Current Date    result_format=%Y-%m-%d
