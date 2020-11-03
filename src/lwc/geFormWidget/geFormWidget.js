@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import {apiNameFor, getSubsetObject, hasNestedProperty, isUndefined} from 'c/utilCommon';
 
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
@@ -11,7 +11,6 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 
 export default class GeFormWidget extends LightningElement {
     @api element;
-    @api widgetData;
 
     _formState;
     @api
@@ -22,8 +21,9 @@ export default class GeFormWidget extends LightningElement {
         this._formState = formState;
         this.sliceWidgetRowDataFromState();
     }
+    @track widgetDataFromState;
     sliceWidgetRowDataFromState() {
-        this.widgetRowDataFromState = getSubsetObject(
+        this.widgetDataFromState = getSubsetObject(
             this.formState,
             [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
     }

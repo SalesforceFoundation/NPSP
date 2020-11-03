@@ -1,7 +1,10 @@
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
-import {apiNameFor, isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
+import {apiNameFor,
+        isEmpty,
+        isNumeric,
+        deepClone} from 'c/utilCommon';
 
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
@@ -13,6 +16,7 @@ import GAU_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit_
 const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
 const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
 const ALLOCATION_GAU = `${ALLOCATION_OBJECT.objectApiName}.${GAU_FIELD.fieldApiName}`;
+const DATA_FIELD_NAME_SELECTOR = 'data-fieldname';
 
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
@@ -21,22 +25,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api disabled;
     @api totalAmount;
     @api remainingAmount;
-    @api widgetRowDataFromState;
+    @api widgetDataFromState;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-
-    /**
-     * Given a field, set a value on that ge-form-field by calling ge-form-field.setFieldValue
-     * @param field Field name to set the value for
-     * @param value Value ot set
-     */
-    @api
-    setFieldValue(field, value) {
-        const element = this.getFieldByName(field);
-        if(element) {
-            element.load({value});
-        }
-    }
 
     /**
      * If the total amount is changed, any GAU allocated by percent must be re-allocated to match the total value.
@@ -81,11 +72,13 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
      */
     handleFieldValueChange(event) {
-        if (event.target.fieldName === this.allocationAmountFieldApiName) {
+        let changedFieldName = event.target.getAttribute(DATA_FIELD_NAME_SELECTOR);
+
+        if (changedFieldName === this.allocationAmountFieldApiName) {
             this.disablePercentFieldIfAmountHasValue(event.target);
         }
 
-        if (event.target.fieldName === this.allocationPercentageFieldApiName) {
+        if (changedFieldName === this.allocationPercentageFieldApiName) {
             this.disableAmountFieldIfPercentHasValue(event.target);
             this.calculateAmountFromPercent(event.target.value)
         }
@@ -94,7 +87,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
             detail: {
                 rowIndex: this.rowIndex,
                 changedFieldAndValue: {
-                    [event.target.fieldName] : event.target.value
+                    [event.target.getAttribute(DATA_FIELD_NAME_SELECTOR)] : event.target.value
                 }
             }
         }));
@@ -109,7 +102,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     disablePercentFieldIfAmountHasValue(changedField) {
         let percentFieldElement = this.template.querySelector(
-    `[data-id=${this.allocationPercentageFieldApiName}]`
+    `[data-fieldname=${this.allocationPercentageFieldApiName}]`
         );
         if(isNumeric(changedField.value) && changedField.value > 0 && !percentFieldElement.disabled) {
             percentFieldElement.disabled = true;
@@ -120,7 +113,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     disableAmountFieldIfPercentHasValue(changedField) {
         let amountFieldElement = this.template.querySelector(
-            `[data-id=${this.allocationAmountFieldApiName}]`
+            `[data-fieldname=${this.allocationAmountFieldApiName}]`
         );
         if(isNumeric(changedField.value) && changedField.value > 0 && !amountFieldElement.disabled) {
             amountFieldElement.disabled = true;
@@ -134,28 +127,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         // convert to cents instead of dollars, avoids floating point problems
         const totalInCents = this.widgetRowDataFromState[this.donationAmountFieldApiName] * 100;
 
-        this.template.querySelector(
-            `[data-id=${this.allocationAmountFieldApiName}]`
-        ).value = Math.round(totalInCents * percentDecimal) / 100;
-    }
-
-    getFieldByName(fieldName) {
-        return this.template.querySelector(`[data-fieldname='${fieldName}']`);
-    }
-
-    isFieldDisabled(fieldName) {
-        const field = this.getFieldByName(fieldName);
-        return field.element.disabled === true;
-    }
-
-    disableField(fieldName) {
-        const field = this.getFieldByName(fieldName);
-        field.disable();
-    }
-
-    enableField(fieldName) {
-        const field = this.getFieldByName(fieldName);
-        field.enable();
+        // this._rowRecord[this.allocationAmountFieldApiName] = Math.round(totalInCents * percentDecimal) / 100;
     }
 
     remove() {
@@ -165,6 +137,10 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     get isRemovable() {
         return this.disabled !== true;
+    }
+
+    get percentCustomLabel() {
+        return this.CUSTOM_LABELS.commonPercent;
     }
 
     get donationAmountFieldApiName() {
