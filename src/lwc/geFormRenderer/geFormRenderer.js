@@ -492,7 +492,6 @@ export default class GeFormRenderer extends LightningElement{
         }));
     }
 
-    @api
     handleCatchOnSave( error ) {
         // var inits
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
@@ -838,8 +837,7 @@ export default class GeFormRenderer extends LightningElement{
      * @returns Object, helper object to minimize length of if statements and improve code legibility
      */
     getDataImportHelper(fieldWrapper) {
-
-        const dataImportRecord = {
+        return {
             // donation donor
             donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
             donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
@@ -858,7 +856,6 @@ export default class GeFormRenderer extends LightningElement{
             isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
             isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField])
         };
-        return dataImportRecord;
     }
 
     // change showSpinner to the opposite of its current value
@@ -900,7 +897,6 @@ export default class GeFormRenderer extends LightningElement{
         this.updateFormState(dataImportWithNullValuesAppended);
     }
 
-    @api
     reset() {
         this.resetFields();
         this.resetFormState();
@@ -909,7 +905,6 @@ export default class GeFormRenderer extends LightningElement{
 
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
-        this.resetStoredDonationDonorProperties();
         this.initializeFormState();
     }
 
@@ -938,7 +933,6 @@ export default class GeFormRenderer extends LightningElement{
             mode.CREATE;
     }
 
-    @api
     get saveActionLabel() {
         return this.isSingleGiftEntry ?
             this.CUSTOM_LABELS.commonSave :
@@ -947,7 +941,6 @@ export default class GeFormRenderer extends LightningElement{
                 this.CUSTOM_LABELS.geButtonSaveNewGift;
     }
 
-    @api
     get isUpdateActionDisabled() {
         return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported';
     }
@@ -967,7 +960,7 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    get donorNames () {
+    get donorNames() {
         return {
             firstName: this.getFieldValueFromFormState(
                 DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD
@@ -1346,7 +1339,8 @@ export default class GeFormRenderer extends LightningElement{
 
     getObjectMappingDevNamesForSelectedRecord(record) {
         let objectMappingDevNames = [];
-        for (let [key, value] of Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
+        for (let [key, value] of Object.entries(
+            this.selectedRecordIdByObjectMappingDevName)) {
             if (value === record.id) {
                 objectMappingDevNames.push(key);
             }
@@ -1380,19 +1374,6 @@ export default class GeFormRenderer extends LightningElement{
                 return this.getFieldValueFromFormState(DATA_IMPORT_CONTACT1_IMPORTED_FIELD);
             default:
                 return null;
-        }
-    }
-
-    handleDonorAccountChange(selectedRecordId) {
-        if (selectedRecordId == null) {
-            this._account1Name = null;
-        }
-    }
-
-    handleDonorContactChange(selectedRecordId) {
-        if (selectedRecordId == null) {
-            this._contact1LastName = null;
-            this._contact1FirstName = null;
         }
     }
 
@@ -1821,7 +1802,7 @@ export default class GeFormRenderer extends LightningElement{
     /**
      * @description Pass in a DataImport field's api to get that field's current
      * value from the formState object.
-     * @param fieldApiName, or an imported field reference object
+     * @param fieldApiNameOrFieldReference: field name or an imported field reference object
      * @returns {*} Current value stored in formState for the passed-in field.
      */
     getFieldValueFromFormState(fieldApiNameOrFieldReference) {
@@ -1981,7 +1962,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasProcessableDataImport() {
-        return !this.hasFailedPurchaseRequest || this._isCreditCardWidgetInDoNotChargeState;
+        return !this.hasFailedPurchaseRequest ||
+            this._isCreditCardWidgetInDoNotChargeState;
     }
 
     hasAuthorizationToken() {
@@ -2021,7 +2003,7 @@ export default class GeFormRenderer extends LightningElement{
             await this.saveDataImport(dataImportFromFormState);
 
             if (this.shouldMakePurchaseRequest()) {
-                await this.makePurchaseRequest()
+                await this.makePurchaseRequest();
             }
 
             if (this.hasProcessableDataImport()) {
@@ -2159,15 +2141,22 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleBdiProcessingError(error) {
-        const paymentStatus = this.getFieldValueFromFormState(apiNameFor(PAYMENT_STATUS));
-        const hasCapturedPayment = paymentStatus && paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
-        if (hasCapturedPayment) {
+        if (this.hasCapturedPayment) {
             const exceptionDataError = new ExceptionDataError(error);
             this.handleCardChargedBDIFailedError(exceptionDataError);
         } else {
             this.handleCatchOnSave(error);
             this.toggleSpinner();
         }
+    }
+
+    get hasCapturedPayment() {
+        const paymentStatus = this.getFieldValueFromFormState(
+            apiNameFor(PAYMENT_STATUS)
+        );
+        return paymentStatus &&
+            paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+
     }
 
     handleCardChargedBDIFailedError(exceptionDataError) {
