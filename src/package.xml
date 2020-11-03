@@ -1879,6 +1879,8 @@
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>accordionSection_ToggleInstructionsWhenClosed</members>
+        <members>accordionSection_ToggleInstructionsWhenOpen</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnConfirm</members>
@@ -2455,7 +2457,9 @@
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>gsAdminSetupTitle</members>
+        <members>gsChecklistArrowDownAltText</members>
         <members>gsChecklistArrowDownAlterText</members>
+        <members>gsChecklistArrowRightAltText</members>
         <members>gsChecklistArrowRightAlterText</members>
         <members>gsChecklistExploreNPSPDesc</members>
         <members>gsChecklistExploreNPSPTitle</members>
@@ -3868,6 +3872,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>accordionSection</members>
         <members>batchProgress</members>
         <members>bdeRetirementAlert</members>
         <members>bdiBatchNumberSettings</members>
