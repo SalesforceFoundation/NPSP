@@ -161,9 +161,7 @@ public class CallableApiParameters {
     public Date getDate(String paramName) {
         validateRequiredParameter('Date', paramName);
         try {
-            if (params.get(paramName) != null) {
-                return (Date) params.get(paramName);
-            }
+            return (Date) params.get(paramName);
         } catch (Exception ex) {
             throwParameterException('Date', paramName);
         }

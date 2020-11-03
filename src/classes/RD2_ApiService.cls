@@ -44,7 +44,7 @@ public inherited sharing class RD2_ApiService {
      * @return JSON Serialized version of Map<Id, List<RD2_ApiService.Schedule>> schedulesByRdId
      */
     public String querySchedules(Set<Id> rdIds) {
-        Map<Id, List<RD2_ApiService.Schedule>> schedulesByRdId = new Map<Id, List<RD2_ApiService.Schedule>>();
+        Map<Id, List<Schedule>> schedulesByRdId = new Map<Id, List<Schedule>>();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return JSON.serialize(schedulesByRdId);
@@ -53,9 +53,9 @@ public inherited sharing class RD2_ApiService {
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
+            List<Schedule> schedules = new List<Schedule>();
             for (RecurringDonationSchedule__c s : rd.RecurringDonationSchedules__r) {
-                schedules.add(new RD2_ApiService.Schedule(s, rd, getCurrencyCode(rd)));
+                schedules.add(new Schedule(s, rd));
             }
 
             schedulesByRdId.put(rd.Id, schedules);
@@ -127,7 +127,7 @@ public inherited sharing class RD2_ApiService {
         public Datetime createdDate { get ;set; }
         public Datetime lastModifiedDate { get ;set; }
 
-        public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd, String currCode) {
+        public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isActive = rdSchedule.Active__c;
             isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate
                 && (rdSchedule.EndDate__c == null || RD2_ScheduleService.currentDate <= rdSchedule.EndDate__c);
@@ -145,7 +145,7 @@ public inherited sharing class RD2_ApiService {
             statusReason = rdSchedule.StatusReason__c;
             createdDate = rdSchedule.CreatedDate;
             lastModifiedDate = rdSchedule.LastModifiedDate;
-            currencyCode = currCode;
+            currencyCode = RD2_ApiService.getCurrencyCode(rd);
         }
     }
 
@@ -153,7 +153,7 @@ public inherited sharing class RD2_ApiService {
      * @description Retrieves the currency from the RD or the org
      * @return currencyCode
      */
-    private String getCurrencyCode(npe03__Recurring_Donation__c rd) {
+    private static String getCurrencyCode(npe03__Recurring_Donation__c rd) {
         String currencyCode;
 
         try {
@@ -178,7 +178,7 @@ public inherited sharing class RD2_ApiService {
      * @return String JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
      */
     public String queryInstallments(Date startDate, Date endDate, Set<Id> rdIds) {
-        Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId = new Map<Id, List<RD2_ApiService.Installment>>();
+        Map<Id, List<Installment>> installmentsByRdId = new Map<Id, List<Installment>>();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return JSON.serialize(installmentsByRdId);
@@ -196,13 +196,13 @@ public inherited sharing class RD2_ApiService {
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            List<RD2_ApiService.Installment> installments = new List<RD2_ApiService.Installment>();
+            List<Installment> installments = new List<Installment>();
             for (RD2_ScheduleService.Installment installment : service.getVisualizedInstallments(
                 startDate,
                 endDate,
                 rd.RecurringDonationSchedules__r)
             ) {
-                installments.add(new RD2_ApiService.Installment(installment, rd, getCurrencyCode(rd)));
+                installments.add(new Installment(installment, rd));
             }
 
             installmentsByRdId.put(rd.Id, installments);
@@ -239,14 +239,14 @@ public inherited sharing class RD2_ApiService {
         public String currencyCode { get; set; }
         public String paymentMethod { get; set; }
 
-        public Installment(RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd, String currCode) {
+        public Installment(RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {
             recurringDonationId = rd.Id;
             scheduleId = installment.scheduleId;
             campaignId = installment.campaignId;
             closeDate = installment.nextDonationDate;
             installmentAmount = installment.installmentAmount;
             paymentMethod = installment.paymentMethod;
-            currencyCode = currCode;
+            currencyCode = currencyCode = RD2_ApiService.getCurrencyCode(rd);
         }
     }
 }
