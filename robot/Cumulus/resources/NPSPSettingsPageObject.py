@@ -51,6 +51,9 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
 
     @capture_screenshot_on_error
     def verify_sub_link_present(self, title, bool):
+        """ Asserts if the sublink is present or not present
+            eg: Verify Sub Link Present     <Linkoption>   True/False
+        """
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         assert bool == str(self.npsp.check_if_element_exists(locator)), "Expected value to be {} but found {}".format(
             bool, self.npsp.check_if_element_exists(locator)
