@@ -1,5 +1,8 @@
 import { LightningElement, api } from 'lwc';
-import {hasNestedProperty, isUndefined} from 'c/utilCommon';
+import {apiNameFor, getSubsetObject, hasNestedProperty, isUndefined} from 'c/utilCommon';
+
+import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -9,7 +12,21 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
-    @api formState;
+
+    _formState;
+    @api
+    get formState() {
+        return this._formState;
+    }
+    set formState(formState) {
+        this._formState = formState;
+        this.sliceWidgetRowDataFromState();
+    }
+    sliceWidgetRowDataFromState() {
+        this.widgetRowDataFromState = getSubsetObject(
+            this.formState,
+            [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
+    }
 
     @api
     reset() {

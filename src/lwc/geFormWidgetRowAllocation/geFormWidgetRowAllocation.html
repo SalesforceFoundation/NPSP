@@ -5,22 +5,25 @@
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={gauFieldApiName}
-                                                   data-id={gauFieldApiName}
-                                                    required='true'
-                                                    onchange={handleFieldValueChange}>
+                                                   data-fieldname={gauFieldApiName}
+                                                   required='true'
+                                                   onchange={handleFieldValueChange}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={allocationAmountFieldApiName}
-                                                   data-id={allocationAmountFieldApiName}
+                                                   data-fieldname={allocationAmountFieldApiName}
                                                    onchange={handleFieldValueChange}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
-                            <lightning-input-field field-name={allocationPercentageFieldApiName}
-                                                   data-id={allocationPercentageFieldApiName}
-                                                   onchange={handleFieldValueChange}>
-                            </lightning-input-field>
+                            <lightning-input label={percentCustomLabel}
+                                             data-fieldname={allocationPercentageFieldApiName}
+                                             type='number'
+                                             formatter='percent-fixed'
+                                             step='0.01'
+                                             onchange={handleFieldValueChange}>
+                            </lightning-input>
                         </div>
                     </div>
                 </lightning-record-edit-form>

@@ -36,7 +36,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
-    @track widgetRowDataFromState = {};
+    @api widgetDataFromState = {};
 
     _formState;
     @api
