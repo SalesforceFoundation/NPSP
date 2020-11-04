@@ -93,6 +93,21 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Determines whether a Recurring Donation event is from the Elevate integration
+    * @param rd Changed Recurring Donation
+    * @param oldRd Old Recurring Donation
+    * @return Boolean
+    */
+    public static Boolean isElevateEvent(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
+        String elevateEvent = rd.getSObject().LastElevateEventPlayed__c;
+
+        Boolean isElevateEventChanged = String.isNotBlank(elevateEvent)
+            && elevateEvent != oldRd.getSObject().LastElevateEventPlayed__c;
+
+        return isElevateEventChanged;
+    }
+
+    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
@@ -121,8 +136,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.StartDate__c != oldRd.StartDate__c
             || rd.Day_of_Month__c != oldRd.Day_of_Month__c
             || rd.RecurringType__c != oldRd.RecurringType__c
-            || rd.PaymentMethod__c != oldRd.PaymentMethod__c
-            || rd.Status__c != oldRd.Status__c;
+            || rd.PaymentMethod__c != oldRd.PaymentMethod__c;
 
         if (!isChanged) {
             String oldCommitmentId = oldRd.CommitmentId__c;
