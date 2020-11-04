@@ -7,13 +7,15 @@
                             <lightning-input-field field-name={gauFieldApiName}
                                                    data-fieldname={gauFieldApiName}
                                                    required='true'
-                                                   onchange={handleFieldValueChange}>
+                                                   onchange={handleFieldValueChange}
+                                                   value={gauValue}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
                             <lightning-input-field field-name={allocationAmountFieldApiName}
                                                    data-fieldname={allocationAmountFieldApiName}
-                                                   onchange={handleFieldValueChange}>
+                                                   onchange={handleFieldValueChange}
+                                                   value={amountValue}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
@@ -22,7 +24,8 @@
                                              type='number'
                                              formatter='percent-fixed'
                                              step='0.01'
-                                             onchange={handleFieldValueChange}>
+                                             onchange={handleFieldValueChange}
+                                             value={percentValue}>
                             </lightning-input>
                         </div>
                     </div>

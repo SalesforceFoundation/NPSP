@@ -30,28 +30,22 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    _widgetDataFromState = {};
+    @api
+    get widgetDataFromState() {
+        return this._widgetDataFromState;
+    }
+    set widgetDataFromState(value) {
+        this._widgetDataFromState = value;
+
+        this.loadWidgetDataFromState();
+    }
     @api element;
     @track alertBanner = {}; // { level: ('error', 'warning'), message: String }
     @track rowList = [];
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
-    @api widgetDataFromState = {};
-
-    _formState;
-    @api
-    get formState() {
-        return this._formState;
-    }
-    set formState(formState) {
-        this._formState = formState;
-        this.sliceWidgetRowDataFromState();
-    }
-    sliceWidgetRowDataFromState() {
-        this.widgetRowDataFromState = getSubsetObject(
-            this.formState,
-            [apiNameFor(DI_DONATION_AMOUNT_FIELD)]);
-    }
 
     connectedCallback() {
         this.init();
@@ -61,54 +55,112 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(!this.allocationSettings) {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
-        if(this.hasDefaultGAU) {
-            this.addRow(true);
-        }
     };
 
-    @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
-    wiredObjectInfo({data}) {
-        // Represents the fields in a row of the widget
-        if(data) {
-            this.fieldList = [
-                {
-                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName}`,
-                    size: 4,
-                    element: {
-                        required: true,
-                        customLabel: data.fields[GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName].label,
-                        type: 'text'
-                    }
-                },
-                {
-                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
-                    size: 3,
-                    element: {
-                        customLabel: data.fields[AMOUNT_FIELD.fieldApiName].label,
-                        type: 'number',
-                        formatter: 'currency'
-                    }
-                },
-                {
-                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`,
-                    size: 3,
-                    element: {
-                        customLabel: data.fields[PERCENT_FIELD.fieldApiName].label
-                    }
-                }
-            ];
+
+    loadWidgetDataFromState() {
+        this.totalAmount = this.widgetDataFromState[DI_DONATION_AMOUNT_FIELD];
+
+        if (!this._widgetDataFromState.hasOwnProperty(DI_ADDITIONAL_OBJECT)) {
+            return;
+        }
+        this.reset();
+
+
+        // if (!this._widgetDataFromState.hasOwnProperty(DI_ADDITIONAL_OBJECT)) {
+        //     return;
+        // }
+        // const ADDITIONAL_OBJECT_PARSED = JSON.parse(this._widgetDataFromState[apiNameFor(DI_ADDITIONAL_OBJECT)])
+        //     .dynamicSourceByObjMappingDevName;
+        // const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
+        //
+        // let dataImportRow;
+        // if (Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName)) {
+        //     dataImportRow =
+        //         JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName])
+        //             .dynamicSourceByObjMappingDevName;
+        // }
+        // if (!dataImportRow) {
+        //     return;
+        // }
+        // let rowList = [];
+        // let fieldMappings = GeFormService.fieldMappings;
+        // let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+        //     return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
+        // });
+        // Object.keys(dataImportRow).forEach(diKey => {
+        //     let properties = {};
+        //
+        //     gauMappingKeys.forEach(fieldMappingKey => {
+        //         let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+        //         let sourceObj = dataImportRow[diKey].sourceObj;
+        //
+        //         if(Object.keys(sourceObj).includes(sourceField)) {
+        //             let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+        //             let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+        //
+        //             properties[targetField] = diSourceField;
+        //
+        //         }
+        //     });
+        //     rowList.push(properties);
+        // });
+        //
+        // this.addRows(rowList);
+    }
+
+    reset() {
+        this.rowList = [];
+        if(this.hasDefaultGAU) {
+            this.addRow(true);
         }
     }
 
     @api
-    get totalAmount() {
-       return this._totalAmount;
+    isValid() {
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
+        for(const row of rows) {
+            if(!row.isValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    /**
-     * Handle changes in the total donation amount.
-     * @param value
-     */
+
+    handleAddRow() {
+        this.addRow(false);
+    }
+
+    addRows(rowRecords) {
+        rowRecords.forEach(rowRecord => {
+            this.addRow(false, rowRecord);
+        });
+    }
+
+    addRow(isDefaultGAU, rowRecord) {
+        let element = {};
+        element.key = this.rowList.length;
+        const record = { ...rowRecord };
+        let row = {};
+        if(isDefaultGAU === true) {
+            // default GAU should be locked.
+            row.isDefaultGAU = true;
+            record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+        }
+
+        row = {
+            ...row,
+            record,
+            element
+        };
+        this.rowList.push(row);
+    }
+
+    get totalAmount() {
+        return this._totalAmount;
+    }
+
     set totalAmount(value) {
         this._totalAmount = value;
         if(value >= 0) {
@@ -123,94 +175,111 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
-    /**
-     * Expected to return true if widget fields are valid, false otherwise
-     * Currently only check to see if the GAU Lookup is filled in
-     * @return Boolean
-     */
-    @api
-    isValid() {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        for(const row of rows) {
-            if(!row.isValid()) {
-                return false;
-            }
-        }
-        return true;
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
     }
 
-    @api
-    reset() {
-        this.rowList = [];
-        this.init();
-    }
-
-    @api
-    load(data) {
-        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
-        let dataImportRow;
-        if (Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName)) {
-            dataImportRow =
-                JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName])
-                    .dynamicSourceByObjMappingDevName;
-        }
-        if (!dataImportRow) {
+    allocateRemainingAmountToDefaultGAU() {
+        if (!this.hasRemainingAmount) {
             return;
         }
-        let rowList = [];
-        let fieldMappings = GeFormService.fieldMappings;
-        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-            return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
-        });
-        Object.keys(dataImportRow).forEach(diKey => {
-            let properties = {};
 
-            gauMappingKeys.forEach(fieldMappingKey => {
-                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
-                let sourceObj = dataImportRow[diKey].sourceObj;
-
-                if(Object.keys(sourceObj).includes(sourceField)) {
-                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
-                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-                    
-                    properties[targetField] = diSourceField;
-
-                }
-            });
-            rowList.push(properties);
-        });
-        
-        this.addRows(rowList);
+        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
+        defaultRow.setFieldValue(
+            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
+            this.remainingAmount);
+    }
+    get hasRemainingAmount() {
+        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
+            this.remainingAmount >= 0;
     }
 
-    handleAddRow() {
-        this.addRow(false);
+
+    /**
+     * Show remaining amount when under-allocated and no default GAU is present, or when over-allocated.
+     * @return {boolean}
+     */
+    get showRemainingAmount() {
+        return this.hasAllocations() &&
+            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
     }
 
-    addRows(records) {
-        records.forEach(record => {
-            this.addRow(false, record);      
-        });
-    }
-
-    addRow(isDefaultGAU, properties) {
-        let element = {};
-        element.key = this.rowList.length;
-        const record = { ...properties };
-        let row = {};
-        if(isDefaultGAU === true) {
-            // default GAU should be locked.
-            element.disabled = true;
-            row.isDefaultGAU = true;
-            record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+    /**
+     * Remaining amount that can be allocated into non-default GAU. If default GAU is present, this
+     * is the amount allocated to the default GAU.
+     * @return {number}
+     */
+    get remainingAmount() {
+        if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
+            const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
+            // avoid floating point errors by subtracting whole numbers
+            return (remainingCents / 100);
         }
+        return 0;
+    }
 
-        row = {
-            ...row,
-            record,
-            element
-        };
-        this.rowList.push(row);
+    /**
+     * Reallocate all percent-based allocations with the updated donation total.
+     * @param totalDonation
+     */
+    reallocateByPercent(totalDonation) {
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
+        if(rows.length > 0) {
+            rows.forEach(row => row.reallocateByPercent(totalDonation));
+        }
+    }
+
+    /**
+     * @return {boolean} TRUE when the total amount allocated is more then the total donation
+     */
+    get isOverAllocated() {
+        return this.allocatedAmount > this.totalAmount;
+    }
+
+    /**
+     * @return {boolean} TRUE when no default GAU is present, and
+     * the total amount allocated is less than the total donation amount
+     */
+    get isUnderAllocated() {
+        return !this.hasDefaultGAU && (this.allocatedAmount < this.totalAmount);
+    }
+
+    get allocatedAmount() {
+        const amount = this.rowList
+            .filter(row => {
+                const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+                if(isNotEmpty(defaultGAUId)) {
+                    // don't include default GAU when calculating remaining amount if one is defined.
+                    return row.record[GENERAL_ACCOUNT_UNIT] !== defaultGAUId;
+                }
+
+                return true;
+            })
+            .reduce((accumulator, current) => {
+                const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
+                const localFieldName = AMOUNT_FIELD.fieldApiName;
+                const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
+
+                let currentAmount = current.record[currentKey];
+                if (isEmpty(currentAmount)) {
+                    // amount is empty, use the percent field
+                    const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
+                    const localFieldNamePercent = PERCENT_FIELD.fieldApiName;
+                    const currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
+                        fullFieldNamePercent : localFieldNamePercent;
+
+                    const currentPercent = current.record[currentKeyPercent];
+                    currentAmount = (currentPercent * this._totalAmount) / 100;
+                }
+
+                if(isNumeric(currentAmount)) {
+                    // prefix + to ensure operand is treated as a number
+                    return (+currentAmount + accumulator);
+                }
+                return accumulator;
+            }, 0);
+
+        return amount;
     }
 
     /**
@@ -234,21 +303,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         // this.validate();
     }
 
-    allocateRemainingAmountToDefaultGAU() {
-        if (!this.hasRemainingAmount) {
-            return;
-        }
-
-        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
-        defaultRow.setFieldValue(
-            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
-            this.remainingAmount);
-    }
-    get hasRemainingAmount() {
-        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
-            this.remainingAmount >= 0;
-    }
-
     convertRowListToSObjectJSON() {
         let widgetRowValues = [];
 
@@ -267,18 +321,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             [this.element.dataImportObjectMappingDevName]: widgetRowValues
         };
     }
-
-    /**
-     * Reallocate all percent-based allocations with the updated donation total.
-     * @param totalDonation
-     */
-    reallocateByPercent(totalDonation) {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        if(rows.length > 0) {
-            rows.forEach(row => row.reallocateByPercent(totalDonation));
-        }
-    }
-
 
     /**
      * Handle removing a GAU from the list.
@@ -316,86 +358,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.alertBanner = {};
             return true;
         }
-    }
-
-    hasAllocations() {
-        return Array.isArray(this.rowList) && this.rowList.length > 0;
-    }
-
-    /**
-     * @return {boolean} TRUE when the total amount allocated is more then the total donation
-     */
-    get isOverAllocated() {
-        return this.allocatedAmount > this.totalAmount;
-    }
-
-    /**
-     * @return {boolean} TRUE when no default GAU is present, and
-     * the total amount allocated is less than the total donation amount
-     */
-    get isUnderAllocated() {
-        return !this.hasDefaultGAU && (this.allocatedAmount < this.totalAmount);
-    }
-
-    get allocatedAmount() {
-        const amount = this.rowList
-            .filter(row => {
-                const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
-                if(isNotEmpty(defaultGAUId)) {
-                    // don't include default GAU when calculating remaining amount if one is defined.
-                    return row.record[GENERAL_ACCOUNT_UNIT] !== defaultGAUId;
-                }
-
-                return true;
-            })
-            .reduce((accumulator, current) => {
-                const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-                const localFieldName = AMOUNT_FIELD.fieldApiName;
-                const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
-                
-                let currentAmount = current.record[currentKey];
-                if (isEmpty(currentAmount)) {
-                    // amount is empty, use the percent field
-                    const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
-                    const localFieldNamePercent = PERCENT_FIELD.fieldApiName;
-                    const currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
-                                            fullFieldNamePercent : localFieldNamePercent;
-
-                    const currentPercent = current.record[currentKeyPercent];
-                    currentAmount = (currentPercent * this._totalAmount) / 100;
-                }
-
-                if(isNumeric(currentAmount)) {
-                    // prefix + to ensure operand is treated as a number
-                    return (+currentAmount + accumulator);
-                }
-                return accumulator;
-        }, 0);
-
-        return amount;
-    }
-
-    /**
-     * Show remaining amount when under-allocated and no default GAU is present, or when over-allocated.
-     * @return {boolean}
-     */
-    get showRemainingAmount() {
-        return this.hasAllocations() &&
-            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
-    }
-
-    /**
-     * Remaining amount that can be allocated into non-default GAU. If default GAU is present, this
-     * is the amount allocated to the default GAU.
-     * @return {number}
-     */
-    get remainingAmount() {
-        if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
-            const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
-            // avoid floating point errors by subtracting whole numbers
-            return (remainingCents / 100);
-        }
-        return 0;
     }
 
     get hasDefaultGAU() {

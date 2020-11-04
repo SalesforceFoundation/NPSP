@@ -35,13 +35,13 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      */
     @api
     reallocateByPercent(totalDonation) {
-        const percent = this.rowRecord[ALLOCATION_PERCENT];
+        const percent = this.rowRecord[apiNameFor(PERCENT_FIELD)];
         if(isNumeric(percent) && percent >= 0) {
             const detail = {
                 targetFieldName: ALLOCATION_PERCENT,
                 value: percent
             };
-            this.handleChange({ detail }, totalDonation);
+            this.handleFieldValueChange({ detail }, totalDonation);
         }
     }
 
@@ -155,15 +155,31 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return apiNameFor(GAU_FIELD);
     }
 
+    get gauValue() {
+        return this.rowRecord[apiNameFor(GAU_FIELD)];
+    }
+
     get allocationAmountFieldApiName() {
         return apiNameFor(AMOUNT_FIELD);
+    }
+
+    get amountValue() {
+        return this.rowRecord[apiNameFor(AMOUNT_FIELD)];
     }
 
     get allocationPercentageFieldApiName() {
         return apiNameFor(PERCENT_FIELD);
     }
 
+    get percentValue() {
+        return this.rowRecord[apiNameFor(PERCENT_FIELD)];
+    }
+
     get qaLocatorDeleteRow() {
         return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
     }
+
+
+
+
 }

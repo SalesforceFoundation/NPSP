@@ -11,6 +11,7 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 
 export default class GeFormWidget extends LightningElement {
     @api element;
+    @api widgetData;
 
     _formState;
     @api
@@ -21,16 +22,12 @@ export default class GeFormWidget extends LightningElement {
         this._formState = formState;
         this.sliceWidgetRowDataFromState();
     }
+
     @track widgetDataFromState;
     sliceWidgetRowDataFromState() {
         this.widgetDataFromState = getSubsetObject(
             this.formState,
             [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
-    }
-
-    @api
-    reset() {
-        this.widgetComponent.reset();
     }
 
     get isValid() {
@@ -65,10 +62,6 @@ export default class GeFormWidget extends LightningElement {
 
     get widgetNotFound(){
         return WIDGET_LIST.indexOf(this.element.componentName) < 0
-    }
-
-    get totalAmount() {
-        return hasNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
 
     handleFormWidgetChange(event) {
