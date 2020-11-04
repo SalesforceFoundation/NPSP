@@ -6720,6 +6720,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>1 Minute Video</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemNPSPCloudDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>This brief overview is meant to dip your toes into what’s possible with NPSP, but you can dive deeper and discover the many other features available to your organization with these resources.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupNPSPCloudPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>See Features</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemNPSPCloudLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>Learn more about NPSP Features Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPCloudTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>Learn about other Nonprofit Cloud Features</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
