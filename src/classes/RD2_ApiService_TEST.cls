@@ -299,19 +299,15 @@ private class RD2_ApiService_TEST {
      * @description Validate a valid installment response when start date is not passed in
      */
     @IsTest
-    private static void shouldReturn25ValidInstallmentsWithDefaultStartDate() {
+    private static void shouldReturnValidInstallmentsWithDefaultStartDate() {
         final Integer installmentCount = 24;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Map<Id, List<Installment>> installmentsByRd = queryInstallments(
-            date.today(),
+            null,
             date.today().addYears(2).addDays(-1),
             rd.Id);
-
-        for (Installment ins: installmentsByRd.get(rd.Id)) {
-            System.debug(ins);
-        }
 
         System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
             'With default start date, ' + installmentCount + ' Recurring donation installments should be returned');
