@@ -99,14 +99,6 @@ export default class GeFormSection extends LightningElement {
         return fieldMappedByAPIName;
     }
 
-    @api
-    reset() {
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget => {
-            widget.reset();
-        });
-    }
-
     registerCreditCardWidget() {
         if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
