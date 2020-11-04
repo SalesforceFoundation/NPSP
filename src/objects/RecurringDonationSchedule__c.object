@@ -491,6 +491,11 @@
                     <default>false</default>
                     <label>ACH/EFT</label>
                 </value>
+                <value>
+                    <fullName>ACH</fullName>
+                    <default>false</default>
+                    <label>ACH</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
