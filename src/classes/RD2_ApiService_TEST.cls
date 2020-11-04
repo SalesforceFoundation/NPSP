@@ -313,10 +313,11 @@ private class RD2_ApiService_TEST {
     }
 
     /**
-     * @description Validate an empty installment response when End Date is missing
+     * @description Validate a valid installment response when End Date is missing
      */
     @IsTest
     private static void shouldReturnNoInstallmentsWithMissingEndDate() {
+        final Integer installmentCount = 12;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
@@ -325,8 +326,8 @@ private class RD2_ApiService_TEST {
             null,
             rd.Id);
 
-        System.assertNotEquals(0, installmentsByRd.size(),
-            'There should be no recurring donation installments returned when End Date is missing');
+        System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
+            'With default dates, ' + installmentCount + 'Recurring donation installments should be returned');
     }
 
     /**

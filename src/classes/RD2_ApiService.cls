@@ -212,9 +212,11 @@ public inherited sharing class RD2_ApiService {
     }
 
     /**
-     * @description Calculates endDate to produce 1 year of installment data (startDate + 1 year - 1 day).
-     * One day is subtracted to ensure that one year of installments is included. Without the adjustment,
-     * an extra installment is reported in most scenarios.
+     * @description Calculates endDate to produce 1 year of installment data. In most cases that means
+     * endDate should be set to startDate + 1 year - 1 day. There may be edge cases where that is not
+     * true, so the subtraction is limited to cases where the day portion of startDate == the day portion of endDate.
+     * The outcome of subtracting one day is to ensure that one year of installments is included. Without the
+     * adjustment, an extra installment is reported in most, if not all, scenarios.
      * @param startDate Date
      * @return endDate Date
      */
