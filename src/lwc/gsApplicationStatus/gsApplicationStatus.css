@@ -1,14 +1,27 @@
 img {
     margin-bottom: 24px;
     object-fit:fill;
+    margin-top: 0px;
 }
 
 .slds-button_outline-brand {
-    border-color: purple;
-    color: purple;
+    border-color: #7614A1;
+    color: #7614A1;
 }
 
 .slds-button_brand {
-    background-color: purple;
-    border-color: purple;
+    background-color: #7614A1;
+    border-color: #7614A1;
+}
+
+.container {
+    background-color:white;
+    box-shadow: 2px -9px 5px -5px gray;
+}
+
+.button-padding {
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-bottom: 24px;
+    width: calc(100% - 48px);
 }

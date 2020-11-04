@@ -1658,6 +1658,7 @@
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
+        <members>Close</members>
         <members>ClosedWonOpportunities</members>
         <members>ConfirmDeleteAccount</members>
         <members>ConfirmDeleteLeaveAccountEmpty</members>
@@ -3879,10 +3880,10 @@
         <members>geTemplates</members>
         <members>geWidgetService</members>
         <members>gsApplicationStatus</members>
-        <members>gsModal</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
+        <members>modal</members>
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
