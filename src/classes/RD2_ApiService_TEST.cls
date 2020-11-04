@@ -299,24 +299,29 @@ private class RD2_ApiService_TEST {
      * @description Validate a valid installment response when start date is not passed in
      */
     @IsTest
-    private static void shouldReturnValidInstallmentsWithMissingStartDate() {
+    private static void shouldReturn25ValidInstallmentsWithDefaultStartDate() {
+        final Integer installmentCount = 24;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Map<Id, List<Installment>> installmentsByRd = queryInstallments(
-            null,
-            date.today().addYears(2),
+            date.today(),
+            date.today().addYears(2).addDays(-1),
             rd.Id);
 
-        System.assertNotEquals(0, installmentsByRd.size(),
-            'Recurring donation installments should be returned when Start Date is missing');
+        for (Installment ins: installmentsByRd.get(rd.Id)) {
+            System.debug(ins);
+        }
+
+        System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
+            'With default start date, ' + installmentCount + ' Recurring donation installments should be returned');
     }
 
     /**
      * @description Validate a valid installment response when End Date is missing
      */
     @IsTest
-    private static void shouldReturnNoInstallmentsWithMissingEndDate() {
+    private static void shouldReturnOneYearOfInstallmentsWithMissingEndDate() {
         final Integer installmentCount = 12;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
@@ -327,7 +332,7 @@ private class RD2_ApiService_TEST {
             rd.Id);
 
         System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
-            'With default dates, ' + installmentCount + 'Recurring donation installments should be returned');
+            'With default end date, ' + installmentCount + ' Recurring donation installments should be returned');
     }
 
     /**
@@ -345,7 +350,7 @@ private class RD2_ApiService_TEST {
             rd.Id);
 
         System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
-            'With default dates, ' + installmentCount + 'Recurring donation installments should be returned');
+            'With default dates, ' + installmentCount + ' Recurring donation installments should be returned');
     }
 
     /**
