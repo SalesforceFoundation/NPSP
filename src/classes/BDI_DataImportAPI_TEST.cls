@@ -51,6 +51,25 @@ public with sharing class BDI_DataImportAPI_TEST {
     }
 
     /*********************************************************************************************************
+    * @description utility to create a new DI record for the specified batch
+    * @return data Import object
+    */
+    private static DataImport__c newDataImport(Id batchId,
+        String firstName, String lastName, String donationName, 
+        Decimal donationAmount, String stage) {
+
+        DataImport__c dataImport = new DataImport__c(
+            Contact1_Firstname__c = firstName,
+            Contact1_Lastname__c = lastName,
+            Donation_Amount__c = donationAmount,
+            Donation_Name__c = donationName,
+            Donation_Stage__c = stage,
+            Donation_Date__c = Date.today(),
+            NPSP_Data_Import_Batch__c = batchId
+        );
+        return dataImport;
+    }
+    /*********************************************************************************************************
     * @description utility to create & save a new DI batch
     */
     public static DataImportBatch__c newBatch(String name, boolean autoProcess) {
@@ -340,5 +359,79 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiDryRunValidated];
         system.assertEquals(3, listDI.size());
+    }
+
+    /*********************************************************************************************************
+    * @description process di records selecting all the fields
+    * verify:
+    *     no errors occurred
+    **********************************************************************************************************/
+    @isTest
+    private static void processRecordsWithAllFields() {
+        // create the data import record
+        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', 'TestOpp', 1000, 'Closed Won');
+        insert dataImport;
+        Id diObjId = dataImport.Id;
+    
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
+
+        // get the list of existing di records with all the fields
+        String allDIFields = String.join(BDI_DataImportService.listStrDataImportFields, ',');
+        List<DataImport__c> listDI = 
+            Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
+                + ' FROM DataImport__c WHERE Id = :diObjId');
+
+        // process no dry run
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
+
+        // check the results
+        dataImport = [
+            SELECT DonationImported__c,
+                    FailureInformation__c
+            FROM DataImport__c
+            WHERE Id = :diObjId
+        ];
+
+        System.assertEquals(null, 
+            dataImport.FailureInformation__c, 'Data Import process errors.');
+    }
+
+    /*********************************************************************************************************
+    * @description process di records and check if the opportunity is created
+    * verify:
+    *     no errors occurred
+    **********************************************************************************************************/
+    @isTest
+    private static void processRecordsAndCreateOpportunity() {
+        // create the data import record
+        String donationName = 'TestOpp';
+        DataImport__c dataImport = newDataImport(null, 'Jane', 'Doe', donationName, 1000, 'Closed Won');
+        insert dataImport;
+        Id diObjId = dataImport.Id;
+    
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.DoNotMatch;
+
+        // get the list of existing di records with all the fields
+        String allDIFields = String.join(BDI_DataImportService.listStrDataImportFields, ',');
+        List<DataImport__c> listDI = 
+            Database.query('SELECT ' + String.escapeSingleQuotes(allDIFields) 
+                + ' FROM DataImport__c WHERE Id = :diObjId');
+
+        // process no dry run
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
+
+        List<Opportunity> opps = [
+            SELECT Id
+            FROM Opportunity 
+            WHERE Name =: donationName
+        ];
+        System.assertEquals(1, opps.size(), 'Opportunity record was not created');
+
     }
 }
