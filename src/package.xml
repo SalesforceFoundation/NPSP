@@ -2488,11 +2488,15 @@
         <members>gsChecklistItemPrepareNPSPLinkLabel</members>
         <members>gsChecklistItemPrepareNPSPPriBtnLabel</members>
         <members>gsChecklistItemPrepareNPSPTitle</members>
+        <members>gsChecklistItemNPSPCloudDesc</members>
+        <members>gsChecklistItemNPSPCloudLinkLabel</members>
+        <members>gsChecklistItemNPSPCloudTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
         <members>gsChecklistItemSetupContactSecBtnLabel</members>
         <members>gsChecklistItemSetupContactTitle</members>
+        <members>gsChecklistItemSetupNPSPCloudPriBtnLabel</members>
         <members>gsChecklistItemStayTrackDesc</members>
         <members>gsChecklistItemStayTrackLinkLabel</members>
         <members>gsChecklistItemStayTrackPriBtnLabel</members>
@@ -3304,6 +3308,7 @@
         <members>GS_Admin_Checklist_Item.Fundraising_process</members>
         <members>GS_Admin_Checklist_Item.Running_Reports</members>
         <members>GS_Admin_Checklist_Item.Prepare_NPSP_Cloud</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>

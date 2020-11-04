@@ -30,6 +30,10 @@ import gsChecklistItemPrepareNPSPDesc from '@salesforce/label/c.gsChecklistItemP
 import gsChecklistItemPrepareNPSPPriBtnLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPPriBtnLabel';
 import gsChecklistItemPrepareNPSPLinkLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPLinkLabel';
 import gsChecklistItemPrepareNPSPTitle from '@salesforce/label/c.gsChecklistItemPrepareNPSPTitle';
+import gsChecklistItemNPSPCloudDesc from '@salesforce/label/c.gsChecklistItemNPSPCloudDesc';
+import gsChecklistItemSetupNPSPCloudPriBtnLabel from '@salesforce/label/c.gsChecklistItemSetupNPSPCloudPriBtnLabel';
+import gsChecklistItemNPSPCloudLinkLabel from '@salesforce/label/c.gsChecklistItemNPSPCloudLinkLabel';
+import gsChecklistItemNPSPCloudTitle from '@salesforce/label/c.gsChecklistItemNPSPCloudTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -67,6 +71,10 @@ const labelMap = {
     gsChecklistItemPrepareNPSPPriBtnLabel,
     gsChecklistItemPrepareNPSPLinkLabel,
     gsChecklistItemPrepareNPSPTitle,
+    gsChecklistItemNPSPCloudDesc,
+    gsChecklistItemSetupNPSPCloudPriBtnLabel,
+    gsChecklistItemNPSPCloudLinkLabel,
+    gsChecklistItemNPSPCloudTitle,
 }
 
 /**
