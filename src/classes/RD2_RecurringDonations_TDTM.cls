@@ -168,20 +168,20 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
         Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = new Map<Id, List<RecurringDonationSchedule__c>>();
-        
+
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
             oppsByRDId = new RD2_OpportunityEvaluationService().getOpportunitiesByRDId(UTIL_SObject.extractIds(rds));
             schedulesByRdId = scheduleService.getAllSchedules(rds, oldRds);
         }
 
-        for (npe03__Recurring_Donation__c rd : rds) { 
+        for (npe03__Recurring_Donation__c rd : rds) {
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
                     .revisePlannedInstallments()
                     .reviseNextDonationDateBeforeInsert(scheduleService);
 
-            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd, oppsByRDId.get(rd.Id))
                     .revisePlannedInstallments()
                     .reviseStatus(currentDate, scheduleService)
@@ -437,7 +437,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                     rdIds.add(rd.Id);
                 }
 
-                if (rd.npe03__Next_Payment_Date__c != oldRd.npe03__Next_Payment_Date__c 
+                if (rd.npe03__Next_Payment_Date__c != oldRd.npe03__Next_Payment_Date__c
                     || !getFieldsChangingSchedule(rd, oldRd).isEmpty()
                 ) {
                     rdIdsWhereScheduleChanged.add(rd.Id);
@@ -565,6 +565,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             RD2_RecurringDonation oldRd = new RD2_RecurringDonation(oldRds[i]);
 
             if (rd.isElevateRecord() && rd.isClosed() && !oldRd.isClosed()) {
+
+                if (RD2_ElevateIntegrationService.isElevateEvent(rd, oldRd)) {
+                    continue;
+                }
+
                 //send the RD details including the user provided Closed Reason to the commitment service
                 commitmentRDs.add(new npe03__Recurring_Donation__c(
                     Id = closedRd.Id,
