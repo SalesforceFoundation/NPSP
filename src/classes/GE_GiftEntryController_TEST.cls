@@ -107,8 +107,8 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'Response status code should match: ' + response);
 
-        System.assertEquals(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE, response.status,
-            'Response status should contain the timeout exception or timout error response message: ' + response);
+        System.assertEquals(true, response.body.contains(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE),
+            'Response body status should contain the timeout exception or timeout error response message: ' + response);
 
         System.assertEquals(true, response.body.contains(requestTimeoutMessage),
             'Response message should contain a generic purchase request timed out message: ' + response);
