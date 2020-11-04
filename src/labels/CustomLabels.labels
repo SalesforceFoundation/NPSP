@@ -6824,6 +6824,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Onboard Your Users</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemFundraisingProcessDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Learn how to leverage built-in tools like Path and Kanban to effectively manage your fundraising and donation process and ensure everyone at your organization has a window into how those processes work.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Learn more about Fudraising in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Create List Views</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Visualize your Fundraising process</value>
+    </labels>
+    <labels>
         <fullName>commonFieldsNotFound</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
