@@ -137,30 +137,6 @@ export default class GeFormRenderer extends LightningElement{
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
-    get selectedDonationOrPaymentRecord() {
-        return this.selectedPaymentRecord() ? this.selectedPaymentRecord() :
-            this.selectedDonationRecord() ? this.selectedDonationRecord() :
-                null;
-    }
-
-    selectedDonationRecord() {
-        return this.getRelatedRecordFromFormStateFor(
-            apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)
-        );
-    }
-
-    selectedPaymentRecord() {
-        return this.getRelatedRecordFromFormStateFor(
-            apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
-        );
-    }
-
-    getRelatedRecordFromFormStateFor(fieldApiName) {
-        return this.getFieldValueFromFormState(
-            relatedRecordFieldNameFor(fieldApiName)
-        );
-    }
-
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
@@ -1101,26 +1077,6 @@ export default class GeFormRenderer extends LightningElement{
             this.selectedDonationCopyForReviewDonationsModal;
     }
 
-    loadFieldValuesForSelectedDonation(paymentImported, donationImported) {
-        // Load the sibling field values (parented by the same object mapping)
-        // for the donation and payment "imported" fields
-        this.loadSelectedRecordFieldValues(
-            this.selectedDonationOrPaymentRecord.Id.startsWith(this.oppPaymentKeyPrefix) ?
-                paymentImported :
-                donationImported,
-            this.selectedDonationOrPaymentRecord.Id
-        );
-
-        if (this.selectedDonationOrPaymentRecord.Id.startsWith(this.opportunityKeyPrefix)) {
-            // If the selected donation is an Opportunity, reset form fields that have
-            // field mappings parented by PaymentImported__c
-            this.resetFieldsForObjMappingApplyDefaults(
-                GeFormService.objectMappingWrapperFor(
-                    apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD)
-                ).DeveloperName);
-        }
-    }
-
     hasSelectedDonationOrPayment() {
         return !!this.selectedDonationOrPaymentRecordId();
     }
@@ -1903,8 +1859,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     selectedDonationOrPaymentRecordId() {
-        return this.selectedDonationOrPaymentRecord &&
-            this.selectedDonationOrPaymentRecord.Id;
+        return this.getFieldValueFromFormState(DATA_IMPORT_PAYMENT_IMPORTED_FIELD) ||
+            this.getFieldValueFromFormState(DATA_IMPORT_DONATION_IMPORTED_FIELD);
     }
 
     resetSelectedPaymentFieldsInFormState() {
