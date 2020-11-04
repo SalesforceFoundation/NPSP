@@ -38,7 +38,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         const percent = this.rowRecord[apiNameFor(PERCENT_FIELD)];
         if(isNumeric(percent) && percent >= 0) {
             const detail = {
-                targetFieldName: ALLOCATION_PERCENT,
+                targetFieldName: apiNameFor(PERCENT_FIELD),
                 value: percent
             };
             this.handleFieldValueChange({ detail }, totalDonation);
@@ -72,6 +72,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
      */
     handleFieldValueChange(event) {
+        if (event.target) {
+
+        }
         let changedFieldName = event.target.getAttribute(DATA_FIELD_NAME_SELECTOR);
 
         if (changedFieldName === this.allocationAmountFieldApiName) {
