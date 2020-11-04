@@ -1,10 +1,12 @@
 import {LightningElement, api, track} from 'lwc';
 import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
-import {apiNameFor,
-        isEmpty,
-        isNumeric,
-        deepClone} from 'c/utilCommon';
+import {
+    apiNameFor,
+    isEmpty,
+    isNumeric,
+    deepClone, debouncify
+} from 'c/utilCommon';
 
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
@@ -38,7 +40,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         const percent = this.rowRecord[apiNameFor(PERCENT_FIELD)];
         if(isNumeric(percent) && percent >= 0) {
             const detail = {
-                targetFieldName: apiNameFor(PERCENT_FIELD),
+                fieldApiName: apiNameFor(PERCENT_FIELD),
                 value: percent
             };
             this.handleFieldValueChange({ detail }, totalDonation);
@@ -71,26 +73,33 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param event
      * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
      */
-    handleFieldValueChange(event) {
-        if (event.target) {
-
+    handleFieldValueChangeSync = (event) => {
+        let changedField = {};
+        // Handle event from a DOM element
+        if (event.target && event.target.hasAttribute(DATA_FIELD_NAME_SELECTOR)) {
+            changedField = {
+                fieldApiName: event.target.getAttribute(DATA_FIELD_NAME_SELECTOR),
+                value: event.target.value
+            }
+            // Handle when the function is called from other functions
+        } else {
+            changedField = event.detail;
         }
-        let changedFieldName = event.target.getAttribute(DATA_FIELD_NAME_SELECTOR);
 
-        if (changedFieldName === this.allocationAmountFieldApiName) {
-            this.disablePercentFieldIfAmountHasValue(event.target);
+        if (changedField.fieldApiName === this.allocationAmountFieldApiName) {
+            this.disablePercentFieldIfAmountHasValue(changedField);
         }
 
-        if (changedFieldName === this.allocationPercentageFieldApiName) {
-            this.disableAmountFieldIfPercentHasValue(event.target);
-            this.calculateAmountFromPercent(event.target.value)
+        if (changedField.fieldApiName === this.allocationPercentageFieldApiName) {
+            this.disableAmountFieldIfPercentHasValue(changedField);
+            this.calculateAmountFromPercent(changedField)
         }
 
         this.dispatchEvent(new CustomEvent('rowvaluechange', {
             detail: {
                 rowIndex: this.rowIndex,
                 changedFieldAndValue: {
-                    [event.target.getAttribute(DATA_FIELD_NAME_SELECTOR)] : event.target.value
+                    [changedField.fieldApiName] : changedField.value
                 }
             }
         }));
@@ -102,6 +111,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         //     fireEvent(null, 'allocationValueChange', {rowIndex: this.rowIndex, payload});
         // }
     }
+    handleFieldValueChange = debouncify(this.handleFieldValueChangeSync.bind(this), 300);
 
     disablePercentFieldIfAmountHasValue(changedField) {
         let percentFieldElement = this.template.querySelector(

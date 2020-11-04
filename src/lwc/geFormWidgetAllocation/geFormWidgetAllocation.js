@@ -14,7 +14,7 @@ import GeLabelService from 'c/geLabelService';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
-import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
+import DATA_IMPORT_ADDITIONAL_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -57,56 +57,49 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     };
 
-
     loadWidgetDataFromState() {
         this.totalAmount = this.widgetDataFromState[DI_DONATION_AMOUNT_FIELD];
 
-        if (!this._widgetDataFromState.hasOwnProperty(DI_ADDITIONAL_OBJECT)) {
+        if (!this._widgetDataFromState.hasOwnProperty(apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD))) {
             return;
         }
         this.reset();
 
+        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
 
-        // if (!this._widgetDataFromState.hasOwnProperty(DI_ADDITIONAL_OBJECT)) {
-        //     return;
-        // }
-        // const ADDITIONAL_OBJECT_PARSED = JSON.parse(this._widgetDataFromState[apiNameFor(DI_ADDITIONAL_OBJECT)])
-        //     .dynamicSourceByObjMappingDevName;
-        // const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
-        //
-        // let dataImportRow;
-        // if (Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName)) {
-        //     dataImportRow =
-        //         JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName])
-        //             .dynamicSourceByObjMappingDevName;
-        // }
-        // if (!dataImportRow) {
-        //     return;
-        // }
-        // let rowList = [];
-        // let fieldMappings = GeFormService.fieldMappings;
-        // let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-        //     return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
-        // });
-        // Object.keys(dataImportRow).forEach(diKey => {
-        //     let properties = {};
-        //
-        //     gauMappingKeys.forEach(fieldMappingKey => {
-        //         let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
-        //         let sourceObj = dataImportRow[diKey].sourceObj;
-        //
-        //         if(Object.keys(sourceObj).includes(sourceField)) {
-        //             let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
-        //             let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-        //
-        //             properties[targetField] = diSourceField;
-        //
-        //         }
-        //     });
-        //     rowList.push(properties);
-        // });
-        //
-        // this.addRows(rowList);
+        let dataImportRow;
+        if (Object.keys(this._widgetDataFromState).includes(DATA_IMPORT_ADDITIONAL_JSON_FIELD.fieldApiName)) {
+            dataImportRow =
+                JSON.parse(this._widgetDataFromState[DATA_IMPORT_ADDITIONAL_JSON_FIELD.fieldApiName])
+                    .dynamicSourceByObjMappingDevName;
+        }
+        if (!dataImportRow) {
+            return;
+        }
+        let rowList = [];
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
+        });
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = {};
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+
+                    properties[targetField] = diSourceField;
+
+                }
+            });
+            rowList.push(properties);
+        });
+
+        this.addRows(rowList);
     }
 
     reset() {
@@ -297,7 +290,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
             detail: {
-                [apiNameFor(DI_ADDITIONAL_OBJECT)]: JSON.stringify(this.convertRowListToSObjectJSON())
+                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
             }
         }));
         // this.validate();
