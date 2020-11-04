@@ -40,6 +40,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         this.loadWidgetDataFromState();
     }
+
     @api element;
     @track alertBanner = {}; // { level: ('error', 'warning'), message: String }
     @track rowList = [];
