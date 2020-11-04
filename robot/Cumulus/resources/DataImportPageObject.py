@@ -9,7 +9,8 @@ from NPSP import npsp_lex_locators
 class DataImportPage(BaseNPSPPage, ListingPage):
 
     def _go_to_page(self, filter_name=None):
-        """To go to DataImport List View page"""
+        """Adding this go to page keyword as a workaround for namespace issue
+        when running NPSP tests in a different repo"""
         url_template = "{root}/lightning/o/{object}/list"
         name = self._object_name
         object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
