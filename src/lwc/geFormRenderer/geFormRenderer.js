@@ -874,21 +874,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     reset() {
-        this.resetFields();
         this.resetFormState();
-        this.widgetData = {};
     }
 
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.initializeFormState();
-    }
-
-    resetFields() {
-        this.template.querySelectorAll('c-ge-form-section')
-            .forEach(section => {
-                section.reset();
-            });
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
