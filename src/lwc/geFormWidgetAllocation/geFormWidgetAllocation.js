@@ -40,7 +40,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     @api element;
-    @track alertBanner = {}; // { level: ('error', 'warning'), message: String }
+    @track alertBanner = {};
     @track rowList = [];
     @track fieldList = [];
     @track allocationSettings;
@@ -106,53 +106,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.addRows(rowList);
     }
 
-    reset() {
-        this.rowList = [];
-        if(this.hasDefaultGAU) {
-            this.addRow(true);
-        }
-    }
-
-    @api
-    isValid() {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        for(const row of rows) {
-            if(!row.isValid()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    handleAddRow() {
-        this.addRow(false);
-    }
-
-    addRows(rowRecords) {
-        rowRecords.forEach(rowRecord => {
-            this.addRow(false, rowRecord);
-        });
-    }
-
-    addRow(isDefaultGAU, rowRecord) {
-        let element = {};
-        element.key = this.rowList.length;
-        const record = { ...rowRecord };
-        let row = {};
-        if(isDefaultGAU === true) {
-            // default GAU should be locked.
-            row.isDefaultGAU = true;
-            record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
-        }
-
-        row = {
-            ...row,
-            record,
-            element
-        };
-        this.rowList.push(row);
-    }
-
     get totalAmount() {
         return this._totalAmount;
     }
@@ -160,13 +113,12 @@ export default class GeFormWidgetAllocation extends LightningElement {
     set totalAmount(value) {
         this._totalAmount = value;
         if(value >= 0) {
-            // handle percentage allocations first
-            // value updates don't propagate down to child nodes, so we need to pass the new Total Amount down
             this.reallocateByPercent(value);
+
             if(this.hasDefaultGAU) {
-                // assign remainder to default GAU if enabled
                 this.allocateRemainingAmountToDefaultGAU();
             }
+
             this.validate();
         }
     }
@@ -204,10 +156,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return Array.isArray(this.rowList) && this.rowList.length > 0;
     }
 
-    /**
-     * Reallocate all percent-based allocations with the updated donation total.
-     * @param totalDonation
-     */
     reallocateByPercent(totalDonation) {
         const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
         if(rows.length > 0) {
@@ -215,17 +163,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
-    /**
-     * @return {boolean} TRUE when the total amount allocated is more then the total donation
-     */
     get isOverAllocated() {
         return this.allocatedAmount > this.totalAmount;
     }
 
-    /**
-     * @return {boolean} TRUE when no default GAU is present, and
-     * the total amount allocated is less than the total donation amount
-     */
     get isUnderAllocated() {
         return !this.hasDefaultGAU && (this.allocatedAmount < this.totalAmount);
     }
@@ -235,7 +176,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             .filter(row => {
                 const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
                 if(isNotEmpty(defaultGAUId)) {
-                    // don't include default GAU when calculating remaining amount if one is defined.
                     return row.record[GENERAL_ACCOUNT_UNIT] !== defaultGAUId;
                 }
 
@@ -255,6 +195,46 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 }
                 return accumulator;
             }, 0);
+    }
+
+    handleAddRow() {
+        this.addRow(false);
+    }
+
+    addRows(rowRecords) {
+        rowRecords.forEach(rowRecord => {
+            this.addRow(false, rowRecord);
+        });
+    }
+
+    addRow(isDefaultGAU, rowRecord) {
+        let element = {};
+        element.key = this.rowList.length;
+        const record = { ...rowRecord };
+        let row = {};
+        if(isDefaultGAU === true) {
+            // default GAU should be locked.
+            row.isDefaultGAU = true;
+            record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+        }
+
+        row = {
+            ...row,
+            record,
+            element
+        };
+        this.rowList.push(row);
+    }
+
+    handleRemove(event) {
+        this.rowList.splice(event.detail.rowIndex, 1);
+    }
+
+    reset() {
+        this.rowList = [];
+        if(this.hasDefaultGAU) {
+            this.addRow(true);
+        }
     }
 
     handleRowValueChangeSync = (event) => {
@@ -292,18 +272,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         };
     }
 
-    /**
-     * Handle removing a GAU from the list.
-     * @param event
-     */
-    handleRemove(event) {
-        this.rowList.splice(event.detail.rowIndex, 1);
-    }
-
-    /**
-     * Check for under-allocation and over-allocation, display appropriate error or warning message.
-     * @return {Boolean} True when component valid
-     */
     validate() {
         const message = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorAmountDoesNotMatch,
