@@ -25,7 +25,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowRecord;
     @api fieldList;
     @api disabled;
-    @api totalAmount;
     @api remainingAmount;
     @api widgetDataFromState;
 
@@ -66,14 +65,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return (amountInCents / 100);
     }
 
-
-
-    /**
-     * Handle field updates inside this allocation row.
-     * @param event
-     * @param total Optional total amount parameter for when we're reacting to the total donation amount changing
-     */
-    handleFieldValueChangeSync = (event) => {
+    handleFieldValueChange = (event) => {
         let changedField = {};
         // Handle event from a DOM element
         if (event.target && event.target.hasAttribute(DATA_FIELD_NAME_SELECTOR)) {
@@ -81,7 +73,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 fieldApiName: event.target.getAttribute(DATA_FIELD_NAME_SELECTOR),
                 value: event.target.value
             }
-            // Handle when the function is called from other functions
+        // Handle when the function is called from other functions
         } else {
             changedField = event.detail;
         }
@@ -111,7 +103,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         //     fireEvent(null, 'allocationValueChange', {rowIndex: this.rowIndex, payload});
         // }
     }
-    handleFieldValueChange = debouncify(this.handleFieldValueChangeSync.bind(this), 300);
 
     disablePercentFieldIfAmountHasValue(changedField) {
         let percentFieldElement = this.template.querySelector(
@@ -191,8 +182,4 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     get qaLocatorDeleteRow() {
         return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
     }
-
-
-
-
 }
