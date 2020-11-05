@@ -4217,6 +4217,32 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Select the specific gift entry data row based on the name parameter and selects the action from the dropdown menu. Eg: |Perform Action On Datatable Row  | ${contact2}[Name]     |     Delete</p></td>
               </tr>
               
+              <tr class="kwrow" id="GiftEntryPageObject.py.Validate Error Message">
+                <td class="kwname">
+                  Validate Error Message
+                </td>
+                <td class="kwargs">
+                  
+                  <i>type</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Validates that page contains specified type of message. Example: Validate Error Message |error |Allocations Error=Test Error Message</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Allocation Remaining Balance">
+                <td class="kwname">
+                  Verify Allocation Remaining Balance
+                </td>
+                <td class="kwargs">
+                  
+                  <i>amount</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Validates that the GAU allocation remaining balance is correct</p></td>
+              </tr>
+              
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Error For Field">
                 <td class="kwname">
                   Verify Error For Field
@@ -4436,16 +4462,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Adds specified batch columns to the visible section if they are not already added</p></td>
               </tr>
               
-              <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To New Section">
+              <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To Section">
                 <td class="kwname">
-                  Add Field Bundle To New Section
+                  Add Field Bundle To Section
                 </td>
                 <td class="kwargs">
                   
-                  <i>bundle</i>
+                  <i>bundle</i>, 
+                  
+                  <i>section=None</i>
                   
                 </td>
-                <td class="kwdoc"><p>Adds the specified field bundle to the template builder form if not already added</p></td>
+                <td class="kwdoc"><p>Adds the specified field bundle to the template builder form if not already added. If section is not specified then adds to the first section of the form, else creates a new section and adds to it</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Enter Value In Field">
@@ -6004,7 +6032,7 @@ Populate Pause Modal
       
     </div>
     <div class="footer">
-      Generated on Wednesday October 28, 09:50 AM - cumulusci v3.21.0
+      Generated on Monday November 02, 04:59 PM - cumulusci v3.22.0
     </div>
   </body>
 </html>
