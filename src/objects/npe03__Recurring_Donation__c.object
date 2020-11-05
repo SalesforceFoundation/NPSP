@@ -385,11 +385,6 @@
                     <label>Check</label>
                 </value>
                 <value>
-                    <fullName>ACH/EFT</fullName>
-                    <default>false</default>
-                    <label>ACH/EFT</label>
-                </value>
-                <value>
                     <fullName>ACH</fullName>
                     <default>false</default>
                     <label>ACH</label>
