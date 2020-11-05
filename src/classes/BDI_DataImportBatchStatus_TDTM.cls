@@ -290,7 +290,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
                 return BDI_DataImport_API.BATCH_STATUS_COMPLETED;
             }
 
-            return BDI_DataImport_API.BATCH_STATUS_COMPLETED;
+            return BDI_DataImport_API.BATCH_STATUS_OPEN;
         }
 
         Boolean isOpen(String status) {
