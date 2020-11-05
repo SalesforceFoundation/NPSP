@@ -106,7 +106,7 @@ public with sharing class GE_GiftEntryController {
     * @return void
     */
     private static void processPurchaseTimeoutResponse(UTIL_Http.Response response, String dataImportRecordId) {   
-        response.body = JSON.serialize(new Map<String, String>{
+        response.body = JSON.serialize(new Map<String, String> {
             'message' => PURCHASE_CALL_TIMEOUT_MESSAGE,
             'statusCode' => String.valueOf(response.statusCode),
             'status' => response.getErrorMessages()
