@@ -45,12 +45,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         }
     }
 
-    @api
-    isValid() {
-        const gauField = this.getFieldByName(ALLOCATION_GAU);
-        return gauField.isValid();
-    }
-
     /**
      * Calculate what amount is X percent of the total donation amount, rounded down to two decimal places.
      * @param percentValue
