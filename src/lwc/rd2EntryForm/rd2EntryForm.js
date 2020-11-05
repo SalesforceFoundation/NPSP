@@ -532,8 +532,16 @@ export default class rd2EntryForm extends LightningElement {
 
         this.isLoading = disableBtn;
         this.isSaveButtonDisabled = disableBtn;
-
-        this.template.querySelector(".error-container").scrollIntoView();
+        
+        
+    }
+    /**
+    * @description Scroll to error if the error is rendered 
+    */
+    renderedCallback() {
+        if (this.error.detail && this.isLoading === false) {
+            this.template.querySelector(".error-container").scrollIntoView(true);
+        }
     }
 
     /**
@@ -741,13 +749,14 @@ export default class rd2EntryForm extends LightningElement {
         this.isLoading = false;
         this.isSaveButtonDisabled = false;
         this.isElevateWidgetEnabled = false;
+        this.error = {}
 
         const inputFields = this.template.querySelectorAll('lightning-input-field');
-        if (inputFields) {
-            inputFields.forEach(field => {
+        inputFields.forEach(field => {
+            if (field.value) {
                 field.clean();
-            });
-        }
+            }
+        });
 
         if (!isNull(this.donorComponent)) {
             this.donorComponent.resetValues();
