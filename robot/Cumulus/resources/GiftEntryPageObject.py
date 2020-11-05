@@ -20,7 +20,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         otherwise waits until page contains batches table"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
