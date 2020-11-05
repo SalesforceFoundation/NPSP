@@ -72,11 +72,10 @@ export default class GeFormField extends LightningElement {
     }
 
     getValueFromChangeEvent(event) {
-        const eventDetailValue = event.detail.value;
-
         if (this.isPicklist) {
+            const value = event.detail.value;
             const isSelectedValueNone =
-                eventDetailValue === this.CUSTOM_LABELS.commonLabelNone;
+                value === this.CUSTOM_LABELS.commonLabelNone;
             if (isSelectedValueNone) {
                 return null;
             }
@@ -90,16 +89,15 @@ export default class GeFormField extends LightningElement {
             return event.target.value;
         }
 
-        if (this.isLookup && eventDetailValue) {
-            const val = eventDetailValue;
+        if (this.isLookup) {
+            const val = event.detail.value;
             if (typeof val === 'string') {
                 return val;
             } else if (Array.isArray(val)) {
                 return val[0] ? val[0] : null;
             }
         }
-
-        return eventDetailValue;
+        return event.detail.value;
     }
 
     /**
