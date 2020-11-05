@@ -260,14 +260,17 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
 
             if (isOpen(status)) {
                 this.hasOpenRow = true;
+                return;
             }
 
             if (isImported(status)) {
                 this.hasImportedRow = true;
+                return;
             }
 
             if (isFailed(status)) {
                 this.hasFailedRow = true;
+                return;
             }
         }
 
