@@ -6823,7 +6823,39 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Stay Track in Get Started</shortDescription>
         <value>Stay on Track with Activities</value>
     </labels>
+      <labels>
+        <fullName>gsChecklistItemPrepareNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Set specific goals and learn the best practices for implementing Nonprofit Cloud.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Set Goals</value>
+    </labels>
      <labels>
+        <fullName>gsChecklistItemPrepareNPSPLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Learn more about NPSP Success in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Prepare for Success with Nonprofit Cloud</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>

@@ -18,21 +18,18 @@ import gsChecklistItemCreateDonationDesc from '@salesforce/label/c.gsChecklistIt
 import gsChecklistItemCreateDonationLinkLabel from '@salesforce/label/c.gsChecklistItemCreateDonationLinkLabel';
 import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChecklistItemCreateDonationPriBtnLabel'; 
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
-<<<<<<< HEAD
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
 import gsChecklistItemFundraisingProcessTitle from '@salesforce/label/c.gsChecklistItemFundraisingProcessTitle';
 import gsChecklistItemFundraisingProcessLinkLabel from '@salesforce/label/c.gsChecklistItemFundraisingProcessLinkLabel';
 import gsChecklistItemFundraisingProcessPriBtnLabel from '@salesforce/label/c.gsChecklistItemFundraisingProcessPriBtnLabel';
-=======
 import gsChecklistItemRunningReportsDesc from '@salesforce/label/c.gsChecklistItemRunningReportsDesc';
 import gsChecklistItemRunningReportsPriBtnLabel from '@salesforce/label/c.gsChecklistItemRunningReportsPriBtnLabel';
 import gsChecklistItemRunningReportsLinkLabel from '@salesforce/label/c.gsChecklistItemRunningReportsLinkLabel';
 import gsChecklistItemRunningReportsTitle from '@salesforce/label/c.gsChecklistItemRunningReportsTitle';
-gsChecklistItemRunningReportsDesc
-gsChecklistItemRunningReportsPriBtnLabel
-gsChecklistItemRunningReportsLinkLabel
-gsChecklistItemRunningReportsTitle
->>>>>>> feature/adoption__W-7971251
+import gsChecklistItemPrepareNPSPDesc from '@salesforce/label/c.gsChecklistItemPrepareNPSPDesc';
+import gsChecklistItemPrepareNPSPPriBtnLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPPriBtnLabel';
+import gsChecklistItemPrepareNPSPLinkLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPLinkLabel';
+import gsChecklistItemPrepareNPSPTitle from '@salesforce/label/c.gsChecklistItemPrepareNPSPTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -58,17 +55,18 @@ const labelMap = {
     gsChecklistItemCreateDonationLinkLabel,
     gsChecklistItemCreateDonationPriBtnLabel,
     gsChecklistItemExtraOneMinuteVideo,
-<<<<<<< HEAD
     gsChecklistItemFundraisingProcessDesc,
     gsChecklistItemFundraisingProcessTitle,
     gsChecklistItemFundraisingProcessLinkLabel,
     gsChecklistItemFundraisingProcessPriBtnLabel,
-=======
     gsChecklistItemRunningReportsDesc,
     gsChecklistItemRunningReportsPriBtnLabel,
     gsChecklistItemRunningReportsLinkLabel,
     gsChecklistItemRunningReportsTitle,
->>>>>>> feature/adoption__W-7971251
+    gsChecklistItemPrepareNPSPDesc,
+    gsChecklistItemPrepareNPSPPriBtnLabel,
+    gsChecklistItemPrepareNPSPLinkLabel,
+    gsChecklistItemPrepareNPSPTitle,
 }
 
 /**
