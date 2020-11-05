@@ -30,6 +30,10 @@ export default class GeFormWidget extends LightningElement {
             [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
     }
 
+    handleFormWidgetChange(event) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}))
+    }
+
     get isValid() {
         const thisWidget = this.widgetComponent;
         let isValid = false;
@@ -62,10 +66,6 @@ export default class GeFormWidget extends LightningElement {
 
     get widgetNotFound(){
         return WIDGET_LIST.indexOf(this.element.componentName) < 0
-    }
-
-    handleFormWidgetChange(event) {
-        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}))
     }
 
     @api
