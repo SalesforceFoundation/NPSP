@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
-import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
+import { registerListener } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 
@@ -724,10 +724,42 @@ export default class rd2EntryForm extends LightningElement {
      * @description Dispatches an event to close the Recurring Donation entry form modal
      */
     closeModal(recordId) {
+        this.resetAllValues();
+
         const closeModalEvent = new CustomEvent('closemodal', {
             detail :{recordId: recordId},
         });
         this.dispatchEvent(closeModalEvent);
+    }
+
+    /**
+    * @description Reset all input values when entry form modal is closed, Reset all values in LWC
+    *   because New override button will not refresh in the same lightning session
+    */
+    resetAllValues() {
+        this.recordId = null;
+        this.isLoading = false;
+        this.isSaveButtonDisabled = false;
+        this.isElevateWidgetEnabled = false;
+
+        const inputFields = this.template.querySelectorAll('lightning-input-field');
+        if (inputFields) {
+            inputFields.forEach(field => {
+                field.clean();
+            });
+        }
+
+        if (!isNull(this.donorComponent)) {
+            this.donorComponent.resetValues();
+            this.donorComponent.forceRefresh();
+        }
+        if (!isNull(this.scheduleComponent)) {
+            this.scheduleComponent.resetValues();
+            this.scheduleComponent.forceRefresh();
+        }
+        if (!isNull(this.customFieldsComponent)) {
+            this.customFieldsComponent.resetValues();
+        }
     }
 
     /**
