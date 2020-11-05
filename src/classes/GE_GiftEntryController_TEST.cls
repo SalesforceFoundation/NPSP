@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/GiftEntry.htm
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
-@isTest
+@IsTest
 private with sharing class GE_GiftEntryController_TEST {
 
 
@@ -42,7 +42,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
      */
-    @isTest
+    @IsTest
     private static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -62,7 +62,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response throws an excpetion
      * when building a purchase request body fails with an unexpected error
      */
-    @isTest
+    @IsTest
     private static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -86,7 +86,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains timed out status code and message
      * when the purchase requests times out
      */
-    @isTest
+    @IsTest
     private static void shouldLogErrorWhenPurchaseRequestTimesOut() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -107,10 +107,10 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'Response status code should match: ' + response);
 
-        System.assertEquals(true, response.body.contains(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE),
+        System.assert(response.body.contains(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE),
             'Response body status should contain the timeout exception or timeout error response message: ' + response);
 
-        System.assertEquals(true, response.body.contains(requestTimeoutMessage),
+        System.assert(response.body.contains(requestTimeoutMessage),
             'Response message should contain a generic purchase request timed out message: ' + response);
 
         List<Error__c> errors = new TEST_SObjectGateway.ErrorGateway().getRecords();
@@ -130,7 +130,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
-    @isTest
+    @IsTest
     private static void shouldUpsertDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
@@ -145,7 +145,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that the Data Import processes correctly and returns an Opportunity id.
      */
-    @isTest
+    @IsTest
     private static void shouldProcessDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', null);
         inMemoryDataImport.Donation_Amount__c = 10;
@@ -154,7 +154,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert(dataImportRecord.Id != null);
         System.assert(dataImportRecord.Donation_Amount__c == 10);
 
-        Test.StartTest();
+        Test.startTest();
         Boolean matchToExistingDonation = false;
         String opportunityId = GE_GiftEntryController.submitDataImportToBDI(dataImportRecord, matchToExistingDonation);
         Test.stopTest();
@@ -166,7 +166,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Saves the data import record, dry runs the record, and returns updated
      * totals with the new row.
      */
-    @isTest
+    @IsTest
     private static void testShouldSaveAndDryRunDataImport() {
 
         // required setting
@@ -191,7 +191,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
-    @isTest
+    @IsTest
     private static void createAndReturnDefaultFormTemplate() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = buildFormTemplate();
@@ -221,7 +221,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
      * by BDI for N number of objects processing.
      */
-    @isTest
+    @IsTest
     private static void widgetDataShouldBeConvertedIntoDynamicSources() {
         General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
                 Active__c = true);
@@ -241,7 +241,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 gau2.Id);
         sourceObjA2.put(Allocation__c.Percent__c.getDescribe().getName(),25);
 
-        Sobject[] testWidgetRecords = new Sobject[]{sourceObjA1,sourceObjA2};
+        SObject[] testWidgetRecords = new SObject[]{sourceObjA1,sourceObjA2};
 
         Map<String,SObject[]> widgetData = new Map<String,SObject[]>();
 
@@ -312,7 +312,7 @@ private with sharing class GE_GiftEntryController_TEST {
         Form_Template__c[] formTemplates = [SELECT Id, Name FROM Form_Template__c];
 
         System.assertEquals(2, formTemplates.size());
-        GE_GiftEntryController.deleteFormTemplates(new String[]{ formTemplates[0].id, formTemplates[1].id });
+        GE_GiftEntryController.deleteFormTemplates(new String[]{ formTemplates[0].Id, formTemplates[1].Id });
 
         formTemplates = [SELECT Id, Name FROM Form_Template__c];
         System.assertEquals(0, formTemplates.size());
@@ -407,12 +407,12 @@ private with sharing class GE_GiftEntryController_TEST {
         Test.stopTest();
 
         String[] selectFields = new String[] {'Id', 'Name'};
-        String sObjectApiName = SObjectType.Custom_Column_Header__c.Name;
+        String sObjectApiName = SObjectType.Custom_Column_Header__c.name;
         String[] whereClause = new String[] {};
         String orderByClause = 'LastModifiedDate desc';
         Integer limitClause = 10;
 
-        sObject[] objects = GE_GiftEntryController.retrieveRecords(
+        SObject[] objects = GE_GiftEntryController.retrieveRecords(
                 selectFields, sObjectApiName, whereClause, orderByClause, limitClause);
 
         System.assertEquals(3, objects.size());
@@ -445,7 +445,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 'New template names should return true from `GE_GiftEntryController.checkNameUniqueness`');
     }
 
-    @isTest
+    @IsTest
     static void shouldRetrieveSGETemplateWithPermission() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
@@ -598,6 +598,7 @@ private with sharing class GE_GiftEntryController_TEST {
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
     * @param lastname the lastname to specify for Contact1
+    * @param batchId Data Import Batch Id
     * @return DataImport__c the new Data Import record
     */
     public static DataImport__c createDataImport(String firstname, String lastname, Id batchId) {
@@ -687,10 +688,7 @@ private with sharing class GE_GiftEntryController_TEST {
     }
 
     private class UTIL_PermissionsMock implements StubProvider {
-
         Boolean hasPermission;
-        String permission;
-
         public UTIL_PermissionsMock(Boolean hasPermission) {
             this.hasPermission = hasPermission;
         }
@@ -698,8 +696,6 @@ private with sharing class GE_GiftEntryController_TEST {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
-
-            Set<String> paramNames = new Set<String>(listOfParamNames);
 
             switch on stubbedMethodName {
                 when 'canRead' {
