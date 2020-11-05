@@ -69,11 +69,10 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     object_id=${data}[contact_rd][Id]
     Current Page Should be                  Details                                   npe03__Recurring_Donation__c
     # validate recurring donation statistics current and next year values
-    Validate Current And Next Year values    100
+    Validate Current And Next Year values   100
 
     # Update the payment installment period to every eight weeks
     Edit Recurring Donation Status
-    ...                                     Recurring Period=Advanced
     ...                                     Every=8
     ...                                     Installment Period=Weekly
     #Open NPSP Settings and run Recurring Donations Batch job for the payment values to get updated
@@ -83,4 +82,4 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     object_id=${data}[contact_rd][Id]
     Current Page Should be                  Details                                   npe03__Recurring_Donation__c
     # validate recurring donation statistics current and next year values
-    Validate Current And Next Year values    100
+    Validate Current And Next Year values   100
