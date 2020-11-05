@@ -153,8 +153,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
         //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
         const nameOnCard = null;
-          return tokenHandler.requestToken(iframe, nameOnCard, this.handleError,
-               this.resolveToken)
+            return tokenHandler.requestToken(iframe, nameOnCard,
+                this.handleError, this.resolveToken)
 
     }
 
