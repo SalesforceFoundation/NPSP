@@ -58,7 +58,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
-        this.reset();
 
         let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
         this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
@@ -242,23 +241,22 @@ export default class GeFormWidgetAllocation extends LightningElement {
     handleRowValueChangeSync = (event) => {
         const detail = event.detail;
         const record = this.rowList[detail.rowIndex].record;
-        let _rowList = deepClone(this.rowList);
-        _rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
+        this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
         // this.allocateRemainingAmountToDefaultGAU();
 
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
             detail: {
-                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON(_rowList))
+                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
             }
         }));
     }
     handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 600);
 
-    convertRowListToSObjectJSON(rowList) {
+    convertRowListToSObjectJSON() {
         let widgetRowValues = [];
 
-        rowList.forEach(row => {
+        this.rowList.forEach(row => {
             // no need to send back default GAU, automatically allocated by the trigger
             if (row.isDefaultGAU) {
                 return;
