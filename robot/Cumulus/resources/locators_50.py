@@ -299,7 +299,11 @@ npsp_lex_locators={
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
         'datatable_options_icon':"//th/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
         'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
-        'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']"
+        'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']",
+        'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
+        'alert':'//div[@role="alert" and contains(@class,"slds-theme_{}")][./span[text()="{}"]]/h2[text()="{}"]',
+        'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]',
+        'page_error':'//div[@class="pageLevelErrors"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
