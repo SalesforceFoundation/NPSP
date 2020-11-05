@@ -26,7 +26,7 @@
             <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} data-qa-locator={qaLocatorAddNewAllocation} onclick={handleAddRow}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size='3' if:true={showRemainingAmount}>
-            <lightning-formatted-number value={remainingAmount} format-style='currency'></lightning-formatted-number>
+            <lightning-formatted-number value={remainingAmount} format-style='currency' data-qa-locator={qaLocatorRemainingAllocationAmount}></lightning-formatted-number>
         </lightning-layout-item>
     </lightning-layout>
 </template>
