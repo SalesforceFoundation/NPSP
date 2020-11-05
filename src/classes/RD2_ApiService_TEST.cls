@@ -38,6 +38,7 @@
 private class RD2_ApiService_TEST {
 
     private static final String API_QUERY_SCHEDULES = 'rd2.queryschedules';
+    private static final String API_QUERY_INSTALLMENTS = 'rd2.queryinstallments';
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
@@ -246,6 +247,145 @@ private class RD2_ApiService_TEST {
         System.assertEquals(1, isActiveCurrentNotPaused, 'There should be one active and current unpaused schedules returned');
     }
 
+    /**
+     * @description Validate an empty installment response when RD2 is not enabled
+     */
+    @IsTest
+    private static void shouldReturnNoInstallmentsWhenRD2NotEnabled() {
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            date.today(),
+            date.today().addYears(2),
+            rd.Id);
+
+        System.assertEquals(0, installmentsByRd.size(),
+            'There should be no recurring donation installments returned when RD2 is not enabled');
+    }
+
+    /**
+     * @description Validate an empty installment response when invalid RD Id is passed in
+     */
+    @IsTest
+    private static void shouldReturnNoInstallmentsWithInvalidRDId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            date.today(),
+            date.today().addYears(2),
+            UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType));
+
+        System.assertEquals(0, installmentsByRd.size(),
+            'There should be no recurring donation installments returned when RD Id is invalid');
+    }
+
+    /**
+     * @description Validate an empty installment response when empty RD Id set is passed in
+     */
+    @IsTest
+    private static void shouldReturnNoInstallmentsWithEmptyRDIdSet() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            Date.today(),
+            Date.today().addYears(2),
+            null);
+
+        System.assertEquals(0, installmentsByRd.size(),
+            'There should be no recurring donation installments returned when RD Id Set is empty');
+    }
+
+    /**
+     * @description Validate a valid installment response when start date is not passed in
+     */
+    @IsTest
+    private static void shouldReturnValidInstallmentsWithDefaultStartDate() {
+        final Integer installmentCount = 24;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            null,
+            date.today().addYears(2).addDays(-1),
+            rd.Id);
+
+        System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
+            'With default start date, ' + installmentCount + ' Recurring donation installments should be returned');
+    }
+
+    /**
+     * @description Validate a valid installment response when End Date is missing
+     */
+    @IsTest
+    private static void shouldReturnOneYearOfInstallmentsWithMissingEndDate() {
+        final Integer installmentCount = 12;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            date.today(),
+            null,
+            rd.Id);
+
+        System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
+            'With default end date, ' + installmentCount + ' Recurring donation installments should be returned');
+    }
+
+    /**
+     * @description Validate a valid installment response when default dates are used
+     */
+    @IsTest
+    private static void shouldReturnValidInstallmentsWithDefaultStartDateAndEndDate() {
+        final Integer installmentCount = 12;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            null,
+            null,
+            rd.Id);
+
+        System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
+            'With default dates, ' + installmentCount + ' Recurring donation installments should be returned');
+    }
+
+    /**
+     * @description Validate a valid installment response when valid parameters passed in
+     */
+    @IsTest
+    private static void shouldReturnValidInstallmentsWhenPauseScheduleIsActive() {
+        final Integer unpausedCount = 25;
+        final Integer pausedCount = 22;
+        final Date startDate = Date.newInstance(2018, 11, 1);
+        final Date endDate = Date.newInstance(2020, 11, 1);
+        final Date pauseStart = Date.newInstance(2019, 12, 1);
+        final Date pauseEnd = Date.newInstance(2020, 2, 1);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Test.startTest();
+        rd.npe03__Date_Established__c = startDate;
+        rd.StartDate__c = startDate;
+        update rd;
+        Test.stopTest();
+
+        Map<Id, List<Installment>> installmentsByRd = queryInstallments(
+            startDate,
+            endDate,
+            rd.Id);
+        System.assertEquals(unpausedCount, installmentsByRd.get(rd.Id).size(),
+            unpausedCount + ' Recurring donation installments should be returned when there is no pause schedule');
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStart, pauseEnd);
+        installmentsByRd = queryInstallments(
+            startDate,
+            endDate,
+            rd.Id);
+        System.assertEquals(pausedCount, installmentsByRd.get(rd.Id).size(),
+            pausedCount + ' Recurring donation installments should be returned when there is a three month pause');
+    }
+
 
     //// Helpers
     //////////////////////////
@@ -266,6 +406,26 @@ private class RD2_ApiService_TEST {
         );
 
         return (Map<Id, List<Schedule>>) JSON.deserialize(response, Map<Id, List<Schedule>>.class);
+    }
+
+    /**
+     * @description Utility method to retrieve installments via Callable_API
+     * @param startDate date
+     * @param endDate date
+     * @param rdId Recurring Donation Id
+     * @return Deserialized api response
+     */
+    private static Map<Id, List<Installment>> queryInstallments(Date startDate, Date endDate, Id rdId) {
+        Callable_API callable = new Callable_API();
+        String response = (String) callable.call(API_QUERY_INSTALLMENTS,
+            new Map<String, Object>{
+                CallableApiParameters.PARAM_RECORD_IDS => new Set<Id>{rdId},
+                CallableApiParameters.PARAM_START_DATE => startDate,
+                CallableApiParameters.PARAM_END_DATE => endDate
+            }
+        );
+
+        return (Map<Id, List<Installment>>) JSON.deserialize(response, Map<Id, List<Installment>>.class);
     }
 
     /****
@@ -314,5 +474,15 @@ private class RD2_ApiService_TEST {
         public String statusReason;
         public String currencyCode;
         public Datetime createdDate;
+    }
+
+    private class Installment {
+        public String recurringDonationId;
+        public String scheduleId;
+        public String campaignId;
+        public Date closeDate;
+        public Decimal installmentAmount;
+        public String currencyCode;
+        public String paymentMethod;
     }
 }
