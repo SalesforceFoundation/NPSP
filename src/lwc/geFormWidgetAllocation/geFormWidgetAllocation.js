@@ -45,7 +45,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track rowList = [];
     @track fieldList = [];
     @track allocationSettings;
-    _totalAmount = 0;
+    _totalAmount;
 
     connectedCallback() {
         this.init();
@@ -58,8 +58,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
-
         let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
+
         this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
 
         if (!this._widgetDataFromState.hasOwnProperty(apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD))) {
@@ -112,10 +112,13 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     set totalAmount(value) {
-        this._totalAmount = value;
-        if(value >= 0) {
-            this.reallocateByPercent(value);
+        if (value === this.totalAmount) {
+            return;
+        }
 
+        this._totalAmount = value;
+
+        if(value >= 0) {
             if(this.hasDefaultGAU) {
                 this.allocateRemainingAmountToDefaultGAU();
             }
@@ -155,13 +158,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         defaultRow.setFieldValue(
             `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
             this.remainingAmount);
-    }
-
-    reallocateByPercent(totalDonation) {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
-        if(rows.length > 0) {
-            // rows.forEach(row => row.reallocateByPercent(totalDonation));
-        }
     }
 
     get isOverAllocated() {
