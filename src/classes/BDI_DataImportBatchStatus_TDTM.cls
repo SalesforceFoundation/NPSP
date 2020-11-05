@@ -193,9 +193,9 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         List<DataImportBatch__c> importedRowBatches = getBatchesWithImportedRows(batchIds);
 
         BatchDataImportStatusAggregator aggregator = new BatchDataImportStatusAggregator();
-        aggregator.ingest(failedRowBatches);
-        aggregator.ingest(openRowBatches);
-        aggregator.ingest(importedRowBatches);
+        aggregator.readBatches(failedRowBatches);
+        aggregator.readBatches(openRowBatches);
+        aggregator.readBatches(importedRowBatches);
 
         return aggregator;
     }
@@ -218,7 +218,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
          * Reads in a list of Data Import batches, and creates or updates a BatchDataImportStatus instance for each batch
          * @param batches A list of Data Import batches to determine the status of.
          */
-        void ingest(List<DataImportBatch__c> batches) {
+        void readBatches(List<DataImportBatch__c> batches) {
             for (DataImportBatch__c batch : batches) {
                 if (statusesById.containsKey(batch.Id)) {
                     statusesById.get(batch.Id).readQueryResult(batch);
@@ -279,18 +279,18 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
          * @return {String} One of 'Failed - Needs Review', 'Open', or 'Completed'
          */
         String getBatchStatus() {
-            // if the batch has one failed row, the batch is failed regardless of the state of the other rows
+            // The order of these conditionals is IMPORTANT. Failed rows have precedence over Open rows when
+            // determining batch status, and Open rows have precedence over Imported rows. This means all rows
+            // must be marked as Imported for a batch to be marked as Completed, no Failed or Open rows allowed.
             if (this.hasFailedRow) {
                 return BDI_DataImport_API.BATCH_STATUS_FAILED;
             }
 
-            // if all rows are imported, and there are no failed or open rows, the batch is completed
-            if (this.hasImportedRow && !this.hasFailedRow && !this.hasOpenRow) {
+            if (!this.hasOpenRow) {
                 return BDI_DataImport_API.BATCH_STATUS_COMPLETED;
             }
 
-            // if none of the above apply, the batch is considered open
-            return BDI_DataImport_API.BATCH_STATUS_OPEN;
+            return BDI_DataImport_API.BATCH_STATUS_COMPLETED;
         }
 
         Boolean isOpen(String status) {
