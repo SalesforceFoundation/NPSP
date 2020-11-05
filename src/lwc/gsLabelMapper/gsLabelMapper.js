@@ -18,6 +18,10 @@ import gsChecklistItemCreateDonationDesc from '@salesforce/label/c.gsChecklistIt
 import gsChecklistItemCreateDonationLinkLabel from '@salesforce/label/c.gsChecklistItemCreateDonationLinkLabel';
 import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChecklistItemCreateDonationPriBtnLabel'; 
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
+import gsChecklistItemPrepareNPSPDesc from '@salesforce/label/c.gsChecklistItemPrepareNPSPDesc';
+import gsChecklistItemPrepareNPSPPriBtnLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPPriBtnLabel';
+import gsChecklistItemPrepareNPSPLinkLabel from '@salesforce/label/c.gsChecklistItemPrepareNPSPLinkLabel';
+import gsChecklistItemPrepareNPSPTitle from '@salesforce/label/c.gsChecklistItemPrepareNPSPTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -43,6 +47,10 @@ const labelMap = {
     gsChecklistItemCreateDonationLinkLabel,
     gsChecklistItemCreateDonationPriBtnLabel,
     gsChecklistItemExtraOneMinuteVideo,
+    gsChecklistItemPrepareNPSPDesc,
+    gsChecklistItemPrepareNPSPPriBtnLabel,
+    gsChecklistItemPrepareNPSPLinkLabel,
+    gsChecklistItemPrepareNPSPTitle,
 }
 
 /**
