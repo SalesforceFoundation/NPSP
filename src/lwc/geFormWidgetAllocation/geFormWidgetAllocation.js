@@ -27,7 +27,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track _totalAmount;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
+
     // need labels for field list
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
     wiredObjectInfo({data}) {
@@ -184,14 +184,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 if(Object.keys(sourceObj).includes(sourceField)) {
                     let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
                     let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-                    
+
                     properties[targetField] = diSourceField;
 
                 }
             });
             rowList.push(properties);
         });
-        
+
         this.addRows(rowList);
     }
 
@@ -204,7 +204,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     addRows(records) {
         records.forEach(record => {
-            this.addRow(false, record);      
+            this.addRow(false, record);
         });
     }
 
@@ -348,7 +348,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
                 const localFieldName = AMOUNT_FIELD.fieldApiName;
                 const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
-                
+
                 let currentAmount = current.record[currentKey];
                 if (isEmpty(currentAmount)) {
                     // amount is empty, use the percent field
@@ -458,6 +458,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     get qaLocatorAddNewAllocation() {
         return `button ${this.CUSTOM_LABELS.geAddNewAllocation}`;
+    }
+
+    get qaLocatorRemainingAllocationAmount() {
+        return `lightning-formatted-number Remaining Allocation Amount`;
     }
 
     /*******************************************************************************
