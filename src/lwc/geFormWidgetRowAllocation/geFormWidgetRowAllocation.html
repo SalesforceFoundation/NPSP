@@ -9,7 +9,8 @@
                                                    required='true'
                                                    onchange={handleFieldValueChange}
                                                    value={gauValue}
-                                                   class="help-text-hidden">
+                                                   class="help-text-hidden"
+                                                   data-qa-locator={qaLocatorGAU}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
@@ -17,7 +18,8 @@
                                                    data-fieldname={allocationAmountFieldApiName}
                                                    onchange={handleFieldValueChange}
                                                    value={amountValue}
-                                                   class="help-text-hidden">
+                                                   class="help-text-hidden"
+                                                   data-qa-locator={qaLocatorAllocationAmount}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
@@ -27,7 +29,8 @@
                                              formatter='percent-fixed'
                                              step='0.01'
                                              onchange={handleFieldValueChange}
-                                             value={percentValue}>
+                                             value={percentValue}
+                                             data-qa-locator={qaLocatorAllocationPercent}>
                             </lightning-input>
                         </div>
                     </div>

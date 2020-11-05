@@ -169,4 +169,16 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     get qaLocatorDeleteRow() {
         return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
     }
+
+    get qaLocatorGAU() {
+        return `input General Accounting Unit ${this.rowIndex}`;
+    }
+
+    get qaLocatorAllocationAmount() {
+        return `input Amount ${this.rowIndex}`;
+    }
+
+    get qaLocatorAllocationPercent() {
+        return `input ${this.percentCustomLabel} ${this.rowIndex}`;
+    }
 }
