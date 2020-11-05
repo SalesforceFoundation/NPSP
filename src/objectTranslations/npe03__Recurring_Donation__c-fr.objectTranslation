@@ -203,7 +203,7 @@
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH</masterLabel>
-            <translation>CCA/TEF</translation>
+            <translation>CCA</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
