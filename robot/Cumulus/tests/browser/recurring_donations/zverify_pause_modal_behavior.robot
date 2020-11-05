@@ -70,5 +70,9 @@ Edit An Enhanced Recurring donation record of type open
 
     # Verify Paused text appears next to the date specified
     Verify Pause Text Next To Installment Date	  @{PAUSE_DATES}
+    Run Recurring Donations Batch                 RD2
     # Verify the calculations for current and next year payments
+    Go To Page                                    Details
+    ...                                           npe03__Recurring_Donation__c
+    ...                                           object_id=${data}[contact_rd][Id]
     Validate Current And Next Year values         100
