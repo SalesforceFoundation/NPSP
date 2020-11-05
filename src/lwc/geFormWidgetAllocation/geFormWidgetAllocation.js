@@ -1,12 +1,10 @@
 import {LightningElement, api, track, wire} from 'lwc';
-
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     isNumeric,
     isNotEmpty,
     isEmpty,
-    apiNameFor,
-    getSubsetObject} from 'c/utilCommon';
+    apiNameFor, debouncify
+} from 'c/utilCommon';
 
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
@@ -46,7 +44,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track rowList = [];
     @track fieldList = [];
     @track allocationSettings;
-    @track _totalAmount;
+    _totalAmount = 0;
 
     connectedCallback() {
         this.init();
@@ -59,7 +57,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
-        this.totalAmount = this.widgetDataFromState[DI_DONATION_AMOUNT_FIELD];
+        let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
+        this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
 
         if (!this._widgetDataFromState.hasOwnProperty(apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD))) {
             return;
@@ -92,6 +91,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 if(Object.keys(sourceObj).includes(sourceField)) {
                     let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
                     let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+
+                    if (diSourceField === 0) {
+                        diSourceField = null;
+                    }
 
                     properties[targetField] = diSourceField;
 
@@ -187,10 +190,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return Array.isArray(this.rowList) && this.rowList.length > 0;
     }
 
-    /**
-     * Show remaining amount when under-allocated and no default GAU is present, or when over-allocated.
-     * @return {boolean}
-     */
     get showRemainingAmount() {
         return this.hasAllocations() &&
             ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
@@ -237,7 +236,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get allocatedAmount() {
-        const amount = this.rowList
+        return this.rowList
             .filter(row => {
                 const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
                 if(isNotEmpty(defaultGAUId)) {
@@ -251,13 +250,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 let currentAmount = current.record[apiNameFor(AMOUNT_FIELD)];
 
                 if (isEmpty(currentAmount)) {
-                    // amount is empty, use the percent field
-                    const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
-                    const localFieldNamePercent = PERCENT_FIELD.fieldApiName;
-                    const currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
-                        fullFieldNamePercent : localFieldNamePercent;
-
-                    const currentPercent = current.record[currentKeyPercent];
+                    const currentPercent = current.record[apiNameFor(PERCENT_FIELD)];
                     currentAmount = (currentPercent * this._totalAmount) / 100;
                 }
 
@@ -267,24 +260,23 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 }
                 return accumulator;
             }, 0);
-
-        return amount;
     }
 
-    handleRowValueChange(event) {
+    handleRowValueChangeSync = (event) => {
         const detail = event.detail;
         const record = this.rowList[detail.rowIndex].record;
         this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
         // this.allocateRemainingAmountToDefaultGAU();
 
+        // this.validate();
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
             detail: {
                 [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
             }
         }));
-        // this.validate();
     }
+    handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 300);
 
     convertRowListToSObjectJSON() {
         let widgetRowValues = [];

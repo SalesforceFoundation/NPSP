@@ -25,7 +25,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowRecord;
     @api fieldList;
     @api disabled;
-    @api remainingAmount;
     @api widgetDataFromState;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
