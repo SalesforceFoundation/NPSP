@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import {apiNameFor, getSubsetObject, hasNestedProperty, isUndefined} from 'c/utilCommon';
+import {apiNameFor, getSubsetObject, isUndefined} from 'c/utilCommon';
 
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
