@@ -170,6 +170,24 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.validate();
         }
     }
+    get remainingAmount() {
+        if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
+            const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
+            // avoid floating point errors by subtracting whole numbers
+            return (remainingCents / 100);
+        }
+        return 0;
+    }
+
+    get hasRemainingAmount() {
+        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
+            this.remainingAmount >= 0;
+    }
+
+    get showRemainingAmount() {
+        return this.hasAllocations() &&
+            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
+    }
 
     allocateRemainingAmountToDefaultGAU() {
         if (!this.hasRemainingAmount) {
@@ -181,32 +199,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
             `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
             this.remainingAmount);
     }
-    get hasRemainingAmount() {
-        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
-            this.remainingAmount >= 0;
-    }
 
     hasAllocations() {
         return Array.isArray(this.rowList) && this.rowList.length > 0;
-    }
-
-    get showRemainingAmount() {
-        return this.hasAllocations() &&
-            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
-    }
-
-    /**
-     * Remaining amount that can be allocated into non-default GAU. If default GAU is present, this
-     * is the amount allocated to the default GAU.
-     * @return {number}
-     */
-    get remainingAmount() {
-        if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
-            const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
-            // avoid floating point errors by subtracting whole numbers
-            return (remainingCents / 100);
-        }
-        return 0;
     }
 
     /**
