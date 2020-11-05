@@ -92,10 +92,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         let percentFieldElement = this.template.querySelector(
     `[data-fieldname=${this.allocationPercentageFieldApiName}]`
         );
-        if(isNumeric(changedField.value) &&
-            changedField.value > 0 &&
-            !percentFieldElement.disabled &&
-            isNotEmpty(percentFieldElement.value)) {
+        if(isEmpty(percentFieldElement.value) &&
+            isNumeric(changedField.value) &&
+            changedField.value > 0) {
 
             percentFieldElement.disabled = true;
         } else if(isEmpty(changedField.value) || changedField.value === 0) {
