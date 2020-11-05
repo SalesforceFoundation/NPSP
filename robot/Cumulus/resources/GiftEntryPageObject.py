@@ -4,6 +4,7 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementNotInteractableException
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -222,13 +223,19 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     self.selenium.input_text(field_name,value,clear=True)
 
 
-    def add_field_bundle_to_new_section(self,bundle):
-        """Adds the specified field bundle to the template builder form if not already added"""
-        try:
-            self.selenium.click_button("Add Section")
-        except ElementClickInterceptedException:
-            self.selenium.execute_javascript("window.scrollBy(0,100)")
-            self.selenium.click_button("Add Section")
+    def add_field_bundle_to_section(self,bundle,section=None):
+        """Adds the specified field bundle to the template builder form if not already added.
+           If section is not specified then adds to the first section of the form,
+           else creates a new section and adds to it"""
+        label_text=bundle+' field bundle includes the following fields:'
+        bundle_label=npsp_lex_locators["label"].format(label_text)
+        new_section_bundle_label=npsp_lex_locators["gift_entry"]["new-section-field-bundle"].format(label_text)
+        if section is not None:
+            try:
+                self.selenium.click_button("Add Section")
+            except ElementClickInterceptedException:
+                self.selenium.execute_javascript("window.scrollBy(0,100)")
+                self.selenium.click_button("Add Section")
         checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(bundle,"input")
         self.selenium.scroll_element_into_view(checkbox)
         cb_loc=self.selenium.get_webelement(checkbox)
@@ -238,6 +245,10 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             except ElementClickInterceptedException:
                 self.selenium.execute_javascript("window.scrollBy(0,100)")
                 self.salesforce._jsclick(checkbox)
+        if section is not None:
+            self.selenium.wait_until_page_contains_element(new_section_bundle_label)
+        else:
+            self.selenium.wait_until_page_contains_element(bundle_label)
 
     def add_batch_table_columns(self,*args):
         """Adds specified batch columns to the visible section if they are not already added"""
@@ -303,7 +314,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(field_locator,value)
                 option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
-                self.selenium.click_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
@@ -390,3 +404,14 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 if not (actual_value == None or actual_value == False):
                     raise Exception (f"Expected {key} status to be {value} but found {actual_value}")
 
+    def validate_error_message(self,type,**kwargs):
+        """Validates that page contains specified type of message.
+        Example: Validate Error Message |error |Allocations Error=Test Error Message"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["alert"].format(type,key,value)
+            self.selenium.wait_until_page_contains_element(locator)
+
+    def verify_allocation_remaining_balance(self,amount):
+        """Validates that the GAU allocation remaining balance is correct"""
+        locator=npsp_lex_locators["gift_entry"]["element_text"].format("Remaining Allocation Amount",amount)
+        self.selenium.wait_until_page_contains_element(locator,error=f'Remaining allocation amount of {amount} could not be found on page')
