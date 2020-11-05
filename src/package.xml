@@ -2437,8 +2437,6 @@
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>gsAdminSetupTitle</members>
-        <members>gsChecklistArrowDownAltText</members>
-        <members>gsChecklistArrowRightAltText</members>
         <members>gsChecklistExploreNPSPDesc</members>
         <members>gsChecklistExploreNPSPTitle</members>
         <members>gsChecklistMakeItYourDesc</members>

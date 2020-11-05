@@ -6656,22 +6656,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>ADMIN SETUP CHECKLIST</value>
     </labels>
     <labels>
-        <fullName>gsChecklistArrowDownAltText</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Arrow Icon alter text to expand state</shortDescription>
-        <value>Click to expand contents</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistArrowRightAltText</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Arrow Icon alter text to collapse state</shortDescription>
-        <value>Click to collapse contents</value>
-    </labels>
-    <labels>
         <fullName>gsChecklistExploreNPSPDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
