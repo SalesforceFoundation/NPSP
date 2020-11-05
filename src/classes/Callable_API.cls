@@ -105,6 +105,17 @@ global with sharing class Callable_API implements System.Callable {
                 RD2_ApiService rd2ApiSvc = new RD2_ApiService();
                 return rd2ApiSvc.querySchedules(rdIds);
 
+            } when 'rd2.queryinstallments' {
+                Date startDate = paramService
+                    .getDate(CallableApiParameters.PARAM_START_DATE);
+                Date endDate = paramService
+                    .getDate(CallableApiParameters.PARAM_END_DATE);
+                Set<Id> rdIds = paramService
+                    .withRequiredParamCheck()
+                    .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
+                RD2_ApiService rd2ApiSvc = new RD2_ApiService();
+                return rd2ApiSvc.queryInstallments(startDate, endDate, rdIds);
+
             } when 'settings.enableenhancedrecurringdonations' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
