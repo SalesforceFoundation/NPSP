@@ -14,16 +14,16 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """To go to NPSP Settings page"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Nonprofit Success Pack Settings")
         self.npsp.choose_frame("Nonprofit Success Pack Settings")
-        
-    def open_main_menu(self,title): 
-        """Waits for the menu item to load and clicks to expand menu""" 
-        self.selenium.wait_until_page_contains(title, 
+
+    def open_main_menu(self,title):
+        """Waits for the menu item to load and clicks to expand menu"""
+        self.selenium.wait_until_page_contains(title,
                                                error=f"{title} link was not found on the page")
         # There are two elements that have donations and this hack is needed to avoid the
         # confusion of which element to pick
