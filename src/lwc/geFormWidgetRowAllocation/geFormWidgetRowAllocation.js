@@ -26,6 +26,28 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api fieldList;
     @api disabled;
 
+    _remainingAmount;
+    @api
+    get remainingAmount() {
+        return this._remainingAmount;
+    }
+    set remainingAmount(value) {
+        if (value === this._remainingAmount) {
+            return;
+        }
+
+        this._remainingAmount = value;
+
+        if (this.rowRecord.isDefaultGAU) {
+            this.handleFieldValueChange({
+               detail: {
+                    fieldApiName: this.allocationAmountFieldApiName,
+                    value: this.remainingAmount
+               }
+            });
+        }
+    }
+
     _totalAmountFromState;
     @api
     get widgetDataFromState(){}
@@ -43,8 +65,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         const percentValue = this.rowRecord[this.allocationPercentageFieldApiName];
         if(isNumeric(percentValue) && percentValue >= 0) {
             this.handleFieldValueChange({
-                detail:
-                {
+                detail: {
                     fieldApiName: this.allocationAmountFieldApiName,
                     value: this.calculateAmountFromPercent(percentValue)
                 }
@@ -92,6 +113,10 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         let percentFieldElement = this.template.querySelector(
     `[data-fieldname=${this.allocationPercentageFieldApiName}]`
         );
+        if (!percentFieldElement) {
+            return;
+        }
+
         if(isEmpty(percentFieldElement.value) &&
             isNumeric(changedField.value) &&
             changedField.value > 0) {

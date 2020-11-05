@@ -58,6 +58,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
+        this.reset();
+
         let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
 
         this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;

@@ -4,6 +4,7 @@ import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPur
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
+import convertWidgetDataToObjectJSON from '@salesforce/apex/GE_GiftEntryController.convertWidgetDataToObjectJSON';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
@@ -54,6 +55,7 @@ import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_De
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
+import DATA_IMPORT_ADDITIONAL_OBJECT_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
@@ -1003,8 +1005,17 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handleFormWidgetChange(event) {
-        this.updateFormState(event.detail);
+    handleFormWidgetChange = async (event) => {
+        let bdiJSON = await this.convertToBDIJSON(event);
+        this.updateFormState({
+            [apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] : bdiJSON
+        });
+    }
+
+    convertToBDIJSON = async (event) => {
+        return convertWidgetDataToObjectJSON({
+            widgetData: event.detail[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]
+        });
     }
 
     /*******************************************************************************
