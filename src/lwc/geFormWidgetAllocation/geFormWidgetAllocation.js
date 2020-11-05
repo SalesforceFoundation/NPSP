@@ -136,6 +136,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.remainingAmount >= 0;
     }
 
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
+    }
+
     get showRemainingAmount() {
         return this.hasAllocations() &&
             ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
@@ -150,10 +154,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         defaultRow.setFieldValue(
             `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
             this.remainingAmount);
-    }
-
-    hasAllocations() {
-        return Array.isArray(this.rowList) && this.rowList.length > 0;
     }
 
     reallocateByPercent(totalDonation) {
