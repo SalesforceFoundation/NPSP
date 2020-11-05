@@ -15,7 +15,7 @@
 
 .slds-modal__content {
     height:auto !important;
-    max-height:calc(65vh) !important;
+    max-height: calc(65vh) !important;
 }
 
 .slds-modal {
