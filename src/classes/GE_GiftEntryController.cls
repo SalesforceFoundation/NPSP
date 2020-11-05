@@ -159,8 +159,6 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            dataImport.Additional_Object_JSON__c =
-                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
             upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
@@ -181,10 +179,6 @@ public with sharing class GE_GiftEntryController {
     */
     @AuraEnabled
     public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
-        // Check for widget data and convert it to the correct format for processing
-        dataImport.Additional_Object_JSON__c =
-            convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
-
         // Run the BDI process on this new Data Import
         processDataImport(dataImport, false, updateGift);
 
