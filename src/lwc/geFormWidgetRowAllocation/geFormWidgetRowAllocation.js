@@ -4,7 +4,6 @@ import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
     isEmpty,
-    isNotEmpty,
     isNumeric
 } from 'c/utilCommon';
 
@@ -15,9 +14,6 @@ import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
 import GAU_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 
-const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
-const ALLOCATION_GAU = `${ALLOCATION_OBJECT.objectApiName}.${GAU_FIELD.fieldApiName}`;
 const DATA_FIELD_NAME_SELECTOR = 'data-fieldname';
 
 export default class GeFormWidgetRowAllocation extends LightningElement {
@@ -32,7 +28,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return this._remainingAmount;
     }
     set remainingAmount(value) {
-        if (value === this._remainingAmount) {
+        if (value === this._remainingAmount || value === 0 || isEmpty(value)) {
             return;
         }
 

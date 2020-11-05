@@ -55,6 +55,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(!this.allocationSettings) {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
+        if (this.hasDefaultGAU) {
+            this.addRow(true);
+        }
     };
 
     loadWidgetDataFromState() {
@@ -149,17 +152,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     get showRemainingAmount() {
         return this.hasAllocations() &&
             ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
-    }
-
-    allocateRemainingAmountToDefaultGAU() {
-        if (!this.hasRemainingAmount) {
-            return;
-        }
-
-        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
-        defaultRow.setFieldValue(
-            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
-            this.remainingAmount);
     }
 
     get isOverAllocated() {
