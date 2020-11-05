@@ -35,10 +35,10 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      */
     @api
     reallocateByPercent(totalDonation) {
-        const percent = this.rowRecord[apiNameFor(PERCENT_FIELD)];
+        const percent = this.rowRecord[this.allocationPercentageFieldApiName];
         if(isNumeric(percent) && percent >= 0) {
             const detail = {
-                fieldApiName: apiNameFor(PERCENT_FIELD),
+                fieldApiName: this.allocationPercentageFieldApiName,
                 value: percent
             };
             this.handleFieldValueChange({ detail }, totalDonation);
@@ -60,6 +60,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     handleFieldValueChange = (event) => {
         let changedField = {};
+        let dependentFieldChanges = {};
         // Handle event from a DOM element
         if (event.target && event.target.hasAttribute(DATA_FIELD_NAME_SELECTOR)) {
             changedField = {
@@ -77,14 +78,15 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
         if (changedField.fieldApiName === this.allocationPercentageFieldApiName) {
             this.disableAmountFieldIfPercentHasValue(changedField);
-            this.calculateAmountFromPercent(changedField)
+            dependentFieldChanges = {...this.calculateAmountFromPercent(changedField.value)};
         }
 
         this.dispatchEvent(new CustomEvent('rowvaluechange', {
             detail: {
                 rowIndex: this.rowIndex,
                 changedFieldAndValue: {
-                    [changedField.fieldApiName] : changedField.value
+                    [changedField.fieldApiName] : changedField.value,
+                    ...dependentFieldChanges
                 }
             }
         }));
@@ -122,9 +124,11 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     calculateAmountFromPercent(percentValue) {
         const percentDecimal = parseFloat(percentValue) / 100;
         // convert to cents instead of dollars, avoids floating point problems
-        const totalInCents = this.widgetRowDataFromState[this.donationAmountFieldApiName] * 100;
+        const totalInCents = this.widgetDataFromState[this.donationAmountFieldApiName] * 100;
 
-        // this._rowRecord[this.allocationAmountFieldApiName] = Math.round(totalInCents * percentDecimal) / 100;
+        return {
+            [this.allocationAmountFieldApiName] : Math.round(totalInCents * percentDecimal) / 100
+        }
     }
 
     remove() {

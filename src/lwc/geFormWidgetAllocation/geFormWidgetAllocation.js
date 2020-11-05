@@ -3,6 +3,7 @@ import {
     isNumeric,
     isNotEmpty,
     isEmpty,
+    deepClone,
     apiNameFor, debouncify
 } from 'c/utilCommon';
 
@@ -57,13 +58,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
+        this.reset();
+
         let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
         this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
 
         if (!this._widgetDataFromState.hasOwnProperty(apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD))) {
             return;
         }
-        this.reset();
 
         const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
 
@@ -100,7 +102,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
                 }
             });
-            rowList.push(properties);
+            rowList.unshift(properties);
         });
 
         this.addRows(rowList);
@@ -159,7 +161,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     reallocateByPercent(totalDonation) {
         const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
         if(rows.length > 0) {
-            rows.forEach(row => row.reallocateByPercent(totalDonation));
+            // rows.forEach(row => row.reallocateByPercent(totalDonation));
         }
     }
 
@@ -240,23 +242,23 @@ export default class GeFormWidgetAllocation extends LightningElement {
     handleRowValueChangeSync = (event) => {
         const detail = event.detail;
         const record = this.rowList[detail.rowIndex].record;
-        this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
+        let _rowList = deepClone(this.rowList);
+        _rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
         // this.allocateRemainingAmountToDefaultGAU();
 
-        // this.validate();
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
             detail: {
-                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
+                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON(_rowList))
             }
         }));
     }
-    handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 300);
+    handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 600);
 
-    convertRowListToSObjectJSON() {
+    convertRowListToSObjectJSON(rowList) {
         let widgetRowValues = [];
 
-        this.rowList.forEach(row => {
+        rowList.forEach(row => {
             // no need to send back default GAU, automatically allocated by the trigger
             if (row.isDefaultGAU) {
                 return;
