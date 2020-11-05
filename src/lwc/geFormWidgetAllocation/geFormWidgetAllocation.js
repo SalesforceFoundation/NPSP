@@ -121,7 +121,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return true;
     }
 
-
     handleAddRow() {
         this.addRow(false);
     }
@@ -169,10 +168,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
-    hasAllocations() {
-        return Array.isArray(this.rowList) && this.rowList.length > 0;
-    }
-
     allocateRemainingAmountToDefaultGAU() {
         if (!this.hasRemainingAmount) {
             return;
@@ -188,6 +183,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.remainingAmount >= 0;
     }
 
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
+    }
 
     /**
      * Show remaining amount when under-allocated and no default GAU is present, or when over-allocated.
@@ -250,11 +248,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 return true;
             })
             .reduce((accumulator, current) => {
-                const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-                const localFieldName = AMOUNT_FIELD.fieldApiName;
-                const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
+                let currentAmount = current.record[apiNameFor(AMOUNT_FIELD)];
 
-                let currentAmount = current.record[currentKey];
                 if (isEmpty(currentAmount)) {
                     // amount is empty, use the percent field
                     const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
@@ -276,12 +271,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return amount;
     }
 
-    /**
-     * Handle an allocation value change event.
-     * rowIndex - Index of the record firing the event
-     * payload - Object where key is the field that was updated, and value is the updated value
-     * @param event { rowIndex: Number, payload: Object }
-     */
     handleRowValueChange(event) {
         const detail = event.detail;
         const record = this.rowList[detail.rowIndex].record;
