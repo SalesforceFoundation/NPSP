@@ -16,18 +16,16 @@
     * @description Handle events sent from the modal
     */
     handleModalEvent: function (component, event) {
-        component.set('v.recordId', event.getParam('recordId'));
-        this.redirectToPage(component);
+        this.redirectToPage(component, event);
     },
 
     /**
      * @description: Redirect the page to either parent or RD record
      */
-    redirectToPage: function (component) {
-        let navigateToId = component.get('v.parentId') || component.get('v.recordId');
+    redirectToPage: function (component, event) {
+        let navigateToId = component.get('v.parentId') || event.getParams('detail').recordId;
 
         let navEvt = this.constructNavigationEvent(navigateToId);
-
         navEvt.fire();
     },
 
