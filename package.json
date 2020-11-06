@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "@salesforce/sfdx-lwc-jest": "^0.7.1"
+    "@salesforce/sfdx-lwc-jest": "^0.7.1",
+    "@sa11y/jest": "^0.1.4-beta.0"
   },
   "resolutions": {
     "js-yaml": "^3.13.1"
