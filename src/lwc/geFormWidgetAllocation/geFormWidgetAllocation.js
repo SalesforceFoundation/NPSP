@@ -339,4 +339,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     get qaLocatorAddNewAllocation() {
         return `button ${this.CUSTOM_LABELS.geAddNewAllocation}`;
     }
+
+    get qaLocatorRemainingAllocationAmount() {
+        return `lightning-formatted-number Remaining Allocation Amount`;
+    }
 }
