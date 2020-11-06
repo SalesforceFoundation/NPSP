@@ -1863,6 +1863,8 @@
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>accordionSection_ToggleInstructionsWhenClosed</members>
+        <members>accordionSection_ToggleInstructionsWhenOpen</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnConfirm</members>
@@ -2438,13 +2440,21 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsAdminSetupTitle</members>
         <members>gsApplicationStatus</members>
         <members>gsApplicationStatusModalHeader</members>
         <members>gsApplyForFreeLicenses</members>
         <members>gsCheckStatus</members>
+        <members>gsChecklistExploreNPSPDesc</members>
+        <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistMakeItYourDesc</members>
+        <members>gsChecklistMakeItYourTitle</members>
+        <members>gsChecklistOnboardUsersDesc</members>
+        <members>gsChecklistOnboardUsersTitle</members>
         <members>gsClose</members>
         <members>gsDaysAdded</members>
         <members>gsDaysRemainingInFreeTrial</members>
+        <members>gsEmailAddress</members>
         <members>gsFollowUpApplicationStatus</members>
         <members>gsLearnMore</members>
         <members>gsNoApplicationSubmitted</members>
@@ -3834,6 +3844,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>accordionSection</members>
         <members>batchProgress</members>
         <members>bdeRetirementAlert</members>
         <members>bdiBatchNumberSettings</members>
@@ -3879,7 +3890,12 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsAccordionLabel</members>
+        <members>gsAccordionSection</members>
+        <members>gsAdminSetup</members>
         <members>gsApplicationStatus</members>
+        <members>gsChecklist</members>
+        <members>gsChecklistIcon</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
