@@ -1492,6 +1492,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>クリックするとセクションが切り替わります。このセクションは開いていません。</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>クリックするとセクションが切り替わります。このセクションは開いています。</label>
+    </customLabels>
+    <customLabels>
         <label>無効な呼び出しです。この機能は Salesforce が使用します。</label>
         <name>adapterException</name>
     </customLabels>

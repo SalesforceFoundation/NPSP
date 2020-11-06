@@ -1859,6 +1859,8 @@
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>accordionSection_ToggleInstructionsWhenClosed</members>
+        <members>accordionSection_ToggleInstructionsWhenOpen</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnConfirm</members>
@@ -2434,6 +2436,13 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsAdminSetupTitle</members>
+        <members>gsChecklistExploreNPSPDesc</members>
+        <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistMakeItYourDesc</members>
+        <members>gsChecklistMakeItYourTitle</members>
+        <members>gsChecklistOnboardUsersDesc</members>
+        <members>gsChecklistOnboardUsersTitle</members>
         <members>gsResourcesItemFundraisingLabel</members>
         <members>gsResourcesItemFundraisingLinkLabel</members>
         <members>gsResourcesItemHubLabel</members>
@@ -3815,6 +3824,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>accordionSection</members>
         <members>batchProgress</members>
         <members>bdeRetirementAlert</members>
         <members>bdiBatchNumberSettings</members>
@@ -3860,6 +3870,11 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsAccordionLabel</members>
+        <members>gsAccordionSection</members>
+        <members>gsAdminSetup</members>
+        <members>gsChecklist</members>
+        <members>gsChecklistIcon</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>

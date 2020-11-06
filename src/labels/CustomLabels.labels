@@ -2930,6 +2930,22 @@
         <value>You cannot verify more than 100 zipcodes at a time.</value>
     </labels>
     <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenClosed</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it's closed</shortDescription>
+        <value>Click to expand this section.</value>
+    </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it's open</shortDescription>
+        <value>Click to close this section.</value>
+    </labels>
+    <labels>
         <fullName>adapterException</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -6630,6 +6646,62 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
         <value>This form contains fields that can't be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>gsAdminSetupTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title in Get Started</shortDescription>
+        <value>ADMIN SETUP CHECKLIST</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Explore Nonprofit in Get Started</shortDescription>
+        <value>Get comfortable with key concepts and features.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Explore Nonprofit in Get Started</shortDescription>
+        <value>Explore the Nonprofit Success Pack (NPSP)</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistMakeItYourDesc</fullName>
+        <categories>Adoption, Group, Description</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Make Your in Get Started</shortDescription>
+        <value>Customize Salesforce with information that&apos;s unique to your organization.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistMakeItYourTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Make Your in Get Started</shortDescription>
+        <value>Make it Your Own</value>
+    </labels>
+       <labels>
+        <fullName>gsChecklistOnboardUsersDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist User Onboard in Get Started</shortDescription>
+        <value>Add your users to Salesforce and plan your rollout.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistOnboardUsersTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
+        <value>Onboard Your Users</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>
