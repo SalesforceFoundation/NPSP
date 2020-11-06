@@ -49,6 +49,15 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()
 
+    @capture_screenshot_on_error
+    def verify_sub_link_present(self, title, bool):
+        """ Asserts if the sublink is present or not present
+            eg: Verify Sub Link Present     <Linkoption>   True/False
+        """
+        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+        assert bool == str(self.npsp.check_if_element_exists(locator)), "Expected {} present value to be {} but found {}".format(
+            title, bool, self.npsp.check_if_element_exists(locator)
+        )
 
     @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):
