@@ -28,12 +28,13 @@
     justify-content: flex-end;
     flex-direction: column;
     top: -1rem;
+    left: 1px;
 }
 
 .slds-media.info.open .border .gap {
     width: 2px;
     background-color: white;
-    height: 3rem;
+    height: 8rem;
 }
 
 .slds-media.info  .steps {
