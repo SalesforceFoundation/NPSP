@@ -3,7 +3,6 @@ import {
     isNumeric,
     isNotEmpty,
     isEmpty,
-    deepClone,
     apiNameFor, debouncify
 } from 'c/utilCommon';
 
@@ -55,18 +54,21 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(!this.allocationSettings) {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
+        if (this.hasDefaultGAU) {
+            this.addRow(true);
+        }
     };
 
     loadWidgetDataFromState() {
-        this.reset();
-
         let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
+        this.totalAmount = totalDonationAmount === 0 ? null :
+            this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
 
-        this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
-
-        if (!this._widgetDataFromState.hasOwnProperty(apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD))) {
+        if (isEmpty(this.widgetDataFromState[apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)])) {
             return;
         }
+
+        this.reset();
 
         const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
 
@@ -85,7 +87,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
         });
         Object.keys(dataImportRow).forEach(diKey => {
-            let properties = {};
+            let row = {};
 
             gauMappingKeys.forEach(fieldMappingKey => {
                 let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
@@ -99,11 +101,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
                         diSourceField = null;
                     }
 
-                    properties[targetField] = diSourceField;
+                    row[targetField] = diSourceField;
 
                 }
             });
-            rowList.unshift(properties);
+            rowList.unshift(row);
         });
 
         this.addRows(rowList);
@@ -114,19 +116,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     set totalAmount(value) {
-        if (value === this.totalAmount) {
-            return;
-        }
-
         this._totalAmount = value;
 
-        if(value >= 0) {
-            if(this.hasDefaultGAU) {
-                this.allocateRemainingAmountToDefaultGAU();
-            }
+        this.validate();
 
-            this.validate();
-        }
     }
     get remainingAmount() {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
@@ -149,17 +142,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     get showRemainingAmount() {
         return this.hasAllocations() &&
             ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
-    }
-
-    allocateRemainingAmountToDefaultGAU() {
-        if (!this.hasRemainingAmount) {
-            return;
-        }
-
-        const defaultRow = this.template.querySelector('[data-defaultgau=true]');
-        defaultRow.setFieldValue(
-            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
-            this.remainingAmount);
     }
 
     get isOverAllocated() {
@@ -214,6 +196,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(isDefaultGAU === true) {
             // default GAU should be locked.
             row.isDefaultGAU = true;
+            row.disabled = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
         }
 
@@ -227,6 +210,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     handleRemove(event) {
         this.rowList.splice(event.detail.rowIndex, 1);
+
+        this.fireFormWidgetChange({
+            [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
+        });
     }
 
     reset() {
@@ -241,15 +228,19 @@ export default class GeFormWidgetAllocation extends LightningElement {
         const record = this.rowList[detail.rowIndex].record;
         this.rowList[detail.rowIndex].record = {...record, ...detail.changedFieldAndValue};
 
-        // this.allocateRemainingAmountToDefaultGAU();
-
-        this.dispatchEvent(new CustomEvent('formwidgetchange', {
-            detail: {
-                [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
-            }
-        }));
+        this.fireFormWidgetChange({
+            [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
+        });
     }
     handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 600);
+
+    fireFormWidgetChange(fieldAndValue) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {
+           detail: {
+               ...fieldAndValue
+           }
+        }));
+    }
 
     convertRowListToSObjectJSON() {
         let widgetRowValues = [];

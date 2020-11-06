@@ -4,7 +4,6 @@ import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
     isEmpty,
-    isNotEmpty,
     isNumeric
 } from 'c/utilCommon';
 
@@ -15,14 +14,11 @@ import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
 import GAU_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 
-const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
-const ALLOCATION_GAU = `${ALLOCATION_OBJECT.objectApiName}.${GAU_FIELD.fieldApiName}`;
 const DATA_FIELD_NAME_SELECTOR = 'data-fieldname';
 
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
-    @api rowRecord;
+    @api row;
     @api fieldList;
     @api disabled;
 
@@ -32,13 +28,13 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return this._remainingAmount;
     }
     set remainingAmount(value) {
-        if (value === this._remainingAmount) {
+        if (value === this._remainingAmount || value === 0 || isEmpty(value)) {
             return;
         }
 
         this._remainingAmount = value;
 
-        if (this.rowRecord.isDefaultGAU) {
+        if (this.row.isDefaultGAU) {
             this.handleFieldValueChange({
                detail: {
                     fieldApiName: this.allocationAmountFieldApiName,
@@ -62,7 +58,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     reallocateAmountByPercent() {
-        const percentValue = this.rowRecord[this.allocationPercentageFieldApiName];
+        const percentValue = this.row.record[this.allocationPercentageFieldApiName];
         if(isNumeric(percentValue) && percentValue >= 0) {
             this.handleFieldValueChange({
                 detail: {
@@ -147,8 +143,8 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     remove() {
-        const { rowIndex, rowRecord } = this;
-        this.dispatchEvent(new CustomEvent('remove', { detail: { rowIndex, rowRecord } }));
+        const { rowIndex, row } = this;
+        this.dispatchEvent(new CustomEvent('remove', { detail: { rowIndex, row } }));
     }
 
     get isRemovable() {
@@ -172,7 +168,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get gauValue() {
-        return this.rowRecord[apiNameFor(GAU_FIELD)];
+        return this.row.record[apiNameFor(GAU_FIELD)];
     }
 
     get allocationAmountFieldApiName() {
@@ -180,7 +176,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get amountValue() {
-        return this.rowRecord[apiNameFor(AMOUNT_FIELD)];
+        return this.row.record[apiNameFor(AMOUNT_FIELD)];
     }
 
     get allocationPercentageFieldApiName() {
@@ -188,7 +184,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get percentValue() {
-        return this.rowRecord[apiNameFor(PERCENT_FIELD)];
+        return this.row.record[apiNameFor(PERCENT_FIELD)];
     }
 
     get qaLocatorDeleteRow() {
