@@ -50,6 +50,8 @@ public class CallableApiParameters {
     public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
     public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
     public static final String PARAM_RECORD_IDS = 'RecordIds';
+    public static final String PARAM_START_DATE = 'StartDate';
+    public static final String PARAM_END_DATE = 'EndDate';
 
     private Map<String, Object> params;
 
@@ -103,6 +105,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a Boolean value
      * @param paramName Map key for the params collection
+     * @return Boolean
      */
     public Boolean getBoolean(String paramName) {
         validateRequiredParameter('Boolean', paramName);
@@ -118,6 +121,7 @@ public class CallableApiParameters {
      * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
      * @param paramName Map key for the params collection
      * @param defaultValue Default if null
+     * @return Boolean
      */
     public Boolean getBoolean(String paramName, Boolean defaultValue) {
         validateRequiredParameter('Boolean', paramName);
@@ -135,6 +139,7 @@ public class CallableApiParameters {
      * @description Retrieve the specified Parameter as a Datetime value
      * @param paramName Map key for the params collection
      * @param defaultValue Default if null
+     * @return Datetime
      */
     public Datetime getDatetime(String paramName) {
         validateRequiredParameter('Datetime', paramName);
@@ -149,9 +154,25 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as a Date value
+     * @param paramName Map key for the params collection
+     * @return Date
+     */
+    public Date getDate(String paramName) {
+        validateRequiredParameter('Date', paramName);
+        try {
+            return (Date) params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Date', paramName);
+        }
+        return null;
+    }
+
+    /**
      * @description Retrieve the specified Parameter as an Exception
      * @param paramName Map key for the params collection
      * @param defaultValue Default if null
+     * @return Exception
      */
     public Exception getException(String paramName) {
         try {
@@ -165,6 +186,7 @@ public class CallableApiParameters {
 /**
      * @description Retrieve the specified Parameter as a List<String> collection
      * @param paramName Map key for the params collection
+     * @return List<String>
      */
     public List<String> getListString(String paramName) {
         validateRequiredParameter('List<String>', paramName);
@@ -179,6 +201,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a Set<String> collection
      * @param paramName Map key for the params collection
+     * @return Set<String>
      */
     public Set<String> getSetString(String paramName) {
         validateRequiredParameter('Set<String>', paramName);
@@ -193,6 +216,7 @@ public class CallableApiParameters {
      /**
      * @description Retrieve the specified Parameter as a Set<Id> collection
      * @param paramName Map key for the params collection
+     * @return Set<Id>
      */
     public Set<Id> getSetId(String paramName) {
         validateRequiredParameter('Set<Id>', paramName);
@@ -207,6 +231,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a Set<String> collection
      * @param paramName Map key for the params collection
+     * @return Map<Id, String>
      */
     public Map<Id, String> getStringsById(String paramName) {
         validateRequiredParameter('Map<Id, String>', paramName);
@@ -221,6 +246,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a List<SObject> collection
      * @param paramName Map key for the params collection
+     * @return List<SObject>
      */
     public List<SObject> getSObjects(String paramName) {
         validateRequiredParameter('List<SObject>', paramName);
@@ -235,6 +261,7 @@ public class CallableApiParameters {
   /**
      * @description Retrieve the specified Parameter as a List<Object> collection
      * @param paramName Map key for the params collection
+     * @return List<Object>
      */
     public List<Object> getObjects(String paramName) {
         validateRequiredParameter('List<Object>', paramName);
@@ -250,6 +277,7 @@ public class CallableApiParameters {
      * @description Retrieve the specified Parameter as a List<CRLP_Rollup> collection. This expects to the parameter
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
      * @param paramName Map key for the params collection
+     * @return List<CRLP_Rollup>
      */
     public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
         validateRequiredParameter('List<CRLP_Rollup', paramName);
@@ -263,7 +291,7 @@ public class CallableApiParameters {
     }
 
     /**
-     * @description Retrieve the specified Parameter as a map of data where the outter map key is the parent record
+     * @description Retrieve the specified Parameter as a map of data where the outer map key is the parent record
      * id (i.e., Opportunity), and the inner map is each related SObjectName where the first SObject Name is "Opportunity".
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
      * @param paramName Map key for the params collection
