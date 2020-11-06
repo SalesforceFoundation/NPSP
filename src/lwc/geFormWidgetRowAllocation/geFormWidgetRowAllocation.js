@@ -196,7 +196,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get qaLocatorGAU() {
-        return `input General Accounting Unit ${this.rowIndex}`;
+        return `autocomplete General Accounting Unit ${this.rowIndex}`;
     }
 
     get qaLocatorAllocationAmount() {
