@@ -16,7 +16,8 @@ img {
 
 .container {
     background-color:white;
-    box-shadow: 2px -9px 5px -5px gray;
+    box-shadow: 1px -5px 3px -3px #b0adab7a;
+    border-radius: 5px;
 }
 
 .button-padding {
