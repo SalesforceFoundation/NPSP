@@ -111,11 +111,28 @@ export default class GsApplicationStatus extends LightningElement {
         this.template.querySelector("c-modal").show();
     }
 
+    /**
+     * Handles the click on the close button in the modal.
+     */
     onClickCloseModal() {
         this.template.querySelector("c-modal").hide();
     }
 
+    /**
+     * Foccuses on the button after the modal is closed. 
+     */
     handleModalClose() {
         this.template.querySelector("button").focus();
+    }
+
+    /**
+     * For accesibillity, if the user click on space, it calls the click method of the caller
+     * @param target the component that fired the event
+     * @param code key code  
+     */
+    handleKeypress({target, code}) {
+        if (code === 'Space') {
+            target.click();
+        }
     }
 }
