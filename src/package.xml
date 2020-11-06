@@ -1134,6 +1134,9 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
+        <members>DataImport__c.Payment_ACH_Code__c</members>
+        <members>DataImport__c.Payment_ACH_Last_4__c</members>
+        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Authorization_Token__c</members>
@@ -1421,6 +1424,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.ACH_Last_4__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
         <members>npe01__OppPayment__c.Batch_Number__c</members>
@@ -3177,6 +3181,7 @@
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_ACH_Last_4</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Card_Expiration_Month</members>
@@ -3751,6 +3756,10 @@
     <types>
         <members>Data_Import_Batch_Record_Home</members>
         <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Payment_ACH_Code</members>
+        <name>GlobalValueSet</name>
     </types>
     <types>
         <members>Account-Household Layout</members>
