@@ -1,20 +1,19 @@
 import { LightningElement, track, wire } from 'lwc';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
 import getChecklist from '@salesforce/apex/GS_AdminSetup.getChecklist';
-import translate from './labelTranslate';
+import translate from 'c/gsTranslate';
 
-/*
+/**
 * @description This component render all checklist section and his steps
 */
 export default class gsAdminSetup extends LightningElement {
 
-    /*
-    *   @description This var contain a list of checklist to render
+    /**
+    * @description This var contain a list of checklist to render
     */
     @track checklists;
 
-
-    /*
+    /**
     * @description This function load and translate all checklist sections and his items
     */
     @wire(getChecklist)
@@ -25,9 +24,9 @@ export default class gsAdminSetup extends LightningElement {
         }
     }
 
-    /*
+    /**
     * @description This method translate all text info in the checklist section and his items
-    * @arg ChecklistSection
+    * @param ChecklistSection
     * @return ChecklistSection (translate)
     */
     translateSection = (section) => {
@@ -38,9 +37,9 @@ export default class gsAdminSetup extends LightningElement {
         return tSection
     }
 
-    /*
+    /**
     * @description This method translate all text info in checklist items
-    * @arg ChecklistItem
+    * @param ChecklistItem
     * @return ChecklistItem (translate)
     */
     translateSectionItem = (item) => {
@@ -64,7 +63,7 @@ export default class gsAdminSetup extends LightningElement {
     }
 
     /**
-    * Return title to display in UI
+    * @description Return title to display in UI
     * @return      Title text
     * @see         labels
     */

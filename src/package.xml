@@ -3921,6 +3921,7 @@
         <members>gsChecklistIcon</members>
         <members>gsChecklistItem</members>
         <members>gsResources</members>
+        <members>gsTranslate</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>

@@ -31,43 +31,60 @@
 * @author Salesforce.org
 * @date 2020
 * @group GS
-* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Class to test GS_AdminSetup class.
 */
 @isTest
 private with sharing class GS_AdminSetup_TEST {
   
-    /*
+    /**
     *  @description This test data if wraped in GS_AdminSetup.getChecklist are the same in the metadata
     */
     @isTest
     static void getChecklistTest() {
         List<GS_AdminSetup.ChecklistSection> checklists= GS_AdminSetup.getChecklist();
         List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
-            SELECT Id, Label, Position__c, 
-                (SELECT Id, Position__c FROM GS_Admin_Checklist_Items__r ORDER BY Position__c ASC) 
-            FROM GS_Admin_Checklist_Section__mdt ORDER BY Position__c ASC
+            SELECT Id, Label, Position__c 
+            FROM GS_Admin_Checklist_Section__mdt 
+            ORDER BY Position__c ASC
         ];
+
         System.assertNotEquals(null, checklists, 'The checklist section is null');
-        System.assertEquals(metadataSections.size(), checklists.size(), 'The checklist section does not have the same size than metadata in org');
+        System.assertEquals(
+            metadataSections.size(),
+            checklists.size(),
+            'The checklist section does not have the same size than metadata in org'
+        );
         
         for (Integer i = 0; i < metadataSections.size(); i++) {
    
+            //Order in sub query don't work well
             GS_Admin_Checklist_Section__mdt metadataSection = metadataSections[i];
             GS_AdminSetup.ChecklistSection checklist = checklists[i];
-            System.assertEquals(metadataSection.Id, checklist.Id,
-            'The metadataSection and Checklist are not in the same orden');
+            System.assertEquals(
+                metadataSection.Id, 
+                checklist.Id,
+                'The metadataSection and Checklist are not in the same orden'
+            );
+            List<GS_Admin_Checklist_Item__mdt> metadataSectionItems = [
+                SELECT Id, Position__c
+                FROM GS_Admin_Checklist_Item__mdt
+                WHERE GS_Admin_Checklist_Section__c = :metadataSection.Id
+                ORDER BY Position__c ASC
+            ];
             System.assertEquals(
                 metadataSection.GS_Admin_Checklist_Items__r.size(), 
                 checklist.items.size(),
-                 'The checklist '+metadataSection.Label +' don\'t have same children size' 
+                'The checklist ' + metadataSection.Label + ' don\'t have same children size' 
             );
             for (Integer j = 0; j < checklist.items.size(); j++) {
                 GS_Admin_Checklist_Item__mdt metadataItem = metadataSection.GS_Admin_Checklist_Items__r[j];
                 GS_AdminSetup.ChecklistItem item = checklist.items[j];
 
-                System.assertEquals(metadataItem.Id, item.Id,
-                    'The metadataSection and Checklist childrens are not in the same orden');
+                System.assertEquals(
+                    metadataItem.Id,
+                    item.Id,
+                    'The metadataSection and Checklist childrens are not in the same orden'
+                );
             }
         }
     }
