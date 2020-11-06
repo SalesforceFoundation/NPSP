@@ -19,7 +19,8 @@
                                                    onchange={handleFieldValueChange}
                                                    value={amountValue}
                                                    class="help-text-hidden"
-                                                   data-qa-locator={qaLocatorAllocationAmount}>
+                                                   data-qa-locator={qaLocatorAllocationAmount}
+                                                   disabled={disabled}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-3">
@@ -30,6 +31,7 @@
                                              step='0.01'
                                              onchange={handleFieldValueChange}
                                              value={percentValue}
+                                             disabled={disabled}
                                              data-qa-locator={qaLocatorAllocationPercent}>
                             </lightning-input>
                         </div>

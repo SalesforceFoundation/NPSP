@@ -13,11 +13,12 @@
                 field-list={fieldList}
                 key={row.element.key}
                 row-index={index}
-                row-record={row.record}
-                disabled={row.element.disabled}
+                row={row}
+                disabled={row.disabled}
                 onremove={handleRemove}
                 onvaluechange={handleValueChange}
                 onrowvaluechange={handleRowValueChange}
+                remaining-amount={remainingAmount}
                 widget-data-from-state={widgetDataFromState}>
         </c-ge-form-widget-row-allocation>
     </template>
