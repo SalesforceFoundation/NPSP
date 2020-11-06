@@ -35,4 +35,17 @@ export default class rd2EntryFormCustomFieldsSection extends LightningElement {
 
         return data;
     }
+
+    /**
+    * @description reset all lighning-input-field value 
+    */
+    @api
+    resetValues() {
+    this.template.querySelectorAll('lightning-input-field')
+        .forEach(field => {
+            if (field.value) {
+                field.reset();
+            }
+        });
+    }
 }
