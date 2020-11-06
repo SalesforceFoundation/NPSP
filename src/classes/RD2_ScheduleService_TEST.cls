@@ -41,7 +41,7 @@ public with sharing class RD2_ScheduleService_TEST {
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
     private static final String PAYMENT_CHECK = 'Check';
-    private static final String PAYMENT_ACH_EFT = 'ACH/EFT';
+    private static final String PAYMENT_ACH = 'ACH';
     private static final Integer NUM_INSTALLMENTS = 12;
     public static final String PAUSE_REASON = 'Unknown';
 
@@ -86,7 +86,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationFirstAndFifteenthBuilder()
             .withStartDate(startDate)
-            .withPaymentMethod(PAYMENT_ACH_EFT)
+            .withPaymentMethod(PAYMENT_ACH)
             .withInstallmentFrequency(2)
             .build();
 
@@ -95,7 +95,7 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(2, schedules.size(), 'Two schedules should exist for Installment Period 1st and 15th');
         for (RecurringDonationSchedule__c schedule : schedules) {
             System.assertEquals(rd.npe03__Amount__c, schedule.InstallmentAmount__c, 'Installment Amount should match RD Amount');
-            System.assertEquals(PAYMENT_ACH_EFT, schedule.PaymentMethod__c, 'Payment Method should match RD Payment Method');
+            System.assertEquals(PAYMENT_ACH, schedule.PaymentMethod__c, 'Payment Method should match RD Payment Method');
             System.assertEquals(rd.InstallmentFrequency__c, schedule.InstallmentFrequency__c, 'Installment Frequency should match RD Installment Frequency');
             System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedule.InstallmentPeriod__c, 'Installment Period should be 1st and 15th');
             System.assertEquals(startDate, schedule.StartDate__c, 'Schedule Start Date should be RD Effective Date');
@@ -656,7 +656,7 @@ public with sharing class RD2_ScheduleService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
 
         npe03__Recurring_Donation__c changeRd = rd.clone();
-        changeRd.PaymentMethod__c = PAYMENT_ACH_EFT;
+        changeRd.PaymentMethod__c = PAYMENT_ACH;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
         Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
