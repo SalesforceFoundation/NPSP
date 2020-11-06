@@ -7684,7 +7684,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Apply for licencses button label for the application status component</shortDescription>
+        <shortDescription>Apply for licenses button label for the application status component</shortDescription>
         <value>Apply for Salesforce Licenses</value>
     </labels>
     <labels>
@@ -7716,7 +7716,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsDaysRemainingInFreeTrial</shortDescription>
+        <shortDescription> Days remaining in the free trial label for the application status component</shortDescription>
         <value>Days Remaining in Free Trial</value>
     </labels>
     <labels>
