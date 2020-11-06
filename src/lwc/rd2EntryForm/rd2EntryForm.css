@@ -12,3 +12,12 @@
     text-align: center;
     top: calc(50% + 3em);
 }
+
+.slds-modal__content {
+    height:auto !important;
+    max-height: calc(65vh) !important;
+}
+
+.slds-modal {
+    height: auto;
+}
