@@ -45,10 +45,17 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     contactLabel;
 
     /**
-     * @description If editing an existing record retrieve the Donor Type from the record so it can default the custom
-     * picklist field accordingly.
+     * @description Init function
      */
     connectedCallback() {
+        this.init();
+    }
+
+    /**
+    * @description If editing an existing record retrieve the Donor Type from the record so it can default the custom
+    * picklist field accordingly.
+    */
+    init() {
         if (!isNull(this.recordId)) {
             getRecurringData({ recordId: this.recordId })
                 .then(response => {
@@ -272,5 +279,26 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             });
 
         return data;
+    }
+
+    /**
+    * @description run init function 
+    */
+    @api
+    forceRefresh() {
+       this.init();
+    }
+
+    /**
+    * @description reset all lighning-input-field value 
+    */
+    @api
+    resetValues() {
+    this.template.querySelectorAll('lightning-input-field')
+        .forEach(field => {
+            if (field.value) {
+                field.reset();
+            }
+        });
     }
 }
