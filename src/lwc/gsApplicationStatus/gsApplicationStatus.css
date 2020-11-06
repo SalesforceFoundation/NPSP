@@ -25,3 +25,15 @@ img {
     margin-bottom: 24px;
     width: calc(100% - 48px);
 }
+
+.modal-text {
+    color: #312D2B;
+}
+
+p {
+    color: #2B2826
+}
+
+.close-button {
+    float: right;
+}

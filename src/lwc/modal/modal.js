@@ -39,6 +39,7 @@ export default class Modal extends LightningElement {
     @api show() {
         const outerDivEl = this.template.querySelector("div");
         outerDivEl.classList.remove(CSS_CLASS);
+        this.template.querySelector("lightning-button-icon").focus();
     }
 
     @api hide() {

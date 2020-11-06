@@ -13,9 +13,9 @@
                     <template  if:false={isApplicationSubmitted}>
                         <lightning-layout-item size="12">
                             <div class="slds-text-align_center slds-size_full slds-p-around_small">
-                                <div><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsNoApplicationSubmitted} | <a tabindex="0" href=" https://www.salesforce.org/power-of-us/" target="_blank">{labels.gsLearnMore}</a></p></div>
+                                <div><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsNoApplicationSubmitted} | <a href=" https://www.salesforce.org/power-of-us/" target="_blank">{labels.gsLearnMore}</a></p></div>
                                 <div><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></div>
-                                <div><a role="button" tabindex="0" class="slds-button slds-button_brand slds-text-heading_small slds-p-around_medium button-padding" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">{labels.gsApplyForFreeLicenses}</a></div>
+                                <div><a role="button" class="slds-button slds-button_brand slds-text-heading_small slds-p-around_medium button-padding" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">{labels.gsApplyForFreeLicenses}</a></div>
                             </div>
                         </lightning-layout-item>
 
@@ -27,7 +27,7 @@
                                 <div><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsApplicationStatus}<span class="slds-text-color_success">{labels.gsSubmitted}</span></p></div>
                                 <div><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></div>
                                 <div><button onclick={onCheckStatusClick}
-                                    class="slds-button slds-button_outline-brand slds-size_full slds-text-heading_small slds-p-around_medium">
+                                    class="slds-button slds-button_outline-brand slds-text-heading_small slds-p-around_medium button-padding close-button">
                                     {labels.gsCheckStatus}
                                     </button>
                                 </div>
@@ -37,15 +37,15 @@
                     </template>
                 </lightning-layout>
             </div>
-       <c-modal header={labels.gsApplicationStatusModalHeader}>
+       <c-modal header={labels.gsApplicationStatusModalHeader} ondialogclose={handleModalClose}>
             <lightning-layout horizontal-align="center">
                 <lightning-layout-item size="12" class="slds-text-align_center">
-                    <p>{labels.gsFollowUpApplicationStatus}</p>
+                    <p class="modal-text" data-id="modalText">{labels.gsFollowUpApplicationStatus}<a href="mailto:powerofus@salesforce.com">{labels.gsEmailAddress}</a></p>
                 </lightning-layout-item>
             </lightning-layout>
             
             <div slot="footer">
-                <lightning-button class="button-padding" variant="brand" label={labels.gsClose} onclick={onClickCloseModal}>
+                <lightning-button class="close-button" variant="brand" label={labels.gsClose} onclick={onClickCloseModal}>
                 </lightning-button>
             </div>
         </c-modal>
