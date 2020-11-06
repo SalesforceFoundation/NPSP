@@ -132,7 +132,7 @@ public with sharing class BDI_DataImport_TEST {
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
 
-        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
                             'The batch status should be Open when all ' +
                             'data import records are Open.');
 
@@ -147,7 +147,7 @@ public with sharing class BDI_DataImport_TEST {
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
 
-        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
                             'The batch status should be Open when all ' +
                             'data import records are Open.');
     }
@@ -178,7 +178,7 @@ public with sharing class BDI_DataImport_TEST {
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
 
-        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_FAILED, bdi.Batch_Status__c, 
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_FAILED, bdi.Batch_Status__c,
                             'The batch status should be Failed when at least one ' +
                             'data import record has failed.');
         
@@ -212,7 +212,7 @@ public with sharing class BDI_DataImport_TEST {
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
 
-        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
                             'The batch status should be Completed when all ' +
                             'data import records have been imported.');
         
@@ -224,7 +224,7 @@ public with sharing class BDI_DataImport_TEST {
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
 
-        System.assertNotEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
+        System.assertNotEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
                             'The batch status should be Completed when all ' +
                             'data import records have been imported.');
     }
