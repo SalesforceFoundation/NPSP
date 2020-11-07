@@ -2041,9 +2041,15 @@ export default class GeFormRenderer extends LightningElement{
 
     updateFormStateWithFailedPurchaseCall(errors) {
         if (errors && errors[0]) {
+            const primaryError = errors[0];
+            const paymentStatus =
+                hasNestedProperty(primaryError, 'errorDetail', 'code', 'name') ?
+                primaryError.errorDetail.code.name :
+                this.CUSTOM_LABELS.commonUnknownError;
+
             this.updateFormState({
-                [apiNameFor(PAYMENT_DECLINED_REASON)]: errors[0].message,
-                [apiNameFor(PAYMENT_STATUS)]: errors[0].localizedPaymentsMessage,
+                [apiNameFor(PAYMENT_DECLINED_REASON)]: primaryError.message,
+                [apiNameFor(PAYMENT_STATUS)]: paymentStatus,
             });
         }
     }
