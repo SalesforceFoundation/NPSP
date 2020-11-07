@@ -552,6 +552,38 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
     return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
 }
 
+
+/**
+ * @description Converts field describe info into a object that is easily accessible from the front end
+ * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+ * (i.e, the field isn't accessible).
+ */
+const extractFieldInfo = (fieldInfos, fldApiName) => {
+    try {
+        const field = fieldInfos[fldApiName];
+        return {
+            apiName: field.apiName,
+            label: field.label,
+            inlineHelpText: field.inlineHelpText,
+            dataType: field.dataType
+        };
+    } catch (error) { }
+}
+
+
+/**
+ * @description Method converts field describe info into objects that the
+ * getRecord method can accept into its 'fields' parameter.
+ */
+const buildFieldDescribes = (fields, objectApiName) => {
+    return Object.keys(fields).map((fieldApiName) => {
+        return {
+            fieldApiName: fieldApiName,
+            objectApiName: objectApiName
+        }
+    });
+}
+
 export {
     constructErrorMessage,
     debouncify,
@@ -583,5 +615,7 @@ export {
     getValueFromDotNotationString,
     validateJSONString,
     stripNamespace,
-    relatedRecordFieldNameFor
+    relatedRecordFieldNameFor,
+    extractFieldInfo,
+    buildFieldDescribes
 };

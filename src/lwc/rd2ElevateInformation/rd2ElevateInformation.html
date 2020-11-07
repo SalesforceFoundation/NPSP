@@ -1,0 +1,47 @@
+<template>
+    <lightning-card title={labels.header} variant="narrow">
+        <div class="slds-m-horizontal--small slds-border_top">
+
+            <div class="slds-p-horizontal_medium" if:true={error.detail}>
+                <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
+                    icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
+                    subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
+                    data-qa-locator="error">
+                </c-util-page-level-message>
+            </div>
+
+            <template if:false={isLoading}>
+                <lightning-layout multiple-rows="true" class="slds-p-around_medium">
+
+                    <lightning-layout-item size="4" small-device-size="4"
+                        class="slds-dl_horizontal__label slds-text-color_weak">
+                        <label for="status">{labels.statusLabel}</label>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="8" small-device-size="8" class="slds-dl_horizontal__detail">
+                        <lightning-formatted-text id="status" data-id="status" value="No Errors">
+                        </lightning-formatted-text>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="4" small-device-size="4"
+                        class="slds-dl_horizontal__label slds-text-color_weak slds-p-top_small">
+                        <label for="commitmentId">{fields.commitmentId.label}</label>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="8" small-device-size="8" class="slds-dl_horizontal__detail slds-p-top_small">
+                        <lightning-formatted-text id="commitmentId" data-id="commitmentId"
+                            value={rdRecord.fields.CommitmentId__c.value}>
+                        </lightning-formatted-text>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </template>
+        </div>
+        
+        <div class="slds-card__footer slds-m-horizontal--small slds-border_top">
+            <a class="slds-card__footer-action" href="javascript:void(0);">View Related Errors
+                <span class="slds-assistive-text">View Related Errors</span>
+            </a>
+        </div>
+    </lightning-card>
+</template>
