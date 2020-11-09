@@ -1902,7 +1902,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     saveableFormState() {
-        let dataImportRecord = deepClone(this.formState);
+        let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
         dataImportRecord = this.sanitizeDonationStageField(dataImportRecord);
         return dataImportRecord;
@@ -1919,22 +1919,21 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     sanitizeDonationStageField(dataImportRecord) {
-        const hasOpportunityStageField = this.findOpportunityStageFieldInForm();
-        if (!hasOpportunityStageField) {
+        if (!this.hasFormFieldElementFor(apiNameFor(OPPORTUNITY_OBJECT), apiNameFor(OPPORTUNITY_STAGE_NAME))) {
             delete dataImportRecord[apiNameFor(DONATION_STAGE_NAME)];
         }
         return dataImportRecord;
     }
 
-    findOpportunityStageFieldInForm() {
+    hasFormFieldElementFor(objectApiName, fieldApiName) {
         return this.formElements().find(element => {
             const hasDefinedObjectAndFieldApiName = element.objectApiName && element.fieldApiName;
             if (hasDefinedObjectAndFieldApiName) {
-                const isOpportunityStageNameField =
-                    element.objectApiName === apiNameFor(OPPORTUNITY_OBJECT) &&
-                    element.fieldApiName === apiNameFor(OPPORTUNITY_STAGE_NAME);
+                const hasMatch =
+                    element.objectApiName === objectApiName &&
+                    element.fieldApiName === fieldApiName;
 
-                if (isOpportunityStageNameField) {
+                if (hasMatch) {
                     return true;
                 }
             }
