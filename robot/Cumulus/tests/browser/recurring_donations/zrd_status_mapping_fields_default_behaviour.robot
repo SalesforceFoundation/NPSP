@@ -3,25 +3,22 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
-...             robot/Cumulus/resources/ContactPageObject.py
-...             robot/Cumulus/resources/RecurringDonationsPageObject.py
-...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
-
 *** Test Cases ***
 
-User On A RD2 Enbaled Org should Not See Status Mappings Option
+User on a RD2 enbaled Org should See Status Mappings Option along with default mapped values
     [Documentation]               On an org with rd2 enabled, a user
      ...                          Should see the option Status to state mapping option
-     ...                          When
+     ...                          When clicked on the sublink status to state mappings
+     ...                          A table with default mapped values get populated
 
 
-    [tags]                       unstable                          W-8211315
+    [tags]                       unstable                          W-8211315              feature:RD2
     Open NPSP Settings           Recurring Donations               Status to State Mapping
     Verify Status To State Mappings
     ...                          Active=Active
