@@ -41,7 +41,7 @@ private with sharing class GS_AdminSetup_TEST {
     */
     @isTest
     static void getChecklistTest() {
-        List<GS_AdminSetup.ChecklistSection> checklists= GS_AdminSetup.getChecklist();
+        List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklist();
         List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
             FROM GS_Admin_Checklist_Section__mdt 
@@ -57,7 +57,7 @@ private with sharing class GS_AdminSetup_TEST {
         
         for (Integer i = 0; i < metadataSections.size(); i++) {
    
-            //Order in sub query don't work well
+            //Order in sub query doesn't work well
             GS_Admin_Checklist_Section__mdt metadataSection = metadataSections[i];
             GS_AdminSetup.ChecklistSection checklist = checklists[i];
             System.assertEquals(

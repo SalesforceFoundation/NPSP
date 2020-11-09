@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group GS
-* @description Class to hold functionality to dispaly Checklist in GS UI.
+* @description Class to hold functionality to display Checklist in GS UI.
 */
 public with sharing class GS_AdminSetup {
 
@@ -39,10 +39,6 @@ public with sharing class GS_AdminSetup {
     /**
      * @description Returns a list of the checklist section with each subsection.
      * Each section is defined in GS_Admin_Checklist_Section__mdt and each subsection is defined in GS_Admin_Checklist_Item__mtd
-     * Imagine a dev needs to add an element on the checklist. He is going to go the component and
-     * finds this method is called from the FE. As this is the method which is returning the list, 
-     * it would help a lot saying where the list came from.
-     * section to display this information in UI
      * @return List<ChecklistSection>
      */
     @AuraEnabled(cacheable=true)
@@ -56,9 +52,9 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-     * @description This method return a list of GS_Admin_Checklist_Section__mdt and his Items 
+     * @description Return the list of GS_Admin_Checklist_Section__mdt and his Items 
      * @return List<GS_Admin_Checklist_Section__mdt>
-     * @note [ORDER BY Position__c ASC]  don't work well in the inner query I need sort Outside SOQL
+     * @note [ORDER BY Position__c ASC] doesn't work well in the inner query, I need to sort outside SOQL
      */
     private static List<GS_Admin_Checklist_Section__mdt> getSectionsAndSubsections() {
         return [ 
