@@ -42,7 +42,7 @@ public with sharing class GS_AdminSetup {
      * @return List<ChecklistSection>
      */
     @AuraEnabled(cacheable=true)
-    public static List<ChecklistSection> getChecklist() {
+    public static List<ChecklistSection> getChecklists() {
         List<GS_Admin_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();
         List<ChecklistSection> checklistWrapers = new List<ChecklistSection>();
         for (GS_Admin_Checklist_Section__mdt checklistSection : checklistSections) {

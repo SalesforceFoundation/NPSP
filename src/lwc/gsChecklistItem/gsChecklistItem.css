@@ -1,4 +1,4 @@
-.step-card {
+.item-card {
     position: relative;
     min-height: 185px;
     border: 1px solid lightgray;
@@ -8,33 +8,30 @@
     box-shadow: 0 3px 2px 0 rgba(176,173,171,.48);
     display: grid;
     grid-template-columns: 185px auto;
-    grid-template-rows: auto auto;
-
 }
 
-.step-card > .card-image {
+.item-card .card-image {
     width: 185px;
     grid-column: 1/ 2;
-    grid-row: 1 / 3;
     padding-left: 6px;
     padding-right: 24px;
     border-right: 1px solid lightgray;
 }
 
-.step-card > .card-image img {
+.item-card .card-image img {
     width: 100%;
 }
 
-.step-card > .card-content {
+.item-card .card-content {
+    display: flex;
     position: relative;
-    padding-left: 14px;
     grid-column: 2/ 3;
-    grid-row: 1 / 2;
+    padding-left: 14px;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.step-card > .card-content .content-time {
+.item-card .card-content .content-time {
     position: absolute;
     right: 0;
     height: 14px;
@@ -47,7 +44,7 @@
     text-align: right;
 }
 
-.step-card > .card-content .content-title {
+.item-card .card-content .content-title {
     color: #3E3E3C;
     font-family: "Salesforce Sans";
     font-size: 12.98px;
@@ -57,7 +54,7 @@
     padding-bottom: 1rem;
 }
 
-.step-card > .card-content .content-text {
+.item-card .card-content .content-text {
     color: #3E3E3C;
     font-family: "Salesforce Sans";
     font-size: 12.98px;
@@ -66,14 +63,12 @@
     padding-right: 3rem;
  }
 
- .step-card > .content-footer {
-    grid-row: 2 / 3;
-    grid-column: 2/ 3;
+ .item-card .card-content .content-footer {
     display: flex;
     align-items: flex-end;
  }
 
- .step-card > .content-footer a {
+ .item-card .card-content .content-footer a {
     color: #2E79DC;
     font-family: "Salesforce Sans";
     font-size: 12.98px;
@@ -84,36 +79,34 @@
     flex: 1 0 0;
  }
 
- .step-card > .content-footer .footer-buttons {
+ .item-card .card-content .content-footer .footer-buttons {
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-end;
  }
  
- .step-card > .content-footer .content-footer-aux {
+ .item-card .card-content .content-footer .content-footer-aux {
     flex: 1 0 0;
-    padding-top: 0.5rem;
-    padding-left: 14px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
  }
 
  @media(max-width: 1073px) {
-    .step-card > .content-footer {
+    .item-card .card-content {
         grid-column: 1/ 3;
     }
-    .step-card > .card-content {
-        grid-column: 1/ 3;
-    }
-    .step-card > .card-image {
+    .item-card .card-image {
         display: none;
     }
 }
 
 @media(max-width: 1173px) {
-    .step-card {
+    .item-card {
         grid-template-columns: 100px auto;
     }
-    .step-card > .card-image {
+    .item-card .card-image {
         width: 100px;
     }
 }

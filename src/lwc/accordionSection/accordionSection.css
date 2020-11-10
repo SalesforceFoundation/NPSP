@@ -12,5 +12,5 @@
 }
 
 .slds-grid_vertical-align-center.clickable-header {
-    max-width: 95%;
+    max-width: calc(100% - 18px);
 }

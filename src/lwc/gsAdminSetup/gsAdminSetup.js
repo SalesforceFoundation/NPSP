@@ -1,63 +1,63 @@
 import { LightningElement, track, wire } from 'lwc';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
-import getChecklist from '@salesforce/apex/GS_AdminSetup.getChecklist';
-import translate from 'c/gsTranslate';
+import getChecklists from '@salesforce/apex/GS_AdminSetup.getChecklists';
+import getLabelValue from 'c/gsLabelMapper';
 
 /**
-* @description This component render all checklist section and his steps
+* @description This component renders all checklist sections and their steps
 */
 export default class gsAdminSetup extends LightningElement {
 
     /**
-    * @description This var contain a list of checklist to render
+    * @description A list of checklists to render
     */
     @track checklists;
 
     /**
-    * @description This function load and translate all checklist sections and his items
+    * @description Loads and translates all checklist sections and their items
     */
-    @wire(getChecklist)
+    @wire(getChecklists)
     wiredGetChecklist({ data, error }) {
         // Hold on to the provisioned value so we can refresh it later.
         if (data) {
-            this.checklists = data.map(this.translateSection);
+            this.checklists = data.map(this.getLabelValueSection);
         }
     }
 
     /**
-    * @description This method translate all text info in the checklist section and his items
+    * @description This method getLabelValue all text info in the checklist section and his items
     * @param ChecklistSection
-    * @return ChecklistSection (translate)
+    * @return ChecklistSection (getLabelValue)
     */
-    translateSection = (section) => {
+    getLabelValueSection = (section) => {
         const tSection = {...section}
-        tSection.title = translate(section.title);
-        tSection.description = translate(section.description);
-        tSection.items = section.items.map(this.translateSectionItem)
+        tSection.title = getLabelValue(section.title);
+        tSection.description = getLabelValue(section.description);
+        tSection.items = section.items.map(this.getLabelValueItem)
         return tSection
     }
 
     /**
-    * @description This method translate all text info in checklist items
+    * @description This method getLabelValue all text info in checklist items
     * @param ChecklistItem
-    * @return ChecklistItem (translate)
+    * @return ChecklistItem (getLabelValue)
     */
-    translateSectionItem = (item) => {
+    getLabelValueItem = (item) => {
         const tItem = {...item};
-        tItem.title = translate(item.title);
-        tItem.description = translate(item.description);
-        tItem.extraInfo = translate(item.extraInfo);
+        tItem.title = getLabelValue(item.title);
+        tItem.description = getLabelValue(item.description);
+        tItem.extraInfo = getLabelValue(item.extraInfo);
         if (item.principalBtn) {
             tItem.principalBtn = {...(item.principalBtn)};
-            tItem.principalBtn.label = translate(item.principalBtn.label);
+            tItem.principalBtn.label = getLabelValue(item.principalBtn.label);
         }
         if (item.secondaryBtn) {
             tItem.secondaryBtn = {...(item.secondaryBtn)};
-            tItem.secondaryBtn.label = translate(item.secondaryBtn.label);
+            tItem.secondaryBtn.label = getLabelValue(item.secondaryBtn.label);
         }
         if (item.link) {
             tItem.link = {...(item.link)};
-            tItem.link.label = translate(item.link.label);
+            tItem.link.label = getLabelValue(item.link.label);
         }
         return tItem;
     }

@@ -40,8 +40,8 @@ private with sharing class GS_AdminSetup_TEST {
     *  @description This test data if wraped in GS_AdminSetup.getChecklist are the same in the metadata
     */
     @isTest
-    static void getChecklistTest() {
-        List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklist();
+    static void getChecklistsTest() {
+        List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
         List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
             FROM GS_Admin_Checklist_Section__mdt 

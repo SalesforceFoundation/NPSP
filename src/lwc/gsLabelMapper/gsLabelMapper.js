@@ -20,9 +20,9 @@ import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChec
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 
 /**
-* @description Map of translate labels
+* @description Map of getLabelValue labels
 */
-const mapValue = {
+const labelMap = {
     gsChecklistExploreNPSPTitle,
     gsChecklistExploreNPSPDesc,
     gsChecklistMakeItYourDesc,
@@ -46,10 +46,10 @@ const mapValue = {
 }
 
 /**
-*  @description This function translate the string using mapValue for that
-*  @param string Name to label to translate
+*  @description This function getLabelValue the string using labelMap for that
+*  @param string Name to label to getLabelValue
 *  @return string
 */
-export default function translate(label) {
-    return mapValue[label] != undefined ? mapValue[label] : label;
+export default function getLabelValue(label) {
+    return labelMap[label] != undefined ? labelMap[label] : label;
 }

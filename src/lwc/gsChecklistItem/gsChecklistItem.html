@@ -1,5 +1,5 @@
 <template>
-    <div class="step-card">
+    <div class="item-card">
         <div class="card-image">
             <img if:true={hasLink} src={imgSrc}/>
         </div>
@@ -9,24 +9,27 @@
             <div  class="content-text">
                 {item.description}
             </div>
-        </div>
-        <div class="content-footer">
-            <div class="content-footer-aux">
-                <a if:true={hasLink} href={item.link.href} target="_blank">
-                    {item.link.label}
-                </a>
-                <div if:false={hasLink}></div>
-                <div class="footer-buttons">
-                    <button if:true={hasSecondaryBtn} 
-                        onclick={onClickSecondaryBtn}
-                        class="slds-button slds-button_outline-brand">
-                        {item.secondaryBtn.label}
-                    </button>
-                    <button if:true={hasPrincipalBtn}
-                        onclick={onClickPrincipalBtn}
-                        class="slds-button slds-button_brand">
-                        {item.principalBtn.label}
-                    </button>
+            <div class="content-footer">
+                <div class="content-footer-aux">
+                    <a if:true={hasLink} href={item.link.href} target="_blank">
+                        {item.link.label}
+                    </a>
+                    <div class="footer-buttons">
+                        <lightning-button if:true={hasSecondaryBtn} 
+                            variant="brand-outline"
+                            class="slds-m-bottom_x-small"
+                            onclick={onClickSecondaryBtn}
+                            title={item.secondaryBtn.label}
+                            label={item.secondaryBtn.label}>
+                        </lightning-button>
+                        <lightning-button if:true={hasPrincipalBtn}
+                            variant="brand"
+                            class="slds-m-left_x-small slds-m-bottom_x-small"
+                            onclick={onClickPrincipalBtn}
+                            title={item.principalBtn.label}
+                            label={item.principalBtn.label}>
+                        </lightning-button>
+                    </div>
                 </div>
             </div>
         </div>

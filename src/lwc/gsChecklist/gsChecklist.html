@@ -13,8 +13,8 @@
             </div>
             <div class="slds-m-left_x-large">
                 <c-gs-accordion-section open="true">
-                    <template iterator:item={group.items}>
-                        <c-gs-checklist-item key={item.value.id} item={item.value}>
+                    <template  for:each={group.items} for:item="item">
+                        <c-gs-checklist-item key={item.id} item={item}>
                         </c-gs-checklist-item>
                     </template>
                 </c-gs-accordion-section>

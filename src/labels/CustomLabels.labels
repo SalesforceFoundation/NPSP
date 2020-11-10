@@ -6685,15 +6685,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
-        <value>Learn more in Trailhead</value>
+        <value>Learn more about Donations in Trailhead</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemCreateDonationPriBtnLabel</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
-        <value>Create Donation</value>
+        <shortDescription>Button label of checklist item Create Donation in Get Started</shortDescription>
+        <value>Create Donations</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemCreateDonationTitle</fullName>
@@ -6717,7 +6717,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Setup Contact in Get Started</shortDescription>
-        <value>People are the most important resource for a nonprofit, so understanding the Contact Object is especially important. Learn how to add relevant constituent data (e.g. a name, address, or employer) into your Salesforce instance.</value>
+        <value>People are the most important resource for a nonprofit, so understanding the Contact object is especially important. Learn how to add relevant constituent data (e.g. a name, address, or employer) into your Salesforce instance.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactPriBtnLabel</fullName>
@@ -6725,7 +6725,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
-        <value>Create Household</value>
+        <value>Create Households</value>
     </labels>
      <labels>
         <fullName>gsChecklistItemSetupContactLinkLabel</fullName>
@@ -6733,7 +6733,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item Setup Contact in Get Started</shortDescription>
-        <value>Learn more on Trailhead</value>
+        <value>Learn more about Contacts and Accounts</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactSecBtnLabel</fullName>
@@ -6749,7 +6749,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item Setup Contact in Get Started</shortDescription>
-        <value>Setup Contact and Household</value>
+        <value>Set Up a Contact and Household Account</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemStayTrackDesc</fullName>
@@ -6757,7 +6757,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
-        <value>&quot;Activities“ refers to tasks, events, or any other interaction that’s tracked in the Activity Timeline. Understanding these will allow you to keep track of every interaction with your constituents. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
+        <value>Activities are tasks, events, or other interactions tracked in the Activity Timelines. Activities allow you to keep track of each time you have contact with a constituent. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemStayTrackLinkLabel</fullName>
