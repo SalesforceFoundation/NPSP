@@ -35,7 +35,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
     set widgetDataFromState(value) {
         this._widgetDataFromState = value;
-
+        this.reset();
         this.loadWidgetDataFromState();
     }
 
@@ -68,8 +68,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if (isEmpty(additionalObjectJson)) {
             return;
         }
-
-        this.reset();
 
         const widgetData = JSON.parse(additionalObjectJson);
         let rowList = [];
@@ -211,7 +209,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
         });
     }
-    handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 600);
+    handleRowValueChange = debouncify(this.handleRowValueChangeSync.bind(this), 300);
 
     fireFormWidgetChange(fieldAndValue) {
         this.dispatchEvent(new CustomEvent('formwidgetchange', {
