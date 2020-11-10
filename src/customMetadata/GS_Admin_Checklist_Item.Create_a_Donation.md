@@ -27,7 +27,7 @@
         <value xsi:type="xsd:string">gsChecklistItemCreateDonationLinkLabel</value>
     </values>
     <values>
-        <field>Link_href__c</field>
+        <field>Link_URL__c</field>
         <value xsi:type="xsd:string">https://trailhead.salesforce.com/content/learn/modules/donation-management-basics-with-nonprofit-success-pack/create-or-edit-donations</value>
     </values>
     <values>
@@ -35,15 +35,15 @@
         <value xsi:type="xsd:double">3.0</value>
     </values>
     <values>
-        <field>Principal_Button_Label__c</field>
+        <field>Primary_Button_Label__c</field>
         <value xsi:type="xsd:string">gsChecklistItemCreateDonationPriBtnLabel</value>
     </values>
     <values>
-        <field>Principal_Button_Type__c</field>
+        <field>Primary_Button_Type__c</field>
         <value xsi:type="xsd:string">link</value>
     </values>
     <values>
-        <field>Principal_Button_Value__c</field>
+        <field>Primary_Button_Value__c</field>
         <value xsi:type="xsd:string">https://sfdc.co/b1NzTv</value>
     </values>
     <values>

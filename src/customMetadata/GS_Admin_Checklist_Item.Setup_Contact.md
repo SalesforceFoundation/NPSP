@@ -27,7 +27,7 @@
         <value xsi:type="xsd:string">gsChecklistItemSetupContactLinkLabel</value>
     </values>
     <values>
-        <field>Link_href__c</field>
+        <field>Link_URL__c</field>
         <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/contact-and-account-settings-in-nonprofit-success-pack</value>
     </values>
     <values>
@@ -35,15 +35,15 @@
         <value xsi:type="xsd:double">1.0</value>
     </values>
     <values>
-        <field>Principal_Button_Label__c</field>
+        <field>Primary_Button_Label__c</field>
         <value xsi:type="xsd:string">gsChecklistItemSetupContactPriBtnLabel</value>
     </values>
     <values>
-        <field>Principal_Button_Type__c</field>
+        <field>Primary_Button_Type__c</field>
         <value xsi:type="xsd:string">link</value>
     </values>
     <values>
-        <field>Principal_Button_Value__c</field>
+        <field>Primary_Button_Value__c</field>
         <value xsi:type="xsd:string">https://sfdc.co/bkLd2s</value>
     </values>
     <values>

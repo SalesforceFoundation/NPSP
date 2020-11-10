@@ -27,7 +27,7 @@
         <value xsi:type="xsd:string">gsChecklistItemStayTrackLinkLabel</value>
     </values>
     <values>
-        <field>Link_href__c</field>
+        <field>Link_URL__c</field>
         <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/sales_admin_maximize_productivity</value>
     </values>
     <values>
@@ -35,15 +35,15 @@
         <value xsi:type="xsd:double">2.0</value>
     </values>
     <values>
-        <field>Principal_Button_Label__c</field>
+        <field>Primary_Button_Label__c</field>
         <value xsi:type="xsd:string">gsChecklistItemStayTrackPriBtnLabel</value>
     </values>
     <values>
-        <field>Principal_Button_Type__c</field>
+        <field>Primary_Button_Type__c</field>
         <value xsi:type="xsd:string">link</value>
     </values>
     <values>
-        <field>Principal_Button_Value__c</field>
+        <field>Primary_Button_Value__c</field>
         <value xsi:type="xsd:string">https://sfdc.co/cpINK6</value>
     </values>
     <values>

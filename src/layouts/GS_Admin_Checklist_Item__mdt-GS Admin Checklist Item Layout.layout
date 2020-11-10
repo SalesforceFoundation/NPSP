@@ -74,7 +74,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Link_href__c</field>
+                <field>Link_URL__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -93,15 +93,15 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Principal_Button_Label__c</field>
+                <field>Primary_Button_Label__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Principal_Button_Type__c</field>
+                <field>Primary_Button_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Principal_Button_Value__c</field>
+                <field>Primary_Button_Value__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

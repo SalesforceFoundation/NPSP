@@ -10,25 +10,20 @@
     display: block;
 }
 
-.slds-media.info.open {
-    position: relative;
-}
-
 .slds-media.info .border {
     display: none;
 }
 
 .slds-media.info.open .border {
-    display:  inline;
     position: absolute;
-    height: 100%;
+    height: calc(100% - 90px);
     width: 2px;
-    background: lightgray;
+    background: #d3d3d3;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
-    top: -1rem;
-    left: 1px;
+    top: 3rem;
+    left: 62px;
 }
 
 .slds-media.info.open .border .gap {

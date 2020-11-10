@@ -2,4 +2,6 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>50.0</apiVersion>
     <isExposed>false</isExposed>
+    <masterLabel>NPSP Getting Started Checklist Item</masterLabel>
+    <description>Card Item to display Checklist sub sections</description>
 </LightningComponentBundle>

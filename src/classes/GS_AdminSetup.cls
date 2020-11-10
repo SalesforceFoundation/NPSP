@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group GS
+* @group Getting Started
 * @description Class to hold functionality to display Checklist in GS UI.
 */
 public with sharing class GS_AdminSetup {
@@ -61,8 +61,8 @@ public with sharing class GS_AdminSetup {
             SELECT Id, Title_Label__c, Description_Label__c, Position__c, 
                 (
                     SELECT Id, Title_Label__c, Description_Label__c, Image__c, Position__c,
-                        Has_Link__c, Link_Label__c, Link_href__c, Extra_Info_Label__c,
-                        Principal_Button_Type__c, Principal_Button_Label__c, Principal_Button_Value__c,
+                        Has_Link__c, Link_Label__c, Link_URL__c, Extra_Info_Label__c,
+                        Primary_Button_Type__c, Primary_Button_Label__c, Primary_Button_Value__c,
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
                     FROM GS_Admin_Checklist_Items__r
                 ) 
@@ -103,10 +103,10 @@ public with sharing class GS_AdminSetup {
         ci.image = item.Image__c;
         ci.pos = item.Position__c.intValue();
         if (item.Has_Link__c) {
-            ci.link = new ChecklistItemLink(item.Link_Label__c, item.Link_href__c);
+            ci.link = new ChecklistItemLink(item.Link_Label__c, item.Link_URL__c);
         }
-        if (item.Principal_Button_Type__c != DISABLED) {
-            ci.principalBtn = new ChecklistItemButton(item.Principal_Button_Type__c, item.Principal_Button_Label__c, item.Principal_Button_Value__c);
+        if (item.Primary_Button_Type__c != DISABLED) {
+            ci.principalBtn = new ChecklistItemButton(item.Primary_Button_Type__c, item.Primary_Button_Label__c, item.Primary_Button_Value__c);
         }
         if (item.Secondary_Button_Type__c != DISABLED) {
             ci.secondaryBtn = new ChecklistItemButton(item.Secondary_Button_Type__c, item.Secondary_Button_Label__c, item.Secondary_Button_Value__c);
