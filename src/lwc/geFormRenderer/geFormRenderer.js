@@ -17,7 +17,6 @@ import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4
 import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import DONATION_STAGE_NAME from '@salesforce/schema/DataImport__c.Donation_Stage__c';
 
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -74,7 +73,6 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import OPPORTUNITY_STAGE_NAME from '@salesforce/schema/Opportunity.StageName';
 import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
 
 
@@ -1904,7 +1902,6 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
-        dataImportRecord = this.sanitizeDonationStageField(dataImportRecord);
         return dataImportRecord;
     }
 
@@ -1916,28 +1913,6 @@ export default class GeFormRenderer extends LightningElement{
             }
         }
         return dataImportRecord;
-    }
-
-    sanitizeDonationStageField(dataImportRecord) {
-        if (!this.hasFormFieldElementFor(apiNameFor(OPPORTUNITY_OBJECT), apiNameFor(OPPORTUNITY_STAGE_NAME))) {
-            delete dataImportRecord[apiNameFor(DONATION_STAGE_NAME)];
-        }
-        return dataImportRecord;
-    }
-
-    hasFormFieldElementFor(objectApiName, fieldApiName) {
-        return this.formElements().find(element => {
-            const hasDefinedObjectAndFieldApiName = element.objectApiName && element.fieldApiName;
-            if (hasDefinedObjectAndFieldApiName) {
-                const hasMatch =
-                    element.objectApiName === objectApiName &&
-                    element.fieldApiName === fieldApiName;
-
-                if (hasMatch) {
-                    return true;
-                }
-            }
-        });
     }
 
     get hasDataImportId() {
