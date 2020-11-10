@@ -84,7 +84,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     .forEach(([key, value]) => {
                         row[key] = value
                     })
-                rowList.unshift(row);
+                rowList.push(row);
             })
         });
         this.addRows(rowList);
