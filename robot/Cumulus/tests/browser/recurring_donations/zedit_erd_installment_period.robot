@@ -7,7 +7,7 @@ Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -56,7 +56,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     Current Page Should be                  Details                                   npe03__Recurring_Donation__c
-    Wait Until Loading Is Complete
+
     Edit Recurring Donation Status
     ...                                     Recurring Period=Advanced
     ...                                     Every=3

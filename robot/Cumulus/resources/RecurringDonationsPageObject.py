@@ -47,6 +47,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populates the RD2 modal form fields with the respective fields and values"""
+        self.builtin.sleep(1,"For Rd2 modal dropdown values to get populated")
         ns=self.npsp.get_npsp_namespace_prefix()
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
@@ -158,6 +159,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     self.selenium.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value,30)
+                    self.selenium.scroll_element_into_view(selection_value)
                     self.selenium.click_element(selection_value)
                 else:
                     self.builtin.log(f"Element {key} not present")
