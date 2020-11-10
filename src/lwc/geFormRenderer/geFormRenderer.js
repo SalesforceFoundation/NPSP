@@ -1250,15 +1250,16 @@ export default class GeFormRenderer extends LightningElement{
         let objectMappingDevNames = this.getObjectMappingDevNamesForSelectedRecord(record);
 
         objectMappingDevNames.forEach(objectMappingName => {
-            //relevant field mappings
             this.fieldMappingsFor(objectMappingName).forEach(fieldMapping => {
-                const valueObjectFromRecord = record.fields[fieldMapping.Target_Field_API_Name];
+                const valueObjectFromRecord =
+                    record.fields[fieldMapping.Target_Field_API_Name];
                 const sourceField = fieldMapping.Source_Field_API_Name;
-                // If the retrieved selected lookup record has a blank value for any
-                // fields that have defaults configured, apply the default value.  Otherwise
-                // load the database value for that field.
-                dataImport[sourceField] =
-                    this.getFieldValueForFormState(valueObjectFromRecord, fieldMapping);
+
+                if (this.isFieldMappingUsedInTemplate(fieldMapping)) {
+                    dataImport[sourceField] =
+                        this.getFieldValueForFormState(
+                            valueObjectFromRecord, fieldMapping);
+                }
             });
 
             const objectMapping = GeFormService.getObjectMapping(objectMappingName);
@@ -1270,6 +1271,10 @@ export default class GeFormRenderer extends LightningElement{
         });
 
         return dataImport;
+    }
+
+    isFieldMappingUsedInTemplate(fieldMapping) {
+        return this.fieldMappingDevNamesUsedInTemplate().includes(fieldMapping.DeveloperName);
     }
 
     getFieldValueForFormState(valueObject, fieldMapping) {
