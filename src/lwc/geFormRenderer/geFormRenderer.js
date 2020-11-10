@@ -1468,8 +1468,8 @@ export default class GeFormRenderer extends LightningElement{
             this.deleteRelationshipFieldsFromStateFor(fields);
         }
 
-        // Re-assign to prompt reactivity
-        this.formState = deepClone(this.formState);
+        // Shallow-copy to a new object to prompt reactivity
+        this.formState = Object.assign({}, this.formState);
     }
 
     updateFormStateFromMap(fieldReferenceToValueMap) {
