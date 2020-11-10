@@ -7,7 +7,7 @@ Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -50,7 +50,6 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     Current Page Should be                  Listing                                   npe03__Recurring_Donation__c
     Reload Page
     Click Link                              New
-    # Reload page is a temporary fix till the developers fix the ui-modal
     Wait For Rd2 Modal
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c

@@ -36,7 +36,6 @@ ${METHOD}  Credit Card
 
     Reload Page
     Click Link                              New
-    # Reload page is a temporary fix till the developers fix the ui-modal
     Wait For Rd2 Modal
 
     # Create Enhanced recurring donation of type Open and assign it to a contact

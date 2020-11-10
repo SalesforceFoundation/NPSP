@@ -47,7 +47,6 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Current Page Should Be                  Listing                                   npe03__Recurring_Donation__c
     Reload Page
     Click Link                              New
-        # Reload page is a temporary fix till the developers fix the ui-modal
     Wait For Rd2 Modal
 
     Go To Page                              Details

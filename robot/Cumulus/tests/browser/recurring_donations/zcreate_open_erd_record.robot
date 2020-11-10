@@ -44,8 +44,7 @@ Create Open Recurring Donation With Monthly Installment
 
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Reload Page
-    Click Link                              New
-    # Reload page is a temporary fix till the developers fix the ui-modal
+    Click Link                             New
     Wait For Rd2 Modal
 
     # Create Enhanced recurring donation of type Open
