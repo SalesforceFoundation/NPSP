@@ -159,6 +159,9 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
+            dataImport.Additional_Object_JSON__c =
+                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+
             upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
@@ -179,6 +182,9 @@ public with sharing class GE_GiftEntryController {
     */
     @AuraEnabled
     public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
+        dataImport.Additional_Object_JSON__c =
+                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+
         // Run the BDI process on this new Data Import
         processDataImport(dataImport, false, updateGift);
 
@@ -496,8 +502,8 @@ public with sharing class GE_GiftEntryController {
     * @description Work in Progress to deliver widget behaviors
     * @return Widget data
     */
-    @AuraEnabled
-    public static String convertWidgetDataToObjectJSON(String widgetData) {
+    @TestVisible
+    private static String convertWidgetDataToObjectJSON(String widgetData) {
 
         if (String.isBlank(widgetData)) {
             return null;
@@ -516,7 +522,6 @@ public with sharing class GE_GiftEntryController {
             objMappingDevNameToObjList = (Map<String, Object>) JSON.deserializeUntyped(widgetData);
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
         }
 

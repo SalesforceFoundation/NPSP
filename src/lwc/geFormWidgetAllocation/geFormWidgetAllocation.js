@@ -64,50 +64,29 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.totalAmount = totalDonationAmount === 0 ? null :
             this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
 
-        if (isEmpty(this.widgetDataFromState[apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)])) {
+        const additionalObjectJson = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)];
+        if (isEmpty(additionalObjectJson)) {
             return;
         }
 
         this.reset();
 
-        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
-
-        let dataImportRow;
-        if (Object.keys(this._widgetDataFromState).includes(DATA_IMPORT_ADDITIONAL_JSON_FIELD.fieldApiName)) {
-            dataImportRow =
-                JSON.parse(this._widgetDataFromState[DATA_IMPORT_ADDITIONAL_JSON_FIELD.fieldApiName])
-                    .dynamicSourceByObjMappingDevName;
-        }
-        if (!dataImportRow) {
-            return;
-        }
+        const widgetData = JSON.parse(additionalObjectJson);
         let rowList = [];
-        let fieldMappings = GeFormService.fieldMappings;
-        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-            return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
+        Object.values(widgetData).forEach(objectDevNameValues => {
+            objectDevNameValues.filter(
+                objectDevNameValue => objectDevNameValue.attributes.type === apiNameFor(ALLOCATION_OBJECT)
+            )
+            .forEach(objectDevNameValue => {
+                let row = {}
+                Object.entries(objectDevNameValue)
+                    .filter(([key, value]) => key !== 'attributes')
+                    .forEach(([key, value]) => {
+                        row[key] = value
+                    })
+                rowList.unshift(row);
+            })
         });
-        Object.keys(dataImportRow).forEach(diKey => {
-            let row = {};
-
-            gauMappingKeys.forEach(fieldMappingKey => {
-                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
-                let sourceObj = dataImportRow[diKey].sourceObj;
-
-                if(Object.keys(sourceObj).includes(sourceField)) {
-                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
-                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-
-                    if (diSourceField === 0) {
-                        diSourceField = null;
-                    }
-
-                    row[targetField] = diSourceField;
-
-                }
-            });
-            rowList.unshift(row);
-        });
-
         this.addRows(rowList);
     }
 

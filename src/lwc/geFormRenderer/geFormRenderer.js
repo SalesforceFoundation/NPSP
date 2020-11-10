@@ -4,7 +4,6 @@ import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPur
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import convertWidgetDataToObjectJSON from '@salesforce/apex/GE_GiftEntryController.convertWidgetDataToObjectJSON';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
@@ -22,6 +21,7 @@ import DONATION_STAGE_NAME from '@salesforce/schema/DataImport__c.Donation_Stage
 
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { convertBDIToWidgetJson } from './geFormRendererHelper';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
@@ -874,6 +874,10 @@ export default class GeFormRenderer extends LightningElement{
     loadDataImportRecord(dataImport) {
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
+
+        dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
+            convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
+
         this.updateFormState(dataImportWithNullValuesAppended);
     }
 
@@ -1008,16 +1012,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleFormWidgetChange = async (event) => {
-        let bdiJSON = await this.convertToBDIJSON(event);
-        this.updateFormState({
-            [apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] : bdiJSON
-        });
-    }
-
-    convertToBDIJSON = async (event) => {
-        return convertWidgetDataToObjectJSON({
-            widgetData: event.detail[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]
-        });
+        this.updateFormState(event.detail);
     }
 
     /*******************************************************************************
