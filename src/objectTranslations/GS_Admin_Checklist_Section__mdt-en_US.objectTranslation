@@ -9,7 +9,7 @@
         <value>GS Admin Checklist Sections</value>
     </caseValues>
     <fields>
-        <help><!-- Is the name of the label used in his description --></help>
+        <help><!-- The custom label api name for the Description Label --></help>
         <label><!-- Description Label --></label>
         <name>Description_Label__c</name>
     </fields>
@@ -19,7 +19,7 @@
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- Is the name of the label used in his title --></help>
+        <help><!-- The custom label api name for the Title Label --></help>
         <label><!-- Title Label --></label>
         <name>Title_Label__c</name>
     </fields>

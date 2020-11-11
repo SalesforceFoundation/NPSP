@@ -3,10 +3,10 @@
     <description>NPSP Getting Started Page section items</description>
     <fields>
         <fullName>Description_Label__c</fullName>
-        <description>The name of the label used in the description on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the description on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his description</inlineHelpText>
+        <inlineHelpText>The custom label api name for the Description Label</inlineHelpText>
         <label>Description Label</label>
         <length>255</length>
         <required>true</required>
@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Extra_Info_Label__c</fullName>
-        <description>The name of the label used in the extra info on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the extra info on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his extra info text</inlineHelpText>
+        <inlineHelpText>The GettingStarted Section this item is part of</inlineHelpText>
         <label>Extra Info Label</label>
         <length>255</length>
         <required>false</required>
@@ -54,7 +54,7 @@
         <description>The name of the image used in the item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The name of the image is displayed</inlineHelpText>
+        <inlineHelpText>The filename of the image is displayed</inlineHelpText>
         <label>Image</label>
         <length>255</length>
         <required>false</required>
@@ -63,10 +63,10 @@
     </fields>
     <fields>
         <fullName>Link_Label__c</fullName>
-        <description>The name of the label used in the link on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the link on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his link</inlineHelpText>
+        <inlineHelpText>Is the custom label api name used in his link</inlineHelpText>
         <label>Link Label</label>
         <length>255</length>
         <required>false</required>
@@ -98,10 +98,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Label__c</fullName>
-        <description>The name of the label used in the primary button on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the Primary Button on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his primary button</inlineHelpText>
+        <inlineHelpText>The custom label api name for the Primary Button Label</inlineHelpText>
         <label>Primary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -110,10 +110,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Type__c</fullName>
-        <description>The type of action released the primary button</description>
+        <description>The type of action released the Primary Button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The type of action released the primary button</inlineHelpText>
+        <inlineHelpText>The type of action released the Primary Button</inlineHelpText>
         <label>Primary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -141,10 +141,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Value__c</fullName>
-        <description>The value used in action released to the primary button</description>
+        <description>The value used in action released to the Primary Button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The value used in action released to the primary button</inlineHelpText>
+        <inlineHelpText>The value used in action released to the Primary Button</inlineHelpText>
         <label>Primary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -153,10 +153,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Label__c</fullName>
-        <description>The name of the label used in the secondary button on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the Secondary Button on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his secondary button</inlineHelpText>
+        <inlineHelpText>The custom label api name for the Secondary Button Label</inlineHelpText>
         <label>Secondary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -165,10 +165,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Type__c</fullName>
-        <description>The type of action released the secondary button</description>
+        <description>The type of action released the secondary Button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The type of action released the secondary button</inlineHelpText>
+        <inlineHelpText>The type of action released the secondary Button</inlineHelpText>
         <label>Secondary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -196,10 +196,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Value__c</fullName>
-        <description>The value used in action released to the secondary button</description>
+        <description>The value used in action released to the secondary Button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The value used in action released to the secondary button</inlineHelpText>
+        <inlineHelpText>The value used in action released to the secondary Button</inlineHelpText>
         <label>Secondary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -208,10 +208,10 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
-        <description>The name of the label used in the label on a section item on the Getting Started page</description>
+        <description>The custom label api name used in the label on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the name of the label used in his title</inlineHelpText>
+        <inlineHelpText>The custom label api name for the Title Label</inlineHelpText>
         <label>Title Label</label>
         <length>255</length>
         <required>true</required>
