@@ -3,6 +3,7 @@ import {
     isNumeric,
     isNotEmpty,
     isEmpty,
+    isEmptyObject,
     apiNameFor, debouncify
 } from 'c/utilCommon';
 
@@ -34,6 +35,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return this._widgetDataFromState;
     }
     set widgetDataFromState(value) {
+        if (isEmptyObject(value)) {
+            return;
+        }
+
         this._widgetDataFromState = value;
         this.reset();
         this.loadWidgetDataFromState();
@@ -60,9 +65,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     };
 
     loadWidgetDataFromState() {
-        let totalDonationAmount = this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
-        this.totalAmount = totalDonationAmount === 0 ? null :
-            this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)];
+        let totalDonationAmount = Number.parseFloat(this.widgetDataFromState[apiNameFor(DI_DONATION_AMOUNT_FIELD)]);
+        this.totalAmount = totalDonationAmount === 0 ? null : totalDonationAmount;
 
         const additionalObjectJson = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)];
         if (isEmpty(additionalObjectJson)) {
@@ -140,16 +144,16 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 return true;
             })
             .reduce((accumulator, current) => {
-                let currentAmount = current.record[apiNameFor(AMOUNT_FIELD)];
+                let currentAmount = +current.record[apiNameFor(AMOUNT_FIELD)];
 
                 if (isEmpty(currentAmount)) {
-                    const currentPercent = current.record[apiNameFor(PERCENT_FIELD)];
-                    currentAmount = (currentPercent * this._totalAmount) / 100;
+                    const currentPercent = +current.record[apiNameFor(PERCENT_FIELD)];
+                    currentAmount = (currentPercent * this.totalAmount) / 100;
                 }
 
                 if(isNumeric(currentAmount)) {
                     // prefix + to ensure operand is treated as a number
-                    return (+currentAmount + accumulator);
+                    return currentAmount + accumulator;
                 }
                 return accumulator;
             }, 0);

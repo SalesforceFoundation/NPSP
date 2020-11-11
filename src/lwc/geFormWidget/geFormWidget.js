@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import {apiNameFor, getSubsetObject, isUndefined} from 'c/utilCommon';
+import {apiNameFor, getSubsetObject, isEmptyObject, isNotEmpty, isUndefined} from 'c/utilCommon';
 
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -13,25 +13,42 @@ export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
 
-    _formState;
+    _formState = {};
     @api
     get formState() {
         return this._formState;
     }
     set formState(formState) {
-        this._formState = formState;
-        this.sliceWidgetRowDataFromState();
+        if (isEmptyObject(formState)) {
+            return;
+        }
+
+        if (this.hasAllocationValuesChanged(formState)) {
+            this.sliceAllocationWidgetDataFromState(formState);
+        }
+        this._formState = Object.assign({}, formState);
     }
 
     @track widgetDataFromState;
-    sliceWidgetRowDataFromState() {
+    sliceAllocationWidgetDataFromState(formState) {
         this.widgetDataFromState = getSubsetObject(
-            this.formState,
+            formState,
             [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
     }
 
     handleFormWidgetChange(event) {
         this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}))
+    }
+
+    hasAllocationValuesChanged(formState) {
+        const donationFieldApiName = apiNameFor(DI_DONATION_AMOUNT_FIELD);
+        const additionalObjectFieldApiName = apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)
+
+        return formState[donationFieldApiName] !==
+            this.formState[donationFieldApiName]
+            ||
+            formState[additionalObjectFieldApiName] !==
+            this.formState[additionalObjectFieldApiName]
     }
 
     get isValid() {
