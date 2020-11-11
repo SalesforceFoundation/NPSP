@@ -88,4 +88,38 @@ private with sharing class GS_AdminSetup_TEST {
             }
         }
     }
+
+    @isTest
+    private static void persistTest() {
+        List<GS_Admin_Checklist_Item__mdt> metadataSectionItems = [SELECT Id, Position__c
+                                                                   FROM   GS_Admin_Checklist_Item__mdt
+                                                                   ORDER BY Position__c ASC LIMIT 1];
+        System.assertEquals(false, metadataSectionItems.isEmpty(), 'Items should not be empty');
+        GS_AdminSetup.updateCheckItem('invalid', true);
+        List<Getting_Started_Completed_Checklist__c> adminStatus = [SELECT Id,
+                                                                           Item_Id__c,
+                                                                           User__c
+                                                                    FROM   Getting_Started_Completed_Checklist__c];
+        System.assertEquals(true, adminStatus.isEmpty(), 'No Invalid Id should be persisted');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   Getting_Started_Completed_Checklist__c];
+        System.assertEquals(1, adminStatus.size(), 'One element should have been created');
+        System.assertEquals(metadataSectionItems[0].id, adminStatus[0].Item_Id__c,'Id should have been the same');
+        System.assertEquals(UserInfo.getUserId(), adminStatus[0].User__c,'UserId should have been the current one');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   Getting_Started_Completed_Checklist__c];
+        System.assertEquals(1, adminStatus.size(), 'No duplicated elements are allowed');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, false);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   Getting_Started_Completed_Checklist__c];
+        System.assertEquals(true, adminStatus.isEmpty(), 'Item is not unchecked');
+    }
 }

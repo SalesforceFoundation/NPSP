@@ -52,6 +52,48 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
+     * @description Persist in database if an element is checked or not.
+     * For doing so we use the object Getting_Started_Completed_Checklist__c. If a record exists for an user and an item, 
+     * it means the element is checked
+     * @param  itemId  Id the checklist item id
+     * @param  checked boolean element is checked of not
+     */
+    @AuraEnabled
+    public static void updateCheckItem(String itemId, Boolean checked){
+        List<GS_Admin_Checklist_Item__mdt> items = [SELECT ID 
+                                                    FROM   GS_Admin_Checklist_Item__mdt
+                                                    WHERE  ID = :itemId];
+        
+        if (!items.isEmpty()) {
+            
+            List<Getting_Started_Completed_Checklist__c> adminStatus = [SELECT ID
+                                                                        FROM   Getting_Started_Completed_Checklist__c
+                                                                        WHERE  Item_Id__c = :itemId 
+                                                                        AND    User__c = :UserInfo.getUserId()];
+            if (checked) {
+                markItemAsCompleted(adminStatus, itemId);
+            } else {
+                unmarkItemAsCompleted(adminStatus);
+            }
+            
+        }    
+    }
+
+    private static void markItemAsCompleted(List<Getting_Started_Completed_Checklist__c> adminStatus, String itemId) {
+        if (adminStatus.isEmpty()) {
+            adminStatus.add(new Getting_Started_Completed_Checklist__c( Item_Id__c = itemId,
+                                                                        User__c = UserInfo.getUserId()));
+            insert adminStatus;
+        }
+    }
+
+    private static void unmarkItemAsCompleted(List<Getting_Started_Completed_Checklist__c> adminStatus) {
+        if (!adminStatus.isEmpty()) {
+            delete adminStatus;
+        }
+    }
+
+    /**
      * @description Return the list of GS_Admin_Checklist_Section__mdt and his Items 
      * @return List<GS_Admin_Checklist_Section__mdt>
      * @note [ORDER BY Position__c ASC] doesn't work well in the inner query, I need to sort outside SOQL
@@ -209,6 +251,9 @@ public with sharing class GS_AdminSetup {
         @AuraEnabled
         public ChecklistItemButton secondaryBtn;
 
+        @AuraEnabled
+        public Boolean checked;
+
         /**
         * @description Compare ChecklistItem to short using position
         * @param ChecklistItem object to compare
@@ -289,5 +334,4 @@ public with sharing class GS_AdminSetup {
             this.value = value;
         }
     }
-
 }
