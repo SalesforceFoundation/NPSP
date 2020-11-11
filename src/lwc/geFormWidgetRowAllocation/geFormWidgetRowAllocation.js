@@ -45,9 +45,13 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     _totalAmountFromState;
+    _widgetDataFromState;
     @api
-    get widgetDataFromState(){}
+    get widgetDataFromState(){
+        return this._widgetDataFromState;
+    }
     set widgetDataFromState(value) {
+        this._widgetDataFromState = value;
 
         this._totalAmountFromState = value[this.donationAmountFieldApiName];
         this.reallocateAmountByPercent();
@@ -81,12 +85,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
             changedField = event.detail;
         }
 
-        if (changedField.fieldApiName === this.allocationAmountFieldApiName) {
-            this.disablePercentFieldIfAmountHasValue(changedField);
-        }
-
         if (changedField.fieldApiName === this.allocationPercentageFieldApiName) {
-            this.disableAmountFieldIfPercentHasValue(changedField);
             dependentFieldChanges = {...
                 {[this.allocationAmountFieldApiName]: this.calculateAmountFromPercent(changedField.value)}
             };
@@ -101,35 +100,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 }
             }
         }));
-    }
-
-    disablePercentFieldIfAmountHasValue(changedField) {
-        let percentFieldElement = this.template.querySelector(
-    `[data-fieldname=${this.allocationPercentageFieldApiName}]`
-        );
-        if (!percentFieldElement) {
-            return;
-        }
-
-        if(isEmpty(percentFieldElement.value) &&
-            isNumeric(changedField.value) &&
-            changedField.value > 0) {
-
-            percentFieldElement.disabled = true;
-        } else if(isEmpty(changedField.value) || changedField.value === 0) {
-            percentFieldElement.disabled = false;
-        }
-    }
-
-    disableAmountFieldIfPercentHasValue(changedField) {
-        let amountFieldElement = this.template.querySelector(
-            `[data-fieldname=${this.allocationAmountFieldApiName}]`
-        );
-        if(isNumeric(changedField.value) && changedField.value > 0 && !amountFieldElement.disabled) {
-            amountFieldElement.disabled = true;
-        } else if(isEmpty(changedField.value) || changedField.value === 0) {
-            amountFieldElement.disabled = false;
-        }
     }
 
     calculateAmountFromPercent(percentValue) {
@@ -183,6 +153,22 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     get percentValue() {
         return this.row.record[apiNameFor(PERCENT_FIELD)];
+    }
+
+    get isPercentDisabled() {
+        if (isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
+            Number.parseFloat(this.row.record[apiNameFor(AMOUNT_FIELD)]) > 0) {
+            return true;
+        }
+    }
+
+    get isAmountDisabled() {
+        if (!isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
+            Number.parseFloat(this.row.record[apiNameFor(PERCENT_FIELD)]) > 0 &&
+            !this.isAmountDisabled) {
+
+            return true;
+        }
     }
 
     get qaLocatorDeleteRow() {
