@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>GS Admin Checklist Item</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>GS Admin Checklist Items</value>
+    </caseValues>
+    <fields>
+        <label><!-- Description Label --></label>
+        <name>Description_Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- Extra Info Label --></label>
+        <name>Extra_Info_Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- GS Admin Checklist Section --></label>
+        <name>GS_Admin_Checklist_Section__c</name>
+        <relationshipLabel><!-- GS Admin Checklist Items --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Has Link --></label>
+        <name>Has_Link__c</name>
+    </fields>
+    <fields>
+        <label><!-- Image --></label>
+        <name>Image__c</name>
+    </fields>
+    <fields>
+        <label><!-- Link Label --></label>
+        <name>Link_Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- Link URL --></label>
+        <name>Link_URL__c</name>
+    </fields>
+    <fields>
+        <label><!-- Position --></label>
+        <name>Position__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary Button Label --></label>
+        <name>Primary_Button_Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary Button Type --></label>
+        <name>Primary_Button_Type__c</name>
+        <picklistValues>
+            <masterLabel>Disabled</masterLabel>
+            <translation><!-- Disabled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Page</masterLabel>
+            <translation><!-- External Page --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SFDC New Tab</masterLabel>
+            <translation><!-- SFDC New Tab --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Primary Button Value --></label>
+        <name>Primary_Button_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Secondary Button Label --></label>
+        <name>Secondary_Button_Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- Secondary Button Type --></label>
+        <name>Secondary_Button_Type__c</name>
+        <picklistValues>
+            <masterLabel>Disabled</masterLabel>
+            <translation><!-- Disabled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Page</masterLabel>
+            <translation><!-- External Page --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SFDC New Tab</masterLabel>
+            <translation><!-- SFDC New Tab --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Secondary Button Value --></label>
+        <name>Secondary_Button_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Title Label --></label>
+        <name>Title_Label__c</name>
+    </fields>
+    <layouts>
+        <layout>GS Admin Checklist Item Layout</layout>
+        <sections>
+            <label><!-- Buttons --></label>
+            <section>Buttons</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Info --></label>
+            <section>Info</section>
+        </sections>
+        <sections>
+            <label><!-- Link --></label>
+            <section>Link</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

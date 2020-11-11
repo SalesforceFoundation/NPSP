@@ -3736,6 +3736,7 @@
         <members>npo02__Households_Settings__c-iw</members>
         <members>npo02__Households_Settings__c-ja</members>
         <members>npo02__Households_Settings__c-nl_NL</members>
+        <members>*</members>
         <name>CustomObjectTranslation</name>
     </types>
     <types>
