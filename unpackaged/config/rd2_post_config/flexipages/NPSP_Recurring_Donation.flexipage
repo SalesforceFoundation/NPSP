@@ -104,9 +104,6 @@
             </componentInstanceProperties>
             <componentName>%%%NAMESPACE_OR_C%%%:rdScheduleVisualizer</componentName>
         </componentInstances>
-        <componentInstances>
-            <componentName>%%%NAMESPACE_OR_C%%%:rd2ElevateInformation</componentName>
-        </componentInstances>
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
