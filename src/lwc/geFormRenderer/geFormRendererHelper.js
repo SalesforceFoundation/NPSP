@@ -22,6 +22,10 @@ export function flatten(obj) {
 }
 
 export function convertBDIToWidgetJson(additionalObjectJson) {
+    if (isEmptyObject(additionalObjectJson)) {
+        return;
+    }
+
     const additionalObjects = JSON.parse(additionalObjectJson);
 
     if (isEmptyObject(additionalObjects) ||
