@@ -48,9 +48,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api
     get widgetDataFromState(){}
     set widgetDataFromState(value) {
-        if (this._totalAmountFromState === value[this.donationAmountFieldApiName]) {
-            return;
-        }
+
         this._totalAmountFromState = value[this.donationAmountFieldApiName];
         this.reallocateAmountByPercent();
     }

@@ -13,6 +13,8 @@ export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
 
+    @track widgetDataFromState = {};
+
     _formState = {};
     @api
     get formState() {
@@ -29,7 +31,6 @@ export default class GeFormWidget extends LightningElement {
         this._formState = Object.assign({}, formState);
     }
 
-    @track widgetDataFromState;
     sliceAllocationWidgetDataFromState(formState) {
         this.widgetDataFromState = getSubsetObject(
             formState,
