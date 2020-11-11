@@ -301,27 +301,47 @@ public with sharing class RD2_EntryFormController {
         }
 
         UTIL_Http.Response response;
+        String exceptionMessage;
 
         try {
             response = commitmentService.sendRequest(recordId, jsonRequestBody);
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                commitmentService.updateRecurringDonation(recordId, response);
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+                commitmentService.updateRecurringDonation(recordId, commitment);
             }
 
-        } catch (Exception e) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        } catch (CalloutException e) {
+            exceptionMessage = e.getMessage();
+
+        } catch (JSONException e) {
+            exceptionMessage = e.getMessage();
 
         } finally {
-            if (response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
-                //create an error log for the RD and the failed response error message
+            if (String.isNotBlank(exceptionMessage)) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(exceptionMessage);
+            }
+
+            if ((response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED)
+                || String.isNotBlank(exceptionMessage)
+            ) {
+                processError((String.isNotBlank(exceptionMessage) ? exceptionMessage : response.body), recordId);
             }
         }
 
         return JSON.serialize(response);
     }
 
+    private static void processError(String errorMessage, Id recordId) {
+        RD2_ElevateIntegrationService.Logger errorLogger = new RD2_ElevateIntegrationService.Logger();
+                errorLogger.addError(
+                    recordId,
+                    errorMessage,
+                    RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
+                );
 
+                errorLogger.processErrors();
+    }
     /**
     * @description Handles sending commitment request and saving its values on the RD
     */
@@ -380,33 +400,22 @@ public with sharing class RD2_EntryFormController {
         * @param response Response from Elevate on the commitment create request
         * @return void
         */
-        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
-            if (response == null
-                || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
-            ) {
-                return;
+        public void updateRecurringDonation(Id recordId, PS_CommitmentRequest.ResponseBody commitment) {
+            if (commitment.hasId()) {
+                npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                    Id = recordId,
+                    CommitmentId__c = commitment.id,
+                    CardLast4__c = commitment.getCardLast4(),
+                    CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                    CardExpirationYear__c = commitment.getCardExpirationYear()
+                );
+
+                UTIL_DMLService.updateRecordBatchAndLogErrors(
+                    new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                );
             }
 
-            try {
-                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
-
-                if (commitment.hasId()) {
-                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                        Id = recordId,
-                        CommitmentId__c = commitment.id,
-                        CardLast4__c = commitment.getCardLast4(),
-                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
-                        CardExpirationYear__c = commitment.getCardExpirationYear()
-                    );
-
-                    UTIL_DMLService.updateRecordBatchAndLogErrors(
-                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
-                    );
-                }
-
-            } catch (Exception e) {
-                throw e;
-            }
+           
         }
     }
 
