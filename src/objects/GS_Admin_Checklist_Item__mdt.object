@@ -3,8 +3,10 @@
     <description>NPSP Getting Started Page section items</description>
     <fields>
         <fullName>Description_Label__c</fullName>
+        <description>The name of the label used in the description on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his description</inlineHelpText>
         <label>Description Label</label>
         <length>255</length>
         <required>true</required>
@@ -13,8 +15,10 @@
     </fields>
     <fields>
         <fullName>Extra_Info_Label__c</fullName>
+        <description>The name of the label used in the extra info on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his extra info text</inlineHelpText>
         <label>Extra Info Label</label>
         <length>255</length>
         <required>false</required>
@@ -23,8 +27,10 @@
     </fields>
     <fields>
         <fullName>GS_Admin_Checklist_Section__c</fullName>
+        <description>The section this belongs to on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Section this belongs</inlineHelpText>
         <label>GS Admin Checklist Section</label>
         <referenceTo>GS_Admin_Checklist_Section__mdt</referenceTo>
         <relationshipLabel>GS Admin Checklist Items</relationshipLabel>
@@ -36,15 +42,19 @@
     <fields>
         <fullName>Has_Link__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>The item has a link to display</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The item has a link to display</inlineHelpText>
         <label>Has Link</label>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Image__c</fullName>
+        <description>The name of the image used in the item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The name of the image is displayed</inlineHelpText>
         <label>Image</label>
         <length>255</length>
         <required>false</required>
@@ -53,8 +63,10 @@
     </fields>
     <fields>
         <fullName>Link_Label__c</fullName>
+        <description>The name of the label used in the link on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his link</inlineHelpText>
         <label>Link Label</label>
         <length>255</length>
         <required>false</required>
@@ -63,16 +75,20 @@
     </fields>
     <fields>
         <fullName>Link_URL__c</fullName>
+        <description>The URL redirect the link</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The URL redirect the link</inlineHelpText>
         <label>Link URL</label>
         <required>false</required>
         <type>Url</type>
     </fields>
     <fields>
         <fullName>Position__c</fullName>
+        <description>The position of the section item in his section on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the position of the section item</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>
@@ -82,8 +98,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Label__c</fullName>
+        <description>The name of the label used in the primary button on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his primary button</inlineHelpText>
         <label>Primary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -92,8 +110,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Type__c</fullName>
+        <description>The type of action released the primary button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The type of action released the primary button</inlineHelpText>
         <label>Primary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -121,8 +141,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Value__c</fullName>
+        <description>The value used in action released to the primary button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The value used in action released to the primary button</inlineHelpText>
         <label>Primary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -131,8 +153,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Label__c</fullName>
+        <description>The name of the label used in the secondary button on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his secondary button</inlineHelpText>
         <label>Secondary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -141,8 +165,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Type__c</fullName>
+        <description>The type of action released the secondary button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The type of action released the secondary button</inlineHelpText>
         <label>Secondary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -170,8 +196,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Value__c</fullName>
+        <description>The value used in action released to the secondary button</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The value used in action released to the secondary button</inlineHelpText>
         <label>Secondary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -180,8 +208,10 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
+        <description>The name of the label used in the label on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his title</inlineHelpText>
         <label>Title Label</label>
         <length>255</length>
         <required>true</required>

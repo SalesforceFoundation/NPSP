@@ -3,8 +3,10 @@
     <description>NPSP Getting Started Page sections</description>
     <fields>
         <fullName>Description_Label__c</fullName>
+        <description>The name of the label used in the description on a section on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his description</inlineHelpText>
         <label>Description Label</label>
         <length>255</length>
         <required>true</required>
@@ -13,8 +15,10 @@
     </fields>
     <fields>
         <fullName>Position__c</fullName>
+        <description>The position of the section on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the position of the section</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>
@@ -24,8 +28,10 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
+        <description>The name of the label used in the title on a section on Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Is the name of the label used in his title</inlineHelpText>
         <label>Title Label</label>
         <length>255</length>
         <required>true</required>

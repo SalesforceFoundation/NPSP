@@ -2,11 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>GS Admin Checklist Item</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>GS Admin Checklist Items</value>
+        <value><!-- GS Admin Checklist Item --></value>
     </caseValues>
     <fields>
         <help><!-- Is the name of the label used in his description --></help>
@@ -127,5 +123,4 @@
             <section>Link</section>
         </sections>
     </layouts>
-    <gender>Neuter</gender>
 </CustomObjectTranslation>

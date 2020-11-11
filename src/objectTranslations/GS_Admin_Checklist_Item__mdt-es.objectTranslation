@@ -9,43 +9,53 @@
         <value>GS Admin Checklist Items</value>
     </caseValues>
     <fields>
+        <help><!-- Is the name of the label used in his description --></help>
         <label><!-- Description Label --></label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his extra info text --></help>
         <label><!-- Extra Info Label --></label>
         <name>Extra_Info_Label__c</name>
     </fields>
     <fields>
+        <help><!-- Section this belongs --></help>
         <label><!-- GS Admin Checklist Section --></label>
         <name>GS_Admin_Checklist_Section__c</name>
         <relationshipLabel><!-- GS Admin Checklist Items --></relationshipLabel>
     </fields>
     <fields>
+        <help><!-- The item has a link to display --></help>
         <label><!-- Has Link --></label>
         <name>Has_Link__c</name>
     </fields>
     <fields>
+        <help><!-- The name of the image is displayed --></help>
         <label><!-- Image --></label>
         <name>Image__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his link --></help>
         <label><!-- Link Label --></label>
         <name>Link_Label__c</name>
     </fields>
     <fields>
+        <help><!-- The URL redirect the link --></help>
         <label><!-- Link URL --></label>
         <name>Link_URL__c</name>
     </fields>
     <fields>
+        <help><!-- Is the position of the section item --></help>
         <label><!-- Position --></label>
         <name>Position__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his primary button --></help>
         <label><!-- Primary Button Label --></label>
         <name>Primary_Button_Label__c</name>
     </fields>
     <fields>
+        <help><!-- The type of action released the primary button --></help>
         <label><!-- Primary Button Type --></label>
         <name>Primary_Button_Type__c</name>
         <picklistValues>
@@ -62,14 +72,17 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- The value used in action released to the primary button --></help>
         <label><!-- Primary Button Value --></label>
         <name>Primary_Button_Value__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his secondary button --></help>
         <label><!-- Secondary Button Label --></label>
         <name>Secondary_Button_Label__c</name>
     </fields>
     <fields>
+        <help><!-- The type of action released the secondary button --></help>
         <label><!-- Secondary Button Type --></label>
         <name>Secondary_Button_Type__c</name>
         <picklistValues>
@@ -86,10 +99,12 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- The value used in action released to the secondary button --></help>
         <label><!-- Secondary Button Value --></label>
         <name>Secondary_Button_Value__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his title --></help>
         <label><!-- Title Label --></label>
         <name>Title_Label__c</name>
     </fields>
@@ -112,5 +127,5 @@
             <section>Link</section>
         </sections>
     </layouts>
-    <startsWith>Consonant</startsWith>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

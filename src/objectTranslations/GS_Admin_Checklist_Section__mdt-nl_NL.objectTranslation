@@ -9,16 +9,19 @@
         <value>GS Admin Checklist Sections</value>
     </caseValues>
     <fields>
+        <help><!-- Is the name of the label used in his description --></help>
         <label><!-- Description Label --></label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
+        <help><!-- Is the position of the section --></help>
         <label><!-- Position --></label>
         <name>Position__c</name>
     </fields>
     <fields>
+        <help><!-- Is the name of the label used in his title --></help>
         <label><!-- Title Label --></label>
         <name>Title_Label__c</name>
     </fields>
-    <startsWith>Consonant</startsWith>
+    <gender>Neuter</gender>
 </CustomObjectTranslation>
