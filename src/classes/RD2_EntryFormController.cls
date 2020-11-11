@@ -301,7 +301,6 @@ public with sharing class RD2_EntryFormController {
         }
 
         UTIL_Http.Response response;
-        String errorMessage;
 
         try {
             response = commitmentService.sendRequest(recordId, jsonRequestBody);
@@ -310,7 +309,7 @@ public with sharing class RD2_EntryFormController {
                 PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
                 commitmentService.updateRecurringDonation(recordId, commitment);
             } else {
-                errorMessage = response.getErrorMessages();
+                processError(response.getErrorMessages(), recordId);
             }
 
         } catch (CalloutException e) {
@@ -319,10 +318,6 @@ public with sharing class RD2_EntryFormController {
         } catch (JSONException e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
-        } finally {
-            if (String.isNotBlank(errorMessage)) {
-                processError(errorMessage, recordId);
-            }
         }
 
         return JSON.serialize(response);
@@ -398,7 +393,7 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
         * @param recordId Recurring Donation Id
-        * @param commitment Commitment response body from Elevate on the commitment create request
+        * @param commitment JSON deserialize response body from Elevate commitment create request
         * @return void
         */
         public void updateRecurringDonation(Id recordId, PS_CommitmentRequest.ResponseBody commitment) {
