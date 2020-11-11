@@ -3861,6 +3861,8 @@
         <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>Getting_Started_Admin_Checklist__c-Getting Started Admin Checklist Layout</members>
+        <members>Getting_Started_Completed_Checklist__c-Getting Started Completed Checklist Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>
