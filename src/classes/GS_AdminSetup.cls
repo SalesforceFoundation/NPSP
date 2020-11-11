@@ -55,7 +55,9 @@ public with sharing class GS_AdminSetup {
 
     /**
      * @description Persist in database if an element is checked or not.
-     * For doing so we use the object Getting_Started_Completed_Checklist__c. If a record exists for an user and an item, 
+     * For doing so we use the object Getting_Started_Completed_Checklist__c. 
+     * The object contains two fields: Item_Id and User. 
+     * Which means that a checkbox is selected if an element  
      * it means the element is checked
      * @param  itemId  Id the checklist item id
      * @param  checked boolean element is checked of not
@@ -96,7 +98,10 @@ public with sharing class GS_AdminSetup {
      * @param  itemId      String the item id to be completed
      */
     private static void markItemAsCompleted(List<Getting_Started_Completed_Checklist__c> adminStatus, String itemId) {
-        if (adminStatus.isEmpty()) {
+        if (Schema.SObjectType.Getting_Started_Completed_Checklist__c.fields.Item_Id__c.isUpdateable() &&
+            Schema.SObjectType.Getting_Started_Completed_Checklist__c.fields.User__c.isUpdateable() && 
+            adminStatus.isEmpty()) {
+            
             adminStatus.add(new Getting_Started_Completed_Checklist__c( Item_Id__c = itemId,
                                                                         User__c = UserInfo.getUserId()));
             insert adminStatus;
@@ -109,7 +114,7 @@ public with sharing class GS_AdminSetup {
      * @param  adminStatus List<Getting_Started_Completed_Checklist__c> list with the items filtered by currentUser and itemId
      */
     private static void unmarkItemAsCompleted(List<Getting_Started_Completed_Checklist__c> adminStatus) {
-        if (!adminStatus.isEmpty()) {
+        if (Getting_Started_Completed_Checklist__c.SObjectType.getDescribe().isDeletable() && !adminStatus.isEmpty()) {
             delete adminStatus;
         }
     }
