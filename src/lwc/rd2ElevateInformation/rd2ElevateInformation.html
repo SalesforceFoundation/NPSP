@@ -28,7 +28,7 @@
                 <lightning-layout multiple-rows="true" class="slds-p-left_medium slds-p-top_medium">
 
                     <lightning-layout-item size="12">
-                        <div class="slds-grid slds-grid_vertical-align-center">
+                        <div class="slds-grid slds-grid_vertical-align-top">
                             <template if:true={status.isProgress}>
                                 <lightning-progress-ring value="75"></lightning-progress-ring>
                             </template>
@@ -37,8 +37,9 @@
                                 </lightning-icon>
                             </template>
                             
-                        <lightning-formatted-text id="status" data-id="status" value={status.message} class="slds-p-left_small slds-form-element__control">
-                        </lightning-formatted-text></div>
+                            <lightning-formatted-text id="status" data-id="status" value={status.message} class="slds-p-left_small slds-form-element__control">
+                            </lightning-formatted-text>
+                        </div>
                     </lightning-layout-item>
 
                     <lightning-layout-item size="12" class="slds-p-top_small slds-p-bottom_x-small">
