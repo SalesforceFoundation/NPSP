@@ -1397,11 +1397,11 @@
         <members>GS_Admin_Checklist_Item__mdt.Has_Link__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Image__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Link_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Link_href__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Link_URL__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Position__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Principal_Button_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Principal_Button_Type__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Principal_Button_Value__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Type__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Value__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Label__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Type__c</members>
         <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Value__c</members>

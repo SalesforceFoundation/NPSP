@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group GS
+* @group Getting Started
 * @description Class to test GS_AdminSetup class.
 */
 @isTest
@@ -72,12 +72,12 @@ private with sharing class GS_AdminSetup_TEST {
                 ORDER BY Position__c ASC
             ];
             System.assertEquals(
-                metadataSection.GS_Admin_Checklist_Items__r.size(), 
+                metadataSectionItems.size(), 
                 checklist.items.size(),
                 'The checklist ' + metadataSection.Label + ' don\'t have same children size' 
             );
             for (Integer j = 0; j < checklist.items.size(); j++) {
-                GS_Admin_Checklist_Item__mdt metadataItem = metadataSection.GS_Admin_Checklist_Items__r[j];
+                GS_Admin_Checklist_Item__mdt metadataItem = metadataSectionItems[j];
                 GS_AdminSetup.ChecklistItem item = checklist.items[j];
 
                 System.assertEquals(
