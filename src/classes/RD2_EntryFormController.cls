@@ -301,7 +301,7 @@ public with sharing class RD2_EntryFormController {
         }
 
         UTIL_Http.Response response;
-        String exceptionMessage;
+        String errorMessage;
 
         try {
             response = commitmentService.sendRequest(recordId, jsonRequestBody);
@@ -309,29 +309,30 @@ public with sharing class RD2_EntryFormController {
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
                 PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
                 commitmentService.updateRecurringDonation(recordId, commitment);
+            } else {
+                errorMessage = response.getErrorMessages();
             }
 
         } catch (CalloutException e) {
-            exceptionMessage = e.getMessage();
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
         } catch (JSONException e) {
-            exceptionMessage = e.getMessage();
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
         } finally {
-            if (String.isNotBlank(exceptionMessage)) {
-                UTIL_AuraEnabledCommon.throwAuraHandledException(exceptionMessage);
-            }
-
-            if ((response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED)
-                || String.isNotBlank(exceptionMessage)
-            ) {
-                processError((String.isNotBlank(exceptionMessage) ? exceptionMessage : response.body), recordId);
+            if (String.isNotBlank(errorMessage)) {
+                processError(errorMessage, recordId);
             }
         }
 
         return JSON.serialize(response);
     }
 
+    /**
+    * @description Process Elevate create commitment error
+    * @param errorMessage error message
+    * @param recordId Recurring Donation Id
+    */
     private static void processError(String errorMessage, Id recordId) {
         RD2_ElevateIntegrationService.Logger errorLogger = new RD2_ElevateIntegrationService.Logger();
                 errorLogger.addError(
@@ -397,7 +398,7 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
         * @param recordId Recurring Donation Id
-        * @param response Response from Elevate on the commitment create request
+        * @param commitment Commitment response body from Elevate on the commitment create request
         * @return void
         */
         public void updateRecurringDonation(Id recordId, PS_CommitmentRequest.ResponseBody commitment) {
