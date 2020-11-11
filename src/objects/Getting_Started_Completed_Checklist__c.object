@@ -55,16 +55,19 @@
     <externalSharingModel>Private</externalSharingModel>
     <fields>
         <fullName>Item_Id__c</fullName>
+        <description>GS_Admin_Checklist_Item_mdt Id which has been completed by the user</description>
         <externalId>false</externalId>
         <label>Item Id</label>
         <length>18</length>
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <inlineHelpText>The Checklist Item Id that is completed</inlineHelpText>
         <unique>false</unique>
     </fields>
     <fields>
         <fullName>User__c</fullName>
+        <description>Reference to the user who has completed the task</description>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>User</label>
@@ -72,6 +75,7 @@
         <relationshipName>Getting_Started_Completed_Checklists</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
+        <inlineHelpText>The User that has checked the item</inlineHelpText>
         <type>Lookup</type>
     </fields>
     <label>Getting Started Completed Checklist</label>
@@ -82,5 +86,5 @@
     <pluralLabel>Getting Started Completed Checklists</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
-    <visibility>Public</visibility>
+    <visibility>Protected</visibility>
 </CustomObject>
