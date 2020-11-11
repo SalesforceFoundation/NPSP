@@ -41,6 +41,15 @@ private with sharing class GS_AdminSetup_TEST {
     */
     @isTest
     static void getChecklistsTest() {
+
+        Id firstItemId = [SELECT Id, Position__c
+                          FROM GS_Admin_Checklist_Item__mdt
+                          LIMIT 1].Id;
+
+        Getting_Started_Completed_Checklist__c checkedItem = new Getting_Started_Completed_Checklist__c(Item_Id__c = firstItemId, 
+                                                                                                        User__c = UserInfo.getUserId());
+        insert checkedItem;
+
         List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
         List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
@@ -85,6 +94,8 @@ private with sharing class GS_AdminSetup_TEST {
                     item.Id,
                     'The metadataSection and Checklist childrens are not in the same orden'
                 );
+
+                System.assertEquals(item.Id == checkedItem.Item_Id__c, item.checked, 'Element is not checked as expected');
             }
         }
     }
