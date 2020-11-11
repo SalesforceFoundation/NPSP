@@ -6757,7 +6757,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
-        <value>Activities are tasks, events, or other interactions tracked in the Activity Timelines. Activities allow you to keep track of each time you have contact with a constituent. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
+        <value>Activities are tasks, events, or other interactions tracked in the Activity Timeline. Activities allow you to keep track of each time you have contact with a constituent. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemStayTrackLinkLabel</fullName>
@@ -6792,7 +6792,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Customize Salesforce with information that&apos;s unique to your organization.</value>
     </labels>
     <labels>
-              <fullName>gsChecklistMakeItYourTitle</fullName>
+        <fullName>gsChecklistMakeItYourTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>

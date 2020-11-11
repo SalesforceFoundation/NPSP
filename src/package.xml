@@ -3661,6 +3661,18 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Item__mdt-de</members>
+        <members>GS_Admin_Checklist_Item__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Item__mdt-es</members>
+        <members>GS_Admin_Checklist_Item__mdt-fr</members>
+        <members>GS_Admin_Checklist_Item__mdt-ja</members>
+        <members>GS_Admin_Checklist_Item__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Section__mdt-de</members>
+        <members>GS_Admin_Checklist_Section__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Section__mdt-es</members>
+        <members>GS_Admin_Checklist_Section__mdt-fr</members>
+        <members>GS_Admin_Checklist_Section__mdt-ja</members>
+        <members>GS_Admin_Checklist_Section__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>

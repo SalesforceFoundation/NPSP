@@ -23,8 +23,8 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @description
     * @return boolean
     */
-    get hasPrincipalBtn() {
-        return !!this.item.principalBtn;
+    get hasPrimaryBtn() {
+        return !!this.item.primaryBtn;
     }
     /**
     * @description
@@ -51,8 +51,8 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     /**
     * @description
     */
-    onClickPrincipalBtn() {
-        this.buttonAction(this.item.principalBtn);
+    onClickPrimaryBtn() {
+        this.buttonAction(this.item.primaryBtn);
     }
     /**
     * @description

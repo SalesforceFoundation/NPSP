@@ -47,9 +47,9 @@ export default class gsAdminSetup extends LightningElement {
         tItem.title = getLabelValue(item.title);
         tItem.description = getLabelValue(item.description);
         tItem.extraInfo = getLabelValue(item.extraInfo);
-        if (item.principalBtn) {
-            tItem.principalBtn = {...(item.principalBtn)};
-            tItem.principalBtn.label = getLabelValue(item.principalBtn.label);
+        if (item.primaryBtn) {
+            tItem.primaryBtn = {...(item.primaryBtn)};
+            tItem.primaryBtn.label = getLabelValue(item.primaryBtn.label);
         }
         if (item.secondaryBtn) {
             tItem.secondaryBtn = {...(item.secondaryBtn)};

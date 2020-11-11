@@ -148,7 +148,7 @@ public with sharing class GS_AdminSetup {
             ci.link = new ChecklistItemLink(item.Link_Label__c, item.Link_URL__c);
         }
         if (item.Primary_Button_Type__c != DISABLED) {
-            ci.principalBtn = new ChecklistItemButton(item.Primary_Button_Type__c, item.Primary_Button_Label__c, item.Primary_Button_Value__c);
+            ci.primaryBtn = new ChecklistItemButton(item.Primary_Button_Type__c, item.Primary_Button_Label__c, item.Primary_Button_Value__c);
         }
         if (item.Secondary_Button_Type__c != DISABLED) {
             ci.secondaryBtn = new ChecklistItemButton(item.Secondary_Button_Type__c, item.Secondary_Button_Label__c, item.Secondary_Button_Value__c);
@@ -239,11 +239,11 @@ public with sharing class GS_AdminSetup {
         @AuraEnabled
         public ChecklistItemLink link;
         /**
-        * @description Item principal button info
+        * @description Item primary button info
         * @type ChecklistItemLink
         */
         @AuraEnabled
-        public ChecklistItemButton principalBtn;
+        public ChecklistItemButton primaryBtn;
         /**
         * @description Item secondary button info
         * @type ChecklistItemButton
