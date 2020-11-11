@@ -1968,16 +1968,18 @@ private class RD2_DataMigration_TEST {
             .build();
 
         npe03__Recurring_Donation__c convertedRD;
+        Exception actualException = null;
         try {
             convertedRD = new RD2_DataMigrationMapper(rd)
                 .convertToEnhancedRD();
         }
         catch (RD2_DataMigrationMapper.MigrationException e) {
-            System.assertEquals(true,
-                e.getMessage()
-                    .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
+            actualException = e;
         }
 
+        System.assertEquals(true,
+            actualException.getMessage()
+                .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
         System.assertEquals(null, convertedRD, 'RD should not be converted');
     }
 

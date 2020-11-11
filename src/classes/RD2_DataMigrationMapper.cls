@@ -131,8 +131,6 @@ public class RD2_DataMigrationMapper {
      */
     private void setInstallmentFields(npe03__Recurring_Donation__c rd) {
 
-        validateAmountCanBeCalculated(rd);
-
         Set<String> frequencyOneInstallmentPeriods = new Set<String>{
             RD_Constants.INSTALLMENT_PERIOD_YEARLY,
             RD_Constants.INSTALLMENT_PERIOD_MONTHLY,
@@ -152,6 +150,8 @@ public class RD2_DataMigrationMapper {
         } else {
             handleCustomInstallmentPeriod(rd);
         }
+
+        validateAmountCanBeCalculated(rd);
 
         if ((rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY || rd.npe03__Schedule_Type__c == null)
             && rd.npe03__Installment_Amount__c != null
