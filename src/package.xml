@@ -396,6 +396,7 @@
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
+        <members>RD2_ElevateInformation_CTRL</members>
         <members>RD2_ElevateIntegrationService</members>
         <members>RD2_ElevateIntegrationService_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
@@ -1700,7 +1701,7 @@
         <members>RD2_ElevateDisabledMessage</members>
         <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateInformationHeader</members>
-        <members>RD2_ElevateInformationStatusLabel</members>
+        <members>RD2_ElevateInformationStatusSuccess</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
@@ -2177,6 +2178,7 @@
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
+        <members>commonErrorPrefix</members>
         <members>commonFieldLabel</members>
         <members>commonFieldNotFound</members>
         <members>commonFieldsNotFound</members>
@@ -2207,6 +2209,7 @@
         <members>commonUnknownError</members>
         <members>commonUpdate</members>
         <members>commonViewAll</members>
+        <members>commonViewErrorLog</members>
         <members>commonViewMore</members>
         <members>commonWaitMessage</members>
         <members>commonWarning</members>

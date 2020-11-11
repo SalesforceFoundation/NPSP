@@ -1,5 +1,9 @@
 <template>
-    <lightning-card title={labels.header} variant="narrow">
+    <lightning-card variant="narrow">
+        <h2 slot="title" class="slds-p-top_medium">
+            {labels.header}
+        </h2>
+        
         <div class="slds-m-horizontal--small slds-border_top">
 
             <div class="slds-p-horizontal_medium" if:true={error.detail}>
@@ -10,28 +14,46 @@
                 </c-util-page-level-message>
             </div>
 
+            <template if:true={isLoading}>
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text={labels.loadingMessage} data-id="spinner" data-qa-locator="spinner" size="small">
+                        </lightning-spinner>
+                        <c-util-stencil row-count="2" column-count="1"></c-util-stencil>
+                    </div>
+                </div>
+            </template>
+
             <template if:false={isLoading}>
-                <lightning-layout multiple-rows="true" class="slds-p-around_medium">
+                <lightning-layout multiple-rows="true" class="slds-p-left_medium slds-p-top_medium">
 
-                    <lightning-layout-item size="4" small-device-size="4"
-                        class="slds-dl_horizontal__label slds-text-color_weak">
-                        <label for="status">{labels.statusLabel}</label>
+                    <lightning-layout-item size="12">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <template if:true={status.isProgress}>
+                                <lightning-progress-ring value="75"></lightning-progress-ring>
+                            </template>
+                            <template if:false={status.isProgress}>
+                                <lightning-icon icon-name={status.icon} size="x-small" alternative-text={status.assistiveText} variant={status.value}>
+                                </lightning-icon>
+                            </template>
+                            
+                        <lightning-formatted-text id="status" data-id="status" value={status.message} class="slds-p-left_small slds-form-element__control">
+                        </lightning-formatted-text></div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="8" small-device-size="8" class="slds-dl_horizontal__detail">
-                        <lightning-formatted-text id="status" data-id="status" value="No Errors">
-                        </lightning-formatted-text>
-                    </lightning-layout-item>
-
-                    <lightning-layout-item size="4" small-device-size="4"
-                        class="slds-dl_horizontal__label slds-text-color_weak slds-p-top_small">
-                        <label for="commitmentId">{fields.commitmentId.label}</label>
-                    </lightning-layout-item>
-
-                    <lightning-layout-item size="8" small-device-size="8" class="slds-dl_horizontal__detail slds-p-top_small">
-                        <lightning-formatted-text id="commitmentId" data-id="commitmentId"
-                            value={rdRecord.fields.CommitmentId__c.value}>
-                        </lightning-formatted-text>
+                    <lightning-layout-item size="12" class="slds-p-top_small slds-p-bottom_x-small">
+                        <lightning-layout align="spread">
+                            <lightning-layout-item size="3">
+                                <label for="commitmentId">{fields.commitmentId.label}</label>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="9">
+                                <a href="javascript:void(0);" data-id="commitmentId" target="_blank">
+                                    <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}></lightning-formatted-text>
+                                    <lightning-icon icon-name="utility:new_window" data-id="newWindowIcon" size="xx-small"
+                                        class="slds-button__icon_right slds-current-color" alternative-text={labels.textNewWindow}></lightning-icon>
+                                </a>
+                            </lightning-layout-item>
+                        </lightning-layout>                        
                     </lightning-layout-item>
 
                 </lightning-layout>
@@ -39,9 +61,10 @@
         </div>
         
         <div class="slds-card__footer slds-m-horizontal--small slds-border_top">
-            <a class="slds-card__footer-action" href="javascript:void(0);">View Related Errors
-                <span class="slds-assistive-text">View Related Errors</span>
-            </a>
+            <lightning-button variant="base"
+                label={labels.viewErrorLogLabel} 
+                onclick={navigateToErrorLog}>
+            </lightning-button>
         </div>
     </lightning-card>
 </template>

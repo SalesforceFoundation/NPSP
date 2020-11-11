@@ -1634,12 +1634,12 @@
         <value>Elevate Information</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevateInformationStatusLabel</fullName>
+        <fullName>RD2_ElevateInformationStatusSuccess</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Elevate information status label</shortDescription>
-        <value>Elevate Status</value>
+        <shortDescription>Status description displayed when no error is active</shortDescription>
+        <value>No Errors</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
@@ -5419,6 +5419,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error</value>
     </labels>
     <labels>
+        <fullName>commonErrorPrefix</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error prefix</shortDescription>
+        <value>Error: {0}</value>
+    </labels>
+    <labels>
         <fullName>commonFieldLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5641,6 +5649,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>View All</shortDescription>
         <value>View All</value>
+    </labels>
+    <labels>
+        <fullName>commonViewErrorLog</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link value displaying error logs for a record</shortDescription>
+        <value>View Error Log</value>
     </labels>
     <labels>
         <fullName>commonViewMore</fullName>
