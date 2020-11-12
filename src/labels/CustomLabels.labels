@@ -7744,6 +7744,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>No Application Submitted</value>
     </labels>
     <labels>
+        <fullName>gsPowerOfUsUrl</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Url of power of us</shortDescription>
+        <value>https://www.salesforce.org/power-of-us/</value>
+    </labels>
+    <labels>
+        <fullName>gsApplicationUrl</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Url of power of us</shortDescription>
+        <value>https://www.salesforce.org/power-of-us/</value>
+    </labels>
+    <labels>
         <fullName>gsSubmitted</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>

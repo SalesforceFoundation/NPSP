@@ -13,6 +13,8 @@ import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationSta
 import gsClose from '@salesforce/label/c.commonClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
 import gsEmailAddress from '@salesforce/label/c.gsEmailAddress'
+import gsPowerOfUsUrl from '@salesforce/label/c.gsPowerOfUsUrl'
+import gsApplicationUrl from '@salesforce/label/c.gsApplicationUrl'
 export default class GsApplicationStatus extends LightningElement {
     
     @track errorMessage = "";
@@ -36,7 +38,9 @@ export default class GsApplicationStatus extends LightningElement {
         gsApplicationStatusModalHeader,
         gsClose,
         gsFollowUpApplicationStatus,
-        gsEmailAddress
+        gsEmailAddress,
+        gsPowerOfUsUrl,
+        gsApplicationUrl
     }
 
     constructor () {
