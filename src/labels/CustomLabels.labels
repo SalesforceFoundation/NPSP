@@ -7712,14 +7712,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Days Remaining in Free Trial</value>
     </labels>
     <labels>
-        <fullName>gsEmailAddress</fullName>
-        <categories>Getting Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Power of us email address</shortDescription>
-        <value>powerofus@salesforce.com</value>
-    </labels>
-    <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
