@@ -18,7 +18,7 @@
         <description>The custom label api name used in the extra info on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The GettingStarted Section this item is part of</inlineHelpText>
+        <inlineHelpText>Label which will be rendered at the upper right corner with extra info(video length, pdf, etc)</inlineHelpText>
         <label>Extra Info Label</label>
         <length>255</length>
         <required>false</required>
@@ -30,7 +30,7 @@
         <description>The section this belongs to on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Section this belongs</inlineHelpText>
+        <inlineHelpText>The GettingStarted Section this item is part of</inlineHelpText>
         <label>GS Admin Checklist Section</label>
         <referenceTo>GS_Admin_Checklist_Section__mdt</referenceTo>
         <relationshipLabel>GS Admin Checklist Items</relationshipLabel>
