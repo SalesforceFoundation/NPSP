@@ -15,7 +15,7 @@
     </fields>
     <fields>
         <fullName>Position__c</fullName>
-        <description>The position of the section on the Getting Started page</description>
+        <description>The position in the section list on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>Is the position of the section</inlineHelpText>
