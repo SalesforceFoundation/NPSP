@@ -13173,4 +13173,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Resource Partners link label in Get Started Resources section</shortDescription>
         <value>Find a Partner</value>
     </labels>
+    <labels>
+        <fullName>gsVideoHeaderTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Video header title in Get Started</shortDescription>
+        <value>Short video describing the sections and resources included in this Get Started page.</value>
+    </labels>
 </CustomLabels>
