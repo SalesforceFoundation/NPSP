@@ -155,17 +155,15 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return this.row.record[apiNameFor(PERCENT_FIELD)];
     }
 
-    get isPercentDisabled() {
+    get shouldDisablePercent() {
         if (isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
             Number.parseFloat(this.row.record[apiNameFor(AMOUNT_FIELD)]) > 0) {
             return true;
         }
     }
-
-    get isAmountDisabled() {
+    get shouldDisableAmount() {
         if (!isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
-            Number.parseFloat(this.row.record[apiNameFor(PERCENT_FIELD)]) > 0 &&
-            !this.isAmountDisabled) {
+            Number.parseFloat(this.row.record[apiNameFor(PERCENT_FIELD)]) > 0) {
 
             return true;
         }
