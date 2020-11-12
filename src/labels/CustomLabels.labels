@@ -1583,7 +1583,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Planned Installments cannot be migrated to enhanced Recurring Donation format</shortDescription>
-        <value>Number of Planned Installments must be 1 when Open Ended Status is Closed and Divide By/Multiply By is not populated.</value>
+        <value>When Open Ended Status is Closed and Divide By/Multiply By is not populated, Planned Installments cannot be a number other than 1.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthMustBeValid</fullName>
