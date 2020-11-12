@@ -246,3 +246,5 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 actual_value=self.selenium.get_webelement(locator).text
                 print(f"actual mapping found for {key} is {actual_value}")
                 assert value == actual_value, "Expected {} value to be {} but found {}".format(key,value, actual_value)
+            else:
+                print("Right keys under status mapping fields table not found")    
