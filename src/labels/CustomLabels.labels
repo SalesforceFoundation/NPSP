@@ -1610,6 +1610,14 @@
         <value>Do Not Use Elevate</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateDisabledHeader</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header indicating the org is not connected to Elevate</shortDescription>
+        <value>Elevate is not enabled for your Salesforce org</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateDisabledMessage</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>

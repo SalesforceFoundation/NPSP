@@ -18,8 +18,10 @@ import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
 import textNewWindow from '@salesforce/label/c.AssistiveTextNewWindow';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
+import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
+import elevateDisabledHeader from '@salesforce/label/c.RD2_ElevateDisabledHeader';
+import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
-
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
 
@@ -42,6 +44,9 @@ export default class rd2ElevateInformation extends LightningElement {
         textWarning,
         textNewWindow,
         insufficientPermissions,
+        contactSystemAdmin,
+        elevateDisabledHeader,
+        elevateDisabledMessage,
         viewErrorLogLabel
     });
 
@@ -57,6 +62,7 @@ export default class rd2ElevateInformation extends LightningElement {
     };
 
     @track isElevateCustomer;
+    @track isElevateRecord = false;
     @track isLoading = true;
     @track permissions = {
         hasAccess: false,
@@ -132,7 +138,7 @@ export default class rd2ElevateInformation extends LightningElement {
 
             this.checkLoading();
         }
-        
+
         if (response.error) {
             this.handleError(response.error);
         }
@@ -147,6 +153,11 @@ export default class rd2ElevateInformation extends LightningElement {
             || isUndefined(this.rdRecord)
             || isNull(this.rdRecord)
             || isUndefined(this.fields.name);
+
+        if (this.isElevateCustomer === true && this.rdRecord && this.rdRecord.fields) {
+            this.isElevateRecord = !isUndefined(this.rdRecord.fields.CommitmentId__c) 
+                && !isNull(this.rdRecord.fields.CommitmentId__c.value);
+        }
     }
 
     /**

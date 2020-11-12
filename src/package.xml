@@ -1698,6 +1698,7 @@
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledHeader</members>
         <members>RD2_ElevateDisabledMessage</members>
         <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateInformationHeader</members>
