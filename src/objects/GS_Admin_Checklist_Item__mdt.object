@@ -30,7 +30,7 @@
         <description>The section this belongs to on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The GettingStarted Section this item is part of</inlineHelpText>
+        <inlineHelpText>The Getting Started section that this item is part of</inlineHelpText>
         <label>GS Admin Checklist Section</label>
         <referenceTo>GS_Admin_Checklist_Section__mdt</referenceTo>
         <relationshipLabel>GS Admin Checklist Items</relationshipLabel>
@@ -42,10 +42,10 @@
     <fields>
         <fullName>Has_Link__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Does the item have a link to display</description>
+        <description>Indicates if the item has a link to display</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Does the item have a link to display</inlineHelpText>
+        <inlineHelpText>Indicates if the item has a link to display</inlineHelpText>
         <label>Has Link</label>
         <type>Checkbox</type>
     </fields>
@@ -85,7 +85,7 @@
     </fields>
     <fields>
         <fullName>Position__c</fullName>
-        <description>The position of this item in his section on the Getting Started page</description>
+        <description>The position of this section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>Is the position of the section item</inlineHelpText>
@@ -98,7 +98,7 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Label__c</fullName>
-        <description>The custom label api name used in the Primary Button on a section item on the Getting Started page</description>
+        <description>The custom label api name for the Primary Button in a section item on the Getting Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The custom label api name for the Primary Button Label</inlineHelpText>
@@ -141,7 +141,7 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Value__c</fullName>
-        <description>The values is used to for the action to the Primary Button, In case is an External Page Button is the external URL and the case is SFDC New Tab is the api name to the tab to open format {type(without started &amp;standard__&amp;)}:{objectApiName}:{actionName}</description>
+        <description>The value used for the action of the Primary Button. For an External Page Button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The value used for the action of the Primary Button</inlineHelpText>
@@ -153,7 +153,7 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Label__c</fullName>
-        <description>The custom label api name used in the Secondary Button on a section item on the Getting Started page</description>
+        <description>The custom label api name for the Secondary Button in a section item on the Getting Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The custom label api name for the Secondary Button Label</inlineHelpText>
@@ -196,7 +196,7 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Value__c</fullName>
-        <description>The values is used to for the action to the Secondary Button, In case is an External Page Button is the external URL and the case is SFDC New Tab is the api name to the tab to open format {type(without started &amp;standard__&amp;)}:{objectApiName}:{actionName}</description>
+        <description>The value used for the action of the Secondary Button. For an External Page Button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The value used for the action of the Secondary Button</inlineHelpText>
@@ -208,7 +208,7 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
-        <description>The custom label api name used in the label on a section item on the Getting Started page</description>
+        <description>The custom label api name used for a section item label on the Getting Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The custom label api name for the Title Label</inlineHelpText>

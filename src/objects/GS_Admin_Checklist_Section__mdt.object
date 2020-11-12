@@ -3,7 +3,7 @@
     <description>NPSP Getting Started Page sections</description>
     <fields>
         <fullName>Description_Label__c</fullName>
-        <description>The custom label api name used in the description on a section on the Getting Started page</description>
+        <description>The custom label api name used in the description of a section on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The custom label api name for the Description Label</inlineHelpText>
@@ -28,7 +28,7 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
-        <description>The custom label api name used in the title on a section on Getting Started page</description>
+        <description>The custom label api name used in the title of a section on the Getting Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The custom label api name for the Title Label</inlineHelpText>
