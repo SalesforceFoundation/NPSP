@@ -25,7 +25,7 @@ export default class GsApplicationStatus extends LightningElement {
     @track isActiveInstance = false;
     applyForFreeLicensesImg = Resources + '/gsResources/Accept_Tasks_Apply_Card.png';
     checkForStatusImg = Resources + '/gsResources/gift_illustration_2.svg';
-    mailto = 'mailto:' + gsEmailAddress;
+
     labels = {
         gsNoApplicationSubmitted,
         gsLearnMore,
