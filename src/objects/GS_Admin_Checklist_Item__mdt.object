@@ -51,7 +51,7 @@
     </fields>
     <fields>
         <fullName>Image__c</fullName>
-        <description>The name of the image used in the item on the Getting Started page</description>
+        <description>The path and filename of the image in the Static Resource to render</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The path and filename of the image in the Static Resource to render</inlineHelpText>
