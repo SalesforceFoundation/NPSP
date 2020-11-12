@@ -189,9 +189,7 @@ public without sharing class UTIL_Http {
                 );
                 messages = responseBody.getMessages();
 
-            } catch (JSONException e) {
-                throw e;
-            }
+            } catch (Exception e) { }
 
             return String.isBlank(messages) ? status : messages;
         }

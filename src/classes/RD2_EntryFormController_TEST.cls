@@ -394,9 +394,13 @@ private with sharing class RD2_EntryFormController_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(),
-            'one error record should be created when the elevate returns error response');
+            'An error record should be created for an error response.');
+        System.assertEquals(rd.Id, errors[0].Related_Record_Id__c,
+            'The error record should contain RD record Id.');
+        System.assertEquals(ERR_Handler_API.Context.Elevate.name(),errors[0].Context_Type__c,
+            'The error record context type should match with Elevate context.');
         System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
-            'The error record should contains the message from the error response');
+            'The error record should contain error response message.');
     }
     
 

@@ -306,37 +306,35 @@ public with sharing class RD2_EntryFormController {
             response = commitmentService.sendRequest(recordId, jsonRequestBody);
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
-                commitmentService.updateRecurringDonation(recordId, commitment);
+                commitmentService.updateRecurringDonation(recordId, response);
+
             } else {
-                processError(response.getErrorMessages(), recordId);
+                processError(recordId, response.getErrorMessages());
             }
 
-        } catch (CalloutException e) {
+        } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
-        } catch (JSONException e) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
-
-        }
+         }
 
         return JSON.serialize(response);
     }
 
     /**
-    * @description Process Elevate create commitment error
-    * @param errorMessage error message
+    * @description Creates an error record for the specified record Id and error message
     * @param recordId Recurring Donation Id
+    * @param errorMessage Error message
+    * @return void
     */
-    private static void processError(String errorMessage, Id recordId) {
+    private static void processError(Id recordId, String errorMessage) {
         RD2_ElevateIntegrationService.Logger errorLogger = new RD2_ElevateIntegrationService.Logger();
-                errorLogger.addError(
-                    recordId,
-                    errorMessage,
-                    RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
-                );
+        errorLogger.addError(
+            recordId,
+            errorMessage,
+            RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
+        );
 
-                errorLogger.processErrors();
+        errorLogger.processErrors();
     }
     /**
     * @description Handles sending commitment request and saving its values on the RD
@@ -393,22 +391,34 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
         * @param recordId Recurring Donation Id
-        * @param commitment JSON deserialize response body from Elevate commitment create request
+        * @param response Response from Elevate on the commitment create request
         * @return void
         */
-        public void updateRecurringDonation(Id recordId, PS_CommitmentRequest.ResponseBody commitment) {
-            if (commitment.hasId()) {
-                npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                    Id = recordId,
-                    CommitmentId__c = commitment.id,
-                    CardLast4__c = commitment.getCardLast4(),
-                    CardExpirationMonth__c = commitment.getCardExpirationMonth(),
-                    CardExpirationYear__c = commitment.getCardExpirationYear()
-                );
+        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
+            if (response == null
+                || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+            ) {
+                return;
+            }
 
-                UTIL_DMLService.updateRecordBatchAndLogErrors(
-                    new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
-                );
+            try {
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+
+                if (commitment.hasId()) {
+                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                        Id = recordId,
+                        CommitmentId__c = commitment.id,
+                        CardLast4__c = commitment.getCardLast4(),
+                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                        CardExpirationYear__c = commitment.getCardExpirationYear()
+                    );
+
+                    UTIL_DMLService.updateRecordBatchAndLogErrors(
+                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                    );
+                }
+            } catch (Exception e) {
+                throw e;
             }
 
            
