@@ -813,7 +813,6 @@ private class RD2_DataMigration_TEST {
         npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
             getLegacyRecurringDonationBuilder()
                 .withOpenEndedStatusClosed()
-                .withPlannedInstallments(1)
                 .build()
         ).convertToEnhancedRD();
 
