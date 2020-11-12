@@ -817,14 +817,6 @@
         <value>omit</value>
     </labels>
     <labels>
-        <fullName>Close</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Close button description</shortDescription>
-        <value>Close</value>
-    </labels>
-    <labels>
         <fullName>ClosedWonOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -5354,6 +5346,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
     </labels>
+        <labels>
+        <fullName>commonClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close button label</shortDescription>
+        <value>Close</value>
+    </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
         <categories>Settings</categories>
@@ -7694,14 +7694,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Check Status label for the application status component</shortDescription>
         <value>Check Status</value>
-    </labels>
-    <labels>
-        <fullName>gsClose</fullName>
-        <categories>Getting Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Close label in the modal for the application status component</shortDescription>
-        <value>Close</value>
     </labels>
     <labels>
         <fullName>gsDaysAdded</fullName>

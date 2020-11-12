@@ -10,7 +10,7 @@ import gsSubmitted from '@salesforce/label/c.gsSubmitted'
 import gsDaysAdded from '@salesforce/label/c.gsDaysAdded'
 import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
 import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
-import gsClose from '@salesforce/label/c.gsClose'
+import gsClose from '@salesforce/label/c.commonClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
 import gsEmailAddress from '@salesforce/label/c.gsEmailAddress'
 export default class GsApplicationStatus extends LightningElement {

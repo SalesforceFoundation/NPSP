@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from "lwc";
-import closeLabel from "@salesforce/label/c.Close";
+import closeLabel from "@salesforce/label/c.commonClose";
 
 const CSS_CLASS = "modal-hidden";
 const ESCAPE = "Escape";
