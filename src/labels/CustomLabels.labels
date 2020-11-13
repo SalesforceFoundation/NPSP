@@ -13267,6 +13267,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Video header title in Get Started</shortDescription>
-        <value>Short video describing the sections and resources included in this Get Started page.</value>
+        <value>Short video describing the sections and resources on the NPSP Getting Started page.</value>
     </labels>
 </CustomLabels>
