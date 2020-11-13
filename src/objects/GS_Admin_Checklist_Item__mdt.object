@@ -18,7 +18,7 @@
         <description>The custom label api name used in the extra info on a section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Label which will be rendered at the upper right corner with extra info(video length, pdf, etc)</inlineHelpText>
+        <inlineHelpText>Label with extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</inlineHelpText>
         <label>Extra Info Label</label>
         <length>255</length>
         <required>false</required>
