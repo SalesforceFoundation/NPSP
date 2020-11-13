@@ -6720,6 +6720,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>1 Minute Video</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemNPSPSettingsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Navigate to the NPSP Settings page and do a thorough review to confirm they are correct for your organization as well as functioning the way you expect them to.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Adjust Settings</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Adjust NPSP Settings</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
