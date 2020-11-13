@@ -57,6 +57,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
     */
     @AuraEnabled(cacheable=false)
     public static Map<String, Object> getData(Id recordId) {
+        RD2_VisualizeScheduleController.validate(recordId);
 
         return new Map<String, Object> {
             'isElevateCustomer' => isElevateCustomer(),

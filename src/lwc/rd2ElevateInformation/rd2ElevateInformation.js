@@ -65,7 +65,7 @@ export default class rd2ElevateInformation extends LightningElement {
     @track isElevateRecord = false;
     @track isLoading = true;
     @track permissions = {
-        hasAccess: false,
+        hasAccess: true,
         isBlocked: false,
         blockedReason: ''
     };
@@ -88,6 +88,7 @@ export default class rd2ElevateInformation extends LightningElement {
                 }
             })
             .catch((error) => {
+                this.permissions.hasAccess = false;
                 this.handleError(error);
             })
             .finally(() => {
@@ -112,7 +113,7 @@ export default class rd2ElevateInformation extends LightningElement {
             this.checkLoading();
         }
 
-        if (response.error) {
+        if (response.error && this.permissions.hasAccess === true) {
             this.handleError(response.error);
         }
     }
@@ -139,7 +140,7 @@ export default class rd2ElevateInformation extends LightningElement {
             this.checkLoading();
         }
 
-        if (response.error) {
+        if (response.error && this.permissions.hasAccess === true) {
             this.handleError(response.error);
         }
     }
@@ -155,7 +156,7 @@ export default class rd2ElevateInformation extends LightningElement {
             || isUndefined(this.fields.name);
 
         if (this.isElevateCustomer === true && this.rdRecord && this.rdRecord.fields) {
-            this.isElevateRecord = !isUndefined(this.rdRecord.fields.CommitmentId__c) 
+            this.isElevateRecord = !isUndefined(this.rdRecord.fields.CommitmentId__c)
                 && !isNull(this.rdRecord.fields.CommitmentId__c.value);
         }
     }

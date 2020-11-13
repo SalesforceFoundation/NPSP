@@ -363,7 +363,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param recordId Record Id
      * @return void
      */
-    private static void validate(Id recordId) {
+    public static void validate(Id recordId) {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             // The label value: "You must enable Enhanced Recurring Donations to use this component."
             throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
