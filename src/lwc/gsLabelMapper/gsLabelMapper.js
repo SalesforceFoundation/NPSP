@@ -59,6 +59,11 @@ import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistIte
 import gsChecklistItemPageLayoutsDesc from '@salesforce/label/c.gsChecklistItemPageLayoutsDesc';
 import gsChecklistItemPageLayoutsLinkLabel from '@salesforce/label/c.gsChecklistItemPageLayoutsLinkLabel';
 import gsChecklistItemPageLayoutsTitle from '@salesforce/label/c.gsChecklistItemPageLayoutsTitle';
+import gsChecklistItemImportDataDesc from '@salesforce/label/c.gsChecklistItemImportDataDesc';
+import gsChecklistItemImportDataPriBtnLabel from '@salesforce/label/c.gsChecklistItemImportDataPriBtnLabel';
+import gsChecklistItemImportDataLinkLabel from '@salesforce/label/c.gsChecklistItemImportDataLinkLabel';
+import gsChecklistItemImportDataSecBtnLabel from '@salesforce/label/c.gsChecklistItemImportDataSecBtnLabel';
+import gsChecklistItemImportDataTitle from '@salesforce/label/c.gsChecklistItemImportDataTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -125,6 +130,11 @@ const labelMap = {
     gsChecklistItemPageLayoutsDesc,
     gsChecklistItemPageLayoutsLinkLabel,
     gsChecklistItemPageLayoutsTitle,
+    gsChecklistItemImportDataDesc,
+    gsChecklistItemImportDataPriBtnLabel,
+    gsChecklistItemImportDataLinkLabel,
+    gsChecklistItemImportDataSecBtnLabel,
+    gsChecklistItemImportDataTitle,
 }
 
 /**

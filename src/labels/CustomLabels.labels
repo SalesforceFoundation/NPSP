@@ -6792,6 +6792,46 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Customize Objects</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemImportDataDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Import Data in Get Started</shortDescription>
+        <value>Use the NPSP Data Importer to get your records into Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Import Data in Get Started</shortDescription>
+        <value>Import Data</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemImportDataLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Import Data in Get Started</shortDescription>
+        <value>Learn more about importing data on Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Import Data in Get Started</shortDescription>
+        <value>See Documentation</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Import Data in Get Started</shortDescription>
+        <value>Import Data</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
