@@ -5346,6 +5346,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
     </labels>
+        <labels>
+        <fullName>commonClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close button label</shortDescription>
+        <value>Close</value>
+    </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
         <categories>Settings</categories>
@@ -7766,6 +7774,86 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Gift Processing configuration error</shortDescription>
         <value>Your org is missing required configuration for Gift Processing. Contact your admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>gsApplicationStatus</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Application Status label for the application status component</shortDescription>
+        <value>Application Status: </value>
+    </labels>
+    <labels>
+        <fullName>gsApplicationStatusModalHeader</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of the modal label for the application status component</shortDescription>
+        <value>Check Application Status</value>
+    </labels>
+    <labels>
+        <fullName>gsApplyForFreeLicenses</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Apply for licenses button label for the application status component</shortDescription>
+        <value>Apply for Salesforce Licenses</value>
+    </labels>
+    <labels>
+        <fullName>gsCheckStatus</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Check Status label for the application status component</shortDescription>
+        <value>Check Status</value>
+    </labels>
+    <labels>
+        <fullName>gsDaysAdded</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Days added label for the application status component</shortDescription>
+        <value>30 Days Added</value>
+    </labels>
+    <labels>
+        <fullName>gsDaysRemainingInFreeTrial</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription> Days remaining in the free trial label for the application status component</shortDescription>
+        <value>Days Remaining in Free Trial</value>
+    </labels>
+    <labels>
+        <fullName>gsFollowUpApplicationStatus</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Follow up Application Status label for the application status component</shortDescription>
+        <value>To follow up on your application status, please email us at: </value>
+    </labels>
+    <labels>
+        <fullName>gsLearnMore</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Learn more label for the application status component</shortDescription>
+        <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>gsNoApplicationSubmitted</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No application submitted label for the application status component</shortDescription>
+        <value>No Application Submitted</value>
+    </labels>
+    <labels>
+        <fullName>gsSubmitted</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Submitted Status label for the application status component</shortDescription>
+        <value>Submitted</value>
     </labels>
     <labels>
         <fullName>healthButtonRun</fullName>

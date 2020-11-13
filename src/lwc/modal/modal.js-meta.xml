@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="modal">
+    <apiVersion>50.0</apiVersion>
+    <masterLabel>Generic Modal</masterLabel>
+    <description>A generic, reusable modal component that follows SLDS since there is no lightning base component for this yet.</description>
+    <isExposed>false</isExposed>
+</LightningComponentBundle>
