@@ -2447,7 +2447,6 @@
         <members>gsAdminSetupTitle</members>
         <members>gsApplicationStatus</members>
         <members>gsApplicationStatusModalHeader</members>
-        <members>gsApplicationUrl</members>
         <members>gsApplyForFreeLicenses</members>
         <members>gsCheckStatus</members>
         <members>gsChecklistExploreNPSPDesc</members>
@@ -2461,7 +2460,6 @@
         <members>gsFollowUpApplicationStatus</members>
         <members>gsLearnMore</members>
         <members>gsNoApplicationSubmitted</members>
-        <members>gsPowerOfUsUrl</members>
         <members>gsResourcesItemFundraisingLabel</members>
         <members>gsResourcesItemFundraisingLinkLabel</members>
         <members>gsResourcesItemHubLabel</members>

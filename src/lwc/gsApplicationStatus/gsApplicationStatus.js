@@ -37,12 +37,6 @@ export default class GsApplicationStatus extends LightningElement {
         gsFollowUpApplicationStatus
     }
 
-    constructor () {
-        super();
-        this.template.addEventListener('dialogclose', evt => {
-            alert('hola');
-        });
-    }
     /**
      * Initialized the component with the data retrieved from Salesforce
      */
