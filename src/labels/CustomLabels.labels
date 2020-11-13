@@ -7064,6 +7064,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Prepare for Success with Nonprofit Cloud</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemPageLayoutsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Take the time to customize how your instance looks and feels so you can be sure the right data is surfaced in the right places for the right people.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPageLayoutsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Learn more about page layouts in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPageLayoutsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Customize Page Layouts</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>

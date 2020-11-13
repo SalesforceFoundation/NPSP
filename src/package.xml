@@ -2513,6 +2513,9 @@
         <members>gsChecklistItemNPSPSettingsDesc</members>
         <members>gsChecklistItemNPSPSettingsPriBtnLabel</members>
         <members>gsChecklistItemNPSPSettingsTitle</members>
+        <members>gsChecklistItemPageLayoutsDesc</members>
+        <members>gsChecklistItemPageLayoutsLinkLabel</members>
+        <members>gsChecklistItemPageLayoutsTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3338,6 +3341,7 @@
         <members>GS_Admin_Checklist_Item.Review_Company</members>
         <members>GS_Admin_Checklist_Item.NPSP_Settings</members>
         <members>GS_Admin_Checklist_Item.Custom_Fields</members>
+        <members>GS_Admin_Checklist_Item.Page_Layouts</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
