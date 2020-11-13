@@ -6864,6 +6864,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Go Further</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemNPSPGuideDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>Take the time to carefully plan your implementation and ensure your instance meets the needs of your nonprofit. Then, once you’ve put all the pieces in place, you’ll be sure you’re ready to launch.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPGuidePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>Download PDF</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPGuideTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>NPSP Planning Guide</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

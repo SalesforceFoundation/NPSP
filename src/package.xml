@@ -2501,6 +2501,9 @@
         <members>gsChecklistItemGoFurtherDesc</members>
         <members>gsChecklistItemGoFurtherLinkLabel</members>
         <members>gsChecklistItemGoFurtherTitle</members>
+        <members>gsChecklistItemNPSPGuideDesc</members>
+        <members>gsChecklistItemNPSPGuidePriBtnLabel</members>
+        <members>gsChecklistItemNPSPGuideTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3322,6 +3325,7 @@
         <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
         <members>GS_Admin_Checklist_Item.Manage_Change</members>
         <members>GS_Admin_Checklist_Item.Go_Further</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
