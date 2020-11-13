@@ -6888,6 +6888,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>NPSP Planning Guide</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemReviewCompanyDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Review Company in Get Started</shortDescription>
+        <value>Within Salesforce, organizational information is referred to as &quot;Company Information.&quot; Here you&apos;ll setup important pieces of your organization&apos;s information such as default time zone, currency locale, and fiscal year start month. You can also find important information about your license usage. To begin, click on the Setup gear menu in your instance.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemReviewCompanyLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Review Company in Get Started</shortDescription>
+        <value>Learn more about Company Settings in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemReviewCompanyTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Review Company in Get Started</shortDescription>
+        <value>Review Company Information</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
