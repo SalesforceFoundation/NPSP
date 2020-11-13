@@ -2476,6 +2476,9 @@
         <members>gsChecklistItemCreateDonationPriBtnLabel</members>
         <members>gsChecklistItemCreateDonationTitle</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
+        <members>gsChecklistItemNPSPGuideDesc</members>
+        <members>gsChecklistItemNPSPGuidePriBtnLabel</members>
+        <members>gsChecklistItemNPSPGuideTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3289,6 +3292,7 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
