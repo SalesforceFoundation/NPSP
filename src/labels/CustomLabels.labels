@@ -6768,6 +6768,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Manage Change to your Instance</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemCustomFieldsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Learn how to use the Object Manager and learn how to use picklists, filters, formulas, and other tools to customize an object in your org. With these best practices in mind you can be sure you’re tracking precisely what your organization needs to measure your impact.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCustomFieldsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Learn more about Object Manager in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCustomFieldsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Customize Objects</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

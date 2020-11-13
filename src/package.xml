@@ -2478,6 +2478,9 @@
         <members>gsChecklistItemCreateDonationLinkLabel</members>
         <members>gsChecklistItemCreateDonationPriBtnLabel</members>
         <members>gsChecklistItemCreateDonationTitle</members>
+        <members>gsChecklistItemCustomFieldsDesc</members>
+        <members>gsChecklistItemCustomFieldsLinkLabel</members>
+        <members>gsChecklistItemCustomFieldsTitle</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
@@ -3334,6 +3337,7 @@
         <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
         <members>GS_Admin_Checklist_Item.Review_Company</members>
         <members>GS_Admin_Checklist_Item.NPSP_Settings</members>
+        <members>GS_Admin_Checklist_Item.Custom_Fields</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
