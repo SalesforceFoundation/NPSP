@@ -1,7 +1,7 @@
 <template>
     <div class="item-card">
         <div class="card-image">
-            <img alt=“” if:true={hasLink} src={imgSrc}/>
+            <img alt=“” if:true={hasImage} src={imgSrc}/>
         </div>
         <div class="card-content">
             <p class="content-time">{item.extraInfo}</p>
@@ -14,7 +14,7 @@
                     <a if:true={hasLink} href={item.link.href} target="_blank">
                         {item.link.label}
                     </a>
-                    <div class="footer-buttons">
+                    <div class={footerClass}>
                         <lightning-button if:true={hasSecondaryBtn} 
                             variant="brand-outline"
                             class="slds-m-bottom_x-small"

@@ -49,6 +49,17 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         return `${gsAssetsImage}/${this.item.image}`;
     }
     /**
+    * @description return class to use in footer
+    * @returns String
+    */
+    get footerClass() {
+        const styleClass = ['content-footer-aux'];
+        if(!this.item.link) {
+            styleClass.push('without-link');
+        }
+        return styleClass.join(' ');
+    }
+    /**
     * @description handler the event to click Primary button
     */
     onClickPrimaryBtn() {

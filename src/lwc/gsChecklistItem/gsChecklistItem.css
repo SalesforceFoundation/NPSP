@@ -51,7 +51,6 @@
     font-weight: bold;
     letter-spacing: 0;
     line-height: 19.97px;
-    padding-bottom: 1rem;
 }
 
 .item-card .card-content .content-text {
@@ -91,6 +90,10 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+ }
+
+ .item-card .card-content .content-footer .content-footer-aux.without-link {
+    flex-direction: row-reverse;
  }
 
  @media(max-width: 1073px) {
