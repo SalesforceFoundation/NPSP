@@ -75,10 +75,10 @@
     </fields>
     <fields>
         <fullName>Link_URL__c</fullName>
-        <description>The URL redirect the link</description>
+        <description>The target URL for the Link</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The URL redirect the link</inlineHelpText>
+        <inlineHelpText>The target URL for the Link</inlineHelpText>
         <label>Link URL</label>
         <required>false</required>
         <type>Url</type>
@@ -88,7 +88,7 @@
         <description>The position of this section item on the Getting Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the position of the section item</inlineHelpText>
+        <inlineHelpText>The position of this section item in the list of items.</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>
