@@ -50,6 +50,9 @@ import gsChecklistItemNPSPGuideTitle from '@salesforce/label/c.gsChecklistItemNP
 import gsChecklistItemReviewCompanyDesc from '@salesforce/label/c.gsChecklistItemReviewCompanyDesc';
 import gsChecklistItemReviewCompanyLinkLabel from '@salesforce/label/c.gsChecklistItemReviewCompanyLinkLabel';
 import gsChecklistItemReviewCompanyTitle from '@salesforce/label/c.gsChecklistItemReviewCompanyTitle';
+import gsChecklistItemNPSPSettingsDesc from '@salesforce/label/c.gsChecklistItemNPSPSettingsDesc';
+import gsChecklistItemNPSPSettingsPriBtnLabel from '@salesforce/label/c.gsChecklistItemNPSPSettingsPriBtnLabel';
+import gsChecklistItemNPSPSettingsTitle from '@salesforce/label/c.gsChecklistItemNPSPSettingsTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -107,6 +110,9 @@ const labelMap = {
     gsChecklistItemReviewCompanyDesc,
     gsChecklistItemReviewCompanyLinkLabel,
     gsChecklistItemReviewCompanyTitle,
+    gsChecklistItemNPSPSettingsDesc,
+    gsChecklistItemNPSPSettingsPriBtnLabel,
+    gsChecklistItemNPSPSettingsTitle,
 }
 
 /**

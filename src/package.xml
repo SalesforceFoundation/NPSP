@@ -2507,6 +2507,9 @@
         <members>gsChecklistItemReviewCompanyDesc</members>
         <members>gsChecklistItemReviewCompanyLinkLabel</members>
         <members>gsChecklistItemReviewCompanyTitle</members>
+        <members>gsChecklistItemNPSPSettingsDesc</members>
+        <members>gsChecklistItemNPSPSettingsPriBtnLabel</members>
+        <members>gsChecklistItemNPSPSettingsTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3330,6 +3333,7 @@
         <members>GS_Admin_Checklist_Item.Go_Further</members>
         <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
         <members>GS_Admin_Checklist_Item.Review_Company</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Settings</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
