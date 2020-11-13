@@ -53,7 +53,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @returns String
     */
     get footerClass() {
-        const styleClass = ['content-footer-aux'];
+        const styleClass = ['content-footer'];
         if(!this.item.link) {
             styleClass.push('without-link');
         }

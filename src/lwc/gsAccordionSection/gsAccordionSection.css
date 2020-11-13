@@ -5,6 +5,7 @@
 }
 
 .slds-media.info .container {
+    width: 100%;
     padding-left: 2rem;
     padding-bottom: 2rem;
     display: block;

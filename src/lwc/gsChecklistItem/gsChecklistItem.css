@@ -64,7 +64,6 @@
 
  .item-card .card-content .content-footer {
     display: flex;
-    align-items: flex-end;
  }
 
  .item-card .card-content .content-footer a {
@@ -88,12 +87,12 @@
  .item-card .card-content .content-footer .content-footer-aux {
     flex: 1 0 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: baseline;
  }
 
- .item-card .card-content .content-footer .content-footer-aux.without-link {
-    flex-direction: row-reverse;
+ .item-card .card-content .content-footer .without-link {
+    justify-content: flex-end;
  }
 
  @media(max-width: 1073px) {
