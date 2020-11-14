@@ -2474,6 +2474,9 @@
         <members>gsChecklistItemAddUserDesc</members>
         <members>gsChecklistItemAddUserLinkLabel</members>
         <members>gsChecklistItemAddUserTitle</members>
+        <members>gsChecklistItemCommunicateWithUserskDesc</members>
+        <members>gsChecklistItemCommunicateWithUserskLinkLabel</members>
+        <members>gsChecklistItemCommunicateWithUserskTitle</members>
         <members>gsChecklistItemCreateDonationDesc</members>
         <members>gsChecklistItemCreateDonationLinkLabel</members>
         <members>gsChecklistItemCreateDonationPriBtnLabel</members>
@@ -3338,6 +3341,7 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GS_Admin_Checklist_Item.Add_User</members>
+        <members>GS_Admin_Checklist_Item.Communicate_With_Users</members>
         <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
         <members>GS_Admin_Checklist_Item.Custom_Fields</members>
         <members>GS_Admin_Checklist_Item.Fundraising_process</members>

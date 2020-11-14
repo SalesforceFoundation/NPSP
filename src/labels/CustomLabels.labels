@@ -6704,6 +6704,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Add Users</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Long before you flip the switch and start using Salesforce, you should make a plan for communicating clearly, compassionately, and transparently with your organization about the shift.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Learn more about Chatter in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Communicate with Your Users</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemCreateDonationDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

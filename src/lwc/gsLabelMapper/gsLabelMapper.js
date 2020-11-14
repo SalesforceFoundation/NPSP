@@ -3,6 +3,9 @@ import gsChecklistExploreNPSPDesc from '@salesforce/label/c.gsChecklistExploreNP
 import gsChecklistItemAddUserDesc from '@salesforce/label/c.gsChecklistItemAddUserDesc';
 import gsChecklistItemAddUserLinkLabel from '@salesforce/label/c.gsChecklistItemAddUserLinkLabel';
 import gsChecklistItemAddUserTitle from '@salesforce/label/c.gsChecklistItemAddUserTitle';
+import gsChecklistItemCommunicateWithUserskDesc from '@salesforce/label/c.gsChecklistItemCommunicateWithUserskDesc';
+import gsChecklistItemCommunicateWithUserskLinkLabel from '@salesforce/label/c.gsChecklistItemCommunicateWithUserskLinkLabel';
+import gsChecklistItemCommunicateWithUserskTitle from '@salesforce/label/c.gsChecklistItemCommunicateWithUserskTitle';
 import gsChecklistItemCreateDonationTitle from '@salesforce/label/c.gsChecklistItemCreateDonationTitle';
 import gsChecklistItemCreateDonationDesc from '@salesforce/label/c.gsChecklistItemCreateDonationDesc';
 import gsChecklistItemCreateDonationLinkLabel from '@salesforce/label/c.gsChecklistItemCreateDonationLinkLabel';
@@ -68,6 +71,7 @@ import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYou
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
 
+
 /**
 * @description Map of getLabelValue labels
 */
@@ -77,6 +81,9 @@ const labelMap = {
     gsChecklistItemAddUserDesc,
     gsChecklistItemAddUserLinkLabel,
     gsChecklistItemAddUserTitle,
+    gsChecklistItemCommunicateWithUserskDesc,
+    gsChecklistItemCommunicateWithUserskLinkLabel,
+    gsChecklistItemCommunicateWithUserskTitle,
     gsChecklistItemCreateDonationTitle,
     gsChecklistItemCreateDonationDesc,
     gsChecklistItemCreateDonationLinkLabel,
