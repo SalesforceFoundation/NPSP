@@ -6735,7 +6735,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Create Donation in Get Started</shortDescription>
         <value>Create a Donation</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>gsChecklistItemManageChangeDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -6799,7 +6799,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
         <value>Learn more in Trailhead</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>gsChecklistItemRunningReportsTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -6838,6 +6838,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of checklist item NPSP Cloud in Get Started</shortDescription>
         <value>Learn about other Nonprofit Cloud Features</value>
+    </label>
+    <label>
+        <fullName>gsChecklistItemGoFurtherDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Go Further in Get Started</shortDescription>
+        <value>These initial steps and NPSP should be enough to get you started, but the possibilities with Salesforce are limitless. You can learn about additional features as well as some of the incredible things other organizations have accomplished with the platform.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemGoFurtherLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Go Further in Get Started</shortDescription>
+        <value>Discover all that you can do with the Nonprofit Success Pack in trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemGoFurtherTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Go Further in Get Started</shortDescription>
+        <value>Go Further</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
@@ -6855,7 +6879,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
         <value>Create Households</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>gsChecklistItemSetupContactLinkLabel</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

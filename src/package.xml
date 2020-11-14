@@ -2498,6 +2498,9 @@
         <members>gsChecklistItemManageChangeLinkLabel</members>
         <members>gsChecklistItemManageChangePriBtnLabel</members>
         <members>gsChecklistItemManageChangeTitle</members>
+        <members>gsChecklistItemGoFurtherDesc</members>
+        <members>gsChecklistItemGoFurtherLinkLabel</members>
+        <members>gsChecklistItemGoFurtherTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -2532,8 +2535,8 @@
         <members>gsResourcesItemWebinarsLabel</members>
         <members>gsResourcesItemWebinarsLinkLabel</members>
         <members>gsResourcesTitle</members>
-        <members>gsVideoHeaderTitle</members>
         <members>gsSubmitted</members>
+        <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3318,6 +3321,7 @@
         <members>GS_Admin_Checklist_Item.Prepare_NPSP_Cloud</members>
         <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
         <members>GS_Admin_Checklist_Item.Manage_Change</members>
+        <members>GS_Admin_Checklist_Item.Go_Further</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
