@@ -1697,7 +1697,6 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
-        <members>RD2_ElevateCreateRecordFailed</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>
         <members>RD2_ElevateDisabledMessage</members>
@@ -1708,6 +1707,7 @@
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>

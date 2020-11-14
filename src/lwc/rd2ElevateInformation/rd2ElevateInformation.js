@@ -23,7 +23,7 @@ import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermi
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
 import elevateDisabledHeader from '@salesforce/label/c.RD2_ElevateDisabledHeader';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
-import elevateCreateRecordFailed from '@salesforce/label/c.RD2_ElevateCreateRecordFailed';
+import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
@@ -52,7 +52,7 @@ export default class rd2ElevateInformation extends LightningElement {
         contactSystemAdmin,
         elevateDisabledHeader,
         elevateDisabledMessage,
-        elevateCreateRecordFailed,
+        elevateRecordCreateFailed,
         viewErrorLogLabel
     });
 
@@ -205,7 +205,7 @@ export default class rd2ElevateInformation extends LightningElement {
             && !this.isElevateConnected
         ) {
             this.handleError({
-                detail: this.labels.elevateCreateRecordFailed
+                detail: this.labels.elevateRecordCreateFailed
             });
         }
     }
