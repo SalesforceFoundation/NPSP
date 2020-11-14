@@ -2531,6 +2531,9 @@
         <members>gsChecklistItemStayTrackLinkLabel</members>
         <members>gsChecklistItemStayTrackPriBtnLabel</members>
         <members>gsChecklistItemStayTrackTitle</members>
+        <members>gsChecklistItemTrainUsersDesc</members>
+        <members>gsChecklistItemTrainUsersLinkLabel</members>
+        <members>gsChecklistItemTrainUsersTitle</members>
         <members>gsChecklistMakeItYourDesc</members>
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
@@ -3350,6 +3353,7 @@
         <members>GS_Admin_Checklist_Item.Running_Reports</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
+        <members>GS_Admin_Checklist_Item.Train_Users</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
         <members>GS_Admin_Checklist_Section.Explore_NPSP</members>
         <members>GS_Admin_Checklist_Section.Make_it_your_own</members>
