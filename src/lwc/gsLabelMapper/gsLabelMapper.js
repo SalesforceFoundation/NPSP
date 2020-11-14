@@ -37,6 +37,10 @@ import gsChecklistItemNPSPCloudTitle from '@salesforce/label/c.gsChecklistItemNP
 import gsChecklistItemAddUserDesc from '@salesforce/label/c.gsChecklistItemAddUserDesc';
 import gsChecklistItemAddUserLinkLabel from '@salesforce/label/c.gsChecklistItemAddUserLinkLabel';
 import gsChecklistItemAddUserTitle from '@salesforce/label/c.gsChecklistItemAddUserTitle';
+import gsChecklistItemManageChangeDesc from '@salesforce/label/c.gsChecklistItemManageChangeDesc';
+import gsChecklistItemManageChangeLinkLabel from '@salesforce/label/c.gsChecklistItemManageChangeLinkLabel';
+import gsChecklistItemManageChangePriBtnLabel from '@salesforce/label/c.gsChecklistItemManageChangePriBtnLabel';
+import gsChecklistItemManageChangeTitle from '@salesforce/label/c.gsChecklistItemManageChangeTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -81,6 +85,10 @@ const labelMap = {
     gsChecklistItemAddUserDesc,
     gsChecklistItemAddUserLinkLabel,
     gsChecklistItemAddUserTitle,
+    gsChecklistItemManageChangeDesc,
+    gsChecklistItemManageChangeLinkLabel,
+    gsChecklistItemManageChangePriBtnLabel,
+    gsChecklistItemManageChangeTitle,
 }
 
 /**

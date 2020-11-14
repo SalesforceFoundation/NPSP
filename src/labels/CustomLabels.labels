@@ -6735,6 +6735,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Create Donation in Get Started</shortDescription>
         <value>Create a Donation</value>
     </labels>
+     <labels>
+        <fullName>gsChecklistItemManageChangeDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Manage Change in Get Started</shortDescription>
+        <value>Salesforce is updated frequently to address issues and add new features. Understanding these changes and how to manage that process it will ensure your organization will always be ready to take full advantage of the platform.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangeLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Manage Change in Get Started</shortDescription>
+        <value>Learn more about Release Readiness in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Manage Change in Get Started</shortDescription>
+        <value>View Release Readiness Group</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangeTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Manage Change in Get Started</shortDescription>
+        <value>Manage Change to your Instance</value>
+    </labels>
     <labels>
         <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
         <categories>Get Started Page</categories>
@@ -6879,7 +6911,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Stay Track in Get Started</shortDescription>
         <value>Stay on Track with Activities</value>
     </labels>
-      <labels>
+    <labels>
         <fullName>gsChecklistItemPrepareNPSPDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

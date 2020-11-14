@@ -2494,6 +2494,10 @@
         <members>gsChecklistItemNPSPCloudDesc</members>
         <members>gsChecklistItemNPSPCloudLinkLabel</members>
         <members>gsChecklistItemNPSPCloudTitle</members>
+        <members>gsChecklistItemManageChangeDesc</members>
+        <members>gsChecklistItemManageChangeLinkLabel</members>
+        <members>gsChecklistItemManageChangePriBtnLabel</members>
+        <members>gsChecklistItemManageChangeTitle</members>
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3313,6 +3317,7 @@
         <members>GS_Admin_Checklist_Item.Running_Reports</members>
         <members>GS_Admin_Checklist_Item.Prepare_NPSP_Cloud</members>
         <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
+        <members>GS_Admin_Checklist_Item.Manage_Change</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
