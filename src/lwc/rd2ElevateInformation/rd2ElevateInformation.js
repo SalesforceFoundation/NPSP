@@ -23,6 +23,7 @@ import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermi
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
 import elevateDisabledHeader from '@salesforce/label/c.RD2_ElevateDisabledHeader';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import elevateCreateRecordFailed from '@salesforce/label/c.RD2_ElevateCreateRecordFailed';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
@@ -51,6 +52,7 @@ export default class rd2ElevateInformation extends LightningElement {
         contactSystemAdmin,
         elevateDisabledHeader,
         elevateDisabledMessage,
+        elevateCreateRecordFailed,
         viewErrorLogLabel
     });
 
@@ -68,6 +70,7 @@ export default class rd2ElevateInformation extends LightningElement {
     @track isLoading = true;
     @track isElevateCustomer;
     @track isElevateRecord = false;
+    @track isElevateConnected = false;
     @track permissions = {
         hasAccess: null,
         alert: ''
@@ -91,7 +94,6 @@ export default class rd2ElevateInformation extends LightningElement {
                 if (this.isElevateCustomer === true) {
                     if (!isNull(this.permissions.alert)) {
                         this.handleError({
-                            header: this.labels.insufficientPermissions,
                             detail: this.permissions.alert
                         });
 
@@ -113,7 +115,6 @@ export default class rd2ElevateInformation extends LightningElement {
                 this.handleError(error);
             })
             .finally(() => {
-                console.log('******getData*****');
                 this.checkLoading();
             });
     }
@@ -152,11 +153,9 @@ export default class rd2ElevateInformation extends LightningElement {
         if (response.data) {
             this.rdRecord = response.data;
 
-            if (this.rdRecord && this.rdRecord.fields && this.rdRecord.fields.ClosedReason__c) {
-                if (this.rdRecord.fields.ClosedReason__c.value === this.labels.statusElevatePending) {
-                    this.status.isProgress = true;
-                    this.status.message = this.labels.statusElevatePending;
-                }
+            if (this.getValue('ClosedReason__c') === this.labels.statusElevatePending) {
+                this.status.isProgress = true;
+                this.status.message = this.labels.statusElevatePending;//TODO
             }
 
             this.checkLoading();
@@ -185,8 +184,23 @@ export default class rd2ElevateInformation extends LightningElement {
                 || !this.isSet(this.fields.name);
         }
 
-        this.isElevateRecord = this.isSetField('CommitmentId__c');
-        console.log('******isloading: ' + this.isLoading);
+        this.checkElevateStatus();
+    }
+
+    checkElevateStatus() {
+        const commitmentId = this.getValue('CommitmentId__c');
+
+        this.isElevateRecord = !isNull(commitmentId);
+        this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith('_PENDING_');
+
+        if (this.isElevateCustomer === true 
+            && this.isElevateRecord 
+            && !this.isElevateConnected
+        ) {
+            this.handleError({
+                detail: this.labels.elevateCreateRecordFailed
+            });
+        }
     }
 
     isTrue(value) {
@@ -198,7 +212,12 @@ export default class rd2ElevateInformation extends LightningElement {
     isSet(value) {
         return !isUndefined(value) && !isNull(value);
     }
-    isSetField(fieldName) {
+    getValue(fieldName) {
+        return this.hasValue(fieldName)
+            ? this.rdRecord.fields[fieldName].value
+            : null;
+    }
+    hasValue(fieldName) {
         return this.rdRecord
             && this.rdRecord.fields
             && !isUndefined(this.rdRecord.fields[fieldName])
@@ -240,7 +259,5 @@ export default class rd2ElevateInformation extends LightningElement {
             this.permissions.hasAccess = false;
             this.error.header = this.labels.insufficientPermissions;
         }
-
-        this.isLoading = false;
     }
 }

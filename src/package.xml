@@ -1697,6 +1697,7 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateCreateRecordFailed</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>
         <members>RD2_ElevateDisabledMessage</members>
