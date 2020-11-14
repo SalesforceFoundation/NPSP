@@ -6,7 +6,7 @@
 
         <div class="slds-m-horizontal--small slds-border_top">
 
-            <div class="slds-p-around_medium" if:true={error.detail}>
+            <div class="slds-p-around_medium slds-border_top" if:true={error.detail}>
                 <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
                     icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
                     subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
@@ -14,94 +14,86 @@
                 </c-util-page-level-message>
             </div>
 
-            <template if:true={permissions.hasAccess}>
+            <template if:true={isLoading}>
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text={labels.loadingMessage} data-id="spinner"
+                            data-qa-locator="spinner" size="small">
+                        </lightning-spinner>
+                        <c-util-stencil row-count="2" column-count="1"></c-util-stencil>
+                    </div>
+                </div>
+            </template>
 
-                <template if:true={isLoading}>
-                    <div class="slds-grid slds-grid_align-center">
-                        <div class="slds-is-relative slds-size_1-of-1">
-                            <lightning-spinner alternative-text={labels.loadingMessage} data-id="spinner"
-                                data-qa-locator="spinner" size="small">
-                            </lightning-spinner>
-                            <c-util-stencil row-count="2" column-count="1"></c-util-stencil>
-                        </div>
+            <template if:false={isLoading}>
+                <template if:false={isElevateCustomer}>
+                    <div class='slds-p-around_medium'>
+                        <c-util-illustration title={labels.elevateDisabledHeader} message={labels.contactSystemAdmin}
+                            size="small" variant="no-access">
+                        </c-util-illustration>
                     </div>
                 </template>
 
-                <template if:false={isLoading}>
+                <template if:true={permissions.hasAccess}>
 
-                    <template if:false={isElevateCustomer}>
-                        <div class='slds-p-top_medium slds-p-bottom_medium'>
-                            <c-util-illustration title={labels.elevateDisabledHeader}
-                                message={labels.contactSystemAdmin} size="small" variant="no-access">
-                            </c-util-illustration>
+                    <template if:false={isElevateRecord}>
+                        <div class="slds-p-around_medium slds-illustration slds-illustration_small">
+                            <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+                            <div class="slds-text-longform">
+                                <p>
+                                    <lightning-formatted-text value={labels.elevateDisabledMessage}>
+                                    </lightning-formatted-text>
+                                </p>
+                            </div>
                         </div>
                     </template>
 
-                    <template if:true={isElevateCustomer}>
+                    <template if:true={isElevateRecord}>
+                        <lightning-layout multiple-rows="true" class="slds-p-left_medium slds-p-top_medium">
+                            <lightning-layout-item size="12">
+                                <div class="slds-grid slds-grid_vertical-align-top">
+                                    <template if:true={status.isProgress}>
+                                        <lightning-progress-ring value="75"></lightning-progress-ring>
+                                    </template>
+                                    <template if:false={status.isProgress}>
+                                        <lightning-icon icon-name={status.icon} size="x-small"
+                                            alternative-text={status.assistiveText} variant={status.value}>
+                                        </lightning-icon>
+                                    </template>
 
-                        <template if:false={isElevateRecord}>
-                            <div
-                                class="slds-p-top_medium slds-p-bottom_medium slds-illustration slds-illustration_small">
-                                <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
-                                <div class="slds-text-longform">
-                                    <h3 class="slds-text-heading_medium">{labels.elevateDisabledMessage}</h3>
-                                    <p>
-                                        <lightning-formatted-text value={labels.contactSystemAdmin}>
-                                        </lightning-formatted-text>
-                                    </p>
+                                    <lightning-formatted-text id="status" data-id="status" value={status.message}
+                                        class="slds-p-left_small slds-form-element__control">
+                                    </lightning-formatted-text>
                                 </div>
-                            </div>
-                        </template>
+                            </lightning-layout-item>
 
-                        <template if:true={isElevateRecord}>
-                            <lightning-layout multiple-rows="true" class="slds-p-left_medium slds-p-top_medium">
+                            <lightning-layout-item size="12" class="slds-p-top_small slds-p-bottom_x-small">
+                                <lightning-layout align="spread">
+                                    <lightning-layout-item size="3">
+                                        <label for="commitmentId">{fields.commitmentId.label}</label>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="9">
+                                        <a href="javascript:void(0);" data-id="commitmentId" target="_blank">
+                                            <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}>
+                                            </lightning-formatted-text>
+                                            <lightning-icon icon-name="utility:new_window" data-id="newWindowIcon"
+                                                size="xx-small" class="slds-button__icon_right slds-current-color"
+                                                alternative-text={labels.textNewWindow}></lightning-icon>
+                                        </a>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
 
-                                <lightning-layout-item size="12">
-                                    <div class="slds-grid slds-grid_vertical-align-top">
-                                        <template if:true={status.isProgress}>
-                                            <lightning-progress-ring value="75"></lightning-progress-ring>
-                                        </template>
-                                        <template if:false={status.isProgress}>
-                                            <lightning-icon icon-name={status.icon} size="x-small"
-                                                alternative-text={status.assistiveText} variant={status.value}>
-                                            </lightning-icon>
-                                        </template>
-
-                                        <lightning-formatted-text id="status" data-id="status" value={status.message}
-                                            class="slds-p-left_small slds-form-element__control">
-                                        </lightning-formatted-text>
-                                    </div>
-                                </lightning-layout-item>
-
-                                <lightning-layout-item size="12" class="slds-p-top_small slds-p-bottom_x-small">
-                                    <lightning-layout align="spread">
-                                        <lightning-layout-item size="3">
-                                            <label for="commitmentId">{fields.commitmentId.label}</label>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item size="9">
-                                            <a href="javascript:void(0);" data-id="commitmentId" target="_blank">
-                                                <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}>
-                                                </lightning-formatted-text>
-                                                <lightning-icon icon-name="utility:new_window" data-id="newWindowIcon"
-                                                    size="xx-small" class="slds-button__icon_right slds-current-color"
-                                                    alternative-text={labels.textNewWindow}></lightning-icon>
-                                            </a>
-                                        </lightning-layout-item>
-                                    </lightning-layout>
-                                </lightning-layout-item>
-
-                            </lightning-layout>
-                        </template>
+                        <div class="slds-card__footer slds-m-horizontal--small slds-border_top">
+                            <lightning-button variant="base" label={labels.viewErrorLogLabel}
+                                onclick={navigateToErrorLog}>
+                            </lightning-button>
+                        </div>
                     </template>
                 </template>
             </template>
         </div>
 
-        <template if:true={isElevateCustomer}><template if:true={isElevateRecord}>
-                <div class="slds-card__footer slds-m-horizontal--small slds-border_top">
-                    <lightning-button variant="base" label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}>
-                    </lightning-button>
-                </div>
-            </template></template>
     </lightning-card>
 </template>

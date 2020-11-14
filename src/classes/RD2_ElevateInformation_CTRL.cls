@@ -57,12 +57,37 @@ public with sharing class RD2_ElevateInformation_CTRL {
     */
     @AuraEnabled(cacheable=false)
     public static Map<String, Object> getData(Id recordId) {
-        RD2_VisualizeScheduleController.validate(recordId);
 
         return new Map<String, Object> {
             'isElevateCustomer' => isElevateCustomer(),
+            'alert' => RD2_VisualizeScheduleController.validateRecord(recordId),
+            'hasFieldPermissions' => hasFieldPermissions(),
             'errorMessage' => getLatestErrorMessage(recordId)
         };
+    }
+
+    /**
+     * @description Checks if the user has access to view Elevate information widget
+     * @return Boolean
+     */
+    private static Boolean hasFieldPermissions() {
+        Set<String> requiredFields = new Set<String>{
+            UTIL_Namespace.StrTokenNSPrefix('Status__c'),
+            UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
+            UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
+        };
+
+        Boolean hasPermissions = true;
+
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isAccessible()) {
+                hasPermissions = false;
+                break;
+            }
+        }
+
+        return hasPermissions;
     }
 
     /***

@@ -17,6 +17,8 @@ import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
 import textNewWindow from '@salesforce/label/c.AssistiveTextNewWindow';
+import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
+import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
 import elevateDisabledHeader from '@salesforce/label/c.RD2_ElevateDisabledHeader';
@@ -43,6 +45,8 @@ export default class rd2ElevateInformation extends LightningElement {
         textError,
         textWarning,
         textNewWindow,
+        flsErrorHeader,
+        flsErrorDetail,
         insufficientPermissions,
         contactSystemAdmin,
         elevateDisabledHeader,
@@ -61,13 +65,12 @@ export default class rd2ElevateInformation extends LightningElement {
         assistiveText: this.labels.textSuccess
     };
 
+    @track isLoading = true;
     @track isElevateCustomer;
     @track isElevateRecord = false;
-    @track isLoading = true;
     @track permissions = {
-        hasAccess: true,
-        isBlocked: false,
-        blockedReason: ''
+        hasAccess: null,
+        alert: ''
     };
     @track error = {};
 
@@ -79,19 +82,38 @@ export default class rd2ElevateInformation extends LightningElement {
         getData({ recordId: this.recordId })
             .then(response => {
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.permissions.alert = response.alert;
 
-                if (!isNull(response.errorMessage)) {
-                    this.status.message = response.errorMessage;
-                    this.status.value = 'error';
-                    this.status.icon = 'utility:error';
-                    this.status.assistiveText = this.labels.textError;
+                this.permissions.hasAccess = this.isElevateCustomer === true
+                    && response.hasFieldPermissions === true
+                    && isNull(this.permissions.alert);
+
+                if (this.isElevateCustomer === true) {
+                    if (!isNull(this.permissions.alert)) {
+                        this.handleError({
+                            header: this.labels.insufficientPermissions,
+                            detail: this.permissions.alert
+                        });
+
+                    } else if (response.hasFieldPermissions === false) {
+                        this.handleError({
+                            header: this.labels.flsErrorHeader,
+                            detail: this.labels.flsErrorDetail
+                        });
+
+                    } else if (!isNull(response.errorMessage)) {
+                        this.status.message = response.errorMessage;
+                        this.status.value = 'error';
+                        this.status.icon = 'utility:error';
+                        this.status.assistiveText = this.labels.textError;
+                    }
                 }
             })
             .catch((error) => {
-                this.permissions.hasAccess = false;
                 this.handleError(error);
             })
             .finally(() => {
+                console.log('******getData*****');
                 this.checkLoading();
             });
     }
@@ -113,7 +135,7 @@ export default class rd2ElevateInformation extends LightningElement {
             this.checkLoading();
         }
 
-        if (response.error && this.permissions.hasAccess === true) {
+        if (response.error && this.hasAccess()) {
             this.handleError(response.error);
         }
     }
@@ -140,25 +162,47 @@ export default class rd2ElevateInformation extends LightningElement {
             this.checkLoading();
         }
 
-        if (response.error && this.permissions.hasAccess === true) {
+        if (response.error && this.hasAccess()) {
             this.handleError(response.error);
         }
+    }
+
+    hasAccess() {
+        return this.isTrue(this.permissions.isElevateCustomer)
+            && this.isTrue(this.permissions.hasAccess);
     }
 
     /**
      * @description Checks if the form is still loading all data required to be displayed
      */
     checkLoading() {
-        this.isLoading = isUndefined(this.isElevateCustomer)
-            || isNull(this.isElevateCustomer)
-            || isUndefined(this.rdRecord)
-            || isNull(this.rdRecord)
-            || isUndefined(this.fields.name);
+        if (this.isNot(this.isElevateCustomer) || this.isNot(this.permissions.hasAccess)) {
+            this.isLoading = false;
 
-        if (this.isElevateCustomer === true && this.rdRecord && this.rdRecord.fields) {
-            this.isElevateRecord = !isUndefined(this.rdRecord.fields.CommitmentId__c)
-                && !isNull(this.rdRecord.fields.CommitmentId__c.value);
+        } else {
+            this.isLoading = !this.isSet(this.isElevateCustomer)
+                || !this.isSet(this.rdRecord)
+                || !this.isSet(this.fields.name);
         }
+
+        this.isElevateRecord = this.isSetField('CommitmentId__c');
+        console.log('******isloading: ' + this.isLoading);
+    }
+
+    isTrue(value) {
+        return this.isSet(value) && value === true;
+    }
+    isNot(value) {
+        return this.isSet(value) && value === false;
+    }
+    isSet(value) {
+        return !isUndefined(value) && !isNull(value);
+    }
+    isSetField(fieldName) {
+        return this.rdRecord
+            && this.rdRecord.fields
+            && !isUndefined(this.rdRecord.fields[fieldName])
+            && !isNull(this.rdRecord.fields[fieldName].value);
     }
 
     /**
@@ -188,16 +232,12 @@ export default class rd2ElevateInformation extends LightningElement {
     * @param error: Error Event
     */
     handleError(error) {
-        this.error = constructErrorMessage(error);
+        this.error = (error && error.detail)
+            ? error
+            : constructErrorMessage(error);
 
-        const errorDetail = this.error.detail;
-
-        const isApexClassDisabled = errorDetail && errorDetail.includes("RD2_ElevateInformation_CTRL");
-        if (isApexClassDisabled) {
+        if (this.error.detail && this.error.detail.includes("RD2_ElevateInformation_CTRL")) {
             this.permissions.hasAccess = false;
-        }
-
-        if (errorDetail && this.permissions.hasAccess === false) {
             this.error.header = this.labels.insufficientPermissions;
         }
 

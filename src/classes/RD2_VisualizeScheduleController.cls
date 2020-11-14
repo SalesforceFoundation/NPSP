@@ -363,17 +363,29 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param recordId Record Id
      * @return void
      */
-    public static void validate(Id recordId) {
+    private static void validate(Id recordId) {
+        String alert = validateRecord(recordId);
+
+        if (String.isNotBlank(alert)) {
+            throwAuraHandledException(alert);
+        }
+    }
+
+
+    public static String validateRecord(Id recordId) {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             // The label value: "You must enable Enhanced Recurring Donations to use this component."
-            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+            return System.Label.RD2_ScheduleVisualizerErrorInvalidUsage;
         }
 
         if (recordId == null || recordId.getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
             // The label value: "This component must be used on a Recurring Donations record page."
-            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+           return System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot;
         }
+
+        return null;
     }
+    
 
     /***
     * @description Throws AuraHandledException
