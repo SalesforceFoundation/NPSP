@@ -93,6 +93,16 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Returns the Elevate Integration service enablement status for Create Commitment feature.
+    * The "Pilot Enabled" flag check should be removed when Create Commiment becomes GA.
+    * @return Boolean
+    */
+    public static Boolean isElevateCreateEnabled() {
+        return config.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled();
+    }
+
+    /***
     * @description Determines whether a Recurring Donation event is from the Elevate integration
     * @param rd Changed Recurring Donation
     * @param oldRd Old Recurring Donation

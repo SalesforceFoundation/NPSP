@@ -79,7 +79,7 @@ export default class rd2ElevateInformation extends LightningElement {
 
 
     /***
-     * @description Initializes the component
+     * @description Initializes the component with data 
      */
     connectedCallback() {
         getData({ recordId: this.recordId })
@@ -120,7 +120,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     /***
-    * @description Retrieve Recurring Donation Object and fields labels and help text
+    * @description Retrieves Recurring Donation Object and fields labels/help text
     */
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
@@ -142,7 +142,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     /***
-     * @description Track specified fields so when the Recurring Donation record is updated,
+     * @description Tracks specified fields so when the Recurring Donation record is updated,
      * this method is called to force refresh of the data and the component.
      */
     @wire(getRecord, {
@@ -166,13 +166,16 @@ export default class rd2ElevateInformation extends LightningElement {
         }
     }
 
+    /***
+     * @description Checks if record detail page or user has access to the Elevate Information data
+     */
     hasAccess() {
         return this.isTrue(this.permissions.isElevateCustomer)
             && this.isTrue(this.permissions.hasAccess);
     }
 
     /**
-     * @description Checks if the form is still loading all data required to be displayed
+     * @description Checks if the form still has outstanding data to load
      */
     checkLoading() {
         if (this.isNot(this.isElevateCustomer) || this.isNot(this.permissions.hasAccess)) {
@@ -187,6 +190,10 @@ export default class rd2ElevateInformation extends LightningElement {
         this.checkElevateStatus();
     }
 
+    /**
+     * @description Determines if the Recurring Donation has commitment Id and 
+     * if such Id is indeed created in Elevate.
+     */
     checkElevateStatus() {
         const commitmentId = this.getValue('CommitmentId__c');
 
@@ -203,20 +210,40 @@ export default class rd2ElevateInformation extends LightningElement {
         }
     }
 
+    /**
+     * @description Determines if the Boolean variable is defined and true
+     */
     isTrue(value) {
         return this.isSet(value) && value === true;
     }
+
+    /**
+     * @description Determines if the Boolean variable is defined and false
+     */
     isNot(value) {
         return this.isSet(value) && value === false;
     }
+
+    /**
+     * @description Determines if the variable is defined and has a value
+     */
     isSet(value) {
         return !isUndefined(value) && !isNull(value);
     }
+
+    /**
+     * @description Returns the Recurring Donation field value if the field is set and populated
+     */
     getValue(fieldName) {
         return this.hasValue(fieldName)
             ? this.rdRecord.fields[fieldName].value
             : null;
     }
+
+    /**
+     * @description Determines if the Recurring Donation record is retrieved and
+     * its fields defined and populated
+     */
     hasValue(fieldName) {
         return this.rdRecord
             && this.rdRecord.fields
@@ -247,7 +274,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     /***
-    * @description Handle error
+    * @description Handles error construction and its display
     * @param error: Error Event
     */
     handleError(error) {

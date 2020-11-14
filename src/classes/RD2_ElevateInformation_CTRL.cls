@@ -51,23 +51,23 @@ public with sharing class RD2_ElevateInformation_CTRL {
     }
     
     /**
-    * @description 
-    * @param 
-    * @return 
+    * @description Returns data required for the Elevate Information widget
+    * @param recordId Recurring Donation Id
+    * @return Map<String, Object> Data value by key
     */
     @AuraEnabled(cacheable=false)
     public static Map<String, Object> getData(Id recordId) {
 
         return new Map<String, Object> {
-            'isElevateCustomer' => isElevateCustomer(),
-            'alert' => RD2_VisualizeScheduleController.validateRecord(recordId),
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled(),
+            'alert' => RD2_VisualizeScheduleController.getValidationAlert(recordId),
             'hasFieldPermissions' => hasFieldPermissions(),
             'errorMessage' => getLatestErrorMessage(recordId)
         };
     }
 
     /**
-     * @description Checks if the user has access to view Elevate information widget
+     * @description Checks if the user has access for fields retrieved by the Elevate information widget
      * @return Boolean
      */
     private static Boolean hasFieldPermissions() {
@@ -91,18 +91,10 @@ public with sharing class RD2_ElevateInformation_CTRL {
     }
 
     /***
-     * @description Checks whether the Elevate credit card can be displayed
-     * on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
-     * The "Pilot Enabled" flag check should be removed when Create Commiment becomes GA.
-     */
-    private static Boolean isElevateCustomer() {
-        return RD2_ElevateIntegrationService.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();
-    }
-
-    /***
      * @description Displays the latest error when latest payment could not be charged or
      * any other issue with the recurring commitment in Elevate
+     * @param recordId Recurring Donation Id
+     * @return String The latest error message if no successful payment is created after it.
      */
     private static String getLatestErrorMessage(Id recordId) {
         Error__c error = finder.getLatestError(recordId);
@@ -149,7 +141,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
         }
 
         /***
-         * @description 
+         * @description Returns the latest Closed Won Opportunity for the provided record
          * @param recordId Recurring Donation Id
          * @return Opportunity
          */
