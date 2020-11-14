@@ -6792,6 +6792,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Stay on Track with Activities</value>
     </labels>
      <labels>
+        <fullName>gsChecklistItemTrainUsersDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Train Users in Get Started</shortDescription>
+        <value>When the day finally comes for you to launch your instance, you want every user in your organization to be ready on day 1. That’s why it’s important to come up with a plan for onboarding your users and helping them get the most out of Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemTrainUsersLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Train Users in Get Started</shortDescription>
+        <value>Learn more about training your users in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemTrainUsersTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Train Users in Get Started</shortDescription>
+        <value>Train your users</value>
+    </labels>
+     <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>
