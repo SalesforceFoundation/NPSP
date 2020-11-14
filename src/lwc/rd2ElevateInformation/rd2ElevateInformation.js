@@ -16,6 +16,7 @@ import statusElevatePending from '@salesforce/label/c.RD2_ElevatePendingStatus';
 import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
+import textProgress from '@salesforce/label/c.ProgressMarkerAssistiveTextProgress';
 import textNewWindow from '@salesforce/label/c.AssistiveTextNewWindow';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
@@ -45,6 +46,7 @@ export default class rd2ElevateInformation extends LightningElement {
         textSuccess,
         textError,
         textWarning,
+        textProgress,
         textNewWindow,
         flsErrorHeader,
         flsErrorDetail,
@@ -200,8 +202,8 @@ export default class rd2ElevateInformation extends LightningElement {
         this.isElevateRecord = !isNull(commitmentId);
         this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith('_PENDING_');
 
-        if (this.isElevateCustomer === true 
-            && this.isElevateRecord 
+        if (this.isElevateCustomer === true
+            && this.isElevateRecord
             && !this.isElevateConnected
         ) {
             this.handleError({
@@ -282,9 +284,56 @@ export default class rd2ElevateInformation extends LightningElement {
             ? error
             : constructErrorMessage(error);
 
-        if (this.error.detail && this.error.detail.includes("RD2_ElevateInformation_CTRL")) {
+        if (this.error.detail && this.error.detail.includes('RD2_ElevateInformation_CTRL')) {
             this.permissions.hasAccess = false;
             this.error.header = this.labels.insufficientPermissions;
+            this.isLoading = false;
         }
     }
+
+
+    /***
+    * @description data-qa-locator values for elements on the component
+    */
+
+    get qaLocatorError() {
+        return `error Notification`;
+    }
+
+    get qaLocatorSpinner() {
+        return `spinner ${this.labels.loadingMessage}`;
+    }
+
+    get qaLocatorNoAccessIllustration() {
+        return `illustration No Access`;
+    }
+
+    get qaLocatorNoDataMessage() {
+        return `text No Data Message`;
+    }
+
+    get qaLocatorProgressRing() {
+        return `${this.labels.textProgress} 75%`;
+    }
+
+    get qaLocatorStatusIcon() {
+        return `icon Status ${this.status.value}`;
+    }
+
+    get qaLocatorStatusMessage() {
+        return `text Status Message`;
+    }
+
+    get qaLocatorCommitmentId() {
+        return `text ${this.fields.commitmentId.label}`;
+    }
+
+    get qaLocatorNewWindow() {
+        return `link ${this.labels.textNewWindow}`;
+    }
+
+    get qaLocatorViewErrorLog() {
+        return `link ${this.labels.viewErrorLogLabel}`;
+    }
+
 }
