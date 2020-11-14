@@ -6680,6 +6680,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Explore the Nonprofit Success Pack (NPSP)</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemAddUserDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Add User in Get Started</shortDescription>
+        <value>Give users access to NPSP and manage permissions for your org to ensure the right people have access to just what they need and nothing they don’t to keep things running smoothly.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemAddUserLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Add User in Get Started</shortDescription>
+        <value>Learn more about adding users in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemAddUserTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Add User in Get Started</shortDescription>
+        <value>Add Users</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemCreateDonationDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
