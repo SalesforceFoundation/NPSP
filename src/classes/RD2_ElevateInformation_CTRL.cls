@@ -37,7 +37,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
 
 
     /**
-    * @description 
+    * @description Finds records related to Recurring Donation Elevate data
     */
     @TestVisible
     private static RecordFinder finder {
@@ -57,13 +57,21 @@ public with sharing class RD2_ElevateInformation_CTRL {
     */
     @AuraEnabled(cacheable=false)
     public static Map<String, Object> getData(Id recordId) {
+        Map<String, Object> data = new Map<String, Object>();
 
-        return new Map<String, Object> {
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled(),
-            'alert' => RD2_VisualizeScheduleController.getValidationAlert(recordId),
-            'hasFieldPermissions' => hasFieldPermissions(),
-            'errorMessage' => getLatestErrorMessage(recordId)
-        };
+        try {
+            data = new Map<String, Object> {
+                'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled(),
+                'alert' => RD2_VisualizeScheduleController.getValidationAlert(recordId),
+                'hasFieldPermissions' => hasFieldPermissions(),
+                'errorMessage' => getLatestErrorMessage(recordId)
+            };
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+
+        return data;
     }
 
     /**
