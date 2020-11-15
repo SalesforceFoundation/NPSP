@@ -28,7 +28,7 @@ Setup Test Data
         ...                                                         npe03__Open_Ended_Status__c=Open
         ...                                                         npe03__Date_Established__c=2019-07-08
         ...                                                         ${NS}Status__c=Active
-        ...                                                         ${NS}Day_of_Month__c=20
+        ...                                                         ${NS}Day_of_Month__c=10
         ...                                                         ${NS}InstallmentFrequency__c=1
         ...                                                         ${NS}PaymentMethod__c=Check
 
