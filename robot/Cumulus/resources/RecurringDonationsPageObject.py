@@ -16,6 +16,14 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     object_name = "npe03__Recurring_Donation__c"
 
     @capture_screenshot_on_error
+    def wait_for_rd2_modal(self):
+        """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
+        self.builtin.sleep(1,"Wait Needed for now to wait for the new modal")
+        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.scroll_element_into_view(btnlocator)
+        self.selenium.wait_until_element_is_visible(btnlocator,60)
+    
+    @capture_screenshot_on_error
     def click_rd2_modal_button(self, name):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
@@ -40,6 +48,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populates the RD2 modal form fields with the respective fields and values"""
+        self.builtin.sleep(1,"For Rd2 modal dropdown values to get populated")
         ns=self.npsp.get_npsp_namespace_prefix()
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
@@ -70,14 +79,14 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         for i in range(3):
-            time.sleep(1)
+            time.sleep(2)
             self.selenium.location_should_contain(
                 "/lightning/r/npe03__Recurring_Donation__c/",
                 message="Current page is not a Recurring Donations record view",
             )
             locator = npsp_lex_locators["bge"]["button"].format("Edit")
+            self.selenium.wait_until_page_contains_element(locator, error="Recurring donations Details page did not load fully")
             edit_button = self.selenium.get_webelement(locator)
-            self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
             if self.npsp.check_if_element_displayed(edit_button):
                 return
             else:
@@ -121,7 +130,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         edit_button = self.selenium.get_webelement(locator)
         self.selenium.wait_until_element_is_visible(edit_button,60)
         self.selenium.click_element(locator)
-        self.salesforce.wait_until_modal_is_open()
         self.selenium.reload_page()
         self.selenium.reload_page()
         time.sleep(3)
@@ -152,19 +160,22 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     self.selenium.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value,30)
+                    self.selenium.scroll_element_into_view(selection_value)
                     self.selenium.click_element(selection_value)
                 else:
                     self.builtin.log(f"Element {key} not present")
 
     @capture_screenshot_on_error
-    def pause_recurring_donation(self, **kwargs):
+    def pause_recurring_donation(self, type=None):
         """Finds the pause button on the recurring donations details
         view page, clicks the button and waits for the modal to appear"""
         locator = npsp_lex_locators["bge"]["button"].format("Pause")
         pause_button = self.selenium.get_webelement(locator)
         self.selenium.wait_until_element_is_visible(pause_button)
         self.selenium.click_element(locator)
-        self.salesforce.wait_until_modal_is_open()
+        if type != "Closed":
+            btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+            self.selenium.wait_until_element_is_visible(btnlocator,60)
 
     @capture_screenshot_on_error
     def populate_pause_modal(self,**kwargs):
