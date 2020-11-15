@@ -1602,6 +1602,14 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateCancelInProgress</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates Elevate recurring commitment cancel is in progress</shortDescription>
+        <value>Elevate Cancel in Progress</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateDisableButtonLabel</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>

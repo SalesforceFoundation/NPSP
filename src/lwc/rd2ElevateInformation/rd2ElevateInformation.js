@@ -12,7 +12,8 @@ import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import statusSuccess from '@salesforce/label/c.RD2_ElevateInformationStatusSuccess';
-import statusElevatePending from '@salesforce/label/c.RD2_ElevatePendingStatus';
+import statusElevatePending from '@salesforce/label/c.RD2_ElevatePendingStatus'; 
+import statusElevateCancelInProgress from '@salesforce/label/c.RD2_ElevateCancelInProgress'; 
 import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
@@ -34,7 +35,8 @@ const FIELDS = [
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
     FIELD_STATUS_REASON
-]
+];
+const TEMP_PREFIX = '_PENDING_';
 
 export default class rd2ElevateInformation extends LightningElement {
 
@@ -43,6 +45,7 @@ export default class rd2ElevateInformation extends LightningElement {
         loadingMessage,
         statusSuccess,
         statusElevatePending,
+        statusElevateCancelInProgress,
         textSuccess,
         textError,
         textWarning,
@@ -157,7 +160,7 @@ export default class rd2ElevateInformation extends LightningElement {
 
             if (this.getValue('ClosedReason__c') === this.labels.statusElevatePending) {
                 this.status.isProgress = true;
-                this.status.message = this.labels.statusElevatePending;//TODO
+                this.status.message = this.labels.statusElevateCancelInProgress;
             }
 
             this.checkLoading();
@@ -200,7 +203,7 @@ export default class rd2ElevateInformation extends LightningElement {
         const commitmentId = this.getValue('CommitmentId__c');
 
         this.isElevateRecord = !isNull(commitmentId);
-        this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith('_PENDING_');
+        this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith(TEMP_PREFIX);
 
         if (this.isElevateCustomer === true
             && this.isElevateRecord
@@ -295,6 +298,9 @@ export default class rd2ElevateInformation extends LightningElement {
     /***
     * @description data-qa-locator values for elements on the component
     */
+    get qaLocatorHeader() {
+        return `text ${this.labels.header}`;
+    }
 
     get qaLocatorError() {
         return `error Notification`;
@@ -305,11 +311,15 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     get qaLocatorNoAccessIllustration() {
-        return `illustration No Access`;
+        return `illustration NoAccess`;
+    }
+
+    get qaLocatorNoDataIllustration() {
+        return `div illustration NoData`;
     }
 
     get qaLocatorNoDataMessage() {
-        return `text No Data Message`;
+        return `text NoData Message`;
     }
 
     get qaLocatorProgressRing() {

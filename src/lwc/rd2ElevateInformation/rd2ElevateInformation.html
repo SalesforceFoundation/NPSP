@@ -1,6 +1,6 @@
 <template>
     <lightning-card variant="narrow">
-        <h2 slot="title" class="slds-p-top_medium">
+        <h2 slot="title" class="slds-p-top_medium" data-qa-locator={qaLocatorHeader}>
             {labels.header}
         </h2>
 
@@ -40,7 +40,8 @@
             <template if:true={permissions.hasAccess}>
 
                 <template if:false={isElevateRecord}>
-                    <div class="slds-p-around_medium slds-illustration slds-illustration_small">
+                    <div class="slds-p-around_medium slds-illustration slds-illustration_small"
+                        data-qa-locator="qaLocatorNoDataIllustration">
                         <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
                         <div class="slds-text-longform">
                             <p>
