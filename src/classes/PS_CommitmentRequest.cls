@@ -155,6 +155,7 @@ public inherited sharing class PS_CommitmentRequest {
             : UserInfo.getDefaultCurrency();
 
         reqBody.withCurrency(currencyCode);
+        reqBody.withMetadata(new Metadata());
 
         setDonorInfo(reqBody, rd);
         setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);
@@ -296,6 +297,11 @@ public inherited sharing class PS_CommitmentRequest {
         public String currencyCode;
         public List<Schedule> schedules;
 
+        /***	
+         * @description Optional Metadata containing origin type and other properties	
+         */	
+        public Metadata metadata;
+
         /***
          * @description Constructor
          */
@@ -395,6 +401,16 @@ public inherited sharing class PS_CommitmentRequest {
         public RequestBody withSchedules(List<Schedule> schedules) {
             this.schedules = schedules;
             return this;
+        }
+
+        /**	
+         * @description Sets metadata	
+         * @param metadata Payments API metadata	
+         * @return RequestBody This request body instance	
+         */	
+        public RequestBody withMetadata(Metadata metadata) {	
+            this.metadata = metadata;	
+            return this;	
         }
 
         /**
@@ -520,5 +536,22 @@ public inherited sharing class PS_CommitmentRequest {
         public String last4;
         public String expirationMonth;
         public String expirationYear;
+    }
+
+    /***	
+     * @description Metadata property on the commitment request	
+     */	
+    public class Metadata {	
+        public String originType;	
+        public String originDisplayName;	
+        public String campaignCode;	
+
+        /**	
+         * @description Metadata constructor	
+         */	
+        public Metadata() {	
+            //set defaults	
+            this.originType = PS_Request.OriginType.CRM.name();	
+        }	
     }
 }
