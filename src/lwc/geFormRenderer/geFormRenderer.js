@@ -111,6 +111,7 @@ export default class GeFormRenderer extends LightningElement{
     @api loadingText;
 
     fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
+    PAYMENT_TRANSACTION_STATUS_ENUM;
     @api sections = [];
     @api showSpinner = false;
     @api batchId;

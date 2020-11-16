@@ -50,8 +50,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     errorCallback;
     isFailedPurchase = false;
 
-    PAYMENT_TRANSACTION_STATUS_ENUM;
-
     namespace;
     count;
     total;
