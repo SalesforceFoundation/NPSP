@@ -12,8 +12,8 @@ import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import statusSuccess from '@salesforce/label/c.RD2_ElevateInformationStatusSuccess';
-import statusElevatePending from '@salesforce/label/c.RD2_ElevatePendingStatus'; 
-import statusElevateCancelInProgress from '@salesforce/label/c.RD2_ElevateCancelInProgress'; 
+import statusElevatePending from '@salesforce/label/c.RD2_ElevatePendingStatus';
+import statusElevateCancelInProgress from '@salesforce/label/c.RD2_ElevateCancelInProgress';
 import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
@@ -84,7 +84,7 @@ export default class rd2ElevateInformation extends LightningElement {
 
 
     /***
-     * @description Initializes the component with data 
+     * @description Initializes the component with data
      */
     connectedCallback() {
         getData({ recordId: this.recordId })
@@ -196,7 +196,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     /**
-     * @description Determines if the Recurring Donation has commitment Id and 
+     * @description Determines if the Recurring Donation has commitment Id and
      * if such Id is indeed created in Elevate.
      */
     checkElevateStatus() {

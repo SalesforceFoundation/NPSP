@@ -49,7 +49,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
         }
         set;
     }
-    
+
     /**
     * @description Returns data required for the Elevate Information widget
     * @param recordId Recurring Donation Id
@@ -111,7 +111,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
             return null;
         }
 
-        //Do not return error if the error is outdated, 
+        //Do not return error if the error is outdated,
         //ie created before the latest successful payment
         Opportunity paidOpp = finder.getLatestPaidOpportunity(recordId);
 
@@ -137,12 +137,12 @@ public with sharing class RD2_ElevateInformation_CTRL {
         public Error__c getLatestError(Id recordId) {
             List<Error__c> errors = [
                 SELECT Full_Message__c, CreatedDate
-                FROM Error__c 
+                FROM Error__c
                 WHERE Related_Record_ID__c = :recordId
                 ORDER BY CreatedDate DESC
                 LIMIT 1
             ];
-            
+
             return errors == null || errors.isEmpty()
                 ? null
                 : errors[0];
