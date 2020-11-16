@@ -27,7 +27,7 @@
         <value xsi:type="xsd:string">gsChecklistItemRunningReportsLinkLabel</value>
     </values>
     <values>
-        <field>Link_href__c</field>
+        <field>Link_URL__c</field>
         <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/fundraising-reports-and-dashboards-with-nonprofit-success-pack</value>
     </values>
     <values>
