@@ -1,0 +1,3 @@
+.status.slds-form-element__control {
+    padding-left: calc(6% - .5rem)
+}

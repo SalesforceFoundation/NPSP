@@ -4,15 +4,17 @@
             {labels.header}
         </h2>
 
-        <div class="slds-m-horizontal--small slds-border_top"></div>
+        <div class="slds-m-horizontal--medium slds-border_top"></div>
 
-        <div class="slds-p-horizontal_medium" if:true={error.detail}>
-            <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
-                icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
-                subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
-                data-qa-locator="qaLocatorError">
-            </c-util-page-level-message>
-        </div>
+        <template if:true={error.detail}>
+            <div class="slds-p-horizontal_medium">
+                <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
+                    icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
+                    subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
+                    data-qa-locator="qaLocatorError">
+                </c-util-page-level-message>
+            </div>
+        </template>
 
         <template if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
@@ -54,9 +56,11 @@
                 </template>
 
                 <template if:true={isElevateRecord}>
-                    <lightning-layout multiple-rows="true" class="slds-p-horizontal_large slds-p-top_medium">
-                        <lightning-layout-item size="12">
-                            <div class="slds-grid slds-grid_vertical-align-top">
+                    <lightning-layout multiple-rows="true" class="slds-p-around_medium">
+                        <lightning-layout-item size="12"
+                            class="slds-form-element slds-form-element_horizontal slds-form-element_1-col">
+
+                            <label class="slds-form-element__label slds-p-top_none" for="status">
                                 <template if:true={status.isProgress}>
                                     <lightning-progress-ring value="75" data-qa-locator={qaLocatorProgressRing}>
                                     </lightning-progress-ring>
@@ -67,38 +71,45 @@
                                         data-qa-locator={qaLocatorStatusIcon}>
                                     </lightning-icon>
                                 </template>
-
-                                <lightning-formatted-text id="status" data-id="status" value={status.message}
-                                    class="slds-p-left_small slds-form-element__control"
-                                    data-qa-locator={qaLocatorStatusMessage}>
-                                </lightning-formatted-text>
+                            </label>
+                            <div class="status slds-form-element__control">
+                                <div class="slds-p-horizontal_small slds-table slds-table_cell-buffer">
+                                    <lightning-formatted-text id="status" data-id="status" value={status.message}
+                                        data-qa-locator={qaLocatorStatusMessage} class="slds-grow slds-cell-wrap">
+                                    </lightning-formatted-text>
+                                </div>
                             </div>
+
                         </lightning-layout-item>
 
-                        <lightning-layout-item size="12" class="slds-p-top_small slds-p-bottom_x-small">
+                        <lightning-layout-item size="12"
+                            class="slds-form-element slds-form-element_horizontal slds-m-around_none">
                             <template if:true={isElevateConnected}>
-                                <lightning-layout align="spread">
-                                    <lightning-layout-item size="3">
-                                        <label for="commitmentId">{fields.commitmentId.label}</label>
-                                    </lightning-layout-item>
-                                    <lightning-layout-item size="9" class="slds-p-left_small">
-                                        <a href="javascript:void(0);" data-id="commitmentId" target="_blank">
+                                <label
+                                    class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                    for="commitmentId">{fields.commitmentId.label}</label>
+                                <div class="slds-form-element__control" data-id="commitmentId">
+                                    <div class="slds-col slds-no-flex slds-truncate">
+                                        <a href="javascript:void(0);" target="_blank">
                                             <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}
                                                 data-qa-locator={qaLocatorCommitmentId}>
                                             </lightning-formatted-text>
                                             <lightning-icon icon-name="utility:new_window" data-id="newWindowIcon"
                                                 size="xx-small" class="slds-button__icon_right slds-current-color"
                                                 alternative-text={labels.textNewWindow}
-                                                data-qa-locator={qaLocatorNewWindow}></lightning-icon>
+                                                data-qa-locator={qaLocatorNewWindow}>
+                                            </lightning-icon>
                                         </a>
-                                    </lightning-layout-item>
-                                </lightning-layout>
+                                    </div>
+                                </div>
                             </template>
                         </lightning-layout-item>
+
                     </lightning-layout>
 
-                    <div class="slds-card__footer slds-m-horizontal--small slds-border_top">
-                        <lightning-button variant="base" label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}
+                    <div class="slds-card__footer slds-m-top_none slds-p-around_none slds-m-horizontal--medium">
+                        <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small"
+                            label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}
                             data-qa-locator={qaLocatorViewErrorLog}>
                         </lightning-button>
                     </div>
