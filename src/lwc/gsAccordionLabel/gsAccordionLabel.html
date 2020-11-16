@@ -1,6 +1,8 @@
 <template>
     <div class="slds-media">
-        <c-gs-checklist-icon label={number}>
+        <c-gs-checklist-icon label={number} 
+                             total-item={totalElements}
+                             checked-item={checkedElements}>
         </c-gs-checklist-icon>
         <div class="slds-media__body slds-m-top_xx-small">
             <div class="slds-media">

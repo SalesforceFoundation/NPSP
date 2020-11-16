@@ -4,10 +4,11 @@
             <img if:true={hasLink} src={imgSrc}/>
         </div>
         <div class="card-content">
+            <lightning-input type="checkbox" label="" data-id={item.id} onchange={onChange} checked={item.checked}></lightning-input>
             <p class="content-time">{item.extraInfo}</p>
             <h1 class="content-title">{item.title}</h1>
             <div  class="content-text">
-                {item.description}
+               {item.description}
             </div>
             <div class="content-footer">
                 <div class="content-footer-aux">

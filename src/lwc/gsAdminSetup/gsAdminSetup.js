@@ -11,7 +11,7 @@ export default class gsAdminSetup extends LightningElement {
     /**
     * @description A list of checklists to render
     */
-    @track checklists;
+    @track checklists = [];
 
     /**
     * @description Loads and translates all checklist sections and their items
@@ -59,6 +59,7 @@ export default class gsAdminSetup extends LightningElement {
             tItem.link = {...(item.link)};
             tItem.link.label = getLabelValue(item.link.label);
         }
+        console.info(tItem);
         return tItem;
     }
 

@@ -139,7 +139,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * This method wrap a checklist section in a apex object to send to UI
+    * @description This method wrap a checklist section in a apex object to send to UI
     * @param GS_Admin_Checklist_Section__mdt the metdata to wrap
     * @return ChecklistSection
     */
@@ -158,7 +158,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * This method wrap a checklist Item in a apex object to send to UI
+    * @description This method wrap a checklist Item in a apex object to send to UI
     * @param GS_Admin_Checklist_Item__mdt the metdata to wrap
     * @return ChecklistItem
     */
@@ -194,7 +194,7 @@ public with sharing class GS_AdminSetup {
         return ids;
     }
 
-    /*
+    /**
     * @description This Class is to wrap GS_Admin_Checklist_Section__mdt information
     */
     public class ChecklistSection {
@@ -230,7 +230,7 @@ public with sharing class GS_AdminSetup {
         public Id id;
     }
 
-    /*
+    /**
     * @description This Class is to wrap GS_Admin_Checklist_Item__mdt information
     */
     public class ChecklistItem implements Comparable {
