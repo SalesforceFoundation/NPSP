@@ -3,10 +3,10 @@
     <description>NPSP Getting Started Page section items</description>
     <fields>
         <fullName>Description_Label__c</fullName>
-        <description>The custom label api name used in the description on a section item on the Getting Started page</description>
+        <description>The api name for the Description label of a section item on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name for the Description Label</inlineHelpText>
+        <inlineHelpText>The api name for the Description label of a section item on the Get Started page.</inlineHelpText>
         <label>Description Label</label>
         <length>255</length>
         <required>true</required>
@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Extra_Info_Label__c</fullName>
-        <description>The custom label api name used in the extra info on a section item on the Getting Started page</description>
+        <description>Provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Label with extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</inlineHelpText>
+        <inlineHelpText>Provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</inlineHelpText>
         <label>Extra Info Label</label>
         <length>255</length>
         <required>false</required>
@@ -27,10 +27,10 @@
     </fields>
     <fields>
         <fullName>GS_Admin_Checklist_Section__c</fullName>
-        <description>The section this belongs to on the Getting Started page</description>
+        <description>The section on the Get Started page that this item is part of.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The Getting Started section that this item is part of</inlineHelpText>
+        <inlineHelpText>The section on the Get Started page that this item is part of.</inlineHelpText>
         <label>GS Admin Checklist Section</label>
         <referenceTo>GS_Admin_Checklist_Section__mdt</referenceTo>
         <relationshipLabel>GS Admin Checklist Items</relationshipLabel>
