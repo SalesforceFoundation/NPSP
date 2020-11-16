@@ -448,6 +448,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         if (ctrl.isAdvancedMappingEnabled) {
             List<String> newDefaultMappingStrings = new List<String>{
+                    'Payment_ACH_Last_4__c',
                     'Payment_Authorized_Date',
                     'Payment_Authorized_UTC_Timestamp',
                     'Payment_Card_Expiration_Month',
