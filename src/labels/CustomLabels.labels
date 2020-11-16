@@ -6719,6 +6719,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Extra Info in the Item &apos;1 Minute Video&apos;</shortDescription>
         <value>1 Minute Video</value>
     </labels>
+     <labels>
+        <fullName>gsChecklistItemRunningReportsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
+        <value>Learn how to build reports and dashboards to bring your data to life and help you tell the story of your organization’s impact.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Running Reports in Get Started</shortDescription>
+        <value>Explore Feature</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
+        <value>Learn more in Trailhead</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemRunningReportsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Running Reports in Get Started</shortDescription>
+        <value>Running Reports on Constituent Data</value>
+    </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>

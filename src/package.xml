@@ -2476,10 +2476,17 @@
         <members>gsChecklistItemCreateDonationPriBtnLabel</members>
         <members>gsChecklistItemCreateDonationTitle</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
+<<<<<<< HEAD
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
         <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
         <members>gsChecklistItemFundraisingProcessTitle</members>
+=======
+        <members>gsChecklistItemRunningReportsDesc</members>
+        <members>gsChecklistItemRunningReportsLinkLabel</members>
+        <members>gsChecklistItemRunningReportsPriBtnLabel</members>
+        <members>gsChecklistItemRunningReportsTitle</members>
+>>>>>>> feature/adoption__W-7971251
         <members>gsChecklistItemSetupContactDesc</members>
         <members>gsChecklistItemSetupContactLinkLabel</members>
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
@@ -3293,7 +3300,11 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
+<<<<<<< HEAD
         <members>GS_Admin_Checklist_Item.Fundraising_process</members>
+=======
+        <members>GS_Admin_Checklist_Item.Running_Reports</members>
+>>>>>>> feature/adoption__W-7971251
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
         <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
