@@ -1607,7 +1607,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Indicates Elevate recurring commitment cancel is in progress</shortDescription>
-        <value>Elevate Cancel in Progress</value>
+        <value>Recurring Payment Cancel in Progress</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateDisableButtonLabel</fullName>
