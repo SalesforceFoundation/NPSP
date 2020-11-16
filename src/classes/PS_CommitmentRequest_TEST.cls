@@ -91,7 +91,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
         System.assertNotEquals(null, requestBody.metadata, 'Metadata should be set by default');
-        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.metadata.originType, 
+        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.metadata.originType,
             'Metadata origin type should be CRM');
 
         System.assertEquals(1, requestBody.schedules.size(),
