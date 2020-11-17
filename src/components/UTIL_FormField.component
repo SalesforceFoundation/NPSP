@@ -9,7 +9,7 @@
     <apex:attribute name="showLabel" type="Boolean" default="true" description="When false, hide the field label" />
     <apex:attribute name="overrideRequired" type="Boolean" default="false" description="When true, it will set the field as not required" />
 
-    <apex:attribute name="ariaDescription" type="String" default="" description="override aria label"/>
+    <apex:attribute name="ariaDescription" type="String" default="" description="override aria description"/>
 
     <!-- Action Support assumes onchange event and calling page has an action status component on the page -->
     <apex:attribute name="actSup" type="Boolean" default="false" description="When true the input field will render action support, defaults to false." />
@@ -83,7 +83,7 @@
         <div class="slds-form-element__control">
             <apex:outputLabel styleClass="slds-checkbox" for="inputCB" id="lblCheckbox">
                 <apex:inputField id="inputCB" value="{!sObj[field]}" label=""
-                html-aria-description="{!IF(ISBLANK(ariaDescription), '', ariaDescription)}">
+                    html-aria-description="{!IF(ISBLANK(ariaDescription), $ObjectType[sObjType].fields[field].label, ariaDescription)}">
                     <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
                 </apex:inputField>
                     <span class="slds-checkbox_faux"></span>
