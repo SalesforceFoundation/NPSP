@@ -1010,7 +1010,7 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handleFormWidgetChange = async (event) => {
+    handleFormWidgetChange = (event) => {
         this.updateFormState(event.detail);
     }
 
