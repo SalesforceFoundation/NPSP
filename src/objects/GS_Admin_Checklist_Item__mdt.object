@@ -196,10 +196,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Value__c</fullName>
-        <description>he value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
+        <description>The value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>he value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</inlineHelpText>
+        <inlineHelpText>The value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open.</inlineHelpText>
         <label>Secondary Button Value</label>
         <length>255</length>
         <required>false</required>
