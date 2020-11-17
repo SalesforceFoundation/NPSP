@@ -254,7 +254,8 @@
                             <apex:commandButton action="{!calculate}"
                                                 value="{!$Label.pmtWizardBtnCalcPayments}"
                                                 rendered="{!AND(hasPaymentAccess, isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
-                                                styleClass="slds-button slds-button_brand slds-m-around_medium"/>
+                                                styleClass="slds-button slds-button_brand slds-m-around_medium"
+                                                reRender="vfForm"/>
                         </div>
                     </div>
                     <!-- Show Payments to be Created -->
