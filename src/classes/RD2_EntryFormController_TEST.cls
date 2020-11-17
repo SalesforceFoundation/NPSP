@@ -46,6 +46,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final String CARD_EXPIRATION_YEAR = '2019';
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -364,6 +365,42 @@ private with sharing class RD2_EntryFormController_TEST {
             'An exception should be generated when Recurring Donation Id is not provided');
         System.assertEquals(System.Label.RD2_ErrorRDIdIsMissingForCommitment, actualException.getMessage(),
             'The exception should be match');
+    }
+
+    /**
+    * @description Verifies an error record will be created when an error response is received from the Elevate API.
+    */
+    @isTest
+    private static void shouldCreateErrorRecordWhenElevateReturnsErrorResponse() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .withCommitmentId(TEMP_COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockBadRequestCalloutResponse();
+
+        String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(),
+            'An error record should be created for an error response.');
+        System.assertEquals(rd.Id, errors[0].Related_Record_Id__c,
+            'The error record should contain RD record Id.');
+        System.assertEquals(ERR_Handler_API.Context.Elevate.name(),errors[0].Context_Type__c,
+            'The error record context type should match with Elevate context.');
+        System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
+            'The error record should contain error response message.');
     }
     
 
