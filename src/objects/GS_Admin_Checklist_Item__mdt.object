@@ -88,7 +88,7 @@
         <description>The position of this section item on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The position of this section item on the Get Started page.jm </inlineHelpText>
+        <inlineHelpText>The position of this section item on the Get Started page.</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>

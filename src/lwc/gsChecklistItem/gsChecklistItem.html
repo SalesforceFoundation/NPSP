@@ -10,20 +10,23 @@
                 {item.description}
             </div>
             <div class={footerClass}>
-                <a if:true={hasLink} href={item.link.href} target="_blank">
+                <a if:true={hasLink} 
+                   class="slds-m-right_x-small"
+                   href={item.link.href} 
+                   target="_blank">
                     {item.link.label}
                 </a>
-                <div class="content-footer-aux">
+                <div class="content-footer-aux"
+                    if:true={hasButtons}>
                     <lightning-button if:true={hasSecondaryBtn} 
                         variant="brand-outline"
-                        class="slds-m-bottom_x-small"
                         onclick={onClickSecondaryBtn}
                         title={item.secondaryBtn.label}
                         label={item.secondaryBtn.label}>
                     </lightning-button>
                     <lightning-button if:true={hasPrimaryBtn}
                         variant="brand"
-                        class="slds-m-left_x-small slds-m-bottom_x-small"
+                        class="slds-m-left_x-small"
                         onclick={onClickPrimaryBtn}
                         title={item.primaryBtn.label}
                         label={item.primaryBtn.label}>

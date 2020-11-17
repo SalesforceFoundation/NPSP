@@ -64,6 +64,7 @@
 
  .item-card .card-content .content-footer {
     display: flex;
+    align-items: baseline;
  }
 
  .item-card .card-content .content-footer a {
@@ -85,7 +86,7 @@
  }
  
  .item-card .card-content .content-footer .content-footer-aux {
-    flex: 1 0 0;
+    margin-left: auto;
     display: flex;
     justify-content: flex-end;
     align-items: baseline;
@@ -102,6 +103,12 @@
     .item-card .card-image {
         display: none;
     }
+}
+
+lightning-button {
+    line-height: normal;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 @media(max-width: 1173px) {
