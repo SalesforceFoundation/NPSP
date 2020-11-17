@@ -34,6 +34,13 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         return !!this.item.link;
     }
     /**
+    * @description return if the item has buttons
+    * @return boolean
+    */
+    get hasButtons() {
+        return !!this.item.primaryBtn || !!this.item.secondaryBtn;
+    }
+    /**
     * @description return if the item has Image
     * @return boolean
     */
