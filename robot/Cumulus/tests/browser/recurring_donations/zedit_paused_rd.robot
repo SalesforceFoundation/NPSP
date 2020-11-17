@@ -58,9 +58,9 @@ Edit An Enhanced Recurring donation record of type open
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
-    Click Object Button                           New
-    Wait For Modal                                New                                       Recurring Donation
     Reload Page
+    Click Link                                    New
+    Wait For Rd2 Modal
     Go To Page                                    Details
     ...                                           npe03__Recurring_Donation__c
     ...                                           object_id=${data}[contact_rd][Id]
