@@ -3,10 +3,10 @@
     <description>NPSP Getting Started Page section items</description>
     <fields>
         <fullName>Description_Label__c</fullName>
-        <description>The api name for the Description label of a section item on the Get Started page.</description>
+        <description>The Description of a section item on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The api name for the Description label of a section item on the Get Started page.</inlineHelpText>
+        <inlineHelpText>The Description of a section item on the Get Started page.</inlineHelpText>
         <label>Description Label</label>
         <length>255</length>
         <required>true</required>
@@ -42,19 +42,19 @@
     <fields>
         <fullName>Has_Link__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Indicates if the item has a link to display</description>
+        <description>Indicates if the item has a link to display.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Indicates if the item has a link to display</inlineHelpText>
+        <inlineHelpText>Indicates if the item has a link to display.</inlineHelpText>
         <label>Has Link</label>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Image__c</fullName>
-        <description>The path and filename of the image in the Static Resource to render</description>
+        <description>The path and filename of the image in the Static Resource to render.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The path and filename of the image in the Static Resource to render</inlineHelpText>
+        <inlineHelpText>The path and filename of the image in the Static Resource to render.</inlineHelpText>
         <label>Image</label>
         <length>255</length>
         <required>false</required>
@@ -63,10 +63,10 @@
     </fields>
     <fields>
         <fullName>Link_Label__c</fullName>
-        <description>The custom label api name used in the link on a section item on the Getting Started page</description>
+        <description>The api name of the label to use for a link on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name to use for the link label</inlineHelpText>
+        <inlineHelpText>The api name of the label to use for a link on the Get Started page.</inlineHelpText>
         <label>Link Label</label>
         <length>255</length>
         <required>false</required>
@@ -75,10 +75,10 @@
     </fields>
     <fields>
         <fullName>Link_URL__c</fullName>
-        <description>The target URL for the Link</description>
+        <description>he target URL for a link on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The target URL for the Link</inlineHelpText>
+        <inlineHelpText>he target URL for a link on the Get Started page.</inlineHelpText>
         <label>Link URL</label>
         <required>false</required>
         <type>Url</type>
@@ -98,10 +98,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Label__c</fullName>
-        <description>The custom label api name for the Primary Button in a section item on the Getting Started page.</description>
+        <description>The api name for the Primary Button in a section item on the Get Started page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name for the Primary Button Label</inlineHelpText>
+        <inlineHelpText>The api name for the Primary Button in a section item on the Get Started page</inlineHelpText>
         <label>Primary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -110,10 +110,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Type__c</fullName>
-        <description>The type of action related the Primary Button</description>
+        <description>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The type of action related the Primary Button</inlineHelpText>
+        <inlineHelpText>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</inlineHelpText>
         <label>Primary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -141,10 +141,10 @@
     </fields>
     <fields>
         <fullName>Primary_Button_Value__c</fullName>
-        <description>The value used for the action of the Primary Button. For an External Page Button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
+        <description>The value used for the action of the Primary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The value used for the action of the Primary Button</inlineHelpText>
+        <inlineHelpText>The value used for the action of the Primary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open.</inlineHelpText>
         <label>Primary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -153,10 +153,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Label__c</fullName>
-        <description>The custom label api name for the Secondary Button in a section item on the Getting Started page.</description>
+        <description>The api name for the Secondary Button in a section item on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name for the Secondary Button Label</inlineHelpText>
+        <inlineHelpText>The api name for the Secondary Button in a section item on the Get Started page.</inlineHelpText>
         <label>Secondary Button Label</label>
         <length>255</length>
         <required>false</required>
@@ -165,10 +165,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Type__c</fullName>
-        <description>The type of action related the Secondary Button</description>
+        <description>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The type of action related the Secondary Button</inlineHelpText>
+        <inlineHelpText>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</inlineHelpText>
         <label>Secondary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
@@ -196,10 +196,10 @@
     </fields>
     <fields>
         <fullName>Secondary_Button_Value__c</fullName>
-        <description>The value used for the action of the Secondary Button. For an External Page Button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
+        <description>he value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The value used for the action of the Secondary Button</inlineHelpText>
+        <inlineHelpText>he value used for the action of the Secondary Button. For an External Page button, this is the external URL. For an SFDC New Tab button, this is the api name of the tab you want to open. The format should be {type(without started &quot;standard__&quot;)}:{objectApiName}:{actionName}</inlineHelpText>
         <label>Secondary Button Value</label>
         <length>255</length>
         <required>false</required>
@@ -208,10 +208,10 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
-        <description>The custom label api name used for a section item label on the Getting Started page.</description>
+        <description>The api name for the Title label of a section item on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name for the Title Label</inlineHelpText>
+        <inlineHelpText>The api name for the Title label of a section item on the Get Started page.</inlineHelpText>
         <label>Title Label</label>
         <length>255</length>
         <required>true</required>

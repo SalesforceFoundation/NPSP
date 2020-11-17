@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Position__c</fullName>
-        <description>The position in the section list on the Getting Started page</description>
+        <description>The position of this section item on the Get Started page. Enter a number greater than zero.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Is the position of the section</inlineHelpText>
+        <inlineHelpText>The position of this section item on the Get Started page. Enter a number greater than zero.</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>
@@ -28,10 +28,10 @@
     </fields>
     <fields>
         <fullName>Title_Label__c</fullName>
-        <description>The custom label api name used in the title of a section on the Getting Started page.</description>
+        <description>The title label for this section on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The custom label api name for the Title Label</inlineHelpText>
+        <inlineHelpText>The title label for this section on the Get Started page.</inlineHelpText>
         <label>Title Label</label>
         <length>255</length>
         <required>true</required>
