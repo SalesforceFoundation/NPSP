@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/GiftEntry.htm
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
-@IsTest
+@isTest
 private with sharing class GE_GiftEntryController_TEST {
 
 
@@ -42,7 +42,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
      */
-    @IsTest
+    @isTest
     private static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -62,7 +62,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response throws an excpetion
      * when building a purchase request body fails with an unexpected error
      */
-    @IsTest
+    @isTest
     private static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -86,7 +86,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains timed out status code and message
      * when the purchase requests times out
      */
-    @IsTest
+    @isTest
     private static void shouldLogErrorWhenPurchaseRequestTimesOut() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -130,7 +130,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
-    @IsTest
+    @isTest
     private static void shouldUpsertDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
@@ -145,7 +145,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that the Data Import processes correctly and returns an Opportunity id.
      */
-    @IsTest
+    @isTest
     private static void shouldProcessDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', null);
         inMemoryDataImport.Donation_Amount__c = 10;
@@ -166,7 +166,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Saves the data import record, dry runs the record, and returns updated
      * totals with the new row.
      */
-    @IsTest
+    @isTest
     private static void testShouldSaveAndDryRunDataImport() {
 
         // required setting
@@ -191,7 +191,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
-    @IsTest
+    @isTest
     private static void createAndReturnDefaultFormTemplate() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = buildFormTemplate();
@@ -221,7 +221,7 @@ private with sharing class GE_GiftEntryController_TEST {
      * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
      * by BDI for N number of objects processing.
      */
-    @IsTest
+    @isTest
     private static void widgetDataShouldBeConvertedIntoDynamicSources() {
         General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
                 Active__c = true);
@@ -283,7 +283,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method returns the correct number of records
     */
-    @IsTest
+    @isTest
     static void shouldReturnCorrectNumberOfRecords() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -299,7 +299,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method deletes Form Template records with given ids.
     */
-    @IsTest
+    @isTest
     static void shouldDeleteFormTemplatesWithGivenIds() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -322,7 +322,7 @@ private with sharing class GE_GiftEntryController_TEST {
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
     * the data.
     */
-    @IsTest
+    @isTest
     static void shouldCommitAndRetrieveTemplate() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
@@ -346,7 +346,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @IsTest
+    @isTest
     static void shouldRetrieveColumnHeaderBasedOnListName() {
 
         Test.startTest();
@@ -364,7 +364,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @IsTest
+    @isTest
     static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
 
         Test.startTest();
@@ -398,7 +398,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that we're able to build a query string and retrieve a list of records.
     */
-    @IsTest
+    @isTest
     static void shouldRetrieveRecordsBasedOnAQueryString() {
 
         Test.startTest();
@@ -421,7 +421,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that form template name uniqueness is enforced.
     */
-    @IsTest
+    @isTest
     static void shouldReturnFalseForExistingFormTemplateName() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -445,7 +445,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 'New template names should return true from `GE_GiftEntryController.checkNameUniqueness`');
     }
 
-    @IsTest
+    @isTest
     static void shouldRetrieveSGETemplateWithPermission() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
@@ -479,7 +479,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
-    @IsTest
+    @isTest
     static void shouldPreventDeletionOfTemplateInUse() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -520,7 +520,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
     */
-    @IsTest
+    @isTest
     static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
 
         // aux vars
