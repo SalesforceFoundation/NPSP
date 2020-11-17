@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemSetupNPSPCloudPriBtnLabel</value>
+        <value xsi:type="xsd:string">gsChecklistItemNPSPCloudPriBtnLabel</value>
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
