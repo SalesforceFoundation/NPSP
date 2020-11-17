@@ -26,6 +26,7 @@ import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMess
 import elevateDisabledHeader from '@salesforce/label/c.RD2_ElevateDisabledHeader';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
@@ -37,6 +38,7 @@ const FIELDS = [
     FIELD_STATUS_REASON
 ];
 const TEMP_PREFIX = '_PENDING_';
+const STATUS_SUCCESS = 'success';
 
 export default class rd2ElevateInformation extends LightningElement {
 
@@ -58,6 +60,7 @@ export default class rd2ElevateInformation extends LightningElement {
         elevateDisabledHeader,
         elevateDisabledMessage,
         elevateRecordCreateFailed,
+        commonUnknownError,
         viewErrorLogLabel
     });
 
@@ -67,7 +70,7 @@ export default class rd2ElevateInformation extends LightningElement {
     @track status = {
         message: this.labels.statusSuccess,
         isProgress: false,
-        value: 'success',
+        value: STATUS_SUCCESS,
         icon: 'utility:success',
         assistiveText: this.labels.textSuccess
     };
@@ -109,10 +112,7 @@ export default class rd2ElevateInformation extends LightningElement {
                         });
 
                     } else if (!isNull(response.errorMessage)) {
-                        this.status.message = response.errorMessage;
-                        this.status.value = 'error';
-                        this.status.icon = 'utility:error';
-                        this.status.assistiveText = this.labels.textError;
+                        this.setErrorStatus(response.errorMessage);
                     }
                 }
             })
@@ -158,7 +158,7 @@ export default class rd2ElevateInformation extends LightningElement {
         if (response.data) {
             this.rdRecord = response.data;
 
-            if (this.getValue('ClosedReason__c') === this.labels.statusElevatePending) {
+            if (this.getValue(FIELD_STATUS_REASON.fieldApiName) === this.labels.statusElevatePending) {
                 this.status.isProgress = true;
                 this.status.message = this.labels.statusElevateCancelInProgress;
             }
@@ -200,7 +200,7 @@ export default class rd2ElevateInformation extends LightningElement {
      * if such Id is indeed created in Elevate.
      */
     checkElevateStatus() {
-        const commitmentId = this.getValue('CommitmentId__c');
+        const commitmentId = this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
 
         this.isElevateRecord = !isNull(commitmentId);
         this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith(TEMP_PREFIX);
@@ -212,7 +212,21 @@ export default class rd2ElevateInformation extends LightningElement {
             this.handleError({
                 detail: this.labels.elevateRecordCreateFailed
             });
+
+            if (this.status.value === STATUS_SUCCESS) {
+                this.setErrorStatus(this.labels.commonUnknownError);
+            }
         }
+    }
+
+    /**
+     * @description Sets status and status message to error state
+     */
+    setErrorStatus(errorMessage) {
+        this.status.message = errorMessage;
+        this.status.value = 'error';
+        this.status.icon = 'utility:error';
+        this.status.assistiveText = this.labels.textError;
     }
 
     /**

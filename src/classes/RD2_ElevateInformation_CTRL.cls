@@ -61,11 +61,16 @@ public with sharing class RD2_ElevateInformation_CTRL {
 
         try {
             data = new Map<String, Object> {
-                'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled(),
-                'alert' => RD2_VisualizeScheduleController.getValidationAlert(recordId),
-                'hasFieldPermissions' => hasFieldPermissions(),
-                'errorMessage' => getLatestErrorMessage(recordId)
+                'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled()
             };
+
+            Boolean hasPermissions = hasFieldPermissions();
+            data.put('hasFieldPermissions', hasPermissions);
+
+            if (hasPermissions) {
+                data.put('alert', RD2_VisualizeScheduleController.getValidationAlert(recordId));
+                data.put('errorMessage', getLatestErrorMessage(recordId));
+            }
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
