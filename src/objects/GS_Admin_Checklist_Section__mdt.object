@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Position__c</fullName>
-        <description>The position of this section item on the Get Started page. Enter a number greater than zero.</description>
+        <description>The position of this section on the Get Started page.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The position of this section item on the Get Started page. Enter a number greater than zero.</inlineHelpText>
+        <inlineHelpText>The position of this section on the Get Started page.</inlineHelpText>
         <label>Position</label>
         <precision>2</precision>
         <required>true</required>
