@@ -15,35 +15,42 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     */
     @api item = {}
     /**
-    * @description
+    * @description return if the item has Secondary button
     * @return boolean
     */
     get hasSecondaryBtn() {
         return !!this.item.secondaryBtn;
     }
     /**
-    * @description
+    * @description return if the item has Primary button
     * @return boolean
     */
     get hasPrimaryBtn() {
         return !!this.item.primaryBtn;
     }
     /**
-    * @description
+    * @description return if the item has Link
     * @return boolean
     */
     get hasLink() {
         return !!this.item.link;
     }
     /**
-    * @description
+    * @description return if the item has buttons
+    * @return boolean
+    */
+    get hasButtons() {
+        return !!this.item.primaryBtn || !!this.item.secondaryBtn;
+    }
+    /**
+    * @description return if the item has Image
     * @return boolean
     */
     get hasImage() {
         return !!this.item.image;
     }
     /**
-    * @description
+    * @description return if the item Image URI
     * @return String
     * @see uri
     */
@@ -51,19 +58,30 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         return `${gsAssetsImage}/${this.item.image}`;
     }
     /**
-    * @description
+    * @description return class to use in footer
+    * @returns String
+    */
+    get footerClass() {
+        const styleClass = ['content-footer'];
+        if(!this.item.link) {
+            styleClass.push('without-link');
+        }
+        return styleClass.join(' ');
+    }
+    /**
+    * @description handler the event to click Primary button
     */
     onClickPrimaryBtn() {
         this.buttonAction(this.item.primaryBtn);
     }
     /**
-    * @description
+    * @description handler the event to click Secondary button
     */
     onClickSecondaryBtn() {
         this.buttonAction(this.item.secondaryBtn);
     }
     /**
-    * @description
+    * @description exec button action
     * @param string button type
     */
     buttonAction(button) {
@@ -79,7 +97,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         }
     }
     /**
-    * @description
+    * @description use NavigationMixin.GenerateUrl Api to navigate in SFDC org
     * @param string button value
     */
     sfdcLinkAction(value) {

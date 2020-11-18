@@ -3,5 +3,5 @@
     <apiVersion>50.0</apiVersion>
     <isExposed>false</isExposed>
     <masterLabel>NPSP Getting Started Label Mapper</masterLabel>
-    <description>Used to get value of the label in Getting Started</description>
+    <description>Maps Custom Labels to vars that are used to generate the Getting Started page sections. These are what the Label Api Names in the GS_AdminChecklistSection and GS_AdminChecklistItem objects reference.</description>
 </LightningComponentBundle>

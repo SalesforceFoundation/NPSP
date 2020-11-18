@@ -5,6 +5,7 @@
 }
 
 .slds-media.info .container {
+    width: 100%;
     padding-left: 2rem;
     padding-bottom: 2rem;
     display: block;
@@ -23,7 +24,7 @@
     justify-content: flex-end;
     flex-direction: column;
     top: 3rem;
-    left: 62px;
+    left: 61px;
 }
 
 .slds-media.info.open .border .gap {

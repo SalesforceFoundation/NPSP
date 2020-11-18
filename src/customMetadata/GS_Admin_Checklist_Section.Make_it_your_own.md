@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistMakeItYourTitle</value>
+        <value xsi:type="xsd:string">gsChecklistMakeItYourDesc</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -12,6 +12,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistMakeItYourDesc</value>
+        <value xsi:type="xsd:string">gsChecklistMakeItYourTitle</value>
     </values>
 </CustomMetadata>
