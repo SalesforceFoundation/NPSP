@@ -13,7 +13,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @api activeFormSectionId;
     @api isFirst;
     @api isLast;
-    @api sourceObjectFieldsDescribe;
+    @api sourceObjectDescribe;
 
     @api formSection;
 

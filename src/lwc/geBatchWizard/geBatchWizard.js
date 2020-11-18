@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
 import { LightningElement, api, track, wire } from 'lwc';
+import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
@@ -13,7 +14,7 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
 import {
     getNamespace,
-    getNestedProperty,
+    getNestedProperty, isNotEmpty,
     isNull,
     stripNamespace
 } from 'c/utilCommon'
@@ -22,6 +23,7 @@ import GeLabelService from 'c/geLabelService';
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
 import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
 
+import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
 import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -151,6 +153,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         }
     }
 
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
+    dataImportObjectDescribe;
+
     /*******************************************************************************
     * @description Method converts field describe info into objects that the
     * getRecord method can accept into its 'fields' parameter.
@@ -183,6 +188,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
                     this.handleTemplateChange({ detail: { value: templateId } });
                     this.setFormFieldsBatchLevelDefaults();
+                    this.appendToElements();
 
                     this.step = 1;
 
@@ -209,6 +215,19 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         });
     }
 
+    appendToElements() {
+        this.formSections.forEach(section => {
+            if (section.elements) {
+                section.elements.forEach(element => {
+                    const mapping = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+                    if(isNotEmpty(mapping)) {
+                        element.sourceFieldApiName = mapping.Source_Field_API_Name;
+                    }
+                });
+            }
+        });
+    }
+
     @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
     dataImportBatchCreateDefaults;
 
@@ -224,7 +243,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     async connectedCallback() {
         try {
             this.donationMatchingBehaviors = await getDonationMatchingValues();
-
+            await GeFormService.getFormTemplate();
             if (!this.recordId) {
                 this.templates = await getAllFormTemplates();
                 this.templates = this.templates.sort();

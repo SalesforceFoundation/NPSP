@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
-import { isEmpty } from 'c/utilCommon';
+import {isEmpty, isNotEmpty} from 'c/utilCommon';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
@@ -54,7 +54,9 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get fullFieldApiName() {
-        return `${this.objectName}.${this.fieldName}`;
+        if(isNotEmpty(this.objectName) && isNotEmpty(this.fieldName)) {
+            return `${this.objectName}.${this.fieldName}`;
+        }
     }
 
     handleValueChange(event) {

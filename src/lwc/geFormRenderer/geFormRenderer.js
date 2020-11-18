@@ -20,7 +20,7 @@ import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Ca
 
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { convertBDIToWidgetJson } from './geFormRendererHelper';
+import { convertBDIToWidgetJson, GeFormElementHelper } from './geFormRendererHelper';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
@@ -332,6 +332,7 @@ export default class GeFormRenderer extends LightningElement{
                 section.elements
                     .forEach(element => {
                         this.appendRecordTypeLocationInfoToElement(element);
+                        this.appendToElement(element);
                     })
             });
 
@@ -349,6 +350,12 @@ export default class GeFormRenderer extends LightningElement{
             element.parentRecordField =
                 this.parentRecordFieldFor(fieldMappingDevName);
         }
+    }
+
+    appendToElement(element) {
+        const helper = new GeFormElementHelper(element);
+        element.isRenderable = helper.isRenderable();
+        element.isSourceFieldPicklist = helper.isSourceFieldPicklist();
     }
 
     setPermissionsError(errorObject) {

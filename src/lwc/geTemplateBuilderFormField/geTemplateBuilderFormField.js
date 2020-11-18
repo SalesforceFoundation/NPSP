@@ -12,6 +12,7 @@ const WIDGET = 'widget';
 const YES = 'Yes';
 const FIELD_METADATA_VALIDATION = 'fieldmetadatavalidation';
 
+
 export default class geTemplateBuilderFormField extends LightningElement {
     @track targetObjectDescribeInfo;
 
@@ -19,7 +20,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
-    @api sourceObjectFieldsDescribe;
+    @api sourceObjectDescribe;
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -73,7 +74,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
 
         if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
-            isEmpty(this.sourceObjectFieldsDescribe[this.fieldMapping.Source_Field_API_Name])) {
+            isEmpty(this.sourceObjectDescribe.fields[this.fieldMapping.Source_Field_API_Name])) {
 
             const inputField = this.template.querySelector('[data-id="formField"]');
 
@@ -155,6 +156,16 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return TemplateBuilderService.fieldMappingByDevName[this.name] ? TemplateBuilderService.fieldMappingByDevName[this.name] : null;
     }
 
+    get sourceFieldDescribe() {
+        if(this.sourceObjectDescribe && this.fieldMapping) {
+            return this.sourceObjectDescribe.fields[this.sourceFieldApiName];
+        }
+    }
+
+    get sourceFieldApiName() {
+        return this.fieldMapping.Source_Field_API_Name;
+    }
+
     get targetFieldApiName() {
         if (this.fieldMapping && this.fieldMapping.Target_Field_API_Name) {
             return this.fieldMapping.Target_Field_API_Name;
@@ -168,9 +179,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get targetObjectApiName() {
+
         if (this.fieldMapping && this.fieldMapping.Target_Object_API_Name) {
             return this.fieldMapping.Target_Object_API_Name;
         }
+
 
         if (this.objectApiName) {
             return this.objectApiName;
@@ -180,7 +193,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isRequired() {
-        return (this.field.required === YES || this.field.required === true) ? true : false;
+        return (this.field.required === YES || this.field.required === true);
     }
 
     get isDisabled() {
@@ -188,7 +201,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isWidget() {
-        return this.field.elementType === WIDGET ? true : false;
+        return this.field.elementType === WIDGET;
     }
 
     get labelGeAssistiveFormFieldRemove() {

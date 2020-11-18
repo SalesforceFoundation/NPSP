@@ -145,13 +145,13 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         FORM_FIELDS_SECTION_ID,
         ADVANCED_FIELDS_SECTION_ID
     };
-    sourceObjectFieldsDescribe;
+    sourceObjectDescribe;
 
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
     dataImportObjectInfo({ data, error }) {
         if (data) {
-            this.sourceObjectFieldsDescribe = data.fields;
+            this.sourceObjectDescribe = data;
             this.buildRequiredFieldsMessage(data);
         }
         if (error) {

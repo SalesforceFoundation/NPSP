@@ -57,6 +57,22 @@
             </c-ge-form-field-picklist>
         </template>
 
+        <template if:true={isTrueFalsePicklist}>
+            <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                      data-id='inputComponent'
+                                      label={uiLabel}
+                                      required={isRequired}
+                                      field-name={sourceFieldApiName}
+                                      object-name={sourceObjectDescribe.apiName}
+                                      object-describe-info={sourceObjectDescribe}
+                                      onchange={handleChangeCombobox}
+                                      value={fieldValue}
+                                      variant={variant}
+                                      tab-index={tabIndex}
+                                      qa-locator-base={uiLabel}>
+            </c-ge-form-field-picklist>
+        </template>
+
         <template if:true={isLightningCheckbox}>
             <lightning-input aria-label="default value"
                              data-id='inputComponent'
@@ -71,6 +87,22 @@
                              type="checkbox"
                              data-qa-locator={qaLocatorCheckbox}>
             </lightning-input>
+        </template>
+
+        <template if:true={isLightningCheckboxPicklist}>
+            <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                      data-id='inputComponent'
+                                      label={uiLabel}
+                                      required={isRequired}
+                                      field-name={fieldApiName}
+                                      object-name={uiObjectApiName}
+                                      object-describe-info={objectInfo}
+                                      onchange={handleChangeCombobox}
+                                      value={fieldValue}
+                                      variant={variant}
+                                      tab-index={tabIndex}
+                                      qa-locator-base={uiLabel}>
+            </c-ge-form-field-picklist>
         </template>
 
         <template if:true={isLightningSearch}>

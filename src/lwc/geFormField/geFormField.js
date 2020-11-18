@@ -71,6 +71,14 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
+    wiredDataImportInfo(response) {
+        if(response.data && this.isTrueFalsePicklist) {
+            this.dataImportDescribeInfo = response.data;
+            this._recordTypeId = this.recordTypeId();
+        }
+    }
+
     getValueFromChangeEvent(event) {
         if (this.isPicklist) {
             const value = event.detail.value;
@@ -212,7 +220,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isLightningInput() {
-        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined';
+        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined' && !this.isTrueFalsePicklist;
     }
 
     get isRichText() {
@@ -235,11 +243,15 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist;
+        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist || this.isTrueFalsePicklist;
     }
 
     get isCheckbox() {
-        return this.fieldType === BOOLEAN_TYPE;
+        return this.fieldType === BOOLEAN_TYPE && !this.element.isSourceFieldPicklist;
+    }
+
+    get isTrueFalsePicklist() {
+        return this.fieldType === BOOLEAN_TYPE && this.element.isSourceFieldPicklist;
     }
 
     get isTextArea() {
@@ -469,11 +481,17 @@ export default class GeFormField extends LightningElement {
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
             this.defaultRecordTypeId() ||
-            null;
+            undefined;
     }
 
     defaultRecordTypeId() {
-        return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
+        if(this.isTrueFalsePicklist) {
+            if(this.dataImportDescribeInfo) {
+                return this.dataImportDescribeInfo.defaultRecordTypeId;
+            }
+        } else {
+            return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
+        }
     }
 
     recordTypeIdFor(recordTypeName) {
@@ -537,7 +555,11 @@ export default class GeFormField extends LightningElement {
      * and build the picklist options array from there.
      */
     get fullFieldApiNameForStandardPicklists() {
-        if (this.isRecordTypeIdLookup || !this.isPicklist) return undefined;
+        if (this.isRecordTypeIdLookup || !this.isPicklist) {
+            return undefined;
+        } else if (this.isTrueFalsePicklist) {
+            return `${DATA_IMPORT.objectApiName}.${this.sourceFieldAPIName}`
+        }
         return `${this.objectApiName}.${this.targetFieldApiName}`;
     }
 
