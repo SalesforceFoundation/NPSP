@@ -44,8 +44,12 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains(title,
                                                error=f"{title} link was not found on the page")
         self.npsp.click_link_with_text(title)
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.wait_until_page_contains_element(locator,
+        if title=='Status to State Mapping':
+            locator=npsp_lex_locators['npsp_settings']['erd_status_mapping_header'].format(title)
+            self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find status mappings on the page")
+        else:
+            locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+            self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()
 
@@ -231,3 +235,16 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 enabled = True
         return enabled
 
+    @capture_screenshot_on_error
+    def verify_status_to_state_mappings(self, **kwargs):
+        """verifies the default status to state mappings for recurring donations"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators['npsp_settings']['erd_state_status_mapping'].format(key)
+            self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find {key} on the page")
+            if self.npsp.check_if_element_exists(locator):
+                print(f"element exists {locator}")
+                actual_value=self.selenium.get_webelement(locator).text
+                print(f"actual mapping found for {key} is {actual_value}")
+                assert value == actual_value, "Expected {} value to be {} but found {}".format(key,value, actual_value)
+            else:
+                print("Right keys under status mapping fields table not found")    

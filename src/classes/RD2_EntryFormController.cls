@@ -307,21 +307,35 @@ public with sharing class RD2_EntryFormController {
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
                 commitmentService.updateRecurringDonation(recordId, response);
+
+            } else {
+                processError(recordId, response.getErrorMessages());
             }
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
-        } finally {
-            if (response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
-                //create an error log for the RD and the failed response error message
-            }
-        }
+         }
 
         return JSON.serialize(response);
     }
 
+    /**
+    * @description Creates an error record for the specified record Id and error message
+    * @param recordId Recurring Donation Id
+    * @param errorMessage Error message
+    * @return void
+    */
+    private static void processError(Id recordId, String errorMessage) {
+        RD2_ElevateIntegrationService.Logger errorLogger = new RD2_ElevateIntegrationService.Logger();
+        errorLogger.addError(
+            recordId,
+            errorMessage,
+            RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
+        );
 
+        errorLogger.processErrors();
+    }
     /**
     * @description Handles sending commitment request and saving its values on the RD
     */
@@ -403,10 +417,11 @@ public with sharing class RD2_EntryFormController {
                         new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
                     );
                 }
-
             } catch (Exception e) {
                 throw e;
             }
+
+           
         }
     }
 
