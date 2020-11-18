@@ -1029,6 +1029,7 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -1134,11 +1135,10 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
-        <members>DataImport__c.Payment_ACH_Code__c</members>
-        <members>DataImport__c.Payment_ACH_Last_4__c</members>
-        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_ACH_Code__c</members>
+        <members>DataImport__c.Payment_ACH_Last_4__c</members>
         <members>DataImport__c.Payment_Authorization_Token__c</members>
         <members>DataImport__c.Payment_Authorized_Date__c</members>
         <members>DataImport__c.Payment_Authorized_UTC_Timestamp__c</members>
@@ -3715,6 +3715,10 @@
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>PilotEnabled</members>
         <name>FeatureParameterBoolean</name>
+    </types>
+    <types>
+        <members>P10_Application_Date</members>
+        <name>FeatureParameterDate</name>
     </types>
     <types>
         <members>DataCount_ONETIME_Use</members>
