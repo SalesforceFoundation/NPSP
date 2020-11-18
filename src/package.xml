@@ -296,6 +296,8 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
+        <members>GS_AdminSetup</members>
+        <members>GS_AdminSetup_TEST</members>
         <members>GS_ApplicationStatusController</members>
         <members>GS_ApplicationStatusController_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
@@ -1392,6 +1394,24 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Description_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Extra_Info_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.GS_Admin_Checklist_Section__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Has_Link__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Image__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Link_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Link_URL__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Position__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Type__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Value__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Type__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Value__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Title_Label__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Description_Label__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Position__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Title_Label__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>RecurringDonationStatusMapping__mdt.State__c</members>
@@ -2451,6 +2471,20 @@
         <members>gsCheckStatus</members>
         <members>gsChecklistExploreNPSPDesc</members>
         <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistItemCreateDonationDesc</members>
+        <members>gsChecklistItemCreateDonationLinkLabel</members>
+        <members>gsChecklistItemCreateDonationPriBtnLabel</members>
+        <members>gsChecklistItemCreateDonationTitle</members>
+        <members>gsChecklistItemExtraOneMinuteVideo</members>
+        <members>gsChecklistItemSetupContactDesc</members>
+        <members>gsChecklistItemSetupContactLinkLabel</members>
+        <members>gsChecklistItemSetupContactPriBtnLabel</members>
+        <members>gsChecklistItemSetupContactSecBtnLabel</members>
+        <members>gsChecklistItemSetupContactTitle</members>
+        <members>gsChecklistItemStayTrackDesc</members>
+        <members>gsChecklistItemStayTrackLinkLabel</members>
+        <members>gsChecklistItemStayTrackPriBtnLabel</members>
+        <members>gsChecklistItemStayTrackTitle</members>
         <members>gsChecklistMakeItYourDesc</members>
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
@@ -3254,6 +3288,12 @@
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
+        <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
+        <members>GS_Admin_Checklist_Item.Setup_Contact</members>
+        <members>GS_Admin_Checklist_Item.Stay_Track</members>
+        <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
+        <members>GS_Admin_Checklist_Section.Explore_NPSP</members>
+        <members>GS_Admin_Checklist_Section.Make_it_your_own</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -3299,6 +3339,8 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
+        <members>GS_Admin_Checklist_Item__mdt</members>
+        <members>GS_Admin_Checklist_Section__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
@@ -3634,6 +3676,18 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Item__mdt-de</members>
+        <members>GS_Admin_Checklist_Item__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Item__mdt-es</members>
+        <members>GS_Admin_Checklist_Item__mdt-fr</members>
+        <members>GS_Admin_Checklist_Item__mdt-ja</members>
+        <members>GS_Admin_Checklist_Item__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Section__mdt-de</members>
+        <members>GS_Admin_Checklist_Section__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Section__mdt-es</members>
+        <members>GS_Admin_Checklist_Section__mdt-fr</members>
+        <members>GS_Admin_Checklist_Section__mdt-ja</members>
+        <members>GS_Admin_Checklist_Section__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
@@ -3842,6 +3896,8 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>GS_Admin_Checklist_Item__mdt-GS Admin Checklist Item Layout</members>
+        <members>GS_Admin_Checklist_Section__mdt-GS Admin Checklist Section Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
@@ -3904,6 +3960,8 @@
         <members>gsApplicationStatus</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
+        <members>gsChecklistItem</members>
+        <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
         <members>libsMoment</members>

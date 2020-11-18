@@ -10,3 +10,7 @@
 .slds-is-open {
     background-color: var(--bgColor);
 }
+
+.slds-grid_vertical-align-center.clickable-header {
+    max-width: calc(100% - 18px);
+}

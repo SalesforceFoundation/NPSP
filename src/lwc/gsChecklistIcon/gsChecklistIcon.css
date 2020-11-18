@@ -1,6 +1,7 @@
-.slds-media__figure span {
+.slds-media__figure p {
     position: absolute;
-    left: 0.76rem;
+    width: 100%;
+    text-align: center;
     top: 0.45rem;
 }
 

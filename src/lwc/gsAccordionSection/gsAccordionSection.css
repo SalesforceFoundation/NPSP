@@ -5,13 +5,10 @@
 }
 
 .slds-media.info .container {
+    width: 100%;
     padding-left: 2rem;
     padding-bottom: 2rem;
     display: block;
-}
-
-.slds-media.info.open {
-    position: relative;
 }
 
 .slds-media.info .border {
@@ -19,21 +16,21 @@
 }
 
 .slds-media.info.open .border {
-    display:  inline;
     position: absolute;
-    height: 100%;
+    height: calc(100% - 90px);
     width: 2px;
-    background: lightgray;
+    background: #d3d3d3;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
-    top: -1rem;
+    top: 3rem;
+    left: 61px;
 }
 
 .slds-media.info.open .border .gap {
     width: 2px;
     background-color: white;
-    height: 3rem;
+    height: 8rem;
 }
 
 .slds-media.info  .steps {
