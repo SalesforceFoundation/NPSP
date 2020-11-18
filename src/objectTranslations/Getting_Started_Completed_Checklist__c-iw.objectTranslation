@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Getting Started Completed Checklist Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הGetting Started Completed Checklist Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Getting Started Completed Checklist Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הGetting Started Completed Checklist Settings --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The Checklist Item Id that is completed --></help>
+        <label><!-- Item Id --></label>
+        <name>Item_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- The User that has checked the item --></help>
+        <label><!-- User --></label>
+        <name>User__c</name>
+        <relationshipLabel><!-- Getting Started Completed Checklists --></relationshipLabel>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>

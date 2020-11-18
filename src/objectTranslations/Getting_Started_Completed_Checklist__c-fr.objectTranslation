@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Gift Entry Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Gift Entry Settings --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The Checklist Item Id that is completed --></help>
+        <label><!-- Item Id --></label>
+        <name>Item_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- The User that has checked the item --></help>
+        <label><!-- User --></label>
+        <name>User__c</name>
+        <relationshipLabel><!-- Getting Started Completed Checklists --></relationshipLabel>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>
