@@ -3,8 +3,6 @@ import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { format } from 'c/utilCommon';
-import { isNull } from 'c/util';
-
 import {
     fireEvent,
     registerListener,
@@ -21,14 +19,10 @@ import DATA_IMPORT_PAYMENT_STATUS_FIELD
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
-    WIDGET_TYPE_DI_FIELD_VALUE,
 } from 'c/geConstants';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
-    @api cardHolderName;
-
     @track domain;
-
     @track isLoading = true;
     @track alert = {};
     @track disabledMessage;
@@ -44,7 +38,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
-        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(await getPaymentTransactionStatusValues()));
+        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
+            JSON.parse(await getPaymentTransactionStatusValues())
+        );
 
         const domainInfo = await getOrgDomainInfo()
             .catch(error => {
@@ -144,20 +140,29 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting
-    * a token. Response for this request is found and handled in
-    * registerPostMessageListener.
-    */
+     * @description Method sends a message to the visualforce page iframe requesting
+     * a token. Response for this request is found and handled in
+     * registerPostMessageListener.
+     */
     requestToken() {
         this.clearError();
 
-        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        const iframe = this.template.querySelector(
+            `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
 
         //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
         //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
         const nameOnCard = null;
+            return tokenHandler.requestToken(iframe, nameOnCard,
+                this.handleError, this.resolveToken)
 
-        return tokenHandler.requestToken(iframe, nameOnCard, this.handleError, this.resolveToken);
+    }
+
+    @api
+    get paymentToken() {
+        return {
+            payload: this.requestToken()
+        }
     }
 
     /**
@@ -213,37 +218,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 isObject: isObject
             }
         };
-    }
-
-    /**
-     * Requests a payment token when the form is saved
-     * @return {paymentToken: Promise<*>} Promise that will resolve to the token
-     */
-    @api
-    returnValues() {
-        return {
-            type: WIDGET_TYPE_DI_FIELD_VALUE,
-            payload: this.requestToken()
-        };
-    }
-
-    @api
-    load() { }
-
-    @api
-    reset() { }
-
-    @api
-    get allFieldsByAPIName() {
-        return [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName];
-    }
-
-    /**
-     * @description Sets name on the card based on the donor selection
-     */
-    @api
-    setNameOnCard(cardHolderName) {
-        this.cardHolderName = cardHolderName;
     }
 
     dispatchApplicationEvent(eventName, payload) {

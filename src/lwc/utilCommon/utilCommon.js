@@ -12,7 +12,7 @@ const OBJECT = 'object';
  * @description 'Debouncifies' any function.
  *
  * @param {object} anyFunction: Function to be debounced.
- * @param {integer} wait: Time to wait by in milliseconds.
+ * @param {number} wait: Time to wait by in milliseconds.
  * @returns {function<Promise>} A debounced version of the function originally
  * passed to debouncify
  */
@@ -533,12 +533,16 @@ const stripNamespace = (apiName , namespacePrefix) => {
  * Useful when referencing the related record field on objects
  * in the lightning/uiRecordApi Record format:
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
- * @param fieldApiName The ApiName of the relationship field for
- * which the related record field name is desired.
+ * @param customFieldApiNameOrFieldReference
+ * The ApiName of the relationship field for which the related record
+ * field name is desired, or the field reference object.
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
  */
-const relatedRecordFieldNameFor = (customFieldApiName) => {
-    return replaceLastInstanceOfWith(customFieldApiName, '__c', '__r');
+const relatedRecordFieldNameFor = (customFieldApiNameOrFieldReference) => {
+    const fieldApiName =
+        getFieldApiNameForFieldApiNameOrObjectReference(customFieldApiNameOrFieldReference);
+    return fieldApiName &&
+        replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
 }
 
 /**
@@ -552,7 +556,31 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
     return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
 }
 
+const apiNameFor = (objectOrFieldReference) => {
+    if (objectOrFieldReference === null || objectOrFieldReference === undefined) {
+       return objectOrFieldReference;
+    }
+    if (objectOrFieldReference.hasOwnProperty('fieldApiName')) {
+        return objectOrFieldReference.fieldApiName;
+    } else if (objectOrFieldReference.hasOwnProperty('objectApiName')) {
+        return objectOrFieldReference.objectApiName;
+    } else {
+        return null;
+    }
+}
+
+const isString = (val) => {
+    return typeof val === 'string' || val instanceof String;
+}
+
+const getFieldApiNameForFieldApiNameOrObjectReference = (fieldApiNameOrFieldReference) => {
+    return isString(fieldApiNameOrFieldReference) ?
+        fieldApiNameOrFieldReference :
+        apiNameFor(fieldApiNameOrFieldReference);
+}
+
 export {
+    apiNameFor,
     constructErrorMessage,
     debouncify,
     deepClone,
@@ -569,6 +597,7 @@ export {
     isUndefined,
     isPrimative,
     isNull,
+    isString,
     mutable,
     sort,
     shiftToIndex,
