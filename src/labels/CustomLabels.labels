@@ -6893,7 +6893,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item Manage Change in Get Started</shortDescription>
-        <value>Manage Changes to your Instance</value>
+        <value>Manage Changes to your Org</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemNPSPCloudDesc</fullName>
@@ -6957,7 +6957,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item NPSP Settings in Get Started</shortDescription>
-        <value>Navigate to the NPSP Settings page and do a thorough review to confirm the settings are correct for your organization and functioning the way you expect them to.</value>
+        <value>Navigate to the NPSP Settings page and do a thorough review to confirm the settings are correct for your organization and are functioning the way you expect them to.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemNPSPSettingsPriBtnLabel</fullName>
@@ -7085,7 +7085,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item Running Reports in Get Started</shortDescription>
-        <value>Running Reports on Constituent Data</value>
+        <value>Run Reports on Constituent Data</value>
     </labels> 
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
