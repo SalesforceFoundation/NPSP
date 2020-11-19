@@ -59,9 +59,9 @@
                     <lightning-layout multiple-rows="true" class="slds-p-around_medium">
 
                         <lightning-layout-item size="12"
-                            class="slds-form-element slds-form-element_horizontal slds-form-element_1-col">
+                            class="slds-grid slds-align-top slds-form-element slds-form-element_horizontal slds-form-element_1-col">
 
-                            <label class="slds-form-element__label slds-p-top_none" for="status">
+                            <label for="status">
                                 <template if:true={status.isProgress}>
                                     <lightning-progress-ring value="75" data-qa-locator={qaLocatorProgressRing}>
                                     </lightning-progress-ring>
@@ -74,11 +74,9 @@
                                 </template>
                             </label>
                             <div class="status slds-form-element__control">
-                                <div class="slds-p-horizontal_small">
-                                    <lightning-formatted-text id="status" data-id="status" value={status.message}
-                                        data-qa-locator={qaLocatorStatusMessage} class="status-message">
-                                    </lightning-formatted-text>
-                                </div>
+                                <lightning-formatted-text id="status" data-id="status" value={status.message}
+                                    data-qa-locator={qaLocatorStatusMessage} class="status-message">
+                                </lightning-formatted-text>
                             </div>
                         </lightning-layout-item>
 
