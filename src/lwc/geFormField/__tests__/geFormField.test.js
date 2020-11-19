@@ -51,7 +51,7 @@ const createStandardPicklistElement = () => {
     const element = createElement('c-ge-form-field', { is: GeFormField });
     element.element = elementJSON;
     element.formState = {
-        [fieldMapping.Source_Field_API_Name]: '--None--'
+        [fieldMapping.Source_Field_API_Name]: null
     };
 
     return element;
@@ -63,7 +63,7 @@ const createRecordTypeIdPicklistElement = () => {
     element.element = recordTypeIdElementJSON;
     element.targetFieldName = 'RecordTypeId';
     element.formState = {
-        [recordTypeIdFieldMapping.Source_Field_API_Name]: ''
+        [recordTypeIdFieldMapping.Source_Field_API_Name]: null
     };
 
     return element;
@@ -144,7 +144,7 @@ describe('c-ge-form-field', () => {
         const picklist = getSubComponentCombobox(element);
 
         return Promise.resolve().then(() => {
-            expect(picklist.value).toBe('--None--');
+            expect(picklist.value).toBe('c.stgLabelNone');
         });
     });
 
@@ -177,7 +177,7 @@ describe('c-ge-form-field', () => {
 
         return Promise.resolve()
             .then(() => {
-                expect(picklist.value).toBe('--None--');
+                expect(picklist.value).toBe('c.stgLabelNone');
 
                 dispatchChangeEvent(picklist, 'Picklist_Option_1');
 
