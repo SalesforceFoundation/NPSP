@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">gsChecklistItemExtraSixtyMinuteVideo</value>
     </values>
     <values>
         <field>GS_Admin_Checklist_Section__c</field>
@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/projects/import-your-data-using-npsp-data-importer</value>
     </values>
     <values>
         <field>Position__c</field>

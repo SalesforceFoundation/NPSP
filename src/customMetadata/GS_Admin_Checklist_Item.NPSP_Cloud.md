@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/trails/explore-nonprofit-success-pack</value>
     </values>
     <values>
         <field>Position__c</field>

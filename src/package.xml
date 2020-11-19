@@ -2485,6 +2485,7 @@
         <members>gsChecklistItemCustomFieldsLinkLabel</members>
         <members>gsChecklistItemCustomFieldsTitle</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
+        <members>gsChecklistItemExtraSixtyMinuteVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
         <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
