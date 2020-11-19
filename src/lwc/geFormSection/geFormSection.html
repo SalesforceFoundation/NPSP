@@ -16,8 +16,6 @@
                                            medium-device-size='3'>
                         <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
                             <c-ge-form-field element={element}
-                                             oncreditcardvaluechange={handleChangeNameOnCardField}
-                                             onlookuprecordselect={handleLookupRecordSelect}
                                              onformfieldchange={handleFormFieldChange}
                                              form-state={formState}>
                             </c-ge-form-field>
@@ -28,7 +26,11 @@
                     <lightning-layout-item key={element.id}
                                            size='12'
                                            medium-device-size='12'>
-                        <c-ge-form-widget element={element} widget-data={widgetData}></c-ge-form-widget>
+                        <c-ge-form-widget element={element}
+                                          widget-data={widgetData}
+                                          form-state={formState}
+                                          onformwidgetchange={handleFormWidgetChange}>
+                        </c-ge-form-widget>
                     </lightning-layout-item>
                 </template>
             </template>
