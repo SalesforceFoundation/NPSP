@@ -77,8 +77,9 @@
     </fields>
     <label>Get Started Completion Checklist State</label>
     <nameField>
+        <displayFormat>GS{0000}</displayFormat>
         <label>Get Started Completion Checklist State Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Get Started Completion Checklist States</pluralLabel>
     <searchLayouts/>
