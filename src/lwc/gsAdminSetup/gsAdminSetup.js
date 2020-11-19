@@ -59,7 +59,6 @@ export default class gsAdminSetup extends LightningElement {
             tItem.link = {...(item.link)};
             tItem.link.label = getLabelValue(item.link.label);
         }
-        console.info(tItem);
         return tItem;
     }
 

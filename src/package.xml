@@ -1253,8 +1253,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
-        <members>Getting_Started_Completed_Checklist__c.Item_Id__c</members>
-        <members>Getting_Started_Completed_Checklist__c.User__c</members>
+        <members>Get_Started_Completed_Checklist__c.Item_Id__c</members>
+        <members>Get_Started_Completed_Checklist__c.User__c</members>
         <members>Gift_Entry_Settings__c.Default_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
@@ -3321,7 +3321,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
-        <members>Getting_Started_Completed_Checklist__c</members>
+        <members>Get_Started_Completed_Checklist__c</members>
         <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
@@ -3527,13 +3527,13 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
-        <members>Getting_Started_Completed_Checklist__c-de</members>
-        <members>Getting_Started_Completed_Checklist__c-en_US</members>
-        <members>Getting_Started_Completed_Checklist__c-es</members>
-        <members>Getting_Started_Completed_Checklist__c-fr</members>
-        <members>Getting_Started_Completed_Checklist__c-iw</members>
-        <members>Getting_Started_Completed_Checklist__c-ja</members>
-        <members>Getting_Started_Completed_Checklist__c-nl_NL</members>
+        <members>Get_Started_Completed_Checklist__c-de</members>
+        <members>Get_Started_Completed_Checklist__c-en_US</members>
+        <members>Get_Started_Completed_Checklist__c-es</members>
+        <members>Get_Started_Completed_Checklist__c-fr</members>
+        <members>Get_Started_Completed_Checklist__c-iw</members>
+        <members>Get_Started_Completed_Checklist__c-ja</members>
+        <members>Get_Started_Completed_Checklist__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
         <members>Gift_Entry_Settings__c-en_US</members>
         <members>Gift_Entry_Settings__c-es</members>
@@ -3887,7 +3887,7 @@
         <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
-        <members>Getting_Started_Completed_Checklist__c-Getting Started Completed Checklist Layout</members>
+        <members>Get_Started_Completed_Checklist__c-Get Started Completed Checklist Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>

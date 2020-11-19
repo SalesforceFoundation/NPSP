@@ -69,17 +69,17 @@
         <externalId>false</externalId>
         <label>User</label>
         <referenceTo>User</referenceTo>
-        <relationshipName>Getting_Started_Completed_Checklists</relationshipName>
+        <relationshipName>Get_Started_Completed_Checklists</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <label>Getting Started Completed Checklist</label>
+    <label>Get Started Completed Checklist</label>
     <nameField>
-        <label>Getting Started Completed Checklist Name</label>
+        <label>Get Started Completed Checklist Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Getting Started Completed Checklists</pluralLabel>
+    <pluralLabel>Get Started Completed Checklists</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

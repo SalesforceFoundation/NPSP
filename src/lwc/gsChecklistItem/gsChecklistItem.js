@@ -120,7 +120,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
      */
     onChange(event) {
         let checked = event.detail.checked;
-        updateCheckItem({'itemId': this.item.id, 'checked': checked})
+        updateCheckItem({'itemId': this.item.id, 'isChecked': checked})
         .then (_ => {
             let eventName = checked ? 'checked' : 'unchecked';
             this.dispatchEvent(new CustomEvent(eventName))
