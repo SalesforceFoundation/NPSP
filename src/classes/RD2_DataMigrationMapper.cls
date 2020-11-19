@@ -170,7 +170,7 @@ public class RD2_DataMigrationMapper {
         if (rd.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_CLOSED
             && String.isBlank(rd.npe03__Schedule_Type__c)
             && rd.npe03__Installments__c != null
-            && rd.npe03__Installments__c > 1)
+            && (rd.npe03__Installments__c > 1 || rd.npe03__Installments__c < 0))
         {
             throw new MigrationException(System.Label.RD2_DataMigrationInvalidPlannedInstallments);
         }
