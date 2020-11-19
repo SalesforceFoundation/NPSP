@@ -47,7 +47,7 @@ private with sharing class GS_AdminSetup_TEST {
                           LIMIT 1].Id;
 
         Get_Started_Completed_Checklist__c checkedItem = new Get_Started_Completed_Checklist__c(Item_Id__c = firstItemId, 
-                                                                                                        User__c = UserInfo.getUserId());
+                                                                                                User__c = UserInfo.getUserId());
         insert checkedItem;
 
         List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
