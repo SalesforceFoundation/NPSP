@@ -2509,8 +2509,8 @@
         <members>gsResourcesItemWebinarsLabel</members>
         <members>gsResourcesItemWebinarsLinkLabel</members>
         <members>gsResourcesTitle</members>
-        <members>gsVideoHeaderTitle</members>
         <members>gsSubmitted</members>
+        <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3852,6 +3852,7 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
+        <members>NPSP_Get_Started</members>
         <name>FlexiPage</name>
     </types>
     <types>
