@@ -57,6 +57,7 @@
 
                 <template if:true={isElevateRecord}>
                     <lightning-layout multiple-rows="true" class="slds-p-around_medium">
+
                         <lightning-layout-item size="12"
                             class="slds-form-element slds-form-element_horizontal slds-form-element_1-col">
 
@@ -73,22 +74,21 @@
                                 </template>
                             </label>
                             <div class="status slds-form-element__control">
-                                <div class="slds-p-horizontal_small slds-table slds-table_cell-buffer">
+                                <div class="slds-p-horizontal_small">
                                     <lightning-formatted-text id="status" data-id="status" value={status.message}
-                                        data-qa-locator={qaLocatorStatusMessage} class="slds-grow slds-cell-wrap">
+                                        data-qa-locator={qaLocatorStatusMessage} class="status-message">
                                     </lightning-formatted-text>
                                 </div>
                             </div>
-
                         </lightning-layout-item>
 
                         <lightning-layout-item size="12"
-                            class="slds-form-element slds-form-element_horizontal slds-m-around_none">
+                            class="slds-form-element slds-form-element_horizontal slds-m-around_none slds-p-top_none">
                             <template if:true={isElevateConnected}>
                                 <label
                                     class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                     for="commitmentId">{fields.commitmentId.label}</label>
-                                <div class="slds-form-element__control" data-id="commitmentId">
+                                <div class="slds-form-element__control slds-p-around_none" data-id="commitmentId">
                                     <div class="slds-col slds-no-flex slds-truncate">
                                         <a href="javascript:void(0);" target="_blank">
                                             <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}

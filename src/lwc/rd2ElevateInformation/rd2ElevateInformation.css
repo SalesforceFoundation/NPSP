@@ -1,3 +1,6 @@
 .status.slds-form-element__control {
-    padding-left: calc(6% - .5rem)
+    padding-left: calc(4% - .5rem)
+}
+.status-message {
+  overflow-wrap: anywhere;
 }
