@@ -3876,7 +3876,6 @@
         <members>utilAlertBanner</members>
         <members>utilCard</members>
         <members>utilCommon</members>
-        <members>utilCustomErrors</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilExpandableSection</members>
