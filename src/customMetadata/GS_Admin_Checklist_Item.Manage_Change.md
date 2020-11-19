@@ -32,7 +32,7 @@
     </values>
     <values>
         <field>Position__c</field>
-        <value xsi:type="xsd:double">5.0</value>
+        <value xsi:type="xsd:double">4.0</value>
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
