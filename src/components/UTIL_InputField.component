@@ -4,6 +4,8 @@
     <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>
     <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
     <apex:attribute name="required" type="Boolean" default="false" description="When true marks the field as required, defaults to false." />
+    <apex:attribute name="ariaLabel" type="String" default="" description="override aria label"/>
+    <apex:attribute name="ariaDescription" type="String" default="" description="override aria description"/>
     <!-- Action Support assumes onchange event and calling page has an action status component on the page -->
     <apex:attribute name="actSup" type="Boolean" default="false" description="When true the input field will render action support, defaults to false." />
     <apex:attribute name="actSupAction" type="ApexPages.Action" default="" description="Action for the onchange action support to fire." />
@@ -14,7 +16,9 @@
     <!-- NOTE: When using a variable for determining readonly or field type in combination with conditionally rendering output panels, some field values do not save -->
     <apex:variable var="ftype" value="{!$ObjectType[sObjType].fields[field].type}"/>
 
-    <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label="" html-aria-label="{!$ObjectType[sObjType].fields[field].label}"
+    <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
+        html-aria-label="{!IF(ISBLANK(ariaLabel), $ObjectType[sObjType].fields[field].label, ariaLabel)}"
+        html-aria-description="{!IF(ISBLANK(ariaDescription), '', ariaDescription)}"
         styleClass="{!CASE(ftype,
                                 'textarea', 'slds-textarea',
                                 'picklist', 'slds-select',
