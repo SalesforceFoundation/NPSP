@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2020
- * @group Getting Started
+ * @group Get Started Page
  * @description TestClass for GS_ApplicationStatusController.
  */
 @IsTest(isParallel=true)

@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Getting Started
+* @group Get Started Page
 * @description Class to test GS_AdminSetup class.
 */
 @isTest
