@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Get Started Paged
+* @group Get Started Page
 * @description Class to hold functionality to display Checklist in GS UI.
 */
 public with sharing class GS_AdminSetup {
