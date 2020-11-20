@@ -3,10 +3,10 @@
     <description>NPSP Get Started Page section items</description>
     <fields>
         <fullName>Description_Label__c</fullName>
-        <description>The API Name for Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <description>The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The API Name for Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <inlineHelpText>The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
         <label>Description Label Name</label>
         <length>255</length>
         <required>true</required>
@@ -157,10 +157,10 @@ For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApi
     </fields>
     <fields>
         <fullName>Secondary_Button_Label__c</fullName>
-        <description>The API name for Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <description>The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The API name for Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <inlineHelpText>The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
         <label>Secondary Button Label Name</label>
         <length>255</length>
         <required>false</required>
@@ -169,10 +169,10 @@ For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApi
     </fields>
     <fields>
         <fullName>Secondary_Button_Type__c</fullName>
-        <description>The API name for Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <description>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>The API name for Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <inlineHelpText>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page</inlineHelpText>
         <label>Secondary Button Type</label>
         <required>true</required>
         <type>Picklist</type>
