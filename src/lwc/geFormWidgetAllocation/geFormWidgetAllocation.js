@@ -88,18 +88,17 @@ export default class GeFormWidgetAllocation extends LightningElement {
             })
         });
         this.addRows(rowList);
+
+        this.validate();
     }
 
     get totalAmount() {
         return this._totalAmount;
     }
-
     set totalAmount(value) {
         this._totalAmount = value;
-
-        this.validate();
-
     }
+
     get remainingAmount() {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
             const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
@@ -243,6 +242,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
         const message = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorAmountDoesNotMatch,
             [this.donationAmountCustomLabel]);
+
+        let underAllocated = this.isUnderAllocated;
 
         if(this.isUnderAllocated) {
             // if no default GAU and under-allocated, display warning
