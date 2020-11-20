@@ -243,8 +243,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.CUSTOM_LABELS.geErrorAmountDoesNotMatch,
             [this.donationAmountCustomLabel]);
 
-        let underAllocated = this.isUnderAllocated;
-
         if(this.isUnderAllocated) {
             // if no default GAU and under-allocated, display warning
             this.alertBanner = {
