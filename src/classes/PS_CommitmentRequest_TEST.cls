@@ -90,6 +90,10 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
+        System.assertNotEquals(null, requestBody.metadata, 'Metadata should be set by default');
+        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.metadata.originType,
+            'Metadata origin type should be CRM');
+
         System.assertEquals(1, requestBody.schedules.size(),
             'One schedule should be passed to the API: ' + requestBody.schedules);
 
