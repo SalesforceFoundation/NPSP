@@ -203,7 +203,7 @@
 
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Scheduled_Date__c"
-                                                      labelOverride="{!$Label.pmtWizardFirstPaymentDate}" />
+                                                      labelOverride="{!$Label.pmtWizardFirstPaymentDate}" ariaDescription="{!$Label.pmtWizardFirstPaymentDate}"/>
                                 </div>
                             </div>
                             <div class="slds-grid slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
@@ -254,7 +254,8 @@
                             <apex:commandButton action="{!calculate}"
                                                 value="{!$Label.pmtWizardBtnCalcPayments}"
                                                 rendered="{!AND(hasPaymentAccess, isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
-                                                styleClass="slds-button slds-button_brand slds-m-around_medium" reRender="vfForm"/>
+                                                styleClass="slds-button slds-button_brand slds-m-around_medium"
+                                                reRender="vfForm"/>
                         </div>
                     </div>
                     <!-- Show Payments to be Created -->
@@ -268,37 +269,47 @@
                                 </span>
                             </h3>
                         </div>
-
-                        <table class="slds-table" id="pmtTable">
-                            <thead>
-                            <tr class="slds-text-heading_label">
-                                <th scope="col" class="slds-cell-wrap"><apex:outputText value="{!$Label.pmtWizardPaymentNumber}"/></th>
-                                <apex:repeat value="{!pmtFieldSet}" var="fLbl">
-                                    <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
-                                            <apex:outputText value="{!fLbl.label}"/>
-                                        </span></th>
-                                </apex:repeat>
-                            </tr>
-                            </thead>
-                            <apex:repeat value="{!payments}" var="p">
-                                <tr>
-                                    <td>
-                                        <div class="slds-form-element">
-                                            <apex:outputText value="{!p.paymentNumber}"/>
-                                        </div>
-                                    </td>
-                                    <apex:repeat value="{!pmtFieldSet}" var="f">
-                                        <td>
-                                            <c:UTIL_FormField field="{!f.fieldPath}"
-                                                              sObj="{!p.OppPayment}"
-                                                              sObjType="npe01__OppPayment__c"
-                                                              showLabel="false"
-                                                              required="{!f.DBRequired || f.Required}" />
-                                        </td>
+                        <div class="slds-form">
+                            <table class="slds-table" id="pmtTable">
+                                <thead>
+                                    <tr class="slds-text-heading_label">
+                                        <th scope="col" class="slds-cell-wrap">
+                                            <apex:outputText value="{!$Label.pmtWizardPaymentNumber}"/>
+                                        </th>
+                                        <apex:repeat value="{!pmtFieldSet}" var="fLbl">
+                                            <th scope="col" class="slds-cell-wrap">
+                                                <span class="slds-truncate" id="{!fLbl.label}">
+                                                    <apex:outputText value="{!fLbl.label}"/>
+                                                </span>
+                                            </th>
+                                        </apex:repeat>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!payments}" var="p">
+                                        <tr>
+                                            <td>
+                                                <div class="slds-form-element">
+                                                    <apex:outputText value="{!p.paymentNumber}"/>
+                                                </div>
+                                            </td>
+                                            <apex:repeat value="{!pmtFieldSet}" var="f">
+                                                <td>
+                                                    <c:UTIL_FormField id="paymentFieldInfo"
+                                                        field="{!f.fieldPath}"
+                                                        sObj="{!p.OppPayment}"
+                                                        sObjType="npe01__OppPayment__c"
+                                                        showLabel="false"
+                                                        required="{!f.DBRequired || f.Required}"
+                                                        ariaDescription="{!$Label.pmtWizardPaymentNumber} {!p.paymentNumber} {!f.label}"
+                                                    />
+                                                </td>
+                                            </apex:repeat>
+                                        </tr>
                                     </apex:repeat>
-                                </tr>
-                            </apex:repeat>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </apex:outputText>
                 </apex:outputText>
                 <!-- END PAYMENT ADD MARKUP  -->
