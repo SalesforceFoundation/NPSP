@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Get Started Page
+* @group Get Started
 * @description Class to test GS_AdminSetup class.
 */
 @isTest
@@ -41,6 +41,15 @@ private with sharing class GS_AdminSetup_TEST {
     */
     @isTest
     static void getChecklistsTest() {
+
+        Id firstItemId = [SELECT Id, Position__c
+                          FROM GS_Admin_Checklist_Item__mdt
+                          LIMIT 1].Id;
+
+        GetStartedCompletionChecklistState__c checkedItem = new GetStartedCompletionChecklistState__c(Item_Id__c = firstItemId, 
+                                                                                                User__c = UserInfo.getUserId());
+        insert checkedItem;
+
         List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
         List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
@@ -85,7 +94,43 @@ private with sharing class GS_AdminSetup_TEST {
                     item.Id,
                     'The metadataSection and Checklist childrens are not in the same orden'
                 );
+
+                System.assertEquals(item.Id == checkedItem.Item_Id__c, item.checked, 'Element is not checked as expected');
             }
         }
+    }
+
+    @isTest
+    private static void persistTest() {
+        List<GS_Admin_Checklist_Item__mdt> metadataSectionItems = [SELECT Id, Position__c
+                                                                   FROM   GS_Admin_Checklist_Item__mdt
+                                                                   ORDER BY Position__c ASC LIMIT 1];
+        System.assertEquals(false, metadataSectionItems.isEmpty(), 'Items should not be empty');
+        GS_AdminSetup.updateCheckItem('invalid', true);
+        List<GetStartedCompletionChecklistState__c> adminStatus = [SELECT Id,
+                                                                           Item_Id__c,
+                                                                           User__c
+                                                                    FROM   GetStartedCompletionChecklistState__c];
+        System.assertEquals(true, adminStatus.isEmpty(), 'No Invalid Id should be persisted');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   GetStartedCompletionChecklistState__c];
+        System.assertEquals(1, adminStatus.size(), 'One element should have been created');
+        System.assertEquals(metadataSectionItems[0].id, adminStatus[0].Item_Id__c,'Id should have been the same');
+        System.assertEquals(UserInfo.getUserId(), adminStatus[0].User__c,'UserId should have been the current one');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   GetStartedCompletionChecklistState__c];
+        System.assertEquals(1, adminStatus.size(), 'No duplicated elements are allowed');
+        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, false);
+        adminStatus = [SELECT Id,
+                              Item_Id__c,
+                              User__c                                   
+                       FROM   GetStartedCompletionChecklistState__c];
+        System.assertEquals(true, adminStatus.isEmpty(), 'Item is not unchecked');
     }
 }

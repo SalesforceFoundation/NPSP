@@ -15,6 +15,18 @@ export default class GsAccordionLabel extends LightningElement {
     @api title
     
     /**
+     * @description Total items rendered in the section
+     * @type int
+     */
+    @api totalElements
+
+    /**
+     * @description Quatity of checked element in the section
+     * @type int
+     */
+    @api checkedElements
+
+    /**
     * @description Display event on click title
     * @type      void
     * @see       Event
