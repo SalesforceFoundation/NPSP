@@ -1693,6 +1693,7 @@
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
+        <members>RD2_DataMigrationInvalidPlannedInstallments</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
