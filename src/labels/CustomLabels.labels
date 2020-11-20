@@ -1578,6 +1578,14 @@
         <value>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
     </labels>
     <labels>
+        <fullName>RD2_DataMigrationInvalidPlannedInstallments</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Planned Installments cannot be migrated to enhanced Recurring Donation format</shortDescription>
+        <value>When Open Ended Status is Closed and Schedule Type is not populated, Number of Planned Installments must be 1.</value>
+    </labels>
+    <labels>
         <fullName>RD2_DayOfMonthMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
