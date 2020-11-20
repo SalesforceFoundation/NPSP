@@ -42,7 +42,7 @@ public with sharing class GS_AdminSetup {
      * Each section is defined in GS_Admin_Checklist_Section__mdt and each subsection is defined in GS_Admin_Checklist_Item__mdt
      * @return List<ChecklistSection>
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<ChecklistSection> getChecklists() {
         storedItemsId = getMarkedAsCompletedCheckListItemByUser();
         List<GS_Admin_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();

@@ -13,15 +13,14 @@ export default class gsAdminSetup extends LightningElement {
     */
     @track checklists = [];
 
-    /**
-    * @description Loads and translates all checklist sections and their items
-    */
-    @wire(getChecklists)
-    wiredGetChecklist({ data, error }) {
-        // Hold on to the provisioned value so we can refresh it later.
-        if (data) {
-            this.checklists = data.map(this.getLabelValueSection);
-        }
+    
+    connectedCallback() {
+        getChecklists()
+        .then(data => {
+            if (data) {
+                this.checklists = data.map(this.getLabelValueSection);
+            }
+        });
     }
 
     /**

@@ -3,7 +3,7 @@ import { LightningElement, api } from 'lwc';
 export default class gsChecklistIcon extends LightningElement {
 
     @api label = 1;
-    @api totalItem;
+    @api totalItem = 0;
     /**
      * @description Quantity of checked items in the section
      */
@@ -12,7 +12,7 @@ export default class gsChecklistIcon extends LightningElement {
         return this._checkedItem;
     }
     set checkedItem(value) {
-        if (this.totalItem !== undefined) {
+        if (this.totalItem !== undefined && this.totalItem != 0) {
             this.percentage = (value / this.totalItem) * 100; 
         }
     }
