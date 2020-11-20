@@ -3844,6 +3844,7 @@
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Get_Started</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -3921,7 +3922,7 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
-        <members>NPSP_Get_Started</members>
+        <members>GetStarted</members>
         <name>FlexiPage</name>
     </types>
     <types>
