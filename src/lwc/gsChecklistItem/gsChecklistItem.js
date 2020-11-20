@@ -9,6 +9,7 @@ const gsAssetsImage = CumulusStaticResources + '/gsAssets/step';
 * @description This component render the Sub Section Item info
 */
 export default class GsChecklistItem extends NavigationMixin(LightningElement) {
+
     /**
     * @description data of the item this component render
     * @type  GS_AdminSetup.ChecklistItem
@@ -120,12 +121,17 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
      */
     onChange(event) {
         let checked = event.detail.checked;
+        let target = event.target;
+        target.disabled = true;
+
         updateCheckItem({'itemId': this.item.id, 'isChecked': checked})
         .then (_ => {
             let eventName = checked ? 'checked' : 'unchecked';
-            this.dispatchEvent(new CustomEvent(eventName))
+            this.dispatchEvent(new CustomEvent(eventName));
+            target.disabled = false;
         })
         .catch(error => {
+            target.disabled = false;
             if (error && error.body) {
                 const evt = new ShowToastEvent({
                     title: '',
@@ -133,6 +139,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                     variant: 'error'
                 });
                 this.dispatchEvent(evt);
+                
             }
         });
         
