@@ -7246,7 +7246,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
-        <value>Visualize your Fundraising Process</value>
+        <value>Visualize your Fundraising Processes</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>
