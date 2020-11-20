@@ -1,12 +1,15 @@
 import { LightningElement, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import CumulusStaticResources from '@salesforce/resourceUrl/CumulusStaticResources';
+import updateCheckItem from '@salesforce/apex/GS_AdminSetup.updateCheckItem'
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 const gsAssetsImage = CumulusStaticResources + '/gsAssets/step';
 
 /**
 * @description This component render the Sub Section Item info
 */
 export default class GsChecklistItem extends NavigationMixin(LightningElement) {
+
     /**
     * @description data of the item this component render
     * @type  GS_AdminSetup.ChecklistItem
@@ -109,5 +112,36 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         }).then((url) => {
             window.open(url, '_blank');
         })
+    }
+
+    /**
+     * Event when the user check or uncheck the checkbox in the item.
+     * It calls the backend to update the status and call events to notify the front end to update the progress ring.
+     * @param event the event object.
+     */
+    onChange(event) {
+        let checked = event.detail.checked;
+        let target = event.target;
+        target.disabled = true;
+
+        updateCheckItem({'itemId': this.item.id, 'isChecked': checked})
+        .then (_ => {
+            let eventName = checked ? 'checked' : 'unchecked';
+            this.dispatchEvent(new CustomEvent(eventName));
+            target.disabled = false;
+        })
+        .catch(error => {
+            target.disabled = false;
+            if (error && error.body) {
+                const evt = new ShowToastEvent({
+                    title: '',
+                    message: error.body.message,
+                    variant: 'error'
+                });
+                this.dispatchEvent(evt);
+                
+            }
+        });
+        
     }
 }
