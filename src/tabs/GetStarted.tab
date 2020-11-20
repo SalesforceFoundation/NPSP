@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Created by Lightning App Builder</description>
-    <flexiPage>NPSP_Get_Started</flexiPage>
+    <flexiPage>GetStarted</flexiPage>
     <label>Get Started with NPSP</label>
-    <mobileReady>false</mobileReady>
     <motif>Custom83: Pencil</motif>
 </CustomTab>
