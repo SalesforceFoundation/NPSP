@@ -151,11 +151,28 @@ public class RD2_DataMigrationMapper {
             handleCustomInstallmentPeriod(rd);
         }
 
+        validateAmountCanBeCalculated(rd);
+
         if ((rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY || rd.npe03__Schedule_Type__c == null)
             && rd.npe03__Installment_Amount__c != null
             && rd.npe03__Installment_Amount__c != 0
         ) {
             rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
+        }
+    }
+
+    /**
+     * @description Determines whether Amount can be calculated.  Throws an exception if not.
+     * @param rd Recurring Donation
+     */
+    private void validateAmountCanBeCalculated(npe03__Recurring_Donation__c rd) {
+
+        if (rd.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_CLOSED
+            && String.isBlank(rd.npe03__Schedule_Type__c)
+            && rd.npe03__Installments__c != null
+            && Math.abs(rd.npe03__Installments__c) > 1)
+        {
+            throw new MigrationException(System.Label.RD2_DataMigrationInvalidPlannedInstallments);
         }
     }
 

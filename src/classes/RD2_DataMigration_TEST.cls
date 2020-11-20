@@ -1933,6 +1933,82 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies RD is successfully converted when Amount can be calculated for an
+     * RD with Open Ended Status set to Closed
+     */
+    @IsTest
+    private static void shouldConvertWhenOpenEndedStatusClosedAmountCanBeCalculated() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusClosed()
+            .withPlannedInstallments(1)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = 0;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = -1;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = 12;
+        rd.npe03__Schedule_Type__c = RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+    }
+
+    /**
+     * @description Verifies Exception is thrown when Amount cannot be calculated for an
+     * RD with Open Ended Status set to Closed
+     */
+    @IsTest
+    private static void shouldThrowExceptionWhenOpenEndedStatusClosedAmountCannotBeCalculated() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusClosed()
+            .withPlannedInstallments(12)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD;
+        Exception actualException = null;
+        try {
+            convertedRD = new RD2_DataMigrationMapper(rd)
+                .convertToEnhancedRD();
+        }
+        catch (RD2_DataMigrationMapper.MigrationException e) {
+            actualException = e;
+        }
+
+        System.assertEquals(true,
+            actualException.getMessage()
+                .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
+        System.assertEquals(null, convertedRD, 'RD should not be converted');
+
+        actualException = null;
+        rd.npe03__Installments__c = -12;
+        try {
+            convertedRD = new RD2_DataMigrationMapper(rd)
+                .convertToEnhancedRD();
+        }
+        catch (RD2_DataMigrationMapper.MigrationException e) {
+            actualException = e;
+        }
+
+        System.assertEquals(true,
+            actualException.getMessage()
+                .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
+        System.assertEquals(null, convertedRD, 'RD should not be converted');
+    }
+
+    /**
      * @description Verifies Account on RD is populated when it is not already specified
      */
     @IsTest
