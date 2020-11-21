@@ -79,13 +79,7 @@ public with sharing class RD2_EntryFormController {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
-
-        // Checks whether the Elevate credit card can be displayed
-        // on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
-        // The RD2 controller should be using isIntegrationEnabled() only when GA.
-        Boolean isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();
-
+            
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
@@ -93,7 +87,7 @@ public with sharing class RD2_EntryFormController {
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => isElevateCustomer
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled()
         };
     }
 
