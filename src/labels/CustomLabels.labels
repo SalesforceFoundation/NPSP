@@ -1610,12 +1610,28 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateCancelInProgress</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates Elevate recurring commitment cancel is in progress</shortDescription>
+        <value>Recurring Payment Cancel in Progress</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateDisableButtonLabel</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
         <value>Do Not Use Elevate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisabledHeader</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header indicating the org is not connected to Elevate</shortDescription>
+        <value>Elevate is not enabled for your Salesforce org</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateDisabledMessage</fullName>
@@ -1632,6 +1648,22 @@
         <protected>true</protected>
         <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
         <value>Alternatively, use Elevate now.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateInformationHeader</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate information widget header</shortDescription>
+        <value>Elevate Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateInformationStatusSuccess</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status description displayed when no error is active</shortDescription>
+        <value>No Errors</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
@@ -1664,6 +1696,14 @@
         <protected>true</protected>
         <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRecordCreateFailed</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
+        <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -5411,6 +5451,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error</value>
     </labels>
     <labels>
+        <fullName>commonErrorPrefix</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error prefix</shortDescription>
+        <value>Error: {0}</value>
+    </labels>
+    <labels>
         <fullName>commonFieldLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5633,6 +5681,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>View All</shortDescription>
         <value>View All</value>
+    </labels>
+    <labels>
+        <fullName>commonViewErrorLog</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link value displaying error logs for a record</shortDescription>
+        <value>View Error Log</value>
     </labels>
     <labels>
         <fullName>commonViewMore</fullName>
