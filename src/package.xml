@@ -833,6 +833,8 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>gsAppPageTemplate</members>
+        <members>gs_homepageTemplate</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>pageNotification</members>
@@ -1255,6 +1257,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>GetStartedCompletionChecklistState__c.Item_Id__c</members>
+        <members>GetStartedCompletionChecklistState__c.User__c</members>
         <members>Gift_Entry_Settings__c.Default_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
@@ -3397,6 +3401,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStartedCompletionChecklistState__c</members>
         <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
@@ -3602,6 +3607,12 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
+        <members>GetStartedCompletionChecklistState__c-de</members>
+        <members>GetStartedCompletionChecklistState__c-en_US</members>
+        <members>GetStartedCompletionChecklistState__c-es</members>
+        <members>GetStartedCompletionChecklistState__c-fr</members>
+        <members>GetStartedCompletionChecklistState__c-ja</members>
+        <members>GetStartedCompletionChecklistState__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
         <members>Gift_Entry_Settings__c-en_US</members>
         <members>Gift_Entry_Settings__c-es</members>
@@ -3853,6 +3864,7 @@
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStarted</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -3930,6 +3942,7 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
+        <members>Get_Started</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -3955,6 +3968,7 @@
         <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>GetStartedCompletionChecklistState__c-Get Started Completion Checklist State Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>

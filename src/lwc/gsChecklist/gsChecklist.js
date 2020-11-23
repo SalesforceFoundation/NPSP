@@ -11,5 +11,32 @@ export default class gsChecklist extends LightningElement {
     * @type      Checklist
     */
     @api group;
+
+    /**
+     * @description Quantity of checked items in the section
+     */
+    @track checkedItems = 0;
+
+    connectedCallback() {
+        this.group.items.forEach(item => {
+            if (item.checked) {
+                this.checkedItems++;
+            }
+        });
+    }
+
+    /**
+     * @description event handler when an element is checked
+     */
+    handleChecked() {
+        this.checkedItems++;
+    }
+
+    /**
+     * @description event handler when an element is unchecked
+     */
+    handleUnchecked() {
+        this.checkedItems--;
+    }
     
 }

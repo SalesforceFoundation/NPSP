@@ -30,25 +30,93 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Getting Started
+* @group Get Started
 * @description Class to hold functionality to display Checklist in GS UI.
 */
 public with sharing class GS_AdminSetup {
 
     private static final String DISABLED = 'Disabled';
+    private static Set<Id> storedItemsId = null;
     /**
      * @description Returns a list of the checklist section with each subsection.
-     * Each section is defined in GS_Admin_Checklist_Section__mdt and each subsection is defined in GS_Admin_Checklist_Item__mtd
+     * Each section is defined in GS_Admin_Checklist_Section__mdt and each subsection is defined in GS_Admin_Checklist_Item__mdt
      * @return List<ChecklistSection>
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<ChecklistSection> getChecklists() {
+        storedItemsId = getMarkedAsCompletedCheckListItemByUser();
         List<GS_Admin_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();
         List<ChecklistSection> checklistWrapers = new List<ChecklistSection>();
         for (GS_Admin_Checklist_Section__mdt checklistSection : checklistSections) {
             checklistWrapers.add(wrapChecklistSection(checklistSection));
         }
         return checklistWrapers;
+    }
+
+    /**
+     * @description Persist in database if an element is checked or not.
+     * For doing so we use the object GetStartedCompletionChecklistState__c;. 
+     * The object contains two fields: Item_Id and User. 
+     * Which means that a checkbox is selected if an element  
+     * it means the element is checked
+     * @param  itemId  Id the checklist item id
+     * @param  isChecked boolean element is checked of not
+     */
+    @AuraEnabled
+    public static void updateCheckItem(String itemId, Boolean isChecked){
+               
+        if (doesChecklistItemExists(itemId)) {
+            List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [SELECT Id
+                                                                                    FROM   GetStartedCompletionChecklistState__c
+                                                                                    WHERE  Item_Id__c = :itemId 
+                                                                                    AND    User__c = :UserInfo.getUserId()];
+            if (isChecked) {
+                markItemAsCompleted(alreadyStoredCompletedItems, itemId);
+            } else {
+                unmarkItemAsCompleted(alreadyStoredCompletedItems);
+            }
+        }    
+    }
+
+    /**
+     * @description Check if exists an GS_Admin_Checklist_Item__mdt with the Id
+     * @param  itemId String the id of the GS_Admin_Checklist_Item__mdt to be validated
+     * @return true if itemId is found, false otherwise
+     */
+    private static Boolean doesChecklistItemExists(String itemId) {
+        List<GS_Admin_Checklist_Item__mdt> items = [SELECT Id 
+                                                    FROM   GS_Admin_Checklist_Item__mdt
+                                                    WHERE  Id = :itemId];
+        return !items.isEmpty();
+    }
+
+    /**
+     * @description Set an Checklist element as checked to the current user.
+     * It's only done if the element was previously marked as "incomplete"(record does not exists). 
+     * It will not create duplicated records.
+     * @param  adminStatus List<GetStartedCompletionChecklistState__c> list with the adminStatus filtered by user and filter id
+     * @param  itemId      String the item id to be completed
+     */
+    private static void markItemAsCompleted(List<GetStartedCompletionChecklistState__c> adminStatus, String itemId) {
+        if (Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.Item_Id__c.isUpdateable() &&
+            Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.User__c.isUpdateable() && 
+            adminStatus.isEmpty()) {
+            
+            adminStatus.add(new GetStartedCompletionChecklistState__c(Item_Id__c = itemId,
+                                                                     User__c = UserInfo.getUserId()));
+            insert adminStatus;
+        }
+    }
+
+    /**
+     * @description unmark the previously completed checklist item marking it as "incomplete"
+     * In this implementation, we only store the "completed" items so we deleted.
+     * @param  adminStatus List<GetStartedCompletionChecklistState__c> list with the items filtered by currentUser and itemId
+     */
+    private static void unmarkItemAsCompleted(List<GetStartedCompletionChecklistState__c> adminStatus) {
+        if (GetStartedCompletionChecklistState__c.SObjectType.getDescribe().isDeletable() && !adminStatus.isEmpty()) {
+            database.delete(adminStatus);
+        }
     }
 
     /**
@@ -71,7 +139,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * This method wrap a checklist section in a apex object to send to UI
+    * @description This method wrap a checklist section in a apex object to send to UI
     * @param GS_Admin_Checklist_Section__mdt the metdata to wrap
     * @return ChecklistSection
     */
@@ -90,7 +158,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * This method wrap a checklist Item in a apex object to send to UI
+    * @description This method wrap a checklist Item in a apex object to send to UI
     * @param GS_Admin_Checklist_Item__mdt the metdata to wrap
     * @return ChecklistItem
     */
@@ -102,6 +170,7 @@ public with sharing class GS_AdminSetup {
         ci.extraInfo = item.Extra_Info_Label__c;
         ci.image = item.Image__c;
         ci.pos = item.Position__c.intValue();
+        ci.checked = storedItemsId.contains(item.Id);
         if (item.Has_Link__c) {
             ci.link = new ChecklistItemLink(item.Link_Label__c, item.Link_URL__c);
         }
@@ -114,7 +183,18 @@ public with sharing class GS_AdminSetup {
         return ci;
     }
 
-    /*
+    private static Set<Id> getMarkedAsCompletedCheckListItemByUser() {
+        List<GetStartedCompletionChecklistState__c> checkedItemList = [SELECT Item_Id__c
+                                                                    FROM GetStartedCompletionChecklistState__c
+                                                                    WHERE User__c = :UserInfo.getUserId()];
+        Set<Id> ids = new Set<Id>();
+        for (GetStartedCompletionChecklistState__c checkedItem : checkedItemList) {
+            ids.add(checkedItem.Item_Id__c);
+        }
+        return ids;
+    }
+
+    /**
     * @description This Class is to wrap GS_Admin_Checklist_Section__mdt information
     */
     public class ChecklistSection {
@@ -150,7 +230,7 @@ public with sharing class GS_AdminSetup {
         public Id id;
     }
 
-    /*
+    /**
     * @description This Class is to wrap GS_Admin_Checklist_Item__mdt information
     */
     public class ChecklistItem implements Comparable {
@@ -208,6 +288,9 @@ public with sharing class GS_AdminSetup {
         */
         @AuraEnabled
         public ChecklistItemButton secondaryBtn;
+
+        @AuraEnabled
+        public Boolean checked;
 
         /**
         * @description Compare ChecklistItem to short using position
@@ -289,5 +372,4 @@ public with sharing class GS_AdminSetup {
             this.value = value;
         }
     }
-
 }

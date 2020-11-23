@@ -29,7 +29,7 @@
 */
 /**
  * @date 2020
- * @group Getting Started
+ * @group Get Started Page
  * @author Salesforce.org
  * @description Service class for getting the Licensing Status of the org
  */

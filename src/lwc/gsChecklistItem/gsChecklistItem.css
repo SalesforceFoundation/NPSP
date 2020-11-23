@@ -62,13 +62,22 @@
     padding-right: 3rem;
  }
 
+ lightning-input.item-checkbox {
+    position: absolute;
+    left: -38px;
+    top: calc(50% - 10px);
+    outline: white 5px solid;
+    background: white;
+    outline-offset: 0;
+ }
+
  .item-card .card-content .content-footer {
     display: flex;
     align-items: baseline;
  }
 
  .item-card .card-content .content-footer a {
-    color: #2E79DC;
+    color: #006DCC;
     font-family: "Salesforce Sans";
     font-size: 12.98px;
     font-weight: bold;

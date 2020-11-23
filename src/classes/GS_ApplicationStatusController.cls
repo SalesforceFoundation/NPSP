@@ -29,7 +29,7 @@
 */
 /**
  * @date 2020
- * @group Getting Started
+ * @group Get Started Page
  * @author Salesforce.org
  * @description Controller for getting the org status(is trial? when it expires?, did customer applied for the licenses?).
  */
