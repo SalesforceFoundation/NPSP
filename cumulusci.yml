@@ -38,6 +38,16 @@ sources:
 
 
 tasks:
+    modify_xml_file:
+        description: Make changes to an XML file
+        group: Salesforce Metadata
+        class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
+
+    delete_files:
+        description: Delete the specified files from the current working folder
+        group: Salesforce Metadata
+        class_path: cumulusci.tasks.util.Delete
+
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -662,7 +672,6 @@ tasks:
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 
-
 flows:
     install_regression:
         steps:
@@ -1132,6 +1141,32 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
+    max_feature_parameter_limit_work_around:
+        description: Deletes feature parameters from local repo to allow deployment to Sandbox and other orgs where max of 25 FP's still exists
+        group: Salesforce Metadata
+        steps:
+            5:
+                task: modify_xml_file
+                options:
+                    output_style: salesforce
+                    path: src/package.xml
+                    xpath: /ns:Package/ns:types/ns:members
+                                [../ns:name='FeatureParameterInteger']
+                                [.='Data_CountGERowsLast30DaysBatch']
+
+            6:
+                task: modify_xml_file
+                options:
+                    output_style: salesforce
+                    path: src/package.xml
+                    xpath: /ns:Package/ns:types/ns:members
+                                [../ns:name='FeatureParameterDate']
+                                [.='P10_Application_Date']
+            10:
+                task: delete_files
+                options:
+                    path: ["*/*/Data_CountGERowsLast30DaysBatch.featureParameterInteger",
+                            "*/*/P10_Application_Date.featureParameterDate"]
 
 orgs:
     scratch:
