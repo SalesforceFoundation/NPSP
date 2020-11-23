@@ -90,7 +90,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
-    Click Special Button             Save & Enter New Gift
+    Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        ${CONTACT}[Name]   True
     ...                              Status=Dry Run - Validated
 
@@ -102,15 +102,15 @@ Test Batch Status Adding Removig Gifts
     Verify Table Field Values         ${CONTACT}[Name]   True
      ...                              Donation Amount=$${AMOUNT_UPDATED}.00
     # Run and validate the Batch data import status
-    Verify Expected Values    nonns   DataImportBatch__c    ${BATCH_ID}
-    ...                               Batch_Status__c=Open
+    Verify Expected Values    nonns   ${NS}DataImportBatch__c    ${BATCH_ID}
+    ...                               ${NS}Batch_Status__c=Open
 
     Process And Validate Batch        Completed
     Verify Table Field Values         ${CONTACT}[Name]   True
     ...                               Status=Imported
     # Verify the backend dataimport batch job using the API call
-    Verify Expected Values    nonns   DataImportBatch__c    ${BATCH_ID}
-    ...                               Batch_Status__c=Completed
+    Verify Expected Values    nonns   ${NS}DataImportBatch__c    ${BATCH_ID}
+    ...                               ${NS}Batch_Status__c=Completed
 
     #Scroll to the top of the page, add gift for contact associated with org account
     Scroll Page To Location           0      0
@@ -120,7 +120,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
-    Click Special Button             Save & Enter New Gift
+    Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        ${CONTACT2}[Name]   True
     ...                              Status=Dry Run - Error
     Process And Validate Batch       Errors
@@ -128,12 +128,12 @@ Test Batch Status Adding Removig Gifts
     ...                              Status=Failed
 
     # Verify the backend dataimport batch job
-    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
-    ...                              Batch_Status__c=Failed - Needs Review
+    Verify Expected Values    nonns  ${NS}DataImportBatch__c    ${BATCH_ID}
+    ...                              ${NS}Batch_Status__c=Failed - Needs Review
 
     #Delete the row that has Dry run status and trigger the batch job to see it completed
     Perform Action On Datatable Row  ${CONTACT2}[Name]          Delete
 
     # Verify the backend dataimport batch job
-    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
-    ...                              Batch_Status__c=Completed
+    Verify Expected Values    nonns  ${NS}DataImportBatch__c    ${BATCH_ID}
+    ...                              ${NS}Batch_Status__c=Completed

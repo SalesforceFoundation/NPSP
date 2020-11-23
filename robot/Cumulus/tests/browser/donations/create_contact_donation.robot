@@ -33,8 +33,8 @@ Create Donation from a Contact
     Go To Page                           Details
     ...                                  Contact
     ...                                  object_id=${data}[contact][Id]
-
-    Click Object Button                  New Donation
+    Current Page Should Be               Details                   Contact
+    Click Button                         New Donation
     Wait For Modal                       New                       Donation
     Populate Modal Form
     ...                                  Stage=${Stage_Type}

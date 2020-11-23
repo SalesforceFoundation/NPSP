@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Run Keywords
@@ -31,9 +32,8 @@ Dont select match for contact new donation with grid changes
     Store Session Record      Account    ${contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Contact
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -76,7 +76,7 @@ Dont select match for contact new donation with grid changes
     ...    Amount=20.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Go To Record Home    ${contact}[Id]
+    Go To Page      Details        Contact        object_id=${contact}[Id]
     Validate Related Record Count     Opportunities     2
 
 

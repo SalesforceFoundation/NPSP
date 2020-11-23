@@ -34,6 +34,15 @@
 * @description Services related to the RecurringDonation <-> Elevate integration
 */
 public inherited sharing class RD2_ElevateIntegrationService {
+
+    /***
+     * @description Contains a prefix appended to a GUID to indicate the RD is in draft
+     * and has a temp commitment Id so future installment Opportunities are not
+     * created for this Recurring Donation and any user can change it
+     * from a temp value to the actual value.
+     */
+    public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
+    
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
@@ -84,6 +93,21 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Determines whether a Recurring Donation event is from the Elevate integration
+    * @param rd Changed Recurring Donation
+    * @param oldRd Old Recurring Donation
+    * @return Boolean
+    */
+    public static Boolean isElevateEvent(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
+        String elevateEvent = rd.getSObject().LastElevateEventPlayed__c;
+
+        Boolean isElevateEventChanged = String.isNotBlank(elevateEvent)
+            && elevateEvent != oldRd.getSObject().LastElevateEventPlayed__c;
+
+        return isElevateEventChanged;
+    }
+
+    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
@@ -112,9 +136,16 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.StartDate__c != oldRd.StartDate__c
             || rd.Day_of_Month__c != oldRd.Day_of_Month__c
             || rd.RecurringType__c != oldRd.RecurringType__c
-            || rd.PaymentMethod__c != oldRd.PaymentMethod__c
-            || rd.Status__c != oldRd.Status__c
-            || rd.CommitmentId__c != oldRd.CommitmentId__c;
+            || rd.PaymentMethod__c != oldRd.PaymentMethod__c;
+
+        if (!isChanged) {
+            String oldCommitmentId = oldRd.CommitmentId__c;
+            Boolean isTempIdOverwrite = String.isNotBlank(oldCommitmentId)
+                && oldCommitmentId.startsWith(TEMP_COMMITMENT_ID_PREFIX);
+
+            isChanged = rd.CommitmentId__c != oldCommitmentId
+                && !isTempIdOverwrite;
+        }
 
         if (!isChanged && !(new RD2_RecurringDonation(rd)).isClosed()) {
             isChanged = rd.ClosedReason__c != oldRd.ClosedReason__c;

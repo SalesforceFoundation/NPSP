@@ -23,7 +23,7 @@ export default class GeFormElementHelper {
     }
 
     get objectMapping() {
-        return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
+        return GeFormService.getObjectMapping(this.targetObjectMappingDevName);
     }
 
     get hasMappingInformation() {

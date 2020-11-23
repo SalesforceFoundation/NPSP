@@ -109,12 +109,12 @@ class GeFormService {
     }
 
     /**
-     * Get a object info object by dev name from the render wrapper object
-     * @param objectDevName
+     * Get a object info object by dev name
+     * @param objectMappingDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectMappingWrapper(objectDevName) {
-        return this.objectMappings[objectDevName];
+    getObjectMapping(objectMappingDevName) {
+        return this.objectMappings[objectMappingDevName];
     }
 
     /**
@@ -173,16 +173,31 @@ class GeFormService {
     }
 
     get importedRecordFieldNames() {
-        return Object.values(this.objectMappings).map(
-            ({ Imported_Record_Field_Name }) =>
-                Imported_Record_Field_Name
-        );
+        return this.objectMappings && Object.values(this.objectMappings)
+            .map(
+                ({Imported_Record_Field_Name}) => Imported_Record_Field_Name
+            );
     }
 
-    getObjectMappingWrapperByImportedFieldName(importedFieldName) {
-        return Object.values(this.objectMappings)
-            .find(({ Imported_Record_Field_Name }) =>
+    fieldMappingsForImportedRecordFieldName(importedRecordFieldName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(
+                fieldMapping =>
+                    fieldMapping.Target_Object_Mapping_Dev_Name ===
+                    this.objectMappingWrapperFor(importedRecordFieldName).DeveloperName
+            );
+    }
+
+    objectMappingWrapperFor(importedFieldName) {
+        return this.objectMappings && Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
                 Imported_Record_Field_Name === importedFieldName);
+    }
+
+    fieldMappingsForObjectMappingDevName(objectMappingDevName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(fieldMapping =>
+                fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
     }
 
 }

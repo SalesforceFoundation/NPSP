@@ -13,12 +13,13 @@
                 field-list={fieldList}
                 key={row.element.key}
                 row-index={index}
-                row-record={row.record}
-                total-amount={totalAmount}
-                remaining-amount={remainingAmount}
-                disabled={row.element.disabled}
+                row={row}
+                disabled={row.disabled}
                 onremove={handleRemove}
-                onvaluechange={handleChange}>
+                onvaluechange={handleValueChange}
+                onrowvaluechange={handleRowValueChange}
+                remaining-amount={remainingAmount}
+                widget-data-from-state={widgetDataFromState}>
         </c-ge-form-widget-row-allocation>
     </template>
     <lightning-layout class={footerClass}>
@@ -26,7 +27,7 @@
             <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} data-qa-locator={qaLocatorAddNewAllocation} onclick={handleAddRow}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size='3' if:true={showRemainingAmount}>
-            <lightning-formatted-number value={remainingAmount} format-style='currency'></lightning-formatted-number>
+            <lightning-formatted-number value={remainingAmount} format-style='currency' data-qa-locator={qaLocatorRemainingAllocationAmount}></lightning-formatted-number>
         </lightning-layout-item>
     </lightning-layout>
 </template>

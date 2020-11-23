@@ -14,16 +14,16 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """To go to NPSP Settings page"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Nonprofit Success Pack Settings")
         self.npsp.choose_frame("Nonprofit Success Pack Settings")
-        
-    def open_main_menu(self,title): 
-        """Waits for the menu item to load and clicks to expand menu""" 
-        self.selenium.wait_until_page_contains(title, 
+
+    def open_main_menu(self,title):
+        """Waits for the menu item to load and clicks to expand menu"""
+        self.selenium.wait_until_page_contains(title,
                                                error=f"{title} link was not found on the page")
         # There are two elements that have donations and this hack is needed to avoid the
         # confusion of which element to pick
@@ -32,10 +32,11 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_element_is_visible(locator)
             self.salesforce._jsclick(locator)
         else:
-            self.npsp.click_link_with_text(title)
-            locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
+            #self.npsp.click_link_with_text(title)
+            locator=npsp_lex_locators["npsp_settings"]["main_menu_link"].format(title)
             self.selenium.wait_until_page_contains_element(locator,
                                                error=f"click on {title} link was not successful even after 30 seconds")
+            self.salesforce._jsclick(locator)
         self.selenium.capture_page_screenshot()
 
     def open_sub_link(self,title):
@@ -43,11 +44,24 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains(title,
                                                error=f"{title} link was not found on the page")
         self.npsp.click_link_with_text(title)
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.wait_until_page_contains_element(locator,
+        if title=='Status to State Mapping':
+            locator=npsp_lex_locators['npsp_settings']['erd_status_mapping_header'].format(title)
+            self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find status mappings on the page")
+        else:
+            locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+            self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()
 
+    @capture_screenshot_on_error
+    def verify_sub_link_present(self, title, bool):
+        """ Asserts if the sublink is present or not present
+            eg: Verify Sub Link Present     <Linkoption>   True/False
+        """
+        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+        assert bool == str(self.npsp.check_if_element_exists(locator)), "Expected {} present value to be {} but found {}".format(
+            title, bool, self.npsp.check_if_element_exists(locator)
+        )
 
     @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):
@@ -221,3 +235,16 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 enabled = True
         return enabled
 
+    @capture_screenshot_on_error
+    def verify_status_to_state_mappings(self, **kwargs):
+        """verifies the default status to state mappings for recurring donations"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators['npsp_settings']['erd_state_status_mapping'].format(key)
+            self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find {key} on the page")
+            if self.npsp.check_if_element_exists(locator):
+                print(f"element exists {locator}")
+                actual_value=self.selenium.get_webelement(locator).text
+                print(f"actual mapping found for {key} is {actual_value}")
+                assert value == actual_value, "Expected {} value to be {} but found {}".format(key,value, actual_value)
+            else:
+                print("Right keys under status mapping fields table not found")    

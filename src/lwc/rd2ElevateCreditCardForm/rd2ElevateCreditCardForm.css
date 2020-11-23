@@ -1,0 +1,41 @@
+.payment-services-iframe {
+    width: 100%;
+    height: 5.7rem;
+    border: none;
+}
+
+.iframe-container {
+    position: relative;
+}
+
+.credit-card-container {
+    border: 1px solid var(--lwc-colorBorder, rgb(216, 221, 230));
+    border-radius: 0.25rem;
+    min-height: 5rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.credit-card-header {
+    background-color: var(--lwc-colorBackgroundShade, rgb(224, 229, 238));
+    font-weight: bold;
+}
+
+.hide-card-button {
+    line-height: 0;
+    font-weight: 100;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.fade-in {
+    animation: fade 1s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

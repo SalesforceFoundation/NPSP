@@ -218,6 +218,16 @@ public with sharing class RD2_ValidationService {
         }
     }
 
+    /**
+    * @description Validates if Enhanced Recurring Donation Paused Status is Active
+    * @return Boolean 
+    */
+    public static Boolean isStatusPausedActive() {
+        return UTIL_Describe.isValidPicklistOption(
+            'npe03__Recurring_Donation__c',
+            String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            RD2_Constants.STATUS_PAUSED);
+    }
     /***
     * @description Validates Enhanced Recurring Donations metadata has been deployed
     * @param rd The Recurring Donation to validate

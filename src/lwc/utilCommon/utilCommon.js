@@ -12,7 +12,7 @@ const OBJECT = 'object';
  * @description 'Debouncifies' any function.
  *
  * @param {object} anyFunction: Function to be debounced.
- * @param {integer} wait: Time to wait by in milliseconds.
+ * @param {number} wait: Time to wait by in milliseconds.
  * @returns {function<Promise>} A debounced version of the function originally
  * passed to debouncify
  */
@@ -323,7 +323,7 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
 * e.g. hasNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
 */
 const hasNestedProperty = (object, property, ...remainingProperties) => {
-    if (object === undefined) return false
+    if (object === undefined || object === null) return false
     if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
     return hasNestedProperty(object[property], ...remainingProperties)
 }
@@ -528,7 +528,59 @@ const stripNamespace = (apiName , namespacePrefix) => {
     return apiNameParts[1];
 }
 
+/**
+ * @description Replaces the last instance of "__c" with "__r".
+ * Useful when referencing the related record field on objects
+ * in the lightning/uiRecordApi Record format:
+ * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
+ * @param customFieldApiNameOrFieldReference
+ * The ApiName of the relationship field for which the related record
+ * field name is desired, or the field reference object.
+ * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
+ */
+const relatedRecordFieldNameFor = (customFieldApiNameOrFieldReference) => {
+    const fieldApiName =
+        getFieldApiNameForFieldApiNameOrObjectReference(customFieldApiNameOrFieldReference);
+    return fieldApiName &&
+        replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
+}
+
+/**
+ * @description Replaces the last instance of a string pattern with another pattern.
+ * @param subject The original string.
+ * @param toRemove The pattern for which the last instance should be removed.
+ * @param replacement The pattern used to replace the last instance of toRemove.
+ * @returns {*|void|string} A new string with the last instance replaced.
+ */
+const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
+    return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
+}
+
+const apiNameFor = (objectOrFieldReference) => {
+    if (objectOrFieldReference === null || objectOrFieldReference === undefined) {
+       return objectOrFieldReference;
+    }
+    if (objectOrFieldReference.hasOwnProperty('fieldApiName')) {
+        return objectOrFieldReference.fieldApiName;
+    } else if (objectOrFieldReference.hasOwnProperty('objectApiName')) {
+        return objectOrFieldReference.objectApiName;
+    } else {
+        return null;
+    }
+}
+
+const isString = (val) => {
+    return typeof val === 'string' || val instanceof String;
+}
+
+const getFieldApiNameForFieldApiNameOrObjectReference = (fieldApiNameOrFieldReference) => {
+    return isString(fieldApiNameOrFieldReference) ?
+        fieldApiNameOrFieldReference :
+        apiNameFor(fieldApiNameOrFieldReference);
+}
+
 export {
+    apiNameFor,
     constructErrorMessage,
     debouncify,
     deepClone,
@@ -545,6 +597,7 @@ export {
     isUndefined,
     isPrimative,
     isNull,
+    isString,
     mutable,
     sort,
     shiftToIndex,
@@ -558,5 +611,6 @@ export {
     arraysMatch,
     getValueFromDotNotationString,
     validateJSONString,
-    stripNamespace
+    stripNamespace,
+    relatedRecordFieldNameFor
 };

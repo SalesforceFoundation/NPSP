@@ -261,6 +261,7 @@ public class BDI_Donations {
     @TestVisible
     private Boolean shouldSetDonationBatchNumber(SObject targetObject, DataImport__c dataImport) {
         if (bdi.isDryRun ||
+            String.isBlank(dataImport.NPSP_Data_Import_Batch__c) ||
             String.isBlank(dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c)) {
             return false;
         }

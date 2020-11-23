@@ -26,6 +26,7 @@ Remove Secondary Affiliation for Contact
     ...                               Verifies that contact does not show under affiliated contacts in the account page
     [tags]                            W-037651                feature:Affiliations
     Go To Page                        Details                      Contact                 object_id=${contact}[Id]
+    Current Page Should Be            Details                      Contact
     Select Tab                        Related
     Click Related Item Popup Link     Organization Affiliations    ${account}[Name]        Delete
     Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation

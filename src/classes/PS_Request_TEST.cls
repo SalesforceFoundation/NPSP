@@ -54,7 +54,7 @@ private with sharing class PS_Request_TEST {
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + '/v1/payments/verified/purchase';
+            + PS_Request.ENDPOINT_PURCHASE;
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
     }
@@ -76,7 +76,7 @@ private with sharing class PS_Request_TEST {
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + '/v1/payments/verified/commitments';
+            + PS_Request.ENDPOINT_COMMITMENT;
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
     }
@@ -98,9 +98,10 @@ private with sharing class PS_Request_TEST {
 
         final String jsonRequestBody = '';
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + '/v1/payments/verified/commitments/'
-            + COMMITMENT_ID
-            + '/cancel';        
+            + String.format(
+                PS_Request.ENDPOINT_COMMITMENT_CANCEL, 
+                new String[]{ COMMITMENT_ID }
+            );        
         
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
     }

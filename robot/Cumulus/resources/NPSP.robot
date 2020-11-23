@@ -361,7 +361,7 @@ Open NPSP Settings
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            ${topmenu}
     Open Sub Link             ${submenu}
-    Sleep  1
+    Sleep  2
 
 Click Data Import Button
     [Documentation]   Switches to the frame and clicks the button identified by path

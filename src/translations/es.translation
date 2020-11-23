@@ -1490,6 +1490,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Haga clic para alternar la sección. Esta sección no está abierta.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Haga clic para alternar la sección. Esta sección está abierta.</label>
+    </customLabels>
+    <customLabels>
         <label>Llamada no válida. Esta función está reservada para uso de Salesforce.</label>
         <name>adapterException</name>
     </customLabels>

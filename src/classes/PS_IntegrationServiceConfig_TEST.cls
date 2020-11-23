@@ -62,6 +62,91 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             }
         };
 
+
+    @IsTest
+    private static void shouldHaveIntegrationPermissionsWhenOrgIsConnectedToElevate() {
+        setUpConfiguration();
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
+        System.assert(hasIntegrationPermissions, 'The user should have integration permissions.');
+    }
+
+    @IsTest
+    private static void shouldNotHaveIntegrationPermissionsWhenOrgIsNotConnectedToElevate() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
+        System.assert(!hasIntegrationPermissions,
+            'The user should not have integration permissions without configuration keys.');
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWhenOrgIsConnectedToElevate() {
+        setUpConfiguration();
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assert(ps.isIntegrationEnabled(),
+            'The org should have Integration Enabled when '
+            + 'all required configuration keys are present.');
+    }
+
+    @IsTest
+    private static void shouldNotHaveIntegrationEnabledWhenOrgIsNotConnectedToElevate() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assertEquals(false, ps.isIntegrationEnabled(),
+            'The org should not have Integration Enabled without '
+            + 'all required configuration keys present.');
+    }
+
+    @IsTest
+    private static void shouldUsePaymentServicesConfig() {
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        Test.startTest();
+        PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
+        Test.stopTest();
+
+        // Verify that the config properties of the class are
+        // the same as those of the inserted config records
+        System.assertEquals(testApiKey, service.getAPIKey());
+        System.assertEquals(testMerchantId, service.getMerchantIds());
+    }
+
+    /**
+     * @description When payments services configuration is initialized with its
+     *              default payment service names, it should use the apiKey
+     *              from "makana" set if not found or null in "payments" config set
+    */
+    @IsTest
+    private static void shouldUseMakanaApiKey() {
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        // Set payments Api key to null and set an Api key for makana
+        PS_IntegrationService.setConfiguration(new Map<String, List<Map<String, String>>>{
+            PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => null
+                }
+            },
+            PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => testMakanaApiKey
+                }
+            }
+        });
+
+        Test.startTest();
+        PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
+        Test.stopTest();
+
+        // Verify apiKey matches makana, while the rest match payments
+        System.assertEquals(testMakanaApiKey, service.getAPIKey());
+        System.assertEquals(testMerchantId, service.getMerchantIds());
+    }
+
+
     /***
     * @description Stub for the integration service config instance
     */
@@ -101,8 +186,13 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         }
     }
 
-    @IsTest
-    private static void shouldHaveIntegrationPermissions() {
+    // Helpers
+    //////////////
+
+    /***
+     * @descriptions Inserts required payments services configuration 
+     */
+    private static void setUpConfiguration() {
         List<Payment_Services_Configuration__c> requiredConfigs = new List<Payment_Services_Configuration__c>();
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
@@ -112,95 +202,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                 Value__c = String.valueOf(i)
             ));
         }
+
         insert requiredConfigs;
-
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
-        System.assert(hasIntegrationPermissions, 'The user should have integration permissions.');
-    }
-
-    @IsTest
-    private static void shouldNotHaveIntegrationPermissions() {
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
-        System.assert(!hasIntegrationPermissions,
-            'The user should not have integration permissions without configuration keys.');
-    }
-
-    @IsTest
-    private static void shouldHaveIntegrationEnabled() {
-        List<Payment_Services_Configuration__c> requiredConfigs = new
-        List<Payment_Services_Configuration__c>();
-
-        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
-            requiredConfigs.add(new Payment_Services_Configuration__c(
-                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                Value__c = String.valueOf(i)
-            ));
-        }
-        insert requiredConfigs;
-
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        System.assert(ps.isIntegrationEnabled(),
-            'The org should have Integration Enabled when '
-            + 'all required configuration keys are present.');
-
-    }
-
-    @IsTest
-    private static void shouldNotHaveIntegrationEnabled() {
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        System.assertEquals(false, ps.isIntegrationEnabled(),
-            'The org should not have Integration Enabled without '
-            + 'all required configuration keys present.');
-    }
-
-    @IsTest
-    private static void shouldUsePaymentServicesConfig() {
-        PS_IntegrationService.setConfiguration(testConfig);
-
-        Test.startTest();
-        GE_PaymentServices service = new GE_PaymentServices();
-        Test.stopTest();
-
-        // Verify that the config properties of the class are
-        // the same as those of the inserted config records
-        System.assertEquals(testMerchantId, service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
-        System.assertEquals(testApiKey, service.config.get(PS_IntegrationServiceConfig.API_KEY));
-    }
-
-    /**
-     * @description When GE_PaymentServices is initialized with its
-     *              default payment service names, it should use the apiKey
-     *              from "makana" set if not found or null in "payments" config set
-    */
-    @IsTest
-    private static void shouldUseMakanaApiKey() {
-        PS_IntegrationService.setConfiguration(testConfig);
-
-        // Set payments Api key to null and set an Api key for makana
-        PS_IntegrationService.setConfiguration(new Map<String, List<Map<String, String>>>{
-            PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME => new List<Map<String, String>>{
-                new Map<String, String>{
-                    'key' => PS_IntegrationServiceConfig.API_KEY,
-                    'value' => null
-                }
-            },
-            PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME => new List<Map<String, String>>{
-                new Map<String, String>{
-                    'key' => PS_IntegrationServiceConfig.API_KEY,
-                    'value' => testMakanaApiKey
-                }
-            }
-        });
-
-        Test.startTest();
-        GE_PaymentServices service = new GE_PaymentServices();
-        Test.stopTest();
-
-        // Verify apiKey matches makana, while the rest match payments
-        System.assertEquals(testMakanaApiKey, service.config.get(PS_IntegrationServiceConfig.API_KEY));
-        System.assertEquals(testMerchantId,service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
     }
 }

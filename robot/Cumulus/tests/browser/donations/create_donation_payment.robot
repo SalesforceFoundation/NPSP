@@ -57,12 +57,16 @@ Create Donation and Opportunity and Create Payment Manually
     Click Related List Button               Payments                                New
     Wait For Modal                          New                                     Payment
     Select Window
-    Populate Modal Form                     Payment Amount=100
-    ...                                     Payment Method=Credit Card
+    Populate Modal Form                     Payment Method=Credit Card
+    ...                                     Payment Amount=100
 
     Open Date Picker                        Payment Date
-    Pick Date                               Today
-    Click Modal Button                      Save
+    Choose Date                             Today
+
+    Click Modal Footer Button               Save
+    Click Modal Footer Button               Cancel
+
+
     Scroll Page To Location                 0    0
     Validate Related Record Count           Payments                                1
 

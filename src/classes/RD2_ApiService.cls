@@ -44,7 +44,7 @@ public inherited sharing class RD2_ApiService {
      * @return JSON Serialized version of Map<Id, List<RD2_ApiService.Schedule>> schedulesByRdId
      */
     public String querySchedules(Set<Id> rdIds) {
-        Map<Id, List<RD2_ApiService.Schedule>> schedulesByRdId = new Map<Id, List<RD2_ApiService.Schedule>>();
+        Map<Id, List<Schedule>> schedulesByRdId = new Map<Id, List<Schedule>>();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return JSON.serialize(schedulesByRdId);
@@ -53,9 +53,9 @@ public inherited sharing class RD2_ApiService {
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
+            List<Schedule> schedules = new List<Schedule>();
             for (RecurringDonationSchedule__c s : rd.RecurringDonationSchedules__r) {
-                schedules.add(new RD2_ApiService.Schedule(s, rd));
+                schedules.add(new Schedule(s, rd));
             }
 
             schedulesByRdId.put(rd.Id, schedules);
@@ -93,7 +93,7 @@ public inherited sharing class RD2_ApiService {
      * The Schedule Service will filter them out if not applicable within the time period.
      * @return String RD Schedule subquery used in the Recurring Donation SOQL
      */
-    public String getScheduleSubQuery() {
+    private String getScheduleSubQuery() {
         Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
         fields.add('CreatedDate');
         fields.add('LastModifiedDate');
@@ -145,18 +145,110 @@ public inherited sharing class RD2_ApiService {
             statusReason = rdSchedule.StatusReason__c;
             createdDate = rdSchedule.CreatedDate;
             lastModifiedDate = rdSchedule.LastModifiedDate;
-
-            try {
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    currencyCode = (String) rd.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
-                } else {
-                    currencyCode = Userinfo.getDefaultCurrency();
-                }
-            } catch (Exception ex) {
-                // ignore any errors if for some reason we can't retrieve the currency code
-                // because usage in the ActiveSchedule inner class is only for api use
-            }
+            currencyCode = RD2_ApiService.getCurrencyCode(rd);
         }
     }
 
+    /**
+     * @description Retrieves the currency from the RD or the org
+     * @return currencyCode
+     */
+    private static String getCurrencyCode(npe03__Recurring_Donation__c rd) {
+        String currencyCode;
+
+        try {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                currencyCode = (String) rd.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            } else {
+                currencyCode = Userinfo.getDefaultCurrency();
+            }
+        } catch (Exception ex) {
+            // ignore any errors if for some reason we can't retrieve the currency code
+            // because usage in the ActiveSchedule inner class is only for api use
+        }
+
+        return currencyCode;
+    }
+
+    /**
+     * @description Retrieve a map of scheduled installments by Rd.id.  Paused installments are omitted.
+     * @param startDate Begin date of range for installments. Defaults to current date if null.
+     * @param endDate End date of range for installments
+     * @param rdIds Recurring Donation Ids for which to retrieve installments
+     * @return String JSON Serialized version of Map<Id, List<RD2_ApiService.Installment>> installmentsByRdId
+     */
+    public String queryInstallments(Date startDate, Date endDate, Set<Id> rdIds) {
+        Map<Id, List<Installment>> installmentsByRdId = new Map<Id, List<Installment>>();
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            return JSON.serialize(installmentsByRdId);
+        }
+
+        if (startDate == null) {
+            startDate = Date.today();
+        }
+
+        if (endDate == null) {
+            endDate = getDefaultEndDate(startDate);
+        }
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        String soql = getRecurringDonationQuery();
+        for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
+
+            List<Installment> installments = new List<Installment>();
+            for (RD2_ScheduleService.Installment installment : service.getVisualizedInstallments(
+                startDate,
+                endDate,
+                rd.RecurringDonationSchedules__r)
+            ) {
+                installments.add(new Installment(installment, rd));
+            }
+
+            installmentsByRdId.put(rd.Id, installments);
+        }
+
+        return JSON.serialize(installmentsByRdId);
+    }
+
+    /**
+     * @description Calculates endDate to produce 1 year of installment data. In most cases that means
+     * endDate should be set to startDate + 1 year - 1 day. There may be edge cases where that is not
+     * true, so the subtraction is limited to cases where the day portion of startDate == the day portion of endDate.
+     * The outcome of subtracting one day is to ensure that one year of installments is included. Without the
+     * adjustment, an extra installment is reported in most, if not all, scenarios.
+     * @param startDate Date
+     * @return endDate Date
+     */
+    private Date getDefaultEndDate(Date startDate) {
+        Date endDate = startDate.addYears(1);
+        if (startDate.day() == endDate.day()) {
+            endDate.addDays(-1);
+        }
+        return endDate;
+    }
+
+    /***
+    * @description Wrapper class for Recurring Donation Schedule data for the querySchedules api
+    */
+    public class Installment {
+
+        public String recurringDonationId { get; set; }
+        public String scheduleId { get; set; }
+        public String campaignId { get; set; }
+        public Date closeDate { get; set; }
+        public Decimal installmentAmount { get; set; }
+        public String currencyCode { get; set; }
+        public String paymentMethod { get; set; }
+
+        public Installment(RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {
+            recurringDonationId = rd.Id;
+            scheduleId = installment.scheduleId;
+            campaignId = installment.campaignId;
+            closeDate = installment.nextDonationDate;
+            installmentAmount = installment.installmentAmount;
+            paymentMethod = installment.paymentMethod;
+            currencyCode = currencyCode = RD2_ApiService.getCurrencyCode(rd);
+        }
+    }
 }

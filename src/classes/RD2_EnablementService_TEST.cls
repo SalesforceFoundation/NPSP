@@ -248,7 +248,7 @@ public with sharing class RD2_EnablementService_TEST {
 
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = true;
-        setPilotEnabledFeatureParameter(false);
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(false);
 
         System.assertEquals(true, service.isRecurringDonations2Ready(),
             'Enhancement should be ready for enablement regardless of the PilotEnabled value');
@@ -260,7 +260,7 @@ public with sharing class RD2_EnablementService_TEST {
     */
     @isTest
     private static void shouldEnableEnhancementWhenPilotEnabledIsFalse() {
-        setPilotEnabledFeatureParameter(false);
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(false);
         configureRecurringDonations2Enabled();
 
         System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should be enabled');
@@ -308,23 +308,6 @@ public with sharing class RD2_EnablementService_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
             Customizable_Rollups_Enabled__c = isEnabled
         ));
-    }
-
-    /***
-    * @description Stubs PilotEnabled feature parameter enablement
-    * @param isEnabled Indicates if the PilotEnabled should be enabled using a Mock feature management
-    * @return none
-    */
-    public static void setPilotEnabledFeatureParameter(Boolean isEnabled) {
-        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
-
-        featureEnablement.featureManagement = (UTIL_FeatureManagement) Test.createStub(
-            UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock()
-        );
-
-        featureEnablement.featureManagement.setPackageBooleanValue(
-            UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), isEnabled
-        );
     }
 
     /***

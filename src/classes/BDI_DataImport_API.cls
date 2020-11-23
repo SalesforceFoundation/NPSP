@@ -57,6 +57,10 @@ global with sharing class BDI_DataImport_API {
     global static final string bdiDryRunValidated = 'Dry Run - Validated';
     global static final string bdiDryRunError = 'Dry Run - Error';
 
+    global static final String BATCH_STATUS_OPEN = 'Open';
+    global static final String BATCH_STATUS_COMPLETED = 'Completed';
+    global static final String BATCH_STATUS_FAILED = 'Failed - Needs Review';
+
 
     /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported and do not belong

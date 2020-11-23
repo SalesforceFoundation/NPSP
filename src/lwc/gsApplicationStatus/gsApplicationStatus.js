@@ -10,7 +10,7 @@ import gsSubmitted from '@salesforce/label/c.gsSubmitted'
 import gsDaysAdded from '@salesforce/label/c.gsDaysAdded'
 import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
 import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
-import gsClose from '@salesforce/label/c.gsClose'
+import gsClose from '@salesforce/label/c.commonClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
 export default class GsApplicationStatus extends LightningElement {
     
@@ -36,6 +36,7 @@ export default class GsApplicationStatus extends LightningElement {
         gsClose,
         gsFollowUpApplicationStatus
     }
+
     /**
      * Initialized the component with the data retrieved from Salesforce
      */
@@ -77,8 +78,8 @@ export default class GsApplicationStatus extends LightningElement {
      */
     calculateTrialRemainingDays(result) {
         if (result.trialExpirationDate) {
-            const date = new Date(result.trialExpirationDate)
-            const oneDay = 24 * 60 * 60 * 1000
+            const date = new Date(result.trialExpirationDate);
+            const oneDay = 24 * 60 * 60 * 1000;
             const today = new Date();
             return Math.ceil(Math.abs(date - today)/oneDay);
         }
@@ -91,7 +92,7 @@ export default class GsApplicationStatus extends LightningElement {
      * @returns True if data has an applicationDate field, false otherwise.
      */
     checkApplicationSubmitted(result) {
-        return result.applicationDate != null;
+        return result.applicationDate !== undefined && result.applicationDate !== null;
     }
 
     /**
@@ -99,6 +100,31 @@ export default class GsApplicationStatus extends LightningElement {
      * In this iteration is showing a pop up with an email address to ask it
      */
     onCheckStatusClick() {
-        this.template.querySelector("c-gs-modal").openModal();
+        this.template.querySelector("c-modal").show();
+    }
+
+    /**
+     * Handles the click on the close button in the modal.
+     */
+    onClickCloseModal() {
+        this.template.querySelector("c-modal").hide();
+    }
+
+    /**
+     * Foccuses on the button after the modal is closed. 
+     */
+    handleModalClose() {
+        this.template.querySelector("button").focus();
+    }
+
+    /**
+     * For accesibillity, if the user click on space, it calls the click method of the caller
+     * @param target the component that fired the event
+     * @param code key code  
+     */
+    handleKeypress({target, code}) {
+        if (code === 'Space') {
+            target.click();
+        }
     }
 }
