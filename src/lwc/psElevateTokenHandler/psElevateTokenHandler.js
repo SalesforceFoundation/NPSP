@@ -2,7 +2,8 @@
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getNamespace, isFunction, isNull } from 'c/utilCommon';
 
-import PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
+        '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 
 
@@ -41,11 +42,35 @@ class psElevateTokenHandler {
     * @description Returns credit card tokenization Visualforce page URL
     */
     getTokenizeCardPageURL() {
-        const namespace = this.getCurrentNamespace();
-
-        return namespace
-            ? `/apex/${namespace}__${TOKENIZE_CARD_PAGE_NAME}`
+        return this.currentNamespace
+            ? `/apex/${this.currentNamespace}__${TOKENIZE_CARD_PAGE_NAME}`
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
+    }
+
+    buildVisualForceOriginURLs(domainInfo) {
+        let url = `https://${domainInfo.orgDomain}--c.visualforce.com`;
+        let alternateUrl = `https://${domainInfo.orgDomain}--c.${domainInfo.podName}.visual.force.com`;
+        let productionEnhancedUrl = `https://${domainInfo.orgDomain}--c.vf.force.com`;
+        let sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--c.sandbox.vf.force.com`;
+
+        const originURLS = [
+            {value: url},
+            {value: alternateUrl},
+            {value: productionEnhancedUrl},
+            {value: sandboxEnhancedUrl}
+        ];
+
+        if (this.currentNamespace) {
+            return this.convertToNamespacedURLs(originURLS);
+        }
+        return originURLS;
+    }
+
+    convertToNamespacedURLs(originUrls) {
+        originUrls.forEach(url => {
+            url.replace('--c', `--${this.currentNamespace}`);
+        });
+        return originUrls;
     }
 
     /***
@@ -57,23 +82,14 @@ class psElevateTokenHandler {
             return;
         }
 
-        const namespace = this.getCurrentNamespace();
-
-        let url = `https://${domainInfo.orgDomain}--c.visualforce.com`;
-        let alternateUrl = `https://${domainInfo.orgDomain}--c.${domainInfo.podName}.visual.force.com`;
-
-        if (namespace) {
-            url = url.replace('--c', `--${namespace}`);
-            alternateUrl = alternateUrl.replace('--c', `--${namespace}`);
-        }
-
-        this._visualforceOriginUrls = [{ value: url }, { value: alternateUrl }];
+        this._visualforceOriginUrls =
+            this.buildVisualForceOriginURLs(domainInfo);
     }
 
     /***
     * @description Returns the NPSP namespace (if any)
     */
-    getCurrentNamespace() {
+    get currentNamespace() {
         return getNamespace(PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
     }
 
@@ -93,16 +109,17 @@ class psElevateTokenHandler {
         let self = this;
 
         window.onmessage = async function (event) {
-
             if (self._visualforceOriginUrls) {
                 self._visualforceOrigin = self._visualforceOriginUrls.find(
                     origin => event.origin === origin.value
-                ).value;
-            }
-
-            if (self._visualforceOrigin) {
-                const message = JSON.parse(event.data);
-                component.handleMessage(message);
+                );
+                self._visualforceOrigin =
+                    self._visualforceOrigin !== undefined ?
+                        self._visualforceOrigin.value : undefined;
+                if (self._visualforceOrigin !== undefined) {
+                    const message = JSON.parse(event.data);
+                    component.handleMessage(message);
+                }
             }
         }
     }
