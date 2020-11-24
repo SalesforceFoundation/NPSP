@@ -68,7 +68,7 @@ class psElevateTokenHandler {
 
     convertToNamespacedURLs(originUrls) {
         originUrls.forEach(url => {
-            url.replace('--c', `--${this.currentNamespace}`);
+            url.value.replace('--c', `--${this.currentNamespace}`);
         });
         return originUrls;
     }
