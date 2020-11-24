@@ -335,14 +335,6 @@ tasks:
             objects:
                 - Error__c
 
-    purge_npsp_errors_managed:
-        description: 'Deletes all NPSP Error__c records'
-        class_path: cumulusci.tasks.bulkdata.DeleteData
-        group: Test Data
-        options:
-            objects:
-                - npsp__Error__c
-
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
@@ -696,12 +688,6 @@ tasks:
                 Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
-
-    generate_and_load_from_yaml_hack:
-        class_path: cumulusci.tasks.bulkdata.generate_and_load_data_from_yaml.GenerateAndLoadDataFromYaml
-
-    hack_cci_sf_sep_2020:
-        class_path: datasets.rd2.cci_sf_hack.CCIHack
 
 flows:
     install_regression:
@@ -1172,8 +1158,8 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
-    ldv_test_data_managed:
-        description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records.
+    ldv_test_data:
+        description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records
         group: NPSP
         steps:
             5:
@@ -1182,7 +1168,6 @@ flows:
                 options:
                     path: datasets/rd2/config_npsp_for_ldv_data_load.cls
                     apex: before_data_load();
-                    managed: true
             10:
                 task: disable_triggers
                 ## Disable Rollups for both the delete and the data load to avoid lock errors
@@ -1194,21 +1179,16 @@ flows:
                         - RD2_RecurringDonationsOpp_TDTM
                     active: false
                     restore: false
-                    managed: true
             15:
                 task: unschedule_apex
                 ## Delete all scheduled NPSP jobs ... just in case.
-                options:
-                    managed: true
             16:
                 task: set_duplicate_rule_status
                 options:
                     api_names: Account.Standard_Account_Duplicate_Rule, Contact.Standard_Contact_Duplicate_Rule
                     active: false
-            19:
-                task: hack_cci_sf_sep_2020
             20:
-                task: generate_and_load_from_yaml_hack
+                task: generate_and_load_from_yaml
                 ## The actual data-loading task.
                 ## Use command line parameters to override the num_records and batch_size parameters
                 options:
@@ -1217,10 +1197,7 @@ flows:
                     num_records_tablename: Contact
                     batch_size: 200000
                     bulk_mode: parallel
-                    managed: true
                     mapping: datasets/rd2/data_recipe_with_rd2_mapping.yml
-                    # working_directory: ./tmp
-
             25:
                 task: restore_triggers
                 ## Reactivate the Rollup and Merge triggers after data loading completes
@@ -1231,7 +1208,6 @@ flows:
                         - RLLP_OppRollup_TDTM
                     active: true
                     restore: false
-                    managed: true
             30:
                 task: execute_anon
                 ## Turn on automatic installment opportunity creation
@@ -1239,9 +1215,8 @@ flows:
                 options:
                     path: datasets/rd2/config_npsp_for_ldv_data_load.cls
                     apex: after_data_load();
-                    managed: true
 
-    ldv_data_delete_managed:
+    ldv_data_delete:
         description: Hard Delete all NPSP related data in org, disabling and reenabling triggers to reduce errors and improve performance
         steps:
             5:
@@ -1262,7 +1237,6 @@ flows:
                         - ACCT_CascadeDeleteLookups_TDTM
                     active: false
                     restore: false
-                    managed: true
             10:
                 task: test_data_delete
                 ## Clear out the relationship object by itself to avoid errors due to concurrent deletes later
@@ -1290,7 +1264,6 @@ flows:
                         - ACCT_CascadeDeleteLookups_TDTM
                     active: true
                     restore: false
-                    managed: true
 
     max_feature_parameter_limit_work_around:
         description: Deletes feature parameters from local repo to allow deployment to Sandbox and other orgs where max of 25 FP's still exists

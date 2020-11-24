@@ -84,9 +84,7 @@ as well as many other features needed to define the workspace for the org's inte
 | Name                          | Type | Description                                                                                  |
 | ----------------------------- | ---- | -------------------------------------------------------------------------------------------- |
 | `enable_rd2` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration (unmanaged only)
-| `enable_rd2_managed` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration (managed only)
 | `deploy_rd2_config`  | Task | Deploys the Unpackaged Metadata needed for Enhanced Recurring Donations (unmanaged only)
-| `deploy_rd2_config_managed`  | Task | Deploys the Unpackaged Metadata needed for Enhanced Recurring Donations (managed only)
 
 ### Static Analysis
 | Name  | Type | Description                                                                                                                     |
@@ -155,8 +153,7 @@ Cumulus's unpackaged configuration is used as follows:
 | `test_data_delete` | Task | Delete all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors |
 | `test_data_delete_managed` | Task | Version for Managed Orgs  |
 | `purge_npsp_errors` | Task | Deletes all records in the Error__c object  |
-| `purge_npsp_errors_managed` | Task | Deletes all records in the npsp__Error__c object  |
-| `ldv_data_delete_managed` | Flow | Hard Deletes all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors. Disables Triggers and other logic first to opimize performance and prevent errors. Use this when deleting large amounts of data in an org. |
+| `ldv_data_delete` | Flow | Hard Deletes all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors. Disables Triggers and other logic first to opimize performance and prevent errors. Use this when deleting large amounts of data in an org. |
 
 ### Dev Org Data Set
 
@@ -197,13 +194,12 @@ This uses Snowfakery to generate a data set up to millions of records. The defau
 95% of all Contacts created will have a single Recurring Donation. Each RD will have one historical Opportunity. Contacts may also have Relationship and Affiliations. A load of 1000 Contacts will create 950 RD records, approximately 4000 Opportunities/Payments/Allocations, and other related records.  
 
 Special Notes:
-- Requires Enhanced Recurring Donations be enabled first. Use the `enable_rd2_managed` flow to do this.
-- This flow is currently built for Managed package orgs only, but an upcoming change to CCI should allow this to work in either managed or unmanaged.
+- Requires Enhanced Recurring Donations be enabled first. Use the `enable_rd2` flow to do this.
 - Future RD Installment Opportunities are not created automatically during the data load. This can be done separately by executing the RD batch job through NPSP Settings.
 
 | Deploy Flow    | Options | Delete Task        |
 | -------------- | ------------ | ------------------ |
-| `ldv_test_data_managed` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_test_data_managed` |
+| `ldv_test_data` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_test_data` |
 
 For managed orgs, the mapping must be manually set to `datasets/mapping-managed.yml`.
 
