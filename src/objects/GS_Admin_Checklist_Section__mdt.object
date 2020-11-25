@@ -38,7 +38,7 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>GS Admin Checklist Section</label>
-    <pluralLabel>GS Admin Checklist Sections</pluralLabel>
+    <label>NPSP Get Started Admin Checklist Section</label>
+    <pluralLabel>NPSP Get Started Admin Checklist Sections</pluralLabel>
     <visibility>Public</visibility>
 </CustomObject>

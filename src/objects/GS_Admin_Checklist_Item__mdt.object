@@ -226,7 +226,7 @@ For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApi
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>GS Admin Checklist Item</label>
-    <pluralLabel>GS Admin Checklist Items</pluralLabel>
+    <label>NPSP Get Started Admin Checklist Item</label>
+    <pluralLabel>NPSP Get Started Admin Checklist Items</pluralLabel>
     <visibility>Public</visibility>
 </CustomObject>
