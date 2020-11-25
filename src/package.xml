@@ -1161,6 +1161,7 @@
         <members>DataImport__c.Payment_Origin_ID__c</members>
         <members>DataImport__c.Payment_Origin_Name__c</members>
         <members>DataImport__c.Payment_Origin_Type__c</members>
+        <members>DataImport__c.Payment_Paid__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
@@ -3210,6 +3211,7 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Name</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
+        <members>Data_Import_Field_Mapping.Payment_Paid</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
