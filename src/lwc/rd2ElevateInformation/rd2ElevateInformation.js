@@ -90,38 +90,40 @@ export default class rd2ElevateInformation extends LightningElement {
      * @description Initializes the component with data
      */
     connectedCallback() {
-        getData({ recordId: this.recordId })
-            .then(response => {
-                this.isElevateCustomer = response.isElevateCustomer;
-                this.permissions.alert = response.alert;
+        if (this.recordId) {
+            getData({ recordId: this.recordId })
+                .then(response => {
+                    this.isElevateCustomer = response.isElevateCustomer;
+                    this.permissions.alert = response.alert;
 
-                this.permissions.hasAccess = this.isElevateCustomer === true
-                    && response.hasFieldPermissions === true
-                    && isNull(this.permissions.alert);
+                    this.permissions.hasAccess = this.isElevateCustomer === true
+                        && response.hasFieldPermissions === true
+                        && isNull(this.permissions.alert);
 
-                if (this.isElevateCustomer === true) {
-                    if (!isNull(this.permissions.alert)) {
-                        this.handleError({
-                            detail: this.permissions.alert
-                        });
+                    if (this.isElevateCustomer === true) {
+                        if (!isNull(this.permissions.alert)) {
+                            this.handleError({
+                                detail: this.permissions.alert
+                            });
 
-                    } else if (response.hasFieldPermissions === false) {
-                        this.handleError({
-                            header: this.labels.flsErrorHeader,
-                            detail: this.labels.flsErrorDetail
-                        });
+                        } else if (response.hasFieldPermissions === false) {
+                            this.handleError({
+                                header: this.labels.flsErrorHeader,
+                                detail: this.labels.flsErrorDetail
+                            });
 
-                    } else if (!isNull(response.errorMessage)) {
-                        this.setErrorStatus(response.errorMessage);
+                        } else if (!isNull(response.errorMessage)) {
+                            this.setErrorStatus(response.errorMessage);
+                        }
                     }
-                }
-            })
-            .catch((error) => {
-                this.handleError(error);
-            })
-            .finally(() => {
-                this.checkLoading();
-            });
+                })
+                .catch((error) => {
+                    this.handleError(error);
+                })
+                .finally(() => {
+                    this.checkLoading();
+                });
+        }
     }
 
     /***
@@ -341,7 +343,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     get qaLocatorStatusIcon() {
-        return `icon Status ${this.status.value}`;
+        return `icon Status`;
     }
 
     get qaLocatorStatusMessage() {
