@@ -118,6 +118,24 @@ const getNoAccessIllustration = (component) => {
 }
 
 
+/***
+* @description Verifies no error notification is displayed on the widget
+*/
+const assertNoErrorNotification = (component) => {
+    const notification = getErrorNotification(component);
+    expect(notification).toBeNull();
+}
+
+/***
+* @description Finds and returns unexpected error message notification if it is displayed on the widget
+*/
+const getErrorNotification = (component) => {
+    const notification = component.shadowRoot.querySelector('[data-qa-locator="error Notification"]');
+
+    return notification;
+}
+
+
 
 
 describe('c-rd2-elevate-information', () => {
@@ -165,6 +183,8 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_SUCCESS, 'c.RD2_ElevateInformationStatusSuccess');
+
+                assertNoErrorNotification(component);
             });
         });
 
@@ -213,6 +233,8 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataError.errorMessage);
+
+                assertNoErrorNotification(component);
             });
         });
 
@@ -247,7 +269,7 @@ describe('c-rd2-elevate-information', () => {
     * for the Recurring Donation and the record has a temp commitment Id.
     * An error is logged when the commitment create request failed.
     */
-    describe('on data load when commitment is not created', () => {
+    describe('on data load when commitment failed to be created', () => {
         let mockGetDataFailedCommitment = JSON.parse(JSON.stringify(mockGetData));
         mockGetDataFailedCommitment.errorMessage = 'Unauthorized endpoint';
 
@@ -261,11 +283,19 @@ describe('c-rd2-elevate-information', () => {
             getRecordAdapter.emit(mockGetRecordFailedCommitment);
         });
 
-        it('should display error icon and message', async () => {
+        it('should display error status and error notification', async () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataFailedCommitment.errorMessage);
+
+                const notification = getErrorNotification(component);
+                expect(notification).not.toBeNull();
+                expect(notification.iconName).toBe(ICON_NAME_ERROR);
+                expect(notification.subtitle).toBe('c.RD2_ElevateRecordCreateFailed');
+
+                const notificationTitle = notification.shadowRoot.querySelector('h2');
+                expect(notificationTitle.textContent).toBe('c.geHeaderPageLevelError');
             });
         });
 
@@ -317,6 +347,8 @@ describe('c-rd2-elevate-information', () => {
             return global.flushPromises().then(async () => {
                 const icon = getStatusIcon(component);
                 expect(icon).toBeNull();
+
+                assertNoErrorNotification(component);
             });
         });
 
@@ -338,7 +370,7 @@ describe('c-rd2-elevate-information', () => {
             });
         });
 
-        it('should display No Data illustration', async () => {
+        it('should display "No Data" illustration', async () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
@@ -376,6 +408,8 @@ describe('c-rd2-elevate-information', () => {
             return global.flushPromises().then(async () => {
                 const icon = getStatusIcon(component);
                 expect(icon).toBeNull();
+
+                assertNoErrorNotification(component);
             });
         });
 
@@ -397,7 +431,7 @@ describe('c-rd2-elevate-information', () => {
             });
         });
 
-        it('should display No Access illustration', async () => {
+        it('should display "No Access" illustration', async () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
