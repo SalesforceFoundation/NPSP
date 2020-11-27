@@ -29,127 +29,6 @@ const ICON_NAME_ERROR = 'utility:error';
 const ICON_NAME_SUCCESS = 'utility:success';
 
 
-/***
-* @description Verifies the Elevate Recurring Id is displayed on the widget
-* and has the same value as the Recurring Donation record
-*/
-const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
-    const elevateId = getElevateRecurringId(component);
-    expect(elevateId).not.toBeNull();
-    expect(elevateId.value).toBe(mockRecord.fields[ELEVATE_ID_FIELD_NAME].value);
-}
-
-/***
-* @description Finds and returns Elevate Recurring Id if it is displayed on the widget
-*/
-const getElevateRecurringId = (component) => {
-    const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
-
-    return elevateId;
-}
-
-/***
-* @description Verifies the status icon name and the message displayed on the widget
-*/
-const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
-    const icon = getStatusIcon(component);
-    expect(icon).not.toBeNull();
-    expect(icon.iconName).toBe(iconName);
-
-    const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
-    expect(message).not.toBeNull();
-    expect(message.value).toBe(statusMessage);
-}
-
-/***
-* @description Finds and returns the status icon if it is displayed on the widget
-*/
-const getStatusIcon = (component) => {
-    const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
-
-    return icon;
-}
-
-/***
-* @description Verifies the "View Error Log" button is displayed and has expected label
-*/
-const assertViewErrorLogIsDisplayed = (component) => {
-    const errorLogButton = getViewErrorLogButton(component);
-    expect(errorLogButton).not.toBeNull();
-    expect(errorLogButton.label).toBe('c.commonViewErrorLog');
-}
-
-/***
-* @description Finds and returns View Error Log button if it is displayed on the widget
-*/
-const getViewErrorLogButton = (component) => {
-    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
-
-    return errorLogButton;
-}
-
-/***
-* @description Verifies no illustration is displayed
-*/
-const assertNoIllustrationIsDisplayed = (component) => {
-    const noDataIllustration = getNoDataIllustration(component);
-    expect(noDataIllustration).toBeNull();
-
-    const noAccessIllustration = getNoAccessIllustration(component);
-    expect(noAccessIllustration).toBeNull();
-}
-
-/***
-* @description Finds and returns No Data illustration if it is displayed on the widget
-*/
-const getNoDataIllustration = (component) => {
-    const illustration = component.shadowRoot.querySelector('[data-qa-locator="div illustration NoData"]');
-
-    return illustration;
-}
-
-/***
-* @description Finds and returns No Access illustration if it is displayed on the widget
-*/
-const getNoAccessIllustration = (component) => {
-    const illustration = component.shadowRoot.querySelector('[data-qa-locator="illustration NoAccess"]');
-
-    return illustration;
-}
-
-
-/***
-* @description Verifies no error notification is displayed on the widget
-*/
-const assertNoErrorNotification = (component) => {
-    const notification = getErrorNotification(component);
-    expect(notification).toBeNull();
-}
-
-/***
-* @description Verifies an error notification with expected title and subtitle is displayed on the widget
-*/
-const assertErrorNotification = (component, title, subtitle) => {
-    const notification = getErrorNotification(component);
-    expect(notification).not.toBeNull();
-    expect(notification.iconName).toBe(ICON_NAME_ERROR);
-    expect(notification.subtitle).toBe(subtitle);
-
-    const notificationTitle = notification.shadowRoot.querySelector('h2');
-    expect(notificationTitle.textContent).toBe(title);
-}
-
-/***
-* @description Finds and returns unexpected error message notification if it is displayed on the widget
-*/
-const getErrorNotification = (component) => {
-    const notification = component.shadowRoot.querySelector('[data-qa-locator="error Notification"]');
-
-    return notification;
-}
-
-
-
 
 describe('c-rd2-elevate-information', () => {
     let component;
@@ -503,3 +382,126 @@ describe('c-rd2-elevate-information', () => {
     });
 
 });
+
+
+// Helpers
+//////////////
+
+/***
+* @description Verifies the Elevate Recurring Id is displayed on the widget
+* and has the same value as the Recurring Donation record
+*/
+const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
+    const elevateId = getElevateRecurringId(component);
+    expect(elevateId).not.toBeNull();
+    expect(elevateId.value).toBe(mockRecord.fields[ELEVATE_ID_FIELD_NAME].value);
+}
+
+/***
+* @description Finds and returns Elevate Recurring Id if it is displayed on the widget
+*/
+const getElevateRecurringId = (component) => {
+    const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
+
+    return elevateId;
+}
+
+/***
+* @description Verifies the status icon name and the message displayed on the widget
+*/
+const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
+    const icon = getStatusIcon(component);
+    expect(icon).not.toBeNull();
+    expect(icon.iconName).toBe(iconName);
+
+    const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
+    expect(message).not.toBeNull();
+    expect(message.value).toBe(statusMessage);
+}
+
+/***
+* @description Finds and returns the status icon if it is displayed on the widget
+*/
+const getStatusIcon = (component) => {
+    const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
+
+    return icon;
+}
+
+/***
+* @description Verifies the "View Error Log" button is displayed and has expected label
+*/
+const assertViewErrorLogIsDisplayed = (component) => {
+    const errorLogButton = getViewErrorLogButton(component);
+    expect(errorLogButton).not.toBeNull();
+    expect(errorLogButton.label).toBe('c.commonViewErrorLog');
+}
+
+/***
+* @description Finds and returns View Error Log button if it is displayed on the widget
+*/
+const getViewErrorLogButton = (component) => {
+    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+
+    return errorLogButton;
+}
+
+/***
+* @description Verifies no illustration is displayed
+*/
+const assertNoIllustrationIsDisplayed = (component) => {
+    const noDataIllustration = getNoDataIllustration(component);
+    expect(noDataIllustration).toBeNull();
+
+    const noAccessIllustration = getNoAccessIllustration(component);
+    expect(noAccessIllustration).toBeNull();
+}
+
+/***
+* @description Finds and returns No Data illustration if it is displayed on the widget
+*/
+const getNoDataIllustration = (component) => {
+    const illustration = component.shadowRoot.querySelector('[data-qa-locator="div illustration NoData"]');
+
+    return illustration;
+}
+
+/***
+* @description Finds and returns No Access illustration if it is displayed on the widget
+*/
+const getNoAccessIllustration = (component) => {
+    const illustration = component.shadowRoot.querySelector('[data-qa-locator="illustration NoAccess"]');
+
+    return illustration;
+}
+
+
+/***
+* @description Verifies no error notification is displayed on the widget
+*/
+const assertNoErrorNotification = (component) => {
+    const notification = getErrorNotification(component);
+    expect(notification).toBeNull();
+}
+
+/***
+* @description Verifies an error notification with expected title and subtitle is displayed on the widget
+*/
+const assertErrorNotification = (component, title, subtitle) => {
+    const notification = getErrorNotification(component);
+    expect(notification).not.toBeNull();
+    expect(notification.iconName).toBe(ICON_NAME_ERROR);
+    expect(notification.subtitle).toBe(subtitle);
+
+    const notificationTitle = notification.shadowRoot.querySelector('h2');
+    expect(notificationTitle.textContent).toBe(title);
+}
+
+/***
+* @description Finds and returns unexpected error message notification if it is displayed on the widget
+*/
+const getErrorNotification = (component) => {
+    const notification = component.shadowRoot.querySelector('[data-qa-locator="error Notification"]');
+
+    return notification;
+}
