@@ -24,11 +24,20 @@ const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetRecord = require('./data/getRecord.json');
 const mockGetData = require('./data/getData.json');
 
+const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
+const ICON_NAME_ERROR = 'utility:error';
+const ICON_NAME_SUCCESS = 'utility:success';
 
 const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
-    const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
+    const elevateId = getElevateRecurringId(component);
     expect(elevateId).not.toBe(null);
-    expect(elevateId.value).toBe(mockRecord.fields['CommitmentId__c'].value);
+    expect(elevateId.value).toBe(mockRecord.fields[ELEVATE_ID_FIELD_NAME].value);
+}
+
+const getElevateRecurringId = (component) => {
+    const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
+
+    return elevateId;
 }
 
 const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
@@ -72,7 +81,8 @@ describe('c-rd2-elevate-information', () => {
         expect(header.textContent).toBe('c.RD2_ElevateInformationHeader');
     });
 
-    describe('on data load when no errors or none after the latest successful payment', () => {
+
+    describe('on data load when no errors or none after successfull payment', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
@@ -84,7 +94,7 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                assertStatusIconAndMessage(component, 'utility:success', 'c.RD2_ElevateInformationStatusSuccess');
+                assertStatusIconAndMessage(component, ICON_NAME_SUCCESS, 'c.RD2_ElevateInformationStatusSuccess');
             });
         });
 
@@ -107,12 +117,12 @@ describe('c-rd2-elevate-information', () => {
 
 
     describe('on data load when the latest payment failed', () => {
-        let mockGetDataErrorMessage = JSON.parse(JSON.stringify(mockGetData));
-        mockGetDataErrorMessage.errorMessage = 'Card declined';
+        let mockGetDataError = JSON.parse(JSON.stringify(mockGetData));
+        mockGetDataError.errorMessage = 'Card declined';
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
-            getData.mockResolvedValue(mockGetDataErrorMessage);
+            getData.mockResolvedValue(mockGetDataError);
             getRecordAdapter.emit(mockGetRecord);
         });
 
@@ -120,7 +130,7 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                assertStatusIconAndMessage(component, 'utility:error', mockGetDataErrorMessage.errorMessage);
+                assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataError.errorMessage);
             });
         });
 
@@ -129,6 +139,47 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertElevateRecurringIdIsPopulated(component, mockGetRecord);
+            });
+        });
+
+        it('should display View Error Log button', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertViewErrorLogIsDisplayed(component);
+            });
+        });
+    });
+
+
+    describe('on data load when commitment is not created', () => {
+        let mockGetDataFailedCommitment = JSON.parse(JSON.stringify(mockGetData));
+        mockGetDataFailedCommitment.errorMessage = 'Unauthorized endpoint';
+
+        let mockGetRecordFailedCommitment = JSON.parse(JSON.stringify(mockGetRecord));
+        mockGetRecordFailedCommitment.fields[ELEVATE_ID_FIELD_NAME].value = '_PENDING_123TempCommitmentId';
+
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetDataFailedCommitment);
+            getRecordAdapter.emit(mockGetRecordFailedCommitment);
+        });
+
+        it('should display error icon and message', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataFailedCommitment.errorMessage);
+            });
+        });
+
+        it('should not display Elevate Recurring Id', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const elevateId = getElevateRecurringId(component);
+                expect(elevateId).toBeNull();
             });
         });
 
