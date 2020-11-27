@@ -3,10 +3,10 @@ import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
-import getData from "@salesforce/apex/RD2_ElevateInformation_CTRL.getData";
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
 
 jest.mock(
-    "@salesforce/apex/RD2_ElevateInformation_CTRL.getData",
+    '@salesforce/apex/RD2_ElevateInformation_CTRL.getData',
     () => {
         return {
             default: jest.fn(),
@@ -20,16 +20,33 @@ import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
 
-const mockGetObjectInfo = require("./data/getObjectInfo.json");
-const mockGetRecord = require("./data/getRecord.json");
-const mockGetData = require("./data/getData.json");
+const mockGetObjectInfo = require('./data/getObjectInfo.json');
+const mockGetRecord = require('./data/getRecord.json');
+const mockGetData = require('./data/getData.json');
+
+
+const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
+    const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
+    expect(elevateId).not.toBe(null);
+    expect(elevateId.value).toBe(mockRecord.fields['CommitmentId__c'].value);
+}
+
+const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
+    const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
+    expect(icon).not.toBe(null);
+    expect(icon.iconName).toBe(iconName);
+
+    const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
+    expect(message).not.toBe(null);
+    expect(message.value).toBe(statusMessage);
+}
 
 
 describe('c-rd2-elevate-information', () => {
     let component;
 
     beforeEach(() => {
-        component = createElement("c-rd2-elevate-information", {
+        component = createElement('c-rd2-elevate-information', {
             is: rd2ElevateInformation,
         });
 
@@ -41,15 +58,15 @@ describe('c-rd2-elevate-information', () => {
         jest.clearAllMocks();
     });
 
-    it("should display header", () => {
+    it('should display header', () => {
         document.body.appendChild(component);
 
-        const header = component.shadowRoot.querySelector("h2");
+        const header = component.shadowRoot.querySelector('h2');
         expect(header).not.toBe(null);
-        expect(header.textContent).toBe("c.RD2_ElevateInformationHeader");
+        expect(header.textContent).toBe('c.RD2_ElevateInformationHeader');
     });
 
-    describe("on no errors data load", () => {
+    describe('on data load when no error at all or after the latest success payment', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
@@ -61,13 +78,7 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                const icon = component.shadowRoot.querySelector("[data-qa-locator='icon Status']");
-                expect(icon).not.toBe(null);
-                expect(icon.iconName).toBe("utility:success");
-
-                const message = component.shadowRoot.querySelector("[data-qa-locator='text Status Message']");
-                expect(message).not.toBe(null);
-                expect(message.value).toBe("c.RD2_ElevateInformationStatusSuccess");
+                assertStatusIconAndMessage(component, 'utility:success', 'c.RD2_ElevateInformationStatusSuccess');
             });
         });
 
@@ -75,9 +86,7 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                const elevateId = component.shadowRoot.querySelector("[data-qa-locator='text Elevate Recurring Id']");
-                expect(elevateId).not.toBe(null);
-                expect(elevateId.value).toBe(mockGetRecord.fields["CommitmentId__c"].value);
+                assertElevateRecurringIdIsPopulated(component, mockGetRecord);
             });
         });
 
@@ -85,9 +94,38 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                const errorLogButton = component.shadowRoot.querySelector("lightning-button");
+                const errorLogButton = component.shadowRoot.querySelector('lightning-button');
                 expect(errorLogButton).not.toBe(null);
-                expect(errorLogButton.label).toBe("c.commonViewErrorLog");
+                expect(errorLogButton.label).toBe('c.commonViewErrorLog');
+            });
+        });
+    });
+
+
+    describe('on data load when the latest payment failed', () => {
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            const mockGetDataErrorMessage = JSON.parse(JSON.stringify(mockGetData));
+            mockGetDataErrorMessage.errorMessage = 'Card declined';
+
+            getData.mockResolvedValue(mockGetDataErrorMessage);
+            getRecordAdapter.emit(mockGetRecord);
+        });
+
+        it('should display error icon and message', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertStatusIconAndMessage(component, 'utility:error', 'Card declined');
+            });
+        });
+
+        it('should display Elevate Recurring Id', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertElevateRecurringIdIsPopulated(component, mockGetRecord);
             });
         });
     });
