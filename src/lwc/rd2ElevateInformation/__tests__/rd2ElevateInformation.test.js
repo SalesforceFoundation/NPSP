@@ -127,6 +127,19 @@ const assertNoErrorNotification = (component) => {
 }
 
 /***
+* @description Verifies an error notification with expected title and subtitle is displayed on the widget
+*/
+const assertErrorNotification = (component, title, subtitle) => {
+    const notification = getErrorNotification(component);
+    expect(notification).not.toBeNull();
+    expect(notification.iconName).toBe(ICON_NAME_ERROR);
+    expect(notification.subtitle).toBe(subtitle);
+
+    const notificationTitle = notification.shadowRoot.querySelector('h2');
+    expect(notificationTitle.textContent).toBe(title);
+}
+
+/***
 * @description Finds and returns unexpected error message notification if it is displayed on the widget
 */
 const getErrorNotification = (component) => {
@@ -289,13 +302,7 @@ describe('c-rd2-elevate-information', () => {
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataFailedCommitment.errorMessage);
 
-                const notification = getErrorNotification(component);
-                expect(notification).not.toBeNull();
-                expect(notification.iconName).toBe(ICON_NAME_ERROR);
-                expect(notification.subtitle).toBe('c.RD2_ElevateRecordCreateFailed');
-
-                const notificationTitle = notification.shadowRoot.querySelector('h2');
-                expect(notificationTitle.textContent).toBe('c.geHeaderPageLevelError');
+                assertErrorNotification(component, 'c.geHeaderPageLevelError', 'c.RD2_ElevateRecordCreateFailed');
             });
         });
 
@@ -313,6 +320,57 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
+            });
+        });
+
+        it('should not display any illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertNoIllustrationIsDisplayed(component);
+            });
+        });
+    });
+
+
+    /***
+    * @description Verifies the widget when the user has not permission on required fields
+    */
+    describe('on data load when user has no permission', () => {
+        const mockGetDataNoPermission = JSON.parse('{ "isElevateCustomer":true, "hasFieldPermissions":false }');
+
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+            getData.mockResolvedValue(mockGetDataNoPermission);
+            getRecordAdapter.emit(mockGetRecord);
+        });
+
+        it('should display error notification and no status icon', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const icon = getStatusIcon(component);
+                expect(icon).toBeNull();
+
+                assertErrorNotification(component, 'c.geErrorFLSHeader', 'c.RD2_EntryFormMissingPermissions');
+            });
+        });
+
+        it('should not display Elevate Recurring Id', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const elevateId = getElevateRecurringId(component);
+                expect(elevateId).toBeNull();
+            });
+        });
+
+        it('should not display View Error Log button', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const errorLogButton = getViewErrorLogButton(component);
+                expect(errorLogButton).toBeNull();
             });
         });
 
