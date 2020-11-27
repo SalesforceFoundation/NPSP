@@ -41,6 +41,12 @@ const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
     expect(message.value).toBe(statusMessage);
 }
 
+const assertViewErrorLogIsDisplayed = (component) => {
+    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+    expect(errorLogButton).not.toBe(null);
+    expect(errorLogButton.label).toBe('c.commonViewErrorLog');
+}
+
 
 describe('c-rd2-elevate-information', () => {
     let component;
@@ -66,7 +72,7 @@ describe('c-rd2-elevate-information', () => {
         expect(header.textContent).toBe('c.RD2_ElevateInformationHeader');
     });
 
-    describe('on data load when no error at all or after the latest success payment', () => {
+    describe('on data load when no errors or none after the latest successful payment', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
@@ -94,21 +100,18 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                const errorLogButton = component.shadowRoot.querySelector('lightning-button');
-                expect(errorLogButton).not.toBe(null);
-                expect(errorLogButton.label).toBe('c.commonViewErrorLog');
+                assertViewErrorLogIsDisplayed(component);
             });
         });
     });
 
 
     describe('on data load when the latest payment failed', () => {
+        let mockGetDataErrorMessage = JSON.parse(JSON.stringify(mockGetData));
+        mockGetDataErrorMessage.errorMessage = 'Card declined';
+
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
-
-            const mockGetDataErrorMessage = JSON.parse(JSON.stringify(mockGetData));
-            mockGetDataErrorMessage.errorMessage = 'Card declined';
-
             getData.mockResolvedValue(mockGetDataErrorMessage);
             getRecordAdapter.emit(mockGetRecord);
         });
@@ -117,7 +120,7 @@ describe('c-rd2-elevate-information', () => {
             document.body.appendChild(component);
 
             return global.flushPromises().then(async () => {
-                assertStatusIconAndMessage(component, 'utility:error', 'Card declined');
+                assertStatusIconAndMessage(component, 'utility:error', mockGetDataErrorMessage.errorMessage);
             });
         });
 
@@ -126,6 +129,14 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertElevateRecurringIdIsPopulated(component, mockGetRecord);
+            });
+        });
+
+        it('should display View Error Log button', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertViewErrorLogIsDisplayed(component);
             });
         });
     });
