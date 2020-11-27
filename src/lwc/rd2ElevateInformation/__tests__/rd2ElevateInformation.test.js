@@ -28,20 +28,31 @@ const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
 const ICON_NAME_ERROR = 'utility:error';
 const ICON_NAME_SUCCESS = 'utility:success';
 
+
+/***
+* @description Verifies the Elevate Recurring Id is displayed on the widget
+* and has the same value as the Recurring Donation record
+*/
 const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
     const elevateId = getElevateRecurringId(component);
     expect(elevateId).not.toBe(null);
     expect(elevateId.value).toBe(mockRecord.fields[ELEVATE_ID_FIELD_NAME].value);
 }
 
+/***
+* @description Finds and returns Elevate Recurring Id if it is displayed on the widget
+*/
 const getElevateRecurringId = (component) => {
     const elevateId = component.shadowRoot.querySelector('[data-qa-locator="text Elevate Recurring Id"]');
 
     return elevateId;
 }
 
+/***
+* @description Verifies the status icon name and the message displayed on the widget
+*/
 const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
-    const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
+    const icon = getStatusIcon(component);
     expect(icon).not.toBe(null);
     expect(icon.iconName).toBe(iconName);
 
@@ -50,11 +61,54 @@ const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
     expect(message.value).toBe(statusMessage);
 }
 
+/***
+* @description Finds and returns the status icon if it is displayed on the widget
+*/
+const getStatusIcon = (component) => {
+    const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
+
+    return icon;
+}
+
+/***
+* @description Verifies the "View Error Log" button is displayed and has expected label
+*/
 const assertViewErrorLogIsDisplayed = (component) => {
-    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+    const errorLogButton = getViewErrorLogButton(component);
     expect(errorLogButton).not.toBe(null);
     expect(errorLogButton.label).toBe('c.commonViewErrorLog');
 }
+
+/***
+* @description Finds and returns View Error Log button if it is displayed on the widget
+*/
+const getViewErrorLogButton = (component) => {
+    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+
+    return errorLogButton;
+}
+
+/***
+* @description Verifies no illustration is displayed
+*/
+const assertNoIllustrationIsDisplayed = (component) => {
+    const noDataIllustration = getNoDataIllustration(component);
+    expect(noDataIllustration).toBeNull();
+
+    const noAccessIllustration = component.shadowRoot.querySelector('[data-qa-locator="illustration NoAccess"]');
+    expect(noAccessIllustration).toBeNull();
+}
+
+/***
+* @description Finds and returns No Data illustration if it is displayed on the widget
+*/
+const getNoDataIllustration = (component) => {
+    const illustration = component.shadowRoot.querySelector('[data-qa-locator="div illustration NoData"]');
+
+    return illustration;
+}
+
+
 
 
 describe('c-rd2-elevate-information', () => {
@@ -73,6 +127,9 @@ describe('c-rd2-elevate-information', () => {
         jest.clearAllMocks();
     });
 
+    /***
+    * @description Verifies header is always displayed on the widget
+    */
     it('should display header', () => {
         document.body.appendChild(component);
 
@@ -82,7 +139,11 @@ describe('c-rd2-elevate-information', () => {
     });
 
 
-    describe('on data load when no errors or none after successfull payment', () => {
+    /***
+    * @description Verifies the widget when the Recurring Donation has no error
+    * or there is no error after the latest successful payment
+    */
+    describe('on data load when no errors', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
@@ -113,9 +174,21 @@ describe('c-rd2-elevate-information', () => {
                 assertViewErrorLogIsDisplayed(component);
             });
         });
+
+        it('should not display any illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertNoIllustrationIsDisplayed(component);
+            });
+        });
     });
 
 
+    /***
+    * @description Verifies the widget when the latest payment failed
+    * and an error has been logged for the Recurring Donation.
+    */
     describe('on data load when the latest payment failed', () => {
         let mockGetDataError = JSON.parse(JSON.stringify(mockGetData));
         mockGetDataError.errorMessage = 'Card declined';
@@ -149,9 +222,22 @@ describe('c-rd2-elevate-information', () => {
                 assertViewErrorLogIsDisplayed(component);
             });
         });
+
+        it('should not display any illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertNoIllustrationIsDisplayed(component);
+            });
+        });
     });
 
 
+    /***
+    * @description Verifies the widget when an Elevate commitment cannot be created
+    * for the Recurring Donation and the record has a temp commitment Id.
+    * An error is logged when the commitment create request failed.
+    */
     describe('on data load when commitment is not created', () => {
         let mockGetDataFailedCommitment = JSON.parse(JSON.stringify(mockGetData));
         mockGetDataFailedCommitment.errorMessage = 'Unauthorized endpoint';
@@ -188,6 +274,70 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
+            });
+        });
+
+        it('should not display any illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                assertNoIllustrationIsDisplayed(component);
+            });
+        });
+    });
+
+
+    /***
+    * @description Verifies "No Data" illustration is displayed when
+    * Recurring Donation is not an Elevate commitment record
+    */
+    describe('on data load when Recurring Donation is not an Elevate commitment', () => {
+        let mockGetRecordNoCommitment = JSON.parse(JSON.stringify(mockGetRecord));
+        mockGetRecordNoCommitment.fields[ELEVATE_ID_FIELD_NAME].value = null;
+
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetData);
+            getRecordAdapter.emit(mockGetRecordNoCommitment);
+        });
+
+        it('should not display any icon', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const icon = getStatusIcon(component);
+                expect(icon).toBeNull();
+            });
+        });
+
+        it('should not display Elevate Recurring Id', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const elevateId = getElevateRecurringId(component);
+                expect(elevateId).toBeNull();
+            });
+        });
+
+        it('should not display View Error Log button', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const errorLogButton = getViewErrorLogButton(component);
+                expect(errorLogButton).toBeNull();
+            });
+        });
+
+        it('should display No Data illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const illustration = getNoDataIllustration(component);
+                expect(illustration).not.toBe(null);
+
+                const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
+                expect(messageDiv).toBeDefined();
             });
         });
     });
