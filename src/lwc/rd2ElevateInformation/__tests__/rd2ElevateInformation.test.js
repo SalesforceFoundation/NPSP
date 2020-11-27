@@ -35,7 +35,7 @@ const ICON_NAME_SUCCESS = 'utility:success';
 */
 const assertElevateRecurringIdIsPopulated = (component, mockRecord) => {
     const elevateId = getElevateRecurringId(component);
-    expect(elevateId).not.toBe(null);
+    expect(elevateId).not.toBeNull();
     expect(elevateId.value).toBe(mockRecord.fields[ELEVATE_ID_FIELD_NAME].value);
 }
 
@@ -53,11 +53,11 @@ const getElevateRecurringId = (component) => {
 */
 const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
     const icon = getStatusIcon(component);
-    expect(icon).not.toBe(null);
+    expect(icon).not.toBeNull();
     expect(icon.iconName).toBe(iconName);
 
     const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
-    expect(message).not.toBe(null);
+    expect(message).not.toBeNull();
     expect(message.value).toBe(statusMessage);
 }
 
@@ -75,7 +75,7 @@ const getStatusIcon = (component) => {
 */
 const assertViewErrorLogIsDisplayed = (component) => {
     const errorLogButton = getViewErrorLogButton(component);
-    expect(errorLogButton).not.toBe(null);
+    expect(errorLogButton).not.toBeNull();
     expect(errorLogButton.label).toBe('c.commonViewErrorLog');
 }
 
@@ -95,7 +95,7 @@ const assertNoIllustrationIsDisplayed = (component) => {
     const noDataIllustration = getNoDataIllustration(component);
     expect(noDataIllustration).toBeNull();
 
-    const noAccessIllustration = component.shadowRoot.querySelector('[data-qa-locator="illustration NoAccess"]');
+    const noAccessIllustration = getNoAccessIllustration(component);
     expect(noAccessIllustration).toBeNull();
 }
 
@@ -104,6 +104,15 @@ const assertNoIllustrationIsDisplayed = (component) => {
 */
 const getNoDataIllustration = (component) => {
     const illustration = component.shadowRoot.querySelector('[data-qa-locator="div illustration NoData"]');
+
+    return illustration;
+}
+
+/***
+* @description Finds and returns No Access illustration if it is displayed on the widget
+*/
+const getNoAccessIllustration = (component) => {
+    const illustration = component.shadowRoot.querySelector('[data-qa-locator="illustration NoAccess"]');
 
     return illustration;
 }
@@ -134,7 +143,7 @@ describe('c-rd2-elevate-information', () => {
         document.body.appendChild(component);
 
         const header = component.shadowRoot.querySelector('h2');
-        expect(header).not.toBe(null);
+        expect(header).not.toBeNull();
         expect(header.textContent).toBe('c.RD2_ElevateInformationHeader');
     });
 
@@ -334,7 +343,66 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 const illustration = getNoDataIllustration(component);
-                expect(illustration).not.toBe(null);
+                expect(illustration).not.toBeNull();
+
+                const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
+                expect(messageDiv).toBeDefined();
+            });
+        });
+    });
+
+
+    /***
+    * @description Verifies "No Access" illustration is displayed when
+    * the org is not connected to Elevate
+    */
+    describe('on data load when org is not connected to Elevate', () => {
+        let mockGetDataNoElevate = JSON.parse(JSON.stringify(mockGetData));
+        mockGetDataNoElevate.isElevateCustomer = false;
+
+        let mockGetRecordNoCommitment = JSON.parse(JSON.stringify(mockGetRecord));
+        mockGetRecordNoCommitment.fields[ELEVATE_ID_FIELD_NAME].value = null;
+
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetDataNoElevate);
+            getRecordAdapter.emit(mockGetRecordNoCommitment);
+        });
+
+        it('should not display any icon', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const icon = getStatusIcon(component);
+                expect(icon).toBeNull();
+            });
+        });
+
+        it('should not display Elevate Recurring Id', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const elevateId = getElevateRecurringId(component);
+                expect(elevateId).toBeNull();
+            });
+        });
+
+        it('should not display View Error Log button', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const errorLogButton = getViewErrorLogButton(component);
+                expect(errorLogButton).toBeNull();
+            });
+        });
+
+        it('should display No Access illustration', async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                const illustration = getNoAccessIllustration(component);
+                expect(illustration).not.toBeNull();
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
