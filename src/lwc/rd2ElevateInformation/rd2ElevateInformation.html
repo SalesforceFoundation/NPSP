@@ -85,10 +85,11 @@
                             <template if:true={isElevateConnected}>
                                 <label
                                     class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
-                                    for="commitmentId">{fields.commitmentId.label}</label>
+                                    for="commitmentId" id="commitmentIdLabel">{fields.commitmentId.label}</label>
                                 <div class="slds-form-element__control slds-p-around_none" data-id="commitmentId">
                                     <div class="slds-col slds-no-flex slds-truncate">
-                                        <a href="javascript:void(0);" target="_blank">
+                                        <a href="javascript:void(0);" aria-labelledby="commitmentIdLabel"
+                                            target="_blank">
                                             <lightning-formatted-text value={rdRecord.fields.CommitmentId__c.value}
                                                 data-qa-locator={qaLocatorCommitmentId}>
                                             </lightning-formatted-text>

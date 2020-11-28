@@ -2,9 +2,9 @@ import { createElement } from 'lwc';
 import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { registerSa11yMatcher } from '@sa11y/jest';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
-
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getData',
     () => {
@@ -32,6 +32,10 @@ const ICON_NAME_SUCCESS = 'utility:success';
 
 describe('c-rd2-elevate-information', () => {
     let component;
+
+    beforeAll(() => {
+        registerSa11yMatcher();
+    });
 
     beforeEach(() => {
         component = createElement('c-rd2-elevate-information', {
@@ -101,6 +105,14 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
+            });
+        });
+
+        it("should be accessible", async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
             });
         });
     });
@@ -209,6 +221,14 @@ describe('c-rd2-elevate-information', () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
+
+        it("should be accessible", async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
+        });
     });
 
 
@@ -216,7 +236,7 @@ describe('c-rd2-elevate-information', () => {
     * @description Verifies the widget when the user has not permission on required fields
     */
     describe('on data load when user has no permission', () => {
-        const mockGetDataNoPermission = JSON.parse('{ "isElevateCustomer":true, "hasFieldPermissions":false }');
+        const mockGetDataNoPermission = { "isElevateCustomer": true, "hasFieldPermissions": false };
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
@@ -258,6 +278,14 @@ describe('c-rd2-elevate-information', () => {
 
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
+            });
+        });
+
+        it("should be accessible", async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
             });
         });
     });
@@ -316,6 +344,14 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
+            });
+        });
+
+        it("should be accessible", async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
             });
         });
     });
@@ -377,6 +413,14 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
+            });
+        });
+
+        it("should be accessible", async () => {
+            document.body.appendChild(component);
+
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
             });
         });
     });
