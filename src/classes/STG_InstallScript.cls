@@ -465,6 +465,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Origin_ID',
                     'Payment_Origin_Name',
                     'Payment_Origin_Type',
+                    'Payment_Paid',
                     'Payment_Type',
                     'Donation_Elevate_Recurring_ID'
             };
