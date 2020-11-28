@@ -25,6 +25,7 @@ const mockGetRecord = require('./data/getRecord.json');
 const mockGetData = require('./data/getData.json');
 
 const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
+const STATUS_REASON_FIELD_NAME = 'ClosedReason__c';
 const ICON_NAME_ERROR = 'utility:error';
 const ICON_NAME_SUCCESS = 'utility:success';
 
@@ -150,6 +151,62 @@ describe('c-rd2-elevate-information', () => {
         it('should not display any illustration', async () => {
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
+            });
+        });
+    });
+
+
+    /***
+    * @description Verifies the widget when the user closed Recurring Donation
+    * and the cancel commitment process is in progress
+    */
+    describe('on data load when Elevate cancel is in progress', () => {
+        let mockGetRecordCancelInProgress = JSON.parse(JSON.stringify(mockGetRecord));
+        mockGetRecordCancelInProgress.fields[STATUS_REASON_FIELD_NAME].value = 'c.RD2_ElevatePendingStatus';
+
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetData);
+            getRecordAdapter.emit(mockGetRecordCancelInProgress);
+
+            document.body.appendChild(component);
+        });
+
+        it('should display progress ring and pending Elevate cancel message', async () => {
+            return global.flushPromises().then(async () => {
+                const progressRing = component.shadowRoot.querySelector('[data-qa-locator="progress ring"]');
+                expect(progressRing).not.toBeNull();
+                expect(progressRing.localName).toBe('lightning-progress-ring');
+                expect(progressRing.value).toBe('75');
+
+                assertStatusMessage(component, 'c.RD2_ElevateCancelInProgress');
+
+                assertNoErrorNotification(component);
+            });
+        });
+
+        it('should display Elevate Recurring Id', async () => {
+            return global.flushPromises().then(async () => {
+                assertElevateRecurringIdIsPopulated(component, mockGetRecord);
+            });
+        });
+
+        it('should display View Error Log button', async () => {
+            return global.flushPromises().then(async () => {
+                assertViewErrorLogIsDisplayed(component);
+            });
+        });
+
+        it('should not display any illustration', async () => {
+            return global.flushPromises().then(async () => {
+                assertNoIllustrationIsDisplayed(component);
+            });
+        });
+
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
             });
         });
     });
@@ -414,9 +471,7 @@ const assertStatusIconAndMessage = (component, iconName, statusMessage) => {
     expect(icon).not.toBeNull();
     expect(icon.iconName).toBe(iconName);
 
-    const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
-    expect(message).not.toBeNull();
-    expect(message.value).toBe(statusMessage);
+    assertStatusMessage(component, statusMessage);
 }
 
 /***
@@ -426,6 +481,15 @@ const getStatusIcon = (component) => {
     const icon = component.shadowRoot.querySelector('[data-qa-locator="icon Status"]');
 
     return icon;
+}
+
+/***
+* @description Verifies the status message displayed on the widget
+*/
+const assertStatusMessage = (component, statusMessage) => {
+    const message = component.shadowRoot.querySelector('[data-qa-locator="text Status Message"]');
+    expect(message).not.toBeNull();
+    expect(message.value).toBe(statusMessage);
 }
 
 /***

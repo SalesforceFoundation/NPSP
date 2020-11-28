@@ -17,7 +17,6 @@ import statusElevateCancelInProgress from '@salesforce/label/c.RD2_ElevateCancel
 import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
-import textProgress from '@salesforce/label/c.ProgressMarkerAssistiveTextProgress';
 import textNewWindow from '@salesforce/label/c.AssistiveTextNewWindow';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
@@ -51,7 +50,6 @@ export default class rd2ElevateInformation extends LightningElement {
         textSuccess,
         textError,
         textWarning,
-        textProgress,
         textNewWindow,
         flsErrorHeader,
         flsErrorDetail,
@@ -160,7 +158,8 @@ export default class rd2ElevateInformation extends LightningElement {
         if (response.data) {
             this.rdRecord = response.data;
 
-            if (this.getValue(FIELD_STATUS_REASON.fieldApiName) === this.labels.statusElevatePending) {
+            const statusReason = this.getValue(FIELD_STATUS_REASON.fieldApiName);
+            if (statusReason === this.labels.statusElevatePending) {
                 this.status.isProgress = true;
                 this.status.message = this.labels.statusElevateCancelInProgress;
             }
@@ -339,7 +338,7 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     get qaLocatorProgressRing() {
-        return `${this.labels.textProgress} 75%`;
+        return `progress ring`;
     }
 
     get qaLocatorStatusIcon() {
