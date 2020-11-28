@@ -72,11 +72,11 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getRecordAdapter.emit(mockGetRecord);
+
+            document.body.appendChild(component);
         });
 
         it('should display success icon and message', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_SUCCESS, 'c.RD2_ElevateInformationStatusSuccess');
 
@@ -85,32 +85,24 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertElevateRecurringIdIsPopulated(component, mockGetRecord);
             });
         });
 
         it('should display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
             });
         });
 
         it('should not display any illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
 
         it("should be accessible", async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
             });
@@ -128,13 +120,14 @@ describe('c-rd2-elevate-information', () => {
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
+
             getData.mockResolvedValue(mockGetDataError);
             getRecordAdapter.emit(mockGetRecord);
+
+            document.body.appendChild(component);
         });
 
         it('should display error icon and message', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataError.errorMessage);
 
@@ -143,24 +136,18 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertElevateRecurringIdIsPopulated(component, mockGetRecord);
             });
         });
 
         it('should display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
             });
         });
 
         it('should not display any illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
             });
@@ -185,11 +172,11 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataFailedCommitment);
             getRecordAdapter.emit(mockGetRecordFailedCommitment);
+
+            document.body.appendChild(component);
         });
 
         it('should display error status and error notification', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataFailedCommitment.errorMessage);
 
@@ -198,8 +185,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const elevateId = getElevateRecurringId(component);
                 expect(elevateId).toBeNull();
@@ -207,24 +192,18 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
             });
         });
 
         it('should not display any illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
 
         it("should be accessible", async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
             });
@@ -240,13 +219,14 @@ describe('c-rd2-elevate-information', () => {
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
+
             getData.mockResolvedValue(mockGetDataNoPermission);
             getRecordAdapter.emit(mockGetRecord);
+
+            document.body.appendChild(component);
         });
 
         it('should display error notification and no status icon', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const icon = getStatusIcon(component);
                 expect(icon).toBeNull();
@@ -256,8 +236,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const elevateId = getElevateRecurringId(component);
                 expect(elevateId).toBeNull();
@@ -265,8 +243,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const errorLogButton = getViewErrorLogButton(component);
                 expect(errorLogButton).toBeNull();
@@ -274,16 +250,12 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display any illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
 
         it("should be accessible", async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
             });
@@ -304,11 +276,11 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getRecordAdapter.emit(mockGetRecordNoCommitment);
+
+            document.body.appendChild(component);
         });
 
         it('should not display any icon', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const icon = getStatusIcon(component);
                 expect(icon).toBeNull();
@@ -318,8 +290,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const elevateId = getElevateRecurringId(component);
                 expect(elevateId).toBeNull();
@@ -327,8 +297,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const errorLogButton = getViewErrorLogButton(component);
                 expect(errorLogButton).toBeNull();
@@ -336,8 +304,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should display "No Data" illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const illustration = getNoDataIllustration(component);
                 expect(illustration).not.toBeNull();
@@ -348,8 +314,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it("should be accessible", async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
             });
@@ -373,11 +337,11 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataNoElevate);
             getRecordAdapter.emit(mockGetRecordNoCommitment);
+
+            document.body.appendChild(component);
         });
 
         it('should not display any icon', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const icon = getStatusIcon(component);
                 expect(icon).toBeNull();
@@ -387,8 +351,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display Elevate Recurring Id', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const elevateId = getElevateRecurringId(component);
                 expect(elevateId).toBeNull();
@@ -396,8 +358,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not display View Error Log button', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const errorLogButton = getViewErrorLogButton(component);
                 expect(errorLogButton).toBeNull();
@@ -405,8 +365,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should display "No Access" illustration', async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 const illustration = getNoAccessIllustration(component);
                 expect(illustration).not.toBeNull();
@@ -417,8 +375,6 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it("should be accessible", async () => {
-            document.body.appendChild(component);
-
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
             });
