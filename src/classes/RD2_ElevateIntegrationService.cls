@@ -42,7 +42,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * from a temp value to the actual value.
      */
     public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
-    
+
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
@@ -55,6 +55,11 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @description CurrencyIsoCode field name
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+
+    /***
+     * @description Maximum number of retry attempts to cancel Elevate commitment
+     */
+    public static final Integer MAX_COMMITMENT_CANCEL_RETRIES = 3;
 
     /***
      * @description Contains configuration related to the Elevate integration service config and permissions
@@ -256,8 +261,8 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * @param closedRDs Closed RDs with the user specified closed reason
     * @return void
     */
-    public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
-        new CancelCommitmentService().cancelCommitments(closedRDs);
+    public void cancelCommitments(List<RD2_ElevateIntegrationService.CommitmentRD> closedRDs) {
+        new CancelCommitmentService(closedRDs).cancelCommitments();
     }
 
     /**
@@ -266,6 +271,17 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * is set based on the Elevate error response.
     */
     public without sharing class CancelCommitmentService {
+        List<RD2_ElevateIntegrationService.CommitmentRD> commitmentRDs;
+        List<RD2_ElevateIntegrationService.CommitmentRD> queuedCommitmentRDs;
+
+        /**
+        * @description Constructor
+        * @param commitmentRDs Closed Recurring Donations containing Commitment Id
+        */
+        public CancelCommitmentService(List<RD2_ElevateIntegrationService.CommitmentRD> commitmentRDs) {
+            this.commitmentRDs = commitmentRDs;
+            this.queuedCommitmentRDs = new List<RD2_ElevateIntegrationService.CommitmentRD>();
+        }
 
         /**
         * @description Sends requests and constructs the response
@@ -281,21 +297,185 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
 
         /**
-        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
+        * @description Sends cancel commitment requests for closed Recurring Donations.
         * Sets RD closed reason back to user specified reason and insert any error.
-        * @param closedRDs Closed RDs with the user specified closed reason
         * @return void
         */
-        public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
-            Logger logger = new Logger();
+        public void cancelCommitments() {
             List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
+            List<RD2_ElevateIntegrationService.CommitmentRD> sentCommitmentRDs = new List<RD2_ElevateIntegrationService.CommitmentRD>();
 
-            for (npe03__Recurring_Donation__c rd : closedRDs) {
-                responses.add(sendRequest(rd.CommitmentId__c));
+            for (RD2_ElevateIntegrationService.CommitmentRD commitmentRD : this.commitmentRDs) {
+                Integer calloutsRemaining = Limits.getLimitCallouts();
+
+                if (calloutsRemaining >= 1) {
+                    responses.add(sendRequest(commitmentRD));
+                    sentCommitmentRDs.add(commitmentRD);
+                    continue;
+                }
+
+                queuedCommitmentRDs.add(commitmentRD);
             }
 
-            for (Integer i = 0; i < responses.size(); i++) {
-                setClosedReason(closedRDs[i], responses[i], logger);
+            handleResponses(sentCommitmentRDs, responses);
+
+            if (!queuedCommitmentRDs.isEmpty()) {
+                System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(queuedCommitmentRDs));
+            }
+        }
+
+        /**
+        * @description Sends request for closed Recurring Donations.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @return UTIL_Http.Response
+        */
+        public UTIL_Http.Response sendRequest(RD2_ElevateIntegrationService.CommitmentRD commitmentRD) {
+            UTIL_Http.Response response;
+
+            try {
+                HttpRequest request;
+
+                if (getRequestType(commitmentRD) == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL) {
+                    request = buildCancelRequest(commitmentRD.rd.Id);
+                } else if (getRequestType(commitmentRD) == PS_Request.ElevateEndpoint.COMMITMENT_ID) {
+                    request = buildCommitmentIDRequest(commitmentRD.rd.Id);
+                }
+                response = requestService.sendRequest(request);
+
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            return response;
+        }
+
+        /**
+        * @description Returns request type to send to Payment API endpoint.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @return PS_Request.ElevateEndpoint
+        */
+        public PS_Request.ElevateEndpoint getRequestType(RD2_ElevateIntegrationService.CommitmentRD commitmentRD) {
+            PS_Request.ElevateEndpoint requestType = PS_Request.ElevateEndpoint.COMMITMENT_CANCEL;
+
+            if (hasPreviousTimeoutOrConflict(commitmentRD)) {
+                requestType = PS_Request.ElevateEndpoint.COMMITMENT_ID;
+            }
+
+            return requestType;
+        }
+
+        /**
+        * @description Returns true if a previous cancel attempt result was timeout or conflict.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @return Boolean
+        */
+        private Boolean hasPreviousTimeoutOrConflict(RD2_ElevateIntegrationService.CommitmentRD commitmentRD) {
+            return commitmentRD.isConfirmationRequired;
+        }
+
+        /**
+        * @description Iterates through list of sent RDs and responses and dispatches to appropriate handlers
+        * @param sentCommitmentRDs List of RD2_ElevateIntegrationService.CommitmentRD
+        * @param responses List of UTIL_Http.Response
+        */
+        private void handleResponses(
+            List<RD2_ElevateIntegrationService.CommitmentRD> sentCommitmentRDs,
+            List<UTIL_Http.Response> responses
+        ) {
+            List<RD2_ElevateIntegrationService.CommitmentRD> handledCommitmentRDs =
+                new List<RD2_ElevateIntegrationService.CommitmentRD>();
+            List<UTIL_Http.Response> handledResponses;
+
+            for (Integer i; i < sentCommitmentRDs.size(); i++) {
+
+                if (isErrorResponse(responses[i]) && isQualifiedForRetry(sentCommitmentRDs[i], responses[i])) {
+                    handleError(sentCommitmentRDs[i], responses[i]);
+                    queuedCommitmentRDs.add(sentCommitmentRDs[i]);
+                    continue;
+                }
+                handledCommitmentRDs.add(sentCommitmentRDs[i]);
+                handledResponses.add(responses[i]);
+            }
+
+            if (!handledCommitmentRDs.isEmpty()) {
+                logErrors(handledCommitmentRDs, handledResponses);
+            }
+        }
+
+        /**
+        * @description Returns true if response represents an error.
+        * @param response UTIL_Http.Response
+        * @return Boolean
+        */
+        private Boolean isErrorResponse(UTIL_Http.Response response) {
+            return response.statusCode != UTIL_Http.STATUS_CODE_OK;
+        }
+
+        /**
+        * @description Returns true if Elevate cancel callout should be retried.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @param response UTIL_Http.Response
+        * @return Boolean
+        */
+        private Boolean isQualifiedForRetry(
+            RD2_ElevateIntegrationService.CommitmentRD commitmentRD,
+            UTIL_Http.Response response
+        ) {
+            return hasRetriesRemaining(commitmentRD) && response.statusCode != UTIL_Http.STATUS_CODE_NOT_FOUND;
+        }
+
+        /**
+        * @description Returns true if commitmentRD has retries remaining.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @return Boolean
+        */
+        private Boolean hasRetriesRemaining(RD2_ElevateIntegrationService.CommitmentRD commitmentRD) {
+            return commitmentRD.retriesRemaining > 0;
+        }
+
+        /**
+        * @description Handles error response.
+        * @param commitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @param response UTIL_Http.Response
+        */
+        private void handleError(
+            RD2_ElevateIntegrationService.CommitmentRD commitmentRD,
+            UTIL_Http.Response response
+        ) {
+            commitmentRD.isConfirmationRequired = isConfirmationNeeded(response);
+            commitmentRD.retriesRemaining--;
+        }
+
+        /**
+        * @description Returns true if response indicates that Elevate status confirmation is needed.
+        * @param response UTIL_Http.Response
+        * @return Boolean
+        */
+        private Boolean isConfirmationNeeded(UTIL_Http.Response response) {
+            return response.statusCode == UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT
+                || response.statusCode == UTIL_Http.STATUS_CODE_GATEWAY_TIMEOUT
+                || response.statusCode == UTIL_Http.STATUS_CODE_INTERNAL_SERVER_ERROR
+                || response.statusCode == UTIL_Http.STATUS_CODE_SERVICE_UNAVAILABLE
+                || response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
+        }
+
+        /**
+        * @description Handles error logging and setting final Status Reason
+        * @param handledCommitmentRDs List of RD2_ElevateIntegrationService.CommitmentRD
+        * @param handledResponses List of UTIL_Http.Response
+        */
+        private void logErrors(
+            List<RD2_ElevateIntegrationService.CommitmentRD> handledCommitmentRDs,
+            List<UTIL_Http.Response> handledResponses
+        ) {
+            Logger logger = new Logger();
+
+            List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
+            for (Integer i = 0; i < handledResponses.size(); i++) {
+                if (validateElevateCancellation(handledCommitmentRDs[i], handledResponses[i])) {
+                    setClosedReason(handledCommitmentRDs[i], handledResponses[i], logger);
+                    closedRDs.add(handledCommitmentRDs[i].rd);
+                }
             }
 
             List<Database.SaveResult> dmlResults = Database.update(closedRDs, false);
@@ -305,26 +485,52 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
 
         /**
-        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
-        * @param closedRDs Closed RDs with the user specified closed reason
-        * @return UTIL_Http.Response
+        * @description Validates Elevate commitment cancellation
+        * @param handledCommitmentRD RD2_ElevateIntegrationService.CommitmentRD
+        * @param handledResponse UTIL_Http.Response
+        * @return Boolean
         */
-        public UTIL_Http.Response sendRequest(String commitmentId) {
-            UTIL_Http.Response response;
+        private Boolean validateElevateCancellation(
+            RD2_ElevateIntegrationService.CommitmentRD handledCommitmentRD,
+            UTIL_Http.Response handledResponse
+        ) {
+            Boolean isValidated = true;
 
-            try {
-                HttpRequest request = buildCancelRequest(commitmentId);
-
-                response = requestService.sendRequest(request);
-            } catch (Exception ex) {
-                response = requestService.buildErrorResponse(ex);
+            if (!handledCommitmentRD.isConfirmationRequired) {
+                return isValidated;
             }
 
-            return response;
+            if (getCommitmentStatus(handledResponse) != 'INACTIVE') {
+                handledCommitmentRD.retriesRemaining--;
+                queuedCommitmentRDs.add(handledCommitmentRD);
+                isValidated = false;
+            }
+
+            return isValidated;
         }
 
         /**
-        * @description Builds a cancel commitment request for the provided commitment Id
+        * @description Extracts Elevate commitment status from response
+        * @param handledResponse UTIL_Http.Response
+        * @return String
+        */
+        private String getCommitmentStatus(UTIL_Http.Response handledResponse) {
+            String status;
+
+            try {
+                Map<String, Object> bodyMap = (Map<String, Object>) JSON.deserializeUntyped(handledResponse.body);
+                Map<String, Object> commitment = (Map<String, Object>) bodyMap.get('commitment');
+                status = (String) commitment.get('status');
+            }
+            catch (Exception e) {
+                // Response body is null or empty. Treat as cancellation unconfirmed.
+            }
+
+            return status;
+        }
+
+        /**
+        * Builds a cancel commitment request for the provided commitment Id
         * @param commitmentId Elevate recurring commitment Id
         * @return HttpRequest
         */
@@ -337,62 +543,71 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
 
         /**
+        * @description Builds a commitment Id request for the provided commitment Id
+        * @param commitmentId Elevate recurring commitment Id
+        * @return HttpRequest
+        */
+        private HttpRequest buildCommitmentIDRequest(String commitmentId) {
+            return new PS_Request.Builder()
+                .withCommitmentId(commitmentId)
+                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_ID)
+                .withMethod(UTIL_Http.Method.GET)
+                .build();
+        }
+
+        /**
         * @description Sets closed reason based on the cancel commitment response.
         * Recurring Donations already contain user specified closed reason value,
         * so the value is restored in database when:
-        * - the commitment is sucessfully cancelled,
+        * - the commitment is successfully cancelled,
         * - the commitment cannot be found in Elevate,
         * - the request results in data conflict which is usually
         *   returned when the commitment is already cancelled.
         *
-        * @param rd Recurring Donation
+        * @param commitmentRD Recurring Donation
         * @param response Elevate API response
         * @param logger Error log container
-        * @return void
         */
-        private void setClosedReason(npe03__Recurring_Donation__c rd, UTIL_Http.Response response, Logger logger) {
+        private void setClosedReason(RD2_ElevateIntegrationService.CommitmentRD commitmentRD, UTIL_Http.Response response, Logger logger) {
 
-            if (isCancelled(response)) {
+            if (isCancelled(commitmentRD, response)) {
                 return;
             }
 
             String messages = response.getErrorMessages();
-            logger.addError(rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
+            logger.addError(commitmentRD.rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
 
-            rd.ClosedReason__c = messages.abbreviate(MAX_PICKLIST_FIELD_LEN);
+            commitmentRD.rd.ClosedReason__c = messages.abbreviate(MAX_PICKLIST_FIELD_LEN);
         }
 
         /**
         * @description Checks if the commitment has been successfully cancelled in Elevate
+        * @param commitmentRD Commitment RD, including previous response code
         * @param response Elevate API response
         * @return Boolean
         */
-        private Boolean isCancelled(UTIL_Http.Response response) {
+        private Boolean isCancelled(RD2_ElevateIntegrationService.CommitmentRD commitmentRD, UTIL_Http.Response response) {
+            // TODO: Add response from COMMITMENT_ID to definition
             return response != null && response.statusCode == UTIL_Http.STATUS_CODE_OK;
-        }
-
-        /**
-        * @description Checks if the commitment has not been found in Elevate
-        * based on the provided commitment Id
-        * @param response Elevate API response
-        * @return Boolean
-        */
-        private Boolean isNotFound(UTIL_Http.Response response) {
-            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_NOT_FOUND;
-        }
-
-        /**
-        * @description Checks if the commitment has data conflicted error response.
-        * Possible reason might be that the commitment has already been cancelled.
-        * @param response Elevate API response
-        * @return Boolean
-        */
-        private Boolean isDataConflict(UTIL_Http.Response response) {
-            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
         }
     }
 
 
+    /**
+    * @description Wraps Recurring Donation, retriesRemaining and isConfirmationRequired.
+    * These values need to be accessed together during the Elevate cancellation process.
+    */
+    public class CommitmentRD {
+        public npe03__Recurring_Donation__c rd;
+        public Integer retriesRemaining;
+        public Boolean isConfirmationRequired;
+
+        public CommitmentRD(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
+            this.retriesRemaining = RD2_ElevateIntegrationService.MAX_COMMITMENT_CANCEL_RETRIES;
+            this.isConfirmationRequired = false;
+        }
+    }
 
     /**
     * @description Builds and creates logs for errors and exceptions.

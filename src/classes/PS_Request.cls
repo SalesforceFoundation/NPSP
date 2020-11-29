@@ -39,7 +39,8 @@ public inherited sharing class PS_Request {
         TOKENIZE,
         PURCHASE,
         COMMITMENT,
-        COMMITMENT_CANCEL
+        COMMITMENT_CANCEL,
+        COMMITMENT_ID
     }
 
     public enum ProductType {
@@ -69,6 +70,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
+    public static String ENDPOINT_COMMITMENT_ID = '/v1/payments/verified/commitments/{0}';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -88,6 +90,15 @@ public inherited sharing class PS_Request {
     */
     public String getCancelCommitmentEndpoint(String commitmentId) {
         return new Builder().getEndpoint(ElevateEndpoint.COMMITMENT_CANCEL, commitmentId);
+    }
+
+    /***
+    * @description Returns payments service endpoint URL
+    * @param commitmentId Elevate recurring commitment Id
+    * @return String
+    */
+    public String getCommitmentIdEndpoint(String commitmentId) {
+        return new Builder().getEndpoint(ElevateEndpoint.COMMITMENT_ID, commitmentId);
     }
 
     /***
@@ -225,16 +236,30 @@ public inherited sharing class PS_Request {
             if (endpoint == ElevateEndpoint.TOKENIZE) {
                 value = ENDPOINT_TOKENIZE;
 
-            } else if (endpoint == ElevateEndpoint.PURCHASE) {
+            }
+            else if (endpoint == ElevateEndpoint.PURCHASE) {
                 value = ENDPOINT_PURCHASE;
 
-            } else if (endpoint == ElevateEndpoint.COMMITMENT) {
+            }
+            else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
-            } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
+            }
+            else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,
-                    new String[]{ commitmentId }
+                    new String[]{
+                        commitmentId
+                    }
+                );
+
+            }
+            else if (endpoint == ElevateEndpoint.COMMITMENT_ID) {
+                value = String.format(
+                    ENDPOINT_COMMITMENT_ID,
+                    new String[]{
+                        commitmentId
+                    }
                 );
             }
 
