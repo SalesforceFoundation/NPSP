@@ -1,7 +1,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { constructErrorMessage, buildFieldDescribes, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
@@ -39,7 +40,7 @@ const FIELDS = [
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
 
-export default class rd2ElevateInformation extends LightningElement {
+export default class rd2ElevateInformation extends NavigationMixin(LightningElement) {
 
     labels = Object.freeze({
         header,
@@ -133,10 +134,6 @@ export default class rd2ElevateInformation extends LightningElement {
             let rdObjectInfo = response.data;
 
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
-            );
 
             this.checkLoading();
         }
@@ -283,7 +280,20 @@ export default class rd2ElevateInformation extends LightningElement {
      * @description Displays error log
      */
     navigateToErrorLog() {
+        var pageRef = {
+            componentDef: "c:errViewRecordLog",//namespace//TODO
+            attributes: {
+                recordId: this.recordId
+            }
+        };
 
+        var encodedPageRef = btoa(JSON.stringify(pageRef));
+        this[NavigationMixin.Navigate]({
+            type: 'standard__webPage',
+            attributes: {
+                url: '/one/one.app#' + encodedPageRef
+            }
+        });
     }
 
     /**

@@ -1,0 +1,58 @@
+<template>
+    <div class="slds-card slds-card_extension">
+
+        <template if:true={isLoading}>
+            <div class="slds-grid slds-grid_align-center">
+                <div class="slds-is-relative slds-size_1-of-1">
+                    <lightning-spinner alternative-text={labels.loadingMessage} data-id="spinner"
+                        data-qa-locator={qaLocatorSpinner} size="small">
+                    </lightning-spinner>
+                    <c-util-stencil row-count="4" column-count="1"></c-util-stencil>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <div class="slds-page-header slds-theme_shade slds-p-top_small slds-p-bottom_medium" role="banner">
+                <div>
+                    <lightning-breadcrumbs>
+                        <lightning-breadcrumb label={recordInfo.sObjectTypeLabelPlural}
+                            onclick={navigateToRecordObjectPage}>
+                        </lightning-breadcrumb>
+
+                        <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}>
+                        </lightning-breadcrumb>
+                    </lightning-breadcrumbs>
+                </div>
+
+                <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-page-header__title">Error Log</h1>
+                    </div>
+                </div>
+            </div>
+
+            <lightning-datatable key-field="id" data={errorLogs} columns={columns} hide-checkbox-column="true"
+                data-qa-locator={qaLocatorErrorLogDatatable} wrap-text-max-lines="3">
+            </lightning-datatable>
+
+            <template if:true={hasErrorLogs}>
+                <div class="slds-p-bottom_xx-large slds-theme_shade">
+                </div>
+            </template>
+
+            <template if:false={hasErrorLogs}>
+                <div class="slds-align_absolute-center slds-p-vertical_xx-large">
+                    <lightning-formatted-text data-id="emptyErrorLogMessage" value={labels.commonNoItems}
+                        data-qa-locator={qaLocatorEmptyErrorLogMessage}>
+                    </lightning-formatted-text>
+                </div>
+            </template>
+        </template>
+
+    </div>
+</template>
