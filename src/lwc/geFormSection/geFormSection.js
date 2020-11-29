@@ -1,5 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
-import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
+import {LightningElement, api} from 'lwc';
+import { isUndefined } from 'c/utilCommon';
 import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
@@ -8,11 +8,10 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
     @api formState;
-    @track hasCreditCardWidget = false;
+    _hasCreditCardWidget = false;
 
     renderedCallback() {
         this.registerCreditCardWidget();
-        this.handleChangeNameOnCardField();
     }
 
     /**
@@ -25,18 +24,6 @@ export default class GeFormSection extends LightningElement {
 
     get isCollapsed() {
         return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
-    }
-
-    @api
-    get values() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let dataImportFieldAndValues = {};
-        if(fields !== null && typeof fields !== 'undefined') {
-            fields.forEach(field => {
-                dataImportFieldAndValues = { ...dataImportFieldAndValues, ...(field.fieldAndValue) };
-            });
-        }
-        return dataImportFieldAndValues;
     }
 
     /**
@@ -65,8 +52,8 @@ export default class GeFormSection extends LightningElement {
 
     /**
      * Sets custom validity on fields inside fieldsArray
-     * @param {fieldsArray},Array with sourceFieldAPIName field property
-     * @param {errorMessage}, String custom error message for fields
+     * @param fieldsArray
+     * @param errorMessage
      */
     @api
     setCustomValidityOnFields( fieldsArray, errorMessage ) {
@@ -80,20 +67,6 @@ export default class GeFormSection extends LightningElement {
             });
         }
 
-    }
-
-    @api
-    get widgetValues() {
-        const widgets = this.template.querySelectorAll('c-ge-form-widget');
-        let widgetValues = [];
-
-        if (widgets !== null && typeof widgets !== 'undefined') {
-            widgets.forEach(widget => {
-                widgetValues.push(widget.widgetAndValues);
-            });
-        }
-
-        return widgetValues;
     }
 
     /**
@@ -126,129 +99,52 @@ export default class GeFormSection extends LightningElement {
         return fieldMappedByAPIName;
     }
 
-    @api
-    load(data) {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        fields.forEach(fieldCmp => {
-            if (Object.keys(data).includes(fieldCmp.sourceFieldAPIName)) {
-                fieldCmp.load(
-                    getSubsetObject(
-                        data,
-                        [fieldCmp.sourceFieldAPIName]));
-            }
-        });
-
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget => {
-            widget.load(data);
-        });
-    }
-
-    @api
-    reset(applyDefaultValues = true) {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-
-        fields.forEach(field => {
-            field.reset(applyDefaultValues);
-        });
-
-        widgetList.forEach(widget => {
-            widget.reset();
-        });
-    }
-
-    @api
-    resetFieldsForFieldMappingsApplyDefaults(fieldMappingDevNames) {
-        this.template.querySelectorAll('c-ge-form-field')
-            .forEach(field => {
-                if (fieldMappingDevNames.includes(
-                    field.element.dataImportFieldMappingDevNames[0]
-                )) {
-                    field.reset();
-                }
-            });
-    }
-
-    handleLookupRecordSelect(event) {
-        const selectEvent = new CustomEvent(
-            'lookuprecordselect',
-            {
-                detail: event.detail,
-                objectMappingDevName: event.objectMappingDevName
-            });
-        this.dispatchEvent(selectEvent);
-    }
-
-    /**
-     * @description Inspects all fields and widgets in the section and
-     *              returns a list of DataImport__c field api names used as
-     *              source fields.  Helps to only send relevant data down from
-     *              geFormRenderer to each section during load() flow.
-     */
-    @api
-    get sourceFields() {
-        let fields = Object.keys(this.getAllFieldsByAPIName());
-
-        this.template.querySelectorAll('c-ge-form-widget')
-            .forEach(widgetCmp => {
-                if (isNotEmpty(widgetCmp.allFieldsByAPIName)) {
-                    fields.push(...widgetCmp.allFieldsByAPIName);
-                }
-            });
-
-        return fields;
-    }
-
     registerCreditCardWidget() {
         if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
                 if (element.componentName === 'geFormWidgetTokenizeCard') {
-                    this.hasCreditCardWidget = true;
+                    this._hasCreditCardWidget = true;
                 }
             })
         }
-    }
+        if (this._hasCreditCardWidget) {
+            const registerCreditCardWidgetEvent = new CustomEvent(
+                'registercreditcardwidget'
+            );
+            this.dispatchEvent(registerCreditCardWidgetEvent)
+        }
 
-    handleChangeNameOnCardField() {
-        const changeNameOnCardFieldEvent = new CustomEvent(
-            'changenameoncardfield'
-        );
-        this.dispatchEvent(changeNameOnCardFieldEvent);
     }
 
     @api
-    setCardHolderName(value) {
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget => {
-            if (widget.isElevateTokenizeCard) {
-                widget.setCardHolderName(value);
-            }
-        });
+    get paymentToken() {
+        let widgetValues = [];
+        const widgets = this.template.querySelectorAll('c-ge-form-widget');
+        if (widgets !== null && typeof widgets !== 'undefined') {
+            widgets.forEach(widget => {
+                if (widget.isElevateTokenizeCard) {
+                    widgetValues.push(widget.paymentToken);
+                }
+            });
+        }
+        return widgetValues;
     }
 
     @api
     get isCreditCardWidgetAvailable() {
-        return this.hasCreditCardWidget;
+        return this._hasCreditCardWidget;
     }
-
     get renderableElements() {
         if (isUndefined(this.section)) {
             return [];
         }
-        return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
+        return this.section.elements.filter(
+            element => new GeFormElementHelper(
+                element).isRenderable());
     }
 
-    @api
-    getAllFieldsByFieldAPIName() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let fieldData = {};
-        if (isNotEmpty(fields)) {
-            fields.forEach(field => {
-                fieldData = { ...fieldData, ...(field.fieldValueAndFieldApiName) };
-            });
-        }
-        return fieldData;
+    handleFormWidgetChange(event) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}));
     }
 
     handleFormFieldChange(event) {

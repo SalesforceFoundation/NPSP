@@ -396,6 +396,8 @@
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
+        <members>RD2_ElevateInformation_CTRL</members>
+        <members>RD2_ElevateInformation_TEST</members>
         <members>RD2_ElevateIntegrationService</members>
         <members>RD2_ElevateIntegrationService_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
@@ -1029,6 +1031,7 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -1134,11 +1137,10 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
-        <members>DataImport__c.Payment_ACH_Code__c</members>
-        <members>DataImport__c.Payment_ACH_Last_4__c</members>
-        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_ACH_Code__c</members>
+        <members>DataImport__c.Payment_ACH_Last_4__c</members>
         <members>DataImport__c.Payment_Authorization_Token__c</members>
         <members>DataImport__c.Payment_Authorized_Date__c</members>
         <members>DataImport__c.Payment_Authorized_UTC_Timestamp__c</members>
@@ -1159,6 +1161,7 @@
         <members>DataImport__c.Payment_Origin_ID__c</members>
         <members>DataImport__c.Payment_Origin_Name__c</members>
         <members>DataImport__c.Payment_Origin_Type__c</members>
+        <members>DataImport__c.Payment_Paid__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
@@ -1693,16 +1696,22 @@
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
+        <members>RD2_DataMigrationInvalidPlannedInstallments</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateCancelInProgress</members>
         <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledHeader</members>
         <members>RD2_ElevateDisabledMessage</members>
         <members>RD2_ElevateEnableButtonLabel</members>
+        <members>RD2_ElevateInformationHeader</members>
+        <members>RD2_ElevateInformationStatusSuccess</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
@@ -2175,6 +2184,7 @@
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
+        <members>commonErrorPrefix</members>
         <members>commonFieldLabel</members>
         <members>commonFieldNotFound</members>
         <members>commonFieldsNotFound</members>
@@ -2205,6 +2215,7 @@
         <members>commonUnknownError</members>
         <members>commonUpdate</members>
         <members>commonViewAll</members>
+        <members>commonViewErrorLog</members>
         <members>commonViewMore</members>
         <members>commonWaitMessage</members>
         <members>commonWarning</members>
@@ -3200,6 +3211,7 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Name</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
+        <members>Data_Import_Field_Mapping.Payment_Paid</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
@@ -3717,6 +3729,10 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>P10_Application_Date</members>
+        <name>FeatureParameterDate</name>
+    </types>
+    <types>
         <members>DataCount_ONETIME_Use</members>
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
@@ -3859,6 +3875,7 @@
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
         <members>rd2ElevateCreditCardForm</members>
+        <members>rd2ElevateInformation</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>
@@ -3871,7 +3888,6 @@
         <members>utilAlertBanner</members>
         <members>utilCard</members>
         <members>utilCommon</members>
-        <members>utilCustomErrors</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilExpandableSection</members>
