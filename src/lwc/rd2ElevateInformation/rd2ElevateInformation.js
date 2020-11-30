@@ -1,7 +1,7 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { constructErrorMessage, buildFieldDescribes, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
@@ -133,10 +133,6 @@ export default class rd2ElevateInformation extends LightningElement {
             let rdObjectInfo = response.data;
 
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
-            );
 
             this.checkLoading();
         }
