@@ -47,26 +47,22 @@ class psElevateTokenHandler {
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
-    buildVisualForceOriginURLs(domainInfo) {
+    getBaseVisualForceOriginURLs(domainInfo) {
         let url = `https://${domainInfo.orgDomain}--c.visualforce.com`;
         let alternateUrl = `https://${domainInfo.orgDomain}--c.${domainInfo.podName}.visual.force.com`;
         let productionEnhancedUrl = `https://${domainInfo.orgDomain}--c.vf.force.com`;
         let sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--c.sandbox.vf.force.com`;
 
-        const originURLS = [
+        return [
             {value: url},
             {value: alternateUrl},
             {value: productionEnhancedUrl},
             {value: sandboxEnhancedUrl}
         ];
-
-        if (this.currentNamespace) {
-            return this.convertToNamespacedURLs(originURLS);
-        }
-        return originURLS;
     }
 
-    convertToNamespacedURLs(originUrls) {
+
+    buildNamespacedVisualForceOriginURLs (originUrls) {
         let convertedUrls = [];
         originUrls.forEach(url => {
             convertedUrls.push(
@@ -83,9 +79,10 @@ class psElevateTokenHandler {
         if (isNull(domainInfo)) {
             return;
         }
+        const baseVfOrigins = this.getBaseVisualForceOriginURLs(domainInfo);
+        this._visualforceOriginUrls = this.currentNamespace ?
+            this.buildNamespacedVisualForceOriginURLs(baseVfOrigins) : baseVfOrigins;
 
-        this._visualforceOriginUrls =
-            this.buildVisualForceOriginURLs(domainInfo);
     }
 
     /***
@@ -109,9 +106,8 @@ class psElevateTokenHandler {
     */
     registerPostMessageListener(component) {
         let self = this;
-
         window.onmessage = async function (event) {
-            if (self.shouldHandleMessage(event)) {
+              if (self.shouldHandleMessage(event)) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
