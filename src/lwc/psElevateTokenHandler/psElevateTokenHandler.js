@@ -111,19 +111,21 @@ class psElevateTokenHandler {
         let self = this;
 
         window.onmessage = async function (event) {
-            if (self._visualforceOriginUrls) {
-                self._visualforceOrigin = self._visualforceOriginUrls.find(
-                    origin => event.origin === origin.value
-                );
-                self._visualforceOrigin =
-                    self._visualforceOrigin !== undefined ?
-                        self._visualforceOrigin.value : undefined;
-                if (self._visualforceOrigin !== undefined) {
-                    const message = JSON.parse(event.data);
-                    component.handleMessage(message);
-                }
+            if (self.shouldHandleMessage(event)) {
+                const message = JSON.parse(event.data);
+                component.handleMessage(message);
             }
         }
+    }
+
+    shouldHandleMessage (event) {
+        this._visualforceOrigin = this._visualforceOriginUrls.find(
+            origin => event.origin === origin.value
+        );
+        this._visualforceOrigin =
+            this._visualforceOrigin !== undefined ?
+                this._visualforceOrigin.value : undefined;
+        return this._visualforceOrigin !== undefined;
     }
 
     /***
