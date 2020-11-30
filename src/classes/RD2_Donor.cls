@@ -77,7 +77,7 @@ public with sharing class RD2_Donor {
     /***
     * @description Gateway to retrieve donor information
     */
-    public class Gateway implements IGateway {
+    public without sharing class Gateway implements IGateway {
 
         /***
         * @description Returns donor information for provided Recurring Donation records
