@@ -99,11 +99,36 @@ private with sharing class PS_Request_TEST {
         final String jsonRequestBody = '';
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
             + String.format(
-                PS_Request.ENDPOINT_COMMITMENT_CANCEL, 
-                new String[]{ COMMITMENT_ID }
-            );        
-        
+            PS_Request.ENDPOINT_COMMITMENT_CANCEL,
+            new String[]{ COMMITMENT_ID }
+        );
+
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
+    }
+
+    /**
+    * @description Verifies Cancel Commitment HttpRequest
+    */
+    @isTest
+    private static void shouldCreateHttpRequestWhenCommitmentIDEndpoint() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Test.startTest();
+        HttpRequest request = new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.GET)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_ID)
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+        Test.stopTest();
+
+        final String jsonRequestBody = '';
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + String.format(
+            PS_Request.ENDPOINT_COMMITMENT_ID,
+            new String[]{ COMMITMENT_ID }
+        );
+
+        assertRequest(request, expectedEndpoint, UTIL_Http.Method.GET, jsonRequestBody);
     }
 
     /**

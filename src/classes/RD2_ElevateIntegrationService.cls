@@ -337,9 +337,11 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
             handleResponses(sentCommitmentRDs, responses);
 
-            if (!queuedCommitmentRDs.isEmpty()) {
-                System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(queuedCommitmentRDs));
+            List<RD2_ElevateIntegrationService.CommitmentRD> retryCommitments = prepCommitmentsForRetry();
+            if (!retryCommitments.isEmpty()) {
+                System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(retryCommitments));
             }
+            prepCommitmentsForRetry();
         }
 
         /**
@@ -408,7 +410,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
                 if (isErrorResponse(responses[i]) && isQualifiedForRetry(sentCommitmentRDs[i], responses[i])) {
                     handleError(sentCommitmentRDs[i], responses[i]);
-                    queuedCommitmentRDs.add(sentCommitmentRDs[i]);
                     continue;
                 }
                 handledCommitmentRDs.add(sentCommitmentRDs[i]);
@@ -461,7 +462,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             UTIL_Http.Response response
         ) {
             commitmentRD.isConfirmationRequired = isConfirmationNeeded(response);
-            commitmentRD.retriesRemaining--;
+            queuedCommitmentRDs.add(commitmentRD);
         }
 
         /**
@@ -475,6 +476,20 @@ public inherited sharing class RD2_ElevateIntegrationService {
                 || response.statusCode == UTIL_Http.STATUS_CODE_INTERNAL_SERVER_ERROR
                 || response.statusCode == UTIL_Http.STATUS_CODE_SERVICE_UNAVAILABLE
                 || response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
+        }
+
+        private List<RD2_ElevateIntegrationService.CommitmentRD> prepCommitmentsForRetry() {
+            List<RD2_ElevateIntegrationService.CommitmentRD> retryCommitments = new List<RD2_ElevateIntegrationService.CommitmentRD>();
+
+            if (!queuedCommitmentRDs.isEmpty()) {
+                for (RD2_ElevateIntegrationService.CommitmentRD retryCommitment : queuedCommitmentRDs) {
+                    if (retryCommitment.retriesRemaining > 0) {
+                        retryCommitment.retriesRemaining--;
+                        retryCommitments.add(retryCommitment);
+                    }
+                }
+            }
+            return retryCommitments;
         }
 
         /**
@@ -519,7 +534,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
             }
 
             if (getCommitmentStatus(handledResponse) != 'INACTIVE') {
-                handledCommitmentRD.retriesRemaining--;
                 handledCommitmentRD.isConfirmationRequired = false;
                 queuedCommitmentRDs.add(handledCommitmentRD);
                 isValidated = false;
