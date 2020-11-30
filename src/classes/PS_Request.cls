@@ -358,6 +358,7 @@ public inherited sharing class PS_Request {
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT
                 || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == ElevateEndpoint.COMMITMENT_ID
             ) {
                 value = ROLE_PAYMENT_COMMITMENTS;
             }
