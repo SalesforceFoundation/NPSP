@@ -30,9 +30,9 @@ export default class errViewLogForRecord extends NavigationMixin(LightningElemen
     @track isLoading = true;
     @track error = {};
 
+    @track recordInfo = {};
     @track columns = [];
     @track errorLogs;
-    @track recordInfo = {};
     @track hasErrorLogs;
 
 

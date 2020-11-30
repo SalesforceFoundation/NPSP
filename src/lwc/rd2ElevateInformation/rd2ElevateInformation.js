@@ -2,13 +2,14 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { constructErrorMessage, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, getNamespace } from 'c/utilCommon';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
@@ -280,8 +281,11 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      * @description Displays error log
      */
     navigateToErrorLog() {
+        const namespace = getNamespace(ERROR_OBJECT.objectApiName);
+        const compName = (namespace ? namespace : 'c') + ":errViewRecordLog";
+
         var pageRef = {
-            componentDef: "c:errViewRecordLog",//namespace//TODO
+            componentDef: compName,
             attributes: {
                 recordId: this.recordId
             }

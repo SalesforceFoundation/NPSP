@@ -1,6 +1,30 @@
 <template>
     <div class="slds-card slds-card_extension">
 
+        <div class="slds-page-header slds-theme_shade slds-p-top_small slds-p-bottom_medium" role="banner">
+            <div>
+                <template if:false={isLoading}>
+                    <lightning-breadcrumbs>
+                        <lightning-breadcrumb label={recordInfo.sObjectTypeLabelPlural}
+                            onclick={navigateToRecordObjectPage}>
+                        </lightning-breadcrumb>
+
+                        <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}>
+                        </lightning-breadcrumb>
+                    </lightning-breadcrumbs>
+                </template>
+            </div>
+
+            <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title">Error Log</h1>
+                </div>
+            </div>
+        </div>
+
         <template if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-is-relative slds-size_1-of-1">
@@ -13,29 +37,6 @@
         </template>
 
         <template if:false={isLoading}>
-
-            <div class="slds-page-header slds-theme_shade slds-p-top_small slds-p-bottom_medium" role="banner">
-                <div>
-                    <lightning-breadcrumbs>
-                        <lightning-breadcrumb label={recordInfo.sObjectTypeLabelPlural}
-                            onclick={navigateToRecordObjectPage}>
-                        </lightning-breadcrumb>
-
-                        <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}>
-                        </lightning-breadcrumb>
-                    </lightning-breadcrumbs>
-                </div>
-
-                <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
-                    <div class="slds-media__figure">
-                        <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
-                    </div>
-                    <div class="slds-media__body">
-                        <h1 class="slds-page-header__title">Error Log</h1>
-                    </div>
-                </div>
-            </div>
-
             <lightning-datatable key-field="id" data={errorLogs} columns={columns} hide-checkbox-column="true"
                 data-qa-locator={qaLocatorErrorLogDatatable} wrap-text-max-lines="3">
             </lightning-datatable>
