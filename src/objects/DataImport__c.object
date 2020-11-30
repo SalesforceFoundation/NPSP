@@ -1578,6 +1578,31 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Paid__c</fullName>
+        <externalId>false</externalId>
+        <description>Indicates if this payment is paid or not.</description>
+        <inlineHelpText>Indicates if this payment is paid or not.</inlineHelpText>
+        <label>Payment Paid</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>True</fullName>
+                    <default>false</default>
+                    <label>True</label>
+                </value>
+                <value>
+                    <fullName>False</fullName>
+                    <default>false</default>
+                    <label>False</label>
+                </value>                
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
         <fullName>Payment_Possible_Matches__c</fullName>
         <description>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</description>
         <externalId>false</externalId>
