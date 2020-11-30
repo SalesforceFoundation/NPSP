@@ -1,6 +1,6 @@
 
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { getNamespace, isFunction, isNull } from 'c/utilCommon';
+import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilCommon';
 
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -50,10 +50,10 @@ class psElevateTokenHandler {
     }
 
     getVisualForceOriginURLs(domainInfo, namespace) {
-        let url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
-        let alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
-        let productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
-        let sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
+        const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
+        const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
+        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
+        const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
 
         return [
             {value: url},
@@ -98,7 +98,7 @@ class psElevateTokenHandler {
     * Rejects any messages from an unknown origin.
     */
     registerPostMessageListener(component) {
-        let self = this;
+        const self = this;
         window.onmessage = async function (event) {
               if (self.shouldHandleMessage(event)) {
                 const message = JSON.parse(event.data);
@@ -108,6 +108,11 @@ class psElevateTokenHandler {
     }
 
     shouldHandleMessage (event) {
+        return this.isExpectedVisualForceOrigin(event) &&
+            validateJSONString(event.data);
+    }
+
+    isExpectedVisualForceOrigin (event) {
         this._visualforceOrigin = this._visualforceOriginUrls.find(
             origin => event.origin === origin.value
         );
