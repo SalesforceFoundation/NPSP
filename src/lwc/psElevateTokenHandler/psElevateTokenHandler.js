@@ -22,6 +22,8 @@ const TOKENIZE_EVENT_ACTION = 'createToken';
 */
 const TOKENIZE_TIMEOUT_MS = 10000;
 
+const NON_NAMESPACED_CHARACTER = 'c';
+
 
 /***
 * @description Payment services Elevate credit card tokenization service
@@ -47,11 +49,11 @@ class psElevateTokenHandler {
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
-    getBaseVisualForceOriginURLs(domainInfo) {
-        let url = `https://${domainInfo.orgDomain}--c.visualforce.com`;
-        let alternateUrl = `https://${domainInfo.orgDomain}--c.${domainInfo.podName}.visual.force.com`;
-        let productionEnhancedUrl = `https://${domainInfo.orgDomain}--c.vf.force.com`;
-        let sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--c.sandbox.vf.force.com`;
+    getVisualForceOriginURLs(domainInfo, namespace) {
+        let url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
+        let alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
+        let productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
+        let sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
 
         return [
             {value: url},
@@ -59,16 +61,6 @@ class psElevateTokenHandler {
             {value: productionEnhancedUrl},
             {value: sandboxEnhancedUrl}
         ];
-    }
-
-
-    buildNamespacedVisualForceOriginURLs (originUrls) {
-        let convertedUrls = [];
-        originUrls.forEach(url => {
-            convertedUrls.push(
-                {value : url.value.replace('--c', `--${this.currentNamespace}`)});
-        })
-        return convertedUrls;
     }
 
     /***
@@ -79,9 +71,10 @@ class psElevateTokenHandler {
         if (isNull(domainInfo)) {
             return;
         }
-        const baseVfOrigins = this.getBaseVisualForceOriginURLs(domainInfo);
-        this._visualforceOriginUrls = this.currentNamespace ?
-            this.buildNamespacedVisualForceOriginURLs(baseVfOrigins) : baseVfOrigins;
+        const namespace = this.currentNamespace ?
+            this.currentNamespace : NON_NAMESPACED_CHARACTER;
+        this._visualforceOriginUrls =
+            this.getVisualForceOriginURLs(domainInfo, namespace);
 
     }
 
