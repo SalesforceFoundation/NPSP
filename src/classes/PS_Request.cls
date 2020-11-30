@@ -236,16 +236,13 @@ public inherited sharing class PS_Request {
             if (endpoint == ElevateEndpoint.TOKENIZE) {
                 value = ENDPOINT_TOKENIZE;
 
-            }
-            else if (endpoint == ElevateEndpoint.PURCHASE) {
+            } else if (endpoint == ElevateEndpoint.PURCHASE) {
                 value = ENDPOINT_PURCHASE;
 
-            }
-            else if (endpoint == ElevateEndpoint.COMMITMENT) {
+            } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
-            }
-            else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,
                     new String[]{
@@ -253,8 +250,7 @@ public inherited sharing class PS_Request {
                     }
                 );
 
-            }
-            else if (endpoint == ElevateEndpoint.COMMITMENT_ID) {
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_ID) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_ID,
                     new String[]{
