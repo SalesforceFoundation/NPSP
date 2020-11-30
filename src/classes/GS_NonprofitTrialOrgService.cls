@@ -138,10 +138,11 @@ public with sharing class GS_NonprofitTrialOrgService {
      * {"Sandbox":false,"TrialExpiration":"2020-11-29T00:00:00.000Z", "applicationDate":"2020-10-20"} Simulates a trial org which has applied for licenses.
      */
     private static TestingConfig getTestingConfiguration() {
-        List<StaticResource> staticResources = [SELECT Body
-                                                FROM StaticResource
-                                                WHERE Name = :STATIC_RESOURCE_NAME
-                                               ];
+        List<StaticResource> staticResources = [
+            SELECT Body FROM StaticResource
+            WHERE Name = :STATIC_RESOURCE_NAME
+            WITH SECURITY_ENFORCED
+        ];
         if (!staticResources.isEmpty()) {
             return (TestingConfig) JSON.deserialize(staticResources[0].Body.toString(), TestingConfig.class);
         }
@@ -161,9 +162,11 @@ public with sharing class GS_NonprofitTrialOrgService {
      * @return Organization with TrialExpirationDate and IsSandbox queried.
      */
     private static Organization getOrgInformation() {
-        return [SELECT TrialExpirationDate,
-                       IsSandbox
-                FROM   Organization];
+        return [
+            SELECT TrialExpirationDate, IsSandbox
+            FROM   Organization
+            WITH SECURITY_ENFORCED
+        ];
     }
 
     /**
