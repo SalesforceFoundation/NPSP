@@ -660,6 +660,7 @@ public class RD2_ElevateIntegrationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_ElevateIntegrationService.maxCancelRetries = 0;
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
@@ -724,6 +725,7 @@ public class RD2_ElevateIntegrationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_ElevateIntegrationService.maxCancelRetries = 0;
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;

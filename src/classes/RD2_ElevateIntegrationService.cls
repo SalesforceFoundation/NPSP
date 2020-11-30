@@ -59,7 +59,15 @@ public inherited sharing class RD2_ElevateIntegrationService {
     /***
      * @description Maximum number of retry attempts to cancel Elevate commitment
      */
-    public static final Integer MAX_COMMITMENT_CANCEL_RETRIES = 3;
+    @TestVisible
+    private static Integer maxCancelRetries {
+        get {
+            if (maxCancelRetries == null) {
+                maxCancelRetries = 3;
+            }
+            return maxCancelRetries;
+        } set;
+    }
 
     /***
      * @description Contains configuration related to the Elevate integration service config and permissions
@@ -394,9 +402,9 @@ public inherited sharing class RD2_ElevateIntegrationService {
         ) {
             List<RD2_ElevateIntegrationService.CommitmentRD> handledCommitmentRDs =
                 new List<RD2_ElevateIntegrationService.CommitmentRD>();
-            List<UTIL_Http.Response> handledResponses;
+            List<UTIL_Http.Response> handledResponses = new List<UTIL_Http.Response>();
 
-            for (Integer i; i < sentCommitmentRDs.size(); i++) {
+            for (Integer i = 0; i < sentCommitmentRDs.size(); i++) {
 
                 if (isErrorResponse(responses[i]) && isQualifiedForRetry(sentCommitmentRDs[i], responses[i])) {
                     handleError(sentCommitmentRDs[i], responses[i]);
@@ -512,6 +520,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
             if (getCommitmentStatus(handledResponse) != 'INACTIVE') {
                 handledCommitmentRD.retriesRemaining--;
+                handledCommitmentRD.isConfirmationRequired = false;
                 queuedCommitmentRDs.add(handledCommitmentRD);
                 isValidated = false;
             }
@@ -614,7 +623,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         public CommitmentRD(npe03__Recurring_Donation__c rd) {
             this.rd = rd;
-            this.retriesRemaining = RD2_ElevateIntegrationService.MAX_COMMITMENT_CANCEL_RETRIES;
+            this.retriesRemaining = RD2_ElevateIntegrationService.maxCancelRetries;
             this.isConfirmationRequired = false;
         }
     }
