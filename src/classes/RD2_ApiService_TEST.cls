@@ -331,8 +331,9 @@ private class RD2_ApiService_TEST {
      */
     @IsTest
     private static void shouldReturnOneYearOfInstallmentsWithMissingEndDate() {
-        final Integer installmentCount = 12;
         setUpEnv();
+        
+        final Integer installmentCount = 12;
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Map<Id, List<Installment>> installmentsByRd = queryInstallments(START_DATE, null, rd.Id);
@@ -354,7 +355,7 @@ private class RD2_ApiService_TEST {
         Map<Id, List<Installment>> installmentsByRd = queryInstallments(null, null, rd.Id);
 
         System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
-            'With default dates, ' + installmentCount + ' Recurring donation installments should be returned');
+            'Number of installments should match when start and end date are default: ' + installmentsByRd.values());
     }
 
     /**
