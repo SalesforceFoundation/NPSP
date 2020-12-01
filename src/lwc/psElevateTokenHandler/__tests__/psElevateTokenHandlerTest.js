@@ -6,7 +6,7 @@ const createPostMessageEvent = (type) => {
          return {
             origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
             data : {
-               "isLoaded":true
+               isLoaded:true
             }
          };
       case 'invalid' :
@@ -20,16 +20,21 @@ const createPostMessageEvent = (type) => {
          return {
             origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
             data : {
-               token : "246656543seuur93msdksy4mds"
+               token: "246656543seuur93msdksy4mds"
             }
          };
       case 'error' :
          return {
             origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
             data : {
-               error : "Invalid Request"
+               error: "Invalid Request"
             }
          };
+      case 'invalidJSON' :
+         return {
+            origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
+            data : undefined
+         }
       default:
    }
 }
@@ -83,6 +88,15 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('error'));
       expect(isMessageHandled).toBe(true);
+
+   });
+
+   it('should discard an invalid JSON data from right origin', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('invalidJSON'));
+      expect(isMessageHandled).toBe(false);
 
    });
 

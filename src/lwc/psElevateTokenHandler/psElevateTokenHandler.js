@@ -71,8 +71,9 @@ class psElevateTokenHandler {
         if (isNull(domainInfo)) {
             return;
         }
-        const namespace = this.currentNamespace ?
-            this.currentNamespace : NON_NAMESPACED_CHARACTER;
+        const namespace = this.currentNamespace
+            ? this.currentNamespace
+            : NON_NAMESPACED_CHARACTER;
         this._visualforceOriginUrls =
             this.getVisualForceOriginURLs(domainInfo, namespace);
 
