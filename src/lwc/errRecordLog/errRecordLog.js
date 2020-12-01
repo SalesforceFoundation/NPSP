@@ -1,8 +1,7 @@
 import { LightningElement, api, wire, track } from 'lwc';
-import LOCALE from '@salesforce/i18n/locale';
 import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { constructErrorMessage, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, format } from 'c/utilCommon';
 import getData from '@salesforce/apex/ERR_Log_CTRL.getData';
 
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
@@ -11,6 +10,9 @@ import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMess
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import actionView from '@salesforce/label/c.bgeActionView';
+import listViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
+import listViewItemCountPlural from '@salesforce/label/c.geTextListViewItemsCount';
+import listViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 import ERROR_FIELD_DATETIME from '@salesforce/schema/Error__c.Datetime__c';
@@ -28,7 +30,10 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         contactSystemAdmin,
         commonUnknownError,
         commonNoItems,
-        actionView
+        actionView,
+        listViewItemCount,
+        listViewItemCountPlural,
+        listViewSortedBy
     });
 
     @api recordId;
@@ -38,10 +43,11 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
 
     @track recordInfo = {};
     @track columns = [];
-    @track errorLogs;
-    @track hasErrorLogs;
+    @track data;
+    @track hasData = true;
     @track sortedBy;
     @track sortDirection = DESC;
+    fieldDatetime = {};
 
 
     /***
@@ -57,8 +63,8 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                         name: response.recordName
                     };
 
-                    this.errorLogs = response.errorLogs;
-                    this.hasErrorLogs = !isUndefined(this.errorLogs) && this.errorLogs.length > 0;
+                    this.data = response.data;
+                    this.hasData = !isUndefined(this.data) && this.data.length > 0;
                 })
                 .catch((error) => {
                     this.handleError(error);
@@ -77,20 +83,14 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         if (response.data) {
             const fields = response.data.fields;
 
-            const fieldDatetime = extractFieldInfo(fields, ERROR_FIELD_DATETIME.fieldApiName);
+            this.fieldDatetime = extractFieldInfo(fields, ERROR_FIELD_DATETIME.fieldApiName);
             const fieldErrorType = extractFieldInfo(fields, ERROR_FIELD_ERROR_TYPE.fieldApiName);
             const fieldFullMessage = extractFieldInfo(fields, ERROR_FIELD_FULL_MESSAGE.fieldApiName);
 
             this.columns = [
                 {
-                    type: 'action',
-                    typeAttributes: {
-                        rowActions: [{ label: this.labels.actionView, name: 'show_details' }],
-                    }
-                },
-                {
-                    label: fieldDatetime.label,
-                    fieldName: fieldDatetime.apiName,
+                    label: this.fieldDatetime.label,
+                    fieldName: this.fieldDatetime.apiName,
                     type: 'date',
                     typeAttributes: {
                         year: 'numeric',
@@ -114,6 +114,12 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                     fieldName: fieldFullMessage.apiName,
                     type: fieldFullMessage.dataType,
                     wrapText: true
+                },
+                {
+                    type: 'action',
+                    typeAttributes: {
+                        rowActions: [{ label: this.labels.actionView, name: 'show_details' }],
+                    }
                 }
             ];
 
@@ -130,10 +136,10 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
      * @description Checks if the form still has outstanding data to load
      */
     checkLoading() {
-        const hasLoadedLogs = !isUndefined(this.errorLogs) && !isNull(this.errorLogs);
-        const hasLoadedColumns = this.columns.length > 0;
+        const waitingForData = isUndefined(this.data) || isNull(this.data);
+        const waitingForObjectInfo = this.columns.length === 0;
 
-        this.isLoading = !hasLoadedLogs && !hasLoadedColumns;
+        this.isLoading = waitingForData || waitingForObjectInfo;
     }
 
     /**
@@ -182,10 +188,11 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
      */
     handleSort(event) {
         const { fieldName: sortedBy, sortDirection } = event.detail;
-        const sorted = [...this.errorLogs];
+        const sorted = [...this.data];
 
         sorted.sort(this.sortBy(sortedBy, sortDirection === ASC ? 1 : -1));
-        this.errorLogs = sorted;
+
+        this.data = sorted;
         this.sortDirection = sortDirection;
         this.sortedBy = sortedBy;
     }
@@ -204,6 +211,26 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
             b = key(b);
             return reverse * ((a > b) - (b > a));
         };
+    }
+
+    /***
+    * @description Returns total number of logs
+    */
+    get itemSummary() {
+        const size = this.data ? this.data.length : 0;
+
+        return size !== 1
+            ? format(this.labels.listViewItemCountPlural, [size])
+            : format(this.labels.listViewItemCount, [size]);
+    }
+
+    /***
+    * @description Returns info about sorted by field which is Datetime field only
+    */
+    get sortedByLabel() {
+        return this.fieldDatetime.label
+            ? format(this.labels.listViewSortedBy, [this.fieldDatetime.label])
+            : undefined;
     }
 
     /***
@@ -229,11 +256,15 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         return `spinner ${this.labels.loadingMessage}`;
     }
 
-    get qaLocatorErrorLogDatatable() {
-        return `datatable Error Logs`;
+    get qaLocatorDatatable() {
+        return `datatable Logs`;
     }
 
-    get qaLocatorEmptyErrorLogMessage() {
-        return `text Error Log Message`;
+    get qaLocatorSummary() {
+        return `text Summary`;
+    }
+
+    get qaLocatorNoItemsMessage() {
+        return `text No Items Message`;
     }
 }

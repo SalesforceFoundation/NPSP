@@ -2,8 +2,9 @@
     <div class="slds-card slds-card_extension">
 
         <div class="slds-page-header slds-theme_shade slds-p-top_small slds-p-bottom_medium" role="banner">
-            <div>
-                <template if:false={isLoading}>
+
+            <template if:false={isLoading}>
+                <div class="slds-page-header__row">
                     <lightning-breadcrumbs>
                         <lightning-breadcrumb label={recordInfo.sObjectTypeLabelPlural}
                             onclick={navigateToRecordObjectPage}>
@@ -12,17 +13,31 @@
                         <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}>
                         </lightning-breadcrumb>
                     </lightning-breadcrumbs>
-                </template>
+                </div>
+            </template>
+
+            <div class="slds-page-header__row slds-p-bottom_medium">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title">Error Log</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
-                <div class="slds-media__figure">
-                    <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
+            <template if:false={isLoading}>
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-meta" data-qa-locator={qaLocatorSummary}>
+                        <p class="slds-page-header__meta-text">
+                            {itemSummary} {sortedByLabel}
+                        </p>
+                    </div>
                 </div>
-                <div class="slds-media__body">
-                    <h1 class="slds-page-header__title">Error Log</h1>
-                </div>
-            </div>
+            </template>
         </div>
 
         <template if:true={isLoading}>
@@ -37,20 +52,17 @@
         </template>
 
         <template if:false={isLoading}>
-            <lightning-datatable key-field="id" data={errorLogs} columns={columns} hide-checkbox-column="true"
-                onrowaction={handleRowAction} sorted-by={sortedBy} sorted-direction={sortDirection} onsort={handleSort}
-                data-qa-locator={qaLocatorErrorLogDatatable} wrap-text-max-lines="3">
-            </lightning-datatable>
+            <div class="slds-p-bottom_x-large">
+                <lightning-datatable key-field="id" data={data} columns={columns} onrowaction={handleRowAction}
+                    sorted-by={sortedBy} sorted-direction={sortDirection} onsort={handleSort}
+                    data-qa-locator={qaLocatorDatatable} wrap-text-max-lines="3" show-row-number-column
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
 
-            <template if:true={hasErrorLogs}>
-                <div class="slds-p-bottom_xx-large slds-theme_shade">
-                </div>
-            </template>
-
-            <template if:false={hasErrorLogs}>
+            <template if:false={hasData}>
                 <div class="slds-align_absolute-center slds-p-vertical_xx-large">
-                    <lightning-formatted-text data-id="emptyErrorLogMessage" value={labels.commonNoItems}
-                        data-qa-locator={qaLocatorEmptyErrorLogMessage}>
+                    <lightning-formatted-text value={labels.commonNoItems} data-qa-locator={qaLocatorNoItemsMessage}>
                     </lightning-formatted-text>
                 </div>
             </template>

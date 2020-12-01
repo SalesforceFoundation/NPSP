@@ -68,7 +68,7 @@ public inherited sharing class ERR_Log_CTRL {
                 data.put('recordName', (String) records[0].get('Name'));
             }
 
-            data.put('errorLogs', logService.getErrors(recordId));
+            data.put('data', logService.getErrors(recordId));
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
