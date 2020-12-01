@@ -22,7 +22,6 @@ import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
 } from 'c/geConstants';
-import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @track domain;
