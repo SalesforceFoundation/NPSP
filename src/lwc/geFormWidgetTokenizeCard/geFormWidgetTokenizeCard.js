@@ -22,6 +22,7 @@ import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
 } from 'c/geConstants';
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @track domain;
@@ -48,7 +49,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleWidgetDataChange(widgetData) {
         const paymentMethod = widgetData[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
 
-        if (paymentMethod === null) {
+        if (paymentMethod === null || paymentMethod === commonLabelNone) {
             this.handleUserDisabledWidget();
         }
 
