@@ -247,4 +247,12 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 print(f"actual mapping found for {key} is {actual_value}")
                 assert value == actual_value, "Expected {} value to be {} but found {}".format(key,value, actual_value)
             else:
-                print("Right keys under status mapping fields table not found")    
+                print("Right keys under status mapping fields table not found")
+
+    def verify_table_contains_row(self,name,**kwargs):
+        """verifies that batch number format table contains a record with given name
+        and a field data-label and value pair.
+        Note: you can pass only 1 key,value pair"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators['npsp_settings']['datatable'].format(name,key,value)
+            self.selenium.page_should_contain_element(locator,message=f'Batch Number Format table didnot contain {value} with expected {key}={value}')
