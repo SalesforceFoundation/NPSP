@@ -797,7 +797,6 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
-        <members>ERR_RecordLog</members>
         <members>GE_GiftEntry</members>
         <members>GE_GiftEntryForm</members>
         <members>GE_TemplateBuilder</members>
