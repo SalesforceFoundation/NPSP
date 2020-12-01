@@ -2,7 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { format } from 'c/utilCommon';
+import { apiNameFor, format } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -16,6 +16,8 @@ import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import DATA_IMPORT_PAYMENT_METHOD
+    from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
@@ -33,6 +35,23 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
+    @api
+    get widgetDataFromState() {
+        return this._widgetDataFromState;
+    }
+
+    set widgetDataFromState(widgetData) {
+        this._widgetDataFromState = widgetData;
+        this.handleWidgetDataChange(widgetData);
+    }
+
+    handleWidgetDataChange(widgetData) {
+        const paymentMethod = widgetData[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+        if (paymentMethod && this.isLoading === false) {
+            const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+            tokenHandler.switchPaymentMethod(iframe, paymentMethod);
+        }
+    }
 
     /***
     * @description Initializes the component and determines the Visualforce origin URLs

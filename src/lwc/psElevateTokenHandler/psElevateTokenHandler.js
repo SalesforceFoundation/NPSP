@@ -171,6 +171,20 @@ class psElevateTokenHandler {
         return tokenPromise;
     }
 
+    switchPaymentMethod(iframe, paymentMethod) {
+        if (isNull(iframe)) {
+            return;
+        }
+
+        iframe.contentWindow.postMessage(
+            {
+                action: 'switchPaymentMethod',
+                paymentMethod: paymentMethod
+            },
+            this._visualforceOrigin
+        );
+    }
+
     mount(iframe, paymentMethod) {
         if (isNull(iframe)) {
             return;

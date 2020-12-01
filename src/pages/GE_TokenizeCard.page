@@ -49,7 +49,14 @@
                 }
 
                 handleTokenCreation();
-            } else if (event.data && event.data.action === 'mount') {
+            } else if (event.data && event.data.action === 'switchPaymentMethod') {
+                console.log('attempting to switch payment methods...', event.data);
+                const paymentMethod = event.data.paymentMethod === 'ACH' ?
+                    sfdo.PaymentMethod.ACH :
+                    sfdo.PaymentMethod.CREDIT_CARD;
+
+                sfdo.setPaymentMethod(paymentMethod);
+            }  else if (event.data && event.data.action === 'mount') {
                 handleMounting(event.data.paymentMethod);
             }
         }
