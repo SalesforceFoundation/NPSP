@@ -66,10 +66,13 @@ public with sharing class GS_AdminSetup {
     public static void updateCheckItem(String itemId, Boolean isChecked){
                
         if (doesChecklistItemExists(itemId)) {
-            List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [SELECT Id
-                                                                                    FROM   GetStartedCompletionChecklistState__c
-                                                                                    WHERE  Item_Id__c = :itemId 
-                                                                                    AND    User__c = :UserInfo.getUserId()];
+            List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [
+                SELECT Id
+                FROM   GetStartedCompletionChecklistState__c
+                WHERE  Item_Id__c = :itemId 
+                AND    User__c = :UserInfo.getUserId()
+                WITH SECURITY_ENFORCED
+            ];
             if (isChecked) {
                 markItemAsCompleted(alreadyStoredCompletedItems, itemId);
             } else {
