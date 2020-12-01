@@ -4,6 +4,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, format } from 'c/utilCommon';
 import getData from '@salesforce/apex/ERR_Log_CTRL.getData';
 
+import title from '@salesforce/label/c.ERR_RecordLogTitle';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
@@ -25,6 +26,7 @@ const DESC = "desc";
 export default class errRecordLog extends NavigationMixin(LightningElement) {
 
     labels = Object.freeze({
+        title,
         loadingMessage,
         insufficientPermissions,
         contactSystemAdmin,

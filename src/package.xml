@@ -1678,6 +1678,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
+        <members>ERR_RecordLogTitle</members>
         <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
