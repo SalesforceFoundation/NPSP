@@ -190,10 +190,3 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 		else:
 			raise Exception(f"Field not found")
-
-				
-				
-			
-			
-		
-		
