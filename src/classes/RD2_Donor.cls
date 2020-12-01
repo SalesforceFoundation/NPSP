@@ -34,7 +34,7 @@
 * @description Recurring Donations Donor record and gateway classes
 *
 */
-public with sharing class RD2_Donor {
+public inherited sharing class RD2_Donor {
 
     /***
     * @description Donor Gateway interface
