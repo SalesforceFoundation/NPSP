@@ -9,6 +9,7 @@ import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermi
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import actionView from '@salesforce/label/c.bgeActionView';
 
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 import ERROR_FIELD_DATETIME from '@salesforce/schema/Error__c.Datetime__c';
@@ -22,7 +23,8 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         insufficientPermissions,
         contactSystemAdmin,
         commonUnknownError,
-        commonNoItems
+        commonNoItems,
+        actionView
     });
 
     @api recordId;
@@ -75,6 +77,12 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
 
             this.columns = [
                 {
+                    type: 'action',
+                    typeAttributes: {
+                        rowActions: [{ label: this.labels.actionView, name: 'show_details' }],
+                    }
+                },
+                {
                     label: fieldDatetime.label,
                     fieldName: fieldDatetime.apiName,
                     type: 'date',
@@ -123,11 +131,9 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description 
+     * @description Navigates to the record detail page
      */
     navigateToRecordViewPage(event) {
-        event.preventDefault();
-
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
@@ -138,16 +144,29 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description 
+     * @description Navigates to the record tab
      */
     navigateToRecordObjectPage(event) {
-        event.preventDefault();
-
         this[NavigationMixin.Navigate]({
             type: "standard__objectPage",
             attributes: {
                 objectApiName: this.recordInfo.sObjectType,
                 actionName: "list",
+            }
+        });
+    }
+
+    /**
+     * @description Navigates to the error log detail page
+     */
+    handleRowAction(event) {
+        const row = event.detail.row;
+
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: row.Id,
+                actionName: 'view'
             }
         });
     }

@@ -38,7 +38,8 @@
 
         <template if:false={isLoading}>
             <lightning-datatable key-field="id" data={errorLogs} columns={columns} hide-checkbox-column="true"
-                data-qa-locator={qaLocatorErrorLogDatatable} wrap-text-max-lines="3">
+                onrowaction={handleRowAction} data-qa-locator={qaLocatorErrorLogDatatable}
+                wrap-text-max-lines="3">
             </lightning-datatable>
 
             <template if:true={hasErrorLogs}>
