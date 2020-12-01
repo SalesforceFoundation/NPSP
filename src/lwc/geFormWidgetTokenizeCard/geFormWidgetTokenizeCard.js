@@ -161,7 +161,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         tokenHandler.handleMessage(message);
 
         if (message.isLoaded) {
-            console.log('handling message... is loaded...');
             this.isLoading = false;
         }
 

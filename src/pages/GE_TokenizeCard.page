@@ -50,7 +50,6 @@
 
                 handleTokenCreation();
             } else if (event.data && event.data.action === 'switchPaymentMethod') {
-                console.log('attempting to switch payment methods...', event.data);
                 const paymentMethod = event.data.paymentMethod === 'ACH' ?
                     sfdo.PaymentMethod.ACH :
                     sfdo.PaymentMethod.CREDIT_CARD;
@@ -66,7 +65,6 @@
         }
 
         function handleMounting(paymentMethod) {
-            console.log('attempting to mount...');
             sfdo.mount({
                 id: 'payments',
                 clientId: '{!productId}',
