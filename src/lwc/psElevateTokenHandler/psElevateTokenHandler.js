@@ -107,6 +107,12 @@ class psElevateTokenHandler {
         }
     }
 
+    /**
+     * Checks the validity of the origin of a post message and containing JSON
+     * string
+     * @param event
+     * @returns {boolean}
+     */
     shouldHandleMessage (event) {
         return !!(this.isExpectedVisualForceOrigin(event) &&
             validateJSONString(JSON.stringify(event.data)));
@@ -117,8 +123,9 @@ class psElevateTokenHandler {
             origin => event.origin === origin.value
         );
         this._visualforceOrigin =
-            this._visualforceOrigin !== undefined ?
-                this._visualforceOrigin.value : undefined;
+            this._visualforceOrigin !== undefined
+                ? this._visualforceOrigin.value
+                : undefined;
         return this._visualforceOrigin !== undefined;
     }
 
