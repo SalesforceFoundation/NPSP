@@ -47,6 +47,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     handleWidgetDataChange(widgetData) {
         const paymentMethod = widgetData[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+
+        if (paymentMethod === null) {
+            this.handleUserDisabledWidget();
+        }
+
         if (paymentMethod && this.isLoading === false) {
             const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
             tokenHandler.switchPaymentMethod(iframe, paymentMethod);
