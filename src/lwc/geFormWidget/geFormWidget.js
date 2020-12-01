@@ -32,11 +32,13 @@ export default class GeFormWidget extends LightningElement {
             return;
         }
 
-        if (this.hasAllocationValuesChanged(formState)) {
+        const shouldUpdateAllocationWidgetState = this.isAllocation && this.hasAllocationValuesChanged(formState);
+        if (shouldUpdateAllocationWidgetState) {
             this.sliceWidgetDataFromFormState(formState, this._allocationFields);
         }
 
-        if (this.hasElevateValuesChanged(formState)) {
+        const shouldUpdateElevateWidgetState = this.isElevateTokenizeCard && this.hasElevateValuesChanged(formState);
+        if (shouldUpdateElevateWidgetState) {
             this.sliceWidgetDataFromFormState(formState, this._elevateFields);
         }
 
