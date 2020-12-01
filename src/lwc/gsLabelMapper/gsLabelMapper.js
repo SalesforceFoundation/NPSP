@@ -33,6 +33,7 @@ import gsChecklistItemNPSPCloudLinkLabel from '@salesforce/label/c.gsChecklistIt
 import gsChecklistItemNPSPCloudTitle from '@salesforce/label/c.gsChecklistItemNPSPCloudTitle';
 import gsChecklistItemNPSPSettingsDesc from '@salesforce/label/c.gsChecklistItemNPSPSettingsDesc';
 import gsChecklistItemNPSPSettingsPriBtnLabel from '@salesforce/label/c.gsChecklistItemNPSPSettingsPriBtnLabel';
+import gsChecklistItemNPSPSettingsLinkLabel from '@salesforce/label/c.gsChecklistItemNPSPSettingsLinkLabel';
 import gsChecklistItemNPSPSettingsTitle from '@salesforce/label/c.gsChecklistItemNPSPSettingsTitle';
 import gsChecklistItemManageChangeDesc from '@salesforce/label/c.gsChecklistItemManageChangeDesc';
 import gsChecklistItemManageChangeLinkLabel from '@salesforce/label/c.gsChecklistItemManageChangeLinkLabel';
@@ -119,6 +120,7 @@ const labelMap = {
     gsChecklistItemNPSPGuideTitle,
     gsChecklistItemNPSPSettingsDesc,
     gsChecklistItemNPSPSettingsPriBtnLabel,
+    gsChecklistItemNPSPSettingsLinkLabel,
     gsChecklistItemNPSPSettingsTitle,
     gsChecklistItemPageLayoutsDesc,
     gsChecklistItemPageLayoutsLinkLabel,
