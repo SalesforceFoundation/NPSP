@@ -282,7 +282,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     navigateToErrorLog() {
         const namespace = getNamespace(ERROR_OBJECT.objectApiName);
-        const compName = (namespace ? namespace : 'c') + ":errViewRecordLog";
+        const compName = (namespace ? namespace : 'c') + ":errRecordLog";
 
         var pageRef = {
             componentDef: compName,

@@ -15,7 +15,7 @@ import ERROR_FIELD_DATETIME from '@salesforce/schema/Error__c.Datetime__c';
 import ERROR_FIELD_ERROR_TYPE from '@salesforce/schema/Error__c.Error_Type__c';
 import ERROR_FIELD_FULL_MESSAGE from '@salesforce/schema/Error__c.Full_Message__c';
 
-export default class errViewLogForRecord extends NavigationMixin(LightningElement) {
+export default class errRecordLog extends NavigationMixin(LightningElement) {
 
     labels = Object.freeze({
         loadingMessage,

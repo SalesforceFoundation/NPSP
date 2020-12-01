@@ -3,5 +3,5 @@
     <apiVersion>50.0</apiVersion>
     <description>Displays error logs for a specified record</description>
     <isExposed>false</isExposed>
-    <masterLabel>View Record Error Logs</masterLabel>
+    <masterLabel>Record Error Log</masterLabel>
 </LightningComponentBundle>
