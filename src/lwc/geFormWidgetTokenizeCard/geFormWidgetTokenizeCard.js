@@ -89,6 +89,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
+        this.isMounted = false;
         this.dispatchApplicationEvent('doNotChargeState', {
             isWidgetDisabled: this.hasUserDisabledWidget
         });
@@ -135,7 +136,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         tokenHandler.handleMessage(message);
 
         if (message.isLoaded) {
+            console.log('handling message... is loaded...');
             this.isLoading = false;
+        }
+
+        if (message.isReadyToMount) {
+            if (!this.isMounted) {
+                const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+                tokenHandler.mount(iframe, 'CARD');
+                this.isMounted = true;
+            }
         }
     }
 

@@ -170,6 +170,20 @@ class psElevateTokenHandler {
 
         return tokenPromise;
     }
+
+    mount(iframe, paymentMethod) {
+        if (isNull(iframe)) {
+            return;
+        }
+
+        iframe.contentWindow.postMessage(
+            {
+                action: 'mount',
+                paymentMethod: paymentMethod
+            },
+            this._visualforceOrigin
+        );
+    }
 }
 
 /**

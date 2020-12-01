@@ -1,5 +1,4 @@
-<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true"
-           applyBodyTag="false">
+<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true" applyBodyTag="false">
 
     <head>
         <apex:slds />
@@ -13,54 +12,23 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
+        const sfdo = new sfdoPaymentsJsSdk();
         const hostname = window.location.hostname;
         const arr = hostname.split(".");
         let domain = arr[0].replace('--npsp', '');
         domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
-
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         let nameOnCard = DEFAULT_NAME_ON_CARD;
 
-        const sfdo = new sfdoPaymentsJsSdk();
-        sfdo.mount({
-            id: 'payments',
-            clientId: '{!productId}',
-            gatewayId: '{!gatewayIds}',
-            merchantId: '{!merchantIds}',
-            designSystem: 'Lightning',
-            styles: '' +
-                '.logo {' +
-                    'left: 8px !important;' +
-                '}' +
-                '.fieldset.cc-number {' +
-                    'padding-left: 0;' +
-                    'padding-right: 1rem;' +
-                '}' +
-                '.fieldset.exp {' +
-                    'padding-left: 0;' +
-                    'padding-right: 1rem;' +
-                '}' +
-                '.fieldset.cvc {' +
-                    'padding: 0;' +
-                '}' +
-                '.error-wrapper.fieldset.exp {' +
-                    'max-width: fit-content;' +
-                '}' +
-                '.error-wrapper.fieldset.cvc {' +
-                    'max-width: fit-content;' +
-                '}'
-        })
-        .then(() => {
-            isLoaded();
-
-            setTimeout(function() {
-                isLoaded();
-            }, 3000);
-        });
 
         function isLoaded() {
             const message = JSON.stringify({ isLoaded: true });
+            postMessage(message);
+        }
+
+        function isReadyToMount() {
+            const message = JSON.stringify({ isReadyToMount: true });
             postMessage(message);
         }
 
@@ -81,7 +49,49 @@
                 }
 
                 handleTokenCreation();
+            } else if (event.data && event.data.action === 'mount') {
+                handleMounting(event.data.paymentMethod);
             }
+        }
+
+        function handleMounting(paymentMethod) {
+            console.log('attempting to mount...');
+            sfdo.mount({
+                id: 'payments',
+                clientId: '{!productId}',
+                gatewayId: '{!gatewayIds}',
+                merchantId: '{!merchantIds}',
+                designSystem: 'Lightning',
+                paymentMethod: paymentMethod,
+                styles: '' +
+                    '.logo {' +
+                    'left: 8px !important;' +
+                    '}' +
+                    '.fieldset.cc-number {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                    '}' +
+                    '.fieldset.exp {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                    '}' +
+                    '.fieldset.cvc {' +
+                    'padding: 0;' +
+                    '}' +
+                    '.error-wrapper.fieldset.exp {' +
+                    'max-width: fit-content;' +
+                    '}' +
+                    '.error-wrapper.fieldset.cvc {' +
+                    'max-width: fit-content;' +
+                    '}'
+            })
+                .then(() => {
+                    isLoaded();
+
+                    setTimeout(function () {
+                        isLoaded();
+                    }, 3000);
+                });
         }
 
         /*******************************************************************************
@@ -123,6 +133,8 @@
         function postMessage(message) {
             window.top.postMessage(message, lightningOrigin);
         }
+
+        window.onload = isReadyToMount();
     </script>
 
 </apex:page>
