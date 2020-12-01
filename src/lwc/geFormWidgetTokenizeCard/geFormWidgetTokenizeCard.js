@@ -48,15 +48,22 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     handleWidgetDataChange(widgetData) {
         const paymentMethod = widgetData[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+        const isValidPaymentMethod = paymentMethod === 'ACH' || paymentMethod === 'Credit Card';
 
-        if (paymentMethod === null || paymentMethod === commonLabelNone) {
+        if (isValidPaymentMethod) {
+            if (this.isMounted) {
+                this.updateElevatePaymentMethod(paymentMethod);
+            } else {
+                this.handleUserEnabledWidget();
+            }
+        } else {
             this.handleUserDisabledWidget();
         }
+    }
 
-        if (paymentMethod && this.isLoading === false) {
-            const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-            tokenHandler.switchPaymentMethod(iframe, paymentMethod);
-        }
+    updateElevatePaymentMethod(paymentMethod) {
+        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        tokenHandler.switchPaymentMethod(iframe, paymentMethod);
     }
 
     /***
