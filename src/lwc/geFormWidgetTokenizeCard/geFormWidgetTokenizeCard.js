@@ -161,8 +161,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
         if (message.isReadyToMount) {
             if (!this.isMounted) {
+                const paymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
                 const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-                tokenHandler.mount(iframe, 'CARD');
+                tokenHandler.mount(iframe, paymentMethod);
                 this.isMounted = true;
             }
         }

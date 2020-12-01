@@ -57,7 +57,11 @@
 
                 sfdo.setPaymentMethod(paymentMethod);
             }  else if (event.data && event.data.action === 'mount') {
-                handleMounting(event.data.paymentMethod);
+                const paymentMethod = event.data.paymentMethod === 'ACH' ?
+                    sfdo.PaymentMethod.ACH :
+                    sfdo.PaymentMethod.CREDIT_CARD;
+
+                handleMounting(paymentMethod);
             }
         }
 
