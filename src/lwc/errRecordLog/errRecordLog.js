@@ -1,4 +1,5 @@
 import { LightningElement, api, wire, track } from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
 import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { constructErrorMessage, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
@@ -15,6 +16,9 @@ import ERROR_OBJECT from '@salesforce/schema/Error__c';
 import ERROR_FIELD_DATETIME from '@salesforce/schema/Error__c.Datetime__c';
 import ERROR_FIELD_ERROR_TYPE from '@salesforce/schema/Error__c.Error_Type__c';
 import ERROR_FIELD_FULL_MESSAGE from '@salesforce/schema/Error__c.Full_Message__c';
+
+const ASC = "asc";
+const DESC = "desc";
 
 export default class errRecordLog extends NavigationMixin(LightningElement) {
 
@@ -36,6 +40,8 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     @track columns = [];
     @track errorLogs;
     @track hasErrorLogs;
+    @track sortedBy;
+    @track sortDirection = DESC;
 
 
     /***
@@ -87,9 +93,9 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                     fieldName: fieldDatetime.apiName,
                     type: 'date',
                     typeAttributes: {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: true
@@ -169,6 +175,35 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                 actionName: 'view'
             }
         });
+    }
+
+    /**
+     * @description Sorts records by the sort direction and sorted field
+     */
+    handleSort(event) {
+        const { fieldName: sortedBy, sortDirection } = event.detail;
+        const sorted = [...this.errorLogs];
+
+        sorted.sort(this.sortBy(sortedBy, sortDirection === ASC ? 1 : -1));
+        this.errorLogs = sorted;
+        this.sortDirection = sortDirection;
+        this.sortedBy = sortedBy;
+    }
+
+    sortBy(field, reverse, primer) {
+        const key = primer
+            ? function (x) {
+                return primer(x[field]);
+            }
+            : function (x) {
+                return x[field];
+            };
+
+        return function (a, b) {
+            a = key(a);
+            b = key(b);
+            return reverse * ((a > b) - (b > a));
+        };
     }
 
     /***
