@@ -108,8 +108,8 @@ class psElevateTokenHandler {
     }
 
     shouldHandleMessage (event) {
-        return this.isExpectedVisualForceOrigin(event) &&
-            validateJSONString(event.data);
+        return !!(this.isExpectedVisualForceOrigin(event) &&
+            validateJSONString(JSON.stringify(event.data)));
     }
 
     isExpectedVisualForceOrigin (event) {

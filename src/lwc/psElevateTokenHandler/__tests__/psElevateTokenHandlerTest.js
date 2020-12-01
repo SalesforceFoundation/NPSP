@@ -4,11 +4,31 @@ const createPostMessageEvent = (type) => {
    switch (type) {
       case 'valid' :
          return {
-            origin :'https://flow-connect-2738-dev-ed--c.visualforce.com'
+            origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
+            data : {
+               "isLoaded":true
+            }
          };
       case 'invalid' :
          return {
-            origin : undefined
+            origin : "https://test.com",
+            data : {
+               post_robot:"seuur93msdksy4mds"
+            }
+         };
+      case 'token' :
+         return {
+            origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
+            data : {
+               token : "246656543seuur93msdksy4mds"
+            }
+         };
+      case 'error' :
+         return {
+            origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
+            data : {
+               error : "Invalid Request"
+            }
          };
       default:
    }
@@ -45,6 +65,24 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
       expect(isMessageHandled).toBe(false);
+
+   });
+
+   it('should handle a token message', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('token'));
+      expect(isMessageHandled).toBe(true);
+
+   });
+
+   it('should discard an error message', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('error'));
+      expect(isMessageHandled).toBe(true);
 
    });
 
