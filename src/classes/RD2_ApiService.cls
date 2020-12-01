@@ -185,7 +185,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         if (startDate == null) {
-            startDate = Date.today();
+            startDate = RD2_ScheduleService.currentDate;
         }
 
         if (endDate == null) {
