@@ -28,7 +28,7 @@ Verify Status Mappings For Custom Status Picklist Values
     ...                 remain intact . The newly added status mapping values appear in the status
     ...                 mappinngs section and remain unmapped.
 
-    [tags]              unstable                                  W-037793                         feature:RD
+    [tags]              unstable                           feature:RD
 
     # Add Two new custom picklist values for the recurring donation's status field
     Add Custom Picklist Values To Field
