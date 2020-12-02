@@ -36,7 +36,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
-    _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 
     @api
@@ -54,11 +53,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
-            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+            const paymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
 
-            if (this.hasValidPaymentMethod()) {
+            if (this.hasValidPaymentMethod(paymentMethod)) {
                 if (this.isMounted) {
-                    this.updateElevatePaymentMethod(this._currentPaymentMethod);
+                    this.requestSwitchPaymentMethod(paymentMethod);
                 } else {
                     this.handleUserEnabledWidget();
                 }
@@ -68,11 +67,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         }
     }
 
-    hasValidPaymentMethod() {
-        return this._currentPaymentMethod === 'ACH' || this._currentPaymentMethod === 'Credit Card';
+    hasValidPaymentMethod(paymentMethod) {
+        return paymentMethod === 'ACH' || paymentMethod === 'Credit Card';
     }
 
-    updateElevatePaymentMethod(paymentMethod) {
+    requestSwitchPaymentMethod(paymentMethod) {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
         tokenHandler.switchPaymentMethod(iframe, paymentMethod);
     }
@@ -198,14 +197,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             this.isLoading = false;
         }
 
-        if (message.isReadyToMount) {
-            if (!this.isMounted) {
-                const paymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
-                const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-                tokenHandler.mount(iframe, paymentMethod);
-                this.isMounted = true;
-            }
+        if (message.isReadyToMount && !this.isMounted) {
+            this.requestMount();
         }
+    }
+
+    requestMount() {
+        const paymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        tokenHandler.mount(iframe, paymentMethod);
+        this.isMounted = true;
     }
 
     /***
