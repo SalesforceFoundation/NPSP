@@ -9831,7 +9831,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>How to activate the Elevate field bundle to enter payment info</shortDescription>
-        <value>Please select a valid in Payment Method.</value>
+        <value>Please select a valid Payment Method.</value>
     </labels>
     <labels>
         <fullName>ProgressMarkerAssistiveTextProgress</fullName>
