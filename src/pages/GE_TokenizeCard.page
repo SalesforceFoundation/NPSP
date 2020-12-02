@@ -53,7 +53,7 @@
         }
 
         function determinePaymentMethod(paymentMethodValue) {
-            return paymentMethodValue === 'ACH'
+            return paymentMethodValue === sfdo.PaymentMethod.ACH
                 ? sfdo.PaymentMethod.ACH
                 : sfdo.PaymentMethod.CREDIT_CARD;
         }

@@ -23,6 +23,9 @@ import {
     LABEL_NEW_LINE,
 } from 'c/geConstants';
 
+const ACH = 'ACH';
+const CREDIT_CARD = 'Credit Card';
+
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
     @track domain;
@@ -69,7 +72,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod(paymentMethod) {
-        return paymentMethod === 'ACH' || paymentMethod === 'Credit Card';
+        return paymentMethod === ACH || paymentMethod === CREDIT_CARD;
     }
 
     requestSetPaymentMethod(paymentMethod) {
