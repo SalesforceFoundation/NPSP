@@ -76,7 +76,3 @@ Test Add and Delete Batch Number Formats
     Create Batch With Default Template      Batch Without Number Automation Batch
     Go To Page                              Landing       GE_Gift_Entry
     Verify Table Contains Row               Batches       Batch Without Number Automation Batch    Batch Number=None
-
-
-
-
