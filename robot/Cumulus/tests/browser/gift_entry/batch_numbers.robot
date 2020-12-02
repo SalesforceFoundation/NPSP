@@ -40,9 +40,9 @@ Create Batch With Default Template
 
 *** Test Cases ***
 Test Add and Delete Batch Number Formats
-    [Documentation]         Add two batch number formats and activate one.Verify new batch created after the format is activated
-    ...                     carry the batch number in the specified format and starting number.Deactivate the active number format,
-    ...                     Activate the other format and very new batch carries correct format.Deactivate the number format
+    [Documentation]         Add two batch number formats and activates one.Verifies new batch created after the format is activated
+    ...                     carry the batch number in the specified format and starting number. Deactivate the active number format,
+    ...                     Activate the other format and verify the new batch carries correct format.Deactivate the number format
     ...                     Verify new batch does not have a batch number assigned.
     [tags]                                  unstable      feature:GE    W-8246942
     #Create Batch Number Formats and activate second format

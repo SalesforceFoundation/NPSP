@@ -251,8 +251,8 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
 
     @capture_screenshot_on_error
     def set_batch_number_format_status(self,number_format,status):
-        """Deactivates the given batch number format by clicking on dropdown and selecting option
-        And verifies that the format has been deactivated"""
+        """Activates or Deactivates the given batch number format by clicking on dropdown and selecting option
+        And verifies that the format has been activated or deactivated based on selection"""
         locator=npsp_lex_locators['npsp_settings']['table_dropdown'].format(number_format)
         self.selenium.get_webelement(locator).click()
         if status.lower()=='deactivate':
