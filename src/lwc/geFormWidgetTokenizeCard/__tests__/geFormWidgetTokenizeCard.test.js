@@ -64,6 +64,24 @@ describe('c-ge-form-widget-tokenize-card', () => {
                 expectIframeIsAvailable(element);
             });
     });
+
+    it('should disable itself after switch to invalid/incompatible payment method', async () => {
+        const element = createWidgetWithPaymentMethod('ACH');
+        document.body.appendChild(element);
+
+        expect(doNotEnterPaymentButton(element)).toBeTruthy();
+
+        return Promise.resolve()
+            .then(() => {
+                expectIframeIsAvailable(element);
+                element.widgetDataFromState = {
+                    ['Payment_Method__c']: 'Cash'
+                };
+            })
+            .then(() => {
+                expectExtendedDisabledMessage(element);
+            });
+    });
 });
 
 const enterPaymentButton = (element) => {
