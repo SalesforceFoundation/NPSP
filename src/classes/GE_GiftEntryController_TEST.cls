@@ -107,10 +107,10 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'Response status code should match: ' + response);
 
-        System.assertEquals(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE, response.status,
-            'Response status should contain the timeout exception or timout error response message: ' + response);
+        System.assert(response.body.contains(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE),
+            'Response body status should contain the timeout exception or timeout error response message: ' + response);
 
-        System.assertEquals(true, response.body.contains(requestTimeoutMessage),
+        System.assert(response.body.contains(requestTimeoutMessage),
             'Response message should contain a generic purchase request timed out message: ' + response);
 
         List<Error__c> errors = new TEST_SObjectGateway.ErrorGateway().getRecords();
@@ -154,7 +154,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert(dataImportRecord.Id != null);
         System.assert(dataImportRecord.Donation_Amount__c == 10);
 
-        Test.StartTest();
+        Test.startTest();
         Boolean matchToExistingDonation = false;
         String opportunityId = GE_GiftEntryController.submitDataImportToBDI(dataImportRecord, matchToExistingDonation);
         Test.stopTest();
@@ -241,7 +241,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 gau2.Id);
         sourceObjA2.put(Allocation__c.Percent__c.getDescribe().getName(),25);
 
-        Sobject[] testWidgetRecords = new Sobject[]{sourceObjA1,sourceObjA2};
+        SObject[] testWidgetRecords = new SObject[]{sourceObjA1,sourceObjA2};
 
         Map<String,SObject[]> widgetData = new Map<String,SObject[]>();
 
@@ -283,7 +283,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method returns the correct number of records
     */
-    @IsTest
+    @isTest
     static void shouldReturnCorrectNumberOfRecords() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -299,7 +299,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method deletes Form Template records with given ids.
     */
-    @IsTest
+    @isTest
     static void shouldDeleteFormTemplatesWithGivenIds() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -312,7 +312,7 @@ private with sharing class GE_GiftEntryController_TEST {
         Form_Template__c[] formTemplates = [SELECT Id, Name FROM Form_Template__c];
 
         System.assertEquals(2, formTemplates.size());
-        GE_GiftEntryController.deleteFormTemplates(new String[]{ formTemplates[0].id, formTemplates[1].id });
+        GE_GiftEntryController.deleteFormTemplates(new String[]{ formTemplates[0].Id, formTemplates[1].Id });
 
         formTemplates = [SELECT Id, Name FROM Form_Template__c];
         System.assertEquals(0, formTemplates.size());
@@ -322,7 +322,7 @@ private with sharing class GE_GiftEntryController_TEST {
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
     * the data.
     */
-    @IsTest
+    @isTest
     static void shouldCommitAndRetrieveTemplate() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
@@ -346,7 +346,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @IsTest
+    @isTest
     static void shouldRetrieveColumnHeaderBasedOnListName() {
 
         Test.startTest();
@@ -364,7 +364,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @IsTest
+    @isTest
     static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
 
         Test.startTest();
@@ -398,7 +398,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that we're able to build a query string and retrieve a list of records.
     */
-    @IsTest
+    @isTest
     static void shouldRetrieveRecordsBasedOnAQueryString() {
 
         Test.startTest();
@@ -407,12 +407,12 @@ private with sharing class GE_GiftEntryController_TEST {
         Test.stopTest();
 
         String[] selectFields = new String[] {'Id', 'Name'};
-        String sObjectApiName = SObjectType.Custom_Column_Header__c.Name;
+        String sObjectApiName = SObjectType.Custom_Column_Header__c.name;
         String[] whereClause = new String[] {};
         String orderByClause = 'LastModifiedDate desc';
         Integer limitClause = 10;
 
-        sObject[] objects = GE_GiftEntryController.retrieveRecords(
+        SObject[] objects = GE_GiftEntryController.retrieveRecords(
                 selectFields, sObjectApiName, whereClause, orderByClause, limitClause);
 
         System.assertEquals(3, objects.size());
@@ -421,7 +421,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that form template name uniqueness is enforced.
     */
-    @IsTest
+    @isTest
     static void shouldReturnFalseForExistingFormTemplateName() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -479,7 +479,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
-    @IsTest
+    @isTest
     static void shouldPreventDeletionOfTemplateInUse() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -520,7 +520,7 @@ private with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
     */
-    @IsTest
+    @isTest
     static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
 
         // aux vars
@@ -598,6 +598,7 @@ private with sharing class GE_GiftEntryController_TEST {
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
     * @param lastname the lastname to specify for Contact1
+    * @param batchId Data Import Batch Id
     * @return DataImport__c the new Data Import record
     */
     public static DataImport__c createDataImport(String firstname, String lastname, Id batchId) {
@@ -687,10 +688,7 @@ private with sharing class GE_GiftEntryController_TEST {
     }
 
     private class UTIL_PermissionsMock implements StubProvider {
-
         Boolean hasPermission;
-        String permission;
-
         public UTIL_PermissionsMock(Boolean hasPermission) {
             this.hasPermission = hasPermission;
         }
@@ -698,8 +696,6 @@ private with sharing class GE_GiftEntryController_TEST {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
-
-            Set<String> paramNames = new Set<String>(listOfParamNames);
 
             switch on stubbedMethodName {
                 when 'canRead' {

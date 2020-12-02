@@ -1,6 +1,6 @@
 /* eslint-disable no-void */
 /* eslint-disable @lwc/lwc/no-async-operation */
-import {ShowToastEvent} from "lightning/platformShowToastEvent";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 
@@ -12,7 +12,7 @@ const OBJECT = 'object';
  * @description 'Debouncifies' any function.
  *
  * @param {object} anyFunction: Function to be debounced.
- * @param {integer} wait: Time to wait by in milliseconds.
+ * @param {number} wait: Time to wait by in milliseconds.
  * @returns {function<Promise>} A debounced version of the function originally
  * passed to debouncify
  */
@@ -108,7 +108,7 @@ const isPrimative = (value) => {
  */
 const isUndefined = (value) => {
     // void(0) allows us to safely obtain undefined to compare with the passed-in value
-    return value === void(0);
+    return value === void (0);
 };
 
 /**
@@ -356,7 +356,7 @@ const getNestedProperty = (object, ...args) => {
 */
 const getLikeMatchByKey = (objectToSearch, keyToFind, returnKey = false) => {
     for (let key in objectToSearch) {
-        if ( key.toLowerCase().indexOf(keyToFind.toLowerCase()) !== -1)
+        if (key.toLowerCase().indexOf(keyToFind.toLowerCase()) !== -1)
             return returnKey ? key : objectToSearch[key];
     }
     return null;
@@ -520,7 +520,7 @@ const showToast = (title, message, variant, mode, messageData) => {
  * @param namespacePrefix
  * @returns {*|string}
  */
-const stripNamespace = (apiName , namespacePrefix) => {
+const stripNamespace = (apiName, namespacePrefix) => {
     if (!apiName.startsWith(namespacePrefix)) {
         return apiName;
     }
@@ -533,12 +533,16 @@ const stripNamespace = (apiName , namespacePrefix) => {
  * Useful when referencing the related record field on objects
  * in the lightning/uiRecordApi Record format:
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
- * @param fieldApiName The ApiName of the relationship field for
- * which the related record field name is desired.
+ * @param customFieldApiNameOrFieldReference
+ * The ApiName of the relationship field for which the related record
+ * field name is desired, or the field reference object.
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
  */
-const relatedRecordFieldNameFor = (customFieldApiName) => {
-    return replaceLastInstanceOfWith(customFieldApiName, '__c', '__r');
+const relatedRecordFieldNameFor = (customFieldApiNameOrFieldReference) => {
+    const fieldApiName =
+        getFieldApiNameForFieldApiNameOrObjectReference(customFieldApiNameOrFieldReference);
+    return fieldApiName &&
+        replaceLastInstanceOfWith(fieldApiName, '__c', '__r');
 }
 
 /**
@@ -552,10 +556,66 @@ const replaceLastInstanceOfWith = (subject, toRemove, replacement) => {
     return subject && subject.replace(new RegExp(toRemove + '$'), replacement);
 }
 
+const apiNameFor = (objectOrFieldReference) => {
+    if (objectOrFieldReference === null || objectOrFieldReference === undefined) {
+        return objectOrFieldReference;
+    }
+    if (objectOrFieldReference.hasOwnProperty('fieldApiName')) {
+        return objectOrFieldReference.fieldApiName;
+    } else if (objectOrFieldReference.hasOwnProperty('objectApiName')) {
+        return objectOrFieldReference.objectApiName;
+    } else {
+        return null;
+    }
+}
+
+const isString = (val) => {
+    return typeof val === 'string' || val instanceof String;
+}
+
+const getFieldApiNameForFieldApiNameOrObjectReference = (fieldApiNameOrFieldReference) => {
+    return isString(fieldApiNameOrFieldReference) ?
+        fieldApiNameOrFieldReference :
+        apiNameFor(fieldApiNameOrFieldReference);
+}
+
+/**
+ * @description Converts field describe info into a object that is easily accessible from the front end
+ * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+ * (i.e, the field isn't accessible).
+ */
+const extractFieldInfo = (fieldInfos, fldApiName) => {
+    try {
+        const field = fieldInfos[fldApiName];
+        return {
+            apiName: field.apiName,
+            label: field.label,
+            inlineHelpText: field.inlineHelpText,
+            dataType: field.dataType
+        };
+    } catch (error) { }
+}
+
+/**
+ * @description Method converts field describe info into objects that the
+ * getRecord method can accept into its 'fields' parameter.
+ */
+const buildFieldDescribes = (fields, objectApiName) => {
+    return Object.keys(fields).map((fieldApiName) => {
+        return {
+            fieldApiName: fieldApiName,
+            objectApiName: objectApiName
+        }
+    });
+}
+
 export {
+    apiNameFor,
+    buildFieldDescribes,
     constructErrorMessage,
     debouncify,
     deepClone,
+    extractFieldInfo,
     findIndexByProperty,
     getNamespace,
     getQueryParameters,
@@ -569,6 +629,7 @@ export {
     isUndefined,
     isPrimative,
     isNull,
+    isString,
     mutable,
     sort,
     shiftToIndex,

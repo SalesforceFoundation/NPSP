@@ -33,12 +33,10 @@ ${METHOD}  Credit Card
     [tags]                                 unstable               W-042701                     feature:RD2
 
     Go To Page                             Listing                                            npe03__Recurring_Donation__c
-    Click Object Button                    New
-    Wait For Modal                         New                                                Recurring Donation
 
-    # Reload page is a temporary fix till the developers fix the ui-modal
     Reload Page
-    Wait For Modal                         New                                                Recurring Donation
+    Click Link                              New
+    Wait For Rd2 Modal
 
     # Create Enhanced recurring donation of type Open and assign it to a contact
     Populate Rd2 Modal Form
