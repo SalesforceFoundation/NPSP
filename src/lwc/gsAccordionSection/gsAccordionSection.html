@@ -1,0 +1,15 @@
+<template>
+    <div class={infoClass}>
+        <div class="border">
+            <div class="gap"></div>
+        </div>
+        <div class="container">
+            <p>{label}</p>
+            <div aria-hidden={notOpen} 
+                id={expandedId} 
+                class="slds-section steps">
+                <slot></slot>
+            </div>
+        </div>
+    </div>
+</template>
