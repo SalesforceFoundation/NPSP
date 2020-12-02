@@ -12,9 +12,10 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
-        const sfdo = new sfdoPaymentsJsSdk();
+        const sfdo = new sfdoPaymentsJsSdk({ debug: true });
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
+        const postMessageType = 'post__npsp';
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
@@ -37,8 +38,8 @@
                     handleMounting(determinePaymentMethod(event.data.paymentMethod));
                     break;
 
-                case 'switchPaymentMethod':
-                    sfdo.setPaymentMethod(determinePaymentMethod(event.data.paymentMethod));
+                case 'setPaymentMethod':
+                    handleSetPaymentMethod(event.data.paymentMethod);
                     break;
 
                 case 'createToken':
@@ -57,6 +58,18 @@
                 : sfdo.PaymentMethod.CREDIT_CARD;
         }
 
+        function handleSetPaymentMethod(paymentMethod) {
+            sfdo.setPaymentMethod(determinePaymentMethod(event.data.paymentMethod))
+                .then(() => {
+                    const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                    postMessage(successMessage);
+                })
+                .catch((err) => {
+                    const errorString = JSON.stringify({ type: postMessageType, ...err});
+                    postMessage(errorString);
+                });
+        }
+
         /*******************************************************************************
         * @description Creates a token and posts the response to a credit card widget LWC
         */
@@ -71,20 +84,20 @@
             };
 
             sfdo.createToken(tokenConfig)
-                .then(function response(resp) {
+                .then((resp) => {
                     if (resp.token) {
                         // Send token to lwc
-                        const successString = JSON.stringify({ token: resp.token });
+                        const successString = JSON.stringify({ type: postMessageType, token: resp.token });
                         postMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        postMessage(JSON.stringify(resp));
+                        postMessage(JSON.stringify({ type: postMessageType, ...resp }));
                     }
                 })
-                .catch(function handleError(err) {
+                .catch((err) => {
                     // Send error to lwc
-                    const errorString = JSON.stringify(err);
+                    const errorString = JSON.stringify({ type: postMessageType, ...err });
                     postMessage(errorString);
                 });
         }
@@ -149,16 +162,13 @@
 
             sfdo.mount(config)
                 .then(() => {
-                    isLoaded();
-                    setTimeout(function () {
-                        isLoaded();
-                    }, 3000);
+                    const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                    postMessage(successMessage);
+                })
+                .catch((err) => {
+                    const errorString = JSON.stringify({ type: postMessageType, ...err});
+                    postMessage(errorString);
                 });
-        }
-
-        function isLoaded() {
-            const message = JSON.stringify({ isLoaded: true });
-            postMessage(message);
         }
 
         function isReadyToMount() {

@@ -58,7 +58,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
             if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
                 if (this.isMounted) {
-                    this.requestSwitchPaymentMethod(this._currentPaymentMethod);
+                    this.requestSetPaymentMethod(this._currentPaymentMethod);
                 } else {
                     this.handleUserEnabledWidget();
                 }
@@ -72,9 +72,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return paymentMethod === 'ACH' || paymentMethod === 'Credit Card';
     }
 
-    requestSwitchPaymentMethod(paymentMethod) {
+    requestSetPaymentMethod(paymentMethod) {
+        this.isLoading = true;
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        tokenHandler.switchPaymentMethod(iframe, paymentMethod);
+        tokenHandler.setPaymentMethod(iframe, paymentMethod, this.handleError, this.resolveSetPaymentMethod);
+    }
+
+    resolveSetPaymentMethod = () => {
+        this.isLoading = false;
     }
 
     get shouldDisplayEnableButton() {
@@ -194,10 +199,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
-        if (message.isLoaded) {
-            this.isLoading = false;
-        }
-
         if (message.isReadyToMount && !this.isMounted) {
             this.requestMount();
         }
@@ -206,7 +207,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     requestMount() {
         const paymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        tokenHandler.mount(iframe, paymentMethod);
+        tokenHandler.mount(iframe, paymentMethod, this.handleError, this.resolveMount);
+    }
+
+    resolveMount = () => {
+        this.isLoading = false;
         this.isMounted = true;
     }
 
