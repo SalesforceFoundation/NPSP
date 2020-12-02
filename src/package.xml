@@ -4051,11 +4051,11 @@
         <members>geWidgetService</members>
         <members>gsAccordionLabel</members>
         <members>gsAccordionSection</members>
-        <members>gsAdminSetup</members>
         <members>gsApplicationStatus</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
         <members>gsChecklistItem</members>
+        <members>gsChecklistSetup</members>
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>

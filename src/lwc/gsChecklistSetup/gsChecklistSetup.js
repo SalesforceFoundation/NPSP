@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
 import getChecklists from '@salesforce/apex/GS_AdminSetup.getChecklists';
 import getLabelValue from 'c/gsLabelMapper';
@@ -6,13 +6,18 @@ import getLabelValue from 'c/gsLabelMapper';
 /**
 * @description This component renders all checklist sections and their steps
 */
-export default class gsAdminSetup extends LightningElement {
+export default class gsChecklistSetup extends LightningElement {
 
     /**
     * @description A list of checklists to render
     */
     @track checklists = [];
 
+    /**
+    * @description The kind of users is belongs this components
+    * @type string
+    */
+    @api belongsTo = "Admin";
     
     connectedCallback() {
         getChecklists()

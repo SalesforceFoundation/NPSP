@@ -5,7 +5,11 @@
             <componentName>gsVideoHeader</componentName>
         </componentInstances>
         <componentInstances>
-            <componentName>gsAdminSetup</componentName>
+            <componentInstanceProperties>
+                <name>userType</name>
+                <value>EndUser</value>
+            </componentInstanceProperties>
+            <componentName>gsChecklistSetup</componentName>
         </componentInstances>
         <name>region1</name>
         <type>Region</type>
@@ -19,6 +23,10 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>userType</name>
+                <value>Admin</value>
+            </componentInstanceProperties>
             <componentName>gsResources</componentName>
         </componentInstances>
         <name>region3</name>
