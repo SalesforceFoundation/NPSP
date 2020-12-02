@@ -14,6 +14,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 Setup Custom Fields and data
     ${Unique_Number}    Generate random string    4    0123456789
+    # Ensuring that unique picklist values are added everytime the test is run
     ${value1}           Catenate    Pending     ${Unique_Number}
     ${value2}           Catenate    Canceled    ${Unique_Number}
     ${picklistvalues}=       Create List           ${value1}       ${value2}

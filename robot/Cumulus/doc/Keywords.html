@@ -2082,6 +2082,18 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="NPSP.robot.Add Custom Picklist Values To Field">
+                <td class="kwname">
+                  Add Custom Picklist Values To Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Reads key value pair arguments. Navigates to Object Manager page and load fields and relationships for the specific object Runs keyword to add picklist values Example key,value pairs Object=Recurring Donation Field_Name=Status Values=@{picklistvalues}</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.Add instance to suite metadata">
                 <td class="kwname">
                   Add instance to suite metadata
@@ -5223,6 +5235,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Add Picklist Values">
+                <td class="kwname">
+                  Add Picklist Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Searches for the specified field and if the field exits, Navigates throught the steps to add the picklist value(s)</p></td>
+              </tr>
+              
               <tr class="kwrow" id="ObjectMangerPageObject.py.Create Currency Field">
                 <td class="kwname">
                   Create Currency Field
@@ -5696,7 +5720,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>**kwargs</i>
+                  <i>type=None</i>
                   
                 </td>
                 <td class="kwdoc"><p>Finds the pause button on the recurring donations details view page, clicks the button and waits for the modal to appear</p></td>
@@ -5885,6 +5909,16 @@ Populate Pause Modal
                 <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Wait For Rd2 Modal">
+                <td class="kwname">
+                  Wait For Rd2 Modal
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
@@ -6058,7 +6092,7 @@ Populate Pause Modal
       
     </div>
     <div class="footer">
-      Generated on Monday November 09, 02:59 PM - cumulusci v3.22.0
+      Generated on Wednesday December 02, 01:28 PM - cumulusci v3.24.0
     </div>
   </body>
 </html>
