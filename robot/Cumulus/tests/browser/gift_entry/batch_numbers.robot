@@ -7,10 +7,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Enable Gift Entry
-Suite Teardown  Run Keywords
-...             Query And Store Records To Delete    ${ns}AutoNumber__c   ${ns}Display_Format__c=${format1}
-...     AND     Query And Store Records To Delete    ${ns}AutoNumber__c   ${ns}Display_Format__c=${format2}
-...     AND     Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
@@ -78,7 +75,7 @@ Test Add and Delete Batch Number Formats
     Go To Page                              Landing       GE_Gift_Entry
     Create Batch With Default Template      Batch Without Number Automation Batch
     Go To Page                              Landing       GE_Gift_Entry
-    Verify Table Contains Row               Batches       Batch Number Automation Batch    Batch Number=None
+    Verify Table Contains Row               Batches       Batch Without Number Automation Batch    Batch Number=None
 
 
 

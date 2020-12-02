@@ -1669,10 +1669,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             for i in records:
                 self.salesforce.store_session_record(object_name,i)
 
+    @capture_screenshot_on_error
     def verify_table_contains_row(self,table_name,record,**kwargs):
         """verifies that batch number format table contains a record with given name
         and record field contains specified value. Example usage:
-
+        Verify Table Contains Row | Batches | MyBatch | Batch Number=MyBatch-01
         """
         for key,value in kwargs.items():
             locator=npsp_lex_locators['datatable'].format(table_name,record,key)

@@ -249,6 +249,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 print("Right keys under status mapping fields table not found")
 
+    @capture_screenshot_on_error
     def deactivate_batch_number_format(self,number_format):
         """Deactivates the given batch number format by clicking on dropdown and selecting option
         And verifies that the format has been deactivated"""
