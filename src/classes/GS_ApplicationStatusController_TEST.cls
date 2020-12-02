@@ -41,6 +41,13 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgNonApplicated() {
         
+        // This test relies on mocked data which is only being mocked in Scratchs org.
+        // As these real data depends on the org which the test is running, the test is fragile in any other org type
+        // avoiding the test.
+        if (!UTIL_Namespace.isScratchOrg() && String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+
         GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(null, false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
         
@@ -56,6 +63,13 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgApplicated() {
        
+        // This test relies on mocked data which is only being mocked in Scratchs org.
+        // As these real data depends on the org which the test is running, the test is fragile in any other org type
+        // avoiding the test.
+        if (!UTIL_Namespace.isScratchOrg() && String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+
         GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(Date.newInstance(2020,10,02), false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
        
