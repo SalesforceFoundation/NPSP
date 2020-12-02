@@ -179,43 +179,216 @@ public with sharing class RD2_CancelCommitmentService_TEST {
     }
 
     /***
-    * @description Should recognize Elevate status is verified when confirmation not required
+    * @description Should prepare record for retry when Elevate Cancel not verified.
     */
     @isTest
-    private static void shouldSetClosedReasonToOriginalErrorWhenElevateCancelNotVerified() {
+    private static void shouldUpdateRecordForRetryWhenElevateCancelNotVerified() {
+        String originalReason = 'Original Reason';
+        String firstError = 'Conflict';
+
+        RD2_CancelCommitmentService.RecordWrapper wrapper = prepRDRecordAndWrapper(originalReason, firstError);
+        wrapper.isConfirmationRequired = true;
+
+        UTIL_Http.Response response = buildCommitmentResponse('ACTIVE');
+
+        RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
+        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        service.handleResponse(wrapper, response, logger);
+
+        System.assertEquals(false, wrapper.isDone,
+            'Record should be marked as ready for retry when Elevate Cancel not verified.');
+        System.assertEquals(false, wrapper.isConfirmationRequired,
+            'Record should be marked as confirmation not required if Elevate status not INACTIVE.');
     }
 
     /***
     * @description Should recognize Elevate status is verified when Elevate status is inactive
     */
     @isTest
-    private static void shouldSetClosedReasonToUserSpecifiedValueWhenElevateCancelVerified() {
-    }
+    private static void shouldUpdateRecordCompleteWhenElevateCancelVerified() {
+        String originalReason = 'Original Reason';
+        String firstError = 'Conflict';
 
-    /***
-    * @description Should recognize Elevate status is not verified when Elevate status is active
-    */
-    @isTest
-    private static void shouldRetryWhenStatusIsActive() {
+        RD2_CancelCommitmentService.RecordWrapper wrapper = prepRDRecordAndWrapper(originalReason, firstError);
+
+        UTIL_Http.Response response = buildCommitmentResponse('INACTIVE');
+
+        RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
+        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        service.handleResponse(wrapper, response, logger);
+
+        System.assertEquals(true, wrapper.isDone,
+            'Record should be marked complete when Elevate Cancel is verified.');
     }
 
     /**
-    * @description Verifies that callout will be retried when the response to cancel times out
+    * @description Verifies that callout will be retried when Response to cancel times out
     */
     @isTest
-    private static void shouldRetryWhenCommitmentWhenResponseIsTimeout() {
+    private static void shouldRetryWhenResponseIsTimeout() {
+        String originalReason = 'Original Reason';
+        String firstError = null;
+
+        RD2_CancelCommitmentService.RecordWrapper wrapper = prepRDRecordAndWrapper(originalReason, firstError);
+
+        UTIL_Http.Response response = buildTimeoutResponse();
+
+        RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
+        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        service.handleResponse(wrapper, response, logger);
+
+        System.assertEquals(false, wrapper.isDone,
+            'Record should be marked as ready for retry when Response is timeout.');
+        System.assertEquals(true, wrapper.isConfirmationRequired,
+            'Record should be marked as requiring confirmation when Response is timeout.');
     }
 
     /**
-    * @description Verifies that callout will be retried when the response to cancel is conflict.
+    * @description Verifies that record marked complete when Response is not found.
     */
     @isTest
-    private static void shouldRetryWhenCommitmentWhenResponseIsConflict() {
+    private static void shouldNotRetryWhenResponseIsNotFound() {
+        String originalReason = 'Original Reason';
+        String firstError = null;
+
+        RD2_CancelCommitmentService.RecordWrapper wrapper = prepRDRecordAndWrapper(originalReason, firstError);
+
+        UTIL_Http.Response response = buildNotFoundResponse();
+
+        RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
+        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        service.handleResponse(wrapper, response, logger);
+
+        System.assertEquals(true, wrapper.isDone,
+            'Record should be marked complete when Response is not found.');
+        System.assertEquals(UTIL_Http_TEST.MESSAGE_NOT_FOUND, wrapper.firstErrorMessage,
+            'First error message should equal ' + UTIL_Http_TEST.MESSAGE_NOT_FOUND);
+    }
+
+    /**
+    * @description Verifies that callout will be retried when the Response is conflict.
+    */
+    @isTest
+    private static void shouldRetryWhenResponseIsConflict() {
+        String originalReason = 'Original Reason';
+        String firstError = null;
+
+        RD2_CancelCommitmentService.RecordWrapper wrapper = prepRDRecordAndWrapper(originalReason, firstError);
+
+        UTIL_Http.Response response = buildConflictResponse();
+
+        RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
+        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        service.handleResponse(wrapper, response, logger);
+
+        System.assertEquals(false, wrapper.isDone,
+            'Record should be marked as ready for retry when Response is conflict.');
+        System.assertEquals(true, wrapper.isConfirmationRequired,
+            'Record should be marked as requiring confirmation when Response is conflict.');
+        System.assertEquals(UTIL_Http_TEST.MESSAGE_DATA_CONFLICT, wrapper.firstErrorMessage,
+            'First error message should equal ' + UTIL_Http_TEST.MESSAGE_DATA_CONFLICT);
     }
 
 
     // Helpers
     ///////////////////
+
+    /****
+    * @description Prepares environment and returns RecordWrapper
+    * @return RD2_CancelCommitmentService.RecordWrapper
+    */
+    private static RD2_CancelCommitmentService.RecordWrapper prepRDRecordAndWrapper(
+        String originalReason,
+        String firstError
+    ) {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = RD2_ElevateIntegrationService_TEST.getElevateRecurringDonationBaseBuilder().build();
+
+        rd.ClosedReason__c = originalReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+        RD2_CancelCommitmentService.RecordWrapper wrapper = buildRecordWrapper(rd);
+        wrapper.firstErrorMessage = firstError;
+
+        return wrapper;
+    }
+
+    /****
+    * @description Builds a RecordWrapper from a Recurring Donation record.
+    * @return RD2_CancelCommitmentService.RecordWrapper
+    */
+    public static RD2_CancelCommitmentService.RecordWrapper buildRecordWrapper(npe03__Recurring_Donation__c rd) {
+        return new RD2_CancelCommitmentService.RecordWrapper(rd);
+    }
+
+    /****
+    * @description Builds a cancel response for a time out.
+    * @return UTIL_Http.Response
+    */
+    public static UTIL_Http.Response buildTimeoutResponse() {
+        UTIL_Http.Response response = new UTIL_Http.Response();
+        String timeout = 'Timed out';
+
+        response.statusCode = UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT;
+        response.status = UTIL_Http.STATUS_TIMED_OUT;
+        response.body = '{"errors":[{'
+            + '"message":"' + timeout
+            + '","localizedPaymentsMessage":"' + timeout
+            + '","detailedMessage":"' + timeout
+            + '"}]}';
+
+        return response;
+    }
+
+    /****
+    * @description Builds a cancel response for Elevate commitment not found.
+    * @return UTIL_Http.Response
+    */
+    public static UTIL_Http.Response buildNotFoundResponse() {
+        UTIL_Http.Response response = new UTIL_Http.Response();
+
+        response.statusCode = UTIL_Http.STATUS_CODE_NOT_FOUND;
+        response.status = UTIL_Http.STATUS_NOT_FOUND;
+        response.body = '{"errors":[{'
+            + '"message":"' + UTIL_Http_TEST.MESSAGE_NOT_FOUND
+            + '","localizedPaymentsMessage":"' + UTIL_Http_TEST.MESSAGE_NOT_FOUND
+            + '","detailedMessage":"' + UTIL_Http_TEST.MESSAGE_NOT_FOUND
+            + '"}]}';
+
+        return response;
+    }
+
+    /****
+    * @description Builds a cancel response for Elevate commitment conflict.
+    * @return UTIL_Http.Response
+    */
+    public static UTIL_Http.Response buildConflictResponse() {
+        UTIL_Http.Response response = new UTIL_Http.Response();
+
+        response.statusCode = UTIL_Http.STATUS_CODE_CONFLICT;
+        response.status = UTIL_Http.STATUS_CONFLICT;
+        response.body = '{"errors":[{'
+            + '"message":"' + UTIL_Http_TEST.MESSAGE_DATA_CONFLICT
+            + '","localizedPaymentsMessage":"' + UTIL_Http_TEST.MESSAGE_DATA_CONFLICT
+            + '","detailedMessage":"' + UTIL_Http_TEST.MESSAGE_DATA_CONFLICT
+            + '"}]}';
+
+        return response;
+    }
+
+    /****
+    * @description Builds a cancel commitment response for a COMMIT GET.
+    * @return UTIL_Http.Response
+    */
+    public static UTIL_Http.Response buildCommitmentResponse(String status) {
+        UTIL_Http.Response response = new UTIL_Http.Response();
+
+        response.statusCode = 200;
+        response.body = '{"commitment":{"status":"' + status + '"}}';
+
+        return response;
+    }
 
     /****
     * @description Builds a cancel commitment response body

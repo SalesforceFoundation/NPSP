@@ -212,6 +212,8 @@ public without sharing class RD2_CancelCommitmentService {
             handleCancelConfirmation(closedRecord, response);
         }
 
+        resetElevateConfirmationRequired(closedRecord, response);
+
         // If not success, decrement retries
         if (!closedRecord.isDone) {
             closedRecord.retriesRemaining--;
@@ -289,6 +291,15 @@ public without sharing class RD2_CancelCommitmentService {
             || response.statusCode == UTIL_Http.STATUS_CODE_INTERNAL_SERVER_ERROR
             || response.statusCode == UTIL_Http.STATUS_CODE_SERVICE_UNAVAILABLE
             || response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
+    }
+
+    private void resetElevateConfirmationRequired(RecordWrapper closedRecord, UTIL_Http.Response response) {
+        if (closedRecord.isConfirmationRequired
+            && response.statusCode == UTIL_Http.STATUS_CODE_OK
+            && !isElevateCommitmentCancelled(response)
+        ) {
+            closedRecord.isConfirmationRequired = false;
+        }
     }
 
     /**
