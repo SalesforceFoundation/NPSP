@@ -827,6 +827,17 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
+    * @description Builds a cancel commitment response body
+    * returned when the commitment is successfully cancelled
+    * @return String
+    */
+    private static String buildCommitmentCanceledResponseBody() {
+        return '{"id":"' + COMMITMENT_ID
+            + '","status":"INACTIVE","statusReason":"DONOR_CANCELED"'
+            + '"}}';
+    }
+
+    /****
     * @description Verifies no error is created
     * @return void
     */
