@@ -116,7 +116,7 @@
             };
             const tokenConfig = {
                 auth: auth,
-                nameOnCard: nameOncard
+                nameOnCard: nameOnCard
             };
 
             sfdo.createToken(tokenConfig)

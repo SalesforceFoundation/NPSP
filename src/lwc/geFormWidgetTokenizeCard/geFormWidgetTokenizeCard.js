@@ -24,6 +24,7 @@ import {
 } from 'c/geConstants';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api sourceFieldsUsedInTemplate = [];
     @track domain;
     @track isLoading = true;
     @track alert = {};
@@ -35,34 +36,60 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
+    _currentPaymentMethod = undefined;
+    _hasPaymentMethodInTemplate = false;
+
     @api
     get widgetDataFromState() {
         return this._widgetDataFromState;
     }
 
-    set widgetDataFromState(widgetData) {
-        this._widgetDataFromState = widgetData;
-        this.handleWidgetDataChange(widgetData);
+    set widgetDataFromState(widgetState) {
+        this._widgetDataFromState = widgetState;
+        this.handleWidgetDataChange(widgetState);
     }
 
-    handleWidgetDataChange(widgetData) {
-        const paymentMethod = widgetData[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
-        const isValidPaymentMethod = paymentMethod === 'ACH' || paymentMethod === 'Credit Card';
+    handleWidgetDataChange(widgetState) {
+        this._hasPaymentMethodInTemplate =
+            this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
-        if (isValidPaymentMethod) {
-            if (this.isMounted) {
-                this.updateElevatePaymentMethod(paymentMethod);
+        if (this._hasPaymentMethodInTemplate) {
+            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+
+            if (this.hasValidPaymentMethod()) {
+                if (this.isMounted) {
+                    this.updateElevatePaymentMethod(this._currentPaymentMethod);
+                } else {
+                    this.handleUserEnabledWidget();
+                }
             } else {
-                this.handleUserEnabledWidget();
+                this.handleUserDisabledWidget();
             }
-        } else {
-            this.handleUserDisabledWidget();
         }
+    }
+
+    hasValidPaymentMethod() {
+        return this._currentPaymentMethod === 'ACH' || this._currentPaymentMethod === 'Credit Card';
     }
 
     updateElevatePaymentMethod(paymentMethod) {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
         tokenHandler.switchPaymentMethod(iframe, paymentMethod);
+    }
+
+    get shouldDisplayEnableButton() {
+        if (!this._hasPaymentMethodInTemplate) return true;
+        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod()) {
+            return true;
+        }
+        return false;
+    }
+
+    get disabledWidgetMessage() {
+        if (this.shouldDisplayEnableButton) {
+            return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
+        }
+        return `${this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction} ${'Please select a valid payment method.'}`;
     }
 
     /***
@@ -155,6 +182,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     toggleWidget(isDisabled, message) {
         this.isDisabled = isDisabled;
+        this.isMounted = false;
         this.disabledMessage = message || null;
     }
 

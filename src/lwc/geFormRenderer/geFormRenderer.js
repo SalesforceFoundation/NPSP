@@ -137,7 +137,7 @@ export default class GeFormRenderer extends LightningElement{
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track widgetData = {}; // data that must be passed down to the allocations widget.
+    @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
     @track isAccessible = true;
 
     set selectedDonationOrPaymentRecord(record) {
@@ -322,6 +322,11 @@ export default class GeFormRenderer extends LightningElement{
 
         this.sections = this.appendRecordTypeLocationInfoToPicklistElements(this.sections);
         this.initializeFormState();
+        this.initializeWidgetConfig();
+    }
+
+    initializeWidgetConfig() {
+        this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
     }
 
     appendRecordTypeLocationInfoToPicklistElements(sections) {

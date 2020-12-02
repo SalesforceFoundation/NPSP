@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import {apiNameFor, getSubsetObject, isEmptyObject, isNotEmpty, isUndefined} from 'c/utilCommon';
+import {apiNameFor, getSubsetObject, isEmptyObject, isUndefined} from 'c/utilCommon';
 
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -12,8 +12,7 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 
 export default class GeFormWidget extends LightningElement {
     @api element;
-    // TODO: Is this still in use?
-    @api widgetData;
+    @api widgetConfig;
 
     @track widgetDataFromState = {};
 
@@ -21,6 +20,10 @@ export default class GeFormWidget extends LightningElement {
 
     _allocationFields = [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)];
     _elevateFields = [apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+
+    get sourceFieldsUsedInTemplate() {
+        return this.widgetConfig ? this.widgetConfig.sourceFieldsUsedInTemplate : [];
+    }
 
     @api
     get formState() {
