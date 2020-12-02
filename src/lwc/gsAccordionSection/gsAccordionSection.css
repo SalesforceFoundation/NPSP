@@ -1,0 +1,44 @@
+.slds-media.info {
+    margin-left: 1rem;
+    display: flex;
+   
+}
+
+.slds-media.info .container {
+    width: 100%;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+    display: block;
+}
+
+.slds-media.info .border {
+    display: none;
+}
+
+.slds-media.info.open .border {
+    position: absolute;
+    height: calc(100% - 90px);
+    width: 2px;
+    background: #d3d3d3;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    top: 3rem;
+    left: 61px;
+}
+
+.slds-media.info.open .border .gap {
+    width: 2px;
+    background-color: white;
+    height: 8rem;
+}
+
+.slds-media.info  .steps {
+    display: none;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.slds-media.info.open  .steps {
+    display: inline;
+}
