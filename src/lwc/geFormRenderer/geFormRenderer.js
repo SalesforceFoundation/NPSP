@@ -320,20 +320,20 @@ export default class GeFormRenderer extends LightningElement{
             }
         }
 
-        this.sections = this.appendRecordTypeLocationInfoToPicklistElements(this.sections);
+        this.sections = this.appendRecordTypeLocationInfoToPicklistElements();
         this.initializeFormState();
     }
 
-    appendRecordTypeLocationInfoToPicklistElements(sections) {
-        let updatedSections = deepClone(sections);
+    appendRecordTypeLocationInfoToPicklistElements() {
+        let updatedSections = deepClone(this.sections);
 
         updatedSections
             .forEach(section => {
                 section.elements
                     .forEach(element => {
                         this.appendRecordTypeLocationInfoToElement(element);
-                        this.appendToElement(element);
-                    })
+                        this.enrichElement(element);
+                    });
             });
 
         return updatedSections;
@@ -352,10 +352,10 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    appendToElement(element) {
+    enrichElement(element) {
         const helper = new GeFormElementHelper(element);
         element.isRenderable = helper.isRenderable();
-        element.isSourceFieldPicklist = helper.isSourceFieldPicklist();
+        element.isTrueFalsePicklist = helper.isTrueFalsePicklist();
     }
 
     setPermissionsError(errorObject) {

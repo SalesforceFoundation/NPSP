@@ -11,10 +11,11 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
+import { handleError, addKeyToCollectionItems, isTrueFalsePicklist } from 'c/utilTemplateBuilder';
 import {
     getNamespace,
-    getNestedProperty, isNotEmpty,
+    getNestedProperty,
+    isNotEmpty,
     isNull,
     stripNamespace
 } from 'c/utilCommon'
@@ -83,16 +84,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         if (this.step === 1 && this.isEditMode) {
             return false;
         }
-        return this.step > 0 ? true : false;
+        return this.step > 0;
     }
 
     get showSaveButton() {
-        return this.step === 2 ? true : false;
+        return this.step === 2;
     }
 
     get isNextButtonDisabled() {
         if (this.step === 0) {
-            return !this.selectedTemplateId ? true : false;
+            return !this.selectedTemplateId;
         } else if (this.step === 1) {
             return false;
         }
@@ -129,7 +130,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     get isEditMode() {
-        return this.recordId ? true : false;
+        return !!this.recordId;
     }
 
     get dataImportBatchName() {
@@ -155,6 +156,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
     dataImportObjectDescribe;
+
+    @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
+    dataImportBatchCreateDefaults;
 
     /*******************************************************************************
     * @description Method converts field describe info into objects that the
@@ -188,7 +192,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
                     this.handleTemplateChange({ detail: { value: templateId } });
                     this.setFormFieldsBatchLevelDefaults();
-                    this.appendToElements();
 
                     this.step = 1;
 
@@ -215,21 +218,19 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         });
     }
 
-    appendToElements() {
+    appendTrueFalsePicklistToElement() {
         this.formSections.forEach(section => {
             if (section.elements) {
                 section.elements.forEach(element => {
-                    const mapping = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
-                    if(isNotEmpty(mapping)) {
-                        element.sourceFieldApiName = mapping.Source_Field_API_Name;
+                    const fieldMapping = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+
+                    if(isNotEmpty(fieldMapping)) {
+                        element.isTrueFalsePicklist = isTrueFalsePicklist(fieldMapping);
                     }
                 });
             }
         });
     }
-
-    @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
-    dataImportBatchCreateDefaults;
 
     setValuesForSelectedBatchHeaderFields(allFields) {
         this.selectedBatchHeaderFields.map(batchHeaderField => {
@@ -290,6 +291,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
         this.formSections = this.selectedTemplate.layout.sections;
+        this.appendTrueFalsePicklistToElement();
+
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
         }

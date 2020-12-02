@@ -71,14 +71,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
-    wiredDataImportInfo(response) {
-        if(response.data && this.isTrueFalsePicklist) {
-            this.dataImportDescribeInfo = response.data;
-            this._recordTypeId = this.recordTypeId();
-        }
-    }
-
     getValueFromChangeEvent(event) {
         if (this.isPicklist) {
             const value = event.detail.value;
@@ -247,11 +239,11 @@ export default class GeFormField extends LightningElement {
     }
 
     get isCheckbox() {
-        return this.fieldType === BOOLEAN_TYPE && !this.element.isSourceFieldPicklist;
+        return this.fieldType === BOOLEAN_TYPE && !this.element.isTrueFalsePicklist;
     }
 
     get isTrueFalsePicklist() {
-        return this.fieldType === BOOLEAN_TYPE && this.element.isSourceFieldPicklist;
+        return this.element.isTrueFalsePicklist;
     }
 
     get isTextArea() {
@@ -481,17 +473,11 @@ export default class GeFormField extends LightningElement {
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
             this.defaultRecordTypeId() ||
-            undefined;
+            null;
     }
 
     defaultRecordTypeId() {
-        if(this.isTrueFalsePicklist) {
-            if(this.dataImportDescribeInfo) {
-                return this.dataImportDescribeInfo.defaultRecordTypeId;
-            }
-        } else {
-            return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
-        }
+        return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
     }
 
     recordTypeIdFor(recordTypeName) {
@@ -535,11 +521,28 @@ export default class GeFormField extends LightningElement {
         if (this.targetFieldApiName === 'RecordTypeId') {
             return this.getPicklistOptionsForRecordTypeIds();
         }
+        if (this.element.isTrueFalsePicklist) {
+            return this.trueFalsePicklistValues();
+        }
         return this._picklistValues;
     }
 
     set picklistValues(values) {
         this._picklistValues = values;
+    }
+
+    trueFalsePicklistValues() {
+        const trueOpt = { label: 'True', value: 'True' };
+        const falseOpt = { label: 'False', value: 'False' };
+        const noneOpt = this.nonePicklistValue();
+        return [noneOpt, trueOpt, falseOpt];
+    }
+
+    nonePicklistValue() {
+        return {
+            label: this.CUSTOM_LABELS.commonLabelNone,
+            value: this.CUSTOM_LABELS.commonLabelNone
+        };
     }
 
     get qaLocatorPicklist() {

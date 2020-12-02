@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, isTrueFalsePicklist, isCheckboxToCheckbox } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import {isEmpty} from 'c/utilCommon';
@@ -20,7 +20,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
-    @api sourceObjectDescribe;
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -97,6 +96,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             return 'slds-card slds-card_extension slds-m-vertical_small';
         }
     }
+
     get cssClassActionsContainer() {
         if (this.field.elementType === WIDGET) {
             return 'slds-size_1-of-12 vertical-align-center'
@@ -156,16 +156,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return TemplateBuilderService.fieldMappingByDevName[this.name] ? TemplateBuilderService.fieldMappingByDevName[this.name] : null;
     }
 
-    get sourceFieldDescribe() {
-        if(this.sourceObjectDescribe && this.fieldMapping) {
-            return this.sourceObjectDescribe.fields[this.sourceFieldApiName];
-        }
-    }
-
-    get sourceFieldApiName() {
-        return this.fieldMapping.Source_Field_API_Name;
-    }
-
     get targetFieldApiName() {
         if (this.fieldMapping && this.fieldMapping.Target_Field_API_Name) {
             return this.fieldMapping.Target_Field_API_Name;
@@ -184,7 +174,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
             return this.fieldMapping.Target_Object_API_Name;
         }
 
-
         if (this.objectApiName) {
             return this.objectApiName;
         }
@@ -202,6 +191,14 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     get isWidget() {
         return this.field.elementType === WIDGET;
+    }
+
+    get showRequiredCheckbox() {
+        return !this.isWidget && !isCheckboxToCheckbox(this.fieldMapping);
+    }
+
+    get isTrueFalsePicklist() {
+        return isTrueFalsePicklist(this.fieldMapping);
     }
 
     get labelGeAssistiveFormFieldRemove() {

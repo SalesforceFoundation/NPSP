@@ -1,5 +1,6 @@
 import GeFormService from 'c/geFormService';
-import {isEmptyObject, isNotEmpty} from 'c/utilCommon';
+import { isEmptyObject, isNotEmpty } from 'c/utilCommon';
+import { isTrueFalsePicklist } from 'c/utilTemplateBuilder';
 
 /**
  * @description Helper function used to convert an object that has key value pairs where
@@ -135,7 +136,7 @@ export class GeFormElementHelper {
         return false;
     }
 
-    isSourceFieldPicklist() {
-        return isNotEmpty(this.fieldMapping) && this.fieldMapping.Source_Field_Data_Type === 'PICKLIST';
+    isTrueFalsePicklist() {
+        return isTrueFalsePicklist(this.fieldMapping);
     }
 }

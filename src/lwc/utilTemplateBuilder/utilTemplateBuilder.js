@@ -504,6 +504,21 @@ const addKeyToCollectionItems = (list) => {
     });
 }
 
+const isTrueFalsePicklist = (fieldMapping) => {
+    if(fieldMapping) {
+        return fieldMapping.Target_Field_Data_Type === 'BOOLEAN' &&
+            fieldMapping.Source_Field_Data_Type === 'PICKLIST';
+    }
+    return false;
+}
+
+const isCheckboxToCheckbox = (fieldMapping) => {
+    if(fieldMapping) {
+        return fieldMapping.Target_Field_Data_Type === 'BOOLEAN' &&
+            fieldMapping.Source_Field_Data_Type === 'BOOLEAN';
+    }
+}
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -527,6 +542,8 @@ export {
     handleError,
     generateId,
     inputTypeByDescribeType,
+    isCheckboxToCheckbox,
+    isTrueFalsePicklist,
     lightningInputTypeByDataType,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,

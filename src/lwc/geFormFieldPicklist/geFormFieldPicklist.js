@@ -12,9 +12,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api value;
     @api className;
     @api qaLocatorBase;
+    @api isTrueFalsePicklist;
 
     @track _objectDescribeInfo;
-    @track picklistValues;
+    @track _picklistValues;
     @track defaultRecordTypeId;
 
     _recordTypeId;
@@ -24,14 +25,11 @@ export default class GeFormFieldPicklist extends LightningElement {
         fieldApiName: '$fullFieldApiName',
         recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
-        if(data) {
-            let valueNone = {
-                label: this.CUSTOM_LABELS.commonLabelNone,
-                value: this.CUSTOM_LABELS.commonLabelNone
-            }
+        if (data) {
+            const valueNone = this.nonePicklistValue();
             this.picklistValues = [valueNone, ...data.values];
         }
-        if(error) {
+        if (error) {
             console.error(error);
         }
     }
@@ -39,7 +37,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api
     set objectDescribeInfo(val) {
         this._objectDescribeInfo = val;
-        if(val) {
+        if (val) {
             this.defaultRecordTypeId = val.defaultRecordTypeId;
             if (!this.recordTypeId) {
                 this.recordTypeId = this.defaultRecordTypeId;
@@ -54,7 +52,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get fullFieldApiName() {
-        if(isNotEmpty(this.objectName) && isNotEmpty(this.fieldName)) {
+        if (isNotEmpty(this.objectName) && isNotEmpty(this.fieldName)) {
             return `${this.objectName}.${this.fieldName}`;
         }
     }
@@ -99,6 +97,31 @@ export default class GeFormFieldPicklist extends LightningElement {
 
     set recordTypeId(id) {
         this._recordTypeId = id || this.defaultRecordTypeId;
+    }
+
+    get picklistValues() {
+        if (this.isTrueFalsePicklist) {
+            return this.trueFalsePicklistValues();
+        }
+        return this._picklistValues;
+    }
+
+    set picklistValues(value) {
+        this._picklistValues = value;
+    }
+
+    trueFalsePicklistValues() {
+        const trueOpt = { label: 'True', value: 'True' };
+        const falseOpt = { label: 'False', value: 'False' };
+        const noneOpt = this.nonePicklistValue();
+        return [noneOpt, trueOpt, falseOpt];
+    }
+
+    nonePicklistValue() {
+        return {
+            label: this.CUSTOM_LABELS.commonLabelNone,
+            value: this.CUSTOM_LABELS.commonLabelNone
+        };
     }
 
     connectedCallback() {

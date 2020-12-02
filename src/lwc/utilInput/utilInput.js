@@ -4,7 +4,6 @@ import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
 import { isNotEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
-import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 
 const WIDGET = 'widget';
 const TEXTAREA = 'textarea';
@@ -30,8 +29,6 @@ export default class utilInput extends LightningElement {
     richTextFormats = RICH_TEXT_FORMATS;
 
     @api fieldApiName;
-    @api sourceObjectDescribe;
-    @api sourceFieldApiName;
     @api label;
     @api defaultValue;
     @api required;
@@ -43,6 +40,7 @@ export default class utilInput extends LightningElement {
     @api variant = 'label-stacked';
     @api value;
     @api widgetName;
+    @api isTrueFalsePicklist;
 
     @track isRichTextValid = true;
 
@@ -80,16 +78,12 @@ export default class utilInput extends LightningElement {
         return this.formFieldType === WIDGET;
     }
 
-    get isTrueFalsePicklist() {
-        return this.type === 'BOOLEAN' && this.sourceFieldDescribe && this.sourceFieldDescribe.dataType === 'Picklist';
-    }
-
     get isLightningTextarea() {
         return this.lightningInputType === TEXTAREA && !this.isLightningRichText;
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX && !this.isTrueFalsePicklist;
+        return this.lightningInputType === COMBOBOX;
     }
 
     get isLightningSearch() {
@@ -149,15 +143,14 @@ export default class utilInput extends LightningElement {
 
     get lightningInputType() {
         if(this.isTrueFalsePicklist) {
-            return 'combobox';
+            return COMBOBOX;
         }
 
         return this.type ? inputTypeByDescribeType[this.type.toLowerCase()] : TEXT;
     }
 
     get isRequired() {
-        const _required = this.required === YES || this.required === true;
-        return (_required && !this.isLightningCheckbox);
+        return this.required === YES || this.required === true;
     }
 
     get fieldDescribe() {
@@ -181,13 +174,7 @@ export default class utilInput extends LightningElement {
     }
 
     get showRichTextLabel() {
-        return this.isLightningRichText && this.variant !== 'label-hidden' ? true : false;
-    }
-
-    get sourceFieldDescribe() {
-        if(isNotEmpty(this.sourceObjectDescribe)) {
-            return this.sourceObjectDescribe.fields[this.sourceFieldApiName];
-        }
+        return this.isLightningRichText && this.variant !== 'label-hidden';
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })

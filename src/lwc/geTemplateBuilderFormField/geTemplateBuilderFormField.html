@@ -23,8 +23,7 @@
                                       form-field-type={field.elementType}
                                       field-api-name={fieldApiName}
                                       object-api-name={targetObjectApiName}
-                                      source-object-describe={sourceObjectDescribe}
-                                      source-field-api-name={sourceFieldApiName}
+                                      is-true-false-picklist={isTrueFalsePicklist}
                                       label={field.customLabel}
                                       default-value={field.defaultValue}
                                       value={field.value}
@@ -38,7 +37,7 @@
                     <div class="slds-size_5-of-12 slds-p-right_small"></div>
                 </template>
                     <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
-                        <template if:false={isWidget}>
+                        <template if:true={showRequiredCheckbox}>
                             <lightning-input aria-label={labelGeAssistiveRequireField}
                                              aria-describedby="requiredCheckboxDescription"
                                              checked={isRequired}
