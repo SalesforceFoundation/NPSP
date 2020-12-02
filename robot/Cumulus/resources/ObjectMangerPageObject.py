@@ -183,10 +183,8 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			self.npsp.choose_frame('vfFrameId')
 			self.selenium.wait_until_page_contains_element(picklist_txtarea)
 			for value in kwargs['Values']:
-				self.builtin.log_to_console(value)
 				self.selenium.get_webelement(picklist_txtarea).send_keys(value)
 				self.selenium.get_webelement(picklist_txtarea).send_keys(Keys.ENTER)
 			self.selenium.click_element(picklist_save)
-			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 		else:
 			raise Exception(f"Field not found")

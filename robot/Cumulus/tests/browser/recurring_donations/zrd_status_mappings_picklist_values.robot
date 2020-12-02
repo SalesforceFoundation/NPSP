@@ -8,14 +8,24 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Custom Fields and data
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Keywords ***
 Setup Custom Fields and data
-
-    ${picklistvalues}=       Create List           Pending       Canceled
+    ${Unique_Number}    Generate random string    4    0123456789
+    ${value1}           Catenate    Pending     ${Unique_Number}
+    ${value2}           Catenate    Canceled    ${Unique_Number}
+    ${picklistvalues}=       Create List           ${value1}       ${value2}
     Set suite variable       @{picklistvalues}
+    Set suite variable       ${value1}
+    Set suite variable       ${value2}
+
+    # Add Two new custom picklist values for the recurring donation's status field
+    Add Custom Picklist Values To Field
+    ...                                                    Object=Recurring Donation
+    ...                                                    Field_Name=Status
+    ...                                                    Values=@{picklistvalues}
 
 
 *** Test Cases ***
@@ -27,17 +37,11 @@ Verify Status Mappings For Custom Status Picklist Values
 
     [tags]              unstable                           feature:RD
 
-    # Add Two new custom picklist values for the recurring donation's status field
-    Add Custom Picklist Values To Field
-    ...                                                    Object=Recurring Donation
-    ...                                                    Field_Name=Status
-    ...                                                    Values=@{picklistvalues}
-
     Open NPSP Settings           Recurring Donations       Status to State Mapping
     Verify Status To State Mappings
     ...                                                    Active=Active
     ...                                                    Lapsed=Lapsed
     ...                                                    Closed=Closed
     ...                                                    Paused=Active
-    ...                                                    Pending=-- Unmapped --
-    ...                                                    Canceled=-- Unmapped --
+    ...                                                    ${value1}=-- Unmapped --
+    ...                                                    ${value2}=-- Unmapped --
