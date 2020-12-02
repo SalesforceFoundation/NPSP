@@ -94,7 +94,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         if (this.shouldDisplayEnableButton) {
             return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
         }
-        return `${this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction} ${'Please select a valid payment method.'}`;
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
     }
 
     /***
