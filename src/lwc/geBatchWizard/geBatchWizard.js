@@ -154,9 +154,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         }
     }
 
-    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
-    dataImportObjectDescribe;
-
     @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
     dataImportBatchCreateDefaults;
 

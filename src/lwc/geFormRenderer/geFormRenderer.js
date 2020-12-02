@@ -331,7 +331,6 @@ export default class GeFormRenderer extends LightningElement{
             .forEach(section => {
                 section.elements
                     .forEach(element => {
-                        this.appendRecordTypeLocationInfoToElement(element);
                         this.enrichElement(element);
                     });
             });
@@ -339,7 +338,7 @@ export default class GeFormRenderer extends LightningElement{
         return updatedSections;
     }
 
-    appendRecordTypeLocationInfoToElement(element) {
+    appendRecordTypeLocationInfo(element) {
         const fieldMappingDevName =
             element.dataImportFieldMappingDevNames &&
             element.dataImportFieldMappingDevNames[0];
@@ -353,6 +352,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     enrichElement(element) {
+        this.appendRecordTypeLocationInfo(element);
+        this.appendElementHelperData(element);
+    }
+
+    appendElementHelperData(element) {
         const helper = new GeFormElementHelper(element);
         element.isRenderable = helper.isRenderable();
         element.isTrueFalsePicklist = helper.isTrueFalsePicklist();
