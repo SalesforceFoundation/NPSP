@@ -12,15 +12,16 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 Setup Test Data
     [Documentation]     Setsup namespace prefix and required number formats
-    ${ns} =               Get NPSP Namespace Prefix
-    Set suite variable    ${ns}
-    ${first} =            Generate Random String
-    ${format1}=           Set Variable    ${first}-{000}
-    Set suite variable    ${format1}
-    ${second} =           Generate Random String
-    Set suite variable    ${second}
-    ${format2}=           Set Variable    ${second}-{00}
-    Set suite variable    ${format2}
+    ${NS} =               Get NPSP Namespace Prefix
+    Set suite variable    ${NS}
+    ${FIRST} =            Generate Random String
+    Set suite variable    ${FIRST}
+    ${FORMAT1}=           Set Variable    ${FIRST}-{000}
+    Set suite variable    ${FORMAT1}
+    ${SECOND} =           Generate Random String
+    Set suite variable    ${SECOND}
+    ${FORMAT2}=           Set Variable    ${SECOND}-{00}
+    Set suite variable    ${FORMAT2}
 
 Create Batch With Default Template
     [Documentation]     creates a simple batch with given name using default template
@@ -41,20 +42,21 @@ Create Batch With Default Template
 Test Add and Delete Batch Number Formats
     [Documentation]         Add two batch number formats and activate one.Verify new batch created after the format is activated
     ...                     carry the batch number in the specified format and starting number.Deactivate the active number format,
-    ...                     Verify Batch does not have a batch number assigned.
+    ...                     Activate the other format and very new batch carries correct format.Deactivate the number format
+    ...                     Verify new batch does not have a batch number assigned.
     [tags]                                  unstable      feature:GE    W-8246942
-    #Create Batch Number Format
+    #Create Batch Number Formats and activate second format
     Load Page Object                        Template      GE_Gift_Entry
     Enter Value In Field
-    ...     Display Format=${format1}
+    ...     Display Format=${FORMAT1}
     ...     Starting Number=0
     Click Button                            Save
-    Verify Table Contains Row               datatable     ${format1}    Active=False
+    Verify Table Contains Row               datatable     ${FORMAT1}    Active=False
     Enter Value In Field
-    ...     Display Format=${format2}
+    ...     Display Format=${FORMAT2}
     ...     Starting Number=1
     Click Button                            Save & Activate
-    Verify Table Contains Row               datatable     ${format2}    Active=True
+    Verify Table Contains Row               datatable     ${FORMAT2}    Active=True
     #Create batch and verify numbering
     Go To Page                              Landing       GE_Gift_Entry
     Click Gift Entry Button                 Settings
@@ -64,15 +66,27 @@ Test Add and Delete Batch Number Formats
     Add Batch Table Columns                 Batch Number
     Click Gift Entry Button                 Listbox Save
     Wait Until Modal Is Closed
-    Create Batch With Default Template      Batch Number Automation Batch
+    Create Batch With Default Template      Batch with second format
     Go To Page                              Landing       GE_Gift_Entry
-    Verify Table Contains Row               Batches       Batch Number Automation Batch    Batch Number=${second}-01
+    Verify Table Contains Row               Batches       Batch with second format     Batch Number=${SECOND}-01
+    #Deactivate the second format and activate first and verify batch numberiing
+    Go To Page                              Custom        NPSP_Settings
+    Open Main Menu                          System Tools
+    Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
+    Verify Table Contains Row               datatable     ${FORMAT2}    Max Used Number=1
+    Set Batch Number Format Status          ${FORMAT2}    Deactivate
+    Set Batch Number Format Status          ${FORMAT1}    Activate
+    Go To Page                              Landing       GE_Gift_Entry
+    Create Batch With Default Template      Batch with first format
+    Go To Page                              Landing       GE_Gift_Entry
+    Verify Table Contains Row               Batches       Batch with first format    Batch Number=${FIRST}-000
     #Deactivate the batch number format and verify new batch doesn't have batch number
     Go To Page                              Custom        NPSP_Settings
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
-    Deactivate Batch Number Format          ${format2}
+    Verify Table Contains Row               datatable     ${FORMAT1}    Max Used Number=0
+    Set Batch Number Format Status          ${FORMAT1}    Deactivate
     Go To Page                              Landing       GE_Gift_Entry
-    Create Batch With Default Template      Batch Without Number Automation Batch
+    Create Batch With Default Template      Batch Without Number
     Go To Page                              Landing       GE_Gift_Entry
-    Verify Table Contains Row               Batches       Batch Without Number Automation Batch    Batch Number=None
+    Verify Table Contains Row               Batches       Batch Without Number    Batch Number=None

@@ -1684,7 +1684,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             elif value=='None' and actual=='':
                 print(f'Table contains {record} with empty {key} as expected')
             else:
-                raise Exception(f'Table didnot contain {record} with expected {key}={value}')
+                raise Exception(f'Table did not contain {record} with expected {key}={value}')
 
 
 

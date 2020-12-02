@@ -250,13 +250,22 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 print("Right keys under status mapping fields table not found")
 
     @capture_screenshot_on_error
-    def deactivate_batch_number_format(self,number_format):
+    def set_batch_number_format_status(self,number_format,status):
         """Deactivates the given batch number format by clicking on dropdown and selecting option
         And verifies that the format has been deactivated"""
         locator=npsp_lex_locators['npsp_settings']['table_dropdown'].format(number_format)
         self.selenium.get_webelement(locator).click()
-        self.selenium.wait_until_page_contains("Deactivate")
-        self.selenium.click_link("Deactivate")
-        self.builtin.sleep(1,"To allow time for format to be deactivated")
-        self.npsp.verify_table_contains_row("datatable",number_format,Active="False")
+        if status.lower()=='deactivate':
+            self.selenium.wait_until_page_contains("Deactivate")
+            self.selenium.click_link("Deactivate")
+            self.builtin.sleep(1,"To allow time for format to be deactivated")
+            self.npsp.verify_table_contains_row("datatable",number_format,Active="False")
+        elif status.lower()=='activate':
+            self.selenium.wait_until_page_contains("Activate")
+            self.selenium.click_link("Activate")
+            self.builtin.sleep(1,"To allow time for format to be activated")
+            self.npsp.verify_table_contains_row("datatable",number_format,Active="True")
+        else:
+            raise Exception(f'{status} is invalid, please select either Activate or Deactivate')
+
 
