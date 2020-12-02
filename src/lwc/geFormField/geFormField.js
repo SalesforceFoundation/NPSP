@@ -239,7 +239,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isCheckbox() {
-        return this.fieldType === BOOLEAN_TYPE && !this.element.isTrueFalsePicklist;
+        return this.fieldType === BOOLEAN_TYPE && !this.isTrueFalsePicklist;
     }
 
     get isTrueFalsePicklist() {

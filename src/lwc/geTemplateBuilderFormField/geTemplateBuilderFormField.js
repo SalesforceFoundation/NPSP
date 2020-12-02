@@ -170,7 +170,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get targetObjectApiName() {
-
         if (this.fieldMapping && this.fieldMapping.Target_Object_API_Name) {
             return this.fieldMapping.Target_Object_API_Name;
         }
