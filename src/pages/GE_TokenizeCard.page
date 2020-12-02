@@ -59,7 +59,7 @@
         }
 
         function handleSetPaymentMethod(paymentMethod) {
-            sfdo.setPaymentMethod(determinePaymentMethod(event.data.paymentMethod))
+            sfdo.setPaymentMethod(determinePaymentMethod(paymentMethod))
                 .then(() => {
                     const successMessage = JSON.stringify({ type: postMessageType, success: true });
                     postMessage(successMessage);
