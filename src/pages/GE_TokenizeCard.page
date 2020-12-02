@@ -12,10 +12,38 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
-        const sfdo = new sfdoPaymentsJsSdk({ debug: true });
+        const sfdo = new sfdoPaymentsJsSdk();
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         const postMessageType = 'post__npsp';
+        const CREDIT_CARD = 'Credit Card';
+        const ACH = 'ACH';
+        const styles = `
+            .logo {
+                left: 8px !important;
+            }
+            .fieldset.cc-number {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .fieldset.exp {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .fieldset.cvc {
+                padding: 0;
+            }
+            .fieldset.account-number {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .error-wrapper.fieldset.exp {
+                max-width: fit-content;
+            }
+            .error-wrapper.fieldset.cvc {
+                max-width: fit-content;
+            }
+        `;
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
@@ -35,7 +63,7 @@
             const action = event.data.action;
             switch (action) {
                 case 'mount':
-                    handleMounting(determinePaymentMethod(event.data.paymentMethod));
+                    handleMounting(event.data.paymentMethod);
                     break;
 
                 case 'setPaymentMethod':
@@ -52,22 +80,42 @@
             }
         }
 
-        function determinePaymentMethod(paymentMethodValue) {
-            return paymentMethodValue === sfdo.PaymentMethod.ACH
-                ? sfdo.PaymentMethod.ACH
-                : sfdo.PaymentMethod.CREDIT_CARD;
+        function handleMounting(paymentMethod) {
+            if (isValidPaymentMethod(paymentMethod)) {
+                const config = {
+                    id: 'payments',
+                    clientId: '{!productId}',
+                    gatewayId: '{!gatewayIds}',
+                    merchantId: '{!merchantIds}',
+                    designSystem: 'Lightning',
+                    paymentMethod: deriveElevatePaymentMethodFrom(paymentMethod),
+                    styles: styles
+                };
+
+                sfdo.mount(config)
+                    .then(() => {
+                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        postMessage(successMessage);
+                    })
+                    .catch((err) => {
+                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        postMessage(errorString);
+                    });
+            }
         }
 
         function handleSetPaymentMethod(paymentMethod) {
-            sfdo.setPaymentMethod(determinePaymentMethod(paymentMethod))
-                .then(() => {
-                    const successMessage = JSON.stringify({ type: postMessageType, success: true });
-                    postMessage(successMessage);
-                })
-                .catch((err) => {
-                    const errorString = JSON.stringify({ type: postMessageType, ...err});
-                    postMessage(errorString);
-                });
+            if (isValidPaymentMethod(paymentMethod)) {
+                sfdo.setPaymentMethod(deriveElevatePaymentMethodFrom(paymentMethod))
+                    .then(() => {
+                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        postMessage(successMessage);
+                    })
+                    .catch((err) => {
+                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        postMessage(errorString);
+                    });
+            }
         }
 
         /*******************************************************************************
@@ -113,6 +161,16 @@
             window.top.postMessage(message, lightningOrigin);
         }
 
+        function deriveElevatePaymentMethodFrom(paymentMethodValue) {
+            return paymentMethodValue === ACH
+                ? sfdo.PaymentMethod.ACH
+                : sfdo.PaymentMethod.CREDIT_CARD;
+        }
+
+        function isValidPaymentMethod(paymentMethod) {
+            return paymentMethod === CREDIT_CARD || paymentMethod === ACH;
+        }
+
         function buildLightningOrigin() {
             const hostname = window.location.hostname;
             const arr = hostname.split(".");
@@ -120,55 +178,6 @@
             domain = domain.replace('--c', '');
 
             return `https://${domain}.lightning.force.com`;
-        }
-
-        const styles = `
-            .logo {
-                left: 8px !important;
-            }
-            .fieldset.cc-number {
-                padding-left: 0;
-                padding-right: 1rem;
-            }
-            .fieldset.exp {
-                padding-left: 0;
-                padding-right: 1rem;
-            }
-            .fieldset.cvc {
-                padding: 0;
-            }
-            .fieldset.account-number {
-                padding-left: 0;
-                padding-right: 1rem;
-            }
-            .error-wrapper.fieldset.exp {
-                max-width: fit-content;
-            }
-            .error-wrapper.fieldset.cvc {
-                max-width: fit-content;
-            }
-        `;
-
-        function handleMounting(paymentMethod) {
-            const config = {
-                id: 'payments',
-                clientId: '{!productId}',
-                gatewayId: '{!gatewayIds}',
-                merchantId: '{!merchantIds}',
-                designSystem: 'Lightning',
-                paymentMethod: paymentMethod,
-                styles: styles
-            };
-
-            sfdo.mount(config)
-                .then(() => {
-                    const successMessage = JSON.stringify({ type: postMessageType, success: true });
-                    postMessage(successMessage);
-                })
-                .catch((err) => {
-                    const errorString = JSON.stringify({ type: postMessageType, ...err});
-                    postMessage(errorString);
-                });
         }
 
         function isReadyToMount() {
