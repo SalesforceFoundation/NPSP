@@ -278,24 +278,23 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     /**
-     * @description Displays error log
+     * @description Displays record error log page by navigating to
+     * the "ERR_RecordLog" Lightning Component wrapper displaying the "errRecordLog" LWC.
+     * The LC name has the namespace, or "c" in unmanaged package, followed by "__" prefix.
+     * The state attributes representing must be prefixed with "c__" prefix, see the following for more details:
+     * https://developer.salesforce.com/docs/component-library/documentation/lwc/lwc.use_navigate_add_params_url
      */
     navigateToErrorLog() {
         const namespace = getNamespace(ERROR_OBJECT.objectApiName);
-        const compName = (namespace ? namespace : 'c') + ":errRecordLog";
+        const compName = (namespace ? namespace : 'c') + "__ERR_RecordLog";
 
-        var pageRef = {
-            componentDef: compName,
-            attributes: {
-                recordId: this.recordId
-            }
-        };
-
-        var encodedPageRef = btoa(JSON.stringify(pageRef));
         this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
+            type: "standard__component",
             attributes: {
-                url: '/one/one.app#' + encodedPageRef
+                componentName: compName
+            },
+            state: {
+                c__recordId: this.recordId
             }
         });
     }

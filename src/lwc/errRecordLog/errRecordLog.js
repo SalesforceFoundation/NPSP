@@ -183,21 +183,6 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description Navigates to the error log detail page
-     */
-    handleRowAction(event) {
-        const row = event.detail.row;
-
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: row.Id,
-                actionName: 'view'
-            }
-        });
-    }
-
-    /**
      * @description Sorts records by the sort direction and sorted field
      */
     handleSort(event) {
