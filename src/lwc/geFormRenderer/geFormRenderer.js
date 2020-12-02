@@ -20,7 +20,8 @@ import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Ca
 
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { convertBDIToWidgetJson, GeFormElementHelper } from './geFormRendererHelper';
+import { convertBDIToWidgetJson } from './geFormRendererHelper';
+import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';

@@ -20,6 +20,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
+    @api sourceObjectFieldsDescribe;
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -73,7 +74,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
 
         if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
-            isEmpty(this.sourceObjectDescribe.fields[this.fieldMapping.Source_Field_API_Name])) {
+            isEmpty(this.sourceObjectFieldsDescribe[this.fieldMapping.Source_Field_API_Name])) {
 
             const inputField = this.template.querySelector('[data-id="formField"]');
 

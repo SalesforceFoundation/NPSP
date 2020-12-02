@@ -142,7 +142,7 @@ export default class utilInput extends LightningElement {
     }
 
     get lightningInputType() {
-        if(this.isTrueFalsePicklist) {
+        if (this.isTrueFalsePicklist) {
             return COMBOBOX;
         }
 
