@@ -7,10 +7,14 @@ const createWidgetWithPaymentMethod = (paymentMethod) => {
         { is: GeFormWidgetTokenizeCard }
     );
     element.sourceFieldsUsedInTemplate = ['Payment_Method__c'];
+    setPaymentMethod(element, paymentMethod);
+    return element;
+}
+
+const setPaymentMethod = (element, paymentMethod) => {
     element.widgetDataFromState = {
         ['Payment_Method__c']: paymentMethod
     };
-    return element;
 }
 
 describe('c-ge-form-widget-tokenize-card', () => {
@@ -74,12 +78,24 @@ describe('c-ge-form-widget-tokenize-card', () => {
         return Promise.resolve()
             .then(() => {
                 expectIframeIsAvailable(element);
-                element.widgetDataFromState = {
-                    ['Payment_Method__c']: 'Cash'
-                };
+                setPaymentMethod(element, 'Cash');
             })
             .then(() => {
                 expectExtendedDisabledMessage(element);
+            });
+    });
+
+    it('should re-enable itself after switch to valid payment method', async () => {
+        const element = createWidgetWithPaymentMethod('Cash');
+        document.body.appendChild(element);
+
+        return Promise.resolve()
+            .then(() => {
+                expectExtendedDisabledMessage(element);
+                setPaymentMethod(element, 'Credit Card');
+            })
+            .then(() => {
+                expectIframeIsAvailable(element);
             });
     });
 });
