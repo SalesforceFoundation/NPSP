@@ -38,8 +38,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
         doNotEnterPaymentButton(element).click();
 
         return Promise.resolve().then(() => {
-            expect(spanDisabledMessage(element).innerHTML)
-                .toBe(DISABLED_MESSAGE);
+            expect(spanDisabledMessage(element).innerHTML).toBe(DISABLED_MESSAGE);
             expect(enterPaymentButton(element)).toBeTruthy();
         });
     });
@@ -51,8 +50,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
         expect(doNotEnterPaymentButton(element)).toBeFalsy();
 
         return Promise.resolve().then(() => {
-            expect(spanExtendedDisabledMessage(element).innerHTML)
-                .toBe(EXTENDED_DISABLED_MESSAGE);
+            expect(spanExtendedDisabledMessage(element).innerHTML).toBe(EXTENDED_DISABLED_MESSAGE);
         });
     });
 
@@ -65,12 +63,12 @@ describe('c-ge-form-widget-tokenize-card', () => {
         return Promise.resolve()
             .then(() => {
                 expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
+
                 doNotEnterPaymentButton(element).click();
             })
             .then(() => {
                 expect(iframe(element)).toBeFalsy;
-                expect(spanDisabledMessage(element).innerHTML)
-                    .toBe(DISABLED_MESSAGE);
+                expect(spanDisabledMessage(element).innerHTML).toBe(DISABLED_MESSAGE);
 
                 enterPaymentButton(element).click();
             })
@@ -88,11 +86,11 @@ describe('c-ge-form-widget-tokenize-card', () => {
         return Promise.resolve()
             .then(() => {
                 expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
+
                 setPaymentMethod(element, CASH);
             })
             .then(() => {
-                expect(spanExtendedDisabledMessage(element).innerHTML)
-                    .toBe(EXTENDED_DISABLED_MESSAGE);
+                expect(spanExtendedDisabledMessage(element).innerHTML).toBe(EXTENDED_DISABLED_MESSAGE);
             });
     });
 
@@ -102,8 +100,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
         return Promise.resolve()
             .then(() => {
-                expect(spanExtendedDisabledMessage(element).innerHTML)
-                    .toBe(EXTENDED_DISABLED_MESSAGE);
+                expect(spanExtendedDisabledMessage(element).innerHTML).toBe(EXTENDED_DISABLED_MESSAGE);
+
                 setPaymentMethod(element, CREDIT_CARD);
             })
             .then(() => {
