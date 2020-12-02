@@ -1677,7 +1677,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         for key,value in kwargs.items():
             locator=npsp_lex_locators['datatable'].format(table_name,record,key)
             actual=self.selenium.get_text(locator)
-            print(f'text is {actual}')
+            print(f'actual value is {actual}')
             if actual==value:
                 print(f'Table contains {record} with expected {key}={value}')
             elif value=='None' and actual=='':
