@@ -16,12 +16,14 @@ import listViewItemCountPlural from '@salesforce/label/c.geTextListViewItemsCoun
 import listViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
+import ERROR_FIELD_NAME from '@salesforce/schema/Error__c.Name';
 import ERROR_FIELD_DATETIME from '@salesforce/schema/Error__c.Datetime__c';
 import ERROR_FIELD_ERROR_TYPE from '@salesforce/schema/Error__c.Error_Type__c';
 import ERROR_FIELD_FULL_MESSAGE from '@salesforce/schema/Error__c.Full_Message__c';
 
 const ASC = "asc";
 const DESC = "desc";
+const ERROR_LOG_URL_FIELD = 'logURL';
 
 export default class errRecordLog extends NavigationMixin(LightningElement) {
 
@@ -67,6 +69,12 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
 
                     this.data = response.data;
                     this.hasData = !isUndefined(this.data) && this.data.length > 0;
+
+                    if (this.hasData) {
+                        this.data.forEach(function (log) {
+                            log[ERROR_LOG_URL_FIELD] = '/' + log['Id'];
+                        });
+                    }
                 })
                 .catch((error) => {
                     this.handleError(error);
@@ -85,11 +93,21 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         if (response.data) {
             const fields = response.data.fields;
 
+            const fieldName = extractFieldInfo(fields, ERROR_FIELD_NAME.fieldApiName);
             this.fieldDatetime = extractFieldInfo(fields, ERROR_FIELD_DATETIME.fieldApiName);
             const fieldErrorType = extractFieldInfo(fields, ERROR_FIELD_ERROR_TYPE.fieldApiName);
             const fieldFullMessage = extractFieldInfo(fields, ERROR_FIELD_FULL_MESSAGE.fieldApiName);
 
             this.columns = [
+                {
+                    label: fieldName.label,
+                    fieldName: ERROR_LOG_URL_FIELD,
+                    type: 'url',
+                    typeAttributes: {
+                        label: { fieldName: fieldName.apiName }
+                    },
+                    hideDefaultActions: true
+                },
                 {
                     label: this.fieldDatetime.label,
                     fieldName: this.fieldDatetime.apiName,
@@ -116,12 +134,6 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                     fieldName: fieldFullMessage.apiName,
                     type: fieldFullMessage.dataType,
                     wrapText: true
-                },
-                {
-                    type: 'action',
-                    typeAttributes: {
-                        rowActions: [{ label: this.labels.actionView, name: 'show_details' }],
-                    }
                 }
             ];
 

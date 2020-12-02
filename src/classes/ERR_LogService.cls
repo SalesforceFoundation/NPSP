@@ -78,6 +78,7 @@ public inherited sharing class ERR_LogService {
 
             return [
                 SELECT 
+                    Name,
                     Context_Type__c,                
                     Datetime__c,
                     Error_Type__c,

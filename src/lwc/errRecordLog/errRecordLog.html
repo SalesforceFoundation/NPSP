@@ -32,7 +32,7 @@
             <template if:false={isLoading}>
                 <div class="slds-page-header__row">
                     <div class="slds-page-header__col-meta" data-qa-locator={qaLocatorSummary}>
-                        <p class="slds-page-header__meta-text slds-text-body_regular">
+                        <p class="slds-page-header__meta-text slds-text-body_small">
                             {itemSummary} {sortedByLabel}
                         </p>
                     </div>
@@ -53,10 +53,9 @@
 
         <template if:false={isLoading}>
             <div class="slds-p-bottom_x-large">
-                <lightning-datatable key-field="id" data={data} columns={columns} onrowaction={handleRowAction}
-                    sorted-by={sortedBy} sorted-direction={sortDirection} onsort={handleSort}
-                    data-qa-locator={qaLocatorDatatable} wrap-text-max-lines="3" show-row-number-column
-                    hide-checkbox-column>
+                <lightning-datatable key-field="Id" data={data} columns={columns} sorted-by={sortedBy}
+                    sorted-direction={sortDirection} onsort={handleSort} data-qa-locator={qaLocatorDatatable}
+                    wrap-text-max-lines="3" show-row-number-column hide-checkbox-column>
                 </lightning-datatable>
             </div>
 
