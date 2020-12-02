@@ -249,10 +249,13 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 print("Right keys under status mapping fields table not found")
 
-    def verify_table_contains_row(self,name,**kwargs):
-        """verifies that batch number format table contains a record with given name
-        and a field data-label and value pair.
-        Note: you can pass only 1 key,value pair"""
-        for key,value in kwargs.items():
-            locator=npsp_lex_locators['npsp_settings']['datatable'].format(name,key,value)
-            self.selenium.page_should_contain_element(locator,message=f'Batch Number Format table didnot contain {value} with expected {key}={value}')
+    def deactivate_batch_number_format(self,number_format):
+        """Deactivates the given batch number format by clicking on dropdown and selecting option
+        And verifies that the format has been deactivated"""
+        locator=npsp_lex_locators['npsp_settings']['table_dropdown'].format(number_format)
+        self.selenium.get_webelement(locator).click()
+        self.selenium.wait_until_page_contains("Deactivate")
+        self.selenium.click_link("Deactivate")
+        self.builtin.sleep(1,"To allow time for format to be deactivated")
+        self.npsp.verify_table_contains_row("datatable",number_format,Active="False")
+
