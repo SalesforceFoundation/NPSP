@@ -15,48 +15,98 @@
         const sfdo = new sfdoPaymentsJsSdk();
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
-        let nameOnCard = DEFAULT_NAME_ON_CARD;
-
-        function isLoaded() {
-            const message = JSON.stringify({ isLoaded: true });
-            postMessage(message);
-        }
-
-        function isReadyToMount() {
-            const message = JSON.stringify({ isReadyToMount: true });
-            postMessage(message);
-        }
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
         * Event.data contains at least an "action" and optionally a "nameOnCard" value.
         */
-        window.onmessage = function (event) {
+        window.onmessage = function(event) {
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
                 return;
-
-            } else if (event.data && event.data.action === 'createToken') {
-                if (event.data.nameOnCard) {
-                    nameOnCard = event.data.nameOnCard;
-                } else {
-                    nameOnCard = DEFAULT_NAME_ON_CARD;
-                }
-
-                handleTokenCreation();
-            } else if (event.data && event.data.action === 'switchPaymentMethod') {
-                const paymentMethod = event.data.paymentMethod === 'ACH' ?
-                    sfdo.PaymentMethod.ACH :
-                    sfdo.PaymentMethod.CREDIT_CARD;
-
-                sfdo.setPaymentMethod(paymentMethod);
-            } else if (event.data && event.data.action === 'mount') {
-                const paymentMethod = event.data.paymentMethod === 'ACH' ?
-                    sfdo.PaymentMethod.ACH :
-                    sfdo.PaymentMethod.CREDIT_CARD;
-
-                handleMounting(paymentMethod);
             }
+            if (event.data) {
+                handleMessage(event);
+            }
+        }
+
+        function handleMessage(event) {
+            const action = event.data.action;
+            switch (action) {
+                case 'mount':
+                    handleMounting(determinePaymentMethod(event.data.paymentMethod));
+                    break;
+
+                case 'switchPaymentMethod':
+                    sfdo.setPaymentMethod(determinePaymentMethod(event.data.paymentMethod));
+                    break;
+
+                case 'createToken':
+                    handleTokenCreation(event.data.nameOnCard || DEFAULT_NAME_ON_CARD);
+                    break;
+
+                case 'createAchToken':
+                    handleAchTokenCreation();
+                    break;
+            }
+        }
+
+        function determinePaymentMethod(paymentMethodValue) {
+            return paymentMethodValue === 'ACH'
+                ? sfdo.PaymentMethod.ACH
+                : sfdo.PaymentMethod.CREDIT_CARD;
+        }
+
+        /*******************************************************************************
+        * @description Creates a token and posts the response to a credit card widget LWC
+        */
+        function handleTokenCreation(nameOnCard) {
+            const auth = {
+                jwt: '{!jwtForToken}',
+                userName: '{!$User.Username}'
+            };
+            const tokenConfig = {
+                auth: auth,
+                nameOnCard: nameOnCard
+            };
+
+            sfdo.createToken(tokenConfig)
+                .then(function response(resp) {
+                    if (resp.token) {
+                        // Send token to lwc
+                        const successString = JSON.stringify({ token: resp.token });
+                        postMessage(successString);
+
+                    } else if (resp.error) {
+                        // Response contains the error, send it to lwc
+                        postMessage(JSON.stringify(resp));
+                    }
+                })
+                .catch(function handleError(err) {
+                    // Send error to lwc
+                    const errorString = JSON.stringify(err);
+                    postMessage(errorString);
+                });
+        }
+
+        function handleAchTokenCreation() {}
+
+        /*******************************************************************************
+        * @description Posts messages to a credit card widget LWC
+        *
+        * @param {string} message: String to pass to the LWC
+        */
+        function postMessage(message) {
+            window.top.postMessage(message, lightningOrigin);
+        }
+
+        function buildLightningOrigin() {
+            const hostname = window.location.hostname;
+            const arr = hostname.split(".");
+            let domain = arr[0].replace('--npsp', '');
+            domain = domain.replace('--c', '');
+
+            return `https://${domain}.lightning.force.com`;
         }
 
         const styles = `
@@ -106,54 +156,14 @@
                 });
         }
 
-        /*******************************************************************************
-        * @description Creates a token and posts the response to a credit card widget LWC
-        */
-        function handleTokenCreation() {
-            const auth = {
-                jwt: '{!jwtForToken}',
-                userName: '{!$User.Username}'
-            };
-            const tokenConfig = {
-                auth: auth,
-                nameOnCard: nameOnCard
-            };
-
-            sfdo.createToken(tokenConfig)
-                .then(function response(resp) {
-                    if (resp.token) {
-                        // Send token to lwc
-                        const successString = JSON.stringify({ token: resp.token });
-                        postMessage(successString);
-
-                    } else if (resp.error) {
-                        // Response contains the error, send it to lwc
-                        postMessage(JSON.stringify(resp));
-                    }
-                })
-                .catch(function handleError(err) {
-                    // Send error to lwc
-                    const errorString = JSON.stringify(err);
-                    postMessage(errorString);
-                });
+        function isLoaded() {
+            const message = JSON.stringify({ isLoaded: true });
+            postMessage(message);
         }
 
-        /*******************************************************************************
-        * @description Posts messages to a credit card widget LWC
-        *
-        * @param {string} message: String to pass to the LWC
-        */
-        function postMessage(message) {
-            window.top.postMessage(message, lightningOrigin);
-        }
-
-        function buildLightningOrigin() {
-            const hostname = window.location.hostname;
-            const arr = hostname.split(".");
-            let domain = arr[0].replace('--npsp', '');
-            domain = domain.replace('--c', '');
-
-            return `https://${domain}.lightning.force.com`;
+        function isReadyToMount() {
+            const message = JSON.stringify({ isReadyToMount: true });
+            postMessage(message);
         }
 
         window.onload = isReadyToMount();
