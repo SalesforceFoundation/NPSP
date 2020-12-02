@@ -20,7 +20,7 @@
         * @description Method listens for messages from a credit card widget LWC
         * Event.data contains at least an "action" and optionally a "nameOnCard" value.
         */
-        window.onmessage = function(event) {
+        window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
                 return;
@@ -89,7 +89,7 @@
                 });
         }
 
-        function handleAchTokenCreation() {}
+        function handleAchTokenCreation() { }
 
         /*******************************************************************************
         * @description Posts messages to a credit card widget LWC
