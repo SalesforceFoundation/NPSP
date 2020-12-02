@@ -66,10 +66,13 @@ public with sharing class GS_AdminSetup {
     public static void updateCheckItem(String itemId, Boolean isChecked){
                
         if (doesChecklistItemExists(itemId)) {
-            List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [SELECT Id
-                                                                                    FROM   GetStartedCompletionChecklistState__c
-                                                                                    WHERE  Item_Id__c = :itemId 
-                                                                                    AND    User__c = :UserInfo.getUserId()];
+            List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [
+                SELECT Id
+                FROM   GetStartedCompletionChecklistState__c
+                WHERE  Item_Id__c = :itemId 
+                AND    User__c = :UserInfo.getUserId()
+                WITH SECURITY_ENFORCED
+            ];
             if (isChecked) {
                 markItemAsCompleted(alreadyStoredCompletedItems, itemId);
             } else {
@@ -84,9 +87,11 @@ public with sharing class GS_AdminSetup {
      * @return true if itemId is found, false otherwise
      */
     private static Boolean doesChecklistItemExists(String itemId) {
-        List<GS_Admin_Checklist_Item__mdt> items = [SELECT Id 
-                                                    FROM   GS_Admin_Checklist_Item__mdt
-                                                    WHERE  Id = :itemId];
+        List<GS_Admin_Checklist_Item__mdt> items = [
+            SELECT Id FROM  GS_Admin_Checklist_Item__mdt
+            WHERE  Id = :itemId
+            WITH SECURITY_ENFORCED
+        ];
         return !items.isEmpty();
     }
 
@@ -134,7 +139,9 @@ public with sharing class GS_AdminSetup {
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
                     FROM GS_Admin_Checklist_Items__r
                 ) 
-            FROM GS_Admin_Checklist_Section__mdt ORDER BY Position__c ASC 
+            FROM GS_Admin_Checklist_Section__mdt 
+            WITH SECURITY_ENFORCED
+            ORDER BY Position__c ASC 
         ];
     }
 
@@ -184,9 +191,12 @@ public with sharing class GS_AdminSetup {
     }
 
     private static Set<Id> getMarkedAsCompletedCheckListItemByUser() {
-        List<GetStartedCompletionChecklistState__c> checkedItemList = [SELECT Item_Id__c
-                                                                    FROM GetStartedCompletionChecklistState__c
-                                                                    WHERE User__c = :UserInfo.getUserId()];
+        List<GetStartedCompletionChecklistState__c> checkedItemList = [
+            SELECT Item_Id__c
+            FROM GetStartedCompletionChecklistState__c
+            WHERE User__c = :UserInfo.getUserId()
+            WITH SECURITY_ENFORCED
+        ];
         Set<Id> ids = new Set<Id>();
         for (GetStartedCompletionChecklistState__c checkedItem : checkedItemList) {
             ids.add(checkedItem.Item_Id__c);
