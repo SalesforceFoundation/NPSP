@@ -179,16 +179,16 @@ public class RD2_QueueableService {
     }
 
     /**
-     * @description Queueable service to make callouts to Elevate payment services and cancel commitments 
+     * @description Queueable service to make callouts to Elevate payment services and cancel commitments
      */
     public class CancelCommitmentService implements Queueable, Database.AllowsCallouts {
-        List<RD2_ElevateIntegrationService.CommitmentRD> commitmentRDs;
+        List<RD2_CancelCommitmentService.RecordWrapper> commitmentRDs;
 
         /**
         * @description Constructor
         * @param closedRDs Closed Recurring Donations containing Commitment Id
         */
-        public CancelCommitmentService(List<RD2_ElevateIntegrationService.CommitmentRD> closedRDs) {
+        public CancelCommitmentService(List<RD2_CancelCommitmentService.RecordWrapper> closedRDs) {
             this.commitmentRDs = closedRDs;
         }
 

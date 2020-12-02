@@ -110,23 +110,20 @@ private with sharing class PS_Request_TEST {
     * @description Verifies Cancel Commitment HttpRequest
     */
     @isTest
-    private static void shouldCreateHttpRequestWhenCommitmentIDEndpoint() {
+    private static void shouldCreateHttpRequestWhenCommitmentEndpointWithId() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
         HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.GET)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_ID)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
             .withCommitmentId(COMMITMENT_ID)
             .build();
         Test.stopTest();
 
         final String jsonRequestBody = '';
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + String.format(
-            PS_Request.ENDPOINT_COMMITMENT_ID,
-            new String[]{ COMMITMENT_ID }
-        );
+            + PS_Request.ENDPOINT_COMMITMENT + '/' + COMMITMENT_ID;
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.GET, jsonRequestBody);
     }
@@ -148,7 +145,6 @@ private with sharing class PS_Request_TEST {
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
-                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_ID
                 ) {
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
             }

@@ -558,7 +558,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        List<RD2_ElevateIntegrationService.CommitmentRD> commitmentRDs = new List<RD2_ElevateIntegrationService.CommitmentRD>();
+        List<RD2_CancelCommitmentService.RecordWrapper> commitmentRDs = new List<RD2_CancelCommitmentService.RecordWrapper>();
 
         for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c closedRd = rds[i];
@@ -572,7 +572,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 }
 
                 //send the RD details including the user provided Closed Reason to the commitment service
-                commitmentRDs.add(new RD2_ElevateIntegrationService.CommitmentRD(
+                commitmentRDs.add(new RD2_CancelCommitmentService.RecordWrapper(
                     new npe03__Recurring_Donation__c(
                         Id = closedRd.Id,
                         ClosedReason__c = closedRd.ClosedReason__c,
