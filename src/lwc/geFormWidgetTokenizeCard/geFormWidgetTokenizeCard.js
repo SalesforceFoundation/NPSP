@@ -36,6 +36,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
+    _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 
     @api
@@ -53,11 +54,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
-            const paymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
 
-            if (this.hasValidPaymentMethod(paymentMethod)) {
+            if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
                 if (this.isMounted) {
-                    this.requestSwitchPaymentMethod(paymentMethod);
+                    this.requestSwitchPaymentMethod(this._currentPaymentMethod);
                 } else {
                     this.handleUserEnabledWidget();
                 }
@@ -78,7 +79,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get shouldDisplayEnableButton() {
         if (!this._hasPaymentMethodInTemplate) return true;
-        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod()) {
+        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod(this._currentPaymentMethod)) {
             return true;
         }
         return false;
