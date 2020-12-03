@@ -88,6 +88,20 @@ public with sharing class UTIL_FeatureManagement_TEST {
             new UTIL_FeatureEnablement().isEnabled(UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name()));
     }
 
+    @isTest
+    private static void shouldCallCheckPackageDateValue() {
+        // Skipping the test if it's running in with a namespace
+        // This causes an error en 2gp tests returning the error CANNOT_MODIFY_MANAGED_OBJECT
+        if (!String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageDateValue('P10_Application_Date', Date.newInstance(2020, 01, 01));
+        
+        System.assertEquals(Date.newInstance(2020,01,01), featureMgt.checkPackageDateValue('P10_Application_Date'), 'P10_Application_Date stored different than expected');
+    }
+
     /*******************************************************************************************************************
     * @description Mock for UTIL_FeatureManagement instance
     */

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>50.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>NPSP Get Started Page Label Mapper</masterLabel>
+    <description>Maps Custom Labels to vars that are used to generate the Get Started page sections. These are what the Label Api Names in the GS_AdminChecklistSection and GS_AdminChecklistItem objects reference.</description>
+</LightningComponentBundle>
