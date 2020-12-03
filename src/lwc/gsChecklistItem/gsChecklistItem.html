@@ -1,0 +1,44 @@
+<template>
+    <div class="item-card">
+        <lightning-input type="checkbox" 
+            class="item-checkbox"
+            label="" 
+            data-id={item.id} 
+            onchange={onChange} checked={item.checked}>
+        </lightning-input>
+        <div class="card-image">
+            <img alt=“” if:true={hasImage} src={imgSrc}/>
+        </div>
+        <div class="card-content">
+            <p class="content-time">{item.extraInfo}</p>
+            <h1 class="content-title">{item.title}</h1>
+            <div  class="content-text">
+               {item.description}
+            </div>
+            <div class={footerClass}>
+                <a if:true={hasLink} 
+                   class="slds-m-right_x-small"
+                   href={item.link.href} 
+                   target="_blank">
+                    {item.link.label}
+                </a>
+                <div class="content-footer-aux"
+                    if:true={hasButtons}>
+                    <lightning-button if:true={hasSecondaryBtn} 
+                        variant="brand-outline"
+                        onclick={onClickSecondaryBtn}
+                        title={item.secondaryBtn.label}
+                        label={item.secondaryBtn.label}>
+                    </lightning-button>
+                    <lightning-button if:true={hasPrimaryBtn}
+                        variant="brand"
+                        class="slds-m-left_x-small"
+                        onclick={onClickPrimaryBtn}
+                        title={item.primaryBtn.label}
+                        label={item.primaryBtn.label}>
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
