@@ -30,6 +30,7 @@
 
 .fade-in {
     animation: fade 1s;
+    margin-bottom: 10px;
 }
 
 @keyframes fade {
