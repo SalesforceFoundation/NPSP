@@ -39,15 +39,15 @@ public with sharing class GS_ChecklistSetup {
     private static Set<Id> storedItemsId = null;
     /**
      * @description Returns a list of the checklist section with each subsection.
-     * Each section is defined in GS_Checklist_Section__mdt and each subsection is defined in GS_Checklist_Item__mdt
+     * Each section is defined in GetStartedChecklistSection__mdt and each subsection is defined in GetStartedChecklistItem__mdt
      * @return List<ChecklistSection>
      */
     @AuraEnabled
     public static List<ChecklistSection> getChecklists() {
         storedItemsId = getMarkedAsCompletedCheckListItemByUser();
-        List<GS_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();
+        List<GetStartedChecklistSection__mdt> checklistSections = getSectionsAndSubsections();
         List<ChecklistSection> checklistWrapers = new List<ChecklistSection>();
-        for (GS_Checklist_Section__mdt checklistSection : checklistSections) {
+        for (GetStartedChecklistSection__mdt checklistSection : checklistSections) {
             checklistWrapers.add(wrapChecklistSection(checklistSection));
         }
         return checklistWrapers;
@@ -55,21 +55,21 @@ public with sharing class GS_ChecklistSetup {
 
     /**
      * @description Persist in database if an element is checked or not.
-     * For doing so we use the object GetStartedCompletionChecklistState__c;. 
-     * The object contains two fields: Item_Id and User. 
-     * Which means that a checkbox is selected if an element  
+     * For doing so we use the object GetStartedCompletionChecklistState__c;.
+     * The object contains two fields: Item_Id and User.
+     * Which means that a checkbox is selected if an element
      * it means the element is checked
      * @param  itemId  Id the checklist item id
      * @param  isChecked boolean element is checked of not
      */
     @AuraEnabled
     public static void updateCheckItem(String itemId, Boolean isChecked){
-               
+
         if (doesChecklistItemExists(itemId)) {
             List<GetStartedCompletionChecklistState__c> alreadyStoredCompletedItems = [
                 SELECT Id
                 FROM   GetStartedCompletionChecklistState__c
-                WHERE  Item_Id__c = :itemId 
+                WHERE  Item_Id__c = :itemId
                 AND    User__c = :UserInfo.getUserId()
                 WITH SECURITY_ENFORCED
             ];
@@ -78,17 +78,17 @@ public with sharing class GS_ChecklistSetup {
             } else {
                 unmarkItemAsCompleted(alreadyStoredCompletedItems);
             }
-        }    
+        }
     }
 
     /**
-     * @description Check if exists an GS_Checklist_Item__mdt with the Id
-     * @param  itemId String the id of the GS_Checklist_Item__mdt to be validated
+     * @description Check if exists an GetStartedChecklistItem__mdt with the Id
+     * @param  itemId String the id of the GetStartedChecklistItem__mdt to be validated
      * @return true if itemId is found, false otherwise
      */
     private static Boolean doesChecklistItemExists(String itemId) {
-        List<GS_Checklist_Item__mdt> items = [
-            SELECT Id FROM  GS_Checklist_Item__mdt
+        List<GetStartedChecklistItem__mdt> items = [
+            SELECT Id FROM  GetStartedChecklistItem__mdt
             WHERE  Id = :itemId
             WITH SECURITY_ENFORCED
         ];
@@ -97,16 +97,16 @@ public with sharing class GS_ChecklistSetup {
 
     /**
      * @description Set an Checklist element as checked to the current user.
-     * It's only done if the element was previously marked as "incomplete"(record does not exists). 
+     * It's only done if the element was previously marked as "incomplete"(record does not exists).
      * It will not create duplicated records.
      * @param  checklistStatus List<GetStartedCompletionChecklistState__c> list with the checklistStatus filtered by user and filter id
      * @param  itemId      String the item id to be completed
      */
     private static void markItemAsCompleted(List<GetStartedCompletionChecklistState__c> checklistStatus, String itemId) {
         if (Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.Item_Id__c.isUpdateable() &&
-            Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.User__c.isUpdateable() && 
+            Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.User__c.isUpdateable() &&
             checklistStatus.isEmpty()) {
-            
+
             checklistStatus.add(new GetStartedCompletionChecklistState__c(Item_Id__c = itemId,
                                                                      User__c = UserInfo.getUserId()));
             insert checklistStatus;
@@ -125,38 +125,38 @@ public with sharing class GS_ChecklistSetup {
     }
 
     /**
-     * @description Return the list of GS_Checklist_Section__mdt and his Items 
-     * @return List<GS_Checklist_Section__mdt>
+     * @description Return the list of GetStartedChecklistSection__mdt and his Items
+     * @return List<GetStartedChecklistSection__mdt>
      * @note [ORDER BY Position__c ASC] doesn't work well in the inner query, I need to sort outside SOQL
      */
-    private static List<GS_Checklist_Section__mdt> getSectionsAndSubsections() {
-        return [ 
-            SELECT Id, Title_Label__c, Description_Label__c, Position__c, 
+    private static List<GetStartedChecklistSection__mdt> getSectionsAndSubsections() {
+        return [
+            SELECT Id, Title_Label__c, Description_Label__c, Position__c,
                 (
                     SELECT Id, Title_Label__c, Description_Label__c, Image__c, Position__c,
                         Has_Link__c, Link_Label__c, Link_URL__c, Extra_Info_Label__c,
                         Primary_Button_Type__c, Primary_Button_Label__c, Primary_Button_Value__c,
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
-                    FROM GS_Checklist_Items__r
-                ) 
-            FROM GS_Checklist_Section__mdt 
+                    FROM GetStartedChecklistItems__r
+                )
+            FROM GetStartedChecklistSection__mdt
             WITH SECURITY_ENFORCED
-            ORDER BY Position__c ASC 
+            ORDER BY Position__c ASC
         ];
     }
 
     /**
     * @description This method wrap a checklist section in a apex object to send to UI
-    * @param GS_Checklist_Section__mdt the metdata to wrap
+    * @param GetStartedChecklistSection__mdt the metdata to wrap
     * @return ChecklistSection
     */
-    private static ChecklistSection wrapChecklistSection(GS_Checklist_Section__mdt section) {
+    private static ChecklistSection wrapChecklistSection(GetStartedChecklistSection__mdt section) {
         ChecklistSection cs = new ChecklistSection();
         cs.id = section.Id;
         cs.title = section.Title_Label__c;
         cs.description = section.Description_Label__c;
         cs.pos = section.Position__c.intValue();
-        for (GS_Checklist_Item__mdt item : section.GS_Checklist_Items__r) {
+        for (GetStartedChecklistItem__mdt item : section.GetStartedChecklistItems__r) {
             cs.items.add(wrapChecklistItem(item));
         }
         //I need sort manualy to not work well in SOQL [ORDER BY]
@@ -166,10 +166,10 @@ public with sharing class GS_ChecklistSetup {
 
     /**
     * @description This method wrap a checklist Item in a apex object to send to UI
-    * @param GS_Checklist_Item__mdt the metdata to wrap
+    * @param GetStartedChecklistItem__mdt the metdata to wrap
     * @return ChecklistItem
     */
-    private static ChecklistItem wrapChecklistItem(GS_Checklist_Item__mdt item) {
+    private static ChecklistItem wrapChecklistItem(GetStartedChecklistItem__mdt item) {
         ChecklistItem ci = new ChecklistItem();
         ci.Id = item.Id;
         ci.title = item.Title_Label__c;
@@ -205,7 +205,7 @@ public with sharing class GS_ChecklistSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Checklist_Section__mdt information
+    * @description This Class is to wrap GetStartedChecklistSection__mdt information
     */
     public class ChecklistSection {
         /*
@@ -241,7 +241,7 @@ public with sharing class GS_ChecklistSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Checklist_Item__mdt information
+    * @description This Class is to wrap GetStartedChecklistItem__mdt information
     */
     public class ChecklistItem implements Comparable {
         /**
@@ -320,7 +320,7 @@ public with sharing class GS_ChecklistSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Checklist_Item__mdt Link information
+    * @description This Class is to wrap GetStartedChecklistItem__mdt Link information
     */
     public class ChecklistItemLink {
         /**
@@ -348,7 +348,7 @@ public with sharing class GS_ChecklistSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Checklist_Item__mdt Buttons information
+    * @description This Class is to wrap GetStartedChecklistItem__mdt Buttons information
     */
     public class ChecklistItemButton {
         /**
@@ -363,7 +363,7 @@ public with sharing class GS_ChecklistSetup {
         */
         @AuraEnabled
         public String label;
-        /** 
+        /**
         * @description Value use to make the button action
         * @type String
         */

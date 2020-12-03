@@ -35,7 +35,7 @@
 */
 @isTest
 private with sharing class GS_ChecklistSetup_TEST {
-  
+
     /**
     *  @description This test data if wraped in GS_ChecklistSetup.getChecklist are the same in the metadata
     */
@@ -43,17 +43,17 @@ private with sharing class GS_ChecklistSetup_TEST {
     static void getChecklistsTest() {
 
         Id firstItemId = [SELECT Id, Position__c
-                          FROM GS_Checklist_Item__mdt
+                          FROM GetStartedChecklistItem__mdt
                           LIMIT 1].Id;
 
-        GetStartedCompletionChecklistState__c checkedItem = new GetStartedCompletionChecklistState__c(Item_Id__c = firstItemId, 
+        GetStartedCompletionChecklistState__c checkedItem = new GetStartedCompletionChecklistState__c(Item_Id__c = firstItemId,
                                                                                                 User__c = UserInfo.getUserId());
         insert checkedItem;
 
         List<GS_ChecklistSetup.ChecklistSection> checklists = GS_ChecklistSetup.getChecklists();
-        List<GS_Checklist_Section__mdt> metadataSections = [ 
-            SELECT Id, Label, Position__c 
-            FROM GS_Checklist_Section__mdt 
+        List<GetStartedChecklistSection__mdt> metadataSections = [
+            SELECT Id, Label, Position__c
+            FROM GetStartedChecklistSection__mdt
             ORDER BY Position__c ASC
         ];
 
@@ -63,30 +63,30 @@ private with sharing class GS_ChecklistSetup_TEST {
             checklists.size(),
             'The checklist section does not have the same size than metadata in org'
         );
-        
+
         for (Integer i = 0; i < metadataSections.size(); i++) {
-   
+
             //Order in sub query doesn't work well
-            GS_Checklist_Section__mdt metadataSection = metadataSections[i];
+            GetStartedChecklistSection__mdt metadataSection = metadataSections[i];
             GS_ChecklistSetup.ChecklistSection checklist = checklists[i];
             System.assertEquals(
-                metadataSection.Id, 
+                metadataSection.Id,
                 checklist.Id,
                 'The metadataSection and Checklist are not in the same orden'
             );
-            List<GS_Checklist_Item__mdt> metadataSectionItems = [
+            List<GetStartedChecklistItem__mdt> metadataSectionItems = [
                 SELECT Id, Position__c
-                FROM GS_Checklist_Item__mdt
+                FROM GetStartedChecklistItem__mdt
                 WHERE GS_Checklist_Section__c = :metadataSection.Id
                 ORDER BY Position__c ASC
             ];
             System.assertEquals(
-                metadataSectionItems.size(), 
+                metadataSectionItems.size(),
                 checklist.items.size(),
-                'The checklist ' + metadataSection.Label + ' don\'t have same children size' 
+                'The checklist ' + metadataSection.Label + ' don\'t have same children size'
             );
             for (Integer j = 0; j < checklist.items.size(); j++) {
-                GS_Checklist_Item__mdt metadataItem = metadataSectionItems[j];
+                GetStartedChecklistItem__mdt metadataItem = metadataSectionItems[j];
                 GS_ChecklistSetup.ChecklistItem item = checklist.items[j];
 
                 System.assertEquals(
@@ -102,8 +102,8 @@ private with sharing class GS_ChecklistSetup_TEST {
 
     @isTest
     private static void persistTest() {
-        List<GS_Checklist_Item__mdt> metadataSectionItems = [SELECT Id, Position__c
-                                                                   FROM   GS_Checklist_Item__mdt
+        List<GetStartedChecklistItem__mdt> metadataSectionItems = [SELECT Id, Position__c
+                                                                   FROM   GetStartedChecklistItem__mdt
                                                                    ORDER BY Position__c ASC LIMIT 1];
         System.assertEquals(false, metadataSectionItems.isEmpty(), 'Items should not be empty');
         GS_ChecklistSetup.updateCheckItem('invalid', true);
@@ -115,7 +115,7 @@ private with sharing class GS_ChecklistSetup_TEST {
         GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, true);
         adminStatus = [SELECT Id,
                               Item_Id__c,
-                              User__c                                   
+                              User__c
                        FROM   GetStartedCompletionChecklistState__c];
         System.assertEquals(1, adminStatus.size(), 'One element should have been created');
         System.assertEquals(metadataSectionItems[0].id, adminStatus[0].Item_Id__c,'Id should have been the same');
@@ -123,13 +123,13 @@ private with sharing class GS_ChecklistSetup_TEST {
         GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, true);
         adminStatus = [SELECT Id,
                               Item_Id__c,
-                              User__c                                   
+                              User__c
                        FROM   GetStartedCompletionChecklistState__c];
         System.assertEquals(1, adminStatus.size(), 'No duplicated elements are allowed');
         GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, false);
         adminStatus = [SELECT Id,
                               Item_Id__c,
-                              User__c                                   
+                              User__c
                        FROM   GetStartedCompletionChecklistState__c];
         System.assertEquals(true, adminStatus.isEmpty(), 'Item is not unchecked');
     }
