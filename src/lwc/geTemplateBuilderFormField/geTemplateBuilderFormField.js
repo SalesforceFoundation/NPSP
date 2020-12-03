@@ -197,6 +197,10 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return !this.isWidget && !isCheckboxToCheckbox(this.fieldMapping);
     }
 
+    get showDefaultValueInput() {
+        return !isCheckboxToCheckbox(this.fieldMapping);
+    }
+
     get isTrueFalsePicklist() {
         return isTrueFalsePicklist(this.fieldMapping);
     }

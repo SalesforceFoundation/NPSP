@@ -19,19 +19,21 @@
                 </template>
                 <template if:true={shouldRender}>
                     <div class="slds-size_5-of-12 slds-p-right_small">
-                        <c-util-input type={field.dataType}
-                                      form-field-type={field.elementType}
-                                      field-api-name={fieldApiName}
-                                      object-api-name={targetObjectApiName}
-                                      is-true-false-picklist={isTrueFalsePicklist}
-                                      label={field.customLabel}
-                                      default-value={field.defaultValue}
-                                      value={field.value}
-                                      variant="label-hidden"
-                                      onchangevalue={handleOnChange}
-                                      widget-name={name}
-                                      data-qa-locator={qaLocatorInputDefaultValue}>
-                        </c-util-input>
+                        <template if:true={showDefaultValueInput}>
+                            <c-util-input type={field.dataType}
+                                          form-field-type={field.elementType}
+                                          field-api-name={fieldApiName}
+                                          object-api-name={targetObjectApiName}
+                                          is-true-false-picklist={isTrueFalsePicklist}
+                                          label={field.customLabel}
+                                          default-value={field.defaultValue}
+                                          value={field.value}
+                                          variant="label-hidden"
+                                          onchangevalue={handleOnChange}
+                                          widget-name={name}
+                                          data-qa-locator={qaLocatorInputDefaultValue}>
+                            </c-util-input>
+                        </template>
                     </div>
                 <template if:true={isWidget}>
                     <div class="slds-size_5-of-12 slds-p-right_small"></div>
