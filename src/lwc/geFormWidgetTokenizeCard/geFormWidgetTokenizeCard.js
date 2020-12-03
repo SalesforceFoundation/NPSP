@@ -68,6 +68,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             } else {
                 this.handleUserDisabledWidget();
             }
+        } else {
+            this._currentPaymentMethod = CREDIT_CARD;
         }
     }
 
@@ -209,9 +211,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestMount() {
-        const paymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        tokenHandler.mount(iframe, paymentMethod, this.handleError, this.resolveMount);
+        tokenHandler.mount(iframe, this._currentPaymentMethod, this.handleError, this.resolveMount);
     }
 
     resolveMount = () => {
