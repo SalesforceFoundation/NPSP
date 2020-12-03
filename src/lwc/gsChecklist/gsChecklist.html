@@ -1,0 +1,26 @@
+<template>
+    <article class="slds-setup-assistant__step">
+        <c-accordion-section>
+            <div slot="clickableHeaderSection"
+                class="slds-m-left_medium">
+                <c-gs-accordion-label
+                    number={group.pos}
+                    title={group.title}
+                    total-elements={group.items.length}
+                    checked-elements={checkedItems}>
+                </c-gs-accordion-label>
+            </div>
+            <div slot="extraInfoSection">
+                <p class="slds-m-left_x-large slds-p-left_large">{group.description}</p>
+            </div>
+            <div class="slds-m-left_x-large">
+                <c-gs-accordion-section open="true" expanded-id={group.id}>
+                    <template  for:each={group.items} for:item="item">
+                        <c-gs-checklist-item key={item.id} item={item} onchecked={handleChecked} onunchecked={handleUnchecked}>
+                        </c-gs-checklist-item>
+                    </template>
+                </c-gs-accordion-section>
+            </div>
+        </c-accordion-section>
+    </article>
+</template>
