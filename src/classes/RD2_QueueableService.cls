@@ -208,7 +208,7 @@ public class RD2_QueueableService {
                 return;
             }
 
-            new RD2_ElevateIntegrationService()
+            new RD2_CancelCommitmentService()
                 .cancelCommitments(commitmentRDs);
         }
     }

@@ -256,15 +256,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /**
-    * @description Cancels commitments in Elevate connected to the closed Recurring Donations
-    * @param closedRDs Closed RDs with the user specified closed reason
-    * @return void
-    */
-    public void cancelCommitments(List<RD2_CancelCommitmentService.RecordWrapper> closedRDs) {
-        new RD2_CancelCommitmentService().cancelCommitments(closedRDs);
-    }
-
-    /**
     * @description Builds and creates logs for errors and exceptions.
     * The current logger version is the ERR_Handler wrapper.
     */

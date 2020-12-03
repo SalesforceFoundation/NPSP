@@ -89,7 +89,7 @@ public without sharing class RD2_CancelCommitmentService {
 
                 //Add the Recurring Donation to update list if it cannot be retried,
                 //it is already cancelled or the cancel succeeded
-                if (isDone(record)) {
+                if (record.isDone) {
                     rdsToUpdate.add(record.getRecurringDonation());
                     continue;
                 }
@@ -300,15 +300,6 @@ public without sharing class RD2_CancelCommitmentService {
         ) {
             closedRecord.isConfirmationRequired = false;
         }
-    }
-
-    /**
-    * @description Returns true if isDone flag has been set on closedRecord.
-    * @param closedRecord RecordWrapper
-    * @return Boolean
-    */
-    private Boolean isDone(RecordWrapper closedRecord) {
-        return closedRecord.isDone;
     }
 
     /**
