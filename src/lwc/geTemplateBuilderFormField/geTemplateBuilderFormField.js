@@ -27,7 +27,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     isBatchHeaderField = false;
     hasRendered = false;
     hasPermission = hasViewSetup;
-    _showDefaultValueInput = true;
+    shouldRender = true;
 
 
     /*******************************************************************************
@@ -83,7 +83,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
             if (!hasViewSetup) {
                 this.field = {};
-                this.showDefaultValueInput = false;
+                this.shouldRender = false;
             }
 
             this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
@@ -195,17 +195,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     get showRequiredCheckbox() {
         return !this.isWidget && !isCheckboxToCheckbox(this.fieldMapping);
-    }
-
-    get showDefaultValueInput() {
-        if(isCheckboxToCheckbox(this.fieldMapping)) {
-            return false;
-        }
-        return this._showDefaultValueInput;
-    }
-
-    set showDefaultValueInput(value) {
-        this._showDefaultValueInput;
     }
 
     get isTrueFalsePicklist() {
