@@ -27,17 +27,16 @@
                         </div>
                     </lightning-layout-item>
 
-                    <template if:false={isDisabled}>
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input name="cardholderName"
-                                             label={labels.cardholderNameLabel}
-                                             data-qa-locator="input Elevate Cardholder Name"
-                                             data-id="cardholderName"
-                            ></lightning-input>
-                        </lightning-layout-item>
-                    </template>
-
                     <lightning-layout-item size='12' padding='around-small'>
+                        <template if:false={isDisabled}>
+                            <lightning-layout-item size="6">
+                                <lightning-input name="cardholderName"
+                                                 label={labels.cardholderNameLabel}
+                                                 data-qa-locator="input Elevate Cardholder Name"
+                                                 data-id="cardholderName"
+                                ></lightning-input>
+                            </lightning-layout-item>
+                        </template>
                         <template if:true={isDisabled}>
                             <p class='fade-in'>
                                 <span class='slds-content-message'>

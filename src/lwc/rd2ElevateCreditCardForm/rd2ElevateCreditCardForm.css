@@ -6,6 +6,7 @@
 
 .iframe-container {
     position: relative;
+    margin-top: 8px;
 }
 
 .credit-card-container {
