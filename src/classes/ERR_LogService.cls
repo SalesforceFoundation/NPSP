@@ -50,11 +50,21 @@ public inherited sharing class ERR_LogService {
     }
     
 
+    /**
+    * @description Retrieves all errors for the specified record
+    * @param recordId Record Id
+    * @return List<Error__c>
+    */
     public List<Error__c> getErrors(Id recordId) {
         return logFinder.getErrors(recordId);
     }
 
 
+    /**
+    * @description Retrieves the latest error (if any) for the specified record
+    * @param recordId Record Id
+    * @return Error__c
+    */
     public Error__c getLatestError(Id recordId) {
         return logFinder.getLatestError(recordId);
     }
@@ -79,7 +89,8 @@ public inherited sharing class ERR_LogService {
             return [
                 SELECT 
                     Name,
-                    Context_Type__c,                
+                    Context_Type__c, 
+                    Related_Record_ID__c,               
                     Datetime__c,
                     Error_Type__c,
                     Full_Message__c
@@ -96,7 +107,7 @@ public inherited sharing class ERR_LogService {
          */
         private Error__c getLatestError(Id recordId) {
             List<Error__c> errors = [
-                SELECT Full_Message__c, CreatedDate
+                SELECT Related_Record_ID__c, Full_Message__c, CreatedDate
                 FROM Error__c
                 WHERE Related_Record_ID__c = :recordId
                 ORDER BY CreatedDate DESC

@@ -34,6 +34,11 @@
 * @description Displays errors for a specified record or for all records
 */
 public inherited sharing class ERR_Log_CTRL {
+    public static String KEY_SOBJECT_TYPE = 'sObjectType';
+    public static String KEY_SOBJECT_LABEL = 'sObjectLabelPlural';
+    public static String KEY_ACCESS = 'hasAccess';
+    public static String KEY_RECORD_NAME = 'recordName';
+    public static String KEY_DATA = 'data';
 
     /**
     * @description Error log service
@@ -49,32 +54,76 @@ public inherited sharing class ERR_Log_CTRL {
         set;
     }
 
+    /***
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    /**
+     * @description Returns data to help render record Error Log page
+     * @param recordId Record Id
+     * @return Map<String, Object>
+     */
     @AuraEnabled(cacheable=false)
     public static Map<String, Object> getData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
          try {
             SObjectType sObjType = recordId.getSObjectType();
-            data.put('sObjectType', String.valueOf(sObjType));
-            data.put('sObjectTypeLabelPlural', sObjType.getDescribe().getLabelPlural());
+            data.put(KEY_SOBJECT_TYPE, String.valueOf(sObjType));
+            data.put(KEY_SOBJECT_LABEL, sObjType.getDescribe().getLabelPlural());
 
-            String soql = new UTIL_Query()
-                .withSelectFields(new String[]{ 'Name' })
-                .withFrom(String.valueOf(sObjType))
-                .withWhere('Id = :recordId')
-                .build();
+            Boolean hasAccess = hasAccess(sObjType);
+            data.put(KEY_ACCESS, hasAccess);
 
-            List<SObject> records = Database.query(soql);
-            if (records != null && !records.isEmpty()) {
-                data.put('recordName', (String) records[0].get('Name'));
+            if (hasAccess) {
+                data.put(KEY_RECORD_NAME, getRecordName(recordId, sObjType));
+                data.put(KEY_DATA, logService.getErrors(recordId));
             }
-
-            data.put('data', logService.getErrors(recordId));
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
         }
 
         return data;
+    }
+
+    /**
+     * @description Determines if user has permissions to view the record
+     * @param sObjType Record SObject Type
+     * @return Boolean
+     */
+    private static Boolean hasAccess(SObjectType sObjType) {
+        return permissions.canRead(sObjType)
+            && permissions.canRead(Error__c.getSObjectType());
+    }
+
+    /**
+     * @description Returns record name
+     * @param recordId Record Id
+     * @param sObjType Record SObject Type
+     * @return String
+     */
+    private static String getRecordName(Id recordId, SObjectType sObjType) {
+        String soql = new UTIL_Query()
+            .withSelectFields(new String[]{ 'Name' })
+            .withFrom(String.valueOf(sObjType))
+            .withWhere('Id = :recordId')
+            .build();
+
+        List<SObject> records = Database.query(soql);
+
+        return records == null || records.isEmpty()
+            ? null
+            : (String) records[0].get('Name');
     }
     
 }

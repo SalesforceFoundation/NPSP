@@ -7,6 +7,7 @@ import getData from '@salesforce/apex/ERR_Log_CTRL.getData';
 import title from '@salesforce/label/c.ERR_RecordLogTitle';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
+import accessDeniedMessage from '@salesforce/label/c.addrCopyConAddBtnFls';
 import contactSystemAdmin from '@salesforce/label/c.commonContactSystemAdminMessage';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
@@ -31,6 +32,7 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         title,
         loadingMessage,
         insufficientPermissions,
+        accessDeniedMessage,
         contactSystemAdmin,
         commonUnknownError,
         commonNoItems,
@@ -44,6 +46,7 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
 
     @track isLoading = true;
     @track error = {};
+    @track hasAccess;
 
     @track recordInfo = {};
     @track columns = [];
@@ -61,9 +64,11 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         if (this.recordId) {
             getData({ recordId: this.recordId })
                 .then(response => {
+                    this.hasAccess = response.hasAccess;
+
                     this.recordInfo = {
                         sObjectType: response.sObjectType,
-                        sObjectTypeLabelPlural: response.sObjectTypeLabelPlural,
+                        sObjectLabelPlural: response.sObjectLabelPlural,
                         name: response.recordName
                     };
 
@@ -75,6 +80,7 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                             log[ERROR_LOG_URL_FIELD] = '/' + log['Id'];
                         });
                     }
+
                 })
                 .catch((error) => {
                     this.handleError(error);
@@ -150,10 +156,15 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
      * @description Checks if the form still has outstanding data to load
      */
     checkLoading() {
-        const waitingForData = isUndefined(this.data) || isNull(this.data);
-        const waitingForObjectInfo = this.columns.length === 0;
+        if (this.hasAccess === false) {
+            this.isLoading = false;
 
-        this.isLoading = waitingForData || waitingForObjectInfo;
+        } else {
+            const waitingForData = isUndefined(this.data) || isNull(this.data);
+            const waitingForObjectInfo = this.columns.length === 0;
+
+            this.isLoading = waitingForData || waitingForObjectInfo;
+        }
     }
 
     /**
@@ -266,4 +277,9 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     get qaLocatorNoItemsMessage() {
         return `text No Items Message`;
     }
+
+    get qaLocatorNoAccessIllustration() {
+        return `illustration NoAccess`;
+    }
+
 }
