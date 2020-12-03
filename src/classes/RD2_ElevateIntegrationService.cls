@@ -42,14 +42,9 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * from a temp value to the actual value.
      */
     public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
-    
+
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
-
-    /***
-     * @description Max length of a string to be stored in a picklist field
-     */
-    private static final Integer MAX_PICKLIST_FIELD_LEN = 255;
 
     /***
      * @description CurrencyIsoCode field name
@@ -259,150 +254,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
             }
         }
     }
-
-
-    /**
-    * @description Cancels commitments in Elevate connected to the closed Recurring Donations
-    * @param closedRDs Closed RDs with the user specified closed reason
-    * @return void
-    */
-    public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
-        new CancelCommitmentService().cancelCommitments(closedRDs);
-    }
-
-    /**
-    * @description Handles cancelation of commitments in Elevate.
-    * If the commitment cannot be closed, the RD closed reason
-    * is set based on the Elevate error response.
-    */
-    public without sharing class CancelCommitmentService {
-
-        /**
-        * @description Sends requests and constructs the response
-        */
-        private UTIL_Http.RequestService requestService {
-            get {
-                if (requestService == null) {
-                    requestService = new UTIL_Http.RequestService();
-                }
-                return requestService;
-            }
-            set;
-        }
-
-        /**
-        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
-        * Sets RD closed reason back to user specified reason and insert any error.
-        * @param closedRDs Closed RDs with the user specified closed reason
-        * @return void
-        */
-        public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
-            Logger logger = new Logger();
-            List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
-
-            for (npe03__Recurring_Donation__c rd : closedRDs) {
-                responses.add(sendRequest(rd.CommitmentId__c));
-            }
-
-            for (Integer i = 0; i < responses.size(); i++) {
-                setClosedReason(closedRDs[i], responses[i], logger);
-            }
-
-            List<Database.SaveResult> dmlResults = Database.update(closedRDs, false);
-            logger.addErrors(dmlResults, closedRDs);
-
-            logger.processErrors();
-        }
-
-        /**
-        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
-        * @param closedRDs Closed RDs with the user specified closed reason
-        * @return UTIL_Http.Response
-        */
-        public UTIL_Http.Response sendRequest(String commitmentId) {
-            UTIL_Http.Response response;
-
-            try {
-                HttpRequest request = buildCancelRequest(commitmentId);
-
-                response = requestService.sendRequest(request);
-            } catch (Exception ex) {
-                response = requestService.buildErrorResponse(ex);
-            }
-
-            return response;
-        }
-
-        /**
-        * @description Builds a cancel commitment request for the provided commitment Id
-        * @param commitmentId Elevate recurring commitment Id
-        * @return HttpRequest
-        */
-        private HttpRequest buildCancelRequest(String commitmentId) {
-            return new PS_Request.Builder()
-                .withCommitmentId(commitmentId)
-                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
-                .withMethod(UTIL_Http.Method.POST)
-                .build();
-        }
-
-        /**
-        * @description Sets closed reason based on the cancel commitment response.
-        * Recurring Donations already contain user specified closed reason value,
-        * so the value is restored in database when:
-        * - the commitment is sucessfully cancelled,
-        * - the commitment cannot be found in Elevate,
-        * - the request results in data conflict which is usually
-        *   returned when the commitment is already cancelled.
-        *
-        * @param rd Recurring Donation
-        * @param response Elevate API response
-        * @param logger Error log container
-        * @return void
-        */
-        private void setClosedReason(npe03__Recurring_Donation__c rd, UTIL_Http.Response response, Logger logger) {
-
-            if (isCancelled(response)) {
-                return;
-            }
-
-            String messages = response.getErrorMessages();
-            logger.addError(rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
-
-            rd.ClosedReason__c = messages.abbreviate(MAX_PICKLIST_FIELD_LEN);
-        }
-
-        /**
-        * @description Checks if the commitment has been successfully cancelled in Elevate
-        * @param response Elevate API response
-        * @return Boolean
-        */
-        private Boolean isCancelled(UTIL_Http.Response response) {
-            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_OK;
-        }
-
-        /**
-        * @description Checks if the commitment has not been found in Elevate
-        * based on the provided commitment Id
-        * @param response Elevate API response
-        * @return Boolean
-        */
-        private Boolean isNotFound(UTIL_Http.Response response) {
-            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_NOT_FOUND;
-        }
-
-        /**
-        * @description Checks if the commitment has data conflicted error response.
-        * Possible reason might be that the commitment has already been cancelled.
-        * @param response Elevate API response
-        * @return Boolean
-        */
-        private Boolean isDataConflict(UTIL_Http.Response response) {
-            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
-        }
-    }
-
-
 
     /**
     * @description Builds and creates logs for errors and exceptions.
