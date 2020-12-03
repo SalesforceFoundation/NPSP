@@ -393,6 +393,8 @@
         <members>PS_Request_TEST</members>
         <members>RD2_ApiService</members>
         <members>RD2_ApiService_TEST</members>
+        <members>RD2_CancelCommitmentService</members>
+        <members>RD2_CancelCommitmentService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -660,8 +662,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>RD2_CancelCommitmentService</members>
-        <members>RD2_CancelCommitmentService_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
