@@ -1,0 +1,57 @@
+<template>
+    <section class={classes}>
+        <!-- HEADER -->
+        <div>
+            <lightning-layout vertical-align="start" 
+                multiple-rows="true">
+                <!--CHEVRON-->
+                <lightning-layout-item
+                    flexibility="auto, no-grow"
+                    class="slds-align_absolute-center slds-m-vertical_x-small"
+                >
+                    <button
+                        onclick={handleToggle}
+                        aria-controls="accordion-details"
+                        aria-expanded={isOpen}
+                        class="slds-align-middle slds-text-link_reset slds-button"
+                    >
+                        <lightning-icon
+                            icon-name={toggleIcon}
+                            alternative-text={toggleInstructions}
+                            size="x-small"
+                        ></lightning-icon>
+                    </button>
+                </lightning-layout-item>
+
+                <!--CLICKABLE SECTION-->
+                <lightning-layout-item
+                    onclick={handleToggle}
+                    flexibility="auto"
+                    class="slds-grid_vertical-align-center clickable-header"
+                >
+                    <slot name="clickableHeaderSection"></slot>
+                </lightning-layout-item>
+
+                <!--NON-CLICKABLE SECTION FLOATS RIGHT-->
+                <lightning-layout-item
+                    flexibility="auto, no-grow"
+                    alignment-bump="left"
+                    class="slds-grid_vertical-align-center"
+                >
+                    <slot name="staticHeaderSection"></slot>
+                </lightning-layout-item>
+
+                <lightning-layout-item
+                    padding="horizontal-large"
+                    size="12">
+                    <slot name="extraInfoSection"></slot>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+
+        <!--BODY-->
+        <div class="slds-accordion__content slds-align-middle" id="accordion-details">
+            <slot></slot>
+        </div>
+    </section>
+</template>
