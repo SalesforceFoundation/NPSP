@@ -6437,7 +6437,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text indicating payment isn't being charged</shortDescription>
-        <value>You aren't entering payment information to be processed by Elevate.</value>
+        <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
@@ -6629,7 +6629,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link to toggle payment processing off</shortDescription>
-        <value>Don't enter payment information.</value>
+        <value>Don&apos;t enter payment information.</value>
     </labels>
     <labels>
         <fullName>geButtonSaveNewGift</fullName>
