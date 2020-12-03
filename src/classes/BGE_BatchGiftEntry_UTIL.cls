@@ -293,7 +293,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static void checkFieldPermissions(String objectName, List<String> fieldNamesToCheck) {
         List<DescribeFieldResult> fieldResults = new List<DescribeFieldResult>();
         for (String fieldName : fieldNamesToCheck) {
-            if (fieldName.contains('__r')) {
+            if (fieldName.endsWith('__r')) {
                 fieldName = fieldName.substringBefore('__r') + '__c';
             }
 
