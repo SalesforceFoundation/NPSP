@@ -195,7 +195,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Prevents Recurring Donation update when
     * its schedule related fields are changed and the RD has an active Pause
-    * @param rd The Recurring Donation to validate
+    * @param rdRecord The Recurring Donation to validate
     * @param oldRd The old Recurring Donation
     * @param schedules All active Schedules on the Recurring Donation
     * @return void
@@ -323,6 +323,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * If the RD is reopened, clear out the End Date
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
+    * @param triggerAction TDTM_Runnable.Action
     */
     private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
         for (Integer i = 0; i < rds.size(); i++) {
@@ -557,7 +558,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        List<npe03__Recurring_Donation__c> commitmentRDs = new List<npe03__Recurring_Donation__c>();
+        List<RD2_CancelCommitmentService.RecordWrapper> commitmentRDs = new List<RD2_CancelCommitmentService.RecordWrapper>();
 
         for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c closedRd = rds[i];
@@ -571,19 +572,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 }
 
                 //send the RD details including the user provided Closed Reason to the commitment service
-                commitmentRDs.add(new npe03__Recurring_Donation__c(
-                    Id = closedRd.Id,
-                    ClosedReason__c = closedRd.ClosedReason__c,
-                    CommitmentId__c = closedRd.CommitmentId__c
+                commitmentRDs.add(new RD2_CancelCommitmentService.RecordWrapper(
+                    new npe03__Recurring_Donation__c(
+                        Id = closedRd.Id,
+                        ClosedReason__c = closedRd.ClosedReason__c,
+                        CommitmentId__c = closedRd.CommitmentId__c
+                    )
                 ));
 
                 // update the closed RD reason to Elevate pending status
                 closedRd.ClosedReason__c = System.Label.RD2_ElevatePendingStatus;
-
-                if (commitmentRDs.size() >= Limits.getLimitCallouts()) {
-                    System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(commitmentRDs));
-                    commitmentRDs.clear();
-                }
             }
         }
 
