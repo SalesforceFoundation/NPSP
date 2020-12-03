@@ -5,10 +5,6 @@
             <componentName>gsVideoHeader</componentName>
         </componentInstances>
         <componentInstances>
-            <componentInstanceProperties>
-                <name>belongsTo</name>
-                <value>Admin</value>
-            </componentInstanceProperties>
             <componentName>gsChecklistSetup</componentName>
         </componentInstances>
         <name>region1</name>
@@ -23,10 +19,6 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
-            <componentInstanceProperties>
-                <name>belongsTo</name>
-                <value>Admin</value>
-            </componentInstanceProperties>
             <componentName>gsResources</componentName>
         </componentInstances>
         <name>region3</name>

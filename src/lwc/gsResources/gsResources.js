@@ -18,12 +18,6 @@ import gsResourcesPartnersLink from '@salesforce/label/c.gsResourcesItemPartners
 export default class gsResources extends LightningElement {
 
     /**
-    * @description The kind of users is belongs this components
-    * @type string
-    */
-   @api belongsTo = "Admin";
-
-    /**
     * Return the Resource list title to display in UI
     * @return      Title text
     * @see         Label

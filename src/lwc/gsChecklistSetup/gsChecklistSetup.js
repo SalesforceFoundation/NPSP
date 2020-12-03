@@ -12,12 +12,6 @@ export default class gsChecklistSetup extends LightningElement {
     * @description A list of checklists to render
     */
     @track checklists = [];
-
-    /**
-    * @description The kind of users is belongs this components
-    * @type string
-    */
-    @api belongsTo = "Admin";
     
     connectedCallback() {
         getChecklists()
