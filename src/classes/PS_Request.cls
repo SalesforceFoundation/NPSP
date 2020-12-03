@@ -82,15 +82,6 @@ public inherited sharing class PS_Request {
     }
 
     /***
-    * @description Returns payments service endpoint URL
-    * @param commitmentId Elevate recurring commitment Id
-    * @return String
-    */
-    public String getCancelCommitmentEndpoint(String commitmentId) {
-        return new Builder().getEndpoint(ElevateEndpoint.COMMITMENT_CANCEL, commitmentId);
-    }
-
-    /***
     * @description Builds an HttpRequest
     */
     public class Builder {
@@ -231,10 +222,16 @@ public inherited sharing class PS_Request {
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
+                if (String.isNotBlank(commitmentId)) {
+                    value += '/' + commitmentId;
+                }
+
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,
-                    new String[]{ commitmentId }
+                    new String[]{
+                        commitmentId
+                    }
                 );
             }
 
