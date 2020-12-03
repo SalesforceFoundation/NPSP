@@ -1,0 +1,37 @@
+img {
+    margin-bottom: 24px;
+    object-fit:fill;
+    margin-top: 0px;
+}
+
+.slds-button_outline-brand {
+    border-color: #7614A1;
+    color: #7614A1;
+}
+
+.slds-button_brand {
+    background-color: #7614A1;
+    border-color: #7614A1;
+}
+
+.container {
+    background-color:white;
+    box-shadow: 1px -5px 3px -3px #b0adab7a;
+    border-radius: 5px;
+    border: solid 1px #DDDBDA;
+}
+
+.button-padding {
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-bottom: 24px;
+    width: calc(100% - 48px);
+}
+
+.modal-text {
+    color: #312D2B;
+}
+
+p {
+    color: #2B2826
+}
