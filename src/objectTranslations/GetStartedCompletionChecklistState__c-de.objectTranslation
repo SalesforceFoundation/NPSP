@@ -3,53 +3,52 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Getting_Started_Completed Checklist Settings --></value>
+        <value><!-- Get Started Completion Checklist State --></value>
     </caseValues>
     <fields>
-        <help><!-- The Checklist Item Id that is completed --></help>
         <label><!-- Item Id --></label>
         <name>Item_Id__c</name>
     </fields>
     <fields>
-        <help><!-- The User that has checked the item --></help>
         <label><!-- User --></label>
         <name>User__c</name>
-        <relationshipLabel><!-- Getting Started Completed Checklists --></relationshipLabel>
+        <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
     </fields>
     <gender><!-- Neuter --></gender>
+    <nameFieldLabel><!-- Get Started Completion Checklist State N --></nameFieldLabel>
 </CustomObjectTranslation>
