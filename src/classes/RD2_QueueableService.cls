@@ -40,6 +40,7 @@ public class RD2_QueueableService {
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
      * @param rdId Recurring Donation Id
+     * @param isScheduleChanged Boolean indicated if the schedule has changed
      * @return void
      */
     public static void enqueueOppEvalService(Id rdId, Boolean isScheduleChanged) { 
@@ -178,30 +179,37 @@ public class RD2_QueueableService {
     }
 
     /**
-     * @description Queueable service to make callouts to Elevate payment services and cancel commitments 
+     * @description Queueable service to make callouts to Elevate payment services and cancel commitments
      */
     public class CancelCommitmentService implements Queueable, Database.AllowsCallouts {
-        List<npe03__Recurring_Donation__c> closedRDs;
+        List<RD2_CancelCommitmentService.RecordWrapper> commitmentRDs;
 
         /**
         * @description Constructor
         * @param closedRDs Closed Recurring Donations containing Commitment Id
         */
-        public CancelCommitmentService(List<npe03__Recurring_Donation__c> closedRDs) {
-            this.closedRDs = closedRDs;
+        public CancelCommitmentService(List<RD2_CancelCommitmentService.RecordWrapper> closedRDs) {
+            this.commitmentRDs = closedRDs;
         }
 
         /**
          * @description Cancel Commitments in Elevate payment services
-         * @param context queuableContext
+         * @param context queueableContext
          */
         public void execute(QueueableContext context) {
-            if (closedRDs == null || closedRDs.isEmpty()) {
+            executeCancelCommitments();
+        }
+
+        /**
+         * @description Cancel Commitments in Elevate payment services
+         */
+        public void executeCancelCommitments() {
+            if (commitmentRDs == null || commitmentRDs.isEmpty()) {
                 return;
             }
 
-            new RD2_ElevateIntegrationService()
-                .cancelCommitments(closedRDs);
+            new RD2_CancelCommitmentService()
+                .cancelCommitments(commitmentRDs);
         }
     }
 }
