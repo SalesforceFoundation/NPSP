@@ -66,7 +66,7 @@ public with sharing class GS_ApplicationStatusController_TEST {
         // This test relies on mocked org information data in the Controller class. That class will only apply mocked data
         // when the current org is a Sandbox org (by checking the Organization object) and there is no package 
         // namespace. As a result, this test has to be skipped for other types of orgs to avoid an error.
-        if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
+        if (!UTIL_Namespace.isScratchOrg() || !String.isBlank(UTIL_Namespace.getNamespace())) {
             return;
         }
 
