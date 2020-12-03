@@ -656,6 +656,8 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>RD2_CancelCommitmentService</members>
+        <members>RD2_CancelCommitmentService_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
