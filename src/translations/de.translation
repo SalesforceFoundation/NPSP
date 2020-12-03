@@ -1489,6 +1489,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist geöffnet.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist nicht geöffnet.</label>
+    </customLabels>
+    <customLabels>
         <label>Ungültiger Aufruf. Diese Funktion ist der Salesforce-Nutzung vorbehalten.</label>
         <name>adapterException</name>
     </customLabels>
