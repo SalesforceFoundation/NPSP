@@ -296,6 +296,11 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
+        <members>GS_AdminSetup</members>
+        <members>GS_AdminSetup_TEST</members>
+        <members>GS_ApplicationStatusController</members>
+        <members>GS_ApplicationStatusController_TEST</members>
+        <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -1251,6 +1256,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>GetStartedCompletionChecklistState__c.Item_Id__c</members>
+        <members>GetStartedCompletionChecklistState__c.User__c</members>
         <members>Gift_Entry_Settings__c.Default_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
@@ -1392,6 +1399,24 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Description_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Extra_Info_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.GS_Admin_Checklist_Section__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Has_Link__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Image__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Link_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Link_URL__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Position__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Type__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Value__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Label__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Type__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Value__c</members>
+        <members>GS_Admin_Checklist_Item__mdt.Title_Label__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Description_Label__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Position__c</members>
+        <members>GS_Admin_Checklist_Section__mdt.Title_Label__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>RecurringDonationStatusMapping__mdt.State__c</members>
@@ -1872,6 +1897,8 @@
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>accordionSection_ToggleInstructionsWhenClosed</members>
+        <members>accordionSection_ToggleInstructionsWhenOpen</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnConfirm</members>
@@ -2174,6 +2201,7 @@
         <members>commonCardType</members>
         <members>commonCardholderName</members>
         <members>commonClone</members>
+        <members>commonClose</members>
         <members>commonConcurrentBatchError</members>
         <members>commonContactSystemAdminMessage</members>
         <members>commonCreditNumber</members>
@@ -2449,6 +2477,106 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsAdminSetupTitle</members>
+        <members>gsApplicationStatus</members>
+        <members>gsApplicationStatusModalHeader</members>
+        <members>gsApplyForFreeLicenses</members>
+        <members>gsCheckStatus</members>
+        <members>gsChecklistExploreNPSPDesc</members>
+        <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistItemAddUserDesc</members>
+        <members>gsChecklistItemAddUserLinkLabel</members>
+        <members>gsChecklistItemAddUserTitle</members>
+        <members>gsChecklistItemCommunicateWithUserskDesc</members>
+        <members>gsChecklistItemCommunicateWithUserskLinkLabel</members>
+        <members>gsChecklistItemCommunicateWithUserskTitle</members>
+        <members>gsChecklistItemCreateDonationDesc</members>
+        <members>gsChecklistItemCreateDonationLinkLabel</members>
+        <members>gsChecklistItemCreateDonationPriBtnLabel</members>
+        <members>gsChecklistItemCreateDonationTitle</members>
+        <members>gsChecklistItemCustomFieldsDesc</members>
+        <members>gsChecklistItemCustomFieldsLinkLabel</members>
+        <members>gsChecklistItemCustomFieldsTitle</members>
+        <members>gsChecklistItemExtraOneMinuteVideo</members>
+        <members>gsChecklistItemExtraSixtyMinuteVideo</members>
+        <members>gsChecklistItemFundraisingProcessDesc</members>
+        <members>gsChecklistItemFundraisingProcessLinkLabel</members>
+        <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
+        <members>gsChecklistItemFundraisingProcessTitle</members>
+        <members>gsChecklistItemGoFurtherDesc</members>
+        <members>gsChecklistItemGoFurtherLinkLabel</members>
+        <members>gsChecklistItemGoFurtherTitle</members>
+        <members>gsChecklistItemImportDataDesc</members>
+        <members>gsChecklistItemImportDataLinkLabel</members>
+        <members>gsChecklistItemImportDataPriBtnLabel</members>
+        <members>gsChecklistItemImportDataSecBtnLabel</members>
+        <members>gsChecklistItemImportDataTitle</members>
+        <members>gsChecklistItemManageChangeDesc</members>
+        <members>gsChecklistItemManageChangeLinkLabel</members>
+        <members>gsChecklistItemManageChangePriBtnLabel</members>
+        <members>gsChecklistItemManageChangeTitle</members>
+        <members>gsChecklistItemNPSPCloudDesc</members>
+        <members>gsChecklistItemNPSPCloudLinkLabel</members>
+        <members>gsChecklistItemNPSPCloudPriBtnLabel</members>
+        <members>gsChecklistItemNPSPCloudTitle</members>
+        <members>gsChecklistItemNPSPGuideDesc</members>
+        <members>gsChecklistItemNPSPGuidePriBtnLabel</members>
+        <members>gsChecklistItemNPSPGuideTitle</members>
+        <members>gsChecklistItemNPSPSettingsDesc</members>
+        <members>gsChecklistItemNPSPSettingsPriBtnLabel</members>
+        <members>gsChecklistItemNPSPSettingsTitle</members>
+        <members>gsChecklistItemPageLayoutsDesc</members>
+        <members>gsChecklistItemPageLayoutsLinkLabel</members>
+        <members>gsChecklistItemPageLayoutsTitle</members>
+        <members>gsChecklistItemPrepareNPSPDesc</members>
+        <members>gsChecklistItemPrepareNPSPLinkLabel</members>
+        <members>gsChecklistItemPrepareNPSPPriBtnLabel</members>
+        <members>gsChecklistItemPrepareNPSPTitle</members>
+        <members>gsChecklistItemReviewCompanyDesc</members>
+        <members>gsChecklistItemReviewCompanyLinkLabel</members>
+        <members>gsChecklistItemReviewCompanyTitle</members>
+        <members>gsChecklistItemRunningReportsDesc</members>
+        <members>gsChecklistItemRunningReportsLinkLabel</members>
+        <members>gsChecklistItemRunningReportsPriBtnLabel</members>
+        <members>gsChecklistItemRunningReportsTitle</members>
+        <members>gsChecklistItemSetupContactDesc</members>
+        <members>gsChecklistItemSetupContactLinkLabel</members>
+        <members>gsChecklistItemSetupContactPriBtnLabel</members>
+        <members>gsChecklistItemSetupContactSecBtnLabel</members>
+        <members>gsChecklistItemSetupContactTitle</members>
+        <members>gsChecklistItemStayTrackDesc</members>
+        <members>gsChecklistItemStayTrackLinkLabel</members>
+        <members>gsChecklistItemStayTrackPriBtnLabel</members>
+        <members>gsChecklistItemStayTrackTitle</members>
+        <members>gsChecklistItemTrainUsersDesc</members>
+        <members>gsChecklistItemTrainUsersLinkLabel</members>
+        <members>gsChecklistItemTrainUsersTitle</members>
+        <members>gsChecklistMakeItYourDesc</members>
+        <members>gsChecklistMakeItYourTitle</members>
+        <members>gsChecklistOnboardUsersDesc</members>
+        <members>gsChecklistOnboardUsersTitle</members>
+        <members>gsDaysAdded</members>
+        <members>gsDaysRemainingInFreeTrial</members>
+        <members>gsFollowUpApplicationStatus</members>
+        <members>gsLearnMore</members>
+        <members>gsNoApplicationSubmitted</members>
+        <members>gsResourcesItemFundraisingLabel</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
+        <members>gsResourcesItemHubLabel</members>
+        <members>gsResourcesItemHubLinkLabel</members>
+        <members>gsResourcesItemMarketingEngagementLabel</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
+        <members>gsResourcesItemNonprofitCloudLabel</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
+        <members>gsResourcesItemPartnersLabel</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
+        <members>gsResourcesItemProgramManagementLabel</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
+        <members>gsResourcesItemWebinarsLabel</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
+        <members>gsResourcesTitle</members>
+        <members>gsSubmitted</members>
+        <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3227,6 +3355,27 @@
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
+        <members>GS_Admin_Checklist_Item.Add_User</members>
+        <members>GS_Admin_Checklist_Item.Communicate_With_Users</members>
+        <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
+        <members>GS_Admin_Checklist_Item.Custom_Fields</members>
+        <members>GS_Admin_Checklist_Item.Fundraising_process</members>
+        <members>GS_Admin_Checklist_Item.Go_Further</members>
+        <members>GS_Admin_Checklist_Item.Import_Data</members>
+        <members>GS_Admin_Checklist_Item.Manage_Change</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
+        <members>GS_Admin_Checklist_Item.NPSP_Settings</members>
+        <members>GS_Admin_Checklist_Item.Page_Layouts</members>
+        <members>GS_Admin_Checklist_Item.Prepare_NPSP_Cloud</members>
+        <members>GS_Admin_Checklist_Item.Review_Company</members>
+        <members>GS_Admin_Checklist_Item.Running_Reports</members>
+        <members>GS_Admin_Checklist_Item.Setup_Contact</members>
+        <members>GS_Admin_Checklist_Item.Stay_Track</members>
+        <members>GS_Admin_Checklist_Item.Train_Users</members>
+        <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
+        <members>GS_Admin_Checklist_Section.Explore_NPSP</members>
+        <members>GS_Admin_Checklist_Section.Make_it_your_own</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -3252,6 +3401,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStartedCompletionChecklistState__c</members>
         <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
@@ -3272,6 +3422,8 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
+        <members>GS_Admin_Checklist_Item__mdt</members>
+        <members>GS_Admin_Checklist_Section__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
@@ -3455,6 +3607,13 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
+        <members>GetStartedCompletionChecklistState__c-de</members>
+        <members>GetStartedCompletionChecklistState__c-en_US</members>
+        <members>GetStartedCompletionChecklistState__c-es</members>
+        <members>GetStartedCompletionChecklistState__c-fr</members>
+        <members>GetStartedCompletionChecklistState__c-iw</members>
+        <members>GetStartedCompletionChecklistState__c-ja</members>
+        <members>GetStartedCompletionChecklistState__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
         <members>Gift_Entry_Settings__c-en_US</members>
         <members>Gift_Entry_Settings__c-es</members>
@@ -3607,6 +3766,20 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Item__mdt-de</members>
+        <members>GS_Admin_Checklist_Item__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Item__mdt-es</members>
+        <members>GS_Admin_Checklist_Item__mdt-fr</members>
+        <members>GS_Admin_Checklist_Item__mdt-iw</members>
+        <members>GS_Admin_Checklist_Item__mdt-ja</members>
+        <members>GS_Admin_Checklist_Item__mdt-nl_NL</members>
+        <members>GS_Admin_Checklist_Section__mdt-de</members>
+        <members>GS_Admin_Checklist_Section__mdt-en_US</members>
+        <members>GS_Admin_Checklist_Section__mdt-es</members>
+        <members>GS_Admin_Checklist_Section__mdt-fr</members>
+        <members>GS_Admin_Checklist_Section__mdt-iw</members>
+        <members>GS_Admin_Checklist_Section__mdt-ja</members>
+        <members>GS_Admin_Checklist_Section__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
@@ -3694,6 +3867,7 @@
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStarted</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -3771,6 +3945,7 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
+        <members>GetStarted</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -3796,6 +3971,7 @@
         <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>GetStartedCompletionChecklistState__c-Get Started Completion Checklist State Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>
@@ -3815,6 +3991,8 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>GS_Admin_Checklist_Item__mdt-GS Admin Checklist Item Layout</members>
+        <members>GS_Admin_Checklist_Section__mdt-GS Admin Checklist Section Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
@@ -3825,6 +4003,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>accordionSection</members>
         <members>batchProgress</members>
         <members>bdeRetirementAlert</members>
         <members>bdiBatchNumberSettings</members>
@@ -3870,7 +4049,18 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsAccordionLabel</members>
+        <members>gsAccordionSection</members>
+        <members>gsAdminSetup</members>
+        <members>gsApplicationStatus</members>
+        <members>gsChecklist</members>
+        <members>gsChecklistIcon</members>
+        <members>gsChecklistItem</members>
+        <members>gsLabelMapper</members>
+        <members>gsResources</members>
+        <members>gsVideoHeader</members>
         <members>libsMoment</members>
+        <members>modal</members>
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
