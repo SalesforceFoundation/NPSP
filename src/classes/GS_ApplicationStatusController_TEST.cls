@@ -44,7 +44,7 @@ public with sharing class GS_ApplicationStatusController_TEST {
         // This test relies on mocked data which is only being mocked in Scratchs org.
         // As these real data depends on the org which the test is running, the test is fragile in any other org type
         // avoiding the test.
-        if (!UTIL_Namespace.isScratchOrg() && String.isBlank(UTIL_Namespace.getNamespace())) {
+        if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
             return;
         }
 
@@ -66,7 +66,7 @@ public with sharing class GS_ApplicationStatusController_TEST {
         // This test relies on mocked data which is only being mocked in Scratchs org.
         // As these real data depends on the org which the test is running, the test is fragile in any other org type
         // avoiding the test.
-        if (!UTIL_Namespace.isScratchOrg() && String.isBlank(UTIL_Namespace.getNamespace())) {
+        if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
             return;
         }
 
