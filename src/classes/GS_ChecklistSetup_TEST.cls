@@ -31,13 +31,13 @@
 * @author Salesforce.org
 * @date 2020
 * @group Get Started
-* @description Class to test GS_AdminSetup class.
+* @description Class to test GS_ChecklistSetup class.
 */
 @isTest
-private with sharing class GS_AdminSetup_TEST {
+private with sharing class GS_ChecklistSetup_TEST {
   
     /**
-    *  @description This test data if wraped in GS_AdminSetup.getChecklist are the same in the metadata
+    *  @description This test data if wraped in GS_ChecklistSetup.getChecklist are the same in the metadata
     */
     @isTest
     static void getChecklistsTest() {
@@ -50,7 +50,7 @@ private with sharing class GS_AdminSetup_TEST {
                                                                                                 User__c = UserInfo.getUserId());
         insert checkedItem;
 
-        List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
+        List<GS_ChecklistSetup.ChecklistSection> checklists = GS_ChecklistSetup.getChecklists();
         List<GS_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
             FROM GS_Checklist_Section__mdt 
@@ -68,7 +68,7 @@ private with sharing class GS_AdminSetup_TEST {
    
             //Order in sub query doesn't work well
             GS_Checklist_Section__mdt metadataSection = metadataSections[i];
-            GS_AdminSetup.ChecklistSection checklist = checklists[i];
+            GS_ChecklistSetup.ChecklistSection checklist = checklists[i];
             System.assertEquals(
                 metadataSection.Id, 
                 checklist.Id,
@@ -87,7 +87,7 @@ private with sharing class GS_AdminSetup_TEST {
             );
             for (Integer j = 0; j < checklist.items.size(); j++) {
                 GS_Checklist_Item__mdt metadataItem = metadataSectionItems[j];
-                GS_AdminSetup.ChecklistItem item = checklist.items[j];
+                GS_ChecklistSetup.ChecklistItem item = checklist.items[j];
 
                 System.assertEquals(
                     metadataItem.Id,
@@ -106,13 +106,13 @@ private with sharing class GS_AdminSetup_TEST {
                                                                    FROM   GS_Checklist_Item__mdt
                                                                    ORDER BY Position__c ASC LIMIT 1];
         System.assertEquals(false, metadataSectionItems.isEmpty(), 'Items should not be empty');
-        GS_AdminSetup.updateCheckItem('invalid', true);
+        GS_ChecklistSetup.updateCheckItem('invalid', true);
         List<GetStartedCompletionChecklistState__c> adminStatus = [SELECT Id,
                                                                            Item_Id__c,
                                                                            User__c
                                                                     FROM   GetStartedCompletionChecklistState__c];
         System.assertEquals(true, adminStatus.isEmpty(), 'No Invalid Id should be persisted');
-        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, true);
         adminStatus = [SELECT Id,
                               Item_Id__c,
                               User__c                                   
@@ -120,13 +120,13 @@ private with sharing class GS_AdminSetup_TEST {
         System.assertEquals(1, adminStatus.size(), 'One element should have been created');
         System.assertEquals(metadataSectionItems[0].id, adminStatus[0].Item_Id__c,'Id should have been the same');
         System.assertEquals(UserInfo.getUserId(), adminStatus[0].User__c,'UserId should have been the current one');
-        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, true);
+        GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, true);
         adminStatus = [SELECT Id,
                               Item_Id__c,
                               User__c                                   
                        FROM   GetStartedCompletionChecklistState__c];
         System.assertEquals(1, adminStatus.size(), 'No duplicated elements are allowed');
-        GS_AdminSetup.updateCheckItem(metadataSectionItems[0].id, false);
+        GS_ChecklistSetup.updateCheckItem(metadataSectionItems[0].id, false);
         adminStatus = [SELECT Id,
                               Item_Id__c,
                               User__c                                   

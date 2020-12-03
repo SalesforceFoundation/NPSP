@@ -296,10 +296,10 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
-        <members>GS_AdminSetup</members>
-        <members>GS_AdminSetup_TEST</members>
         <members>GS_ApplicationStatusController</members>
         <members>GS_ApplicationStatusController_TEST</members>
+        <members>GS_ChecklistSetup</members>
+        <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>

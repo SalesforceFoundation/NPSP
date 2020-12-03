@@ -33,7 +33,7 @@
 * @group Get Started
 * @description Class to hold functionality to display Checklist in GS UI.
 */
-public with sharing class GS_AdminSetup {
+public with sharing class GS_ChecklistSetup {
 
     private static final String DISABLED = 'Disabled';
     private static Set<Id> storedItemsId = null;
@@ -99,28 +99,28 @@ public with sharing class GS_AdminSetup {
      * @description Set an Checklist element as checked to the current user.
      * It's only done if the element was previously marked as "incomplete"(record does not exists). 
      * It will not create duplicated records.
-     * @param  adminStatus List<GetStartedCompletionChecklistState__c> list with the adminStatus filtered by user and filter id
+     * @param  checklistStatus List<GetStartedCompletionChecklistState__c> list with the checklistStatus filtered by user and filter id
      * @param  itemId      String the item id to be completed
      */
-    private static void markItemAsCompleted(List<GetStartedCompletionChecklistState__c> adminStatus, String itemId) {
+    private static void markItemAsCompleted(List<GetStartedCompletionChecklistState__c> checklistStatus, String itemId) {
         if (Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.Item_Id__c.isUpdateable() &&
             Schema.SObjectType.GetStartedCompletionChecklistState__c.fields.User__c.isUpdateable() && 
-            adminStatus.isEmpty()) {
+            checklistStatus.isEmpty()) {
             
-            adminStatus.add(new GetStartedCompletionChecklistState__c(Item_Id__c = itemId,
+            checklistStatus.add(new GetStartedCompletionChecklistState__c(Item_Id__c = itemId,
                                                                      User__c = UserInfo.getUserId()));
-            insert adminStatus;
+            insert checklistStatus;
         }
     }
 
     /**
      * @description unmark the previously completed checklist item marking it as "incomplete"
      * In this implementation, we only store the "completed" items so we deleted.
-     * @param  adminStatus List<GetStartedCompletionChecklistState__c> list with the items filtered by currentUser and itemId
+     * @param  checklistStatus List<GetStartedCompletionChecklistState__c> list with the items filtered by currentUser and itemId
      */
-    private static void unmarkItemAsCompleted(List<GetStartedCompletionChecklistState__c> adminStatus) {
-        if (GetStartedCompletionChecklistState__c.SObjectType.getDescribe().isDeletable() && !adminStatus.isEmpty()) {
-            database.delete(adminStatus);
+    private static void unmarkItemAsCompleted(List<GetStartedCompletionChecklistState__c> checklistStatus) {
+        if (GetStartedCompletionChecklistState__c.SObjectType.getDescribe().isDeletable() && !checklistStatus.isEmpty()) {
+            database.delete(checklistStatus);
         }
     }
 

@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
-import getChecklists from '@salesforce/apex/GS_AdminSetup.getChecklists';
+import getChecklists from '@salesforce/apex/GS_ChecklistSetup.getChecklists';
 import getLabelValue from 'c/gsLabelMapper';
 
 /**
