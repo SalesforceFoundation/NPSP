@@ -373,7 +373,7 @@ public class PMT_PaymentCreator {
      * @param oppCurrencyField The Opportunity Object Currency Field
      * @return npe01__OppPayment__c The Opportunity Payment created
      */
-    private npe01__OppPayment__c constructOppPayment(Opportunity newOpportunity, SObjectField paymentCurrencyField, SObjectField oppCurrencyField) {
+    public static npe01__OppPayment__c constructOppPayment(Opportunity newOpportunity, SObjectField paymentCurrencyField, SObjectField oppCurrencyField) {
         npe01__OppPayment__c opportunityPayment = new npe01__OppPayment__c(
             npe01__Opportunity__c = newOpportunity.Id,
             npe01__Paid__c = newOpportunity.IsClosed,
