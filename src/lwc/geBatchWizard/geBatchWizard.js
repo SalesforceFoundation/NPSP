@@ -11,7 +11,11 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError, addKeyToCollectionItems, isTrueFalsePicklist } from 'c/utilTemplateBuilder';
+import {
+    handleError,
+    addKeyToCollectionItems,
+    isTrueFalsePicklist,
+    isCheckboxToCheckbox } from 'c/utilTemplateBuilder';
 import {
     getNamespace,
     getNestedProperty,
@@ -223,6 +227,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
                     if(isNotEmpty(fieldMapping)) {
                         element.isTrueFalsePicklist = isTrueFalsePicklist(fieldMapping);
+                        element.isCheckboxToCheckbox = isCheckboxToCheckbox(fieldMapping);
                     }
                 });
             }
