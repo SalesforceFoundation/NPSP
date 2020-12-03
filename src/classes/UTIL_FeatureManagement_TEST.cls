@@ -90,6 +90,11 @@ public with sharing class UTIL_FeatureManagement_TEST {
 
     @isTest
     private static void shouldCallCheckPackageDateValue() {
+        // Skipping the test if it's running in with a namespace
+        // This causes an error en 2gp tests returning the error CANNOT_MODIFY_MANAGED_OBJECT
+        if (!String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
         UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
 
         featureMgt.setPackageDateValue('P10_Application_Date', Date.newInstance(2020, 01, 01));
