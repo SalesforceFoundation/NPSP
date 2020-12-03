@@ -1623,7 +1623,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
-        <value>Don&apos;t enter payment information</value>
+        <value>Don&apos;t enter payment information.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateDisabledHeader</fullName>
