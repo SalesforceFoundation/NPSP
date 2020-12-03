@@ -41,9 +41,9 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgNonApplicated() {
         
-        // This test relies on mocked data which is only being mocked in Scratchs org.
-        // As these real data depends on the org which the test is running, the test is fragile in any other org type
-        // avoiding the test.
+        // This test relies on mocked org information data in the Controller class. That class will only apply mocked data
+        // when the current org is a Sandbox org (by checking the Organization object) and there is no package 
+        // namespace. As a result, this test has to be skipped for other types of orgs to avoid an error.
         if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
             return;
         }
@@ -63,9 +63,9 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgApplicated() {
        
-        // This test relies on mocked data which is only being mocked in Scratchs org.
-        // As these real data depends on the org which the test is running, the test is fragile in any other org type
-        // avoiding the test.
+        // This test relies on mocked org information data in the Controller class. That class will only apply mocked data
+        // when the current org is a Sandbox org (by checking the Organization object) and there is no package 
+        // namespace. As a result, this test has to be skipped for other types of orgs to avoid an error.
         if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
             return;
         }
