@@ -43,7 +43,7 @@ private with sharing class GS_AdminSetup_TEST {
     static void getChecklistsTest() {
 
         Id firstItemId = [SELECT Id, Position__c
-                          FROM GS_Admin_Checklist_Item__mdt
+                          FROM GS_Checklist_Item__mdt
                           LIMIT 1].Id;
 
         GetStartedCompletionChecklistState__c checkedItem = new GetStartedCompletionChecklistState__c(Item_Id__c = firstItemId, 
@@ -51,9 +51,9 @@ private with sharing class GS_AdminSetup_TEST {
         insert checkedItem;
 
         List<GS_AdminSetup.ChecklistSection> checklists = GS_AdminSetup.getChecklists();
-        List<GS_Admin_Checklist_Section__mdt> metadataSections = [ 
+        List<GS_Checklist_Section__mdt> metadataSections = [ 
             SELECT Id, Label, Position__c 
-            FROM GS_Admin_Checklist_Section__mdt 
+            FROM GS_Checklist_Section__mdt 
             ORDER BY Position__c ASC
         ];
 
@@ -67,17 +67,17 @@ private with sharing class GS_AdminSetup_TEST {
         for (Integer i = 0; i < metadataSections.size(); i++) {
    
             //Order in sub query doesn't work well
-            GS_Admin_Checklist_Section__mdt metadataSection = metadataSections[i];
+            GS_Checklist_Section__mdt metadataSection = metadataSections[i];
             GS_AdminSetup.ChecklistSection checklist = checklists[i];
             System.assertEquals(
                 metadataSection.Id, 
                 checklist.Id,
                 'The metadataSection and Checklist are not in the same orden'
             );
-            List<GS_Admin_Checklist_Item__mdt> metadataSectionItems = [
+            List<GS_Checklist_Item__mdt> metadataSectionItems = [
                 SELECT Id, Position__c
-                FROM GS_Admin_Checklist_Item__mdt
-                WHERE GS_Admin_Checklist_Section__c = :metadataSection.Id
+                FROM GS_Checklist_Item__mdt
+                WHERE GS_Checklist_Section__c = :metadataSection.Id
                 ORDER BY Position__c ASC
             ];
             System.assertEquals(
@@ -86,7 +86,7 @@ private with sharing class GS_AdminSetup_TEST {
                 'The checklist ' + metadataSection.Label + ' don\'t have same children size' 
             );
             for (Integer j = 0; j < checklist.items.size(); j++) {
-                GS_Admin_Checklist_Item__mdt metadataItem = metadataSectionItems[j];
+                GS_Checklist_Item__mdt metadataItem = metadataSectionItems[j];
                 GS_AdminSetup.ChecklistItem item = checklist.items[j];
 
                 System.assertEquals(
@@ -102,8 +102,8 @@ private with sharing class GS_AdminSetup_TEST {
 
     @isTest
     private static void persistTest() {
-        List<GS_Admin_Checklist_Item__mdt> metadataSectionItems = [SELECT Id, Position__c
-                                                                   FROM   GS_Admin_Checklist_Item__mdt
+        List<GS_Checklist_Item__mdt> metadataSectionItems = [SELECT Id, Position__c
+                                                                   FROM   GS_Checklist_Item__mdt
                                                                    ORDER BY Position__c ASC LIMIT 1];
         System.assertEquals(false, metadataSectionItems.isEmpty(), 'Items should not be empty');
         GS_AdminSetup.updateCheckItem('invalid', true);

@@ -39,15 +39,15 @@ public with sharing class GS_AdminSetup {
     private static Set<Id> storedItemsId = null;
     /**
      * @description Returns a list of the checklist section with each subsection.
-     * Each section is defined in GS_Admin_Checklist_Section__mdt and each subsection is defined in GS_Admin_Checklist_Item__mdt
+     * Each section is defined in GS_Checklist_Section__mdt and each subsection is defined in GS_Checklist_Item__mdt
      * @return List<ChecklistSection>
      */
     @AuraEnabled
     public static List<ChecklistSection> getChecklists() {
         storedItemsId = getMarkedAsCompletedCheckListItemByUser();
-        List<GS_Admin_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();
+        List<GS_Checklist_Section__mdt> checklistSections = getSectionsAndSubsections();
         List<ChecklistSection> checklistWrapers = new List<ChecklistSection>();
-        for (GS_Admin_Checklist_Section__mdt checklistSection : checklistSections) {
+        for (GS_Checklist_Section__mdt checklistSection : checklistSections) {
             checklistWrapers.add(wrapChecklistSection(checklistSection));
         }
         return checklistWrapers;
@@ -82,13 +82,13 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-     * @description Check if exists an GS_Admin_Checklist_Item__mdt with the Id
-     * @param  itemId String the id of the GS_Admin_Checklist_Item__mdt to be validated
+     * @description Check if exists an GS_Checklist_Item__mdt with the Id
+     * @param  itemId String the id of the GS_Checklist_Item__mdt to be validated
      * @return true if itemId is found, false otherwise
      */
     private static Boolean doesChecklistItemExists(String itemId) {
-        List<GS_Admin_Checklist_Item__mdt> items = [
-            SELECT Id FROM  GS_Admin_Checklist_Item__mdt
+        List<GS_Checklist_Item__mdt> items = [
+            SELECT Id FROM  GS_Checklist_Item__mdt
             WHERE  Id = :itemId
             WITH SECURITY_ENFORCED
         ];
@@ -125,11 +125,11 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-     * @description Return the list of GS_Admin_Checklist_Section__mdt and his Items 
-     * @return List<GS_Admin_Checklist_Section__mdt>
+     * @description Return the list of GS_Checklist_Section__mdt and his Items 
+     * @return List<GS_Checklist_Section__mdt>
      * @note [ORDER BY Position__c ASC] doesn't work well in the inner query, I need to sort outside SOQL
      */
-    private static List<GS_Admin_Checklist_Section__mdt> getSectionsAndSubsections() {
+    private static List<GS_Checklist_Section__mdt> getSectionsAndSubsections() {
         return [ 
             SELECT Id, Title_Label__c, Description_Label__c, Position__c, 
                 (
@@ -137,9 +137,9 @@ public with sharing class GS_AdminSetup {
                         Has_Link__c, Link_Label__c, Link_URL__c, Extra_Info_Label__c,
                         Primary_Button_Type__c, Primary_Button_Label__c, Primary_Button_Value__c,
                         Secondary_Button_Type__c, Secondary_Button_Label__c, Secondary_Button_Value__c
-                    FROM GS_Admin_Checklist_Items__r
+                    FROM GS_Checklist_Items__r
                 ) 
-            FROM GS_Admin_Checklist_Section__mdt 
+            FROM GS_Checklist_Section__mdt 
             WITH SECURITY_ENFORCED
             ORDER BY Position__c ASC 
         ];
@@ -147,16 +147,16 @@ public with sharing class GS_AdminSetup {
 
     /**
     * @description This method wrap a checklist section in a apex object to send to UI
-    * @param GS_Admin_Checklist_Section__mdt the metdata to wrap
+    * @param GS_Checklist_Section__mdt the metdata to wrap
     * @return ChecklistSection
     */
-    private static ChecklistSection wrapChecklistSection(GS_Admin_Checklist_Section__mdt section) {
+    private static ChecklistSection wrapChecklistSection(GS_Checklist_Section__mdt section) {
         ChecklistSection cs = new ChecklistSection();
         cs.id = section.Id;
         cs.title = section.Title_Label__c;
         cs.description = section.Description_Label__c;
         cs.pos = section.Position__c.intValue();
-        for (GS_Admin_Checklist_Item__mdt item : section.GS_Admin_Checklist_Items__r) {
+        for (GS_Checklist_Item__mdt item : section.GS_Checklist_Items__r) {
             cs.items.add(wrapChecklistItem(item));
         }
         //I need sort manualy to not work well in SOQL [ORDER BY]
@@ -166,10 +166,10 @@ public with sharing class GS_AdminSetup {
 
     /**
     * @description This method wrap a checklist Item in a apex object to send to UI
-    * @param GS_Admin_Checklist_Item__mdt the metdata to wrap
+    * @param GS_Checklist_Item__mdt the metdata to wrap
     * @return ChecklistItem
     */
-    private static ChecklistItem wrapChecklistItem(GS_Admin_Checklist_Item__mdt item) {
+    private static ChecklistItem wrapChecklistItem(GS_Checklist_Item__mdt item) {
         ChecklistItem ci = new ChecklistItem();
         ci.Id = item.Id;
         ci.title = item.Title_Label__c;
@@ -205,7 +205,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Admin_Checklist_Section__mdt information
+    * @description This Class is to wrap GS_Checklist_Section__mdt information
     */
     public class ChecklistSection {
         /*
@@ -241,7 +241,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Admin_Checklist_Item__mdt information
+    * @description This Class is to wrap GS_Checklist_Item__mdt information
     */
     public class ChecklistItem implements Comparable {
         /**
@@ -320,7 +320,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Admin_Checklist_Item__mdt Link information
+    * @description This Class is to wrap GS_Checklist_Item__mdt Link information
     */
     public class ChecklistItemLink {
         /**
@@ -348,7 +348,7 @@ public with sharing class GS_AdminSetup {
     }
 
     /**
-    * @description This Class is to wrap GS_Admin_Checklist_Item__mdt Buttons information
+    * @description This Class is to wrap GS_Checklist_Item__mdt Buttons information
     */
     public class ChecklistItemButton {
         /**
