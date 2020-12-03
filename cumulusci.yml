@@ -1168,6 +1168,16 @@ flows:
                     path: ["*/*/Data_CountGERowsLast30DaysBatch.featureParameterInteger",
                             "*/*/P10_Application_Date.featureParameterDate"]
 
+    config_apextest:
+        ## Disable all duplicate rules before running unit tests
+        steps:
+            3:
+                task: set_duplicate_rule_status
+                when: org_config.scratch
+                options:
+                    api_names: Account.Standard_Account_Duplicate_Rule, Contact.Standard_Contact_Duplicate_Rule
+                    active: false
+
 orgs:
     scratch:
         dev_multicurrency:
