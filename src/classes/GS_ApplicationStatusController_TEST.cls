@@ -41,6 +41,13 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgNonApplicated() {
         
+        // This test relies on mocked org information data in the Controller class. That class will only apply mocked data
+        // when the current org is a Sandbox org (by checking the Organization object) and there is no package 
+        // namespace. As a result, this test has to be skipped for other types of orgs to avoid an error.
+        if (!UTIL_Namespace.isScratchOrg() || String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+
         GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(null, false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
         
@@ -56,6 +63,13 @@ public with sharing class GS_ApplicationStatusController_TEST {
     @IsTest 
     private static void testGetApplicationStatusTrialOrgApplicated() {
        
+        // This test relies on mocked org information data in the Controller class. That class will only apply mocked data
+        // when the current org is a Sandbox org (by checking the Organization object) and there is no package 
+        // namespace. As a result, this test has to be skipped for other types of orgs to avoid an error.
+        if (!UTIL_Namespace.isScratchOrg() || !String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+
         GS_NonprofitTrialOrgService.TestingConfig testingConfiguration = new GS_NonprofitTrialOrgService.TestingConfig(Date.newInstance(2020,10,02), false, Date.newInstance(2020,10,15));
         GS_NonprofitTrialOrgService.testingConfiguration = testingConfiguration;
        
