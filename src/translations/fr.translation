@@ -1490,6 +1490,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Cliquez pour basculer la section. Cette section n&apos;est pas ouverte.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Cliquez pour basculer la section. Cette section est ouverte.</label>
+    </customLabels>
+    <customLabels>
         <label>Appel non valide. Cette fonction est réservée à l&apos;usage de Salesforce.</label>
         <name>adapterException</name>
     </customLabels>
