@@ -3617,6 +3617,7 @@
         <members>GetStartedCompletionChecklistState__c-en_US</members>
         <members>GetStartedCompletionChecklistState__c-es</members>
         <members>GetStartedCompletionChecklistState__c-fr</members>
+        <members>GetStartedCompletionChecklistState__c-iw</members>
         <members>GetStartedCompletionChecklistState__c-ja</members>
         <members>GetStartedCompletionChecklistState__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
@@ -3775,12 +3776,14 @@
         <members>GS_Admin_Checklist_Item__mdt-en_US</members>
         <members>GS_Admin_Checklist_Item__mdt-es</members>
         <members>GS_Admin_Checklist_Item__mdt-fr</members>
+        <members>GS_Admin_Checklist_Item__mdt-iw</members>
         <members>GS_Admin_Checklist_Item__mdt-ja</members>
         <members>GS_Admin_Checklist_Item__mdt-nl_NL</members>
         <members>GS_Admin_Checklist_Section__mdt-de</members>
         <members>GS_Admin_Checklist_Section__mdt-en_US</members>
         <members>GS_Admin_Checklist_Section__mdt-es</members>
         <members>GS_Admin_Checklist_Section__mdt-fr</members>
+        <members>GS_Admin_Checklist_Section__mdt-iw</members>
         <members>GS_Admin_Checklist_Section__mdt-ja</members>
         <members>GS_Admin_Checklist_Section__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
