@@ -100,12 +100,8 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
             const fields = response.data.fields;
 
             const fieldName = extractFieldInfo(fields, ERROR_FIELD_NAME.fieldApiName);
-            this.fieldDatetime = extractFieldInfo(fields, ERROR_FIELD_DATETIME.fieldApiName);
-            const fieldErrorType = extractFieldInfo(fields, ERROR_FIELD_ERROR_TYPE.fieldApiName);
-            const fieldFullMessage = extractFieldInfo(fields, ERROR_FIELD_FULL_MESSAGE.fieldApiName);
-
-            this.columns = [
-                {
+            if (fieldName) {
+                this.columns.push({
                     label: fieldName.label,
                     fieldName: ERROR_LOG_URL_FIELD,
                     type: 'url',
@@ -113,8 +109,12 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                         label: { fieldName: fieldName.apiName }
                     },
                     hideDefaultActions: true
-                },
-                {
+                });
+            }
+
+            this.fieldDatetime = extractFieldInfo(fields, ERROR_FIELD_DATETIME.fieldApiName);
+            if (this.fieldDatetime) {
+                this.columns.push({
                     label: this.fieldDatetime.label,
                     fieldName: this.fieldDatetime.apiName,
                     type: 'date',
@@ -128,20 +128,32 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
                     },
                     hideDefaultActions: true,
                     sortable: true
-                },
-                {
+                });
+            }
+
+            const fieldErrorType = extractFieldInfo(fields, ERROR_FIELD_ERROR_TYPE.fieldApiName);
+            if (fieldErrorType) {
+                this.columns.push({
                     label: fieldErrorType.label,
                     fieldName: fieldErrorType.apiName,
                     type: fieldErrorType.dataType,
                     hideDefaultActions: true
-                },
-                {
+                });
+            }
+
+            const fieldFullMessage = extractFieldInfo(fields, ERROR_FIELD_FULL_MESSAGE.fieldApiName);
+            if (fieldFullMessage) {
+                this.columns.push({
                     label: fieldFullMessage.label,
                     fieldName: fieldFullMessage.apiName,
                     type: fieldFullMessage.dataType,
                     wrapText: true
-                }
-            ];
+                });
+            }
+
+            if (this.columns.lenth === 0) {
+                this.hasAccess = false;
+            }
 
             this.checkLoading();
         }
@@ -238,7 +250,7 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
     * @description Returns info about sorted by field which is Datetime field only
     */
     get sortedByLabel() {
-        return this.fieldDatetime.label
+        return (this.fieldDatetime && this.fieldDatetime.label)
             ? format(this.labels.listViewSortedBy, [this.fieldDatetime.label])
             : undefined;
     }
