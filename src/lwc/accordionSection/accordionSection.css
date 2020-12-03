@@ -1,0 +1,16 @@
+@media print {
+    .slds-accordion__content {
+        overflow: visible !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+    }
+}
+
+.slds-is-open {
+    background-color: var(--bgColor);
+}
+
+.slds-grid_vertical-align-center.clickable-header {
+    max-width: calc(100% - 18px);
+}
