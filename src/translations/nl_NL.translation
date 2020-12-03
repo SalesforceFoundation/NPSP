@@ -1489,6 +1489,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+        <label>Klik om de sectie te openen of te sluiten. Deze sectie is gesloten.</label>
+    </customLabels>
+    <customLabels>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+        <label>Klik om de sectie te openen of te sluiten. Deze sectie is open.</label>
+    </customLabels>
+    <customLabels>
         <label>Ongeldige aanroep. Deze functie is voorbehouden voor Salesforce-gebruik.</label>
         <name>adapterException</name>
     </customLabels>
