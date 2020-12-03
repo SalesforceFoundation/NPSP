@@ -32,9 +32,9 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The section on the Get Started page that this item is part of.</inlineHelpText>
         <label>GS Checklist Section</label>
-        <referenceTo>GS_Checklist_Section__mdt</referenceTo>
+        <referenceTo>GetStartedChecklistSection__mdt</referenceTo>
         <relationshipLabel>GS Checklist Items</relationshipLabel>
-        <relationshipName>GS_Checklist_Items</relationshipName>
+        <relationshipName>GetStartedChecklistItems</relationshipName>
         <required>true</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>

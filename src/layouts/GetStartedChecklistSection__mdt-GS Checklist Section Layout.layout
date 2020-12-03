@@ -69,7 +69,7 @@
         <fields>MasterLabel</fields>
         <fields>DeveloperName</fields>
         <fields>NamespacePrefix</fields>
-        <relatedList>GS_Checklist_Item__mdt.GS_Checklist_Section__c</relatedList>
+        <relatedList>GetStartedChecklistItem__mdt.GS_Checklist_Section__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
