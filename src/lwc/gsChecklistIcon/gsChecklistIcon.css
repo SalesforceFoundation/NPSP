@@ -1,0 +1,11 @@
+.slds-media__figure p {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0.45rem;
+}
+
+.slds-media__figure {
+    position: relative;
+    height: 2rem;
+}
