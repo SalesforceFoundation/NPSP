@@ -558,7 +558,7 @@ export default class GeFormField extends LightningElement {
      * and build the picklist options array from there.
      */
     get fullFieldApiNameForStandardPicklists() {
-        if (this.isRecordTypeIdLookup || !this.isPicklist) return undefined;
+        if (this.isRecordTypeIdLookup || !this.isPicklist || this.isTrueFalsePicklist) return undefined;
         return `${this.objectApiName}.${this.targetFieldApiName}`;
     }
 
