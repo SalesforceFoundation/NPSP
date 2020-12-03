@@ -22,9 +22,6 @@
 }
 
 .do-not-charge-card-button {
-    line-height: 0;
-    font-weight: 100;
-    color: rgb(112, 110, 107);
     font-size: 0.8125rem;
     font-weight: 500;
 }
