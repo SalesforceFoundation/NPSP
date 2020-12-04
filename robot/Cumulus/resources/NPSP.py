@@ -1669,4 +1669,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             for i in records:
                 self.salesforce.store_session_record(object_name,i)
 
+    @capture_screenshot_on_error
+    def verify_table_contains_row(self,table_name,record,**kwargs):
+        """verifies that batch number format table contains a record with given name
+        and record field contains specified value. Example usage:
+        Verify Table Contains Row | Batches | MyBatch | Batch Number=MyBatch-01
+        """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators['datatable'].format(table_name,record,key)
+            actual=self.selenium.get_text(locator)
+            print(f'actual value is {actual}')
+            if actual==value:
+                print(f'Table contains {record} with expected {key}={value}')
+            elif value=='None' and actual=='':
+                print(f'Table contains {record} with empty {key} as expected')
+            else:
+                raise Exception(f'Table did not contain {record} with expected {key}={value}')
+
+
 
