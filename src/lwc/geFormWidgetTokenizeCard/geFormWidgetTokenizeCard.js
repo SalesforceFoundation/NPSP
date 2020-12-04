@@ -2,7 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { format } from 'c/utilCommon';
+import { apiNameFor, format } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -16,12 +16,18 @@ import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import DATA_IMPORT_PAYMENT_METHOD
+    from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
 } from 'c/geConstants';
 
+const ACH = 'ACH';
+const CREDIT_CARD = 'Credit Card';
+
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api sourceFieldsUsedInTemplate = [];
     @track domain;
     @track isLoading = true;
     @track alert = {};
@@ -33,6 +39,69 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
+    _currentPaymentMethod = undefined;
+    _hasPaymentMethodInTemplate = false;
+
+    @api
+    get widgetDataFromState() {
+        return this._widgetDataFromState;
+    }
+
+    set widgetDataFromState(widgetState) {
+        this._widgetDataFromState = widgetState;
+        this.handleWidgetDataChange(widgetState);
+    }
+
+    handleWidgetDataChange(widgetState) {
+        this._hasPaymentMethodInTemplate =
+            this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
+
+        if (this._hasPaymentMethodInTemplate) {
+            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+
+            if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
+                if (this.isMounted) {
+                    this.requestSetPaymentMethod(this._currentPaymentMethod);
+                } else {
+                    this.handleUserEnabledWidget();
+                }
+            } else {
+                this.handleUserDisabledWidget();
+            }
+        } else {
+            this._currentPaymentMethod = CREDIT_CARD;
+        }
+    }
+
+    hasValidPaymentMethod(paymentMethod) {
+        return paymentMethod === ACH || paymentMethod === CREDIT_CARD;
+    }
+
+    requestSetPaymentMethod(paymentMethod) {
+        this.isLoading = true;
+        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        tokenHandler.setPaymentMethod(iframe, paymentMethod, this.handleError, this.resolveSetPaymentMethod);
+    }
+
+    resolveSetPaymentMethod = () => {
+        this.isLoading = false;
+    }
+
+    get shouldDisplayEnableButton() {
+        if (!this._hasPaymentMethodInTemplate) return true;
+        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod(this._currentPaymentMethod)) {
+            return true;
+        }
+        return false;
+    }
+
+    get disabledWidgetMessage() {
+        if (this.shouldDisplayEnableButton) {
+            return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
+        }
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
+    }
 
     /***
     * @description Initializes the component and determines the Visualforce origin URLs
@@ -89,6 +158,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
+        this.isMounted = false;
         this.dispatchApplicationEvent('doNotChargeState', {
             isWidgetDisabled: this.hasUserDisabledWidget
         });
@@ -123,6 +193,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     toggleWidget(isDisabled, message) {
         this.isDisabled = isDisabled;
+        this.isMounted = false;
         this.disabledMessage = message || null;
     }
 
@@ -134,9 +205,19 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
-        if (message.isLoaded) {
-            this.isLoading = false;
+        if (message.isReadyToMount && !this.isMounted) {
+            this.requestMount();
         }
+    }
+
+    requestMount() {
+        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        tokenHandler.mount(iframe, this._currentPaymentMethod, this.handleError, this.resolveMount);
+    }
+
+    resolveMount = () => {
+        this.isLoading = false;
+        this.isMounted = true;
     }
 
     /***

@@ -135,7 +135,8 @@ class psElevateTokenHandler {
     * @param message Message received from the iframe
     */
     handleMessage(message) {
-        if (message.error || message.token) {
+        const isValidMessageType = message.type === 'post__npsp';
+        if (isValidMessageType) {
             if (isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
             }
@@ -192,6 +193,58 @@ class psElevateTokenHandler {
         );
 
         return tokenPromise;
+    }
+
+    setPaymentMethod(iframe, paymentMethod, handleError, resolveSetPaymentMethod) {
+        if (isNull(iframe)) {
+            return;
+        }
+
+        const setPaymentMethodPromise = new Promise((resolve, reject) => {
+            this.tokenCallback = message => {
+                if (message.error) {
+                    reject(handleError(message));
+                } else {
+                    resolve(resolveSetPaymentMethod());
+                }
+            };
+        });
+
+        iframe.contentWindow.postMessage(
+            {
+                action: 'setPaymentMethod',
+                paymentMethod: paymentMethod
+            },
+            this._visualforceOrigin
+        );
+
+        return setPaymentMethodPromise;
+    }
+
+    mount(iframe, paymentMethod, handleError, resolveMount) {
+        if (isNull(iframe)) {
+            return;
+        }
+
+        const mountPromise = new Promise((resolve, reject) => {
+            this.tokenCallback = message => {
+                if (message.error) {
+                    reject(handleError(message));
+                } else {
+                    resolve(resolveMount());
+                }
+            };
+        });
+
+        iframe.contentWindow.postMessage(
+            {
+                action: 'mount',
+                paymentMethod: paymentMethod
+            },
+            this._visualforceOrigin
+        );
+
+        return mountPromise;
     }
 }
 

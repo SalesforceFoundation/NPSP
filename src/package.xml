@@ -2852,6 +2852,7 @@
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
         <members>pmtWrittenOffPaymentDateRequired</members>
+        <members>psSelectValidPaymentMethod</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
