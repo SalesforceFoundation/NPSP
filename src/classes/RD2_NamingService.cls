@@ -34,7 +34,7 @@
 * @description Recurring Donations Naming Service
 *
 */
-public with sharing class RD2_NamingService {
+public inherited sharing class RD2_NamingService {
 
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
     public static final Integer MAX_NAME_LENGTH = 80;
