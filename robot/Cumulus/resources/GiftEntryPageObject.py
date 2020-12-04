@@ -263,7 +263,8 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     position=args.index(i)
                 else:
                     self.selenium.click_element(locator,'COMMAND')
-        self.selenium.click_button("Move selection to Visible Fields")
+        if not first_element:
+            self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
