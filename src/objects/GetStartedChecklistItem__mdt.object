@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>NPSP Get Started Page section items</description>
+    <fields>
+        <fullName>Description_Label__c</fullName>
+        <description>The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <label>Description Label Name</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Extra_Info_Label__c</fullName>
+        <description>The API name of the Extra Info Label, which provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API name of the Extra Info Label, which provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.</inlineHelpText>
+        <label>Extra Info Label Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GS_Checklist_Section__c</fullName>
+        <description>The section on the Get Started page that this item is part of.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The section on the Get Started page that this item is part of.</inlineHelpText>
+        <label>GS Checklist Section</label>
+        <referenceTo>GetStartedChecklistSection__mdt</referenceTo>
+        <relationshipLabel>GS Checklist Items</relationshipLabel>
+        <relationshipName>GetStartedChecklistItems</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Has_Link__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates if the item has a link to display.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Indicates if the item has a link to display.</inlineHelpText>
+        <label>Has Link</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Image__c</fullName>
+        <description>The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render.</inlineHelpText>
+        <label>Image</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Link_Label__c</fullName>
+        <description>The API name for the Link label of a link on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API name for the Link label of a link on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <label>Link Label Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Link_URL__c</fullName>
+        <description>The target URL for a link on the Get Started page.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The target URL for a link on the Get Started page.</inlineHelpText>
+        <label>Link URL</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Position__c</fullName>
+        <description>The position of this section item on the Get Started page.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The position of this section item on the Get Started page.</inlineHelpText>
+        <label>Position</label>
+        <precision>2</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Primary_Button_Label__c</fullName>
+        <description>The API name for the Primary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API name for the Primary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <label>Primary Button Label Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Primary_Button_Type__c</fullName>
+        <description>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</inlineHelpText>
+        <label>Primary Button Type</label>
+        <required>true</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Disabled</fullName>
+                    <default>true</default>
+                    <label>Disabled</label>
+                </value>
+                <value>
+                    <fullName>sfdc:new-tab</fullName>
+                    <default>false</default>
+                    <label>SFDC New Tab</label>
+                </value>
+                <value>
+                    <fullName>link</fullName>
+                    <default>false</default>
+                    <label>External Page</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Primary_Button_Value__c</fullName>
+        <description>The action of the Primary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The action of the Primary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</inlineHelpText>
+        <label>Primary Button Value</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Secondary_Button_Label__c</fullName>
+        <description>The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <label>Secondary Button Label Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Secondary_Button_Type__c</fullName>
+        <description>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page</inlineHelpText>
+        <label>Secondary Button Type</label>
+        <required>true</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Disabled</fullName>
+                    <default>true</default>
+                    <label>Disabled</label>
+                </value>
+                <value>
+                    <fullName>sfdc:new-tab</fullName>
+                    <default>false</default>
+                    <label>SFDC New Tab</label>
+                </value>
+                <value>
+                    <fullName>link</fullName>
+                    <default>false</default>
+                    <label>External Page</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Secondary_Button_Value__c</fullName>
+        <description>The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</inlineHelpText>
+        <label>Secondary Button Value</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Title_Label__c</fullName>
+        <description>The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</inlineHelpText>
+        <label>Title Label Name</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>NPSP Get Started Checklist Item</label>
+    <pluralLabel>NPSP Get Started Checklist Items</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
