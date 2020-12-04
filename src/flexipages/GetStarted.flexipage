@@ -5,7 +5,7 @@
             <componentName>gsVideoHeader</componentName>
         </componentInstances>
         <componentInstances>
-            <componentName>gsAdminSetup</componentName>
+            <componentName>gsChecklistSetup</componentName>
         </componentInstances>
         <name>region1</name>
         <type>Region</type>
