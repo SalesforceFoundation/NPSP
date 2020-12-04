@@ -296,10 +296,10 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
-        <members>GS_AdminSetup</members>
-        <members>GS_AdminSetup_TEST</members>
         <members>GS_ApplicationStatusController</members>
         <members>GS_ApplicationStatusController_TEST</members>
+        <members>GS_ChecklistSetup</members>
+        <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -389,6 +389,8 @@
         <members>PS_Request_TEST</members>
         <members>RD2_ApiService</members>
         <members>RD2_ApiService_TEST</members>
+        <members>RD2_CancelCommitmentService</members>
+        <members>RD2_CancelCommitmentService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -656,8 +658,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>RD2_CancelCommitmentService</members>
-        <members>RD2_CancelCommitmentService_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1401,24 +1401,24 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Description_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Extra_Info_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.GS_Admin_Checklist_Section__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Has_Link__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Image__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Link_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Link_URL__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Position__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Type__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Primary_Button_Value__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Label__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Type__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Secondary_Button_Value__c</members>
-        <members>GS_Admin_Checklist_Item__mdt.Title_Label__c</members>
-        <members>GS_Admin_Checklist_Section__mdt.Description_Label__c</members>
-        <members>GS_Admin_Checklist_Section__mdt.Position__c</members>
-        <members>GS_Admin_Checklist_Section__mdt.Title_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Description_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Extra_Info_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.GS_Checklist_Section__c</members>
+        <members>GetStartedChecklistItem__mdt.Has_Link__c</members>
+        <members>GetStartedChecklistItem__mdt.Image__c</members>
+        <members>GetStartedChecklistItem__mdt.Link_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Link_URL__c</members>
+        <members>GetStartedChecklistItem__mdt.Position__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Type__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Value__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Type__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Value__c</members>
+        <members>GetStartedChecklistItem__mdt.Title_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Description_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Position__c</members>
+        <members>GetStartedChecklistSection__mdt.Title_Label__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>RecurringDonationStatusMapping__mdt.State__c</members>
@@ -3357,27 +3357,27 @@
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
-        <members>GS_Admin_Checklist_Item.Add_User</members>
-        <members>GS_Admin_Checklist_Item.Communicate_With_Users</members>
-        <members>GS_Admin_Checklist_Item.Create_a_Donation</members>
-        <members>GS_Admin_Checklist_Item.Custom_Fields</members>
-        <members>GS_Admin_Checklist_Item.Fundraising_process</members>
-        <members>GS_Admin_Checklist_Item.Go_Further</members>
-        <members>GS_Admin_Checklist_Item.Import_Data</members>
-        <members>GS_Admin_Checklist_Item.Manage_Change</members>
-        <members>GS_Admin_Checklist_Item.NPSP_Cloud</members>
-        <members>GS_Admin_Checklist_Item.NPSP_Guide</members>
-        <members>GS_Admin_Checklist_Item.NPSP_Settings</members>
-        <members>GS_Admin_Checklist_Item.Page_Layouts</members>
-        <members>GS_Admin_Checklist_Item.Prepare_NPSP_Cloud</members>
-        <members>GS_Admin_Checklist_Item.Review_Company</members>
-        <members>GS_Admin_Checklist_Item.Running_Reports</members>
-        <members>GS_Admin_Checklist_Item.Setup_Contact</members>
-        <members>GS_Admin_Checklist_Item.Stay_Track</members>
-        <members>GS_Admin_Checklist_Item.Train_Users</members>
-        <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
-        <members>GS_Admin_Checklist_Section.Explore_NPSP</members>
-        <members>GS_Admin_Checklist_Section.Make_it_your_own</members>
+        <members>GetStartedChecklistItem.Add_User</members>
+        <members>GetStartedChecklistItem.Communicate_With_Users</members>
+        <members>GetStartedChecklistItem.Create_a_Donation</members>
+        <members>GetStartedChecklistItem.Custom_Fields</members>
+        <members>GetStartedChecklistItem.Fundraising_process</members>
+        <members>GetStartedChecklistItem.Go_Further</members>
+        <members>GetStartedChecklistItem.Import_Data</members>
+        <members>GetStartedChecklistItem.Manage_Change</members>
+        <members>GetStartedChecklistItem.NPSP_Cloud</members>
+        <members>GetStartedChecklistItem.NPSP_Guide</members>
+        <members>GetStartedChecklistItem.NPSP_Settings</members>
+        <members>GetStartedChecklistItem.Page_Layouts</members>
+        <members>GetStartedChecklistItem.Prepare_NPSP_Cloud</members>
+        <members>GetStartedChecklistItem.Review_Company</members>
+        <members>GetStartedChecklistItem.Running_Reports</members>
+        <members>GetStartedChecklistItem.Setup_Contact</members>
+        <members>GetStartedChecklistItem.Stay_Track</members>
+        <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
+        <members>GetStartedChecklistSection.Explore_NPSP</members>
+        <members>GetStartedChecklistSection.Make_it_your_own</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -3424,8 +3424,8 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
-        <members>GS_Admin_Checklist_Item__mdt</members>
-        <members>GS_Admin_Checklist_Section__mdt</members>
+        <members>GetStartedChecklistItem__mdt</members>
+        <members>GetStartedChecklistSection__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
@@ -3768,20 +3768,20 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
-        <members>GS_Admin_Checklist_Item__mdt-de</members>
-        <members>GS_Admin_Checklist_Item__mdt-en_US</members>
-        <members>GS_Admin_Checklist_Item__mdt-es</members>
-        <members>GS_Admin_Checklist_Item__mdt-fr</members>
-        <members>GS_Admin_Checklist_Item__mdt-iw</members>
-        <members>GS_Admin_Checklist_Item__mdt-ja</members>
-        <members>GS_Admin_Checklist_Item__mdt-nl_NL</members>
-        <members>GS_Admin_Checklist_Section__mdt-de</members>
-        <members>GS_Admin_Checklist_Section__mdt-en_US</members>
-        <members>GS_Admin_Checklist_Section__mdt-es</members>
-        <members>GS_Admin_Checklist_Section__mdt-fr</members>
-        <members>GS_Admin_Checklist_Section__mdt-iw</members>
-        <members>GS_Admin_Checklist_Section__mdt-ja</members>
-        <members>GS_Admin_Checklist_Section__mdt-nl_NL</members>
+        <members>GetStartedChecklistItem__mdt-de</members>
+        <members>GetStartedChecklistItem__mdt-en_US</members>
+        <members>GetStartedChecklistItem__mdt-es</members>
+        <members>GetStartedChecklistItem__mdt-fr</members>
+        <members>GetStartedChecklistItem__mdt-iw</members>
+        <members>GetStartedChecklistItem__mdt-ja</members>
+        <members>GetStartedChecklistItem__mdt-nl_NL</members>
+        <members>GetStartedChecklistSection__mdt-de</members>
+        <members>GetStartedChecklistSection__mdt-en_US</members>
+        <members>GetStartedChecklistSection__mdt-es</members>
+        <members>GetStartedChecklistSection__mdt-fr</members>
+        <members>GetStartedChecklistSection__mdt-iw</members>
+        <members>GetStartedChecklistSection__mdt-ja</members>
+        <members>GetStartedChecklistSection__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
@@ -3993,8 +3993,8 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
-        <members>GS_Admin_Checklist_Item__mdt-GS Admin Checklist Item Layout</members>
-        <members>GS_Admin_Checklist_Section__mdt-GS Admin Checklist Section Layout</members>
+        <members>GetStartedChecklistItem__mdt-GS Checklist Item Layout</members>
+        <members>GetStartedChecklistSection__mdt-GS Checklist Section Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
@@ -4053,11 +4053,11 @@
         <members>geWidgetService</members>
         <members>gsAccordionLabel</members>
         <members>gsAccordionSection</members>
-        <members>gsAdminSetup</members>
         <members>gsApplicationStatus</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
         <members>gsChecklistItem</members>
+        <members>gsChecklistSetup</members>
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
