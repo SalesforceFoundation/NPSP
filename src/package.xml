@@ -1454,6 +1454,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.ACH_Code__c</members>
         <members>npe01__OppPayment__c.ACH_Last_4__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
@@ -1464,6 +1465,8 @@
         <members>npe01__OppPayment__c.Card_Network__c</members>
         <members>npe01__OppPayment__c.Donor_Cover_Amount__c</members>
         <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_API_Declined_Reason__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_API_Status__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_ID__c</members>
@@ -3322,6 +3325,7 @@
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_ACH_Code</members>
         <members>Data_Import_Field_Mapping.Payment_ACH_Last_4</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_UTC_Timestamp</members>
@@ -3331,6 +3335,8 @@
         <members>Data_Import_Field_Mapping.Payment_Card_Network</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
         <members>Data_Import_Field_Mapping.Payment_Donor_Cover_Amount</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_API_Declined_Reason</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_API_Status</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_ID</members>

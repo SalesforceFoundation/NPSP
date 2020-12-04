@@ -53,6 +53,17 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>ACH_Consent__c</fullName>
+        <description>The Elevate Giving Page consent message the donor agreed to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Elevate Giving Page consent message the donor agreed to.</inlineHelpText>
+        <label>Payment ACH Consent Message</label>
+        <length>2000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Account1ImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Account1 Import Status</label>
@@ -1201,8 +1212,8 @@
     </fields>
     <fields>
         <fullName>NPSP_Data_Import_Batch__c</fullName>
-        <description>Lookup to the NPSP Data Import Batch this record belongs to.</description>
         <deleteConstraint>SetNull</deleteConstraint>
+        <description>Lookup to the NPSP Data Import Batch this record belongs to.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the NPSP Data Import Batch this record belongs to.</inlineHelpText>
         <label>NPSP Data Import Batch</label>
@@ -1286,6 +1297,28 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>PaymentImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PaymentImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Payment Imported</label>
+        <referenceTo>npe01__OppPayment__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Payment_ACH_Code__c</fullName>
         <description>The Standard Entry Class (SEC) code used for this ACH transaction.</description>
         <externalId>false</externalId>
@@ -1312,39 +1345,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>ACH_Consent__c</fullName>
-        <description>The Elevate Giving Page consent message the donor agreed to.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The Elevate Giving Page consent message the donor agreed to.</inlineHelpText>
-        <label>Payment ACH Consent Message</label>
-        <length>2000</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>PaymentImportStatus__c</fullName>
-        <externalId>false</externalId>
-        <label>Payment Import Status</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>PaymentImported__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Payment Imported</label>
-        <referenceTo>npe01__OppPayment__c</referenceTo>
-        <relationshipLabel>NPSP Data Imports</relationshipLabel>
-        <relationshipName>NPSP_Data_Imports</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>Payment_Authorization_Token__c</fullName>
         <description>Authorization token for a transaction.</description>
         <externalId>false</externalId>
@@ -1355,8 +1355,8 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
-    </fields>       
-    <fields>     
+    </fields>
+    <fields>
         <fullName>Payment_Authorized_Date__c</fullName>
         <description>The date and time the transaction was authorized.</description>
         <externalId>false</externalId>
@@ -1441,7 +1441,7 @@
         <fullName>Payment_Declined_Reason__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
-        <label>Payment Declined Reason</label>
+        <label>Payment Elevate API Declined Reason</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1459,8 +1459,8 @@
         <scale>2</scale>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
-    </fields>  
-    <fields>      
+    </fields>
+    <fields>
         <fullName>Payment_Elevate_Created_Date__c</fullName>
         <description>The date and time the transaction was created.</description>
         <externalId>false</externalId>
@@ -1579,8 +1579,8 @@
     </fields>
     <fields>
         <fullName>Payment_Paid__c</fullName>
-        <externalId>false</externalId>
         <description>Indicates if this payment is paid or not.</description>
+        <externalId>false</externalId>
         <inlineHelpText>Indicates if this payment is paid or not.</inlineHelpText>
         <label>Payment Paid</label>
         <required>false</required>
@@ -1598,7 +1598,7 @@
                     <fullName>False</fullName>
                     <default>false</default>
                     <label>False</label>
-                </value>                
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
@@ -1616,17 +1616,17 @@
     </fields>
     <fields>
         <fullName>Payment_Status__c</fullName>
-        <externalId>false</externalId>
         <description>The API status of the transaction from Elevate.</description>
+        <externalId>false</externalId>
         <inlineHelpText>The API status of the transaction from Elevate.</inlineHelpText>
-        <label>Payment Status</label>
+        <label>Payment Elevate API Status</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>      
+    <fields>
         <fullName>Payment_Type__c</fullName>
         <description>Indicates the type of transaction.</description>
         <externalId>false</externalId>
