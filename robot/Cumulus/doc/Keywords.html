@@ -1933,6 +1933,22 @@ pre {
                 <td class="kwdoc"><p>verifies if actual row count matches with expected value</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Verify Table Contains Row">
+                <td class="kwname">
+                  Verify Table Contains Row
+                </td>
+                <td class="kwargs">
+                  
+                  <i>table_name</i>, 
+                  
+                  <i>record</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies that batch number format table contains a record with given name and record field contains specified value. Example usage: Verify Table Contains Row | Batches | MyBatch | Batch Number=MyBatch-01</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Verify Title">
                 <td class="kwname">
                   Verify Title
@@ -5111,6 +5127,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Selects value from list identified by list_name. uses selenium select from list by label keyword</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Set Batch Number Format Status">
+                <td class="kwname">
+                  Set Batch Number Format Status
+                </td>
+                <td class="kwargs">
+                  
+                  <i>number_format</i>, 
+                  
+                  <i>status</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Activates or Deactivates the given batch number format by clicking on dropdown and selecting option And verifies that the format has been activated or deactivated based on selection</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Advanced Mapping Is Not Enabled">
                 <td class="kwname">
                   Verify Advanced Mapping Is Not Enabled
@@ -5696,7 +5726,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>**kwargs</i>
+                  <i>type=None</i>
                   
                 </td>
                 <td class="kwdoc"><p>Finds the pause button on the recurring donations details view page, clicks the button and waits for the modal to appear</p></td>
@@ -5885,6 +5915,16 @@ Populate Pause Modal
                 <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Wait For Rd2 Modal">
+                <td class="kwname">
+                  Wait For Rd2 Modal
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
@@ -6058,7 +6098,7 @@ Populate Pause Modal
       
     </div>
     <div class="footer">
-      Generated on Monday November 09, 02:59 PM - cumulusci v3.22.0
+      Generated on Wednesday December 02, 03:00 PM - cumulusci v3.23.0
     </div>
   </body>
 </html>
