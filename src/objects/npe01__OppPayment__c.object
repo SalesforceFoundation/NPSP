@@ -79,6 +79,20 @@
         <label>Payment Wizard FS</label>
     </fieldSets>
     <fields>
+        <fullName>ACH_Code__c</fullName>
+        <description>The Standard Entry Class (SEC) code used for this ACH transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Standard Entry Class (SEC) code used for this ACH transaction.</inlineHelpText>
+        <label>ACH Code</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Payment_ACH_Code</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
         <fullName>ACH_Last_4__c</fullName>
         <description>The last four digits of the bank account used for this transaction.</description>
         <externalId>false</externalId>
@@ -191,6 +205,30 @@
         <inlineHelpText>For refunds only. Shows the ID of the original payment transaction from Elevate.</inlineHelpText>
         <label>Elevate Original Payment ID</label>
         <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Elevate_Payment_API_Declined_Reason__c</fullName>
+        <description>Provides detail about why a transaction was declined.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+        <label>Elevate Payment API Declined Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Elevate_Payment_API_Status__c</fullName>
+        <description>The API status value for this Elevate connected Payment record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The API status value for this Elevate connected Payment record.</inlineHelpText>
+        <label>Elevate Payment API Status</label>
+        <length>80</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
