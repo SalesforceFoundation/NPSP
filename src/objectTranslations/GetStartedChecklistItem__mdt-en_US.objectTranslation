@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP Get Started Checklist Item</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>NPSP Get Started Checklist Items</value>
+    </caseValues>
+    <fields>
+        <help><!-- The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Description Label Name --></label>
+        <name>Description_Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name of the Extra Info Label, which provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner. --></help>
+        <label><!-- Extra Info Label Name --></label>
+        <name>Extra_Info_Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- The section on the Get Started page that this item is part of. --></help>
+        <label><!-- GS Checklist Section --></label>
+        <name>GS_Checklist_Section__c</name>
+        <relationshipLabel><!-- GS Checklist Items --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates if the item has a link to display. --></help>
+        <label><!-- Has Link --></label>
+        <name>Has_Link__c</name>
+    </fields>
+    <fields>
+        <help><!-- The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render. --></help>
+        <label><!-- Image --></label>
+        <name>Image__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name for the Link label of a link on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Link Label Name --></label>
+        <name>Link_Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- The target URL for a link on the Get Started page. --></help>
+        <label><!-- Link URL --></label>
+        <name>Link_URL__c</name>
+    </fields>
+    <fields>
+        <help><!-- The position of this section item on the Get Started page. --></help>
+        <label><!-- Position --></label>
+        <name>Position__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name for the Primary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Primary Button Label Name --></label>
+        <name>Primary_Button_Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page. --></help>
+        <label><!-- Primary Button Type --></label>
+        <name>Primary_Button_Type__c</name>
+        <picklistValues>
+            <masterLabel>Disabled</masterLabel>
+            <translation><!-- Disabled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Page</masterLabel>
+            <translation><!-- External Page --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SFDC New Tab</masterLabel>
+            <translation><!-- SFDC New Tab --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The action of the Primary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs. --></help>
+        <label><!-- Primary Button Value --></label>
+        <name>Primary_Button_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Secondary Button Label Name --></label>
+        <name>Secondary_Button_Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page --></help>
+        <label><!-- Secondary Button Type --></label>
+        <name>Secondary_Button_Type__c</name>
+        <picklistValues>
+            <masterLabel>Disabled</masterLabel>
+            <translation><!-- Disabled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>External Page</masterLabel>
+            <translation><!-- External Page --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SFDC New Tab</masterLabel>
+            <translation><!-- SFDC New Tab --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs. --></help>
+        <label><!-- Secondary Button Value --></label>
+        <name>Secondary_Button_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Title Label Name --></label>
+        <name>Title_Label__c</name>
+    </fields>
+    <layouts>
+        <layout>GS Checklist Item Layout</layout>
+        <sections>
+            <label><!-- Buttons --></label>
+            <section>Buttons</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Info --></label>
+            <section>Info</section>
+        </sections>
+        <sections>
+            <label><!-- Link --></label>
+            <section>Link</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
