@@ -192,7 +192,7 @@ public with sharing class RD2_CancelCommitmentService_TEST {
         UTIL_Http.Response response = buildCommitmentResponse('ACTIVE');
 
         RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = buildLogger();        
         service.handleResponse(wrapper, response, logger);
 
         System.assertEquals(false, wrapper.isDone,
@@ -214,7 +214,7 @@ public with sharing class RD2_CancelCommitmentService_TEST {
         UTIL_Http.Response response = buildCommitmentResponse('INACTIVE');
 
         RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = buildLogger();
         service.handleResponse(wrapper, response, logger);
 
         System.assertEquals(true, wrapper.isDone,
@@ -234,7 +234,7 @@ public with sharing class RD2_CancelCommitmentService_TEST {
         UTIL_Http.Response response = buildTimeoutResponse();
 
         RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = buildLogger();
         service.handleResponse(wrapper, response, logger);
 
         System.assertEquals(false, wrapper.isDone,
@@ -256,7 +256,7 @@ public with sharing class RD2_CancelCommitmentService_TEST {
         UTIL_Http.Response response = buildNotFoundResponse();
 
         RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = buildLogger();
         service.handleResponse(wrapper, response, logger);
 
         System.assertEquals(true, wrapper.isDone,
@@ -278,7 +278,7 @@ public with sharing class RD2_CancelCommitmentService_TEST {
         UTIL_Http.Response response = buildConflictResponse();
 
         RD2_CancelCommitmentService service = new RD2_CancelCommitmentService();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = buildLogger();
         service.handleResponse(wrapper, response, logger);
 
         System.assertEquals(false, wrapper.isDone,
@@ -410,6 +410,17 @@ public with sharing class RD2_CancelCommitmentService_TEST {
     */
     private static void assertCancelCommitmentError(String message, Id recordId) {
         RD2_ElevateIntegrationService_TEST.assertError(message, recordId, LOG_TYPE_COMMITMENT_CANCEL);
+    }
+
+    /****
+    * @description Builds a logger with expected context and SObject type
+    * @return ERR_LogService.Logger
+    */
+    private static ERR_LogService.Logger buildLogger() {
+        return new ERR_LogService.Logger(
+            ERR_Handler_API.Context.Elevate,
+            npe03__Recurring_Donation__c.SObjectType
+        );
     }
 
 }
