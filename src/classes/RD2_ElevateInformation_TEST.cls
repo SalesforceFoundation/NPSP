@@ -37,9 +37,7 @@
 @IsTest(IsParallel=false)
 private with sharing class RD2_ElevateInformation_TEST {
 
-    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
-
-
+    
     /****
     * @description Verifies required data is returned to the Elevate widget
     */

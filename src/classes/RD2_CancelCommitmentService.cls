@@ -75,7 +75,10 @@ public without sharing class RD2_CancelCommitmentService {
     public void cancelCommitments(List<RecordWrapper> closedRecords) {
         List<npe03__Recurring_Donation__c> rdsToUpdate = new List<npe03__Recurring_Donation__c>();
         List<RecordWrapper> queuedRecords = new List<RecordWrapper>();
-        RD2_ElevateIntegrationService.Logger logger = new RD2_ElevateIntegrationService.Logger();
+        ERR_LogService.Logger logger = new ERR_LogService.Logger(
+            ERR_Handler_API.Context.Elevate,
+            npe03__Recurring_Donation__c.SObjectType
+        );
 
         for (RecordWrapper record : closedRecords) {
             Integer calloutsRemaining = Limits.getLimitCallouts();
@@ -192,13 +195,13 @@ public without sharing class RD2_CancelCommitmentService {
     * @description Handles response from the Payments API
     * @param closedRecord RecordWrapper
     * @param response UTIL_Http.Response
-    * @param logger RD2_ElevateIntegrationService.Logger
+    * @param logger Logger to create error logs
     */
     @TestVisible
     private void handleResponse(
         RecordWrapper closedRecord,
         UTIL_Http.Response response,
-        RD2_ElevateIntegrationService.Logger logger
+        ERR_LogService.Logger logger
     ) {
         // Successful cancellation
         if (isCancelled(closedRecord, response)) {
