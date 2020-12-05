@@ -1418,6 +1418,14 @@
         <value>to</value>
     </labels>
     <labels>
+        <fullName>ERR_RecordLogTitle</fullName>
+        <categories>Error Log</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title on a page displaying error logs for a record</shortDescription>
+        <value>Error Log</value>
+    </labels>
+    <labels>
         <fullName>ErrorEmailMessage</fullName>
         <categories>Error</categories>
         <language>en_US</language>
