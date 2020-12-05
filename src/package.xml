@@ -280,6 +280,10 @@
         <members>ERR_Handler_API</members>
         <members>ERR_Handler_CTRL_TEST</members>
         <members>ERR_Handler_TEST</members>
+        <members>ERR_LogService</members>
+        <members>ERR_LogService_TEST</members>
+        <members>ERR_Log_CTRL</members>
+        <members>ERR_Log_TEST</members>
         <members>ERR_Notifier</members>
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
@@ -802,6 +806,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>ERR_RecordLog</members>
         <members>GE_GiftEntry</members>
         <members>GE_GiftEntryForm</members>
         <members>GE_TemplateBuilder</members>
@@ -1705,6 +1710,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
+        <members>ERR_RecordLogTitle</members>
         <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
@@ -4021,6 +4027,7 @@
         <members>bdiObjectMappings</members>
         <members>customDatatable</members>
         <members>customPicklistType</members>
+        <members>errRecordLog</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>

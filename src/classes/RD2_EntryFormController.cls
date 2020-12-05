@@ -321,15 +321,21 @@ public with sharing class RD2_EntryFormController {
     * @return void
     */
     private static void processError(Id recordId, String errorMessage) {
-        RD2_ElevateIntegrationService.Logger errorLogger = new RD2_ElevateIntegrationService.Logger();
-        errorLogger.addError(
+        ERR_LogService.Logger logger = new ERR_LogService.Logger(
+            ERR_Handler_API.Context.Elevate,
+            npe03__Recurring_Donation__c.SObjectType
+        );
+
+        logger.addError(
             recordId,
             errorMessage,
             RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
         );
 
-        errorLogger.processErrors();
+        logger.processErrors();
     }
+    
+
     /**
     * @description Handles sending commitment request and saving its values on the RD
     */
@@ -413,9 +419,7 @@ public with sharing class RD2_EntryFormController {
                 }
             } catch (Exception e) {
                 throw e;
-            }
-
-           
+            }           
         }
     }
 
