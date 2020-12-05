@@ -110,7 +110,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
      * @return String The latest error message if no successful payment is created after it.
      */
     private static String getLatestErrorMessage(Id recordId) {
-        Error__c error = finder.getLatestError(recordId);
+        Error__c error = new ERR_LogService().getLatestError(recordId);
 
         if (error == null) {
             return null;
@@ -132,26 +132,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
     /***
      * @description Retrieves records
      */
-    public without sharing class RecordFinder {
-
-        /***
-         * @description Returns the latest error (if any) for the provided record
-         * @param recordId Record Id
-         * @return Error__c
-         */
-        public Error__c getLatestError(Id recordId) {
-            List<Error__c> errors = [
-                SELECT Full_Message__c, CreatedDate
-                FROM Error__c
-                WHERE Related_Record_ID__c = :recordId
-                ORDER BY CreatedDate DESC
-                LIMIT 1
-            ];
-
-            return errors == null || errors.isEmpty()
-                ? null
-                : errors[0];
-        }
+    private without sharing class RecordFinder {
 
         /***
          * @description Returns the latest Closed Won Opportunity for the provided record
