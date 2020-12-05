@@ -1,13 +1,15 @@
 import { LightningElement, api, wire, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { constructErrorMessage, buildFieldDescribes, extractFieldInfo, isNull, isUndefined } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, getNamespace } from 'c/utilCommon';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
@@ -17,7 +19,6 @@ import statusElevateCancelInProgress from '@salesforce/label/c.RD2_ElevateCancel
 import textSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import textError from '@salesforce/label/c.AssistiveTextError';
 import textWarning from '@salesforce/label/c.AssistiveTextWarning';
-import textProgress from '@salesforce/label/c.ProgressMarkerAssistiveTextProgress';
 import textNewWindow from '@salesforce/label/c.AssistiveTextNewWindow';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
@@ -40,7 +41,7 @@ const FIELDS = [
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
 
-export default class rd2ElevateInformation extends LightningElement {
+export default class rd2ElevateInformation extends NavigationMixin(LightningElement) {
 
     labels = Object.freeze({
         header,
@@ -51,7 +52,6 @@ export default class rd2ElevateInformation extends LightningElement {
         textSuccess,
         textError,
         textWarning,
-        textProgress,
         textNewWindow,
         flsErrorHeader,
         flsErrorDetail,
@@ -90,38 +90,40 @@ export default class rd2ElevateInformation extends LightningElement {
      * @description Initializes the component with data
      */
     connectedCallback() {
-        getData({ recordId: this.recordId })
-            .then(response => {
-                this.isElevateCustomer = response.isElevateCustomer;
-                this.permissions.alert = response.alert;
+        if (this.recordId) {
+            getData({ recordId: this.recordId })
+                .then(response => {
+                    this.isElevateCustomer = response.isElevateCustomer;
+                    this.permissions.alert = response.alert;
 
-                this.permissions.hasAccess = this.isElevateCustomer === true
-                    && response.hasFieldPermissions === true
-                    && isNull(this.permissions.alert);
+                    this.permissions.hasAccess = this.isElevateCustomer === true
+                        && response.hasFieldPermissions === true
+                        && isNull(this.permissions.alert);
 
-                if (this.isElevateCustomer === true) {
-                    if (!isNull(this.permissions.alert)) {
-                        this.handleError({
-                            detail: this.permissions.alert
-                        });
+                    if (this.isElevateCustomer === true) {
+                        if (!isNull(this.permissions.alert)) {
+                            this.handleError({
+                                detail: this.permissions.alert
+                            });
 
-                    } else if (response.hasFieldPermissions === false) {
-                        this.handleError({
-                            header: this.labels.flsErrorHeader,
-                            detail: this.labels.flsErrorDetail
-                        });
+                        } else if (response.hasFieldPermissions === false) {
+                            this.handleError({
+                                header: this.labels.flsErrorHeader,
+                                detail: this.labels.flsErrorDetail
+                            });
 
-                    } else if (!isNull(response.errorMessage)) {
-                        this.setErrorStatus(response.errorMessage);
+                        } else if (!isNull(response.errorMessage)) {
+                            this.setErrorStatus(response.errorMessage);
+                        }
                     }
-                }
-            })
-            .catch((error) => {
-                this.handleError(error);
-            })
-            .finally(() => {
-                this.checkLoading();
-            });
+                })
+                .catch((error) => {
+                    this.handleError(error);
+                })
+                .finally(() => {
+                    this.checkLoading();
+                });
+        }
     }
 
     /***
@@ -133,10 +135,6 @@ export default class rd2ElevateInformation extends LightningElement {
             let rdObjectInfo = response.data;
 
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
-            );
 
             this.checkLoading();
         }
@@ -158,7 +156,8 @@ export default class rd2ElevateInformation extends LightningElement {
         if (response.data) {
             this.rdRecord = response.data;
 
-            if (this.getValue(FIELD_STATUS_REASON.fieldApiName) === this.labels.statusElevatePending) {
+            const statusReason = this.getValue(FIELD_STATUS_REASON.fieldApiName);
+            if (statusReason === this.labels.statusElevatePending) {
                 this.status.isProgress = true;
                 this.status.message = this.labels.statusElevateCancelInProgress;
             }
@@ -279,10 +278,25 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     /**
-     * @description Displays error log
+     * @description Displays record error log page by navigating to
+     * the "ERR_RecordLog" Lightning Component wrapper displaying the "errRecordLog" LWC.
+     * The LC name has the namespace, or "c" in unmanaged package, followed by "__" prefix.
+     * The state attributes representing must be prefixed with "c__" prefix, see the following for more details:
+     * https://developer.salesforce.com/docs/component-library/documentation/lwc/lwc.use_navigate_add_params_url
      */
     navigateToErrorLog() {
+        const namespace = getNamespace(ERROR_OBJECT.objectApiName);
+        const compName = (namespace ? namespace : 'c') + "__ERR_RecordLog";
 
+        this[NavigationMixin.Navigate]({
+            type: "standard__component",
+            attributes: {
+                componentName: compName
+            },
+            state: {
+                c__recordId: this.recordId
+            }
+        });
     }
 
     /**
@@ -337,11 +351,11 @@ export default class rd2ElevateInformation extends LightningElement {
     }
 
     get qaLocatorProgressRing() {
-        return `${this.labels.textProgress} 75%`;
+        return `progress ring`;
     }
 
     get qaLocatorStatusIcon() {
-        return `icon Status ${this.status.value}`;
+        return `icon Status`;
     }
 
     get qaLocatorStatusMessage() {
