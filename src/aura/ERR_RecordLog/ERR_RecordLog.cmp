@@ -1,0 +1,13 @@
+<aura:component implements="lightning:isUrlAddressable">
+
+    <aura:attribute type="String" name="recordId" 
+        description="Contains error logs related record Id value" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.reInit}" />
+
+    <div class="slds-card">
+        <c:errRecordLog recordId="{!v.recordId}"></c:errRecordLog>
+    </div>
+
+</aura:component>

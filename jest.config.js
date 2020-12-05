@@ -9,5 +9,6 @@ module.exports = {
         '<rootDir>/test/specs/'
     ],
     setupFiles: ['./jest.setup.js'],
-    reporters: ["default"]
+    reporters: ["default"],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };
