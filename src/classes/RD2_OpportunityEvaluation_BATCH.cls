@@ -78,8 +78,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private Boolean isBatchInProgress {
         get {
             if (isBatchInProgress == null) {
-                //in this context, we have at least 1 Batch running(this itself).
-                isBatchInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+                isBatchInProgress = new UTIL_BatchJobService().isAnotherBatchInProgress(batchClassName);
             }
             return isBatchInProgress;
         }
