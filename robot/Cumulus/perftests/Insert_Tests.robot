@@ -15,13 +15,13 @@ Disable Duplicate Matching
     Run Task        set_duplicate_rule_status
         ...     active=${False}
 
-Insert 200 Contacts
-    [Documentation]  Create 200 Contacts in CONTACTS suite variable
+Insert 200 Contacts With Address
+    [Documentation]  Create 200 Contacts (With Address) in CONTACTS suite variable
     Set Suite Variable      ${COUNTER}   ${COUNTER + 1}
     Log to Console             ${COUNTER}
     ${random}=     Generate Random String     16
     ${timestamp} =	Get Current Date    result_format=epoch
-    @{objects}=  Generate Test Data  Contact  200  
+    @{objects}=  Generate Test Data  Contact  200
         ...  FirstName={{fake.first_name}}
         ...  LastName={{fake.last_name}}
         ...  MailingStreet={{fake.street_address}}
@@ -34,12 +34,35 @@ Insert 200 Contacts
     Salesforce Collection Insert  ${objects}
     [return]    ${objects}
 
+Insert 200 Contacts No Address
+    [Documentation]  Create 200 Contacts (No Address) in CONTACTS suite variable
+    Set Suite Variable      ${COUNTER}   ${COUNTER + 1}
+    Log to Console             ${COUNTER}
+    ${random}=     Generate Random String     16
+    ${timestamp} =	Get Current Date    result_format=epoch
+    @{objects}=  Generate Test Data  Contact  200
+        ...  FirstName={{fake.first_name}}
+        ...  LastName={{fake.last_name}}
+        ...  Phone={{fake.phone_number}}
+        ...  Title=${random}
+        ...  Email=${timestamp}+{{number}}@${random}-{{number}}.com
+    Salesforce Collection Insert  ${objects}
+    [return]    ${objects}
+
 *** Test Cases ***
 
 Insert Contact Perf Test 10000
     [Setup]     Disable Duplicate Matching
     [Tags]    long     insertions
     FOR    ${index}    IN RANGE     50
-        Insert 200 Contacts
+        Insert 200 Contacts With Address
+        Log To Console   Inserted batch ${index}
+    END
+
+Insert Contact Perf Test 10000 No Address
+    [Setup]     Disable Duplicate Matching
+    [Tags]    long     insertions
+    FOR    ${index}    IN RANGE     50
+        Insert 200 Contacts No Address
         Log To Console   Inserted batch ${index}
     END
