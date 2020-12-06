@@ -227,6 +227,9 @@ public without sharing class UTIL_BatchJobService {
     public AsyncApexJob getAsyncApexJob(String className) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
 
+        //Remove the namespace from the class name
+        className = UTIL_Namespace.removeClassNamespace(className);  
+
         List<AsyncApexJob> apexJobs = [
             SELECT
                 Status, ApexClass.Name,
