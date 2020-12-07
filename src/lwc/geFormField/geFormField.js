@@ -225,7 +225,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isLightningInput() {
-        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined' && !this.isTrueFalsePicklist;
+        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined' && !this.hasPicklistOverride;
     }
 
     get isRichText() {
@@ -248,11 +248,11 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist || this.isTrueFalsePicklist;
+        return this.fieldType === PICKLIST_TYPE || this.hasPicklistOverride;
     }
 
     get isCheckbox() {
-        return this.fieldType === BOOLEAN_TYPE && !this.isTrueFalsePicklist;
+        return this.fieldType === BOOLEAN_TYPE;
     }
 
     get booleanValue() {
@@ -261,8 +261,8 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get isTrueFalsePicklist() {
-        return this.element.isTrueFalsePicklist;
+    get hasPicklistOverride() {
+        return isNotEmpty(this.element.picklistOptionOverride);
     }
 
     get isTextArea() {
@@ -534,31 +534,17 @@ export default class GeFormField extends LightningElement {
     }
 
     get picklistValues() {
+        if(this.element.picklistOptionOverride) {
+            return this.element.picklistOptionOverride;
+        }
         if (this.targetFieldApiName === 'RecordTypeId') {
             return this.getPicklistOptionsForRecordTypeIds();
-        }
-        if (this.element.isTrueFalsePicklist) {
-            return this.trueFalsePicklistValues();
         }
         return this._picklistValues;
     }
 
     set picklistValues(values) {
         this._picklistValues = values;
-    }
-
-    trueFalsePicklistValues() {
-        const trueOpt = { label: 'True', value: 'True' };
-        const falseOpt = { label: 'False', value: 'False' };
-        const noneOpt = this.nonePicklistValue();
-        return [noneOpt, trueOpt, falseOpt];
-    }
-
-    nonePicklistValue() {
-        return {
-            label: this.CUSTOM_LABELS.commonLabelNone,
-            value: this.CUSTOM_LABELS.commonLabelNone
-        };
     }
 
     get qaLocatorPicklist() {
@@ -574,7 +560,7 @@ export default class GeFormField extends LightningElement {
      * and build the picklist options array from there.
      */
     get fullFieldApiNameForStandardPicklists() {
-        if (this.isRecordTypeIdLookup || !this.isPicklist || this.isTrueFalsePicklist) return undefined;
+        if (this.isRecordTypeIdLookup || !this.isPicklist || this.hasPicklistOverride) return undefined;
         return `${this.objectApiName}.${this.targetFieldApiName}`;
     }
 

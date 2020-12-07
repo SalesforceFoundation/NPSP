@@ -12,10 +12,9 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api value;
     @api className;
     @api qaLocatorBase;
-    @api isTrueFalsePicklist;
 
     @track _objectDescribeInfo;
-    @track _picklistValues;
+    @track picklistValues;
     @track defaultRecordTypeId;
 
     _recordTypeId;
@@ -97,24 +96,6 @@ export default class GeFormFieldPicklist extends LightningElement {
 
     set recordTypeId(id) {
         this._recordTypeId = id || this.defaultRecordTypeId;
-    }
-
-    get picklistValues() {
-        if (this.isTrueFalsePicklist) {
-            return this.trueFalsePicklistValues();
-        }
-        return this._picklistValues;
-    }
-
-    set picklistValues(value) {
-        this._picklistValues = value;
-    }
-
-    trueFalsePicklistValues() {
-        const trueOpt = { label: 'True', value: 'True' };
-        const falseOpt = { label: 'False', value: 'False' };
-        const noneOpt = this.nonePicklistValue();
-        return [noneOpt, trueOpt, falseOpt];
     }
 
     nonePicklistValue() {

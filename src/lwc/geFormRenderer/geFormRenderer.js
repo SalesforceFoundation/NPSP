@@ -33,7 +33,8 @@ import {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     checkPermissionErrors,
-    isTrueFalsePicklist
+    isTrueFalsePicklist,
+    trueFalsePicklistOptions
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -361,7 +362,9 @@ export default class GeFormRenderer extends LightningElement{
     appendElementHelperData(element) {
         const helper = new GeFormElementHelper(element);
         element.isRenderable = helper.isRenderable();
-        element.isTrueFalsePicklist = helper.isTrueFalsePicklist();
+        if(helper.isTrueFalsePicklist()) {
+            element.picklistOptionOverride = trueFalsePicklistOptions();
+        }
     }
 
     setPermissionsError(errorObject) {
@@ -1560,10 +1563,7 @@ export default class GeFormRenderer extends LightningElement{
             sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
             isDonationRecordTypeName = this.isDonationRecordTypeName(sourceField),
             isDonationDonor = this.isDonationDonor(sourceField),
-            isImportedRecordField = this.isImportedRecordField(sourceField),
-            valueNeedsTransform = isTrueFalsePicklist(GeFormService.getFieldMappingWrapper(event.detail.fieldMappingDevName));
-
-        const formStateValue = valueNeedsTransform ? this.transformForTrueFalsePicklist(value) : value;
+            isImportedRecordField = this.isImportedRecordField(sourceField)
 
         this.updateFormState({
             [sourceField]: isDonationRecordTypeName ? label : formStateValue

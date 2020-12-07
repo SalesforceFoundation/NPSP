@@ -1,5 +1,4 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { isEmpty, isNotEmpty, deepClone, showToast } from 'c/utilCommon';
 
 // Import schema for additionally required fields for the template batch header
@@ -512,6 +511,13 @@ const isTrueFalsePicklist = (fieldMapping) => {
     return false;
 }
 
+const trueFalsePicklistOptions = () => {
+    const noneOpt = { label: CUSTOM_LABELS.commonLabelNone, value: CUSTOM_LABELS.commonLabelNone }
+    const trueOpt = { label: CUSTOM_LABELS.labelBooleanTrue, value: 'True' }
+    const falseOpt = { label: CUSTOM_LABELS.labelBooleanFalse, value: 'False' };
+    return [noneOpt, trueOpt, falseOpt];
+}
+
 const isCheckboxToCheckbox = (fieldMapping) => {
     if(fieldMapping) {
         return fieldMapping.Target_Field_Data_Type === 'BOOLEAN' &&
@@ -550,6 +556,7 @@ export {
     checkPermissionErrors,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
+    trueFalsePicklistOptions,
     getPageAccess,
     addKeyToCollectionItems
 }
