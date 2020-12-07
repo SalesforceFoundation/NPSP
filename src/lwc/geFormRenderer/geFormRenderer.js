@@ -33,6 +33,7 @@ import {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     checkPermissionErrors,
+    isTrueFalsePicklist
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -1289,9 +1290,15 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     getFieldValueForFormState(valueObject, fieldMapping) {
-        return valueObject.value === null ?
-            this.defaultValueFor(fieldMapping.DeveloperName) :
-            valueObject.value;
+        const { value } = valueObject;
+
+        if (valueObject === null) {
+            return this.defaultValueFor(fieldMapping.DeveloperName);
+        } else if (isTrueFalsePicklist(fieldMapping)) {
+            return this.transformForTrueFalsePicklist(value);
+        } 
+
+        return value;
     }
 
     isPaymentImportedObjectMapping(objectMapping) {
@@ -1553,10 +1560,13 @@ export default class GeFormRenderer extends LightningElement{
             sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
             isDonationRecordTypeName = this.isDonationRecordTypeName(sourceField),
             isDonationDonor = this.isDonationDonor(sourceField),
-            isImportedRecordField = this.isImportedRecordField(sourceField);
+            isImportedRecordField = this.isImportedRecordField(sourceField),
+            valueNeedsTransform = isTrueFalsePicklist(GeFormService.getFieldMappingWrapper(event.detail.fieldMappingDevName));
+
+        const formStateValue = valueNeedsTransform ? this.transformForTrueFalsePicklist(value) : value;
 
         this.updateFormState({
-            [sourceField]: isDonationRecordTypeName ? label : value
+            [sourceField]: isDonationRecordTypeName ? label : formStateValue
         });
 
         if (isDonationRecordTypeName) {
@@ -1594,7 +1604,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     sourceFieldFor(fieldMappingDevName) {
-        return GeFormService.fieldMappings[fieldMappingDevName].Source_Field_API_Name;
+        return GeFormService.getFieldMappingWrapper(fieldMappingDevName).Source_Field_API_Name;
+    }
+
+    isTrueFalsePicklist(fieldMappingDevName) {
+        const fieldMapping = GeFormService.fieldMappings[fieldMappingDevName];
+        return isTrueFalsePicklist(fieldMapping);
     }
 
     /*******************************************************************************
@@ -1718,6 +1733,15 @@ export default class GeFormRenderer extends LightningElement{
     get opportunityRecordTypeInfos() {
         return this.opportunityObjectInfo &&
             Object.values(this.opportunityObjectInfo.data.recordTypeInfos);
+    }
+
+    transformForTrueFalsePicklist(value) {
+        if (value === true || value === 'true') {
+            return 'True';
+        } else if (value === false || value === 'false') {
+            return 'False';
+        }
+        return ''; // blank values are valid for picklist/checkbox mappings
     }
 
     setDonationRecordTypeIdInFormState(opportunityRecordTypeId) {
