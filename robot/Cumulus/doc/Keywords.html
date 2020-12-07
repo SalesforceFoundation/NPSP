@@ -1933,6 +1933,22 @@ pre {
                 <td class="kwdoc"><p>verifies if actual row count matches with expected value</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Verify Table Contains Row">
+                <td class="kwname">
+                  Verify Table Contains Row
+                </td>
+                <td class="kwargs">
+                  
+                  <i>table_name</i>, 
+                  
+                  <i>record</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies that batch number format table contains a record with given name and record field contains specified value. Example usage: Verify Table Contains Row | Batches | MyBatch | Batch Number=MyBatch-01</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Verify Title">
                 <td class="kwname">
                   Verify Title
@@ -5123,6 +5139,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Selects value from list identified by list_name. uses selenium select from list by label keyword</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Set Batch Number Format Status">
+                <td class="kwname">
+                  Set Batch Number Format Status
+                </td>
+                <td class="kwargs">
+                  
+                  <i>number_format</i>, 
+                  
+                  <i>status</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Activates or Deactivates the given batch number format by clicking on dropdown and selecting option And verifies that the format has been activated or deactivated based on selection</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Advanced Mapping Is Not Enabled">
                 <td class="kwname">
                   Verify Advanced Mapping Is Not Enabled
@@ -6092,7 +6122,7 @@ Populate Pause Modal
       
     </div>
     <div class="footer">
-      Generated on Wednesday December 02, 01:28 PM - cumulusci v3.24.0
+      Generated on Wednesday December 02, 03:00 PM - cumulusci v3.23.0
     </div>
   </body>
 </html>

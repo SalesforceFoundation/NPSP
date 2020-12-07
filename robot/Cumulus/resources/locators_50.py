@@ -9,6 +9,7 @@ npsp_lex_locators={
     'button-with-text':'//button[contains(text(),"{}")]',
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
+    'datatable':"//*[contains(@data-qa-locator,'{}')]//tbody/tr[./th//*[text()='{}']]/td[@data-label='{}']",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
@@ -206,7 +207,8 @@ npsp_lex_locators={
         'batch-button':'//div[@id="{}"]//child::input[@value="{}"]',
         'checkbox':'//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]',
 		'erd_status_mapping_header':"//div/h1[contains(text(),'{}')]",
-		'erd_state_status_mapping':"//tr[@data-row-key-value='{}']//lightning-primitive-cell-factory[@data-label='State']//lightning-base-formatted-text"
+		'erd_state_status_mapping':"//tr[@data-row-key-value='{}']//lightning-primitive-cell-factory[@data-label='State']//lightning-base-formatted-text",
+        'table_dropdown':"//tbody/tr[./th//*[text()='{}']]/td//button"
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
