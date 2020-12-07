@@ -255,6 +255,12 @@ export default class GeFormField extends LightningElement {
         return this.fieldType === BOOLEAN_TYPE && !this.isTrueFalsePicklist;
     }
 
+    get booleanValue() {
+        if(this.isCheckbox) {
+            return !!this.value;
+        }
+    }
+
     get isTrueFalsePicklist() {
         return this.element.isTrueFalsePicklist;
     }
@@ -427,15 +433,11 @@ export default class GeFormField extends LightningElement {
     set formState(formState) {
         this._formState = formState;
         this._recordTypeId = this.recordTypeId();
-        this.handleFormStateChange();
     }
 
     get valueFromFormState() {
         const value = this.formState[this.sourceFieldAPIName];
 
-        if (this.sourceFieldAPIName === 'npsp__Real_Checkbox__c') {
-            console.log('things');
-        }
         if (value === undefined) {
            return null;
         }
