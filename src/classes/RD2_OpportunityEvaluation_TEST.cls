@@ -348,7 +348,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         insert rd;
 
         RD2_OpportunityEvaluation_BATCH batch  = new RD2_OpportunityEvaluation_BATCH(nextCloseDate.addDays(1));
-        batch.isBatchInProgress = true;
+        batch.isConcurrentBatch = true;
         runBatch(batch);
 
         List<Error__c> errors = errorGateway.getRecords();

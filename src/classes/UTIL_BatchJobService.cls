@@ -101,7 +101,7 @@ public without sharing class UTIL_BatchJobService {
     * @param className Batch class name
     * @return Boolean
     */
-    public Boolean isAnotherBatchInProgress(String className) {
+    public Boolean isConcurrentBatch(String className) {
         return getAsyncApexJobInProgress(className).size() > 1;
     }
 
