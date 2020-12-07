@@ -686,8 +686,6 @@ flows:
                 flow: None
             3:
                 task: update_admin_profile
-                options:
-                    managed: true
             4:
                 task: update_dependencies
                 options:
