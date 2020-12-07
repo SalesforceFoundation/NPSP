@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import CumulusStaticResources from '@salesforce/resourceUrl/CumulusStaticResources';
-import updateCheckItem from '@salesforce/apex/GS_AdminSetup.updateCheckItem'
+import updateCheckItem from '@salesforce/apex/GS_ChecklistSetup.updateCheckItem'
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 const gsAssetsImage = CumulusStaticResources + '/gsAssets/step';
 
@@ -12,7 +12,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
 
     /**
     * @description data of the item this component render
-    * @type  GS_AdminSetup.ChecklistItem
+    * @type  GS_ChecklistSetup.ChecklistItem
     */
     @api item = {}
     /**
