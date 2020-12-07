@@ -907,13 +907,10 @@ flows:
                 options:
                     deploy_trial_config:
                         unmanaged: False
-                    #deploy_pmm_trial_config:
-                    #    unmanaged: False
-
-            #4:
-            #    task: update_admin_profile
-            #    options:
-            #        managed: true
+            4:
+                task: update_admin_profile
+                options:
+                    managed: true
             5:
                 task: test_data_relationships
             6:
@@ -998,11 +995,21 @@ flows:
 
     config_regression:
         steps:
+            1:
+                flow: None
             2:
-                task: deploy_qa_config
-                options:
-                    unmanaged: False
+                task: deploy_post
             3:
+                task: deploy_dev_config_delete
+            4:
+                flow: config_trial
+            5:
+                task: test_data_relationships
+            6:
+                task: deploy_reports
+            7:
+                task: deploy_qa_config
+            8:
                 task: deploy_regression_bdi_metadata_config
 
     config_offsetfiscal:
