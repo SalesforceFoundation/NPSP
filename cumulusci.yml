@@ -1332,7 +1332,7 @@ plans:
         tier: additional
         is_listed: True
         checks:
-            - when: "not 'npsp' in org_config.installed_packages"
+            - when: "'npsp' not in org_config.installed_packages"
               action: error
               message: "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again."
         steps:
