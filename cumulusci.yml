@@ -682,8 +682,12 @@ flows:
 
     regression_org:
         steps:
+            2:
+                flow: None
             3:
-                task: None
+                task: update_admin_profile
+                options:
+                    managed: true
             4:
                 task: update_dependencies
                 options:
@@ -694,6 +698,8 @@ flows:
                 options:
                     security_type: PUSH
             6:
+                flow: config_regression
+            7:
                 task: snapshot_changes
 
     config_dev:
@@ -904,10 +910,10 @@ flows:
                     #deploy_pmm_trial_config:
                     #    unmanaged: False
 
-            4:
-                task: update_admin_profile
-                options:
-                    managed: true
+            #4:
+            #    task: update_admin_profile
+            #    options:
+            #        managed: true
             5:
                 task: test_data_relationships
             6:
@@ -998,10 +1004,6 @@ flows:
                     unmanaged: False
             3:
                 task: deploy_regression_bdi_metadata_config
-            4:
-                task: update_admin_profile
-                options:
-                    managed: true
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
