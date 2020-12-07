@@ -1296,7 +1296,7 @@ export default class GeFormRenderer extends LightningElement{
             return this.defaultValueFor(fieldMapping.DeveloperName);
         } else if (isTrueFalsePicklist(fieldMapping)) {
             return this.transformForTrueFalsePicklist(value);
-        } 
+        }
 
         return value;
     }

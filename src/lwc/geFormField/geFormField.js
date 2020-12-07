@@ -60,6 +60,15 @@ export default class GeFormField extends LightningElement {
     };
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
+    handleFormStateChange() {
+        if(this.isCheckbox) {
+            const field = this.inputField();
+            if(field) {
+                field.checked = !!this.value;
+            }
+        }
+    }
+
     /**
      * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
@@ -82,7 +91,7 @@ export default class GeFormField extends LightningElement {
         }
 
         if (this.isCheckbox) {
-            return event.detail.checked.toString();
+            return !!event.detail.checked.toString();
         }
 
         if (this.isRichText) {
@@ -124,7 +133,7 @@ export default class GeFormField extends LightningElement {
      */
     checkFieldValidity() {
         // TODO: Handle other input types, if needed
-        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        const inputField = this.inputField();
         if (typeof inputField !== 'undefined'
             && inputField !== null
             && typeof inputField.reportValidity === 'function'
@@ -152,7 +161,11 @@ export default class GeFormField extends LightningElement {
         return true;
     }
 
-    get isRichTextValid () {
+    inputField() {
+        return this.template.querySelector('[data-id="inputComponent"]');
+    }
+
+    get isRichTextValid() {
         return this._isRichTextValid;
     }
 
@@ -330,7 +343,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     setCustomValidity(errorMessage) {
-        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        const inputField = this.inputField();
 
         const canSetCustomValidity =
             inputField &&
@@ -414,11 +427,15 @@ export default class GeFormField extends LightningElement {
     set formState(formState) {
         this._formState = formState;
         this._recordTypeId = this.recordTypeId();
+        this.handleFormStateChange();
     }
 
     get valueFromFormState() {
         const value = this.formState[this.sourceFieldAPIName];
 
+        if (this.sourceFieldAPIName === 'npsp__Real_Checkbox__c') {
+            console.log('things');
+        }
         if (value === undefined) {
            return null;
         }
@@ -514,9 +531,6 @@ export default class GeFormField extends LightningElement {
             this.element.parentRecordField;
     }
 
-    // ================================================================================
-    // Logic formerly in geFormFieldPicklist
-    // ================================================================================
     get picklistValues() {
         if (this.targetFieldApiName === 'RecordTypeId') {
             return this.getPicklistOptionsForRecordTypeIds();
