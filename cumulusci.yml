@@ -1213,7 +1213,7 @@ plans:
               message: "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again."
             - when: "not tasks.check_advanced_currency_management()"
               action: error
-              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance."
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
         steps:
             1:
                 task: update_dependencies
@@ -1258,7 +1258,7 @@ plans:
               message: "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP."
             - when: "not tasks.check_advanced_currency_management()"
               action: error
-              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance."
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
         steps:
             1:
                 task: update_dependencies
