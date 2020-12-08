@@ -144,23 +144,24 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token.
-    * This request response is found and handled in the registerPostMessageListener().
-    * @param iframe The payment services iframe displayed within the credit card widget LWC
-    * @param cardholderName The cardholder name
-    * @param handleError An error handler function
-    * @param resolveToken Function (if any) called when a token is generated
-    * @return Promise A token promise
-    */
-    requestToken(iframe, cardholderName, handleError, resolveToken) {
-        if (isNull(iframe)) {
+     * @description Method sends a message to the visualforce page iframe requesting a token.
+     * This request response is found and handled in the registerPostMessageListener().
+     * @param iframe The payment services iframe displayed within the credit card widget LWC
+     * @param params
+     * @param action
+     * @param handleError An error handler function
+     * @param resolveToken Function (if any) called when a token is generated
+     * @return Promise A token promise
+     */
+    requestToken(params) {
+        if (isNull(params.iframe)) {
             return;
         }
 
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() =>
-                reject(handleError({
+                reject(params.handleError({
                     error: this.labels.tokenRequestTimedOut,
                     isObject: false
                 })),
@@ -171,11 +172,11 @@ class psElevateTokenHandler {
                 clearTimeout(timer);
 
                 if (message.error) {
-                    reject(handleError(message));
+                    reject(params.handleError(message));
 
                 } else if (message.token) {
-                    if (resolveToken) {
-                        resolve(resolveToken(message.token));
+                    if (params.resolveToken) {
+                        resolve(params.resolveToken(message.token));
                     } else {
                         resolve(message.token);
                     }
@@ -184,10 +185,10 @@ class psElevateTokenHandler {
 
         });
 
-        iframe.contentWindow.postMessage(
+        params.iframe.contentWindow.postMessage(
             {
-                action: TOKENIZE_EVENT_ACTION,
-                nameOnCard: cardholderName
+                action: params.eventAction,
+                params: params.tokenizeParameters
             },
             this._visualforceOrigin
         );

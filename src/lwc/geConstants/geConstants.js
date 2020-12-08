@@ -9,9 +9,29 @@ const HTTP_CODES = Object.freeze({
     Request_Timeout: 408,
 });
 
+const ACCOUNT_HOLDER_TYPES = Object.freeze({
+    INDIVIDUAL: 'INDIVIDUAL',
+    BUSINESS: 'BUSINESS'
+});
+const ACCOUNT_HOLDER_BANK_TYPES = Object.freeze({
+    CHECKING: 'CHECKING',
+    SAVINGS: 'SAVINGS'
+});
+
+const ACH_CODE = 'WEB';
+
+const PAYMENT_METHODS = Object.freeze({
+    ACH: 'ACH',
+    CREDIT_CARD: 'Credit Card',
+    CASH: 'Cash'
+});
 export {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
     WIDGET_TYPE_DI_FIELD_VALUE,
-    HTTP_CODES
+    HTTP_CODES,
+    ACCOUNT_HOLDER_TYPES,
+    ACCOUNT_HOLDER_BANK_TYPES,
+    PAYMENT_METHODS,
+    ACH_CODE
 };

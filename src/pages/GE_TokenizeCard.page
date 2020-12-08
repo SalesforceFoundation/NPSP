@@ -71,11 +71,11 @@
                     break;
 
                 case 'createToken':
-                    handleTokenCreation(event.data.nameOnCard || DEFAULT_NAME_ON_CARD);
+                    handleTokenCreation(event.data.params.nameOnCard || DEFAULT_NAME_ON_CARD);
                     break;
 
                 case 'createAchToken':
-                    handleAchTokenCreation();
+                    handleAchTokenCreation(event.data.params);
                     break;
             }
         }
@@ -150,7 +150,37 @@
                 });
         }
 
-        function handleAchTokenCreation() { }
+        function handleAchTokenCreation (params) {
+           const auth = {
+              jwt: '{!jwtForToken}',
+              userName: '{!$User.Username}'
+           };
+
+           const tokenConfig = {
+              auth: auth,
+              achCode: 'WEB',
+              currencyCode: 'USD',
+              ach: params
+           };
+
+           sfdo.createToken(tokenConfig)
+           .then((resp) => {
+              if (resp.token) {
+                 // Send token to lwc
+                 const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                 postMessage(successString);
+
+              } else if (resp.error) {
+                 // Response contains the error, send it to lwc
+                 postMessage(JSON.stringify({ type: postMessageType, ...resp }));
+              }
+           })
+           .catch((err) => {
+              // Send error to lwc
+              const errorString = JSON.stringify({ type: postMessageType, ...err });
+              postMessage(errorString);
+           });
+        }
 
         /*******************************************************************************
         * @description Posts messages to a credit card widget LWC
