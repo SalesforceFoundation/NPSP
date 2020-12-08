@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isNotEmpty } from 'c/utilCommon';
+import { isEmpty, isNotEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -40,7 +40,7 @@ export default class utilInput extends LightningElement {
     @api variant = 'label-stacked';
     @api value;
     @api widgetName;
-    @api isTrueFalsePicklist;
+    @api picklistOptionsOverride;
 
     @track isRichTextValid = true;
 
@@ -99,7 +99,7 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningCheckbox() {
-        return this.lightningInputType === CHECKBOX && !this.isTrueFalsePicklist;
+        return this.lightningInputType === CHECKBOX && isEmpty(this.picklistOptionsOverride);
     }
 
     get isLightningDateOrDatetime() {
@@ -142,7 +142,7 @@ export default class utilInput extends LightningElement {
     }
 
     get lightningInputType() {
-        if (this.isTrueFalsePicklist) {
+        if (isNotEmpty(this.picklistOptionsOverride)) {
             return COMBOBOX;
         }
 

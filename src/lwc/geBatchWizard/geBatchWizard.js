@@ -15,7 +15,8 @@ import {
     handleError,
     addKeyToCollectionItems,
     isTrueFalsePicklist,
-    isCheckboxToCheckbox } from 'c/utilTemplateBuilder';
+    isCheckboxToCheckbox, trueFalsePicklistOptions
+} from 'c/utilTemplateBuilder';
 import {
     getNamespace,
     getNestedProperty,
@@ -226,7 +227,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                     const fieldMapping = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
 
                     if(isNotEmpty(fieldMapping)) {
-                        element.isTrueFalsePicklist = isTrueFalsePicklist(fieldMapping);
+                        if(isTrueFalsePicklist(fieldMapping)) {
+                            element.picklistOptionsOverride = trueFalsePicklistOptions();
+                        }
                         element.isCheckboxToCheckbox = isCheckboxToCheckbox(fieldMapping);
                     }
                 });

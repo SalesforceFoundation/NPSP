@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch, isTrueFalsePicklist, isCheckboxToCheckbox } from 'c/utilTemplateBuilder';
+import {dispatch, isTrueFalsePicklist, isCheckboxToCheckbox, trueFalsePicklistOptions} from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import {isEmpty} from 'c/utilCommon';
@@ -201,8 +201,10 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return !isCheckboxToCheckbox(this.fieldMapping);
     }
 
-    get isTrueFalsePicklist() {
-        return isTrueFalsePicklist(this.fieldMapping);
+    get picklistOptionsOverride() {
+        if(isTrueFalsePicklist(this.fieldMapping)) {
+            return trueFalsePicklistOptions();
+        }
     }
 
     get labelGeAssistiveFormFieldRemove() {

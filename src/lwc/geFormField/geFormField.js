@@ -262,7 +262,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get hasPicklistOverride() {
-        return isNotEmpty(this.element.picklistOptionOverride);
+        return isNotEmpty(this.element.picklistOptionsOverride);
     }
 
     get isTextArea() {
@@ -534,8 +534,8 @@ export default class GeFormField extends LightningElement {
     }
 
     get picklistValues() {
-        if(this.element.picklistOptionOverride) {
-            return this.element.picklistOptionOverride;
+        if(this.element.picklistOptionsOverride) {
+            return this.element.picklistOptionsOverride;
         }
         if (this.targetFieldApiName === 'RecordTypeId') {
             return this.getPicklistOptionsForRecordTypeIds();

@@ -12,9 +12,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api value;
     @api className;
     @api qaLocatorBase;
+    @api picklistOptionsOverride;
 
     @track _objectDescribeInfo;
-    @track picklistValues;
+    @track _picklistValues;
     @track defaultRecordTypeId;
 
     _recordTypeId;
@@ -98,6 +99,13 @@ export default class GeFormFieldPicklist extends LightningElement {
         this._recordTypeId = id || this.defaultRecordTypeId;
     }
 
+    get picklistValues() {
+        return isNotEmpty(this.picklistOptionsOverride) ? this.picklistOptionsOverride : this._picklistValues;
+    }
+
+    set picklistValues(value) {
+        this._picklistValues = value;
+    }
     nonePicklistValue() {
         return {
             label: this.CUSTOM_LABELS.commonLabelNone,

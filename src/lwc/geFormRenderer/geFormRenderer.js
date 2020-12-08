@@ -363,7 +363,7 @@ export default class GeFormRenderer extends LightningElement{
         const helper = new GeFormElementHelper(element);
         element.isRenderable = helper.isRenderable();
         if(helper.isTrueFalsePicklist()) {
-            element.picklistOptionOverride = trueFalsePicklistOptions();
+            element.picklistOptionsOverride = trueFalsePicklistOptions();
         }
     }
 
