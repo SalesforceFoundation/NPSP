@@ -100,6 +100,12 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.metadata.campaignCode,
             'Metadata campaign code should be set to RD campaign');
 
+        System.assertNotEquals(null, requestBody.productMetaData, 'Product Metadata should be set by default');
+        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.productMetaData.origin.type,
+            'Product Metadata origin type should be CRM');
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.productMetaData.campaign.id,
+            'Product Metadata campaign id should be set to RD campaign');
+        
         System.assertEquals(1, requestBody.schedules.size(),
             'One schedule should be passed to the API: ' + requestBody.schedules);
 
