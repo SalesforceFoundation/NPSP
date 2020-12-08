@@ -1246,7 +1246,7 @@ plans:
               message: "Please enable My Domain in your org prior to installing."
             - when: "'trlhdtips' not in org_config.installed_packages"
               action: warn
-              message: "This installer is intended only for Trailhead Playground orgs. Your org does not appear to be a Trailhead Playground. Choosing to continue may cause damage to your org."
+              message: "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org."
         steps:
             1:
                 task: update_dependencies
