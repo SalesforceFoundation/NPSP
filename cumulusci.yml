@@ -547,7 +547,7 @@ tasks:
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
             retry_always: True
-            required_org_code_coverage_percent: 75
+            required_org_code_coverage_percent: 86
 
     disable_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
