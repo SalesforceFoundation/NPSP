@@ -1566,7 +1566,7 @@ export default class GeFormRenderer extends LightningElement{
             isImportedRecordField = this.isImportedRecordField(sourceField)
 
         this.updateFormState({
-            [sourceField]: isDonationRecordTypeName ? label : formStateValue
+            [sourceField]: isDonationRecordTypeName ? label : value
         });
 
         if (isDonationRecordTypeName) {
