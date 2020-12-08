@@ -154,8 +154,12 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
-        reqBody.withCurrency(currencyCode);
-        reqBody.withMetadata(new Metadata());
+        reqBody.withCurrency(currencyCode)
+            .withMetadata(new Metadata())
+            .withProductMetaData(
+                new productMetaData()
+                    .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
+            );
 
         setDonorInfo(reqBody, rd);
         setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);
@@ -231,7 +235,8 @@ public inherited sharing class PS_CommitmentRequest {
             'npe03__Contact__c',
             'npe03__Contact__r.AccountId',
             'npe03__Contact__r.FirstName',
-            'npe03__Contact__r.LastName'
+            'npe03__Contact__r.LastName',
+            'npe03__Recurring_Donation_Campaign__c'
         };
 
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -301,6 +306,8 @@ public inherited sharing class PS_CommitmentRequest {
          * Optional properties
          */
         public Metadata metadata;
+
+        public ProductMetaData productMetaData;
 
         /***
          * @description Constructor
@@ -410,6 +417,16 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public RequestBody withMetadata(Metadata metadata) {
             this.metadata = metadata;
+            return this;
+        }
+
+        /**
+         * @description Sets product metadata
+         * @param productMetaData Payments API product metadata
+         * @return RequestBody This request body instance
+         */
+        public RequestBody withProductMetaData(productMetaData productMetaData) {
+            this.productMetaData = productMetaData;
             return this;
         }
 
@@ -550,6 +567,36 @@ public inherited sharing class PS_CommitmentRequest {
         public Metadata() {
             //set defaults
             this.originType = PS_Request.OriginType.CRM.name();
+        }
+    }
+
+    /***
+     * @description Product metadata property on the commitment request
+     */
+    public class productMetaData {
+        public Campaign campaign;
+
+        /**
+         * @description Sets campaign info
+         * @param campaignId campaign Id
+         * @return productMetaData This product metadata instance
+         */
+        public productMetaData withCampaign(Id campaignId) {
+            this.campaign = new Campaign(campaignId);
+
+            return this;
+        }
+
+    }
+
+    /***
+     * @description Campaign property on the commitment request
+     */
+    public class Campaign {
+        public String id;
+
+        public Campaign(Id campaignId) {
+            this.id = campaignId;
         }
     }
 }
