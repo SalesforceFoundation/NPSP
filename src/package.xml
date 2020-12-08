@@ -1421,6 +1421,7 @@
         <members>GetStartedChecklistItem__mdt.Secondary_Button_Type__c</members>
         <members>GetStartedChecklistItem__mdt.Secondary_Button_Value__c</members>
         <members>GetStartedChecklistItem__mdt.Title_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Belongs_to__c</members>
         <members>GetStartedChecklistSection__mdt.Description_Label__c</members>
         <members>GetStartedChecklistSection__mdt.Position__c</members>
         <members>GetStartedChecklistSection__mdt.Title_Label__c</members>

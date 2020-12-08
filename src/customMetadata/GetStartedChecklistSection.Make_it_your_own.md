@@ -3,6 +3,10 @@
     <label>Make it your own</label>
     <protected>true</protected>
     <values>
+        <field>Belongs_to__c</field>
+        <value xsi:type="xsd:string">Admin</value>
+    </values>
+    <values>
         <field>Description_Label__c</field>
         <value xsi:type="xsd:string">gsChecklistMakeItYourDesc</value>
     </values>

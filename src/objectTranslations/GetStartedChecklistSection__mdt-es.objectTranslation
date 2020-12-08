@@ -9,6 +9,19 @@
         <value><!-- NPSP Get Started Checklist Section --></value>
     </caseValues>
     <fields>
+        <help><!-- To select in which checklist has displayed this section --></help>
+        <label><!-- Belongs to --></label>
+        <name>Belongs_to__c</name>
+        <picklistValues>
+            <masterLabel>Admin</masterLabel>
+            <translation><!-- Admin --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>End User</masterLabel>
+            <translation><!-- End User --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
         <label><!-- Description Label Name --></label>
         <name>Description_Label__c</name>
