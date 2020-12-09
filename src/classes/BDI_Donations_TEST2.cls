@@ -37,7 +37,7 @@
 @isTest
 public with sharing class BDI_Donations_TEST2 {
     @isTest
-    private static void shouldCreatePaymentsForElevateDI () {
+    private static void shouldCreateAndUpdateACHPaymentsForElevateDI () {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
