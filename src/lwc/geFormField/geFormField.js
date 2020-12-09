@@ -247,9 +247,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get booleanValue() {
-        if(this.isCheckbox) {
-            return !!this.value;
-        }
+        return !!this.value;
     }
 
     get hasPicklistOverride() {
