@@ -629,9 +629,7 @@ export default class GeFormRenderer extends LightningElement{
             const tokenResponse = await Promise.all(
                 [widgetValues[0].payload]
             );
-
-            console.log('Token: '+JSON.stringify(tokenResponse));
-
+            
             if (tokenResponse) {
                 this.updateFormState(tokenResponse[0]);
             }
