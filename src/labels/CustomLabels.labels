@@ -13872,7 +13872,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsVideoHeaderTitle</fullName>
-        <categories>Get Started Page</categories>
+        <categories>Get Started on NPSP</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Video header title in Get Started</shortDescription>
