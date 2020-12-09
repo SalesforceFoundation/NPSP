@@ -13800,7 +13800,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
-        <categories>Get Started Page</categories>
+        <categories>tart Managing Programs</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
@@ -13808,7 +13808,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Get Started Page</categories>
+        <categories>Start Engaging Constituents</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
@@ -13828,7 +13828,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Webinars label in Get Started Resources section</shortDescription>
-        <value>Free Webinars</value>
+        <value>Salesforce Events Calendar</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLinkLabel</fullName>
@@ -13836,7 +13836,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Webinars link label in Get Started Resources section</shortDescription>
-        <value>Join Webinars</value>
+        <value>Find Events and Webinars</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLabel</fullName>
