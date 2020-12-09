@@ -337,7 +337,7 @@ export default class GeFormRenderer extends LightningElement{
                     });
             });
 
-        return [...updatedSections];
+        return [...this.sections];
     }
 
     appendRecordTypeLocationInfo(element) {

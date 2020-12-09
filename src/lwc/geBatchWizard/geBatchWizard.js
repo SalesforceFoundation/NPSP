@@ -15,7 +15,8 @@ import {
     handleError,
     addKeyToCollectionItems,
     isTrueFalsePicklist,
-    isCheckboxToCheckbox, trueFalsePicklistOptions
+    isCheckboxToCheckbox,
+    trueFalsePicklistOptions
 } from 'c/utilTemplateBuilder';
 import {
     getNamespace,
@@ -29,7 +30,6 @@ import GeLabelService from 'c/geLabelService';
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
 import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
 
-import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
 import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -249,7 +249,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     async connectedCallback() {
         try {
             this.donationMatchingBehaviors = await getDonationMatchingValues();
-            await GeFormService.getFormTemplate();
+
             if (!this.recordId) {
                 this.templates = await getAllFormTemplates();
                 this.templates = this.templates.sort();
