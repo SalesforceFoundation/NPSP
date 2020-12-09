@@ -328,7 +328,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
-        let updatedSections = deepClone(this.sections);
+        let updatedSections = Object.assign({}, this.sections);
 
         updatedSections
             .forEach(section => {
@@ -1563,7 +1563,7 @@ export default class GeFormRenderer extends LightningElement{
             sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
             isDonationRecordTypeName = this.isDonationRecordTypeName(sourceField),
             isDonationDonor = this.isDonationDonor(sourceField),
-            isImportedRecordField = this.isImportedRecordField(sourceField)
+            isImportedRecordField = this.isImportedRecordField(sourceField);
 
         this.updateFormState({
             [sourceField]: isDonationRecordTypeName ? label : value
