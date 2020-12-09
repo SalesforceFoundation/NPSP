@@ -1608,7 +1608,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isTrueFalsePicklist(fieldMappingDevName) {
-        const fieldMapping = GeFormService.fieldMappings[fieldMappingDevName];
+        const fieldMapping = GeFormService.getFieldMappingWrapper(fieldMappingDevName);
         return isTrueFalsePicklist(fieldMapping);
     }
 

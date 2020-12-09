@@ -503,10 +503,13 @@ const addKeyToCollectionItems = (list) => {
     });
 }
 
+const BOOLEAN_MAPPING = 'BOOLEAN';
+const PICKLIST_MAPPING = 'PICKLIST';
+
 const isTrueFalsePicklist = (fieldMapping) => {
     if(fieldMapping) {
-        return fieldMapping.Target_Field_Data_Type === 'BOOLEAN' &&
-            fieldMapping.Source_Field_Data_Type === 'PICKLIST';
+        return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING &&
+            fieldMapping.Source_Field_Data_Type === PICKLIST_MAPPING;
     }
     return false;
 }
@@ -520,8 +523,8 @@ const trueFalsePicklistOptions = () => {
 
 const isCheckboxToCheckbox = (fieldMapping) => {
     if(fieldMapping) {
-        return fieldMapping.Target_Field_Data_Type === 'BOOLEAN' &&
-            fieldMapping.Source_Field_Data_Type === 'BOOLEAN';
+        return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING &&
+            fieldMapping.Source_Field_Data_Type === BOOLEAN_MAPPING;
     }
 }
 
