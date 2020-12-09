@@ -328,9 +328,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
-        let updatedSections = Object.assign({}, this.sections);
 
-        updatedSections
+        this.sections
             .forEach(section => {
                 section.elements
                     .forEach(element => {
@@ -338,7 +337,7 @@ export default class GeFormRenderer extends LightningElement{
                     });
             });
 
-        return updatedSections;
+        return [...updatedSections];
     }
 
     appendRecordTypeLocationInfo(element) {
