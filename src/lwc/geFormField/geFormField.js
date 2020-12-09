@@ -60,15 +60,6 @@ export default class GeFormField extends LightningElement {
     };
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
-    handleFormStateChange() {
-        if(this.isCheckbox) {
-            const field = this.inputField();
-            if(field) {
-                field.checked = !!this.value;
-            }
-        }
-    }
-
     /**
      * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
