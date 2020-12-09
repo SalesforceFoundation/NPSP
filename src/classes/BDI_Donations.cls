@@ -249,6 +249,7 @@ public class BDI_Donations {
             if (!result.isSuccess()) {
                 bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             } else {
+                dataImportsToUpdate[i].DonationImportStatus__c = System.label.bdiUpdated;
                 //split out successful elevate DIs for separate processing
                 if (isElevatePaymentDI(dataImportsToUpdate[i])) {
                     successfulElevateDIs.add(dataImportsToUpdate[i]);
@@ -324,21 +325,24 @@ public class BDI_Donations {
                continue;
             }
 
-            // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
-            // they must have already been created for this di on a previous run, and we don't want to create another.
-            // Elevate DIs should be specifically excluded from this for update processing.
-            if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) 
-                && matchBehavior == BDI_DataImport_API.DoNotMatch
-                && !isElevatePaymentDI(dataImport)) {
-                continue;
-            }
-
             // If the donation was created or matched on a previous run, consider the
             // donation validated for this Data Import record.
             if (dataImport.DonationImported__c != null
                     && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
                     || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
+            }
+
+            // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
+            // they must have already been created for this di on a previous run, and we don't want to create another.
+            // Elevate DIs should be specifically excluded from this for update processing.
+            if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null)){
+
+                if (isElevatePaymentDI(dataImport)) {
+                    dataImportDonations.add(dataImport);
+                } else if (matchBehavior == BDI_DataImport_API.DoNotMatch) {
+                    continue;
+                }
             }
 
             if (dataImport.Donation_Donor__c == 'Contact1' || (dataImport.Donation_Donor__c == null && dataImport.Donation_Amount__c != null)) {
@@ -507,7 +511,8 @@ public class BDI_Donations {
             }
         }
 
-        if (dataImport.Donation_Stage__c == null && defaultClosedWonStage != '' && dataImport.PaymentImported__c == null) {
+        if (dataImport.Donation_Stage__c == null && defaultClosedWonStage != ''
+                && dataImport.PaymentImported__c == null) {
             dataImport.Donation_Stage__c = defaultClosedWonStage;
         }
 
@@ -669,7 +674,8 @@ public class BDI_Donations {
                     npe01__OppPayment__c payment = mapOppIdToPayment.get(dataImport.DonationImported__c);
                     if (payment != null) {
                         dataImport.PaymentImported__c = payment.Id;
-                        dataImport.PaymentImportStatus__c = dataImport.DonationImportStatus__c; // could be new or matched
+                        // could be new or matched
+                        dataImport.PaymentImportStatus__c = dataImport.DonationImportStatus__c;
                         paymentsByDataImportId.put(dataImport.Id, payment);
                     }
                 }
@@ -722,7 +728,7 @@ public class BDI_Donations {
             if (dataImport.PaymentImported__c != null
                     || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment
                     || (isElevatePaymentDI(dataImport) && 
-                        dataImport.DonationImportStatus__c == System.label.bdiCreated)) {
+                        dataImport.PaymentImportStatus__c == null)) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     if (shouldSetDonationBatchNumber(payment, dataImport)) {
@@ -756,7 +762,9 @@ public class BDI_Donations {
                     result.getErrors()[0].getMessage(), 
                     'PaymentImportStatus__c'
                 );               
-            }           
+            } else {
+                dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiUpdated;
+            }
         }
 
         for (DataImport__c dataImport : dataImportsWithDonations) {

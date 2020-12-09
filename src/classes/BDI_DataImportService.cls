@@ -49,6 +49,7 @@ global with sharing class BDI_DataImportService {
     }, '.');
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+    public static final String ACH_PAYMENT_TYPE = 'ACH';
 
 
     public BDI_MappingService mappingService;
@@ -682,17 +683,18 @@ global with sharing class BDI_DataImportService {
     /**
      * @description Checks a collection of data imports and returns a filtered list of only those data import records
      * that have been successfully charged by payment services or those with a blank payment status which were not
-     * sent to payment services because a credit card charge was not required.
+     * sent to payment services because a credit card charge was not required.  Also allow processing of all ACH
+     * Payment Types since we do need to process DI for Elevate ACH payments of several payment statuses.
      *
      * @param di DataImport__c record to be filtered
      * @return Boolean
      */
     private Boolean isSuccessfulPayment(DataImport__c di) {
         String paymentStatus = di.Payment_Status__c;
-        
+
         return String.isBlank(paymentStatus) || 
             di.Payment_Status__c.equalsIgnoreCase(GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()) ||
-            di.Payment_Status__c.equalsIgnoreCase(GE_PaymentServices.ElevateTransactionStatus.SUBMITTED.name());
+            di.Payment_Type__c == ACH_PAYMENT_TYPE;
     }
 
     /**
