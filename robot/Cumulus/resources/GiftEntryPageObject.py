@@ -209,7 +209,15 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
                     elif placeholder=="Search...":
-                        self.salesforce.populate_lookup_field(key,value)
+                        # self.salesforce.populate_lookup_field(key,value)
+                        self.salesforce._populate_field(field_loc,value)
+                        qa_id="Select "+value
+                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        self.selenium.wait_until_page_contains_element(option)
+                        try:
+                            self.selenium.click_element(option)
+                        except ElementNotInteractableException:
+                            self.salesforce._jsclick(option)
                     elif "Date" in field:
                         locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
                         self.selenium.wait_until_page_contains_element(locator)
