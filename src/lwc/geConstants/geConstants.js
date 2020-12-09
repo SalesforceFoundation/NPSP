@@ -22,7 +22,7 @@ const ACH_CODE = 'WEB';
 
 const PAYMENT_METHODS = Object.freeze({
     ACH: 'ACH',
-    CREDIT_CARD: 'Credit Card',
+    CREDIT_CARD: 'CARD',
     CASH: 'Cash'
 });
 export {

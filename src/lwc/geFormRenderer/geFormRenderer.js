@@ -629,7 +629,7 @@ export default class GeFormRenderer extends LightningElement{
             const tokenResponse = await Promise.all(
                 [widgetValues[0].payload]
             );
-            
+
             if (tokenResponse) {
                 this.updateFormState(tokenResponse[0]);
             }
@@ -2073,6 +2073,7 @@ export default class GeFormRenderer extends LightningElement{
             ),
             paymentMethodToken:
                 this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
+            paymentMethodType : PAYMENT_METHODS.CREDIT_CARD,
         });
     }
 
