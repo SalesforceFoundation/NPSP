@@ -52,9 +52,13 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get fullFieldApiName() {
-        if (isNotEmpty(this.objectName) && isNotEmpty(this.fieldName)) {
+        if (this.shouldRetrievePicklistValues()) {
             return `${this.objectName}.${this.fieldName}`;
         }
+    }
+
+    shouldRetrievePicklistValues() {
+        return isEmpty(this.picklistOptionsOverride) && isNotEmpty(this.objectName) && isNotEmpty(this.fieldName);
     }
 
     handleValueChange(event) {
