@@ -6989,7 +6989,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item NPSP Cloud in Get Started</shortDescription>
-        <value>Learn more about NPSP Features in Trailhead</value>
+        <value>Learn about Other Nonprofit Cloud Features</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemNPSPCloudTitle</fullName>
@@ -7149,7 +7149,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
-        <value>Learn how to customize NPSP reports &amp; dashboards in Trailhead</value>
+        <value>Learn how to customize NPSP reports &amp; Dashboard in Trailhead</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemRunningReportsTitle</fullName>
@@ -7165,7 +7165,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Setup Contact in Get Started</shortDescription>
-        <value>People are the most important resource for a nonprofit, so understanding the Contact object is especially important. Learn how to add relevant constituent data (e.g. a name, address, or employer) into your Salesforce instance.</value>
+        <value>Learn how to add relevant constituent data (for example a name, address, or employer) into your Salesforce instance.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemSetupContactPriBtnLabel</fullName>
@@ -7294,7 +7294,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item FundraisingProcess in Get Started</shortDescription>
-        <value>Learn how to leverage built-in tools like Path and Kanban to effectively manage your fundraising and donation process, and ensure everyone at your organization has a window into how those processes work.</value>
+        <value>Learn how to leverage built-in tools like list views and Path to effectively manage your fundraising and donation processes.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemFundraisingProcessLinkLabel</fullName>
@@ -7302,7 +7302,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item FundraisingProcess in Get Started</shortDescription>
-        <value>Learn more about Fundraising in Trailhead</value>
+        <value>Learn more about list views and Path in Trailhead</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemFundraisingProcessPriBtnLabel</fullName>
