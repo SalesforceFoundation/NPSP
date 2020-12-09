@@ -90,7 +90,7 @@ export default class GeFormField extends LightningElement {
             }
         }
 
-        if (this.isCheckbox) {
+        if (this.isCheckbox && !this.isPicklist) {
             return !!event.detail.checked.toString();
         }
 
