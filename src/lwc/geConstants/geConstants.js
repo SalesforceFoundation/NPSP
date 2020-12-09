@@ -1,6 +1,6 @@
 const DISABLE_TOKENIZE_WIDGET_EVENT_NAME = 'disableGeFormWidgetTokenizeCard';
 const LABEL_NEW_LINE = '/0x0A/';
-const WIDGET_TYPE_DI_FIELD_VALUE = 'DI_FIELD_VALUE';
+
 // http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 const HTTP_CODES = Object.freeze({
     OK: 200,
@@ -28,7 +28,6 @@ const PAYMENT_METHODS = Object.freeze({
 export {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
-    WIDGET_TYPE_DI_FIELD_VALUE,
     HTTP_CODES,
     ACCOUNT_HOLDER_TYPES,
     ACCOUNT_HOLDER_BANK_TYPES,

@@ -31,6 +31,8 @@ const ACH = 'ACH';
 const CREDIT_CARD = 'Credit Card';
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
+const CONTACT_DONOR_TYPE = 'Contact1';
+
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
     @track domain;
@@ -47,11 +49,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 
-    @api
+
     get widgetDataFromState() {
         return this._widgetDataFromState;
     }
 
+    @api
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
         this.handleWidgetDataChange(widgetState);
@@ -275,33 +278,31 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
         if (this.accountHolderType() === ACCOUNT_HOLDER_TYPES.BUSINESS) {
             achTokenizeParameters.accountHolder.businessName =
-                this.widgetDataFromState[DATA_IMPORT_CONTACT_LASTNAME];
+                this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)];
             achTokenizeParameters.accountHolder.accountName =
-                this.widgetDataFromState[DATA_IMPORT_ACCOUNT_NAME];
+                this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_NAME)];
             achTokenizeParameters.nameOnAccount =
-                this.widgetDataFromState[DATA_IMPORT_ACCOUNT_NAME];
+                this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_NAME)];
         }
 
         if (this.accountHolderType() === ACCOUNT_HOLDER_TYPES.INDIVIDUAL) {
             achTokenizeParameters.accountHolder.firstName =
-                this.widgetDataFromState[DATA_IMPORT_CONTACT_FIRSTNAME];
+                this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME)];
             achTokenizeParameters.accountHolder.lastName =
-                this.widgetDataFromState[DATA_IMPORT_CONTACT_LASTNAME];
+                this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)];
             achTokenizeParameters.nameOnAccount =
-                `${this.widgetDataFromState[DATA_IMPORT_CONTACT_FIRSTNAME]}+' 
-                '+${this.widgetDataFromState[DATA_IMPORT_CONTACT_LASTNAME]}`
+                `${this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME)]} ${this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)]}`
 
         }
         achTokenizeParameters.accountHolder.type = this.accountHolderType();
         achTokenizeParameters.accountHolder.bankType = ACCOUNT_HOLDER_BANK_TYPES.CHECKING;
 
-        console.log(JSON.stringify('ACH Tokenize Params: '+achTokenizeParameters));
-
-        return achTokenizeParameters;
+        return JSON.stringify(achTokenizeParameters);
     }
 
     accountHolderType() {
-        return this.widgetDataFromState[DATA_IMPORT_DONATION_DONOR] === 'Contact'
+        return this.widgetDataFromState[
+            apiNameFor(DATA_IMPORT_DONATION_DONOR)] === CONTACT_DONOR_TYPE
             ? ACCOUNT_HOLDER_TYPES.INDIVIDUAL
             : ACCOUNT_HOLDER_TYPES.BUSINESS;
     }

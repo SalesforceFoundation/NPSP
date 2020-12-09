@@ -139,8 +139,8 @@ export default class GeFormRenderer extends LightningElement{
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
-    _isCreditCardWidgetInDoNotChargeState = false;
-    _hasCreditCardWidget = false;
+    _isPaymentWidgetInDoNotChargeState = false;
+    _hasPaymentWidget = false;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -207,7 +207,7 @@ export default class GeFormRenderer extends LightningElement{
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
-        return this._hasCreditCardWidget && this._isCreditCardWidgetInDoNotChargeState === false;
+        return this._hasPaymentWidget && this._isPaymentWidgetInDoNotChargeState === false;
     }
 
     get title() {
@@ -629,6 +629,9 @@ export default class GeFormRenderer extends LightningElement{
             const tokenResponse = await Promise.all(
                 [widgetValues[0].payload]
             );
+
+            console.log('Token: '+JSON.stringify(tokenResponse));
+
             if (tokenResponse) {
                 this.updateFormState(tokenResponse[0]);
             }
@@ -1013,8 +1016,8 @@ export default class GeFormRenderer extends LightningElement{
      * @param event
      */
     handleDoNotChargeCardState (event) {
-        this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
-        if (this._isCreditCardWidgetInDoNotChargeState) {
+        this._isPaymentWidgetInDoNotChargeState = event.isWidgetDisabled;
+        if (this._isPaymentWidgetInDoNotChargeState) {
             this.removePaymentFieldsFromFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -1381,8 +1384,8 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handleRegisterCreditCardWidget() {
-       this._hasCreditCardWidget = true;
+    handleRegisterPaymentWidget() {
+       this._hasPaymentWidget = true;
     }
 
     /*******************************************************************************
@@ -1935,7 +1938,7 @@ export default class GeFormRenderer extends LightningElement{
 
     hasProcessableDataImport() {
         return !this.hasFailedPurchaseRequest ||
-            this._isCreditCardWidgetInDoNotChargeState;
+            this._isPaymentWidgetInDoNotChargeState;
     }
 
     hasAuthorizationToken() {
@@ -1946,7 +1949,7 @@ export default class GeFormRenderer extends LightningElement{
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
             this.hasChargeableTransactionStatus() &&
-            !this._isCreditCardWidgetInDoNotChargeState;
+            !this._isPaymentWidgetInDoNotChargeState;
     }
 
     hasChargeableTransactionStatus = () => {
@@ -2018,33 +2021,45 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     buildACHPurchaseRequestBodyParameters() {
-        let requestBody = {};
-        if (this.isDonorTypeAccount()) {
-            requestBody.accountName = this.getFieldValueFromFormState(DATA_IMPORT_ACCOUNT1_NAME);
-        } else {
-            requestBody.firstName = this.cardholderNames.firstName;
-            requestBody.lastName = this.cardholderNames.lastName;
-        }
-        requestBody.achData = {
+        const metadata = {
+            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
+        };
+        const achData = {
             achCode: ACH_CODE,
             consent: 'Test Consent',
             type: this.accountHolderType(),
-            bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
+            bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
         }
-
-        requestBody.metadata =  {
-            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
-        };
-
-        requestBody.amount = getCurrencyLowestCommonDenominator(
-            this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT))
-        );
-
-        requestBody.paymentMethodToken =
+        const amount = getCurrencyLowestCommonDenominator(
+            this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT)));
+        const paymentMethodToken =
             this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
-        return JSON.stringify({ requestBody });
+
+        return JSON.stringify({
+            ...this.buildACHPurchaseBodyNameParameter(),
+            paymentMethodType : PAYMENT_METHODS.ACH,
+            amount: amount,
+            paymentMethodToken: paymentMethodToken,
+            achData : achData,
+            metadata: metadata
+        });
+
     }
 
+    buildACHPurchaseBodyNameParameter() {
+        let names;
+        if (this.isDonorTypeContact()) {
+            names = {
+                firstName: this.donorNames.firstName,
+                lastName: this.donorNames.lastName
+            };
+        } else {
+            names = {
+                accountName: this.donorNames.accountName
+            }
+        }
+        return names;
+    }
 
     buildCreditCardPurchaseRequestBodyParameters() {
         const { firstName, lastName } = this.cardholderNames;
@@ -2070,7 +2085,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     selectedPaymentMethod () {
-        return this.getFieldValueForFormState(PAYMENT_METHOD);
+        return this.getFieldValueFromFormState(PAYMENT_METHOD);
     }
 
     processPurchaseResponse = async (responseBody) => {
@@ -2090,9 +2105,13 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const isPurchaseCreated =
-            responseBody.id && responseBody.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+            responseBody.id && (responseBody.status ===
+                this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+                || responseBody.status ===
+                this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
+            );
         if (isPurchaseCreated) {
-            this.updateFormStateWithSuccessfulPurchaseCall(responseBody, );
+            this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
 
@@ -2133,7 +2152,7 @@ export default class GeFormRenderer extends LightningElement{
         });
     }
 
-    updateFormStateWithSuccessfulPurchaseCall(responseBody, transactionType) {
+    updateFormStateWithSuccessfulPurchaseCall(responseBody) {
         if (this.isCreditCardTransaction()) {
             this.updateFormState({
                 [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
@@ -2155,15 +2174,11 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
                 [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
                 [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
-                [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.pa,
-                [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
-                [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
+                [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
+                [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
+                [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType
             });
         }
-    }
-
-    isACHTransaction() {
-       return this.selectedPaymentMethod() === PAYMENT_METHODS.ACH;
     }
 
     isCreditCardTransaction() {

@@ -155,12 +155,11 @@
               jwt: '{!jwtForToken}',
               userName: '{!$User.Username}'
            };
-
            const tokenConfig = {
               auth: auth,
               achCode: 'WEB',
               currencyCode: 'USD',
-              ach: params
+              ach: JSON.parse(params)
            };
 
            sfdo.createToken(tokenConfig)

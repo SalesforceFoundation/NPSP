@@ -72,9 +72,10 @@ export default class GeFormWidget extends LightningElement {
     hasElevateValuesChanged(formState) {
         const paymentMethodApiName = apiNameFor(DATA_IMPORT_PAYMENT_METHOD);
         if (!paymentMethodApiName) return false;
-
-        const hasChanged = formState[paymentMethodApiName] !== this.formState[paymentMethodApiName];
-        return hasChanged;
+        const hasChanged = this._elevateFields.find(field => {
+            return formState[field] !== this.formState[field];
+        })
+        return !!hasChanged ;
     }
 
     hasAllocationValuesChanged(formState) {

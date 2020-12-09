@@ -45,7 +45,8 @@ public with sharing class GE_PaymentServices {
         DECLINED,
         NONRETRYABLEERROR,
         RETRYABLEERROR,
-        REFUNDISSUED
+        REFUNDISSUED,
+        SUBMITTED
     }
 
     /***
@@ -195,6 +196,14 @@ public with sharing class GE_PaymentServices {
         public String campaignCode;
     }
 
+    public with sharing class AchData {
+        public String achCode;
+        public String consent;
+        public String type;
+        public String bankType;
+        public String checkNumber;
+    }
+
     /***
     * @description Inner class to assist in constructing the Purchase http request body.
     */
@@ -229,6 +238,9 @@ public with sharing class GE_PaymentServices {
         public String postalCode;
         // The ISO 3166-1 alpha-2 country code. E.g. US
         public String country;
+        public AchData achData;
+        public String paymentMethodType;
+        public String accountName;
 
         public PurchaseCallBody(String currencyCode, String merchantIds, String gatewayIds) {
             this.currencyCode = currencyCode;

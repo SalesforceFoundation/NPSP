@@ -691,9 +691,10 @@ global with sharing class BDI_DataImportService {
         String paymentStatus = dataImport.Payment_Status__c;
 
         return String.isBlank(paymentStatus) ||
-            dataImport.Payment_Status__c.equalsIgnoreCase(
+            (dataImport.Payment_Status__c.equalsIgnoreCase(
                 GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
-            );
+            ) || dataImport.Payment_Status__c.equalsIgnoreCase(
+                GE_PaymentServices.ElevateTransactionStatus.SUBMITTED.name()));
     }
 
     /**
