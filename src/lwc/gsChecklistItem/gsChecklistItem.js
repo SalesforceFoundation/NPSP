@@ -119,7 +119,6 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @param string button value
     */
     sfdcLinkAction(value) {
-        console.log('sfdcLinkAction');
         const values = value.split(':');     
         this[NavigationMixin.GenerateUrl]({
             type: `standard__${values[0]}`,
