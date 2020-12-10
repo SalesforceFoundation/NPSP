@@ -8352,6 +8352,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Submitted Status label for the application status component</shortDescription>
         <value>Submitted</value>
     </labels>
+        <labels>
+        <fullName>gsVideoHeaderLength</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Video Duration displayed in the Video Header Component</shortDescription>
+        <value>in 2 minutes</value>
+    </labels>
     <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
@@ -13876,6 +13884,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Video header title in Get Started</shortDescription>
-        <value>Short video describing the sections and resources on the NPSP Get Started Page.</value>
+        <value>Get Started on NPSP</value>
     </labels>
 </CustomLabels>
