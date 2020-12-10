@@ -45,8 +45,7 @@ public with sharing class GE_PaymentServices {
         DECLINED,
         NONRETRYABLEERROR,
         RETRYABLEERROR,
-        REFUNDISSUED,
-        SUBMITTED
+        REFUNDISSUED
     }
 
     /***

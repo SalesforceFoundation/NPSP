@@ -56,7 +56,7 @@ public with sharing class BDI_Donations_TEST2 {
                                                 Donation_Amount__c = 100,
                                                 Payment_Elevate_ID__c = '123',
                                                 Payment_ACH_Last_4__c = '4567',
-                                                Payment_Type__c = 'ACH',
+                                                Payment_Method__c = 'ACH',
                                                 Payment_Status__c = SUBMITTED_STATUS,
                                                 Payment_Paid__c = 'True');
 
@@ -67,7 +67,7 @@ public with sharing class BDI_Donations_TEST2 {
                                                 Donation_Amount__c = 100,
                                                 Payment_Elevate_ID__c = '124',
                                                 Payment_ACH_Last_4__c = '4568',
-                                                Payment_Type__c = 'ACH',
+                                                Payment_Method__c = 'ACH',
                                                 Payment_Status__c = SUBMITTED_STATUS,
                                                 Payment_Paid__c = 'True');
 
@@ -78,7 +78,7 @@ public with sharing class BDI_Donations_TEST2 {
                                                 Donation_Amount__c = 100,
                                                 Payment_Elevate_ID__c = '125',
                                                 Payment_ACH_Last_4__c = '4569',
-                                                Payment_Type__c = 'ACH',
+                                                Payment_Method__c = 'ACH',
                                                 Payment_Status__c = DECLINED_STATUS,
                                                 Payment_Paid__c = 'False',
                                                 Donation_Stage__c = CLOSED_LOST_STAGE);
@@ -195,14 +195,14 @@ public with sharing class BDI_Donations_TEST2 {
                                                     Payment_Status__c = SETTLED_STATUS,
                                                     Payment_Paid__c = null,
                                                     Payment_Elevate_ID__c = '123',
-                                                    Payment_Type__c = 'ACH');
+                                                    Payment_Method__c = 'ACH');
         DataImport__c diUpdate2 = new DataImport__c(DonationImported__c = pmt2.npe01__Opportunity__c,
                                                     Donation_Stage__c = CLOSED_LOST_STAGE,
                                                     PaymentImported__c = pmt2.Id,
                                                     Payment_Status__c = DECLINED_STATUS,
                                                     Payment_Paid__c = 'False',
                                                     Payment_Elevate_ID__c = '124',
-                                                    Payment_Type__c = 'ACH');
+                                                    Payment_Method__c = 'ACH');
 
         DataImport__c[] diUpdates = new DataImport__c[]{diUpdate1,diUpdate2};
         insert diUpdates;
