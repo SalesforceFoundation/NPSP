@@ -820,12 +820,12 @@ public class BDI_Donations {
             opptIdsForQuery.add(di.DonationImported__c);
         }
 
-        Set<String> fieldNamesForQuery = new Set<String>{'Id','StageName','CloseDate','Amount','IsClosed'};
+        Set<String> fieldNamesForQuery = new Set<String>{'id','stagename','closedate','amount','isclosed'};
 
         // Add all the payment mappings to the list of fields to be queried since they will
         // need to be copied to the payment.
         for (npe01__Payment_Field_Mapping_Settings__c pfms : PMT_PaymentCreator.paymentMappings.values()) {
-            fieldNamesForQuery.add(pfms.npe01__Opportunity_Field__c);
+            fieldNamesForQuery.add(pfms.npe01__Opportunity_Field__c.toLowerCase());
         }
 
         String query = 'SELECT ';
