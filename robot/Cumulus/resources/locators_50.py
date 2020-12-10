@@ -261,6 +261,9 @@ npsp_lex_locators={
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]',
         'formula_txtarea': '//textarea[@id = "{}"]',
         'object_result': '//th/a[text()="{}"]',
+		'field_result': '//td/a/span[text()="{}"]',
+        'new_picklist_btn': '//td[@class="pbButton"]/input[@title="{}"]',
+        'picklist_txtarea': '//textarea[@title = "{}"]'
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
