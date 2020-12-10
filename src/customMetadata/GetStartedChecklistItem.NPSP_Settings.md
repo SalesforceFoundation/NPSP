@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://power-of-us-hub-doc.s3-us-west-2.amazonaws.com/NPSP_Planning_Guide.pdf</value>
+        <value xsi:type="xsd:string">https://bit.ly/3mYoskO</value>
     </values>
     <values>
         <field>Position__c</field>
