@@ -225,8 +225,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 section.elements.forEach(element => {
                     const fieldMapping = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
 
-                    if(isNotEmpty(fieldMapping)) {
-                        if(isTrueFalsePicklist(fieldMapping)) {
+                    if (isNotEmpty(fieldMapping)) {
+                        if (isTrueFalsePicklist(fieldMapping)) {
                             element.picklistOptionsOverride = trueFalsePicklistOptions();
                         }
 
@@ -253,7 +253,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         try {
             this.donationMatchingBehaviors = await getDonationMatchingValues();
 
-            if(!GeFormService.fieldMappings) {
+            if (!GeFormService.fieldMappings) {
                 await GeFormService.getFieldMappings();
             }
 

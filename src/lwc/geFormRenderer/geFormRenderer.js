@@ -253,7 +253,7 @@ export default class GeFormRenderer extends LightningElement{
             // check if there is a record id in the url
             this.donorRecordId = getQueryParameters().c__donorRecordId;
             const donorApiName = getQueryParameters().c__apiName;
-            if(donorApiName) {
+            if (donorApiName) {
                 this.initializeDonationDonorTypeInFormState(donorApiName);
             }
 
@@ -361,7 +361,7 @@ export default class GeFormRenderer extends LightningElement{
     appendElementHelperData(element) {
         const helper = new GeFormElementHelper(element);
         element.isRenderable = helper.isRenderable();
-        if(helper.isTrueFalsePicklist()) {
+        if (helper.isTrueFalsePicklist()) {
             element.picklistOptionsOverride = trueFalsePicklistOptions();
         }
     }

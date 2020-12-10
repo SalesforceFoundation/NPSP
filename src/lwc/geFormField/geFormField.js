@@ -523,7 +523,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get picklistValues() {
-        if(this.element.picklistOptionsOverride) {
+        if (this.element.picklistOptionsOverride) {
             return this.element.picklistOptionsOverride;
         }
         if (this.targetFieldApiName === 'RecordTypeId') {

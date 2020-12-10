@@ -507,7 +507,7 @@ const BOOLEAN_MAPPING = 'BOOLEAN';
 const PICKLIST_MAPPING = 'PICKLIST';
 
 const isTrueFalsePicklist = (fieldMapping) => {
-    if(fieldMapping) {
+    if (fieldMapping) {
         return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING &&
             fieldMapping.Source_Field_Data_Type === PICKLIST_MAPPING;
     }
@@ -522,7 +522,7 @@ const trueFalsePicklistOptions = () => {
 }
 
 const isCheckboxToCheckbox = (fieldMapping) => {
-    if(fieldMapping) {
+    if (fieldMapping) {
         return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING &&
             fieldMapping.Source_Field_Data_Type === BOOLEAN_MAPPING;
     }

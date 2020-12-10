@@ -202,7 +202,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get picklistOptionsOverride() {
-        if(isTrueFalsePicklist(this.fieldMapping)) {
+        if (isTrueFalsePicklist(this.fieldMapping)) {
             return trueFalsePicklistOptions();
         }
     }
