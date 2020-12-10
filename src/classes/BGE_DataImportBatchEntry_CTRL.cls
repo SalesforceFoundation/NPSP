@@ -132,6 +132,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     nonNameFields.add(str);
                 }
             }
+
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
                     String.valueOf(DataImport__c.SObjectType),
                     nonNameFields

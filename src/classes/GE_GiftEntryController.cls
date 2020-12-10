@@ -607,6 +607,10 @@ public with sharing class GE_GiftEntryController {
         return getDefaultSGERenderWrapper();
     }
 
+    /**
+     * @description Retrieves field mappings when a template is not needed, no render wrapper.
+     * @return {BDI_FieldMappingSet}
+     */
     @AuraEnabled
     public static BDI_FieldMappingSet getFieldMappings() {
         return BDI_MappingServiceAdvanced.getInstance().fieldMappingSet;
