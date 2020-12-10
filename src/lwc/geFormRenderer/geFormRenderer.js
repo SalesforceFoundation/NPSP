@@ -2215,8 +2215,9 @@ export default class GeFormRenderer extends LightningElement{
         const paymentStatus = this.getFieldValueFromFormState(
             apiNameFor(PAYMENT_STATUS)
         );
-        return paymentStatus &&
-            paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+        return paymentStatus
+            && (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
 
     }
 
