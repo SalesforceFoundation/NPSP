@@ -13,23 +13,25 @@ Suite Teardown  Run Keywords
 *** Variables ***
 ${TEMPLATE}       Opportunity Lookups Template
 &{RECORD_TYPE}    Default Value=In-Kind Gift
+&{DESCRIPTION}    Default Value=Testing defaults
 
 *** Keywords ***
 Setup Test Data
-    &{CONTACT} =         API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
-    Set suite variable   &{CONTACT}
-    ${CUR_DATE} =        Get Current Date         result_format=%Y-%m-%d
-    Set suite variable   ${CUR_DATE}
-    &{OPPORTUNITY} =     API Create Opportunity   ${CONTACT}[AccountId]              Donation
-    ...                  StageName=Prospecting
-    ...                  Amount=100
-    ...                  CloseDate=${CUR_DATE}
-    ...                  Name=${CONTACT}[Name] Donation
-    Set suite variable   &{OPPORTUNITY}
-    ${NS} =              Get NPSP Namespace Prefix
-    Set suite variable   ${NS}
-    ${ui_date} =         Get Current Date         result_format=%b %-d, %Y
-    Set suite variable   ${UI_DATE}
+    &{CONTACT} =          API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
+    Set suite variable    &{CONTACT}
+    Store Session Record  Account                  ${CONTACT}[AccountId]
+    ${CUR_DATE} =         Get Current Date         result_format=%Y-%m-%d
+    Set suite variable    ${CUR_DATE}
+    &{OPPORTUNITY} =      API Create Opportunity   ${CONTACT}[AccountId]              Donation
+    ...                   StageName=Prospecting
+    ...                   Amount=100
+    ...                   CloseDate=${CUR_DATE}
+    ...                   Name=${CONTACT}[Name] Donation
+    Set suite variable    &{OPPORTUNITY}
+    ${NS} =               Get NPSP Namespace Prefix
+    Set suite variable    ${NS}
+    ${ui_date} =          Get Current Date         result_format=%b %-d, %Y
+    Set suite variable    ${UI_DATE}
 
 *** Test Cases ***
 
@@ -46,12 +48,13 @@ Verify Changing Labels on Template Gets Updated on Batches
     Click Gift Entry Button                 Next: Form Fields
     Perform Action On Object Field          select                          Opportunity           Record Type ID
     Perform Action On Object Field          select                          Opportunity           Stage
-    Perform Action On Object Field          select                          Opportunity           Do Not Automatically Create Payment
+    Perform Action On Object Field          select                          Opportunity           Description
     Fill Template Form                      Opportunity: Record Type ID=&{RECORD_TYPE}
+    ...                                     Opportunity: Description=&{DESCRIPTION}
     Click Gift Entry Button                 Next: Batch Settings
-    Add Batch Table Columns                 Opportunity: Do Not Automatically Create Payment
-    ...                                     Opportunity: Record Type ID
+    Add Batch Table Columns                 Opportunity: Record Type
     ...                                     Opportunity: Stage
+    ...                                     Opportunity: Description
     Click Gift Entry Button                 Save & Close
     Current Page Should Be                  Landing                         GE_Gift_Entry
     Click Link                              Templates
@@ -62,17 +65,20 @@ Verify Changing Labels on Template Gets Updated on Batches
     ${BATCH_Id} =   Save Current Record ID For Deletion                     ${NS}DataImportBatch__c
     Set Suite Variable                      ${BATCH_Id}
     Verify Field Default Value              Opportunity: Record Type=${RECORD_TYPE}[Default Value]
+    ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
     Fill Gift Entry Form
     ...                                     Data Import: Donation Donor=Contact1
     ...                                     Data Import: Contact1 Imported=${CONTACT}[Name]
     Click Button                            Review Donations
     Wait Until Modal Is Open
-    Click Button                            Update this Opportunity
+    Click Button                            npsp:gift_entry.id:Update this Opportunity ${OPPORTUNITY}[Name]
     Verify Field Default Value
-    ...                                     Opportunity: Amount=$100
+    ...                                     Opportunity: Amount=$100.00
     ...                                     Opportunity: Close Date=${UI_DATE}
     ...                                     Opportunity: Record Type=Donation
     ...                                     Opportunity: Stage=Prospecting
+    ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
+    Fill Gift Entry Form                    Opportunity: Stage=Closed Won
     Click Button                            Save & Enter New Gift
     #Verify gift is created with correct values
     Verify Gift Count                       1
@@ -81,9 +87,14 @@ Verify Changing Labels on Template Gets Updated on Batches
     ...                                     Opportunity: Amount=$100.00
     ...                                     Opportunity: Close Date=${UI_DATE}
     ...                                     Opportunity: Record Type=Donation
-    ...                                     Opportunity: Stage=Prospecting
-    Click Gift Entry Button                 Process Batch
-    Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process               BDI_DataImport_BATCH            Completed
-    Click Button With Value                 Close
+    ...                                     Opportunity: Stage=Closed Won
+    ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
+    Perform Action On Datatable Row   	    ${CONTACT}[Name]                Open
+    Verify Field Default Value
+    ...                                     Opportunity: Amount=$100.00
+    ...                                     Opportunity: Close Date=${UI_DATE}
+    ...                                     Opportunity: Record Type=Donation
+    ...                                     Opportunity: Stage=Closed Won
+    ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
+
 

@@ -195,8 +195,12 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                             self.salesforce._jsclick(field_checkbox)
                 elif section=="Default Value":
                     key=f'{section} {field}'
-                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
-                    placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
+                    if "Description" in field:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                        placeholder=None
+                    else:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                        placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
                     self.selenium.scroll_element_into_view(field_loc)
                     try:
                         self.selenium.click_element(field_loc)
@@ -209,7 +213,6 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
                     elif placeholder=="Search...":
-                        # self.salesforce.populate_lookup_field(key,value)
                         self.salesforce._populate_field(field_loc,value)
                         qa_id="Select "+value
                         option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
