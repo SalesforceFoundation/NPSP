@@ -15,7 +15,6 @@ import {
     handleError,
     addKeyToCollectionItems,
     isTrueFalsePicklist,
-    isCheckboxToCheckbox,
     trueFalsePicklistOptions
 } from 'c/utilTemplateBuilder';
 import {
@@ -135,7 +134,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     get isEditMode() {
-        return !!this.recordId;
+        return isNotEmpty(this.recordId);
     }
 
     get dataImportBatchName() {
@@ -230,7 +229,11 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                         if(isTrueFalsePicklist(fieldMapping)) {
                             element.picklistOptionsOverride = trueFalsePicklistOptions();
                         }
-                        element.isCheckboxToCheckbox = isCheckboxToCheckbox(fieldMapping);
+
+                        Object.defineProperty(element, 'showDefaultValueInput', {
+                            get: function() { return this.dataType !== 'BOOLEAN' || !!this.picklistOptionsOverride; }
+                        });
+
                     }
                 });
             }
@@ -249,6 +252,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     async connectedCallback() {
         try {
             this.donationMatchingBehaviors = await getDonationMatchingValues();
+
+            if(!GeFormService.fieldMappings) {
+                await GeFormService.getFieldMappings();
+            }
 
             if (!this.recordId) {
                 this.templates = await getAllFormTemplates();
