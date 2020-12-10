@@ -531,8 +531,7 @@ public with sharing class GE_GiftEntryController {
 
             BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
 
-            String[] tempObjStrings = new String[]{
-            };
+            String[] tempObjStrings = new String[]{};
 
             //Reserializing the object strings to resolve platform issue with deserializing SObjects
             for (Object obj : (List<Object>) objMappingDevNameToObjList.get(objMappingDevName)) {
@@ -606,6 +605,11 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static RenderWrapper retrieveDefaultSGERenderWrapper() {
         return getDefaultSGERenderWrapper();
+    }
+
+    @AuraEnabled
+    public static BDI_FieldMappingSet getFieldMappings() {
+        return BDI_MappingServiceAdvanced.getInstance().fieldMappingSet;
     }
 
     public class RenderWrapper {
