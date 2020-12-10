@@ -414,6 +414,18 @@ Create Customfield In Object Manager
     Open Fields And Relationships                        ${fields}[Object]
     Create Custom Field                                  &{fields}
 
+Add Custom Picklist Values To Field
+    [Documentation]        Reads key value pair arguments.
+    ...                    Navigates to Object Manager page and load fields and relationships for the specific object
+    ...                    Runs keyword to add picklist values
+    ...                    Example key,value pairs
+    ...                                                    Object=Recurring Donation
+    ...                                                    Field_Name=Status
+    ...                                                    Values=@{picklistvalues}
+    [Arguments]            &{fields}
+    Load Page Object                                     Custom                           ObjectManager
+    Open Fields And Relationships                        ${fields}[Object]
+    Add picklist values                                  &{fields}
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
