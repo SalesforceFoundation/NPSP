@@ -29,7 +29,7 @@ jest.mock('c/geFormService', () => {
         getNumberFormatterByDescribeType: jest.fn(() => {
             return null;
         }),
-        getObjectMappingWrapper: jest.fn(() => {
+        getObjectMapping: jest.fn(() => {
             return require('./data/objectMapping.json');
         }),
         importedRecordFieldNames: jest.fn(() => {
@@ -42,7 +42,8 @@ jest.mock('c/geFormService', () => {
             if (targetFieldName === 'RecordTypeId') {
                 return require('./data/recordTypeIdFieldMapping.json');
             }
-        })
+        }),
+
     };
 });
 
@@ -124,6 +125,7 @@ describe('c-ge-form-field', () => {
         document.body.appendChild(element);
 
         return Promise.resolve().then(() => {
+            debugger;
             expect(element.isPicklist).toBeTruthy();
             expect(getSubComponentCombobox(element).options.length).toEqual(2);
             expect(getSubComponentCombobox(element).options).toContainOptions([

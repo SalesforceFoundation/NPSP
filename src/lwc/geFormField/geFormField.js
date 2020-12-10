@@ -239,7 +239,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE || this.hasPicklistOverride;
+        return this.fieldType === PICKLIST_TYPE || this.hasPicklistOverride || this.isRecordTypePicklist;
     }
 
     get isCheckbox() {
