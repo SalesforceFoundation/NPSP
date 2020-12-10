@@ -150,3 +150,41 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 				self.create_formula_field(kwargs['Field_Name'],kwargs['Formula'])
 			elif type.lower() == 'text':
 				self.create_text_field(kwargs['Field_Name'])
+		
+	
+	@capture_screenshot_on_error
+	def add_picklist_values(self, **kwargs):
+		"""
+		Searches for the specified field and if the field exits, Navigates throught the steps
+		to add the picklist value(s)
+		"""
+		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
+		self.selenium.wait_until_page_contains_element(search_button,60)
+		self.selenium.get_webelement(search_button).send_keys(kwargs['Field_Name'])
+		self.selenium.get_webelement(search_button).send_keys(Keys.ENTER)
+		time.sleep(1)
+		self.salesforce.wait_until_loading_is_complete()
+		search_results = npsp_lex_locators['object_manager']['search_result'].format(kwargs['Field_Name'])
+		count = len(self.selenium.get_webelements(search_results))
+		if count >= 1:
+			field = npsp_lex_locators['object_manager']['field_result'].format(kwargs['Field_Name'])
+			new_picklst_btn = npsp_lex_locators['object_manager']['new_picklist_btn'].format('New Values')
+			picklist_txtarea =  npsp_lex_locators['object_manager']['picklist_txtarea'].format('Status')
+			picklist_save = npsp_lex_locators['object_manager']['button'].format('Save')
+			self.selenium.wait_until_page_contains_element(field)
+			self.selenium.click_element(field)
+			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
+			self.npsp.choose_frame('vfFrameId')
+			self.selenium.wait_until_page_contains_element(new_picklst_btn)
+			self.selenium.scroll_element_into_view(new_picklst_btn)
+			self.selenium.click_element(new_picklst_btn)
+			time.sleep(2)
+			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
+			self.npsp.choose_frame('vfFrameId')
+			self.selenium.wait_until_page_contains_element(picklist_txtarea)
+			for value in kwargs['Values']:
+				self.selenium.get_webelement(picklist_txtarea).send_keys(value)
+				self.selenium.get_webelement(picklist_txtarea).send_keys(Keys.ENTER)
+			self.selenium.click_element(picklist_save)
+		else:
+			raise Exception(f"Field not found")
