@@ -246,7 +246,8 @@ public class BDI_Donations {
                 bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             } else {
 
-                //split out successful elevate DIs for separate processing
+                // Setting status to updated for elevate opportunities that were updated.
+                // Non-Elevate Donations would typically have a matched status instead.
                 if (isElevatePaymentDI(dataImportsToUpdate[i])) {
                     dataImportsToUpdate[i].DonationImportStatus__c = System.label.bdiUpdated;
                 }
