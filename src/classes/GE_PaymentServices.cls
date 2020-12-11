@@ -201,7 +201,6 @@ public with sharing class GE_PaymentServices {
         public String consent;
         public String type;
         public String bankType;
-        public String checkNumber;
     }
 
     /***
@@ -226,13 +225,7 @@ public with sharing class GE_PaymentServices {
         */
         // May be any key:value pairs. i.e. campaignCode: 123
         public Metadata metadata;
-        // The donor salutation. E.g. Mr., Ms.
-        public String salutation;
-        // The donor suffix. E.g. III, Esq.
-        public String suffix;
         public String phone;
-        public String addressLine1;
-        public String addressLine2;
         public String city;
         public String state;
         public String postalCode;

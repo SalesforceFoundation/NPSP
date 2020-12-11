@@ -20,6 +20,8 @@ import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Ca
 import PAYMENT_ACH_CODE from '@salesforce/schema/DataImport__c.Payment_ACH_Code__c';
 import PAYMENT_ACH_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
 import PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID
+    from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
@@ -560,7 +562,7 @@ export default class GeFormRenderer extends LightningElement{
             this.addPageLevelErrorMessage({ errorMessage: exceptionWrapper.errorMessage, index: 0 });
         }
 
-        // focus either the page level or field level error messsage somehow
+        // focus either the page level or field level error message somehow
         window.scrollTo(0, 0);
     }
 
@@ -1951,7 +1953,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        const paymentStatus = this.getFieldValueFromFormState(apiNameFor(PAYMENT_STATUS));
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         switch (paymentStatus) {
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
@@ -1994,8 +1996,13 @@ export default class GeFormRenderer extends LightningElement{
             this.CUSTOM_LABELS.geTextUpdating :
             this.CUSTOM_LABELS.geTextSaving;
 
-        const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
-        this.updateFormState(upsertResponse);
+            await upsertDataImport({
+                dataImport: dataImportFromFormState
+            }).then(upsertResponse => {
+                this.updateFormState(upsertResponse);
+            }).catch(err => {
+                this.handleError(err)
+            });
     };
 
     makePurchaseRequest = async () => {
@@ -2020,7 +2027,7 @@ export default class GeFormRenderer extends LightningElement{
 
     buildACHPurchaseRequestBodyParameters() {
         const metadata = {
-            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
+            campaignCode: this.getFieldValueFromFormState(DONATION_CAMPAIGN_NAME)
         };
         const achData = {
             achCode: ACH_CODE,
@@ -2029,9 +2036,9 @@ export default class GeFormRenderer extends LightningElement{
             bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
         }
         const amount = getCurrencyLowestCommonDenominator(
-            this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT)));
+            this.getFieldValueFromFormState(DONATION_AMOUNT));
         const paymentMethodToken =
-            this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
+            this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN);
 
         return JSON.stringify({
             ...this.buildACHPurchaseBodyNameParameter(),
@@ -2088,34 +2095,40 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     processPurchaseResponse = async (responseBody) => {
-        const isPurchaseFailed = responseBody.errors;
-        if (isPurchaseFailed) {
+        if (responseBody.errors) {
             this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
             this.handlePurchaseCallValidationErrors(responseBody.errors);
             this.hasFailedPurchaseRequest = true;
         }
 
-        const isPurchaseTimedout = !responseBody.id && responseBody.message && responseBody.status;
-        if (isPurchaseTimedout) {
+        if (this.hasPurchaseTimedOut(responseBody)) {
             this.updateFormStateWithTimedoutPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = true;
             this.hasPurchaseCallTimedout = true;
             this.formatTimeoutErrorMessage();
         }
 
-        const isPurchaseCreated =
-            responseBody.id && (responseBody.status ===
-                this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
-                || responseBody.status ===
-                this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-            );
-        if (isPurchaseCreated) {
+        if (this.isPurchaseCreated(responseBody)) {
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
 
         await this.saveDataImport(this.saveableFormState());
     }
+
+    isPurchaseCreated (responseBody) {
+       return responseBody.id
+           && (responseBody.status ===
+               this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+           || responseBody.status ===
+           this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
+       );
+    }
+
+    hasPurchaseTimedOut (responseBody) {
+        return !responseBody.id && responseBody.message && responseBody.status;
+    }
+
 
     updateFormStateWithFailedPurchaseCall(errors) {
         if (errors && errors[0]) {
@@ -2133,9 +2146,13 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handlePurchaseCallValidationErrors(errors) {
-        const errorMessage = JSON.stringify(errors.map(error => error.message)) || this.CUSTOM_LABELS.commonUnknownError;
-        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorMessage];
-        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+        const errorMessage = JSON.stringify(
+            errors.map(error => error.message))
+            || this.CUSTOM_LABELS.commonUnknownError;
+        let labelReplacements = [
+            this.CUSTOM_LABELS.commonPaymentServices, errorMessage];
+        let formattedErrorResponse = format(
+            this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
 
         const error = {
             message: formattedErrorResponse.split(LABEL_NEW_LINE),
@@ -2175,7 +2192,8 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
                 [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
                 [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
-                [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType
+                [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType,
+                [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: responseBody.originalTransactionId
             });
         }
     }
@@ -2183,7 +2201,6 @@ export default class GeFormRenderer extends LightningElement{
     isCreditCardTransaction() {
         return this.selectedPaymentMethod() === PAYMENT_METHODS.CREDIT_CARD;
     }
-
 
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
@@ -2212,9 +2229,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get hasCapturedPayment() {
-        const paymentStatus = this.getFieldValueFromFormState(
-            apiNameFor(PAYMENT_STATUS)
-        );
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         return paymentStatus
             && (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
