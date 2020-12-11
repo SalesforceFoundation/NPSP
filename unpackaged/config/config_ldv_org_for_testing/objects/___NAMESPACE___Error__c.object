@@ -4,9 +4,9 @@
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>CREATED_DATE</columns>
-        <columns>npsp__Error_Type__c</columns>
-        <columns>npsp__Context_Type__c</columns>
-        <columns>npsp__Full_Message__c</columns>
+        <columns>%%%NAMESPACE%%%Error_Type__c</columns>
+        <columns>%%%NAMESPACE%%%Context_Type__c</columns>
+        <columns>%%%NAMESPACE%%%Full_Message__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Errors</label>
     </listViews>

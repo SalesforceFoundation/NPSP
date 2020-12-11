@@ -36,11 +36,11 @@
         <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
-        <tab>npsp__Error__c</tab>
+        <tab>%%%NAMESPACE%%%Error__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>npsp__Trigger_Handler__c</tab>
+        <tab>%%%NAMESPACE%%%Trigger_Handler__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
 </Profile>

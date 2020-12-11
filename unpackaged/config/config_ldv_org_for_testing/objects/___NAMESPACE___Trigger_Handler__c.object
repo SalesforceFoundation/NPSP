@@ -3,11 +3,11 @@
     <listViews>
         <fullName>All_Triggers</fullName>
         <columns>NAME</columns>
-        <columns>npsp__Class__c</columns>
-        <columns>npsp__Object__c</columns>
-        <columns>npsp__Trigger_Action__c</columns>
-        <columns>npsp__User_Managed__c</columns>
-        <columns>npsp__Active__c</columns>
+        <columns>%%%NAMESPACE%%%Class__c</columns>
+        <columns>%%%NAMESPACE%%%Object__c</columns>
+        <columns>%%%NAMESPACE%%%Trigger_Action__c</columns>
+        <columns>%%%NAMESPACE%%%User_Managed__c</columns>
+        <columns>%%%NAMESPACE%%%Active__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Triggers</label>
     </listViews>

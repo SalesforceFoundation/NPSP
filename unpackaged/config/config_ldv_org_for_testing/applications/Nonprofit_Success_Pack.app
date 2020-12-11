@@ -12,7 +12,7 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>Nonprofit Success Pack</label>
     <navType>Standard</navType>
-    <tabs>npsp__NPSP_Resources</tabs>
+    <tabs>%%%NAMESPACE%%%GetStarted</tabs>
     <tabs>standard-home</tabs>
     <tabs>standard-Account</tabs>
     <tabs>standard-Contact</tabs>
@@ -21,9 +21,9 @@
     <tabs>standard-Campaign</tabs>
     <tabs>standard-report</tabs>
     <tabs>npe03__Recurring_Donation__c</tabs>
-    <tabs>npsp__Level__c</tabs>
-    <tabs>npsp__Error__c</tabs>
-    <tabs>npsp__Trigger_Handler__c</tabs>
+    <tabs>%%%NAMESPACE%%%Level__c</tabs>
+    <tabs>%%%NAMESPACE%%%Error__c</tabs>
+    <tabs>%%%NAMESPACE%%%Trigger_Handler__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Nonprofit_Success_Pack_UtilityBar</utilityBar>
 </CustomApplication>
