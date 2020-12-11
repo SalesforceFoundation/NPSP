@@ -49,7 +49,7 @@ global with sharing class BDI_DataImportService {
     }, '.');
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
-
+    public static final String ACH_PAYMENT_METHOD = 'ACH';
 
     public BDI_MappingService mappingService;
 
@@ -693,8 +693,8 @@ global with sharing class BDI_DataImportService {
         return String.isBlank(paymentStatus) ||
             (dataImport.Payment_Status__c.equalsIgnoreCase(
                 GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
-            ) || dataImport.Payment_Status__c.equalsIgnoreCase(
-                GE_PaymentServices.ElevateTransactionStatus.SUBMITTED.name()));
+            ) || (dataImport.Payment_Method__c == ACH_PAYMENT_METHOD
+                && dataImport.Payment_Elevate_ID__c != null));
     }
 
     /**

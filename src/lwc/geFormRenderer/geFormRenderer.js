@@ -22,6 +22,8 @@ import PAYMENT_ACH_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Las
 import PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID
     from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
+import PAYMENT_TYPE from '@salesforce/schema/DataImport__c.Payment_Type__c';
+import PAYMENT_ACH_CONSENT from '@salesforce/schema/DataImport__c.ACH_Consent__c';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
@@ -2193,6 +2195,8 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
                 [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
                 [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType,
+                [apiNameFor(PAYMENT_ACH_CONSENT)]: responseBody.achData.consentMessage,
+                [apiNameFor(PAYMENT_TYPE)]: responseBody.paymentType,
                 [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: responseBody.originalTransactionId
             });
         }
