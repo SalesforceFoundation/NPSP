@@ -16,7 +16,7 @@
     </values>
     <values>
         <field>Has_Link__c</field>
-        <value xsi:type="xsd:boolean">false</value>
+        <value xsi:type="xsd:boolean">true</value>
     </values>
     <values>
         <field>Image__c</field>
@@ -24,11 +24,11 @@
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">gsChecklistItemNPSPSettingsLinkLabel</value>
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://bit.ly/3mYoskO</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -40,11 +40,11 @@
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
-        <value xsi:type="xsd:string">link</value>
+        <value xsi:type="xsd:string">sfdc:new-tab</value>
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://power-of-us-hub-doc.s3-us-west-2.amazonaws.com/NPSP_Planning_Guide.pdf</value>
+        <value xsi:type="xsd:string">navItemPage:c__NPSP_Settings</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
