@@ -60,8 +60,12 @@ private with sharing class PS_CommitmentRequest_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
         insert getRecurringDonationBuilder(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .withCampaign(rdCampaign.Id)
             .build();
     }
 
@@ -75,11 +79,11 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Id recordId = rdGateway.getRecords()[0].Id;
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         Contact contact = getContact();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(recordId, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd.Id, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -93,7 +97,15 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertNotEquals(null, requestBody.metadata, 'Metadata should be set by default');
         System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.metadata.originType,
             'Metadata origin type should be CRM');
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.metadata.campaignCode,
+            'Metadata campaign code should be set to RD campaign');
 
+        System.assertNotEquals(null, requestBody.productMetaData, 'Product Metadata should be set by default');
+        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.productMetaData.origin.type,
+            'Product Metadata origin type should be CRM');
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.productMetaData.campaign.id,
+            'Product Metadata campaign id should be set to RD campaign');
+        
         System.assertEquals(1, requestBody.schedules.size(),
             'One schedule should be passed to the API: ' + requestBody.schedules);
 
