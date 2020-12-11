@@ -329,32 +329,26 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         testNextInstallmentOppCreation(rd);
     }
 
+    /**
+     * @description Verifies the batch job will not be started with another
+     * batch job with the same class name is already executing
+     */
     @isTest
     private static void shouldNotRunTheBatchIfAnotherJobIsRunning() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withStatusLapsed()
-            .build();
-
+        
         final Date prevCloseDate = START_DATE.addMonths(1);
         final Date today = prevCloseDate.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2);
         RD2_ScheduleService.currentDate = today;
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStatusLapsed()
+            .build();
         insert rd;
 
-        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
-            .withOpenStage()
-            .withCloseDate(prevCloseDate)
-            .build();
-
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
-
         RD2_OpportunityEvaluation_BATCH batch  = new RD2_OpportunityEvaluation_BATCH(nextCloseDate.addDays(1));
-        batch.isBatchInProgress = true;
+        batch.isConcurrentBatch = true;
         runBatch(batch);
 
         List<Error__c> errors = errorGateway.getRecords();
