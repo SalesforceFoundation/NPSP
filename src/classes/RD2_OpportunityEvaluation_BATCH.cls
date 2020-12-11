@@ -75,13 +75,12 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Checks if another concurrent batch job is in progress
     */
     @TestVisible
-    private Boolean isBatchInProgress {
+    private Boolean isConcurrentBatch {
         get {
-            if (isBatchInProgress == null) {
-                //in this context, we have at least 1 Batch running(this itself).
-                isBatchInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+            if (isConcurrentBatch == null) {
+                isConcurrentBatch = new UTIL_BatchJobService().isConcurrentBatch(batchClassName);
             }
-            return isBatchInProgress;
+            return isConcurrentBatch;
         }
         set;
     }
@@ -165,7 +164,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         String query = getRDBatchQuery();
 
-        if (isBatchInProgress) {
+        if (isConcurrentBatch) {
             new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }    

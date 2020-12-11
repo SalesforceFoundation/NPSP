@@ -523,7 +523,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         Test.startTest();
         RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
-        rdbatch.isBatchInProgress = true;
+        rdbatch.isConcurrentBatch = true;
         Database.executeBatch(rdbatch);
         Test.stopTest();
         
