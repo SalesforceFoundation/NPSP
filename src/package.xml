@@ -2537,6 +2537,7 @@
         <members>gsChecklistItemNPSPGuidePriBtnLabel</members>
         <members>gsChecklistItemNPSPGuideTitle</members>
         <members>gsChecklistItemNPSPSettingsDesc</members>
+        <members>gsChecklistItemNPSPSettingsLinkLabel</members>
         <members>gsChecklistItemNPSPSettingsPriBtnLabel</members>
         <members>gsChecklistItemNPSPSettingsTitle</members>
         <members>gsChecklistItemPageLayoutsDesc</members>
