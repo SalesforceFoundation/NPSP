@@ -427,3 +427,23 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """Validates that the GAU allocation remaining balance is correct"""
         locator=npsp_lex_locators["gift_entry"]["element_text"].format("Remaining Allocation Amount",amount)
         self.selenium.wait_until_page_contains_element(locator,error=f'Remaining allocation amount of {amount} could not be found on page')
+
+    @capture_screenshot_on_error
+    def verify_record_picklist_values(self,field,*args,**kwargs):
+        """Verifies that picklist field values change based on Record Type selected.
+        Arguments: field | Picklist field name
+                   *args | Expected values to be loaded in the picklist field
+                **kwargs | Record Type field name=Record Type Value
+        Example: Verify Record Picklist Values | Opportunity Stage | @{GRANT_STAGES} | Opportunity Record Type=Grant"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+            field_value=self.selenium.get_element_attribute(locator,"value")
+            if field_value==value:
+                option_field=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+                self.selenium.click_element(option_field) # clicking in the field inorder to trigger picklist values to load
+                for item in args:
+                    options=npsp_lex_locators["gift_entry"]["picklist_values"].format(field,item)
+                    self.selenium.page_should_contain_element(options,message=f'{field} does not contain {item} option')
+                self.selenium.click_element(option_field) # clicking again to close the picklist after verification
+            else:
+                raise Exception(f'{key} does not contain specified {value}')

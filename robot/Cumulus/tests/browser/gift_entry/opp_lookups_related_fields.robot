@@ -11,12 +11,15 @@ Suite Teardown  Run Keywords
 ...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
-${TEMPLATE}       Opportunity Lookups Template
-&{RECORD_TYPE}    Default Value=In-Kind Gift
-&{DESCRIPTION}    Default Value=Testing defaults
+${TEMPLATE}         Opportunity Lookups Template
+&{RECORD_TYPE}      Default Value=Grant
+&{DESCRIPTION}      Default Value=Testing defaults
+@{GRANT_STAGE}      Prospecting   LOI Submitted   Application Submitted   Withdrawn   Awarded
+@{DONATION_STAGE}   Prospecting   Pledged         Closed Lost             Closed Won  Withdrawn   Posted
 
 *** Keywords ***
 Setup Test Data
+    [Documentation]       Creates the namespace, dates, contact and opportunity record needed for test
     &{CONTACT} =          API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable    &{CONTACT}
     Store Session Record  Account                  ${CONTACT}[AccountId]
@@ -35,8 +38,12 @@ Setup Test Data
 
 *** Test Cases ***
 
-Verify Changing Labels on Template Gets Updated on Batches
-    # [Documentation]
+Verify Opportunity Related Field Values Autopopulate Correctly
+    [Documentation]          Creates a template with different types of opportunity fields, with default values in Record Type and Description fields.
+    ...                      Verifies defaults are loaded correctly on batch gift form. Verifies picklist values are updated correctly for different record types.
+    ...                      When opportunity is selected from Review Donations > Update Opportunity, verifies related values are autopopulated correctly.
+    ...                      When opportunity contains value in the field that has default, verifies opportunity value is updated in field upon opportunity selection.
+    ...                      When opportunity does not contain value in the field that has default, verifies field default is not cleared upon opportunity selection.
     [tags]                                  unstable      feature:GE        W-8292782
     Go To Page                              Landing                         GE_Gift_Entry
     Click Link                              Templates
@@ -66,6 +73,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     Set Suite Variable                      ${BATCH_Id}
     Verify Field Default Value              Opportunity: Record Type=${RECORD_TYPE}[Default Value]
     ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
+    Verify Record Picklist Values           Opportunity: Stage      @{GRANT_STAGE}      Opportunity: Record Type=Grant
     Fill Gift Entry Form
     ...                                     Data Import: Donation Donor=Contact1
     ...                                     Data Import: Contact1 Imported=${CONTACT}[Name]
@@ -78,6 +86,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     ...                                     Opportunity: Record Type=Donation
     ...                                     Opportunity: Stage=Prospecting
     ...                                     Opportunity: Description=${DESCRIPTION}[Default Value]
+    Verify Record Picklist Values           Opportunity: Stage      @{DONATION_STAGE}      Opportunity: Record Type=Donation
     Fill Gift Entry Form                    Opportunity: Stage=Closed Won
     Click Button                            Save & Enter New Gift
     #Verify gift is created with correct values
