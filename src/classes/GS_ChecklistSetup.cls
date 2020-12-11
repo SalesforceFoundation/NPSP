@@ -204,6 +204,15 @@ public with sharing class GS_ChecklistSetup {
         return ids;
     }
 
+    /***
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    * @return String
+    */
+    @AuraEnabled(Cacheable=true)
+    public static String getNamespace() {
+        return UTIL_Namespace.getNamespace();
+    }
+
     /**
     * @description This Class is to wrap GetStartedChecklistSection__mdt information
     */
