@@ -6983,7 +6983,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Button label of checklist item NPSP Cloud in Get Started</shortDescription>
         <value>See Features</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>gsChecklistItemNPSPCloudLinkLabel</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -7037,7 +7037,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button label of checklist item NPSP Settings in Get Started</shortDescription>
-        <value>Learn More</value>
+        <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Learn more about NPSP Settings in the Planning Guide</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemNPSPSettingsTitle</fullName>
