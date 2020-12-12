@@ -18,7 +18,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def wait_for_rd2_modal(self):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
-        self.builtin.sleep(1,"Wait Needed for now to wait for the new modal")
+        self.builtin.sleep(2,"Wait Needed for now to wait for the new modal")
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.wait_until_element_is_visible(btnlocator,60)
