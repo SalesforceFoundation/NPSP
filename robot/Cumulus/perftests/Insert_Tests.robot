@@ -179,7 +179,7 @@ Delete Contacts
     [Documentation]     Delete Account and Related Records Using the Bulk Api for performance
     Log to Console      Deleting Contact Records
     Run Task            test_data_delete
-        ...     objects=Address__c,Contact,Account
+        ...     objects=npe01__OppPayment__c,Allocation__c,Address__c,Contact,Account
 
 Delete Opportunities
     [Documentation]     Delete Opporutnity and Related Records Using the Bulk Api for performance
