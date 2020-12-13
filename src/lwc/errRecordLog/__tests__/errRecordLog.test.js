@@ -56,97 +56,87 @@ describe('c-err-record-log', () => {
         expect(header.textContent).toBe('c.ERR_RecordLogTitle');
     });
 
-    /***
-    * @description Verifies record detail page is displayed when 
-    * user clicks on the record name breadcrumb
-    */
-    it("should navigate to the record detail page", async () => {
-        component.recordId = RECORD_ID;
-        getData.mockResolvedValue(mockGetData);
-
-        document.body.appendChild(component);
-
-        return global.flushPromises()
-            .then(async () => {
-                const recordViewBreadcrumb = getElement(component, "breadcrumb Record View Page");
-                expect(recordViewBreadcrumb).not.toBeNull();
-                expect(recordViewBreadcrumb.label).toBe(mockGetData.recordName);
-
-                dispatchClickEvent(recordViewBreadcrumb);
-            })
-            .then(async () => {
-                const { pageReference } = getNavigateCalledWith();
-
-                expect(pageReference.type).toBe("standard__recordPage");
-                expect(pageReference.attributes.recordId).toBe(component.recordId);
-                expect(pageReference.attributes.actionName).toBe("view");
-            });
-    });
 
     /***
-    * @description Verifies record SObject tab is displayed when 
-    * user clicks on the record SObject name breadcrumb
+    * @description Verifies Error Log page elements for the specified record
     */
-    it("should navigate to the record SObject page", async () => {
-        component.recordId = RECORD_ID;
-        getData.mockResolvedValue(mockGetData);
+    describe('on data load', () => {
 
-        document.body.appendChild(component);
+        beforeEach(() => {
+            component.recordId = RECORD_ID;
+            getData.mockResolvedValue(mockGetData);
 
-        return global.flushPromises()
-            .then(async () => {
-                const recordSObjectBreadcrumb = getElement(component, "breadcrumb Record SObject Page");
-                expect(recordSObjectBreadcrumb).not.toBeNull();
-                expect(recordSObjectBreadcrumb.label).toBe(mockGetData.sObjectLabelPlural);
+            document.body.appendChild(component);
+        });
 
-                dispatchClickEvent(recordSObjectBreadcrumb);
-            })
-            .then(async () => {
-                const { pageReference } = getNavigateCalledWith();
+        /***
+        * @description Verifies record detail page is displayed when 
+        * user clicks on the record name breadcrumb
+        */
+        it("should navigate to the record detail page", async () => {
+            return global.flushPromises()
+                .then(async () => {
+                    const recordViewBreadcrumb = getElement(component, "breadcrumb Record View Page");
+                    expect(recordViewBreadcrumb).not.toBeNull();
+                    expect(recordViewBreadcrumb.label).toBe(mockGetData.recordName);
 
-                expect(pageReference.type).toBe("standard__objectPage");
-                expect(pageReference.attributes.objectApiName).toBe(mockGetData.sObjectType);
-                expect(pageReference.attributes.actionName).toBe("list");
+                    dispatchClickEvent(recordViewBreadcrumb);
+                })
+                .then(async () => {
+                    const { pageReference } = getNavigateCalledWith();
+
+                    expect(pageReference.type).toBe("standard__recordPage");
+                    expect(pageReference.attributes.recordId).toBe(component.recordId);
+                    expect(pageReference.attributes.actionName).toBe("view");
+                });
+        });
+
+        /***
+        * @description Verifies record SObject tab is displayed when 
+        * user clicks on the record SObject name breadcrumb
+        */
+        it("should navigate to the record SObject page", async () => {
+            return global.flushPromises()
+                .then(async () => {
+                    const recordSObjectBreadcrumb = getElement(component, "breadcrumb Record SObject Page");
+                    expect(recordSObjectBreadcrumb).not.toBeNull();
+                    expect(recordSObjectBreadcrumb.label).toBe(mockGetData.sObjectLabelPlural);
+
+                    dispatchClickEvent(recordSObjectBreadcrumb);
+                })
+                .then(async () => {
+                    const { pageReference } = getNavigateCalledWith();
+
+                    expect(pageReference.type).toBe("standard__objectPage");
+                    expect(pageReference.attributes.objectApiName).toBe(mockGetData.sObjectType);
+                    expect(pageReference.attributes.actionName).toBe("list");
+                });
+        });
+
+        it('should display datatable summary', async () => {
+            return global.flushPromises().then(async () => {
+                const summary = getElement(component, "text Summary");
+
+                expect(summary).not.toBeNull();
+                expect(summary.textContent).toBe("c.geTextListViewItemsCount c.geTextListViewSortedBy");
             });
-    });
-
-    it('should display datatable summary', async () => {
-        component.recordId = RECORD_ID;
-        getData.mockResolvedValue(mockGetData);
-
-        document.body.appendChild(component);
-
-        return global.flushPromises().then(async () => {
-            const summary = getElement(component, "text Summary");
-
-            expect(summary).not.toBeNull();
-            expect(summary.textContent).toBe("c.geTextListViewItemsCount c.geTextListViewSortedBy");
         });
-    });
 
-    it('should display no item message when record has no errors', async () => {
-        component.recordId = RECORD_ID;
-        getData.mockResolvedValue(mockGetData);
+        it('should display no item message when record has no errors', async () => {
+            return global.flushPromises().then(async () => {
+                const message = getElement(component, "text No Items Message");
 
-        document.body.appendChild(component);
-
-        return global.flushPromises().then(async () => {
-            const message = getElement(component, "text No Items Message");
-
-            expect(message).not.toBeNull();
-            expect(message.value).toBe("c.commonNoItems");
+                expect(message).not.toBeNull();
+                expect(message.value).toBe("c.commonNoItems");
+            });
         });
-    });
 
-    it("should be accessible", async () => {
-        component.recordId = RECORD_ID;
-        getData.mockResolvedValue(mockGetData);
-
-        document.body.appendChild(component);
-
-        return global.flushPromises().then(async () => {
-            await expect(component).toBeAccessible();
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
         });
+
     });
 
 
