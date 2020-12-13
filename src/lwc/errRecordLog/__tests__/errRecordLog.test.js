@@ -110,6 +110,46 @@ describe('c-err-record-log', () => {
             });
     });
 
+    it('should display datatable summary', async () => {
+        component.recordId = RECORD_ID;
+        getData.mockResolvedValue(mockGetData);
+
+        document.body.appendChild(component);
+
+        return global.flushPromises().then(async () => {
+            const summary = getElement(component, "text Summary");
+
+            expect(summary).not.toBeNull();
+            expect(summary.textContent).toBe("c.geTextListViewItemsCount c.geTextListViewSortedBy");
+        });
+    });
+
+    it('should display no item message when record has no errors', async () => {
+        component.recordId = RECORD_ID;
+        getData.mockResolvedValue(mockGetData);
+
+        document.body.appendChild(component);
+
+        return global.flushPromises().then(async () => {
+            const message = getElement(component, "text No Items Message");
+
+            expect(message).not.toBeNull();
+            expect(message.value).toBe("c.commonNoItems");
+        });
+    });
+
+    it("should be accessible", async () => {
+        component.recordId = RECORD_ID;
+        getData.mockResolvedValue(mockGetData);
+
+        document.body.appendChild(component);
+
+        return global.flushPromises().then(async () => {
+            await expect(component).toBeAccessible();
+        });
+    });
+
+
 });
 
 
