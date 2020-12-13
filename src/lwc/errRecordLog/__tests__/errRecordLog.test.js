@@ -21,6 +21,7 @@ const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
 
 const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetData = require('./data/getData.json');
+const mockGetDataErrorLogs = require('./data/getDataErrorLogs.json');
 
 const RECORD_ID = "a0900000008MR9bQAG";
 
@@ -113,7 +114,7 @@ describe('c-err-record-log', () => {
                 });
         });
 
-        it('should display datatable summary', async () => {
+        it('should display error log datatable summary', async () => {
             return global.flushPromises().then(async () => {
                 const summary = getElement(component, "text Summary");
 
@@ -122,7 +123,7 @@ describe('c-err-record-log', () => {
             });
         });
 
-        it('should display no item message when record has no errors', async () => {
+        it('should display no item message when record has no error logs', async () => {
             return global.flushPromises().then(async () => {
                 const message = getElement(component, "text No Items Message");
 
@@ -136,9 +137,36 @@ describe('c-err-record-log', () => {
                 await expect(component).toBeAccessible();
             });
         });
-
     });
 
+
+    /***
+    * @description Verifies Error Log page elements when
+    * the specified record has error logs
+    */
+    describe('on datatable displaying error logs', () => {
+
+        beforeEach(() => {
+            component.recordId = RECORD_ID;
+            getData.mockResolvedValue(mockGetDataErrorLogs);
+
+            document.body.appendChild(component);
+        });
+
+        it('should not display no item message', async () => {
+            return global.flushPromises().then(async () => {
+                const message = getElement(component, "text No Items Message");
+
+                expect(message).toBeNull();
+            });
+        });
+
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
+        });
+    });
 
 });
 
