@@ -283,12 +283,16 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         return `error Notification`;
     }
 
-    get qaLocatorDatatable() {
-        return `datatable Logs`;
+    get qaLocatorRecordViewPage() {
+        return `breadcrumb Record View Page`;
     }
 
     get qaLocatorSummary() {
         return `text Summary`;
+    }
+
+    get qaLocatorDatatable() {
+        return `datatable Logs`;
     }
 
     get qaLocatorNoItemsMessage() {
