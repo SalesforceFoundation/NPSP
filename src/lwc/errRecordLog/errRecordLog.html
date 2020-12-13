@@ -8,7 +8,7 @@
                     <div class="slds-page-header__row">
                         <lightning-breadcrumbs>
                             <lightning-breadcrumb label={recordInfo.sObjectLabelPlural}
-                                onclick={navigateToRecordObjectPage}>
+                                onclick={navigateToRecordObjectPage} data-qa-locator={qaLocatorRecordSObjectPage}>
                             </lightning-breadcrumb>
 
                             <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}

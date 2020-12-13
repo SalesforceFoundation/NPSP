@@ -58,7 +58,7 @@ describe('c-err-record-log', () => {
 
     /***
     * @description Verifies record detail page is displayed when 
-    * user clicks on the record name breadcrumb URL
+    * user clicks on the record name breadcrumb
     */
     it("should navigate to the record detail page", async () => {
         component.recordId = RECORD_ID;
@@ -68,10 +68,10 @@ describe('c-err-record-log', () => {
 
         return global.flushPromises()
             .then(async () => {
-                const recordViewPageLink = getRecordViewPage(component);
-                expect(recordViewPageLink).not.toBeNull();
+                const recordViewBreadcrumb = getElement(component, "breadcrumb Record View Page");
+                expect(recordViewBreadcrumb).not.toBeNull();
 
-                recordViewPageLink.dispatchEvent(
+                recordViewBreadcrumb.dispatchEvent(
                     new CustomEvent('click')
                 );
             })
@@ -84,6 +84,34 @@ describe('c-err-record-log', () => {
             });
     });
 
+    /***
+    * @description Verifies record SObject tab is displayed when 
+    * user clicks on the record SObject name breadcrumb
+    */
+    it("should navigate to the record SObject page", async () => {
+        component.recordId = RECORD_ID;
+        getData.mockResolvedValue(mockGetData);
+
+        document.body.appendChild(component);
+
+        return global.flushPromises()
+            .then(async () => {
+                const recordSObjectBreadcrumb = getElement(component, "breadcrumb Record SObject Page");
+                expect(recordSObjectBreadcrumb).not.toBeNull();
+
+                recordSObjectBreadcrumb.dispatchEvent(
+                    new CustomEvent('click')
+                );
+            })
+            .then(async () => {
+                const { pageReference } = getNavigateCalledWith();
+
+                expect(pageReference.type).toBe("standard__objectPage");
+                expect(pageReference.attributes.objectApiName).toBe(mockGetData.sObjectType);
+                expect(pageReference.attributes.actionName).toBe("list");
+            });
+    });
+
 });
 
 
@@ -93,10 +121,10 @@ describe('c-err-record-log', () => {
 
 
 /***
-* @description Finds and returns record detail page breadcrumb link
+* @description Finds and returns element defined by its "data-qa-locator" on the component
 */
-const getRecordViewPage = (component) => {
-    const breadcrumb = component.shadowRoot.querySelector('[data-qa-locator="breadcrumb Record View Page"]');
+const getElement = (component, qaLocator) => {
+    const breadcrumb = component.shadowRoot.querySelector('[data-qa-locator="' + qaLocator + '"]');
 
     return breadcrumb;
 }

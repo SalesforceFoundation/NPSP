@@ -287,6 +287,10 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         return `breadcrumb Record View Page`;
     }
 
+    get qaLocatorRecordSObjectPage() {
+        return `breadcrumb Record SObject Page`;
+    }
+
     get qaLocatorSummary() {
         return `text Summary`;
     }
