@@ -70,10 +70,9 @@ describe('c-err-record-log', () => {
             .then(async () => {
                 const recordViewBreadcrumb = getElement(component, "breadcrumb Record View Page");
                 expect(recordViewBreadcrumb).not.toBeNull();
+                expect(recordViewBreadcrumb.label).toBe(mockGetData.recordName);
 
-                recordViewBreadcrumb.dispatchEvent(
-                    new CustomEvent('click')
-                );
+                dispatchClickEvent(recordViewBreadcrumb);
             })
             .then(async () => {
                 const { pageReference } = getNavigateCalledWith();
@@ -98,10 +97,9 @@ describe('c-err-record-log', () => {
             .then(async () => {
                 const recordSObjectBreadcrumb = getElement(component, "breadcrumb Record SObject Page");
                 expect(recordSObjectBreadcrumb).not.toBeNull();
+                expect(recordSObjectBreadcrumb.label).toBe(mockGetData.sObjectLabelPlural);
 
-                recordSObjectBreadcrumb.dispatchEvent(
-                    new CustomEvent('click')
-                );
+                dispatchClickEvent(recordSObjectBreadcrumb);
             })
             .then(async () => {
                 const { pageReference } = getNavigateCalledWith();
@@ -127,4 +125,13 @@ const getElement = (component, qaLocator) => {
     const breadcrumb = component.shadowRoot.querySelector('[data-qa-locator="' + qaLocator + '"]');
 
     return breadcrumb;
+}
+
+/***
+* @description Mimics user clicking on the element
+*/
+const dispatchClickEvent = (element) => {
+    element.dispatchEvent(
+        new CustomEvent('click')
+    );
 }
