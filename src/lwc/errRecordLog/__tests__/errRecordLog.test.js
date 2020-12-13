@@ -161,6 +161,26 @@ describe('c-err-record-log', () => {
             });
         });
 
+        it('should display error logs', async () => {
+            return global.flushPromises().then(async () => {
+                const datatable = getElement(component, "datatable Logs");
+
+                expect(datatable).not.toBeNull();
+
+                expect(datatable.columns.length).toBe(4);
+                expect(datatable.columns[0].fieldName).toBe("logURL");
+                expect(datatable.columns[0].label).toBe(
+                    mockGetObjectInfo.fields["Name"].label
+                );
+
+                expect(datatable.data.length).toBe(1);
+                expect(datatable.data[0].Name).not.toBeNull();
+                expect(datatable.data[0].Name).toBe(
+                    mockGetDataErrorLogs.data[0].Name
+                );
+            });
+        });
+
         it("should be accessible", async () => {
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();

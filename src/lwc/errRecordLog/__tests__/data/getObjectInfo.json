@@ -5,7 +5,7 @@
     "fields": {
         "Name": {
             "apiName": "Name",
-            "label": "Name",
+            "label": "Error Number",
             "type": "String",
             "nameField": true
         },
