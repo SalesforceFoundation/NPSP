@@ -13816,7 +13816,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
-        <categories>Get Started</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
@@ -13824,11 +13824,11 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Marketing/Engagement Learning Path</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
-        <value>Get Started</value>
+        <value>Marketing/Engagement Learning PathGet Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
@@ -13888,7 +13888,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsVideoHeaderTitle</fullName>
-        <categories>Get Started on NPSP</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Video header title in Get Started</shortDescription>
