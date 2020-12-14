@@ -1087,14 +1087,14 @@ flows:
             2:
                 task: enable_crlp
                 # Enable customizable rollups before running the tests
-            3:
+            2.5:
                 task: custom_settings_value_wait
                 # Wait for CRLP to be fully enabled before continuing
                 options:
                     object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
                     field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
                     value: true
-            4:
+            3:
                 task: test_insert_performance
 
     test_performance_LDV:
