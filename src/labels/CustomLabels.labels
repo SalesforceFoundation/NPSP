@@ -7157,7 +7157,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
-        <value>Learn how to customize NPSP reports &amp; Dashboard in Trailhead</value>
+        <value>Learn how to customize NPSP reports &amp; Dashboards in Trailhead</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemRunningReportsTitle</fullName>
