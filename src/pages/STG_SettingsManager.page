@@ -384,7 +384,7 @@
 
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
                     <apex:include pageName="STG_PanelRD" id="idPanelRD"/>
-                </div> 
+                </div>
 
                 <div class="panel noborder" id="idPanelRD2StatusMapping" style="display:none">
                     <apex:include pageName="STG_PanelRD2StatusMapping" id="idPanelRD2StatusMapping"/>

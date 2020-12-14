@@ -29,9 +29,40 @@
   -->
 
 <template>
-    <lightning-layout>
+    <lightning-layout multiple-rows="true">
+        <div if:true={showSpinner}
+             class='spinner-container'>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                               size='large'>
+            </lightning-spinner>
+            <p class='loading-text slds-text-heading_medium'>{loadingText}</p>
+        </div>
         <lightning-layout-item size="12">
             <h1 class="slds-text-heading_medium slds-p-top-medium">Elevate Gateway Management</h1>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <p class="slds-text-body_regular slds-p-vertical_medium">NPSP uses the gateway that was added to Elevate most
+                recently. To override this, click Edit and enter the gateway ID for the one you'd like to use instead.
+                Find the gateway ID in the Elevate Admin Console | Gateway Management.</p>
+        </lightning-layout-item>
+        <template if:true={isReadState}>
+            <lightning-layout-item size="12" class="slds-text-align_center">
+                <lightning-button label="Edit" data-id="editGatewayButton" onclick={handleEdit}></lightning-button>
+            </lightning-layout-item>
+        </template>
+        <lightning-layout-item size="4">
+            <template if:true={isReadState}>
+                <lightning-input variant="label-inline" read-only="true" label="Gateway ID" value={gatewayId}
+                                 type="text"></lightning-input>
+            </template>
+            <template if:true={isEditState}>
+                <lightning-input variant="label-inline" label="Gateway ID" value="test"
+                                 type="text"></lightning-input>
+                <lightning-button-group>
+                    <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </lightning-button-group>
+            </template>
         </lightning-layout-item>
     </lightning-layout>
 </template>

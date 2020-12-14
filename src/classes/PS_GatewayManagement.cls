@@ -27,7 +27,27 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-.spinner-container {
-    vertical-align: middle;
-    text-align: center;
+
+public with sharing class PS_GatewayManagement {
+
+    private static final String CURRENT_GATEWAY_ID = new PS_IntegrationServiceConfig.Service().getGatewayIds();
+
+    @AuraEnabled
+    public static void setGatewayId(String gatewayId) {
+        Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>>{
+                'payments' =>
+                        new List<Map<String, String>>{
+                                new Map<String, String>{
+                                        'key' => PS_IntegrationServiceConfig.SFDO_GATEWAYIDS,
+                                        'value' => gatewayId
+                                }
+                        }
+        };
+        PS_IntegrationService.setConfiguration(gatewayConfig);
+    }
+
+    @AuraEnabled
+    public static String getGatewayIdFromConfig() {
+        return CURRENT_GATEWAY_ID;
+    }
 }

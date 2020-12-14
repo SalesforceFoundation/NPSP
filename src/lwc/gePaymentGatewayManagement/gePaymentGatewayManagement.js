@@ -27,8 +27,64 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-import {LightningElement} from 'lwc';
+import { LightningElement } from 'lwc';
+import { handleError } from 'c/utilTemplateBuilder';
+import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
+import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
+    showSpinner = false;
+    gatewayId;
+
+    CUSTOM_LABELS = { messageLoading };
+
+    connectedCallback() {
+        this.getGatewayId();
+    }
+
+    _isReadState = true;
+    get isReadState() {
+        return this._isReadState;
+    }
+    set isReadState(value) {
+        this._isReadState = value;
+        this._isEditState = false;
+    }
+
+    _isEditState;
+    get isEditState() {
+        return this._isEditState
+    }
+    set isEditState(value) {
+        this._isEditState = value;
+        this._isReadState = false;
+    }
+
+    handleEdit() {
+        this.isEditState = true;
+    }
+
+    handleCancel() {
+        this.isReadState = true;
+    }
+
+    async handleSave(event) {
+        // setGatewayId({gatewayId: event.target.value})
+        //     .then({
+        //
+        //     })
+        //     .catch(error => {
+        //         handleError(error);
+        //     });
+    }
+
+    async getGatewayId() {
+        try {
+            this.gatewayId = await getGatewayIdFromConfig();
+        } catch(ex) {
+            handleError(ex);
+        }
+    }
 }

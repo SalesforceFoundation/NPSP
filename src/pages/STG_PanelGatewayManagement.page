@@ -31,7 +31,7 @@
     <apex:slds />
     <apex:includeLightning />
 
-    <div id="stgPanelGatewayManagementSettings"></div>
+    <div id="stgPanelGatewayManagementSettings" class="slds-m-around_x-large"></div>
 
     <script>
         $Lightning.use("c:RD2_EnablementApp", function() {
