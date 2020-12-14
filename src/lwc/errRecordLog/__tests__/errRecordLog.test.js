@@ -211,7 +211,7 @@ describe('c-err-record-log', () => {
                 const illustration = getElement(component, "illustration NoAccess");
                 expect(illustration).not.toBeNull();
 
-                expect(illustration.title).toBe('c.commonInsufficientPermissions');
+                expect(illustration.heading2).toBe('c.commonInsufficientPermissions');
                 expect(illustration.message).toBe('c.addrCopyConAddBtnFls');
             });
         });
