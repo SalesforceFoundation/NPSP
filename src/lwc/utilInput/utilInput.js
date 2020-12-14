@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isNotEmpty, isEmpty } from 'c/utilCommon';
+import { isEmpty, isNotEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -40,6 +40,7 @@ export default class utilInput extends LightningElement {
     @api variant = 'label-stacked';
     @api value;
     @api widgetName;
+    @api picklistOptionsOverride;
 
     @track isRichTextValid = true;
 
@@ -70,23 +71,23 @@ export default class utilInput extends LightningElement {
     }
 
     get checkboxDefaultValue() {
-        return (this.defaultValue === TRUE || this.defaultValue === true) ? true : false;
+        return (this.defaultValue === TRUE || this.defaultValue === true);
     }
 
     get isWidget() {
-        return this.formFieldType === WIDGET ? true : false;
+        return this.formFieldType === WIDGET;
     }
 
     get isLightningTextarea() {
-        return this.lightningInputType === TEXTAREA && !this.isLightningRichText ? true : false;
+        return this.lightningInputType === TEXTAREA && !this.isLightningRichText;
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX ? true : false;
+        return this.lightningInputType === COMBOBOX;
     }
 
     get isLightningSearch() {
-        return this.lightningInputType === SEARCH ? true : false;
+        return this.lightningInputType === SEARCH;
     }
 
     get isLightningRichText() {
@@ -98,11 +99,11 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningCheckbox() {
-        return this.lightningInputType === CHECKBOX ? true : false;
+        return this.lightningInputType === CHECKBOX && isEmpty(this.picklistOptionsOverride);
     }
 
     get isLightningDateOrDatetime() {
-        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME) ? true : false;
+        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME);
     }
 
     get isBaseLightningInput() {
@@ -141,12 +142,15 @@ export default class utilInput extends LightningElement {
     }
 
     get lightningInputType() {
+        if (isNotEmpty(this.picklistOptionsOverride)) {
+            return COMBOBOX;
+        }
+
         return this.type ? inputTypeByDescribeType[this.type.toLowerCase()] : TEXT;
     }
 
     get isRequired() {
-        const _required = this.required === YES || this.required === true;
-        return (_required && !this.isLightningCheckbox) ? true : false;
+        return this.required === YES || this.required === true;
     }
 
     get fieldDescribe() {
@@ -170,7 +174,7 @@ export default class utilInput extends LightningElement {
     }
 
     get showRichTextLabel() {
-        return this.isLightningRichText && this.variant !== 'label-hidden' ? true : false;
+        return this.isLightningRichText && this.variant !== 'label-hidden';
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
