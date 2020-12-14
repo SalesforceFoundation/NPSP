@@ -114,6 +114,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     CONTACT1: 'Contact1'
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
+const ACH_CONSENT_MESSAGE = 'Test Consent';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -2033,7 +2034,7 @@ export default class GeFormRenderer extends LightningElement{
         };
         const achData = {
             achCode: ACH_CODE,
-            consent: 'Test Consent',
+            consent: ACH_CONSENT_MESSAGE,
             type: this.accountHolderType(),
             bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
         }
