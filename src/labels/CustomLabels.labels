@@ -13879,6 +13879,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Find a Partner</value>
     </labels>
     <labels>
+        <fullName>gsResourcesVideographyLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Videography label in Get Started Resources section</shortDescription>
+        <value>NPSP Videography Channel</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesVideographyLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Videography link label in Get Started Resources section</shortDescription>
+        <value>Watch Videos</value>
+    </labels>
+    <labels>
         <fullName>gsVideoHeaderTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
