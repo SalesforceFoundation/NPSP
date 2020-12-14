@@ -125,7 +125,6 @@ describe('c-ge-form-field', () => {
         document.body.appendChild(element);
 
         return Promise.resolve().then(() => {
-            debugger;
             expect(element.isPicklist).toBeTruthy();
             expect(getSubComponentCombobox(element).options.length).toEqual(2);
             expect(getSubComponentCombobox(element).options).toContainOptions([
