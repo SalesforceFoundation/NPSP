@@ -82,11 +82,11 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     public Boolean isRunningBatch { get; set; }
 
     /***
-    * @description Whether another same batch process is currently running
+    * @description Whether any batch job with the same class name is currently running
     */
     public Boolean isConcurrentBatch {
         get {
-            return new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 0 ;
+            return new UTIL_BatchJobService().isBatchInProgress(batchClassName);
         }
     }
 
