@@ -13816,19 +13816,19 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
-        <categories>Start Managing Programs</categories>
+        <categories>Get Started</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
-        <value>Get Started</value>
+        <value>Start Managing Programs</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Start Engaging Constituents</categories>
+        <categories>Marketing/Engagement Learning Path</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
-        <value>Marketing/Engagement Learning Path</value>
+        <value>Get Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
