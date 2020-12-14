@@ -3,12 +3,12 @@
     <label>Explore NPSP</label>
     <protected>true</protected>
     <values>
-        <field>Belongs_to__c</field>
-        <value xsi:type="xsd:string">Admin</value>
-    </values>
-    <values>
         <field>Description_Label__c</field>
         <value xsi:type="xsd:string">gsChecklistExploreNPSPDesc</value>
+    </values>
+    <values>
+        <field>Page_Type__c</field>
+        <value xsi:type="xsd:string">Admin</value>
     </values>
     <values>
         <field>Position__c</field>

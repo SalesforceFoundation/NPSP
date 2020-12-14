@@ -6,7 +6,7 @@
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
-                <name>belongsTo</name>
+                <name>pageType</name>
                 <value>Admin</value>
             </componentInstanceProperties>
             <componentName>gsChecklistSetup</componentName>
@@ -24,7 +24,7 @@
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
-                <name>belongsTo</name>
+                <name>pageType</name>
                 <value>Admin</value>
             </componentInstanceProperties>
             <componentName>gsResources</componentName>

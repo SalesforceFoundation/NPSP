@@ -16,10 +16,10 @@ export default class gsChecklistSetup extends LightningElement {
     /**
     * @description To select which data display in this component
     */
-    @api belongsTo = 'Admin';
+    @api pageType = 'Admin';
 
     connectedCallback() {
-        getChecklists({'belongTo': this.belongsTo})
+        getChecklists({'pageType': this.pageType})
         .then(data => {
             if (data) {
                 this.checklists = data.map(this.getLabelValueSection);

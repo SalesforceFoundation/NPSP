@@ -52,7 +52,7 @@ private with sharing class GS_ChecklistSetup_TEST {
         List<GetStartedChecklistSection__mdt> metadataSections = [
             SELECT Id, Label, Position__c
             FROM GetStartedChecklistSection__mdt
-            WHERE Belongs_to__c = 'Admin'
+            WHERE Page_Type__c = 'Admin'
             ORDER BY Position__c ASC
         ];
 

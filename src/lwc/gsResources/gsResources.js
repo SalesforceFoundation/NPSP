@@ -20,7 +20,7 @@ export default class gsResources extends LightningElement {
     /**
     * @description To select which data display in this component
     */
-    @api belongsTo = 'Admin';
+    @api pageType = 'Admin';
 
     /**
     * Return the Resource list title to display in UI

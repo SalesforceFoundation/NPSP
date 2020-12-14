@@ -41,9 +41,14 @@
         <value><!-- NPSP Get Started Checklist Section --></value>
     </caseValues>
     <fields>
+        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
+        <label><!-- Description Label Name --></label>
+        <name>Description_Label__c</name>
+    </fields>
+    <fields>
         <help><!-- To select in which checklist has displayed this section --></help>
-        <label><!-- Belongs to --></label>
-        <name>Belongs_to__c</name>
+        <label><!-- Page Tyepe --></label>
+        <name>Page_Type__c</name>
         <picklistValues>
             <masterLabel>Admin</masterLabel>
             <translation><!-- Admin --></translation>
@@ -52,11 +57,6 @@
             <masterLabel>End User</masterLabel>
             <translation><!-- End User --></translation>
         </picklistValues>
-    </fields>
-    <fields>
-        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
-        <name>Description_Label__c</name>
     </fields>
     <fields>
         <help><!-- The position of this section on the Get Started page. --></help>

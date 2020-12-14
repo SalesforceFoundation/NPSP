@@ -8,7 +8,7 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage">
-            <property name="belongsTo" label="Belongs to" type="String" datasource="Admin,End User" />
+            <property name="pageType" label="Page Type" type="String" datasource="Admin,End User" />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
