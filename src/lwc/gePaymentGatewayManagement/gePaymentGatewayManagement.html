@@ -56,7 +56,7 @@
                                  type="text"></lightning-input>
             </template>
             <template if:true={isEditState}>
-                <lightning-input variant="label-inline" label="Gateway ID" value="test"
+                <lightning-input variant="label-inline" label="Gateway ID" value={gatewayId}
                                  type="text"></lightning-input>
                 <lightning-button-group>
                     <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
