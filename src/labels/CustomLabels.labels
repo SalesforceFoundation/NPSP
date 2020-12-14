@@ -13816,7 +13816,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
-        <categories>tart Managing Programs</categories>
+        <categories>Start Managing Programs</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
