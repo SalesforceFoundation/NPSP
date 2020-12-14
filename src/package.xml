@@ -2589,6 +2589,8 @@
         <members>gsResourcesItemWebinarsLabel</members>
         <members>gsResourcesItemWebinarsLinkLabel</members>
         <members>gsResourcesTitle</members>
+        <members>gsResourcesVideographyLabel</members>
+        <members>gsResourcesVideographyLinkLabel</members>
         <members>gsSubmitted</members>
         <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
