@@ -235,13 +235,13 @@ describe('c-err-record-log', () => {
 * @description Finds and returns element defined by its "data-qa-locator" on the component
 */
 const getElement = (component, qaLocator) => {
-    const breadcrumb = component.shadowRoot.querySelector('[data-qa-locator="' + qaLocator + '"]');
+    const element = component.shadowRoot.querySelector('[data-qa-locator="' + qaLocator + '"]');
 
-    return breadcrumb;
+    return element;
 }
 
 /***
-* @description Mimics user clicking on the element
+* @description Dispatch event when user clicks on the element
 */
 const dispatchClickEvent = (element) => {
     element.dispatchEvent(
