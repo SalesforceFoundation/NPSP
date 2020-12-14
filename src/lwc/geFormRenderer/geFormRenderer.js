@@ -36,7 +36,7 @@ import {
     isTrueFalsePicklist,
     trueFalsePicklistOptions,
     CHECKBOX_TRUE,
-    CHECKBOX_FALSE
+    CHECKBOX_FALSE,
     PICKLIST_TRUE,
     PICKLIST_FALSE
 } from 'c/utilTemplateBuilder';
