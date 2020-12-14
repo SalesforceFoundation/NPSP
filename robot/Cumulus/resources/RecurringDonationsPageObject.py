@@ -41,6 +41,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
             self.selenium.scroll_element_into_view(locator)
             self.salesforce._jsclick(locator)
             self.selenium.wait_until_element_is_visible(selection_value)
+            self.selenium.scroll_element_into_view(selection_value)
             self.selenium.click_element(selection_value)
         else:
             self.builtin.log(f"dropdown element {dropdown} not present")

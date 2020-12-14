@@ -2,6 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        DateTime
+Library        Process
 Library        robot/Cumulus/resources/NPSPSettingsPageObject.py
 Library        NPSP.py
 
@@ -485,7 +486,10 @@ API Query Recurrring Donation Settings For RD2 Enablement
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
     ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
-    Run Keyword if            "${is_rd2_enabled}"!="True"
+    ${ns} =                   Get Npsp Namespace Prefix
+    Run Keyword if            not $is_rd2_enabled and $ns == 'npsp__'
+    ...                       Run Process     cci  flow  run  enable_rd2_managed
+    Run Keyword if            not $is_rd2_enabled
     ...                       Enable RD2QA
 
 Run Recurring Donations Batch
