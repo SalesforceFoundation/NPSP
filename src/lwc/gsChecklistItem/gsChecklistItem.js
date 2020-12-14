@@ -1,7 +1,8 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import CumulusStaticResources from '@salesforce/resourceUrl/CumulusStaticResources';
 import updateCheckItem from '@salesforce/apex/GS_ChecklistSetup.updateCheckItem'
+import getNamespace from '@salesforce/apex/GS_ChecklistSetup.getNamespace';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 const gsAssetsImage = CumulusStaticResources + '/gsAssets/step';
 
@@ -15,6 +16,22 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @type  GS_ChecklistSetup.ChecklistItem
     */
     @api item = {}
+
+    /**
+    * @description package namespace to used in navigation
+    * @type string
+    */
+    namespace = '';
+
+    connectedCallback() {
+        getNamespace()
+            .then(data => {
+                if (data) {
+                    this.namespace = data;
+                }
+            });
+    }
+
     /**
     * @description return if the item has Secondary button
     * @return boolean
@@ -105,13 +122,40 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         const values = value.split(':');     
         this[NavigationMixin.GenerateUrl]({
             type: `standard__${values[0]}`,
-            attributes: {
-                objectApiName: values[1],
-                actionName: values[2]
-            }
+            attributes: this.getSfdcLinkAttr(values)
         }).then((url) => {
             window.open(url, '_blank');
         })
+    }
+
+    /**
+    * @description get attribute to navigate in sfdc pages
+    * @param string[] value arguments
+    * @returns object
+    */
+    getSfdcLinkAttr(values) {
+        switch(values[0]) {
+            case 'navItemPage':
+                return {
+                    apiName: this.subNamespace(values[1])
+                };
+            case 'objectPage':
+                return {
+                    objectApiName: this.subNamespace(values[1]),
+                    actionName: values[2]
+                };
+            default:
+                return {};
+        }
+    }
+
+    /**
+    * @description Substitute 'c__' to package namespace
+    * @param string api name
+    * @returns String
+    */
+    subNamespace(apiName) {
+        return apiName.replace(/^c__/, this.namespace ? `${this.namespace}__` : '');
     }
 
     /**
