@@ -164,11 +164,11 @@ describe('c-err-record-log', () => {
         it('should display error logs', async () => {
             return global.flushPromises().then(async () => {
                 const datatable = getElement(component, "datatable Logs");
-
                 expect(datatable).not.toBeNull();
 
                 expect(datatable.columns.length).toBe(4);
                 expect(datatable.columns[0].fieldName).toBe("logURL");
+                expect(datatable.columns[0].type).toBe("url");
                 expect(datatable.columns[0].label).toBe(
                     mockGetObjectInfo.fields["Name"].label
                 );
@@ -178,6 +178,41 @@ describe('c-err-record-log', () => {
                 expect(datatable.data[0].Name).toBe(
                     mockGetDataErrorLogs.data[0].Name
                 );
+            });
+        });
+
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
+        });
+    });
+
+
+    /***
+    * @description Verifies No Access illustration is displayed when
+    * user has no read access on the record SObject or Error SObject
+    */
+    describe('on no access', () => {
+
+        beforeEach(() => {
+            component.recordId = RECORD_ID;
+
+            let mockGetDataNoAccess = JSON.parse(JSON.stringify(mockGetData));
+            mockGetDataNoAccess.hasAccess = false;
+
+            getData.mockResolvedValue(mockGetDataNoAccess);
+
+            document.body.appendChild(component);
+        });
+
+        it('should display No Access illustration', async () => {
+            return global.flushPromises().then(async () => {
+                const illustration = getElement(component, "illustration NoAccess");
+                expect(illustration).not.toBeNull();
+
+                expect(illustration.title).toBe('c.commonInsufficientPermissions');
+                expect(illustration.message).toBe('c.addrCopyConAddBtnFls');
             });
         });
 
