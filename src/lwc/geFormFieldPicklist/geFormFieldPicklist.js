@@ -18,10 +18,6 @@ export default class GeFormFieldPicklist extends LightningElement {
     @track _picklistValues;
     @track defaultRecordTypeId;
 
-    _nonePicklistValue = {
-        label: this.CUSTOM_LABELS.commonLabelNone,
-        value: this.CUSTOM_LABELS.commonLabelNone
-    };
     _recordTypeId;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -30,7 +26,10 @@ export default class GeFormFieldPicklist extends LightningElement {
         recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
         if (data) {
-            const valueNone = this._nonePicklistValue;
+            const valueNone = {
+                label: this.CUSTOM_LABELS.commonLabelNone,
+                value: this.CUSTOM_LABELS.commonLabelNone
+            };
             this.picklistValues = [valueNone, ...data.values];
         }
         if (error) {
