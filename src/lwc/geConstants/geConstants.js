@@ -22,8 +22,7 @@ const ACH_CODE = 'WEB';
 
 const PAYMENT_METHODS = Object.freeze({
     ACH: 'ACH',
-    CREDIT_CARD: 'CARD',
-    CASH: 'Cash'
+    CREDIT_CARD: 'CARD'
 });
 export {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,

@@ -1994,25 +1994,25 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     saveDataImport = async (dataImportFromFormState) => {
-        this.loadingText = this.hasDataImportId ?
-            this.CUSTOM_LABELS.geTextUpdating :
-            this.CUSTOM_LABELS.geTextSaving;
+        this.loadingText = this.hasDataImportId
+            ? this.CUSTOM_LABELS.geTextUpdating
+            : this.CUSTOM_LABELS.geTextSaving;
 
-            await upsertDataImport({
+        try {
+            const upsertResponse = await upsertDataImport({
                 dataImport: dataImportFromFormState
-            }).then(upsertResponse => {
-                this.updateFormState(upsertResponse);
-            }).catch(err => {
-                this.handleError(err)
             });
+            this.updateFormState(upsertResponse);
+        } catch (err) {
+            handleError(err);
+        }
     };
 
     makePurchaseRequest = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
-
         const responseBodyString = await sendPurchaseRequest({
             requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
-            dataImportRecordId: this.getFieldValueFromFormState('id')
+            dataImportRecordId: this.getFieldValueFromFormState('id'),
         });
 
         const responseBody = JSON.parse(responseBodyString);
@@ -2069,20 +2069,22 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     buildCreditCardPurchaseRequestBodyParameters() {
-        const { firstName, lastName } = this.cardholderNames;
+        const {firstName, lastName} = this.cardholderNames;
         const metadata = {
-            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
+            campaignCode: this.getFieldValueFromFormState(
+                apiNameFor(DONATION_CAMPAIGN_NAME)),
         };
         return JSON.stringify({
             firstName: firstName,
             lastName: lastName,
             metadata: metadata,
             amount: getCurrencyLowestCommonDenominator(
-                this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT))
+                this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT)),
             ),
             paymentMethodToken:
-                this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
-            paymentMethodType : PAYMENT_METHODS.CREDIT_CARD,
+                this.getFieldValueFromFormState(
+                    apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
+            paymentMethodType: PAYMENT_METHODS.CREDIT_CARD,
         });
     }
 
@@ -2118,13 +2120,20 @@ export default class GeFormRenderer extends LightningElement{
         await this.saveDataImport(this.saveableFormState());
     }
 
-    isPurchaseCreated (responseBody) {
-       return responseBody.id
-           && (responseBody.status ===
-               this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
-           || responseBody.status ===
-           this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-       );
+    isPurchaseCreated(responseBody) {
+        return responseBody.id
+            && this.isCreditCardTransactionSuccessResponse(responseBody)
+            || this.isACHTransactionSuccessResponse(responseBody);
+    }
+
+    isCreditCardTransactionSuccessResponse(responseBody) {
+        return responseBody.status ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+    }
+
+    isACHTransactionSuccessResponse(responseBody) {
+        return responseBody.status ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED;
     }
 
     hasPurchaseTimedOut (responseBody) {
@@ -2171,35 +2180,51 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     updateFormStateWithSuccessfulPurchaseCall(responseBody) {
+        const baseDataImportPaymentFields = {
+            [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
+            [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
+            [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
+            [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
+            [apiNameFor(
+                PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
+            [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt
+        };
+
         if (this.isCreditCardTransaction()) {
-            this.updateFormState({
-                [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
-                [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
-                [apiNameFor(PAYMENT_CARD_NETWORK)]: responseBody.cardData.brand,
-                [apiNameFor(PAYMENT_LAST_4)]: responseBody.cardData.last4,
-                [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: responseBody.cardData.expirationMonth,
-                [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: responseBody.cardData.expirationYear,
-                [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
-                [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
-                [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
-                [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
-            });
+            this.updateFormStateWithCreditCardTransactionResponse(
+                baseDataImportPaymentFields, responseBody);
         } else {
-            this.updateFormState({
-                [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
-                [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
-                [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
-                [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
-                [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
-                [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
-                [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
-                [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
-                [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType,
-                [apiNameFor(PAYMENT_ACH_CONSENT)]: responseBody.achData.consentMessage,
-                [apiNameFor(PAYMENT_TYPE)]: responseBody.paymentType,
-                [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: responseBody.originalTransactionId
-            });
+            this.updateFormStateWithACHTransactionResponse(
+                baseDataImportPaymentFields, responseBody);
         }
+    }
+
+    updateFormStateWithCreditCardTransactionResponse(
+        baseDataImportPaymentFields, responseBody) {
+        this.updateFormState({
+            ...baseDataImportPaymentFields,
+            [apiNameFor(PAYMENT_CARD_NETWORK)]: responseBody.cardData.brand,
+            [apiNameFor(PAYMENT_LAST_4)]: responseBody.cardData.last4,
+            [apiNameFor(
+                PAYMENT_EXPIRATION_MONTH)]: responseBody.cardData.expirationMonth,
+            [apiNameFor(
+                PAYMENT_EXPIRATION_YEAR)]: responseBody.cardData.expirationYear
+        });
+    }
+
+    updateFormStateWithACHTransactionResponse(
+        baseDataImportPaymentFields, responseBody) {
+        this.updateFormState({
+            ...baseDataImportPaymentFields,
+            [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
+            [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
+            [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType,
+            [apiNameFor(
+                PAYMENT_ACH_CONSENT)]: responseBody.achData.consentMessage,
+            [apiNameFor(PAYMENT_TYPE)]: responseBody.paymentType,
+            [apiNameFor(
+                PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: responseBody.originalTransactionId,
+        });
     }
 
     isCreditCardTransaction() {

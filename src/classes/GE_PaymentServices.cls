@@ -196,6 +196,9 @@ public with sharing class GE_PaymentServices {
         public String campaignCode;
     }
 
+    /**
+     * @description Inner class for constructing ACH specific data for the purchase request body
+     */
     public with sharing class AchData {
         public String achCode;
         public String consent;
