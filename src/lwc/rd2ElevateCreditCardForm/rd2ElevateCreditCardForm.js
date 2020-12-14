@@ -114,7 +114,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
         const params = {nameOnCard : this.getCardholderName()};
         return tokenHandler.requestToken({
-            iframe : iframe,
+            iframe: iframe,
             tokenizeParameters: params,
             eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
             handleError: this.handleError,
