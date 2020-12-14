@@ -6,6 +6,7 @@
 
 .iframe-container {
     position: relative;
+    margin-top: 8px;
 }
 
 .credit-card-container {
@@ -27,6 +28,7 @@
 
 .fade-in {
     animation: fade 1s;
+    margin-bottom: 10px;
 }
 
 @keyframes fade {

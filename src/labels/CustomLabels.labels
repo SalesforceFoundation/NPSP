@@ -1631,7 +1631,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
-        <value>Do Not Use Elevate</value>
+        <value>Don&apos;t enter payment information.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateDisabledHeader</fullName>
@@ -1647,7 +1647,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation will not be committed to Elevate</shortDescription>
-        <value>You are not using Elevate for this Recurring Donation.</value>
+        <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateEnableButtonLabel</fullName>
@@ -1655,7 +1655,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
-        <value>Alternatively, use Elevate now.</value>
+        <value>Alternatively, enter payment details now.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateInformationHeader</fullName>
