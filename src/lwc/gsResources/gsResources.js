@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement } from 'lwc';
 import gsResourcesTitle from '@salesforce/label/c.gsResourcesTitle';
 import gsResourcesItemNonprofitCloudLabel from '@salesforce/label/c.gsResourcesItemNonprofitCloudLabel';
 import gsResourcesItemNonprofitCloudLink from '@salesforce/label/c.gsResourcesItemNonprofitCloudLinkLabel';
@@ -14,6 +14,8 @@ import gsResourcesHubLabel from '@salesforce/label/c.gsResourcesItemHubLabel';
 import gsResourcesHubLink from '@salesforce/label/c.gsResourcesItemHubLinkLabel';
 import gsResourcesPartnersLabel from '@salesforce/label/c.gsResourcesItemPartnersLabel';
 import gsResourcesPartnersLink from '@salesforce/label/c.gsResourcesItemPartnersLinkLabel';
+import gsResourcesVideographyLabel from '@salesforce/label/c.gsResourcesVideographyLabel';
+import gsResourcesVideographyLinkLabel from '@salesforce/label/c.gsResourcesVideographyLinkLabel';
 
 export default class gsResources extends LightningElement {
 
@@ -75,6 +77,12 @@ export default class gsResources extends LightningElement {
                 linkLabel: gsResourcesPartnersLink,
                 href: 'https://www.salesforce.org/nonprofit/find-partner/'
             },
+            {
+                id: 8,
+                label: gsResourcesVideographyLabel,
+                linkLabel: gsResourcesVideographyLinkLabel,
+                href: 'https://www.youtube.com/channel/UC8kDDLRZzDdOBS24al99Kag'
+            }
         ];
     }
 }
