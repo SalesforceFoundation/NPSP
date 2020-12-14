@@ -303,7 +303,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             self.selenium.wait_until_page_contains_element(field)
-            time.sleep(1)
+            self.builtin.sleep(2,"waiting for couple of seconds for field default value to be updated")
             element=self.selenium.get_webelement(field)
             default_value=element.get_attribute("value")
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"

@@ -45,6 +45,7 @@ Verify Opportunity Related Field Values Autopopulate Correctly
     ...                      When opportunity contains value in the field that has default, verifies opportunity value is updated in field upon opportunity selection.
     ...                      When opportunity does not contain value in the field that has default, verifies field default is not cleared upon opportunity selection.
     [tags]                                  unstable      feature:GE        W-8292782
+    #creating a template with opp record type, stage and description with defaults in record type and description
     Go To Page                              Landing                         GE_Gift_Entry
     Click Link                              Templates
     Click Gift Entry Button                 Create Template
@@ -67,6 +68,7 @@ Verify Opportunity Related Field Values Autopopulate Correctly
     Click Link                              Templates
     Wait Until Page Contains                ${TEMPLATE}
     Store Template Record Id                ${TEMPLATE}
+    #create batch and verify defaults, stage list changes with record type
     Create Gift Entry Batch                 ${TEMPLATE}                     Opportunity Lookups Automation Batch
     Current Page Should Be                  Form                            Gift Entry          title=Gift Entry Form
     ${BATCH_Id} =   Save Current Record ID For Deletion                     ${NS}DataImportBatch__c
