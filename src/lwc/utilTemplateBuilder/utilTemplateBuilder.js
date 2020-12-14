@@ -206,6 +206,12 @@ const lightningInputTypeByDataType = {
     'combobox': 'lightning-combobox'
 }
 
+// values used to enable picklist-to-checkbox mappings
+const PICKLIST_TRUE = 'True';
+const PICKLIST_FALSE = 'False';
+const CHECKBOX_TRUE = 'true';
+const CHECKBOX_FALSE = 'false';
+
 /*******************************************************************************
 * @description Collects all the missing required field mappings. Currently only
 * checks 'requiredness' of the source (DataImport__c).
@@ -516,8 +522,8 @@ const isTrueFalsePicklist = (fieldMapping) => {
 
 const trueFalsePicklistOptions = () => {
     const noneOpt = { label: CUSTOM_LABELS.commonLabelNone, value: CUSTOM_LABELS.commonLabelNone }
-    const trueOpt = { label: CUSTOM_LABELS.labelBooleanTrue, value: 'True' }
-    const falseOpt = { label: CUSTOM_LABELS.labelBooleanFalse, value: 'False' };
+    const trueOpt = { label: CUSTOM_LABELS.labelBooleanTrue, value: PICKLIST_TRUE }
+    const falseOpt = { label: CUSTOM_LABELS.labelBooleanFalse, value: PICKLIST_FALSE };
     return [noneOpt, trueOpt, falseOpt];
 }
 
@@ -547,6 +553,10 @@ export {
     ACCOUNT1,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
+    CHECKBOX_TRUE,
+    CHECKBOX_FALSE,
+    PICKLIST_TRUE,
+    PICKLIST_FALSE,
     dispatch,
     handleError,
     generateId,

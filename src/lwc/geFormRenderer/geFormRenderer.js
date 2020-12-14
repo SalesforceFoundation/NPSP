@@ -34,7 +34,11 @@ import {
     setRecordValuesOnTemplate,
     checkPermissionErrors,
     isTrueFalsePicklist,
-    trueFalsePicklistOptions
+    trueFalsePicklistOptions,
+    CHECKBOX_TRUE,
+    CHECKBOX_FALSE
+    PICKLIST_TRUE,
+    PICKLIST_FALSE
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -1735,10 +1739,10 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     transformForTrueFalsePicklist(value) {
-        if (value === true || value === 'true') {
-            return 'True';
-        } else if (value === false || value === 'false') {
-            return 'False';
+        if (value === true || value === CHECKBOX_TRUE) {
+            return PICKLIST_TRUE;
+        } else if (value === false || value === CHECKBOX_FALSE) {
+            return PICKLIST_FALSE;
         }
         return ''; // blank values are valid for picklist/checkbox mappings
     }
