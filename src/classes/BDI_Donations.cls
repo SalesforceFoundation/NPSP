@@ -756,7 +756,12 @@ public class BDI_Donations {
                 );               
             } else {
                 if(isElevatePaymentDI(dataImportsToUpdate[i])) {
-                    dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiUpdated;
+                    if (result.isCreated()) {
+                        dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiCreated;
+                        dataImportsToUpdate[i].PaymentImported__c =result.getId();
+                    } else {
+                        dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiUpdated;
+                    }
                 }
             }
         }

@@ -44,6 +44,13 @@ public with sharing class BDI_Donations_TEST2 {
             BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
+        //Adding test payment field mapping for regression testing
+        npe01__Payment_Field_Mapping_Settings__c testPFMS =
+                new npe01__Payment_Field_Mapping_Settings__c(Name = 'TestPFMSasdf',
+                                                        npe01__Opportunity_Field__c = 'Name',
+                                                        npe01__Payment_Field__c = 'npe01__Check_Reference_Number__c');
+        PMT_PaymentCreator.paymentMappings.put(testPFMS.Name, testPFMS);
+
         String CLOSED_LOST_STAGE = 'Closed Lost';
         String SUBMITTED_STATUS = 'SUBMITTED';
         String DECLINED_STATUS = 'DECLINED';
@@ -122,13 +129,19 @@ public with sharing class BDI_Donations_TEST2 {
         //Confirm that the DIs are Imported and that the correct status is in place for each Oppt/Payment
         System.assertEquals(System.label.bdiImported,di1.Status__c);
         System.assertEquals(System.label.bdiCreated,di1.DonationImportStatus__c);
-        System.assertEquals(System.label.bdiUpdated,di1.PaymentImportStatus__c);
+        System.assertEquals(System.label.bdiCreated,di1.PaymentImportStatus__c);
+        System.assertNotEquals(null,di1.DonationImported__c);
+        System.assertNotEquals(null,di1.PaymentImported__c);
         System.assertEquals(System.label.bdiImported,di2.Status__c);
         System.assertEquals(System.label.bdiCreated,di2.DonationImportStatus__c);
-        System.assertEquals(System.label.bdiUpdated,di2.PaymentImportStatus__c);
+        System.assertEquals(System.label.bdiCreated,di2.PaymentImportStatus__c);
+        System.assertNotEquals(null,di2.DonationImported__c);
+        System.assertNotEquals(null,di2.PaymentImported__c);
         System.assertEquals(System.label.bdiImported,di3.Status__c);
         System.assertEquals(System.label.bdiCreated,di3.DonationImportStatus__c);
-        System.assertEquals(System.label.bdiUpdated,di3.PaymentImportStatus__c);
+        System.assertEquals(System.label.bdiCreated,di3.PaymentImportStatus__c);
+        System.assertNotEquals(null,di3.DonationImported__c);
+        System.assertNotEquals(null,di3.PaymentImported__c);
 
         npe01__OppPayment__c pmt1;
         npe01__OppPayment__c pmt2;
@@ -138,6 +151,7 @@ public with sharing class BDI_Donations_TEST2 {
                                                         npe01__Payment_Amount__c, 
                                                         npe01__Opportunity__c,
                                                         Elevate_Payment_Id__c,
+                                                        npe01__Check_Reference_Number__c,
                                                         npe01__Paid__c,
                                                         Elevate_Payment_API_Status__c,
                                                         Elevate_Payment_API_Declined_Reason__c,
@@ -146,7 +160,8 @@ public with sharing class BDI_Donations_TEST2 {
                                                         npe01__Opportunity__r.StageName,
                                                         npe01__Opportunity__r.Amount,
                                                         npe01__Opportunity__r.IsClosed,
-                                                        npe01__Opportunity__r.IsWon
+                                                        npe01__Opportunity__r.IsWon,
+                                                        npe01__Opportunity__r.Name
                                                 FROM npe01__OppPayment__c];
 
         for (npe01__OppPayment__c pmt : paymentResults) {
@@ -169,6 +184,8 @@ public with sharing class BDI_Donations_TEST2 {
         System.assertEquals('4567', pmt1.ACH_Last_4__c);
         System.assertEquals(true, pmt1.npe01__Opportunity__r.IsClosed);
         System.assertEquals(true, pmt1.npe01__Opportunity__r.IsWon);
+        //Checking that payment mapping worked correctly.
+        System.assertEquals(pmt1.npe01__Opportunity__r.Name, pmt1.npe01__Check_Reference_Number__c);
 
         //Confirm that the Oppt is Closed Won and the Payment is submitted
         System.assertNotEquals(null, pmt2);
@@ -178,6 +195,8 @@ public with sharing class BDI_Donations_TEST2 {
         System.assertEquals('4568', pmt2.ACH_Last_4__c);
         System.assertEquals(true, pmt2.npe01__Opportunity__r.IsClosed);
         System.assertEquals(true, pmt2.npe01__Opportunity__r.IsWon);
+        //Checking that payment mapping worked correctly.
+        System.assertEquals(pmt2.npe01__Opportunity__r.Name, pmt2.npe01__Check_Reference_Number__c);
 
         //Confirm that the Oppt is Closed Lost and the Payment is DECLINED
         System.assertNotEquals(null, pmt3);
@@ -187,6 +206,8 @@ public with sharing class BDI_Donations_TEST2 {
         System.assertEquals('4569', pmt3.ACH_Last_4__c);
         System.assertEquals(true, pmt3.npe01__Opportunity__r.IsClosed);
         System.assertEquals(false, pmt3.npe01__Opportunity__r.IsWon);
+        //Checking that payment mapping worked correctly.
+        System.assertEquals(pmt2.npe01__Opportunity__r.Name, pmt2.npe01__Check_Reference_Number__c);
 
         //Now prepare new DIs to simulate update of the previously processed payment
         DataImport__c diUpdate1 = new DataImport__c(DonationImported__c = pmt1.npe01__Opportunity__c,
