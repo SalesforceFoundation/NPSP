@@ -66,7 +66,7 @@ describe('c-err-record-log', () => {
     /***
     * @description Verifies Error Log page elements when the record Id is specified
     */
-    describe('on data load', () => {
+    describe('on page render', () => {
 
         beforeEach(() => {
             component.recordId = RECORD_ID;
@@ -111,7 +111,7 @@ describe('c-err-record-log', () => {
                 });
         });
 
-        it('should display error log datatable summary', async () => {
+        it('should display error log data summary', async () => {
             return global.flushPromises().then(async () => {
                 const summary = getElement(component, "text Summary");
 
@@ -148,7 +148,7 @@ describe('c-err-record-log', () => {
     * @description Verifies Error Log page elements when
     * the specified record has error logs
     */
-    describe('on datatable displaying error logs', () => {
+    describe('on page displaying error logs', () => {
         const numberOfColumns = 4;
         const numberOfRows = 2;
 
@@ -187,6 +187,34 @@ describe('c-err-record-log', () => {
             });
         });
 
+        it('should sort error logs', async () => {
+            return global.flushPromises()
+                .then(async () => {
+                    const datatable = getElement(component, QA_LOCATOR_DATATABLE);
+                    expect(datatable).not.toBeNull();
+
+                    expect(datatable.data[0].Name).toBe(
+                        mockGetDataErrorLogs.data[0].Name
+                    );
+
+                    datatable.dispatchEvent(
+                        new CustomEvent("sort", {
+                            detail: {
+                                fieldName: mockGetObjectInfo.fields["Datetime__c"].apiName,
+                                sortDirection: "asc",
+                            },
+                        })
+                    );
+                })
+                .then(async () => {
+                    const datatable = getElement(component, QA_LOCATOR_DATATABLE);
+
+                    expect(datatable.data[0].Name).toBe(
+                        mockGetDataErrorLogs.data[1].Name
+                    );
+                });
+        });
+
         it("should be accessible", async () => {
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
@@ -199,7 +227,7 @@ describe('c-err-record-log', () => {
     * @description Verifies No Access illustration is displayed when
     * user has no read access on the record SObject or Error SObject
     */
-    describe('on no access', () => {
+    describe('on insufficient permissions', () => {
 
         beforeEach(() => {
             component.recordId = RECORD_ID;
