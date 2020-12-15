@@ -29,19 +29,25 @@
   -->
 
 <template>
-    <template if:true={isSuccess}>
+    <div class="slds-m-bottom_medium">
         <c-util-alert-banner theme="success"
                              icon="utility:success"
                              size="small"
-                             message="Gateway updated.">
+                             message="Gateway updated."
+                             is-dismissable="true"
+                             is-visible={isSuccess}>
         </c-util-alert-banner>
-    </template>
+    </div>
     <template if:true={isError}>
-        <c-util-alert-banner theme="failure"
-                             icon="utility:error"
-                             size="small"
-                             message={errorMessage}>
-        </c-util-alert-banner>
+        <div class="slds-m-bottom_medium">
+            <c-util-alert-banner theme="failure"
+                                 icon="utility:error"
+                                 size="small"
+                                 message={errorMessage}
+                                 is-dismissable="true"
+                                 is-visible={isError}>
+            </c-util-alert-banner>
+        </div>
     </template>
     <lightning-layout multiple-rows="true">
         <div if:true={showSpinner}
@@ -59,19 +65,19 @@
                 recently. To override this, click Edit and enter the gateway ID for the one you'd like to use instead.
                 Find the gateway ID in the Elevate Admin Console | Gateway Management.</p>
         </lightning-layout-item>
-        <template if:true={isReadState}>
+        <template if:true={isReadOnly}>
             <lightning-layout-item size="12" class="slds-text-align_center">
                 <lightning-button label="Edit" data-id="editGatewayButton" onclick={handleEdit}></lightning-button>
             </lightning-layout-item>
         </template>
         <lightning-layout-item size="4">
-            <template if:true={isReadState}>
-                <lightning-input variant="label-inline" read-only="true" label="Gateway ID" value={gatewayId}
-                                 type="text"></lightning-input>
-            </template>
-            <template if:true={isEditState}>
-                <lightning-input variant="label-inline" label="Gateway ID" value={gatewayId}
-                                 type="text" data-id="gatewayIdEditField"></lightning-input>
+            <lightning-input variant="label-inline"
+                             read-only={isReadOnly}
+                             label="Gateway ID"
+                             value={gatewayId}
+                             type="text">
+            </lightning-input>
+            <template if:false={isReadOnly}>
                 <lightning-button-group>
                     <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
                     <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>

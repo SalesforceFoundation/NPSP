@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 import { LightningElement } from 'lwc';
-import { handleError } from 'c/utilTemplateBuilder';
+import { buildErrorMessage } from 'c/utilTemplateBuilder';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
@@ -44,22 +44,12 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this.getGatewayId();
     }
 
-    _isReadState = true;
-    get isReadState() {
-        return this._isReadState;
+    _isReadOnly = true;
+    get isReadOnly() {
+        return this._isReadOnly;
     }
-    set isReadState(value) {
-        this._isReadState = value;
-        this._isEditState = false;
-    }
-
-    _isEditState;
-    get isEditState() {
-        return this._isEditState
-    }
-    set isEditState(value) {
-        this._isEditState = value;
-        this._isReadState = false;
+    set isReadOnly(value) {
+        this._isReadOnly = value;
     }
 
     _isSuccess;
@@ -91,21 +81,23 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     handleEdit() {
-        this.isEditState = true;
+        this.isReadOnly = false;
     }
 
     handleCancel() {
-        this.isReadState = true;
+        this.isReadOnly = true;
     }
 
     async handleSave(event) {
+        this.resetAlert();
+
         try {
             let gatewayId = this.template.querySelector("[data-id='gatewayIdEditField']").value;
             await setGatewayId({ gatewayId: gatewayId});
 
             this.isSuccess = true;
         } catch(ex) {
-            console.log(ex);
+            this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
         }
     }
@@ -116,5 +108,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
         } catch(ex) {
             // handleError(ex);
         }
+    }
+
+    resetAlert() {
+        this.isSuccess = null;
+        this.isError = null;
     }
 }
