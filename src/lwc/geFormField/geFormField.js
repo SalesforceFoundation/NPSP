@@ -81,7 +81,7 @@ export default class GeFormField extends LightningElement {
             }
         }
 
-        if (this.isCheckbox) {
+        if (this.isCheckbox && !this.isPicklist) {
             return event.detail.checked.toString();
         }
 
@@ -124,7 +124,7 @@ export default class GeFormField extends LightningElement {
      */
     checkFieldValidity() {
         // TODO: Handle other input types, if needed
-        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        const inputField = this.inputField();
         if (typeof inputField !== 'undefined'
             && inputField !== null
             && typeof inputField.reportValidity === 'function'
@@ -152,7 +152,11 @@ export default class GeFormField extends LightningElement {
         return true;
     }
 
-    get isRichTextValid () {
+    inputField() {
+        return this.template.querySelector('[data-id="inputComponent"]');
+    }
+
+    get isRichTextValid() {
         return this._isRichTextValid;
     }
 
@@ -212,7 +216,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isLightningInput() {
-        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined';
+        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined' && !this.hasPicklistOverride;
     }
 
     get isRichText() {
@@ -235,11 +239,19 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist;
+        return this.fieldType === PICKLIST_TYPE || this.hasPicklistOverride || this.isRecordTypePicklist;
     }
 
     get isCheckbox() {
         return this.fieldType === BOOLEAN_TYPE;
+    }
+
+    get booleanValue() {
+        return !!this.value;
+    }
+
+    get hasPicklistOverride() {
+        return isNotEmpty(this.element.picklistOptionsOverride);
     }
 
     get isTextArea() {
@@ -326,7 +338,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     setCustomValidity(errorMessage) {
-        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        const inputField = this.inputField();
 
         const canSetCustomValidity =
             inputField &&
@@ -510,10 +522,10 @@ export default class GeFormField extends LightningElement {
             this.element.parentRecordField;
     }
 
-    // ================================================================================
-    // Logic formerly in geFormFieldPicklist
-    // ================================================================================
     get picklistValues() {
+        if (this.element.picklistOptionsOverride) {
+            return this.element.picklistOptionsOverride;
+        }
         if (this.targetFieldApiName === 'RecordTypeId') {
             return this.getPicklistOptionsForRecordTypeIds();
         }
@@ -537,8 +549,13 @@ export default class GeFormField extends LightningElement {
      * and build the picklist options array from there.
      */
     get fullFieldApiNameForStandardPicklists() {
-        if (this.isRecordTypeIdLookup || !this.isPicklist) return undefined;
-        return `${this.objectApiName}.${this.targetFieldApiName}`;
+        if (this.isStandardPicklist()) {
+            return `${this.objectApiName}.${this.targetFieldApiName}`;
+        }
+    }
+
+    isStandardPicklist() {
+        return this.isPicklist && !this.isRecordTypeIdLookup && !this.hasPicklistOverride;
     }
 
     get isRecordTypeIdLookup() {
