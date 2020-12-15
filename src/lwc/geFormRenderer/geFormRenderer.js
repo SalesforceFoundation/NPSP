@@ -1298,7 +1298,7 @@ export default class GeFormRenderer extends LightningElement{
     getFieldValueForFormState(valueObject, fieldMapping) {
         const { value } = valueObject;
 
-        if (valueObject === null) {
+        if (value === null) {
             return this.defaultValueFor(fieldMapping.DeveloperName);
         } else if (isTrueFalsePicklist(fieldMapping)) {
             return this.transformForTrueFalsePicklist(value);
