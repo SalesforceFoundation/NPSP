@@ -229,12 +229,11 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                         if (isTrueFalsePicklist(fieldMapping)) {
                             element.picklistOptionsOverride = trueFalsePicklistOptions();
                         }
-
-                        Object.defineProperty(element, 'showDefaultValueInput', {
-                            get: function() { return this.dataType !== 'BOOLEAN' || !!this.picklistOptionsOverride; }
-                        });
-
                     }
+
+                    Object.defineProperty(element, 'showDefaultValueInput', {
+                        get: function() { return this.dataType !== 'BOOLEAN' || !!this.picklistOptionsOverride; }
+                    });
                 });
             }
         });
