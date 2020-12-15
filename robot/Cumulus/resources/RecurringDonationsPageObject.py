@@ -29,6 +29,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
+        self.builtin.sleep(1,"Wait Needed for page to fully load")
 
     @capture_screenshot_on_error
     def select_value_from_rd2_modal_dropdown(self, dropdown, value):
