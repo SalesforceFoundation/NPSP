@@ -70,23 +70,23 @@ export default class utilInput extends LightningElement {
     }
 
     get checkboxDefaultValue() {
-        return (this.defaultValue === TRUE || this.defaultValue === true) ? true : false;
+        return (this.defaultValue === TRUE || this.defaultValue === true);
     }
 
     get isWidget() {
-        return this.formFieldType === WIDGET ? true : false;
+        return this.formFieldType === WIDGET;
     }
 
     get isLightningTextarea() {
-        return this.lightningInputType === TEXTAREA && !this.isLightningRichText ? true : false;
+        return this.lightningInputType === TEXTAREA && !this.isLightningRichText;
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX ? true : false;
+        return this.lightningInputType === COMBOBOX;
     }
 
     get isLightningSearch() {
-        return this.lightningInputType === SEARCH ? true : false;
+        return this.lightningInputType === SEARCH;
     }
 
     get isLightningRichText() {
@@ -98,11 +98,11 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningCheckbox() {
-        return this.lightningInputType === CHECKBOX ? true : false;
+        return this.lightningInputType === CHECKBOX;
     }
 
     get isLightningDateOrDatetime() {
-        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME) ? true : false;
+        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME);
     }
 
     get isBaseLightningInput() {
@@ -146,7 +146,7 @@ export default class utilInput extends LightningElement {
 
     get isRequired() {
         const _required = this.required === YES || this.required === true;
-        return (_required && !this.isLightningCheckbox) ? true : false;
+        return (_required && !this.isLightningCheckbox);
     }
 
     get fieldDescribe() {
@@ -170,7 +170,7 @@ export default class utilInput extends LightningElement {
     }
 
     get showRichTextLabel() {
-        return this.isLightningRichText && this.variant !== 'label-hidden' ? true : false;
+        return this.isLightningRichText && this.variant !== 'label-hidden';
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
@@ -213,7 +213,7 @@ export default class utilInput extends LightningElement {
         if (this.type && this.lightningInputType === CHECKBOX) {
             this.value = event.target.checked;
         } else if (this.type && this.lightningInputType === SEARCH) {
-            this.value = event.detail.value;
+            this.value = this.valueFromLookupChange(event);
         } else if (event.target) {
             this.value = event.target.value;
         }
@@ -286,6 +286,15 @@ export default class utilInput extends LightningElement {
             return isValid;
         }
         return true;
+    }
+
+    valueFromLookupChange(event) {
+        const val = event.detail.value;
+        if (typeof val === 'string') {
+            return val;
+        } else if (Array.isArray(val)) {
+            return val[0] ? val[0] : null;
+        }
     }
 
     stopPropagation(event) {
