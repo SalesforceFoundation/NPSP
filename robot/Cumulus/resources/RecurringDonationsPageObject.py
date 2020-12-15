@@ -49,7 +49,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populates the RD2 modal form fields with the respective fields and values"""
-        self.builtin.sleep(1,"For Rd2 modal dropdown values to get populated")
+        self.builtin.sleep(2,"For Rd2 modal dropdown values to get populated")
         ns=self.npsp.get_npsp_namespace_prefix()
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
