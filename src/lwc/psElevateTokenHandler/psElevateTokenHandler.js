@@ -114,8 +114,8 @@ class psElevateTokenHandler {
      * @returns {boolean}
      */
     shouldHandleMessage (event) {
-        return !!(this.isExpectedVisualForceOrigin(event) &&
-            validateJSONString(JSON.stringify(event.data)));
+        return !!(this.isExpectedVisualForceOrigin(event)
+            && validateJSONString(JSON.stringify(event.data)));
     }
 
     isExpectedVisualForceOrigin (event) {
@@ -148,30 +148,36 @@ class psElevateTokenHandler {
      * @param {Object} params An object that holds parameters needed to tokenize credit card and ACH transactions
      * @return Promise A token promise
      */
-    requestToken(params) {
-        if (isNull(params.iframe)) {
+    requestToken({
+        iframe,
+        handleError,
+        resolveToken,
+        eventAction,
+        tokenizeParameters,
+    } = {}) {
+        if (isNull(iframe)) {
             return;
         }
 
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() =>
-                reject(params.handleError({
-                    error: this.labels.tokenRequestTimedOut,
-                    isObject: false
-                })),
-                TOKENIZE_TIMEOUT_MS
+                    reject(handleError({
+                        error: this.labels.tokenRequestTimedOut,
+                        isObject: false,
+                    })),
+                TOKENIZE_TIMEOUT_MS,
             );
 
             this.tokenCallback = message => {
                 clearTimeout(timer);
 
                 if (message.error) {
-                    reject(params.handleError(message));
+                    reject(handleError(message));
 
                 } else if (message.token) {
-                    if (params.resolveToken) {
-                        resolve(params.resolveToken(message.token));
+                    if (resolveToken) {
+                        resolve(resolveToken(message.token));
                     } else {
                         resolve(message.token);
                     }
@@ -180,12 +186,12 @@ class psElevateTokenHandler {
 
         });
 
-        params.iframe.contentWindow.postMessage(
+        iframe.contentWindow.postMessage(
             {
-                action: params.eventAction,
-                params: params.tokenizeParameters
+                action: eventAction,
+                params: tokenizeParameters,
             },
-            this._visualforceOrigin
+            this._visualforceOrigin,
         );
 
         return tokenPromise;
