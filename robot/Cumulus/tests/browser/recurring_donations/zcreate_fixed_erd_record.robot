@@ -57,8 +57,9 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     Day of Month=${day_of_month}
     Click Rd2 Modal Button                  Save
     Wait Until Modal Is Closed
-    Current Page Should Be                  Details                                   npe03__Recurring_Donation__c
+    Reload Page
     Wait Until Loading Is Complete
+    Current Page Should Be                  Details                                   npe03__Recurring_Donation__c
     ${rd_id}                                Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
     Validate Field Values Under Section
