@@ -29,6 +29,7 @@
  */
 import { LightningElement } from 'lwc';
 import { buildErrorMessage } from 'c/utilTemplateBuilder';
+import { isEmpty } from 'c/utilCommon';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
@@ -79,17 +80,22 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this.resetAlert();
 
         try {
-            let gatewayId = this.template.querySelector("[data-id='gatewayIdField']").value;
+            let gatewayId = this.validateGatewayId();
+
+            if (isEmpty(gatewayId)) {
+                return;
+            }
 
             this.showSpinner = true;
 
             await setGatewayId({ gatewayId: gatewayId});
 
-            this.showSpinner = false;
-
+            this.isReadOnly = true;
             this.isSuccess = true;
+            this.showSpinner = false;
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
+            this.showSpinner = false;
             this.isError = true;
         }
     }
@@ -98,7 +104,22 @@ export default class GePaymentGatewayManagement extends LightningElement {
         try {
             this.gatewayId = await getGatewayIdFromConfig();
         } catch(ex) {
-            // handleError(ex);
+            this.errorMessage = buildErrorMessage(ex);
+            this.isError = true;
+        }
+    }
+
+    validateGatewayId(gatewayId) {
+        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
+
+        if (isEmpty(gatewayId)) {
+            gatewayIdField.setCustomValidity('Invalid Gateway ID.');
+            gatewayIdField.reportValidity();
+
+            this.errorMessage = 'Enter a valid gateway ID.'
+            this.isError = true;
+        } else {
+            return gatewayIdField.value;
         }
     }
 
