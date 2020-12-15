@@ -1,5 +1,4 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { isEmpty, isNotEmpty, deepClone, showToast } from 'c/utilCommon';
 
 // Import schema for additionally required fields for the template batch header
@@ -206,6 +205,12 @@ const lightningInputTypeByDataType = {
     'textarea': 'lightning-textarea',
     'combobox': 'lightning-combobox'
 }
+
+// values used to enable picklist-to-checkbox mappings
+const PICKLIST_TRUE = 'True';
+const PICKLIST_FALSE = 'False';
+const CHECKBOX_TRUE = 'true';
+const CHECKBOX_FALSE = 'false';
 
 /*******************************************************************************
 * @description Collects all the missing required field mappings. Currently only
@@ -504,6 +509,31 @@ const addKeyToCollectionItems = (list) => {
     });
 }
 
+const BOOLEAN_MAPPING = 'BOOLEAN';
+const PICKLIST_MAPPING = 'PICKLIST';
+
+const isTrueFalsePicklist = (fieldMapping) => {
+    if (fieldMapping) {
+        return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING
+            && fieldMapping.Source_Field_Data_Type === PICKLIST_MAPPING;
+    }
+    return false;
+}
+
+const trueFalsePicklistOptions = () => {
+    const noneOpt = { label: CUSTOM_LABELS.commonLabelNone, value: CUSTOM_LABELS.commonLabelNone }
+    const trueOpt = { label: CUSTOM_LABELS.labelBooleanTrue, value: PICKLIST_TRUE }
+    const falseOpt = { label: CUSTOM_LABELS.labelBooleanFalse, value: PICKLIST_FALSE };
+    return [noneOpt, trueOpt, falseOpt];
+}
+
+const isCheckboxToCheckbox = (fieldMapping) => {
+    if (fieldMapping) {
+        return fieldMapping.Target_Field_Data_Type === BOOLEAN_MAPPING
+            && fieldMapping.Source_Field_Data_Type === BOOLEAN_MAPPING;
+    }
+}
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -523,16 +553,23 @@ export {
     ACCOUNT1,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
+    CHECKBOX_TRUE,
+    CHECKBOX_FALSE,
+    PICKLIST_TRUE,
+    PICKLIST_FALSE,
     dispatch,
     handleError,
     generateId,
     inputTypeByDescribeType,
+    isCheckboxToCheckbox,
+    isTrueFalsePicklist,
     lightningInputTypeByDataType,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     checkPermissionErrors,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
+    trueFalsePicklistOptions,
     getPageAccess,
     addKeyToCollectionItems
 }

@@ -20,6 +20,7 @@ import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
 import commonFieldsNotFound from '@salesforce/label/c.commonFieldsNotFound';
 import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
 import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
@@ -214,7 +215,8 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
+import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
+import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 
 class GeLabelService {
 
@@ -439,6 +441,8 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
+        labelBooleanTrue,
+        labelBooleanFalse
     });
 
     /*******************************************************************************
