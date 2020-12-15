@@ -85,6 +85,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     };
     @track error = {};
 
+    get commitmentId() {
+        return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
+    }
 
     /***
      * @description Initializes the component with data
@@ -199,7 +202,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      * if such Id is indeed created in Elevate.
      */
     checkElevateStatus() {
-        const commitmentId = this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
+        const commitmentId = this.commitmentId;
 
         this.isElevateRecord = !isNull(commitmentId);
         this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith(TEMP_PREFIX);
