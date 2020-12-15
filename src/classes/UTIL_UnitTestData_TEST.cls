@@ -532,7 +532,7 @@ public class UTIL_UnitTestData_TEST {
     public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
