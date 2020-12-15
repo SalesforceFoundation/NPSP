@@ -40,7 +40,7 @@
     </div>
     <template if:true={isError}>
         <div class="slds-m-bottom_medium">
-            <c-util-alert-banner theme="failure"
+            <c-util-alert-banner theme="error"
                                  icon="utility:error"
                                  size="small"
                                  message={errorMessage}
@@ -75,7 +75,8 @@
                              read-only={isReadOnly}
                              label="Gateway ID"
                              value={gatewayId}
-                             type="text">
+                             type="text"
+                             data-id="gatewayIdField">
             </lightning-input>
             <template if:false={isReadOnly}>
                 <lightning-button-group>

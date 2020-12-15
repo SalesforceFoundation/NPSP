@@ -79,8 +79,13 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this.resetAlert();
 
         try {
-            let gatewayId = this.template.querySelector("[data-id='gatewayIdEditField']").value;
+            let gatewayId = this.template.querySelector("[data-id='gatewayIdField']").value;
+
+            this.showSpinner = true;
+
             await setGatewayId({ gatewayId: gatewayId});
+
+            this.showSpinner = false;
 
             this.isSuccess = true;
         } catch(ex) {
