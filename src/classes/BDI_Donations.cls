@@ -333,6 +333,7 @@ public class BDI_Donations {
 
                 if (isElevatePaymentDI(dataImport)) {
                     dataImportDonations.add(dataImport);
+                    continue;
                 } else if (matchBehavior == BDI_DataImport_API.DoNotMatch) {
                     continue;
                 }
