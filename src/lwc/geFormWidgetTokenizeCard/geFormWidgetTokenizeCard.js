@@ -55,11 +55,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
     }
 
+    @api
     get widgetDataFromState() {
         return this._widgetDataFromState;
     }
 
-    @api
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
         this.handleWidgetDataChange(widgetState);
