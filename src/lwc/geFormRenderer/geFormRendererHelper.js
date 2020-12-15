@@ -1,5 +1,5 @@
 import GeFormService from 'c/geFormService';
-import {isEmptyObject, isNotEmpty} from 'c/utilCommon';
+import { isEmptyObject, isNotEmpty } from 'c/utilCommon';
 
 /**
  * @description Helper function used to convert an object that has key value pairs where
@@ -88,4 +88,3 @@ function createSimplifiedObjectForObjectDevName(targetFieldApiNameBySourceFieldA
 
     return simplifiedObjectForObjectDevName;
 }
-
