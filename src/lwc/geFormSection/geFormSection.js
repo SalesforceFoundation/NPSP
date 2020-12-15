@@ -1,6 +1,5 @@
 import {LightningElement, api} from 'lwc';
 import { isUndefined } from 'c/utilCommon';
-import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
 
@@ -134,13 +133,12 @@ export default class GeFormSection extends LightningElement {
     get isCreditCardWidgetAvailable() {
         return this._hasCreditCardWidget;
     }
+
     get renderableElements() {
         if (isUndefined(this.section)) {
             return [];
         }
-        return this.section.elements.filter(
-            element => new GeFormElementHelper(
-                element).isRenderable());
+        return this.section.elements.filter(e => e.isRenderable);
     }
 
     handleFormWidgetChange(event) {
