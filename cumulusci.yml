@@ -767,6 +767,11 @@ flows:
             4:
                 task: snapshot_changes
 
+    qa_org_2gp:
+        steps:
+            2:
+                flow: config_regression
+
     config_trial:
         steps:
             1:
