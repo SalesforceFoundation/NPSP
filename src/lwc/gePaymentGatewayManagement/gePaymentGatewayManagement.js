@@ -62,6 +62,34 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this._isReadState = false;
     }
 
+    _isSuccess;
+    get isSuccess() {
+        return this._isSuccess;
+    }
+    set isSuccess(value) {
+        this._isSuccess = value;
+
+        if (value) { this.isError = false; }
+    }
+
+    _isError;
+    get isError() {
+        return this._isError;
+    }
+    set isError(value) {
+        this._isError = value;
+
+        if (value) { this.isSuccess = false; }
+    }
+
+    _errorMessage;
+    get errorMessage() {
+       return this._errorMessage;
+    }
+    set errorMessage(value) {
+        this._errorMessage = value;
+    }
+
     handleEdit() {
         this.isEditState = true;
     }
@@ -71,20 +99,22 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     async handleSave(event) {
-        // setGatewayId({gatewayId: event.target.value})
-        //     .then({
-        //
-        //     })
-        //     .catch(error => {
-        //         handleError(error);
-        //     });
+        try {
+            let gatewayId = this.template.querySelector("[data-id='gatewayIdEditField']").value;
+            await setGatewayId({ gatewayId: gatewayId});
+
+            this.isSuccess = true;
+        } catch(ex) {
+            console.log(ex);
+            this.isError = true;
+        }
     }
 
     async getGatewayId() {
         try {
             this.gatewayId = await getGatewayIdFromConfig();
         } catch(ex) {
-            handleError(ex);
+            // handleError(ex);
         }
     }
 }

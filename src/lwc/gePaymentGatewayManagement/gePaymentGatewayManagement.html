@@ -29,6 +29,20 @@
   -->
 
 <template>
+    <template if:true={isSuccess}>
+        <c-util-alert-banner theme="success"
+                             icon="utility:success"
+                             size="small"
+                             message="Gateway updated.">
+        </c-util-alert-banner>
+    </template>
+    <template if:true={isError}>
+        <c-util-alert-banner theme="failure"
+                             icon="utility:error"
+                             size="small"
+                             message={errorMessage}>
+        </c-util-alert-banner>
+    </template>
     <lightning-layout multiple-rows="true">
         <div if:true={showSpinner}
              class='spinner-container'>
@@ -57,7 +71,7 @@
             </template>
             <template if:true={isEditState}>
                 <lightning-input variant="label-inline" label="Gateway ID" value={gatewayId}
-                                 type="text"></lightning-input>
+                                 type="text" data-id="gatewayIdEditField"></lightning-input>
                 <lightning-button-group>
                     <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
                     <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
