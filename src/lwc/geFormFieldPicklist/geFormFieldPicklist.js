@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
-import { isEmpty } from 'c/utilCommon';
+import {isEmpty, isNotEmpty} from 'c/utilCommon';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
@@ -12,9 +12,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api value;
     @api className;
     @api qaLocatorBase;
+    @api picklistOptionsOverride;
 
     @track _objectDescribeInfo;
-    @track picklistValues;
+    @track _picklistValues;
     @track defaultRecordTypeId;
 
     _recordTypeId;
@@ -24,14 +25,14 @@ export default class GeFormFieldPicklist extends LightningElement {
         fieldApiName: '$fullFieldApiName',
         recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
-        if(data) {
-            let valueNone = {
+        if (data) {
+            const valueNone = {
                 label: this.CUSTOM_LABELS.commonLabelNone,
                 value: this.CUSTOM_LABELS.commonLabelNone
-            }
+            };
             this.picklistValues = [valueNone, ...data.values];
         }
-        if(error) {
+        if (error) {
             console.error(error);
         }
     }
@@ -39,7 +40,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api
     set objectDescribeInfo(val) {
         this._objectDescribeInfo = val;
-        if(val) {
+        if (val) {
             this.defaultRecordTypeId = val.defaultRecordTypeId;
             if (!this.recordTypeId) {
                 this.recordTypeId = this.defaultRecordTypeId;
@@ -54,7 +55,13 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get fullFieldApiName() {
-        return `${this.objectName}.${this.fieldName}`;
+        if (this.shouldRetrievePicklistValues()) {
+            return `${this.objectName}.${this.fieldName}`;
+        }
+    }
+
+    shouldRetrievePicklistValues() {
+        return isEmpty(this.picklistOptionsOverride) && isNotEmpty(this.objectName) && isNotEmpty(this.fieldName);
     }
 
     handleValueChange(event) {
@@ -97,6 +104,14 @@ export default class GeFormFieldPicklist extends LightningElement {
 
     set recordTypeId(id) {
         this._recordTypeId = id || this.defaultRecordTypeId;
+    }
+
+    get picklistValues() {
+        return isNotEmpty(this.picklistOptionsOverride) ? this.picklistOptionsOverride : this._picklistValues;
+    }
+
+    set picklistValues(value) {
+        this._picklistValues = value;
     }
 
     connectedCallback() {
