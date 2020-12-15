@@ -176,11 +176,14 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 			self.npsp.choose_frame('vfFrameId')
 			self.selenium.wait_until_page_contains_element(new_picklst_btn)
-			self.selenium.scroll_element_into_view(new_picklst_btn)
+			self.selenium.execute_javascript("window.scrollBy(0, 100)")
 			self.selenium.click_element(new_picklst_btn)
 			time.sleep(2)
+			self.selenium.driver.switch_to.default_content()
 			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 			self.npsp.choose_frame('vfFrameId')
+			
+
 			self.selenium.wait_until_page_contains_element(picklist_txtarea)
 			for value in kwargs['Values']:
 				self.selenium.get_webelement(picklist_txtarea).send_keys(value)

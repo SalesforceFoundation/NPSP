@@ -4,6 +4,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
+from selenium.webdriver import ActionChains
 from datetime import datetime
 import time
 from logging import exception
@@ -360,6 +361,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             values = {}
             while i <= count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
+                self.selenium.execute_javascript("window.scrollBy(0, 100)")
                 installment_date = self.selenium.get_webelement(datefield)
                 actual_date = self.selenium.get_webelement(installment_date).text
                 paused_locator = npsp_lex_locators["erd"]["date_with_paused_txt"].format(actual_date)
@@ -389,7 +391,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """Takes in the parameter (number of payments) and the donation start date
         verifies that the payment schedules created on UI reflect the total number
         verifies that the next payment dates are reflected correctly for all the schedules"""
-
+        
         installmentrow = npsp_lex_locators["erd"]["installment_row"]
         installments = self.selenium.get_webelements(installmentrow)
         count = len(installments)
