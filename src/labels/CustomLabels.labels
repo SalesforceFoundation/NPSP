@@ -7157,7 +7157,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
-        <value>Learn how to customize NPSP reports &amp; Dashboards in Trailhead</value>
+        <value>Learn how to customize NPSP Reports &amp; Dashboards in Trailhead</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemRunningReportsTitle</fullName>
@@ -7262,7 +7262,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item Train Users in Get Started</shortDescription>
-        <value>Train your users</value>
+        <value>Train Your users</value>
     </labels>
     <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
@@ -7326,7 +7326,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
-        <value>Visualize your Fundraising Processes</value>
+        <value>Visualize Your Fundraising Processes</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>
@@ -13820,7 +13820,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
-        <value>Start Managing Programs</value>
+        <value>Manage Programs</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
@@ -13836,7 +13836,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement link label in Get Started Resources section</shortDescription>
-        <value>Get Started</value>
+        <value>Engage Constituents</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLabel</fullName>
