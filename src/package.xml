@@ -385,6 +385,7 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_CommitmentRequest</members>
         <members>PS_CommitmentRequest_TEST</members>
+        <members>PS_GatewayManagement</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -4042,6 +4043,7 @@
         <members>geDonationMatching</members>
         <members>geDonationMatchingOpportunityCard</members>
         <members>geDonationMatchingPaymentCard</members>
+        <members>geFormElement</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
