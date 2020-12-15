@@ -35,21 +35,16 @@ import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGat
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
-    showSpinner = false;
+    showSpinner;
     gatewayId;
+
+    isReadOnly = true;
+    errorMessage;
 
     CUSTOM_LABELS = { messageLoading };
 
     connectedCallback() {
         this.getGatewayId();
-    }
-
-    _isReadOnly = true;
-    get isReadOnly() {
-        return this._isReadOnly;
-    }
-    set isReadOnly(value) {
-        this._isReadOnly = value;
     }
 
     _isSuccess;
@@ -70,14 +65,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this._isError = value;
 
         if (value) { this.isSuccess = false; }
-    }
-
-    _errorMessage;
-    get errorMessage() {
-       return this._errorMessage;
-    }
-    set errorMessage(value) {
-        this._errorMessage = value;
     }
 
     handleEdit() {
