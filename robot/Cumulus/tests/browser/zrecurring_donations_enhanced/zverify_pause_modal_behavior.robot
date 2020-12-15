@@ -46,7 +46,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          Year values
 
 
-    [tags]                                        unstable               W-8116680          feature:RD2
+    [tags]                                                       W-8116680          feature:RD2
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
