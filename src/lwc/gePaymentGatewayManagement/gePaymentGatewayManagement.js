@@ -79,14 +79,15 @@ export default class GePaymentGatewayManagement extends LightningElement {
     async handleSave(event) {
         this.resetAlert();
 
+        let gatewayId = this.validateGatewayId();
+
+        if (isEmpty(gatewayId)) {
+            return;
+        }
+
+        this.showSpinner = true;
+
         try {
-            let gatewayId = this.validateGatewayId();
-
-            if (isEmpty(gatewayId)) {
-                return;
-            }
-
-            this.showSpinner = true;
 
             await setGatewayId({ gatewayId: gatewayId});
 
@@ -109,16 +110,20 @@ export default class GePaymentGatewayManagement extends LightningElement {
         }
     }
 
-    validateGatewayId(gatewayId) {
+    validateGatewayId() {
         let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
 
-        if (isEmpty(gatewayId)) {
+        if (isEmpty(gatewayIdField.value)) {
             gatewayIdField.setCustomValidity('Invalid Gateway ID.');
             gatewayIdField.reportValidity();
 
             this.errorMessage = 'Enter a valid gateway ID.'
             this.isError = true;
         } else {
+            if (!gatewayIdField.valid) {
+                gatewayIdField.setCustomValidity('');
+                gatewayIdField.reportValidity();
+            }
             return gatewayIdField.value;
         }
     }
