@@ -27,6 +27,7 @@ import PAYMENT_ACH_CONSENT from '@salesforce/schema/DataImport__c.ACH_Consent__c
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
+import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
@@ -38,6 +39,12 @@ import {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     checkPermissionErrors,
+    isTrueFalsePicklist,
+    trueFalsePicklistOptions,
+    CHECKBOX_TRUE,
+    CHECKBOX_FALSE,
+    PICKLIST_TRUE,
+    PICKLIST_FALSE
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -263,7 +270,7 @@ export default class GeFormRenderer extends LightningElement{
             // check if there is a record id in the url
             this.donorRecordId = getQueryParameters().c__donorRecordId;
             const donorApiName = getQueryParameters().c__apiName;
-            if(donorApiName) {
+            if (donorApiName) {
                 this.initializeDonationDonorTypeInFormState(donorApiName);
             }
 
@@ -333,7 +340,7 @@ export default class GeFormRenderer extends LightningElement{
             }
         }
 
-        this.sections = this.appendRecordTypeLocationInfoToPicklistElements(this.sections);
+        this.sections = this.appendRecordTypeLocationInfoToPicklistElements();
         this.initializeFormState();
         this.initializeWidgetConfig();
     }
@@ -342,21 +349,20 @@ export default class GeFormRenderer extends LightningElement{
         this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
     }
 
-    appendRecordTypeLocationInfoToPicklistElements(sections) {
-        let updatedSections = deepClone(sections);
+    appendRecordTypeLocationInfoToPicklistElements() {
 
-        updatedSections
+        this.sections
             .forEach(section => {
                 section.elements
                     .forEach(element => {
-                        this.appendRecordTypeLocationInfoToElement(element);
-                    })
+                        this.enrichElement(element);
+                    });
             });
 
-        return updatedSections;
+        return [...this.sections];
     }
 
-    appendRecordTypeLocationInfoToElement(element) {
+    appendRecordTypeLocationInfo(element) {
         const fieldMappingDevName =
             element.dataImportFieldMappingDevNames &&
             element.dataImportFieldMappingDevNames[0];
@@ -366,6 +372,19 @@ export default class GeFormRenderer extends LightningElement{
                 this.siblingRecordTypeFieldFor(fieldMappingDevName);
             element.parentRecordField =
                 this.parentRecordFieldFor(fieldMappingDevName);
+        }
+    }
+
+    enrichElement(element) {
+        this.appendRecordTypeLocationInfo(element);
+        this.appendElementHelperData(element);
+    }
+
+    appendElementHelperData(element) {
+        const helper = new GeFormElementHelper(element);
+        element.isRenderable = helper.isRenderable();
+        if (helper.isTrueFalsePicklist()) {
+            element.picklistOptionsOverride = trueFalsePicklistOptions();
         }
     }
 
@@ -1296,9 +1315,15 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     getFieldValueForFormState(valueObject, fieldMapping) {
-        return valueObject.value === null ?
-            this.defaultValueFor(fieldMapping.DeveloperName) :
-            valueObject.value;
+        const { value } = valueObject;
+
+        if (value === null) {
+            return this.defaultValueFor(fieldMapping.DeveloperName);
+        } else if (isTrueFalsePicklist(fieldMapping)) {
+            return this.transformForTrueFalsePicklist(value);
+        }
+
+        return value;
     }
 
     isPaymentImportedObjectMapping(objectMapping) {
@@ -1601,7 +1626,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     sourceFieldFor(fieldMappingDevName) {
-        return GeFormService.fieldMappings[fieldMappingDevName].Source_Field_API_Name;
+        return GeFormService.getFieldMappingWrapper(fieldMappingDevName).Source_Field_API_Name;
+    }
+
+    isTrueFalsePicklist(fieldMappingDevName) {
+        const fieldMapping = GeFormService.getFieldMappingWrapper(fieldMappingDevName);
+        return isTrueFalsePicklist(fieldMapping);
     }
 
     /*******************************************************************************
@@ -1725,6 +1755,15 @@ export default class GeFormRenderer extends LightningElement{
     get opportunityRecordTypeInfos() {
         return this.opportunityObjectInfo &&
             Object.values(this.opportunityObjectInfo.data.recordTypeInfos);
+    }
+
+    transformForTrueFalsePicklist(value) {
+        if (value === true || value === CHECKBOX_TRUE) {
+            return PICKLIST_TRUE;
+        } else if (value === false || value === CHECKBOX_FALSE) {
+            return PICKLIST_FALSE;
+        }
+        return ''; // blank values are valid for picklist/checkbox mappings
     }
 
     setDonationRecordTypeIdInFormState(opportunityRecordTypeId) {
