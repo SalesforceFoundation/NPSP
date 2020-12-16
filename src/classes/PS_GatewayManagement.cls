@@ -33,7 +33,7 @@ public with sharing class PS_GatewayManagement {
     @AuraEnabled
     public static void setGatewayId(String gatewayId) {
         Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>>{
-                'payments' =>
+                PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
                         new List<Map<String, String>>{
                                 new Map<String, String>{
                                         'key' => PS_IntegrationServiceConfig.SFDO_GATEWAYIDS,
