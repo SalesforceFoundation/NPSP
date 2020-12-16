@@ -197,7 +197,7 @@ export default class GeFormField extends LightningElement {
 
     get targetFieldDescribeInfo() {
         if (this.objectDescribeUtil) {
-            return this.objectDescribeInfo.getFieldDescribe(this.targetFieldApiName);
+            return this.objectDescribeUtil.getFieldDescribe(this.targetFieldApiName);
         }
     }
 
@@ -448,10 +448,10 @@ export default class GeFormField extends LightningElement {
             this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
                 this.objectDescribeUtil.recordTypeIdFor(this.siblingRecordTypeValue()) :
                 this.siblingRecordTypeValue();
-
+        const defaultRecordTypeId = this.objectDescribeUtil ? this.objectDescribeUtil.defaultRecordTypeId() : null;
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
-            this.objectDescribeUtil.defaultRecordTypeId() ||
+            defaultRecordTypeId ||
             null;
     }
 
