@@ -30,8 +30,6 @@
 
 public with sharing class PS_GatewayManagement {
 
-    private static final String CURRENT_GATEWAY_ID = new PS_IntegrationServiceConfig.Service().getGatewayIds();
-
     @AuraEnabled
     public static void setGatewayId(String gatewayId) {
         Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>>{
@@ -48,6 +46,15 @@ public with sharing class PS_GatewayManagement {
 
     @AuraEnabled
     public static String getGatewayIdFromConfig() {
-        return CURRENT_GATEWAY_ID;
+        PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
+
+        return configService.getGatewayIds();
+    }
+
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+
+        return ps.isIntegrationEnabled();
     }
 }

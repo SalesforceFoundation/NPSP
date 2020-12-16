@@ -30,9 +30,12 @@
 import { LightningElement } from 'lwc';
 import { buildErrorMessage } from 'c/utilTemplateBuilder';
 import { isEmpty } from 'c/utilCommon';
+
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
+import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -40,11 +43,21 @@ export default class GePaymentGatewayManagement extends LightningElement {
     gatewayId;
 
     isReadOnly = true;
+    isElevateCustomer;
     errorMessage;
 
     CUSTOM_LABELS = { messageLoading };
 
     connectedCallback() {
+        checkForElevateCustomer()
+            .then(isElevateCustomer => {
+                this.isElevateCustomer = !!isElevateCustomer;
+            })
+            .catch(ex => {
+                this.errorMessage = buildErrorMessage(ex);
+                this.isError = true;
+            });
+
         this.getGatewayId();
     }
 
