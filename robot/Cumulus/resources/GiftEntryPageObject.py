@@ -195,8 +195,12 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                             self.salesforce._jsclick(field_checkbox)
                 elif section=="Default Value":
                     key=f'{section} {field}'
-                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
-                    placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
+                    if "Description" in field:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                        placeholder=None
+                    else:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                        placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
                     self.selenium.scroll_element_into_view(field_loc)
                     try:
                         self.selenium.click_element(field_loc)
@@ -209,7 +213,14 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
                     elif placeholder=="Search...":
-                        self.salesforce.populate_lookup_field(key,value)
+                        self.salesforce._populate_field(field_loc,value)
+                        qa_id="Select "+value
+                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        self.selenium.wait_until_page_contains_element(option)
+                        try:
+                            self.selenium.click_element(option)
+                        except ElementNotInteractableException:
+                            self.salesforce._jsclick(option)
                     elif "Date" in field:
                         locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
                         self.selenium.wait_until_page_contains_element(locator)
@@ -292,7 +303,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             self.selenium.wait_until_page_contains_element(field)
-            time.sleep(1)
+            self.builtin.sleep(2,"waiting for couple of seconds for field default value to be updated")
             element=self.selenium.get_webelement(field)
             default_value=element.get_attribute("value")
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
@@ -416,3 +427,23 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """Validates that the GAU allocation remaining balance is correct"""
         locator=npsp_lex_locators["gift_entry"]["element_text"].format("Remaining Allocation Amount",amount)
         self.selenium.wait_until_page_contains_element(locator,error=f'Remaining allocation amount of {amount} could not be found on page')
+
+    @capture_screenshot_on_error
+    def verify_record_picklist_values(self,field,*args,**kwargs):
+        """Verifies that picklist field values change based on Record Type selected.
+        Arguments: field | Picklist field name
+                   *args | Expected values to be loaded in the picklist field
+                **kwargs | Record Type field name=Record Type Value
+        Example: Verify Record Picklist Values | Opportunity Stage | @{GRANT_STAGES} | Opportunity Record Type=Grant"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+            field_value=self.selenium.get_element_attribute(locator,"value")
+            if field_value==value:
+                option_field=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+                self.selenium.click_element(option_field) # clicking in the field inorder to trigger picklist values to load
+                for item in args:
+                    options=npsp_lex_locators["gift_entry"]["picklist_values"].format(field,item)
+                    self.selenium.page_should_contain_element(options,message=f'{field} does not contain {item} option')
+                self.selenium.click_element(option_field) # clicking again to close the picklist after verification
+            else:
+                raise Exception(f'{key} does not contain specified {value}')

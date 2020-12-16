@@ -50,15 +50,7 @@ Verify Mapped Field Is Available For Batch Template
     Wait Until Page Contains                ${TEMPLATE}
     Store Template Record Id                ${TEMPLATE}
     #Verify field is displayed on newly created batch with new template
-    Click Gift Entry Button                 New Batch
-    Wait Until Modal Is Open
-    Select Template                         ${TEMPLATE}
-    Load Page Object                        Form                            Gift Entry
-    Fill Gift Entry Form
-    ...                                     Batch Name=Field Mapping Automation Batch
-    ...                                     Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button                 Next
-    Click Gift Entry Button                 Save
+    Create Gift Entry Batch                 ${TEMPLATE}                     Field Mapping Automation Batch
     Current Page Should Be                  Form                            Gift Entry            title=Gift Entry Form
     ${batch_id} =                           Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Wait Until Page Contains                Test Mapping

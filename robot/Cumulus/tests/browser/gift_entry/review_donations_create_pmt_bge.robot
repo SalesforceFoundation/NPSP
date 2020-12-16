@@ -41,15 +41,7 @@ Review Donation And Create Payment For Batch Gift
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and create a payment
     Go To Page                           Landing                       GE_Gift_Entry
-    Click Gift Entry Button              New Batch
-    Wait Until Modal Is Open
-    Select Template                      Default Gift Entry Template
-    Load Page Object                     Form                          Gift Entry
-    Fill Gift Entry Form
-    ...                                  Batch Name=${CONTACT}[Name]Automation Batch
-    ...                                  Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button              Next
-    Click Gift Entry Button              Save
+    Create Gift Entry Batch              Default Gift Entry Template   ${CONTACT}[Name]Automation Batch
     Current Page Should Be               Form                          Gift Entry
     ${batch_id} =                        Save Current Record ID For Deletion     ${NS}DataImportBatch__c
     Fill Gift Entry Form
