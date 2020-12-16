@@ -104,8 +104,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     handleCancel() {
+        this.template.querySelector("[data-id='gatewayIdField']").value = this.gatewayId;
         this.resetAlert();
         this.clearFieldErrors();
+
         this.isReadOnly = true;
     }
 
