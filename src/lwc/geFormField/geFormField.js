@@ -443,6 +443,18 @@ export default class GeFormField extends LightningElement {
         return this.element.dataImportFieldMappingDevNames[0];
     }
 
+    recordTypeId() {
+        const siblingRecordTypeId =
+            this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
+                this.objectDescribeUtil.recordTypeIdFor(this.siblingRecordTypeValue()) :
+                this.siblingRecordTypeValue();
+
+        return siblingRecordTypeId ||
+            this.parentRecordRecordTypeId() ||
+            this.objectDescribeUtil.defaultRecordTypeId() ||
+            null;
+    }
+
     siblingRecordTypeValue() {
         return this.formState && this.formState[this.siblingRecordTypeField()];
     }
