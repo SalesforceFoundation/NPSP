@@ -1,5 +1,5 @@
 import {api, LightningElement, track, wire} from 'lwc';
-import {debouncify, isNotEmpty, relatedRecordFieldNameFor, ObjectDescribeUtil, nonePicklistOption } from 'c/utilCommon';
+import {debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
@@ -62,7 +62,7 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
-            this.objectDescribeUtil = new ObjectDescribeUtil(response.data);
+            this.objectDescribeUtil = new UtilDescribe(response.data);
             this._recordTypeId = this.recordTypeId();
         }
     }
@@ -196,8 +196,8 @@ export default class GeFormField extends LightningElement {
     }
 
     get targetFieldDescribeInfo() {
-        if (this.objectDescribeInfo && this.objectDescribeInfo.fields) {
-            return this.objectDescribeInfo.fields[this.targetFieldApiName];
+        if (this.objectDescribeUtil) {
+            return this.objectDescribeInfo.getFieldDescribe(this.targetFieldApiName);
         }
     }
 

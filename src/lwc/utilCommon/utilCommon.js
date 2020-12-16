@@ -1,7 +1,7 @@
 /* eslint-disable no-void */
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-
+import UtilDescribe from './utilDescribe';
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 const FUNCTION = 'function';
@@ -610,56 +610,7 @@ const buildFieldDescribes = (fields, objectApiName) => {
 }
 
 
-class ObjectDescribeUtil {
-    objectDescribeInfo;
 
-    constructor(objectDescribeInfo) {
-        this.objectDescribeInfo = objectDescribeInfo;
-    }
-
-    get accessibleRecordTypes() {
-        if (!this.objectDescribeInfo) return [];
-        const allRecordTypes = Object.values(this.objectDescribeInfo.recordTypeInfos);
-        return allRecordTypes.filter(recordType => recordType.available && !recordType.master);
-    }
-
-    defaultRecordTypeId() {
-        return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
-    }
-
-    recordTypeNameFor(recordTypeId) {
-        return this.objectDescribeInfo &&
-            Object.values(this.objectDescribeInfo.recordTypeInfos)
-                .find(rtInfo => rtInfo.recordTypeId === recordTypeId)
-                .name;
-    }
-
-    recordTypeIdFor(recordTypeName) {
-        if (recordTypeName === null) {
-            return null;
-        }
-
-        const rtInfo = this.objectDescribeInfo &&
-            Object.values(this.objectDescribeInfo.recordTypeInfos)
-                .find(rtInfo => rtInfo.name === recordTypeName);
-
-        return rtInfo && rtInfo.recordTypeId;
-    }
-
-    getPicklistOptionsForRecordTypeIds() {
-        if (!this.accessibleRecordTypes ||
-            this.accessibleRecordTypes.length <= 0) {
-            return [nonePicklistOption()];
-        }
-
-        const recordTypeOptions = this.accessibleRecordTypes.map(recordType => {
-            return createPicklistOption(recordType.name,
-                recordType.recordTypeId);
-        });
-
-        return [nonePicklistOption(), ...recordTypeOptions];
-    }
-}
 
 const createPicklistOption = (label, value, attributes = null, validFor = []) => ({
     attributes: attributes,
@@ -708,6 +659,7 @@ export {
     validateJSONString,
     stripNamespace,
     relatedRecordFieldNameFor,
-    ObjectDescribeUtil,
-    nonePicklistOption
+    nonePicklistOption,
+    createPicklistOption,
+    UtilDescribe
 };

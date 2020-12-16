@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isEmpty, isNotEmpty, ObjectDescribeUtil, nonePicklistOption } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
@@ -208,7 +208,7 @@ export default class utilInput extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
-            this.objectDescribeUtil = new ObjectDescribeUtil(response.data);
+            this.objectDescribeUtil = new UtilDescribe(response.data);
             if (!this.type) {
                 let field = this.objectInfo.fields[this.fieldApiName];
                 if (isNotEmpty(field)) {
