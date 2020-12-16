@@ -552,3 +552,16 @@ API Create Lead
     ...                 &{fields}
     &{lead} =           Salesforce Get  Lead  ${lead_id}
     [return]            &{lead}
+
+Create Gift Entry Batch
+    [Documentation]
+    [Arguments]         ${template}    ${batch_name}
+    Click Gift Entry Button                 New Batch
+    Wait Until Modal Is Open
+    Select Template                         ${template}
+    Load Page Object                        Form                            Gift Entry
+    Fill Gift Entry Form
+    ...                                     Batch Name=${batch_name}
+    ...                                     Batch Description=This is a test batch created via automation script
+    Click Gift Entry Button                 Next
+    Click Gift Entry Button                 Save
