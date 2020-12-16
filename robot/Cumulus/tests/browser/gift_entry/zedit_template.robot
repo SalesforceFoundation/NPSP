@@ -91,14 +91,7 @@ Edit GE Template And Verify Changes
     ...                              ${org_ns}custom_acc_text__c=${msg}
     # Create a new batch and verify default values are displayed on the Batch Gift Form
     Go To Page                       Landing                       GE_Gift_Entry
-    Click Gift Entry Button          New Batch
-    Wait Until Modal Is Open
-    Select Template                  Default Gift Entry Template
-    Fill Gift Entry Form
-    ...                              Batch Name=Automation Batch
-    ...                              Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button          Next
-    Click Gift Entry Button          Save
+    Create Gift Entry Batch          Default Gift Entry Template   Automation Batch
     Current Page Should Be           Form                          Gift Entry
     ${batch_id} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Verify Field Default Value
@@ -135,8 +128,3 @@ Edit GE Template And Verify Changes
     ...                              npe01__Payment_Method__c=Check
     Verify Expected Values           nonns    Account     ${contact}[AccountId]
     ...                              ${org_ns}custom_acc_text__c=None
-
-
-
-
-
