@@ -387,6 +387,7 @@
         <members>PS_CommitmentRequest</members>
         <members>PS_CommitmentRequest_TEST</members>
         <members>PS_GatewayManagement</members>
+        <members>PS_GatewayManagement_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -510,6 +511,7 @@
         <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
+        <members>STG_PanelGatewayManagement_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
