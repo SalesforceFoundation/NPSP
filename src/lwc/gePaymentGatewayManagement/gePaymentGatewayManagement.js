@@ -32,10 +32,13 @@ import { buildErrorMessage } from 'c/utilTemplateBuilder';
 import { isEmpty } from 'c/utilCommon';
 
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
+import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
-import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
+import isElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
+import isSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -43,22 +46,43 @@ export default class GePaymentGatewayManagement extends LightningElement {
     gatewayId;
 
     isReadOnly = true;
-    isElevateCustomer;
     errorMessage;
 
-    CUSTOM_LABELS = { messageLoading };
+    isElevateCustomer;
+    isSystemAdmin;
+    _hasAccess;
+
+    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
 
     connectedCallback() {
-        checkForElevateCustomer()
-            .then(isElevateCustomer => {
-                this.isElevateCustomer = !!isElevateCustomer;
-            })
-            .catch(ex => {
-                this.errorMessage = buildErrorMessage(ex);
-                this.isError = true;
-            });
+        this.checkForElevateCustomer();
+        this.checkForSystemAdmin();
+
+        this._hasAccess = !!(this.isElevateCustomer && this.isSystemAdmin);
+
+        if (!this.hasAccess) {
+            return;
+        }
 
         this.getGatewayId();
+    }
+
+    async checkForElevateCustomer() {
+        try {
+            this.isElevateCustomer = await isElevateCustomer();
+        } catch(ex) {
+            this.errorMessage = buildErrorMessage(ex);
+            this.isError = true;
+        }
+    }
+
+    async checkForSystemAdmin() {
+        try {
+            this.isSystemAdmin = await isSystemAdmin();
+        } catch(ex) {
+            this.errorMessage = buildErrorMessage(ex);
+            this.isError = true;
+        }
     }
 
     _isSuccess;
@@ -71,6 +95,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
         if (value) { this.isError = false; }
     }
 
+    get hasAccess() {
+        return this._hasAccess;
+    }
+
     _isError;
     get isError() {
         return this._isError;
@@ -81,6 +109,15 @@ export default class GePaymentGatewayManagement extends LightningElement {
         if (value) { this.isSuccess = false; }
     }
 
+    get noAccessErrorMessage() {
+        if (!this.isSystemAdmin) {
+            return this.CUSTOM_LABELS.commonAdminPermissionErrorMessage
+        }
+        if (!this.isElevateCustomer) {
+            return 'You must be an Elevate customer to use this setting.';
+        }
+    }
+
     handleEdit() {
         this.isReadOnly = false;
     }
@@ -88,6 +125,16 @@ export default class GePaymentGatewayManagement extends LightningElement {
     handleCancel() {
         this.isReadOnly = true;
     }
+
+    async getGatewayId() {
+        try {
+            this.gatewayId = await getGatewayIdFromConfig();
+        } catch(ex) {
+            this.errorMessage = buildErrorMessage(ex);
+            this.isError = true;
+        }
+    }
+
 
     async handleSave(event) {
         this.resetAlert();
@@ -110,15 +157,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
-            this.isError = true;
-        }
-    }
-
-    async getGatewayId() {
-        try {
-            this.gatewayId = await getGatewayIdFromConfig();
-        } catch(ex) {
-            this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
         }
     }

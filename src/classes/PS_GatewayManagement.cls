@@ -57,4 +57,9 @@ public with sharing class PS_GatewayManagement {
 
         return ps.isIntegrationEnabled();
     }
+
+    @AuraEnabled
+    public static Boolean isSystemAdmin() {
+        return STG_Panel.runningUserIsAdmin();
+    }
 }
