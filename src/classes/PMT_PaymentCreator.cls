@@ -36,8 +36,8 @@
 public class PMT_PaymentCreator {
 
     /* @description Retrieve info about specific fields that may or may not exist on the objects */
-    private static final SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
-    private static final SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');
+    public static final SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+    public static final SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');
     private static final SObjectField OppRecordTypeId = Schema.sObjectType.Opportunity.fields.getMap().get('RecordTypeId');
 
 
@@ -373,7 +373,7 @@ public class PMT_PaymentCreator {
      * @param oppCurrencyField The Opportunity Object Currency Field
      * @return npe01__OppPayment__c The Opportunity Payment created
      */
-    private npe01__OppPayment__c constructOppPayment(Opportunity newOpportunity, SObjectField paymentCurrencyField, SObjectField oppCurrencyField) {
+    public static npe01__OppPayment__c constructOppPayment(Opportunity newOpportunity, SObjectField paymentCurrencyField, SObjectField oppCurrencyField) {
         npe01__OppPayment__c opportunityPayment = new npe01__OppPayment__c(
             npe01__Opportunity__c = newOpportunity.Id,
             npe01__Paid__c = newOpportunity.IsClosed,
