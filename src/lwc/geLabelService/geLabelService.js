@@ -216,6 +216,8 @@ import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsErr
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
+import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
+import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 
 class GeLabelService {
 
@@ -441,6 +443,8 @@ class GeLabelService {
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
         psSelectValidPaymentMethod,
+        labelBooleanTrue,
+        labelBooleanFalse
     });
 
     /*******************************************************************************

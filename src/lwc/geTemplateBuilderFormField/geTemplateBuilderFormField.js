@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch } from 'c/utilTemplateBuilder';
+import {dispatch, isTrueFalsePicklist, isCheckboxToCheckbox, trueFalsePicklistOptions} from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import {isEmpty} from 'c/utilCommon';
@@ -11,6 +11,7 @@ import DATA_IMPORT_BATCH from '@salesforce/schema/DataImportBatch__c';
 const WIDGET = 'widget';
 const YES = 'Yes';
 const FIELD_METADATA_VALIDATION = 'fieldmetadatavalidation';
+
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track targetObjectDescribeInfo;
@@ -96,6 +97,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             return 'slds-card slds-card_extension slds-m-vertical_small';
         }
     }
+
     get cssClassActionsContainer() {
         if (this.field.elementType === WIDGET) {
             return 'slds-size_1-of-12 vertical-align-center'
@@ -180,7 +182,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isRequired() {
-        return (this.field.required === YES || this.field.required === true) ? true : false;
+        return (this.field.required === YES || this.field.required === true);
     }
 
     get isDisabled() {
@@ -188,7 +190,21 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isWidget() {
-        return this.field.elementType === WIDGET ? true : false;
+        return this.field.elementType === WIDGET;
+    }
+
+    get showRequiredCheckbox() {
+        return !this.isWidget && !isCheckboxToCheckbox(this.fieldMapping);
+    }
+
+    get showDefaultValueInput() {
+        return !isCheckboxToCheckbox(this.fieldMapping);
+    }
+
+    get picklistOptionsOverride() {
+        if (isTrueFalsePicklist(this.fieldMapping)) {
+            return trueFalsePicklistOptions();
+        }
     }
 
     get labelGeAssistiveFormFieldRemove() {
