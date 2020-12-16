@@ -61,7 +61,7 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
-        if(this.isPicklist && this.value === null) {
+        if (this.isPicklist && this.value === null) {
             return this.CUSTOM_LABELS.commonLabelNone;
         }
         if (this.value !== undefined) {
@@ -219,7 +219,7 @@ export default class utilInput extends LightningElement {
     }
 
     get defaultRecordTypeId() {
-        if(this.objectDescribeUtil) {
+        if (this.objectDescribeUtil) {
             return this.objectDescribeUtil.defaultRecordTypeId();
         }
     }
