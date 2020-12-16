@@ -439,43 +439,8 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(formFieldChangeEvent);
     }
 
-    recordTypeNameFor(recordTypeId) {
-        return this.objectDescribeInfo &&
-            Object.values(this.objectDescribeInfo.recordTypeInfos)
-                .find(rtInfo => rtInfo.recordTypeId === recordTypeId)
-                .name;
-    }
-
     fieldMappingDevName() {
         return this.element.dataImportFieldMappingDevNames[0];
-    }
-
-    recordTypeId() {
-        const siblingRecordTypeId =
-            this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
-                this.recordTypeIdFor(this.siblingRecordTypeValue()) :
-                this.siblingRecordTypeValue();
-
-        return siblingRecordTypeId ||
-            this.parentRecordRecordTypeId() ||
-            this.defaultRecordTypeId() ||
-            null;
-    }
-
-    defaultRecordTypeId() {
-        return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
-    }
-
-    recordTypeIdFor(recordTypeName) {
-        if (recordTypeName === null) {
-            return null;
-        }
-        
-        const rtInfo = this.objectDescribeInfo &&
-            Object.values(this.objectDescribeInfo.recordTypeInfos)
-                .find(rtInfo => rtInfo.name === recordTypeName);
-
-        return rtInfo && rtInfo.recordTypeId;
     }
 
     siblingRecordTypeValue() {
@@ -540,12 +505,6 @@ export default class GeFormField extends LightningElement {
         return this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
-    get accessibleRecordTypes() {
-        if (!this.objectDescribeInfo) return [];
-        const allRecordTypes = Object.values(this.objectDescribeInfo.recordTypeInfos);
-        return allRecordTypes.filter(recordType => recordType.available && !recordType.master);
-    }
-
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiNameForStandardPicklists',
         recordTypeId: '$_recordTypeId'
@@ -563,18 +522,6 @@ export default class GeFormField extends LightningElement {
         if (!options || options.length === 0) return false;
         return options.some(option => {
             return option.value === value;
-        });
-    }
-
-    getPicklistOptionsForRecordTypeIds() {
-        if (!this.accessibleRecordTypes ||
-            this.accessibleRecordTypes.length <= 0) {
-            return [this.PICKLIST_OPTION_NONE];
-        }
-
-        return this.accessibleRecordTypes.map(recordType => {
-            return this.createPicklistOption(recordType.name,
-                recordType.recordTypeId);
         });
     }
 

@@ -77,14 +77,6 @@ export default class utilInput extends LightningElement {
         return undefined;
     }
 
-    get comboBoxValue() {
-        if(isEmpty(this.value)) {
-            return this.CUSTOM_LABELS.commonLabelNone;
-        } else {
-            return this.value;
-        }
-    }
-
     get checkboxDefaultValue() {
         return (this.defaultValue === TRUE || this.defaultValue === true);
     }
