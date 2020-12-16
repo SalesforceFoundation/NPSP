@@ -34,6 +34,7 @@ export default class GeFormField extends LightningElement {
     @track _formState;
     @track objectDescribeInfo;
     @track _disabled = false;
+    @track targetFieldDescribeInfo;
     @api element;
     @api targetFieldName;
     _recordTypeId;
@@ -43,6 +44,7 @@ export default class GeFormField extends LightningElement {
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     utilDescribe = new UtilDescribe();
+
     get value() {
         return this.valueFromFormState;
     }
@@ -63,6 +65,7 @@ export default class GeFormField extends LightningElement {
         if (response.data) {
             this.objectDescribeInfo = response.data;
             this.utilDescribe.setDescribe(response.data);
+            this.targetFieldDescribeInfo = this.utilDescribe.getFieldDescribe(this.targetFieldApiName);
             this._recordTypeId = this.recordTypeId();
         }
     }
@@ -193,10 +196,6 @@ export default class GeFormField extends LightningElement {
         return isNotEmpty(this.targetFieldName) ?
             GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
             GeFormService.getFieldMappingWrapper(this.formElementName);
-    }
-
-    get targetFieldDescribeInfo() {
-        return this.utilDescribe.getFieldDescribe(this.targetFieldApiName);
     }
 
     get objectMapping() {
