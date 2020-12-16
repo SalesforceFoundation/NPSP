@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://powerofus.force.com/s/article/NPSP-Feature-Configuration-Overview</value>
+        <value xsi:type="xsd:string">https://sforce.co/3lUVK2S</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
