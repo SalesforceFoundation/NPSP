@@ -82,7 +82,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     _isError;
     get isError() {
-        return this._isError;
+        return !!this.errorMessage;
     }
     set isError(value) {
         this._isError = value;
@@ -113,12 +113,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     async getGatewayId() {
-        try {
-            this.gatewayId = await getGatewayIdFromConfig();
-        } catch(ex) {
-            this.errorMessage = buildErrorMessage(ex);
-            this.isError = true;
-        }
+        this.gatewayId = await getGatewayIdFromConfig();
     }
 
 
