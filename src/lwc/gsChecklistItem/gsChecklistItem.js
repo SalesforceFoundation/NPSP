@@ -169,13 +169,11 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         target.disabled = true;
 
         updateCheckItem({'itemId': this.item.id, 'isChecked': checked})
-        .then (_ => {
+        .then ( _ => {
             let eventName = checked ? 'checked' : 'unchecked';
             this.dispatchEvent(new CustomEvent(eventName));
-            target.disabled = false;
         })
         .catch(error => {
-            target.disabled = false;
             if (error && error.body) {
                 const evt = new ShowToastEvent({
                     title: '',
@@ -185,6 +183,12 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                 this.dispatchEvent(evt);
                 
             }
+        }) 
+        .then( _ => {
+            target.disabled = false;
+        })
+        .then( _ => {
+            target.focus();
         });
         
     }
