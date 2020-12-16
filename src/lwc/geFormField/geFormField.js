@@ -42,7 +42,7 @@ export default class GeFormField extends LightningElement {
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-
+    objectDescribeUtil = new UtilDescribe();
     get value() {
         return this.valueFromFormState;
     }
@@ -62,7 +62,7 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
-            this.objectDescribeUtil = new UtilDescribe(response.data);
+            this.objectDescribeUtil.setDescribe(response.data);
             this._recordTypeId = this.recordTypeId();
         }
     }
@@ -412,7 +412,7 @@ export default class GeFormField extends LightningElement {
         const isDonationRecordTypeName =
             this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
         if (isDonationRecordTypeName) {
-            return this.recordTypeIdFor(value);
+            return this.objectDescribeUtil.recordTypeIdFor(value);
         }
 
         if (this.isPicklist && value === null) {
