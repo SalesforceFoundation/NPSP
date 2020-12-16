@@ -37,8 +37,8 @@ import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPe
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
-import isElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
-import isSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
+import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
+import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -50,38 +50,20 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     isElevateCustomer;
     isSystemAdmin;
-    _hasAccess;
 
     CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
 
-    connectedCallback() {
-        this.checkForElevateCustomer();
-        this.checkForSystemAdmin();
-
-        this._hasAccess = !!(this.isElevateCustomer && this.isSystemAdmin);
-
-        if (!this.hasAccess) {
-            return;
-        }
-
-        this.getGatewayId();
-    }
-
-    async checkForElevateCustomer() {
+    async connectedCallback() {
         try {
-            this.isElevateCustomer = await isElevateCustomer();
+            this.isSystemAdmin = await checkForSystemAdmin();
+            this.isElevateCustomer = await checkForElevateCustomer();
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
         }
-    }
 
-    async checkForSystemAdmin() {
-        try {
-            this.isSystemAdmin = await isSystemAdmin();
-        } catch(ex) {
-            this.errorMessage = buildErrorMessage(ex);
-            this.isError = true;
+        if (this.hasAccess) {
+            this.getGatewayId();
         }
     }
 
@@ -95,10 +77,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
         if (value) { this.isError = false; }
     }
 
-    get hasAccess() {
-        return this._hasAccess;
-    }
-
     _isError;
     get isError() {
         return this._isError;
@@ -107,6 +85,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
         this._isError = value;
 
         if (value) { this.isSuccess = false; }
+    }
+
+    get hasAccess() {
+        return this.isElevateCustomer && this.isSystemAdmin;
     }
 
     get noAccessErrorMessage() {
