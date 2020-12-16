@@ -2638,6 +2638,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Reads key value pair arguments. Navigates to Object Manager page and load fields and relationships for the specific object Runs keyword to create custom field Example key,value pairs Object=Payment Field_Type=Formula Field_Name=Is Opportunity From Prior Year Formula=YEAR( npe01__Opportunity__r.CloseDate ) &lt; YEAR( npe01__Payment_Date__c )</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.Create Gift Entry Batch">
+                <td class="kwname">
+                  Create Gift Entry Batch
+                </td>
+                <td class="kwargs">
+                  
+                  <i>template</i>, 
+                  
+                  <i>batch_name</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.Enable Advanced Mapping">
                 <td class="kwname">
                   Enable Advanced Mapping
@@ -4317,6 +4331,22 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Verify the link is disabled/enabled, pass the name of the link and the expected status of the link as either enabled or disabled Eg: |Verify Link Status  |  Update this Payment=enabled ...                    Update this Opportunity=disabled  |</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Record Picklist Values">
+                <td class="kwname">
+                  Verify Record Picklist Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that picklist field values change based on Record Type selected. Arguments: field | Picklist field name *args | Expected values to be loaded in the picklist field **kwargs | Record Type field name=Record Type Value Example: Verify Record Picklist Values | Opportunity Stage | @{GRANT_STAGES} | Opportunity Record Type=Grant</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
@@ -6122,7 +6152,7 @@ Populate Pause Modal
       
     </div>
     <div class="footer">
-      Generated on Wednesday December 02, 03:00 PM - cumulusci v3.23.0
+      Generated on Monday December 14, 03:43 PM - cumulusci v3.25.0
     </div>
   </body>
 </html>
