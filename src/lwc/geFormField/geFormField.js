@@ -42,7 +42,7 @@ export default class GeFormField extends LightningElement {
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    objectDescribeUtil = new UtilDescribe();
+    utilDescribe = new UtilDescribe();
     get value() {
         return this.valueFromFormState;
     }
@@ -62,7 +62,7 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
-            this.objectDescribeUtil.setDescribe(response.data);
+            this.utilDescribe.setDescribe(response.data);
             this._recordTypeId = this.recordTypeId();
         }
     }
@@ -196,9 +196,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get targetFieldDescribeInfo() {
-        if (this.objectDescribeUtil) {
-            return this.objectDescribeUtil.getFieldDescribe(this.targetFieldApiName);
-        }
+        return this.utilDescribe.getFieldDescribe(this.targetFieldApiName);
     }
 
     get objectMapping() {
@@ -412,7 +410,7 @@ export default class GeFormField extends LightningElement {
         const isDonationRecordTypeName =
             this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
         if (isDonationRecordTypeName) {
-            return this.objectDescribeUtil.recordTypeIdFor(value);
+            return this.utilDescribe.recordTypeIdFor(value);
         }
 
         if (this.isPicklist && value === null) {
@@ -446,9 +444,10 @@ export default class GeFormField extends LightningElement {
     recordTypeId() {
         const siblingRecordTypeId =
             this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
-                this.objectDescribeUtil.recordTypeIdFor(this.siblingRecordTypeValue()) :
+                this.utilDescribe.recordTypeIdFor(this.siblingRecordTypeValue()) :
                 this.siblingRecordTypeValue();
-        const defaultRecordTypeId = this.objectDescribeUtil ? this.objectDescribeUtil.defaultRecordTypeId() : null;
+        const defaultRecordTypeId = this.utilDescribe.defaultRecordTypeId();
+
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
             defaultRecordTypeId ||
@@ -481,8 +480,8 @@ export default class GeFormField extends LightningElement {
         if (this.element.picklistOptionsOverride) {
             return this.element.picklistOptionsOverride;
         }
-        if (this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName && this.objectDescribeUtil) {
-            return this.objectDescribeUtil.getPicklistOptionsForRecordTypeIds();
+        if (this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName) {
+            return this.utilDescribe.getPicklistOptionsForRecordTypeIds();
         }
         return this._picklistValues;
     }

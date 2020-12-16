@@ -30,7 +30,7 @@ export default class utilInput extends LightningElement {
     CUSTOM_LABELS = { geBodyBatchFieldBundleInfo, commonLabelNone };
     PICKLIST_OPTION_NONE = nonePicklistOption();
     richTextFormats = RICH_TEXT_FORMATS;
-
+    utilDescribe = new UtilDescribe();
     @api fieldApiName;
     @api label;
     @api defaultValue;
@@ -161,8 +161,8 @@ export default class utilInput extends LightningElement {
             return this.picklistOptionsOverride;
         }
 
-        if (this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName && this.objectDescribeUtil) {
-            return this.objectDescribeUtil.getPicklistOptionsForRecordTypeIds();
+        if (this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName) {
+            return this.utilDescribe.getPicklistOptionsForRecordTypeIds();
         }
 
         return this._picklistValues;
@@ -208,7 +208,7 @@ export default class utilInput extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
-            this.objectDescribeUtil = new UtilDescribe(response.data);
+            this.utilDescribe.setDescribe(response.data);
             if (!this.type) {
                 let field = this.objectInfo.fields[this.fieldApiName];
                 if (isNotEmpty(field)) {
@@ -219,9 +219,7 @@ export default class utilInput extends LightningElement {
     }
 
     get defaultRecordTypeId() {
-        if (this.objectDescribeUtil) {
-            return this.objectDescribeUtil.defaultRecordTypeId();
-        }
+        return this.utilDescribe.defaultRecordTypeId();
     }
 
     @wire(getPicklistValues, {
