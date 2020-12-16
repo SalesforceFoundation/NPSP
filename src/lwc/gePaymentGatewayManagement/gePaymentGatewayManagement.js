@@ -50,6 +50,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     isElevateCustomer;
     isSystemAdmin;
+    hasAccess;
 
     CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
 
@@ -57,6 +58,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
         try {
             this.isSystemAdmin = await checkForSystemAdmin();
             this.isElevateCustomer = await checkForElevateCustomer();
+
+            this.hasAccess = !!(this.isElevateCustomer && this.isSystemAdmin);
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
@@ -87,10 +90,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
         if (value) { this.isSuccess = false; }
     }
 
-    get hasAccess() {
-        return this.isElevateCustomer && this.isSystemAdmin;
-    }
-
     get noAccessErrorMessage() {
         if (!this.isSystemAdmin) {
             return this.CUSTOM_LABELS.commonAdminPermissionErrorMessage
@@ -105,6 +104,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     handleCancel() {
+        this.resetAlert();
+        this.clearFieldErrors();
         this.isReadOnly = true;
     }
 
@@ -153,11 +154,17 @@ export default class GePaymentGatewayManagement extends LightningElement {
             this.errorMessage = 'Enter a valid gateway ID.'
             this.isError = true;
         } else {
-            if (!gatewayIdField.valid) {
-                gatewayIdField.setCustomValidity('');
-                gatewayIdField.reportValidity();
-            }
+            this.clearFieldErrors();
+
             return gatewayIdField.value;
+        }
+    }
+
+    clearFieldErrors() {
+        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
+        if (!gatewayIdField.valid) {
+            gatewayIdField.setCustomValidity('');
+            gatewayIdField.reportValidity();
         }
     }
 
