@@ -71,15 +71,7 @@ Test Batch Status Adding Removig Gifts
 
     Edit Default Template To Add Batch Table Columns
     Go To Page                       Landing                       GE_Gift_Entry
-    Click Gift Entry Button          New Batch
-    Wait Until Modal Is Open
-    Select Template                  Default Gift Entry Template
-    Current Page Should Be           Form                          GE_Gift_Entry
-    Fill Gift Entry Form
-    ...                              Batch Name=${MSG}
-    ...                              Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button          Next
-    Click Gift Entry Button          Save
+    Create Gift Entry Batch          Default Gift Entry Template   ${MSG}
     Current Page Should Be           Form                          Gift Entry
 
     ${BATCH_ID} =                    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
