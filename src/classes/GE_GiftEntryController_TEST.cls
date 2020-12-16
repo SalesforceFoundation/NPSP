@@ -216,6 +216,21 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert(frw.formTemplate.name == template.name);
 
     }
+    @IsTest
+    private static void createAndReturnFieldMappings() {
+
+        UTIL_UnitTestData_TEST.createSampleFieldMappings();
+
+        Test.startTest();
+
+        BDI_FieldMappingSet bdiFieldMappingSet = GE_GiftEntryController.getFieldMappings();
+
+        Test.stopTest();
+
+        System.assertNotEquals(null, bdiFieldMappingSet, 'Expected to receive field mappings, got null.');
+        System.assertEquals('Default_Field_Mapping_Set', bdiFieldMappingSet.DeveloperName);
+
+    }
 
     /***
      * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
