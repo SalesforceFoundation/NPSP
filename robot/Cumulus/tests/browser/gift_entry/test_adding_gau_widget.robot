@@ -33,15 +33,7 @@ Create Template with GAU Widget
     Click Link                              Templates
     Wait Until Page Contains                ${TEMPLATE}
     Store Template Record Id                ${TEMPLATE}
-    Click Gift Entry Button                 New Batch
-    Wait Until Modal Is Open
-    Select Template                         ${TEMPLATE}
-    Load Page Object                        Form                     Gift Entry
-    Fill Gift Entry Form
-    ...       Batch Name=${TEMPLATE} Automation Batch
-    ...       Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button                 Next
-    Click Gift Entry Button                 Save
+    Create Gift Entry Batch                 ${TEMPLATE}              ${TEMPLATE} Automation Batch
     Current Page Should Be                  Form                     Gift Entry            title=Gift Entry Form
     ${ns} =  Get NPSP Namespace Prefix
     Save Current Record ID For Deletion     ${ns}DataImportBatch__c
