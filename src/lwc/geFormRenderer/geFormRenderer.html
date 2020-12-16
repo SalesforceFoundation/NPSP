@@ -80,7 +80,8 @@
                                           for:item='errorMessageWrapper'>
                                     <li key={errorMessageWrapper.index}>
                                         <p>{errorMessageWrapper.errorMessage}</p>
-                                        <ul class="slds-list_dotted slds-text-color_error">
+                                        <ul if:true={errorMessageWrapper.multilineMessages}
+                                            class="slds-list_dotted slds-text-color_error">
                                             <template for:each={errorMessageWrapper.multilineMessages}
                                                       for:item='error'>
                                                 <li key={error.index}>{error.message}</li>
