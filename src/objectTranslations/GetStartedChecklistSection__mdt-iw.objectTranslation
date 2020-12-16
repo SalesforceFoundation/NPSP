@@ -26,7 +26,7 @@
         <name>Description_Label__c</name>
     </fields>
      <fields>
-        <help><!-- To select in which checklist has displayed this section --></help>
+        <help><!-- Determines which checklist will display this section --></help>
         <label><!-- Page Type --></label>
         <name>Page_Type__c</name>
         <picklistValues>
