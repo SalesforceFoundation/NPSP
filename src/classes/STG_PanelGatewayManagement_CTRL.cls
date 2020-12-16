@@ -31,8 +31,13 @@
 public with sharing class STG_PanelGatewayManagement_CTRL {
 
     public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) return 'c';
+        String namespace;
+
+        if (String.isBlank(UTIL_Namespace.getNamespace())) {
+            namespace = 'c';
+        } else {
+            namespace = UTIL_Namespace.getNamespace();
+        }
 
         return namespace;
     }

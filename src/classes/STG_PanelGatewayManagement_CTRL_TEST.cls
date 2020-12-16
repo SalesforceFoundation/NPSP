@@ -32,14 +32,17 @@
 private with sharing class STG_PanelGatewayManagement_CTRL_TEST {
 
     @isTest
-    private static void testDoesReturnNamespaceValue() {
+    private static void testReturnsNamespaceValue() {
         String namespace = UTIL_Namespace.getNamespace();
 
-        if (String.isNotBlank(namespace)) {
-            STG_PanelGatewayManagement_CTRL controller = new STG_PanelGatewayManagement_CTRL();
+        STG_PanelGatewayManagement_CTRL controller = new STG_PanelGatewayManagement_CTRL();
 
-            System.assertNotEquals('', controller.getNamespace());
+        if (String.isNotBlank(namespace)) {
+
+            System.assertNotEquals('c', controller.getNamespace());
             System.assertEquals(UTIL_Namespace.getNamespace(), controller.getNamespace());
+        } else {
+            System.assertEquals('c', controller.getNamespace());
         }
     }
 }
