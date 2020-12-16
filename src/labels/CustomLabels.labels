@@ -6997,7 +6997,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist item NPSP Cloud in Get Started</shortDescription>
-        <value>Learn about other Nonprofit Cloud Features</value>
+        <value>Learn about Other Nonprofit Cloud Features</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemNPSPGuideDesc</fullName>
