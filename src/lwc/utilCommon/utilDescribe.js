@@ -46,11 +46,9 @@ export default class UtilDescribe {
             return [nonePicklistOption()];
         }
 
-        const recordTypeOptions = this.accessibleRecordTypes.map(recordType => {
+        return this.accessibleRecordTypes.map(recordType => {
             return createPicklistOption(recordType.name,
                 recordType.recordTypeId);
         });
-
-        return [nonePicklistOption(), ...recordTypeOptions];
     }
 }
