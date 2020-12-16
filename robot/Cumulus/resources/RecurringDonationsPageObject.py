@@ -56,7 +56,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
             # Recurring Donation Name field only appears on a regression org hence this check
-            if key == "Recurring Donation Name" and ns=="npsp__":
+            if key == "Recurring Donation Name":
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
