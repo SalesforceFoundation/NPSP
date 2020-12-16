@@ -767,6 +767,13 @@ flows:
             4:
                 task: snapshot_changes
 
+    qa_org_2gp:
+    # This override allows QA Org 2GP to be functional.
+    # NPSP's config_qa is not currently compatible with managed installations.
+        steps:
+            2:
+                flow: config_regression
+
     config_trial:
         steps:
             1:
