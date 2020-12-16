@@ -7,10 +7,10 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetConfig;
     @api formState;
-    _hasCreditCardWidget = false;
+    _hasPaymentWidget = false;
 
     renderedCallback() {
-        this.registerCreditCardWidget();
+        this.registerPaymentWidget();
     }
 
     /**
@@ -98,19 +98,19 @@ export default class GeFormSection extends LightningElement {
         return fieldMappedByAPIName;
     }
 
-    registerCreditCardWidget() {
+    registerPaymentWidget() {
         if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
                 if (element.componentName === 'geFormWidgetTokenizeCard') {
-                    this._hasCreditCardWidget = true;
+                    this._hasPaymentWidget = true;
                 }
             })
         }
-        if (this._hasCreditCardWidget) {
-            const registerCreditCardWidgetEvent = new CustomEvent(
-                'registercreditcardwidget'
+        if (this._hasPaymentWidget) {
+            const registerPaymentWidgetEvent = new CustomEvent(
+                'registerpaymentwidget'
             );
-            this.dispatchEvent(registerCreditCardWidgetEvent)
+            this.dispatchEvent(registerPaymentWidgetEvent)
         }
 
     }
@@ -130,8 +130,8 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    get isCreditCardWidgetAvailable() {
-        return this._hasCreditCardWidget;
+    get isPaymentWidgetAvailable() {
+        return this._hasPaymentWidget;
     }
 
     get renderableElements() {
