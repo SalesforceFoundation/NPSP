@@ -3252,6 +3252,7 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
+        <members>gsVideoHeaderLength</members>
         <name>CustomLabel</name>
     </types>
     <types>
@@ -4032,8 +4033,6 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
-        <members>geAutocomplete</members>
-        <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -4042,8 +4041,6 @@
         <members>geDonationMatchingOpportunityCard</members>
         <members>geDonationMatchingPaymentCard</members>
         <members>geFormField</members>
-        <members>geFormFieldLookup</members>
-        <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
