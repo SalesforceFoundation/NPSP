@@ -1,5 +1,5 @@
 import {api, LightningElement, track, wire} from 'lwc';
-import {debouncify, isNotEmpty, relatedRecordFieldNameFor} from 'c/utilCommon';
+import {debouncify, isNotEmpty, relatedRecordFieldNameFor, ObjectDescribeUtil, nonePicklistOption } from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
@@ -47,12 +47,7 @@ export default class GeFormField extends LightningElement {
         return this.valueFromFormState;
     }
 
-    PICKLIST_OPTION_NONE = Object.freeze({
-        attributes: null,
-        label: this.CUSTOM_LABELS.commonLabelNone,
-        validFor: [],
-        value: this.CUSTOM_LABELS.commonLabelNone
-    });
+    PICKLIST_OPTION_NONE = nonePicklistOption();
 
     handleValueChangeSync = (event) => {
         this.fireFormFieldChangeEvent(
@@ -67,6 +62,7 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
+            this.objectDescribeUtil = new ObjectDescribeUtil(response.data);
             this._recordTypeId = this.recordTypeId();
         }
     }
@@ -359,24 +355,6 @@ export default class GeFormField extends LightningElement {
 
     }
 
-    /**
-     * @description Returns the name of the RecordType that corresponds to a RecordType Id.
-     *              This method references this component's objectInfo.recordTypeInfos
-     *              property.
-     * @param Id The Id of the RecordType.
-     * @returns {string|null} The name of the RecordType or null if the RecordType was
-     *          not found.
-     */
-    getRecordTypeNameById(Id) {
-        if (this.objectDescribeInfo &&
-            this.objectDescribeInfo.recordTypeInfos &&
-            this.objectDescribeInfo.recordTypeInfos[Id]) {
-            return this.objectDescribeInfo.recordTypeInfos[Id].name;
-        } else {
-            return null;
-        }
-    }
-
     get qaLocatorBase() {
         const rowIndex = this.getAttribute('data-qa-row');
         if (rowIndex) {
@@ -526,8 +504,8 @@ export default class GeFormField extends LightningElement {
         if (this.element.picklistOptionsOverride) {
             return this.element.picklistOptionsOverride;
         }
-        if (this.targetFieldApiName === 'RecordTypeId') {
-            return this.getPicklistOptionsForRecordTypeIds();
+        if (this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName && this.objectDescribeUtil) {
+            return this.objectDescribeUtil.getPicklistOptionsForRecordTypeIds();
         }
         return this._picklistValues;
     }
@@ -559,7 +537,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isRecordTypeIdLookup() {
-        return this.targetFieldApiName === 'RecordTypeId';
+        return this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
     get accessibleRecordTypes() {
@@ -599,12 +577,5 @@ export default class GeFormField extends LightningElement {
                 recordType.recordTypeId);
         });
     }
-
-    createPicklistOption = (label, value, attributes = null, validFor = []) => ({
-        attributes: attributes,
-        label: label,
-        validFor: validFor,
-        value: value
-    });
 
 }

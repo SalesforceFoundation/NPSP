@@ -1,9 +1,11 @@
 /* eslint-disable consistent-return */
 import { LightningElement, api, track, wire } from 'lwc';
-import { getObjectInfo } from "lightning/uiObjectInfoApi";
+import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isEmpty, isNotEmpty } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, ObjectDescribeUtil, nonePicklistOption } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
+import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
 
 const WIDGET = 'widget';
 const TEXTAREA = 'textarea';
@@ -25,7 +27,8 @@ const DECIMAL = 'decimal';
 export default class utilInput extends LightningElement {
 
     // expose custom labels to template
-    CUSTOM_LABELS = { geBodyBatchFieldBundleInfo };
+    CUSTOM_LABELS = { geBodyBatchFieldBundleInfo, commonLabelNone };
+    PICKLIST_OPTION_NONE = nonePicklistOption();
     richTextFormats = RICH_TEXT_FORMATS;
 
     @api fieldApiName;
@@ -43,6 +46,7 @@ export default class utilInput extends LightningElement {
     @api picklistOptionsOverride;
 
     @track isRichTextValid = true;
+    @track _picklistValues;
 
     @api
     reportValue() {
@@ -57,6 +61,9 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
+        if(this.isPicklist && this.value === null) {
+            return this.CUSTOM_LABELS.commonLabelNone;
+        }
         if (this.value !== undefined) {
             return this.value;
         }
@@ -68,6 +75,14 @@ export default class utilInput extends LightningElement {
             return '';
         }
         return undefined;
+    }
+
+    get comboBoxValue() {
+        if(isEmpty(this.value)) {
+            return this.CUSTOM_LABELS.commonLabelNone;
+        } else {
+            return this.value;
+        }
     }
 
     get checkboxDefaultValue() {
@@ -83,11 +98,11 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX;
+        return this.lightningInputType === COMBOBOX || this.isRecordTypePicklist;
     }
 
     get isLightningSearch() {
-        return this.lightningInputType === SEARCH;
+        return this.lightningInputType === SEARCH && !this.isRecordTypePicklist;
     }
 
     get isLightningRichText() {
@@ -149,6 +164,26 @@ export default class utilInput extends LightningElement {
         return this.type ? inputTypeByDescribeType[this.type.toLowerCase()] : TEXT;
     }
 
+    get picklistValues() {
+        if (this.picklistOptionsOverride) {
+            return this.picklistOptionsOverride;
+        }
+
+        if (this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName && this.objectDescribeUtil) {
+            return this.objectDescribeUtil.getPicklistOptionsForRecordTypeIds();
+        }
+
+        return this._picklistValues;
+    }
+
+    set picklistValues(values) {
+        this._picklistValues = values;
+    }
+
+    get isRecordTypePicklist() {
+        return this.type === 'REFERENCE' && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
+    }
+
     get isRequired() {
         return this.required === YES || this.required === true;
     }
@@ -181,6 +216,7 @@ export default class utilInput extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
+            this.objectDescribeUtil = new ObjectDescribeUtil(response.data);
             if (!this.type) {
                 let field = this.objectInfo.fields[this.fieldApiName];
                 if (isNotEmpty(field)) {
@@ -190,6 +226,35 @@ export default class utilInput extends LightningElement {
         }
     }
 
+    get defaultRecordTypeId() {
+        if(this.objectDescribeUtil) {
+            return this.objectDescribeUtil.defaultRecordTypeId();
+        }
+    }
+
+    @wire(getPicklistValues, {
+        fieldApiName: '$fullFieldApiNameForStandardPicklists',
+        recordTypeId: '$defaultRecordTypeId'
+    })
+    wiredPicklistValues({error, data}) {
+        if (data) {
+            this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
+        }
+        if (error) {
+            console.error(error);
+        }
+    }
+
+    get fullFieldApiNameForStandardPicklists() {
+        if (this.isStandardPicklist()) {
+            return `${this.objectApiName}.${this.fieldApiName}`;
+        }
+    }
+
+    isStandardPicklist() {
+        return this.isLightningCombobox && !this.isRecordTypePicklist && !this.hasPicklistOverride;
+    }
+
     /*******************************************************************************
     * @description Dispatches an event to notify parent component that the form
     * field's defaultValue property for a combobox has changed.
@@ -197,10 +262,13 @@ export default class utilInput extends LightningElement {
     * @param {object} event: Event object from lightning-combobox onchange event handler 
     */
     handleChangeCombobox(event) {
-        let detail = {
+        const { value } = event.detail;
+        const isSelectedValueNone = value === this.CUSTOM_LABELS.commonLabelNone;
+
+        const detail = {
             objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
-            value: event.target.value
+            value: isSelectedValueNone ? null : value
         };
         this.value = event.detail.value;
         this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));
@@ -222,7 +290,7 @@ export default class utilInput extends LightningElement {
             this.value = event.target.value;
         }
 
-        let isValid = true;
+        let isValid;
         if (this.isLightningRichText) {
             isValid = this.checkRichTextValidity();
         } else {

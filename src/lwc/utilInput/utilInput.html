@@ -42,19 +42,15 @@
         </template>
 
         <template if:true={isLightningCombobox}>
-            <c-ge-form-field-picklist class-name="slds-m-around_none"
-                                      data-id='inputComponent'
-                                      label={uiLabel}
-                                      picklist-options-override={picklistOptionsOverride}
-                                      required={isRequired}
-                                      field-name={fieldApiName}
-                                      object-name={uiObjectApiName}
-                                      object-describe-info={objectInfo}
-                                      onchange={handleChangeCombobox}
-                                      value={fieldValue}
-                                      variant={variant}
-                                      qa-locator-base={uiLabel}>
-            </c-ge-form-field-picklist>
+            <lightning-combobox data-id='inputComponent'
+                                value={fieldValue}
+                                onchange={handleChangeCombobox}
+                                label={uiLabel}
+                                options={picklistValues}
+                                data-qa-locator={qaLocatorPicklist}
+                                required={isRequired}
+                                variant={variant}>
+            </lightning-combobox>
         </template>
 
         <template if:true={isLightningCheckbox}>
