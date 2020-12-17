@@ -310,7 +310,8 @@ npsp_lex_locators={
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
         'alert':'//div[@role="alert" and contains(@class,"slds-theme_{}")][./span[text()="{}"]]/h2[text()="{}"]',
         'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]',
-        'page_error':'//div[@class="pageLevelErrors"]'
+        'page_error':'//div[@class="pageLevelErrors"]',
+        'picklist_values':'//*[contains(@data-qa-locator,"{}")]//child::lightning-base-combobox-item[@data-value="{}"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
