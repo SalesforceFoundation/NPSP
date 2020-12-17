@@ -30,40 +30,8 @@
 
 @isTest
 private with sharing class PS_GatewayManagement_TEST {
-
-    private static Map<String, List<Map<String, String>>> configParams;
-    private static Map<String, PS_IntegrationService.Config> paymentConfigParams;
-    private static Map<String, PS_IntegrationService.Config> makanaConfigParams;
-    private static final String API_KEY = 'apiKey';
-    private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
-
     public static final String TEST_MERCHANT_ID = 'abc123-xyz456';
     public static final String TEST_GATEWAY_ID = 'def123-ghi456';
-    public static final String TEST_API_KEY = 'def1234-tuv4567';
-    public static final String TEST_BASE_URL = 'https://elevate.test.com';
-
-    // Key-Values by service name
-    public static final Map<String, List<Map<String, String>>> testConfig = new Map<String, List<Map<String, String>>>{
-        PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-            new List<Map<String, String>>{
-                new Map<String, String>{
-                        'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-                        'value' => TEST_MERCHANT_ID
-                },
-                new Map<String, String>{
-                        'key' => PS_IntegrationServiceConfig.SFDO_GATEWAYIDS,
-                        'value' => TEST_GATEWAY_ID
-                },
-                new Map<String, String>{
-                        'key' => PS_IntegrationServiceConfig.API_KEY,
-                        'value' => TEST_API_KEY
-                },
-                new Map<String, String>{
-                        'key' => PS_IntegrationServiceConfig.BASE_URL,
-                        'value' => TEST_BASE_URL
-                }
-        }
-    };
 
     @isTest
     static void shouldUpdateGatewayId() {
