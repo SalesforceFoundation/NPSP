@@ -37,23 +37,23 @@
         </c-util-illustration>
     </template>
     <template if:true={hasAccess}>
-        <div class="slds-m-bottom_medium">
-            <c-util-alert-banner theme="success"
-                                 icon="utility:success"
-                                 size="small"
-                                 message="Gateway updated."
-                                 is-dismissable="true"
-                                 is-visible={isSuccess}>
-            </c-util-alert-banner>
-        </div>
+        <template if:true={isSuccess}>
+            <div class="slds-m-bottom_medium">
+                <c-util-alert-banner theme="success"
+                                     icon="utility:success"
+                                     size="small"
+                                     message="Gateway updated."
+                                     is-dismissable="true">
+                </c-util-alert-banner>
+            </div>
+        </template>
         <template if:true={isError}>
             <div class="slds-m-bottom_medium">
                 <c-util-alert-banner theme="error"
                                      icon="utility:error"
                                      size="small"
                                      message={errorMessage}
-                                     is-dismissable="true"
-                                     is-visible={isError}>
+                                     is-dismissable="true">
                 </c-util-alert-banner>
             </div>
         </template>
@@ -87,7 +87,7 @@
                     </lightning-button>
                 </lightning-layout-item>
             </template>
-            <lightning-layout-item size="6">
+            <lightning-layout-item size="4">
                 <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
                 <lightning-input variant="label-inline"
                                  read-only={isReadOnly}
