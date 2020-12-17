@@ -23,21 +23,6 @@ Setup Test Data
     ${FORMAT2}=           Set Variable    ${SECOND}-{00}
     Set suite variable    ${FORMAT2}
 
-Create Batch With Default Template
-    [Documentation]     creates a simple batch with given name using default template
-    [Arguments]         ${batch_name}
-    Click Gift Entry Button                 New Batch
-    Wait Until Modal Is Open
-    Select Template                         Default Gift Entry Template
-    Load Page Object                        Form                            Gift Entry
-    Fill Gift Entry Form
-    ...                                     Batch Name=${batch_name}
-    ...                                     Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button                 Next
-    Click Gift Entry Button                 Save
-    Current Page Should Be                  Form                            Gift Entry
-    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
-
 *** Test Cases ***
 Test Add and Delete Batch Number Formats
     [Documentation]         Add two batch number formats and activates one.Verifies new batch created after the format is activated
@@ -66,7 +51,9 @@ Test Add and Delete Batch Number Formats
     Add Batch Table Columns                 Batch Number
     Click Gift Entry Button                 Listbox Save
     Wait Until Modal Is Closed
-    Create Batch With Default Template      Batch with second format
+    Create Gift Entry Batch                 Default Gift Entry Template                Batch with second format
+    Current Page Should Be                  Form                                       Gift Entry
+    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
     Go To Page                              Landing       GE_Gift_Entry
     Verify Table Contains Row               Batches       Batch with second format     Batch Number=${SECOND}-01
     #Deactivate the second format and activate first and verify batch numberiing
@@ -77,9 +64,11 @@ Test Add and Delete Batch Number Formats
     Set Batch Number Format Status          ${FORMAT2}    Deactivate
     Set Batch Number Format Status          ${FORMAT1}    Activate
     Go To Page                              Landing       GE_Gift_Entry
-    Create Batch With Default Template      Batch with first format
+    Create Gift Entry Batch                 Default Gift Entry Template                Batch with first format
+    Current Page Should Be                  Form                                       Gift Entry
+    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
     Go To Page                              Landing       GE_Gift_Entry
-    Verify Table Contains Row               Batches       Batch with first format    Batch Number=${FIRST}-000
+    Verify Table Contains Row               Batches       Batch with first format      Batch Number=${FIRST}-000
     #Deactivate the batch number format and verify new batch doesn't have batch number
     Go To Page                              Custom        NPSP_Settings
     Open Main Menu                          System Tools
@@ -87,6 +76,8 @@ Test Add and Delete Batch Number Formats
     Verify Table Contains Row               datatable     ${FORMAT1}    Max Used Number=0
     Set Batch Number Format Status          ${FORMAT1}    Deactivate
     Go To Page                              Landing       GE_Gift_Entry
-    Create Batch With Default Template      Batch Without Number
+    Create Gift Entry Batch                 Default Gift Entry Template                Batch Without Number
+    Current Page Should Be                  Form                                       Gift Entry
+    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
     Go To Page                              Landing       GE_Gift_Entry
-    Verify Table Contains Row               Batches       Batch Without Number    Batch Number=None
+    Verify Table Contains Row               Batches       Batch Without Number         Batch Number=None

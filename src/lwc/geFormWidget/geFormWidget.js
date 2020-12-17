@@ -4,6 +4,10 @@ import {apiNameFor, getSubsetObject, isEmptyObject, isUndefined} from 'c/utilCom
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
+import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -18,8 +22,17 @@ export default class GeFormWidget extends LightningElement {
 
     _formState = {};
 
-    _allocationFields = [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)];
-    _elevateFields = [apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+    _allocationFields = [
+        apiNameFor(DI_DONATION_AMOUNT_FIELD),
+        apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)
+    ];
+    _elevateFields = [
+        apiNameFor(DATA_IMPORT_PAYMENT_METHOD),
+        apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME),
+        apiNameFor(DATA_IMPORT_CONTACT_LASTNAME),
+        apiNameFor(DATA_IMPORT_DONATION_DONOR),
+        apiNameFor(DATA_IMPORT_ACCOUNT_NAME)
+    ];
 
     get sourceFieldsUsedInTemplate() {
         return this.widgetConfig ? this.widgetConfig.sourceFieldsUsedInTemplate : [];
@@ -59,9 +72,10 @@ export default class GeFormWidget extends LightningElement {
     hasElevateValuesChanged(formState) {
         const paymentMethodApiName = apiNameFor(DATA_IMPORT_PAYMENT_METHOD);
         if (!paymentMethodApiName) return false;
-
-        const hasChanged = formState[paymentMethodApiName] !== this.formState[paymentMethodApiName];
-        return hasChanged;
+        const hasChanged = this._elevateFields.find(field => {
+            return formState[field] !== this.formState[field];
+        })
+        return !!hasChanged ;
     }
 
     hasAllocationValuesChanged(formState) {

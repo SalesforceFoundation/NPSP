@@ -12,10 +12,9 @@ import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 */
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
-/***
-* @description Event action sent to the Visualforce page to request the token
-*/
-const TOKENIZE_EVENT_ACTION = 'createToken';
+const MOUNT_IFRAME_EVENT_ACTION = 'mount';
+
+const SET_PAYMENT_METHOD_EVENT_ACTION = 'setPaymentMethod';
 
 /***
 * @description Max number of ms to wait for the response containing a token or an error
@@ -115,8 +114,8 @@ class psElevateTokenHandler {
      * @returns {boolean}
      */
     shouldHandleMessage (event) {
-        return !!(this.isExpectedVisualForceOrigin(event) &&
-            validateJSONString(JSON.stringify(event.data)));
+        return !!(this.isExpectedVisualForceOrigin(event)
+            && validateJSONString(JSON.stringify(event.data)));
     }
 
     isExpectedVisualForceOrigin (event) {
@@ -144,15 +143,18 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token.
-    * This request response is found and handled in the registerPostMessageListener().
-    * @param iframe The payment services iframe displayed within the credit card widget LWC
-    * @param cardholderName The cardholder name
-    * @param handleError An error handler function
-    * @param resolveToken Function (if any) called when a token is generated
-    * @return Promise A token promise
-    */
-    requestToken(iframe, cardholderName, handleError, resolveToken) {
+     * @description Method sends a message to the visualforce page iframe requesting a token.
+     * This request response is found and handled in the registerPostMessageListener().
+     * @param {Object} params An object that holds parameters needed to tokenize credit card and ACH transactions
+     * @return Promise A token promise
+     */
+    requestToken({
+        iframe,
+        handleError,
+        resolveToken,
+        eventAction,
+        tokenizeParameters,
+    } = {}) {
         if (isNull(iframe)) {
             return;
         }
@@ -160,11 +162,11 @@ class psElevateTokenHandler {
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() =>
-                reject(handleError({
-                    error: this.labels.tokenRequestTimedOut,
-                    isObject: false
-                })),
-                TOKENIZE_TIMEOUT_MS
+                    reject(handleError({
+                        error: this.labels.tokenRequestTimedOut,
+                        isObject: false,
+                    })),
+                TOKENIZE_TIMEOUT_MS,
             );
 
             this.tokenCallback = message => {
@@ -186,10 +188,10 @@ class psElevateTokenHandler {
 
         iframe.contentWindow.postMessage(
             {
-                action: TOKENIZE_EVENT_ACTION,
-                nameOnCard: cardholderName
+                action: eventAction,
+                params: tokenizeParameters,
             },
-            this._visualforceOrigin
+            this._visualforceOrigin,
         );
 
         return tokenPromise;
@@ -212,7 +214,7 @@ class psElevateTokenHandler {
 
         iframe.contentWindow.postMessage(
             {
-                action: 'setPaymentMethod',
+                action: SET_PAYMENT_METHOD_EVENT_ACTION,
                 paymentMethod: paymentMethod
             },
             this._visualforceOrigin
@@ -238,7 +240,7 @@ class psElevateTokenHandler {
 
         iframe.contentWindow.postMessage(
             {
-                action: 'mount',
+                action: MOUNT_IFRAME_EVENT_ACTION,
                 paymentMethod: paymentMethod
             },
             this._visualforceOrigin
