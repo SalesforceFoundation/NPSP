@@ -429,7 +429,7 @@ export default class GeFormField extends LightningElement {
             detail:
                 {
                     value: value,
-                    label: this.isRecordTypePicklist ? this.recordTypeNameFor(value) : value,
+                    label: this.isRecordTypePicklist ? this.utilDescribe.recordTypeNameFor(value) : value,
                     fieldMappingDevName: this.fieldMappingDevName()
                 }
         });
