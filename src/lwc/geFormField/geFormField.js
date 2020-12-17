@@ -1,5 +1,5 @@
 import {api, LightningElement, track, wire} from 'lwc';
-import {debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
+import {debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, isString, nonePicklistOption } from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
@@ -90,7 +90,7 @@ export default class GeFormField extends LightningElement {
 
         if (this.isLookup) {
             const val = event.detail.value;
-            if (typeof val === 'string') {
+            if (isString(val)) {
                 return val;
             } else if (Array.isArray(val)) {
                 return val[0] ? val[0] : null;

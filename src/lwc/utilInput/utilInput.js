@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isEmpty, isNotEmpty, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, isString, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
@@ -40,7 +40,6 @@ export default class utilInput extends LightningElement {
     @api required;
     @api type;
     @api formFieldType;
-    @api objectInfo;
     @api objectApiName;
     @api tabIndex;
     @api variant = LABEL_STACKED;
@@ -365,7 +364,7 @@ export default class utilInput extends LightningElement {
 
     valueFromLookupChange(event) {
         const val = event.detail.value;
-        if (typeof val === 'string') {
+        if (isString(val)) {
             return val;
         } else if (Array.isArray(val)) {
             return val[0] ? val[0] : null;
