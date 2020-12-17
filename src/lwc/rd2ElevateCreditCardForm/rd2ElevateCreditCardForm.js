@@ -17,6 +17,8 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
+const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
 */
@@ -110,8 +112,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-
-        return tokenHandler.requestToken(iframe, this.getCardholderName(), this.handleError);
+        const params = { nameOnCard : this.getCardholderName() };
+        return tokenHandler.requestToken({
+            iframe: iframe,
+            tokenizeParameters: params,
+            eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+            handleError: this.handleError,
+        });
     }
 
     /***

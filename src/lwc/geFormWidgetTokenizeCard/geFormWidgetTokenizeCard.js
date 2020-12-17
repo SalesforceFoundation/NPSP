@@ -18,13 +18,20 @@ import DATA_IMPORT_PAYMENT_STATUS_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PAYMENT_METHOD
     from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
+import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    LABEL_NEW_LINE,
+    LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
 } from 'c/geConstants';
 
 const ACH = 'ACH';
 const CREDIT_CARD = 'Credit Card';
+const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
+const CONTACT_DONOR_TYPE = 'Contact1';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
@@ -41,6 +48,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
+
+
+    iframe() {
+        return this.template.querySelector(
+            `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+    }
 
     @api
     get widgetDataFromState() {
@@ -77,10 +90,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return paymentMethod === ACH || paymentMethod === CREDIT_CARD;
     }
 
+    tokenizeEventAction() {
+        return this._currentPaymentMethod === ACH
+            ? TOKENIZE_ACH_EVENT_ACTION
+            : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
+    }
+
     requestSetPaymentMethod(paymentMethod) {
         this.isLoading = true;
-        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        tokenHandler.setPaymentMethod(iframe, paymentMethod, this.handleError, this.resolveSetPaymentMethod);
+        tokenHandler.setPaymentMethod(
+            this.iframe(), paymentMethod, this.handleError,
+            this.resolveSetPaymentMethod,
+        ).catch(err => {
+            this.handleError(err);
+        });
     }
 
     resolveSetPaymentMethod = () => {
@@ -211,8 +234,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestMount() {
-        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        tokenHandler.mount(iframe, this._currentPaymentMethod, this.handleError, this.resolveMount);
+        tokenHandler.mount(this.iframe(), this._currentPaymentMethod, this.handleError, this.resolveMount);
     }
 
     resolveMount = () => {
@@ -227,16 +249,64 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
      */
     requestToken() {
         this.clearError();
+        return tokenHandler.requestToken({
+            iframe: this.iframe(),
+            tokenizeParameters: this.buildTokenizeParameters(),
+            eventAction: this.tokenizeEventAction(),
+            handleError: this.handleError,
+            resolveToken: this.resolveToken,
+        });
+    }
 
-        const iframe = this.template.querySelector(
-            `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+    buildTokenizeParameters() {
+        if (this._currentPaymentMethod === CREDIT_CARD) {
+            //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
+            //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
+            return { nameOnCard: null };
+        } else {
+            return this.ACHTokenizeParameters();
+        }
+    }
 
-        //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
-        //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
-        const nameOnCard = null;
-            return tokenHandler.requestToken(iframe, nameOnCard,
-                this.handleError, this.resolveToken)
+    ACHTokenizeParameters() {
+        let achTokenizeParameters = {
+            nameOnAccount: '',
+            accountHolder: {},
+        };
+        achTokenizeParameters.accountHolder.type = this.accountHolderType();
+        achTokenizeParameters.accountHolder.bankType = ACCOUNT_HOLDER_BANK_TYPES.CHECKING;
+        achTokenizeParameters = this.accountHolderType() ===
+        ACCOUNT_HOLDER_TYPES.BUSINESS
+            ? this.populateAchParametersForBusiness(achTokenizeParameters)
+            : this.populateAchParametersForIndividual(achTokenizeParameters);
+        return JSON.stringify(achTokenizeParameters);
+    }
 
+    populateAchParametersForBusiness(achTokenizeParameters) {
+        achTokenizeParameters.accountHolder.businessName =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)];
+        achTokenizeParameters.accountHolder.accountName =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_NAME)];
+        achTokenizeParameters.nameOnAccount =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_NAME)];
+        return achTokenizeParameters;
+    }
+
+    populateAchParametersForIndividual (achTokenizeParameters) {
+        achTokenizeParameters.accountHolder.firstName =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME)];
+        achTokenizeParameters.accountHolder.lastName =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)];
+        achTokenizeParameters.nameOnAccount =
+            `${this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME)]} ${this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_LASTNAME)]}`;
+        return achTokenizeParameters
+    }
+
+    accountHolderType() {
+        return this.widgetDataFromState[
+            apiNameFor(DATA_IMPORT_DONATION_DONOR)] === CONTACT_DONOR_TYPE
+            ? ACCOUNT_HOLDER_TYPES.INDIVIDUAL
+            : ACCOUNT_HOLDER_TYPES.BUSINESS;
     }
 
     @api
