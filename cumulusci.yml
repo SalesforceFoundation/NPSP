@@ -1087,12 +1087,15 @@ flows:
                 task: ensure_record_type
 
     test_performance_scratch:
-        description: 'Creates a test org and runs Customizable Rollup Testing'
+        description: 'Creates a test org and runs BDI performance tests'
         steps:
             1:
                 flow: qa_org
             3:
-                flow: test_customizable_rollups
+                task: test_performance
+                options:
+                    include: medium
+                    vars: persistent_org:False
 
     test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
