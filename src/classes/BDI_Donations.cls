@@ -828,6 +828,10 @@ public class BDI_Donations {
 
         Set<String> fieldNamesForQuery = new Set<String>{'id','stagename','closedate','amount','isclosed'};
 
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            fieldNamesForQuery.add('currencyisocode');
+        }
+
         // Add all the payment mappings to the list of fields to be queried since they will
         // need to be copied to the payment.
         for (npe01__Payment_Field_Mapping_Settings__c pfms : PMT_PaymentCreator.paymentMappings.values()) {
