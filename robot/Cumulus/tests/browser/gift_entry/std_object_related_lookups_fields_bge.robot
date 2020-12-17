@@ -92,7 +92,7 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	#edit batch info and remove default lead and verify form is clear when loaded
 	Click Gift Entry Button						  Edit Batch Info
 	Click Gift Entry Button              		  Next
-	Click Button             					  npsp:gift_entry.id:Remove selected option Data Import: Lead Lookup
+	Clear Lookup Value							  Data Import: Lead Lookup
 	Click Gift Entry Button              		  Wizard Save
 	Wait Until Modal Is Closed
     Current Page Should Be               		  Form                   Gift Entry		title=Gift Entry Form
