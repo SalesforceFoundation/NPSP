@@ -2593,6 +2593,7 @@
         <members>gsResourcesVideographyLabel</members>
         <members>gsResourcesVideographyLinkLabel</members>
         <members>gsSubmitted</members>
+        <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
