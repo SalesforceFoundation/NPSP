@@ -48,12 +48,14 @@ export default class utilInput extends LightningElement {
     @api picklistOptionsOverride;
 
     @track isRichTextValid = true;
+    @track defaultRecordTypeId;
+    @track fieldDescribe;
     @track _picklistValues;
 
     @api
     reportValue() {
         return {
-            objectApiName: this.uiObjectApiName,
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
             value: this.fieldValue
         };
@@ -182,12 +184,6 @@ export default class utilInput extends LightningElement {
         return this.required === YES || this.required === true;
     }
 
-    get fieldDescribe() {
-        if (this.objectInfo && this.objectInfo.fields) {
-            return this.objectInfo.fields[this.fieldApiName];
-        }
-    }
-
     get lookupFormElementClass() {
         if(this.variant === LABEL_INLINE) {
             return 'slds-form-element slds-form-element_horizontal';
@@ -208,10 +204,6 @@ export default class utilInput extends LightningElement {
         return undefined;
     }
 
-    get uiObjectApiName() {
-        return this.objectInfo && this.objectInfo.apiName ? this.objectInfo.apiName : this.objectApiName;
-    }
-
     get showRichTextLabel() {
         return this.isLightningRichText && this.variant !== LABEL_HIDDEN;
     }
@@ -221,17 +213,15 @@ export default class utilInput extends LightningElement {
         if (response.data) {
             this.objectInfo = response.data;
             this.utilDescribe.setDescribe(response.data);
+            this.defaultRecordTypeId = this.utilDescribe.defaultRecordTypeId();
+            this.fieldDescribe = this.utilDescribe.getFieldDescribe(this.fieldApiName);
+
             if (!this.type) {
-                let field = this.objectInfo.fields[this.fieldApiName];
-                if (isNotEmpty(field)) {
-                    this.type = field.dataType;
+                if (isNotEmpty(this.fieldDescribe)) {
+                    this.type = this.fieldDescribe.dataType;
                 }
             }
         }
-    }
-
-    get defaultRecordTypeId() {
-        return this.utilDescribe.defaultRecordTypeId();
     }
 
     @wire(getPicklistValues, {
@@ -268,7 +258,7 @@ export default class utilInput extends LightningElement {
         const isSelectedValueNone = value === this.CUSTOM_LABELS.commonLabelNone;
 
         const detail = {
-            objectApiName: this.uiObjectApiName,
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
             value: isSelectedValueNone ? null : value
         };
@@ -300,7 +290,7 @@ export default class utilInput extends LightningElement {
         }
 
         let detail = {
-            objectApiName: this.uiObjectApiName,
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
             value: this.fieldValue,
             isValid: isValid
