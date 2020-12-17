@@ -1,8 +1,8 @@
-import {api, LightningElement, track, wire} from 'lwc';
-import {debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, isString, nonePicklistOption } from 'c/utilCommon';
+import { api, LightningElement, track, wire } from 'lwc';
+import { debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, isString, nonePicklistOption } from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED

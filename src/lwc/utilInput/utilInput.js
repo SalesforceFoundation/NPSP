@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { LightningElement, api, track, wire } from 'lwc';
-import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
+import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
 import { isEmpty, isNotEmpty, isString, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
@@ -177,7 +177,7 @@ export default class utilInput extends LightningElement {
     }
 
     get isRecordTypePicklist() {
-        return this.type === 'REFERENCE' && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
+        return this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
     get isRequired() {

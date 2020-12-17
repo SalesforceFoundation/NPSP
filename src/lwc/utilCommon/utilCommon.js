@@ -609,9 +609,6 @@ const buildFieldDescribes = (fields, objectApiName) => {
     });
 }
 
-
-
-
 const createPicklistOption = (label, value, attributes = null, validFor = []) => ({
     attributes: attributes,
     label: label,
