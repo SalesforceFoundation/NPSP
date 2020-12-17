@@ -23,6 +23,9 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const LABEL_HIDDEN = 'label-hidden';
+const LABEL_STACKED = 'label-stacked';
+const LABEL_INLINE = 'label-inline';
 
 export default class utilInput extends LightningElement {
 
@@ -40,7 +43,7 @@ export default class utilInput extends LightningElement {
     @api objectInfo;
     @api objectApiName;
     @api tabIndex;
-    @api variant = 'label-stacked';
+    @api variant = LABEL_STACKED;
     @api value;
     @api widgetName;
     @api picklistOptionsOverride;
@@ -186,6 +189,16 @@ export default class utilInput extends LightningElement {
         }
     }
 
+    get lookupFormElementClass() {
+        if(this.variant === LABEL_INLINE) {
+            return 'slds-form-element slds-form-element_horizontal';
+        } else if (this.variant === LABEL_STACKED) {
+            return 'slds-form-element slds-form-element_stacked';
+        } else if (this.variant === LABEL_HIDDEN) {
+            return 'slds-form-element slds-form-element_hidden';
+        }
+    }
+
     @api
     get uiLabel() {
         if (this.label) {
@@ -201,7 +214,7 @@ export default class utilInput extends LightningElement {
     }
 
     get showRichTextLabel() {
-        return this.isLightningRichText && this.variant !== 'label-hidden';
+        return this.isLightningRichText && this.variant !== LABEL_HIDDEN;
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
@@ -385,6 +398,14 @@ export default class utilInput extends LightningElement {
 
     get qaLocatorBaseInput() {
         return `input ${this.uiLabel}`;
+    }
+
+    get qaLocatorPicklist() {
+        return `combobox ${this.uiLabel}`;
+    }
+
+    get qaLocatorLookup() {
+        return `autocomplete ${this.uiLabel}`;
     }
 
     /*******************************************************************************

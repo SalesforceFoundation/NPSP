@@ -71,19 +71,22 @@
 
         <template if:true={isLightningSearch}>
             <lightning-record-edit-form object-api-name={objectApiName}>
-                <label class="slds-form-element__label">
-                    <abbr class="slds-required" title="required" if:true={isRequired}>* </abbr>
-                    {uiLabel}
-                </label>
-                <lightning-input-field data-id='inputComponent'
-                                       field-name={fieldApiName}
-                                       onchange={handleValueChange}
-                                       required={isRequired}
-                                       variant='label-hidden'
-                                       class="help-text-hidden"
-                                       value={fieldValue}
-                                       data-qa-locator={qaLocatorLookup}>
-                </lightning-input-field>
+                <div class={lookupFormElementClass}>
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required" if:true={isRequired}>* </abbr>
+                        {uiLabel}</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field data-id='inputComponent'
+                                               field-name={fieldApiName}
+                                               onchange={handleValueChange}
+                                               required={isRequired}
+                                               variant='label-hidden'
+                                               class="help-text-hidden"
+                                               value={fieldValue}
+                                               data-qa-locator={qaLocatorLookup}>
+                        </lightning-input-field>
+                    </div>
+                </div>
             </lightning-record-edit-form>
         </template>
 
