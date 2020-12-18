@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import gsResourcesTitle from '@salesforce/label/c.gsResourcesTitle';
 import gsResourcesItemNonprofitCloudLabel from '@salesforce/label/c.gsResourcesItemNonprofitCloudLabel';
 import gsResourcesItemNonprofitCloudLink from '@salesforce/label/c.gsResourcesItemNonprofitCloudLinkLabel';
@@ -18,6 +18,11 @@ import gsResourcesVideographyLabel from '@salesforce/label/c.gsResourcesVideogra
 import gsResourcesVideographyLinkLabel from '@salesforce/label/c.gsResourcesVideographyLinkLabel';
 
 export default class gsResources extends LightningElement {
+
+    /**
+    * @description To select which data display in this component
+    */
+    @api pageType = 'Admin';
 
     /**
     * Return the Resource list title to display in UI
