@@ -1,9 +1,9 @@
 /* eslint-disable no-void */
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-
+import UtilDescribe from './utilDescribe';
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
-
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 const FUNCTION = 'function';
 const OBJECT = 'object';
 
@@ -609,6 +609,17 @@ const buildFieldDescribes = (fields, objectApiName) => {
     });
 }
 
+const createPicklistOption = (label, value, attributes = null, validFor = []) => ({
+    attributes: attributes,
+    label: label,
+    validFor: validFor,
+    value: value
+});
+
+const nonePicklistOption = () => {
+    return createPicklistOption(commonLabelNone, commonLabelNone);
+}
+
 export {
     apiNameFor,
     buildFieldDescribes,
@@ -644,5 +655,8 @@ export {
     getValueFromDotNotationString,
     validateJSONString,
     stripNamespace,
-    relatedRecordFieldNameFor
+    relatedRecordFieldNameFor,
+    nonePicklistOption,
+    createPicklistOption,
+    UtilDescribe
 };
