@@ -20,7 +20,7 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>The type of Get Started page (Admin or End User) where this section will appear.</inlineHelpText>
         <label>Page Type</label>
-        <required>fasle</required>
+        <required>false</required>
         <type>Picklist</type>
         <valueSet>
             <restricted>true</restricted>
