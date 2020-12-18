@@ -23,5 +23,40 @@
             "name": "Record Type 2",
             "recordTypeId": "000000000000000002"
         }
+    },
+    "fields": {
+        "StageName": {
+            "apiName": "StageName",
+            "calculated": false,
+            "compound": false,
+            "compoundComponentName": null,
+            "compoundFieldName": null,
+            "controllerName": null,
+            "controllingFields": [],
+            "createable": true,
+            "custom": false,
+            "dataType": "Picklist",
+            "extraTypeInfo": null,
+            "filterable": true,
+            "filteredLookupInfo": null,
+            "highScaleNumber": false,
+            "htmlFormatted": false,
+            "inlineHelpText": null,
+            "label": "Stage",
+            "length": 255,
+            "nameField": false,
+            "polymorphicForeignKey": false,
+            "precision": 0,
+            "reference": false,
+            "referenceTargetField": null,
+            "referenceToInfos": [],
+            "relationshipName": null,
+            "required": true,
+            "scale": 0,
+            "searchPrefilterable": false,
+            "sortable": true,
+            "unique": false,
+            "updateable": true
+        }
     }
 }
