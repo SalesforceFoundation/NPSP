@@ -447,3 +447,9 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_element(option_field) # clicking again to close the picklist after verification
             else:
                 raise Exception(f'{key} does not contain specified {value}')
+
+    def clear_lookup_value(self,field):
+        """clear the value in lookup field on batch gift wizard """
+        locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_button(locator)
