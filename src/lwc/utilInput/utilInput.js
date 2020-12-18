@@ -1,9 +1,11 @@
 /* eslint-disable consistent-return */
 import { LightningElement, api, track, wire } from 'lwc';
-import { getObjectInfo } from "lightning/uiObjectInfoApi";
+import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isEmpty, isNotEmpty } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, isString, UtilDescribe, nonePicklistOption } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
+import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
 
 const WIDGET = 'widget';
 const TEXTAREA = 'textarea';
@@ -21,33 +23,39 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const LABEL_HIDDEN = 'label-hidden';
+const LABEL_STACKED = 'label-stacked';
+const LABEL_INLINE = 'label-inline';
 
 export default class utilInput extends LightningElement {
 
     // expose custom labels to template
-    CUSTOM_LABELS = { geBodyBatchFieldBundleInfo };
+    CUSTOM_LABELS = { geBodyBatchFieldBundleInfo, commonLabelNone };
+    PICKLIST_OPTION_NONE = nonePicklistOption();
     richTextFormats = RICH_TEXT_FORMATS;
-
+    utilDescribe = new UtilDescribe();
     @api fieldApiName;
     @api label;
     @api defaultValue;
     @api required;
     @api type;
     @api formFieldType;
-    @api objectInfo;
     @api objectApiName;
     @api tabIndex;
-    @api variant = 'label-stacked';
+    @api variant = LABEL_STACKED;
     @api value;
     @api widgetName;
     @api picklistOptionsOverride;
 
     @track isRichTextValid = true;
+    @track defaultRecordTypeId;
+    @track fieldDescribe;
+    @track _picklistValues;
 
     @api
     reportValue() {
         return {
-            objectApiName: this.uiObjectApiName,
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
             value: this.fieldValue
         };
@@ -56,6 +64,9 @@ export default class utilInput extends LightningElement {
     get fieldValue() {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
+        }
+        if (this.isPicklist && this.value === null) {
+            return this.CUSTOM_LABELS.commonLabelNone;
         }
         if (this.value !== undefined) {
             return this.value;
@@ -83,11 +94,11 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX;
+        return this.lightningInputType === COMBOBOX || this.isRecordTypePicklist;
     }
 
     get isLightningSearch() {
-        return this.lightningInputType === SEARCH;
+        return this.lightningInputType === SEARCH && !this.isRecordTypePicklist;
     }
 
     get isLightningRichText() {
@@ -149,13 +160,37 @@ export default class utilInput extends LightningElement {
         return this.type ? inputTypeByDescribeType[this.type.toLowerCase()] : TEXT;
     }
 
+    get picklistValues() {
+        if (this.picklistOptionsOverride) {
+            return this.picklistOptionsOverride;
+        }
+
+        if (this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName) {
+            return this.utilDescribe.getPicklistOptionsForRecordTypeIds();
+        }
+
+        return this._picklistValues;
+    }
+
+    set picklistValues(values) {
+        this._picklistValues = values;
+    }
+
+    get isRecordTypePicklist() {
+        return this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
+    }
+
     get isRequired() {
         return this.required === YES || this.required === true;
     }
 
-    get fieldDescribe() {
-        if (this.objectInfo && this.objectInfo.fields) {
-            return this.objectInfo.fields[this.fieldApiName];
+    get lookupFormElementClass() {
+        if(this.variant === LABEL_INLINE) {
+            return 'slds-form-element slds-form-element_horizontal';
+        } else if (this.variant === LABEL_STACKED) {
+            return 'slds-form-element slds-form-element_stacked';
+        } else if (this.variant === LABEL_HIDDEN) {
+            return 'slds-form-element slds-form-element_hidden';
         }
     }
 
@@ -169,25 +204,47 @@ export default class utilInput extends LightningElement {
         return undefined;
     }
 
-    get uiObjectApiName() {
-        return this.objectInfo && this.objectInfo.apiName ? this.objectInfo.apiName : this.objectApiName;
-    }
-
     get showRichTextLabel() {
-        return this.isLightningRichText && this.variant !== 'label-hidden';
+        return this.isLightningRichText && this.variant !== LABEL_HIDDEN;
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
+            this.utilDescribe.setDescribe(response.data);
+            this.defaultRecordTypeId = this.utilDescribe.defaultRecordTypeId();
+            this.fieldDescribe = this.utilDescribe.getFieldDescribe(this.fieldApiName);
+
             if (!this.type) {
-                let field = this.objectInfo.fields[this.fieldApiName];
-                if (isNotEmpty(field)) {
-                    this.type = field.dataType;
+                if (isNotEmpty(this.fieldDescribe)) {
+                    this.type = this.fieldDescribe.dataType;
                 }
             }
         }
+    }
+
+    @wire(getPicklistValues, {
+        fieldApiName: '$fullFieldApiNameForStandardPicklists',
+        recordTypeId: '$defaultRecordTypeId'
+    })
+    wiredPicklistValues({error, data}) {
+        if (data) {
+            this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
+        }
+        if (error) {
+            console.error(error);
+        }
+    }
+
+    get fullFieldApiNameForStandardPicklists() {
+        if (this.isStandardPicklist()) {
+            return `${this.objectApiName}.${this.fieldApiName}`;
+        }
+    }
+
+    isStandardPicklist() {
+        return this.isLightningCombobox && !this.isRecordTypePicklist && !this.hasPicklistOverride;
     }
 
     /*******************************************************************************
@@ -197,10 +254,13 @@ export default class utilInput extends LightningElement {
     * @param {object} event: Event object from lightning-combobox onchange event handler 
     */
     handleChangeCombobox(event) {
-        let detail = {
-            objectApiName: this.uiObjectApiName,
+        const { value } = event.detail;
+        const isSelectedValueNone = value === this.CUSTOM_LABELS.commonLabelNone;
+
+        const detail = {
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
-            value: event.target.value
+            value: isSelectedValueNone ? null : value
         };
         this.value = event.detail.value;
         this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));
@@ -217,12 +277,12 @@ export default class utilInput extends LightningElement {
         if (this.type && this.lightningInputType === CHECKBOX) {
             this.value = event.target.checked;
         } else if (this.type && this.lightningInputType === SEARCH) {
-            this.value = event.detail.value;
+            this.value = this.valueFromLookupChange(event);
         } else if (event.target) {
             this.value = event.target.value;
         }
 
-        let isValid = true;
+        let isValid;
         if (this.isLightningRichText) {
             isValid = this.checkRichTextValidity();
         } else {
@@ -230,7 +290,7 @@ export default class utilInput extends LightningElement {
         }
 
         let detail = {
-            objectApiName: this.uiObjectApiName,
+            objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
             value: this.fieldValue,
             isValid: isValid
@@ -292,6 +352,15 @@ export default class utilInput extends LightningElement {
         return true;
     }
 
+    valueFromLookupChange(event) {
+        const val = event.detail.value;
+        if (isString(val)) {
+            return val;
+        } else if (Array.isArray(val)) {
+            return val[0] ? val[0] : null;
+        }
+    }
+
     stopPropagation(event) {
         event.stopPropagation();
     }
@@ -318,6 +387,14 @@ export default class utilInput extends LightningElement {
 
     get qaLocatorBaseInput() {
         return `input ${this.uiLabel}`;
+    }
+
+    get qaLocatorPicklist() {
+        return `combobox ${this.uiLabel}`;
+    }
+
+    get qaLocatorLookup() {
+        return `autocomplete ${this.uiLabel}`;
     }
 
     /*******************************************************************************

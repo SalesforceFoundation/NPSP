@@ -558,3 +558,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
+
+    def clear_lookup_value(self,field):
+        """clear the value in lookup field on batch gift wizard """
+        locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_button(locator)
+
