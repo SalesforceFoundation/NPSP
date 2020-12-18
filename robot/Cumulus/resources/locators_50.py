@@ -311,7 +311,8 @@ npsp_lex_locators={
         'alert':'//div[@role="alert" and contains(@class,"slds-theme_{}")][./span[text()="{}"]]/h2[text()="{}"]',
         'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]',
         'page_error':'//div[@class="pageLevelErrors"]',
-        'picklist_values':'//*[contains(@data-qa-locator,"{}")]//child::lightning-base-combobox-item[@data-value="{}"]'
+        'picklist_values':'//*[contains(@data-qa-locator,"{}")]//child::lightning-base-combobox-item[@data-value="{}"]',
+        'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
