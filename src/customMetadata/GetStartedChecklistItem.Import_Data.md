@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://sforce.co/3mUlg9J</value>
+        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/projects/import-your-data-using-npsp-data-importer</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -56,7 +56,7 @@
     </values>
     <values>
         <field>Secondary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://powerofus.force.com/s/article/NPSP-Are-You-Ready</value>
+        <value xsi:type="xsd:string">https://sforce.co/3mUlg9J</value>
     </values>
     <values>
         <field>Title_Label__c</field>
