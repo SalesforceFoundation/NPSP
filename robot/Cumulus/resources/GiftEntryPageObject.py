@@ -494,12 +494,16 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
                 self.selenium.click_element(field_locator)
-                popup=npsp_lex_locators["flexipage-popup"]
+                popup=npsp_lex_locators["newflexi-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
-                option=npsp_lex_locators["span_button"].format(value)
+                option=npsp_lex_locators["modalspan_button"].format(value)
                 self.selenium.scroll_element_into_view(option)
-                self.selenium.click_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
                 self.selenium.scroll_element_into_view(field_locator)
@@ -510,9 +514,6 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(locator)
                 self.selenium.input_text(field_locator,value,clear=True)
                 self.selenium.input_text(field_locator,value)
-                # option=npsp_lex_locators["span_button"].format(value)
-                # self.selenium.click_element(option)
-                # self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
             else:
                 self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
@@ -541,16 +542,16 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["newflexi-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
                 option=npsp_lex_locators["modalspan_button"].format(value)
+                self.selenium.scroll_element_into_view(option)
                 try:
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
-
-                #self.selenium.click_element(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
                 self.selenium.scroll_element_into_view(field_locator)
