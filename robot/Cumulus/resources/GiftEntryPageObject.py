@@ -467,7 +467,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
 
     def fill_modal_form(self,**kwargs):
         """Fill the gift entry modal form fields with specified values.
-        Key is field name and value is value to be entered for fields """
+        Key is field name and value is value to be entered for field """
         for key,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["modal_id"].format(key)
             type=self.selenium.get_element_attribute(locator,"data-qa-locator")

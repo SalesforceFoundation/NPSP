@@ -41,7 +41,6 @@ Setup Test Data
 	Set suite variable    ${BATCH_NAME}
     ${NS} =               Get NPSP Namespace Prefix
     Set suite variable    ${NS}
-    
 *** Test Cases ***
 Batch Template Default values Setting
     [Documentation]                 Set default values in batch template and verify they auto poputale in batch for.
