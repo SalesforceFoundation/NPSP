@@ -147,10 +147,21 @@ public class BDI_Donations {
         // get the list of DI records that have donations to process
         List<DataImport__c> dataImportDonations = validateDonationsToProcess(matchBehavior);
 
+        List<DataImport__c> elevateDIs = new List<DataImport__c>();
+        List<DataImport__c> nonElevateDIs = new List<DataImport__c>();
+
+        for (DataImport__c di : dataImportDonations) {
+            if (isElevatePaymentDI(di)) {
+                elevateDIs.add(di);
+            } else {
+                nonElevateDIs.add(di);
+            }
+        }
+
         // call the extension to match against existing donations
-        if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
+        if (matchBehavior != BDI_DataImport_API.DoNotMatch && nonElevateDIs.size() > 0) {
             BDI_PerfLogger.PerfLog logger = BDI_DataImportService.perfLogger.newPerfLog('iMatchDonations.match');
-            iMatchDonations.match(bdi, dataImportDonations, opportunitiesByDataImportId, paymentsByDataImportId);
+            iMatchDonations.match(bdi, nonElevateDIs, opportunitiesByDataImportId, paymentsByDataImportId);
             logger.stop();
         }
         
@@ -172,8 +183,9 @@ public class BDI_Donations {
                     );
                     dataImport.PaymentImportStatus__c = Label.bdiCreated;
                 } else {
-                    // validate against our desired matching behavior (exact match, best match, new, etc.)
-                    if (!isValidMatchBehavior(dataImport, matchBehavior)) {
+                    // Validate our desired matching behavior (exact match, best match, new, etc.) unless its a Elevate
+                    // Payment that was not matched in the first place.
+                    if (!isElevatePaymentDI(dataImport) && !isValidMatchBehavior(dataImport, matchBehavior)) {
                         continue;
                     }
 
@@ -232,19 +244,34 @@ public class BDI_Donations {
             Database.SaveResult result = results[i];
             if (!result.isSuccess()) {
                 bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), 'DonationImportStatus__c');
+            } else {
+
+                // Setting status to updated for elevate opportunities that were updated.
+                // Non-Elevate Donations would typically have a matched status instead.
+                if (isElevatePaymentDI(dataImportsToUpdate[i])) {
+                    dataImportsToUpdate[i].DonationImportStatus__c = System.label.bdiUpdated;
+                }
             }
         }
-
-        // mark any paid Payments we matched
-        markPaidPayments(dataImportDonations);
-
-        // add any new payments to our map
-        trackPayments(dataImportDonations);
 
         // when we mark Payments paid, ensure they will close our Opp.
         npe01__Contacts_And_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
         if (cs.Payments_Auto_Close_Stage_Name__c == null) {
             cs.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
+        }
+
+        if (elevateDIs.size() > 0) {
+            // Handle construction/update of Elevate Related Payments
+            processPaymentsForElevateDIs(elevateDIs);
+
+        }
+
+        if (nonElevateDIs.size() > 0) {
+            // mark any non-Elevate paid Payments we matched
+            markPaidPayments(nonElevateDIs);
+
+            // add any new non-Elevate payments to our map
+            trackPayments(nonElevateDIs);
         }
 
         // update payments with any data from the DI record
@@ -291,18 +318,25 @@ public class BDI_Donations {
                continue;
             }
 
-            // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
-            // they must have already been created for this di on a previous run, and we don't want to create another.
-            if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {
-                continue;
-            }
-
             // If the donation was created or matched on a previous run, consider the
             // donation validated for this Data Import record.
             if (dataImport.DonationImported__c != null
                     && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
                     || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
+            }
+
+            // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
+            // they must have already been created for this di on a previous run, and we don't want to create another.
+            // Elevate DIs should be specifically excluded from this for update processing.
+            if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null)){
+
+                if (isElevatePaymentDI(dataImport)) {
+                    dataImportDonations.add(dataImport);
+                    continue;
+                } else if (matchBehavior == BDI_DataImport_API.DoNotMatch) {
+                    continue;
+                }
             }
 
             if (dataImport.Donation_Donor__c == 'Contact1' || (dataImport.Donation_Donor__c == null && dataImport.Donation_Amount__c != null)) {
@@ -412,6 +446,11 @@ public class BDI_Donations {
         Opportunity opp = opportunitiesByDataImportId.get(dataImport.Id);
         String opportunityName;
 
+        if (isElevatePaymentDI(dataImport) && dataImport.DonationImported__c != null) {
+            opp = new Opportunity (Id = dataImport.DonationImported__c);
+            opportunitiesByDataImportId.put(dataImport.Id,opp);
+        }
+
         // if there is no opp matched, create one for it
         Boolean isNew = (opp == null);
         if (isNew) {
@@ -467,8 +506,14 @@ public class BDI_Donations {
             }
         }
 
-        if (dataImport.Donation_Stage__c == null && defaultClosedWonStage != '' && dataImport.PaymentImported__c == null) {
+        if (dataImport.Donation_Stage__c == null && defaultClosedWonStage != ''
+                && dataImport.PaymentImported__c == null) {
             dataImport.Donation_Stage__c = defaultClosedWonStage;
+        }
+
+        //Suppressing automatic payment creation for Elevate Payment DIs, since we always want to create it
+        if (isElevatePaymentDI(dataImport)) {
+            opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
         }
 
         Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
@@ -500,10 +545,13 @@ public class BDI_Donations {
             }
 
             // Don't copy over Stage or Amount if we are applying a new Payment or updating a Payment
-            if (dataImportField == donationStage || dataImportField == donationAmount) {
-                if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment
-                        && dataImport.PaymentImported__c != null) {
-                    continue;
+            // Exclude elevate updates of Opportunity since we do want to copy the stage
+            if (!isElevatePaymentDI(dataImport)) {
+                if (dataImportField == donationStage || dataImportField == donationAmount) {
+                    if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment
+                            && dataImport.PaymentImported__c != null) {
+                        continue;
+                    }
                 }
             }
 
@@ -621,7 +669,8 @@ public class BDI_Donations {
                     npe01__OppPayment__c payment = mapOppIdToPayment.get(dataImport.DonationImported__c);
                     if (payment != null) {
                         dataImport.PaymentImported__c = payment.Id;
-                        dataImport.PaymentImportStatus__c = dataImport.DonationImportStatus__c; // could be new or matched
+                        // could be new or matched
+                        dataImport.PaymentImportStatus__c = dataImport.DonationImportStatus__c;
                         paymentsByDataImportId.put(dataImport.Id, payment);
                     }
                 }
@@ -671,7 +720,8 @@ public class BDI_Donations {
                 continue;
             }
             if (dataImport.PaymentImported__c != null
-                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment
+                    || isElevatePaymentDI(dataImport)) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     if (shouldSetDonationBatchNumber(payment, dataImport)) {
@@ -681,7 +731,10 @@ public class BDI_Donations {
 
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
-                        if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
+                        if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport,
+                                                                                 dataImportField,
+                                                                                 payment,
+                                                                                 dataImportFieldToPaymentField)) {
                             numberOfCopiedFields++;
                         }
                     }
@@ -702,7 +755,16 @@ public class BDI_Donations {
                     result.getErrors()[0].getMessage(), 
                     'PaymentImportStatus__c'
                 );               
-            }           
+            } else {
+                if(isElevatePaymentDI(dataImportsToUpdate[i])) {
+                    if (result.isCreated()) {
+                        dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiCreated;
+                        dataImportsToUpdate[i].PaymentImported__c =result.getId();
+                    } else {
+                        dataImportsToUpdate[i].PaymentImportStatus__c = System.label.bdiUpdated;
+                    }
+                }
+            }
         }
 
         for (DataImport__c dataImport : dataImportsWithDonations) {
@@ -711,5 +773,112 @@ public class BDI_Donations {
             }
         }
     }
+
+    /*******************************************************************************************************
+    * @description helper method to return true if the record is an elevate oppt/payment and false if not.
+    * @param dataImportToReview the DI to determine if it is from Elevate
+    * @return result 
+    */
+    private Boolean isElevatePaymentDI(DataImport__c di) {
+        return di.Payment_Elevate_Id__c != null;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Populates new and updates existing payments as needed for elevate related transactions.
+    * @param dataImportsById map of Data import records by their ids. 
+    */
+    private void processPaymentsForElevateDIs (DataImport__c[] dataImports) {
+
+        if (dataImports != null && dataImports.size() > 0) {
+            DataImport__c[] newPaymentDIs = new DataImport__c[]{};
     
+            for (DataImport__c di : dataImports) {
+
+                // For new opportunities, and thus new payments, add to a list for querying the existing oppt.
+                if (di.DonationImportStatus__c == System.Label.bdiCreated) {
+                    newPaymentDIs.add(di);
+                // For existing payments determine if any fields are populated before attempting update
+                } else if (di.PaymentImported__c != null 
+                    && BDI_DataImportService.anyFieldsPopulatedForObjectMapping(di,dataImportFieldToPaymentField)){
+                    paymentsByDataImportId.put(di.Id,new npe01__OppPayment__c(Id = di.PaymentImported__c));
+                }
+            }
+
+            //If there are DIs that need new Payments then construct
+            if (newPaymentDIs.size() > 0) {
+                constructNewPayments(newPaymentDIs);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Queries Opportunities from DIs that have a DonationImported__c value.  This is primarily to 
+    * retreive Oppt field data for Elevate Payments to be constructed inside of the BDI code.
+    * @param disWithOpptForQuery Data Import records that have the DonationImported__c field populated
+    * @return opportunitiesById the opportunities returned by the query
+    */
+    private Map<Id, Opportunity> queryElevateOppts(DataImport__c[] disWithOpptForQuery) {
+        Set<Id> opptIdsForQuery = new Set<Id>();
+        Map<Id, Opportunity> resultOpptsById = new Map<Id,Opportunity>();
+
+        for (DataImport__c di : disWithOpptForQuery) {
+            opptIdsForQuery.add(di.DonationImported__c);
+        }
+
+        Set<String> fieldNamesForQuery = new Set<String>{'id','stagename','closedate','amount','isclosed'};
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            fieldNamesForQuery.add('currencyisocode');
+        }
+
+        // Add all the payment mappings to the list of fields to be queried since they will
+        // need to be copied to the payment.
+        for (npe01__Payment_Field_Mapping_Settings__c pfms : PMT_PaymentCreator.paymentMappings.values()) {
+            fieldNamesForQuery.add(pfms.npe01__Opportunity_Field__c.toLowerCase());
+        }
+
+        String query = 'SELECT ';
+        
+        // Build SELECT portion of query
+        for (String opptField : fieldNamesForQuery) {
+            query += opptField + ',';
+        }
+
+        // Remove trailing comma and space
+        query = query.removeEnd(',');
+
+        // add FROM and WHERE clauses
+        query += ' FROM Opportunity WHERE Id IN: opptIdsForQuery';
+
+        Opportunity[] oppts = Database.query(query);
+        
+        if (oppts != null) {
+            resultOpptsById = new Map<Id,Opportunity>(oppts);
+        }
+
+        return resultOpptsById;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries the parent opportunities for new Elevate payments and constructs a the new Payment
+    * record using the existing logic in PMT_PaymentCreator for consistency.
+    * @param disWithOpptForQuery Data Import records that have the DonationImported__c field populated
+    * @return opportunitiesById the opportunities returned by the query
+    */
+    private void constructNewPayments (DataImport__c[] disForNewPayment) {
+
+        Map<Id, Opportunity> parentOpptsByDiId = queryElevateOppts(disForNewPayment);
+
+        // Cycle through the DI records and
+        for (DataImport__c di : disForNewPayment) {
+            Opportunity parentOppt = parentOpptsByDiId.get(di.DonationImported__c);
+            if (parentOppt != null) {
+                npe01__OppPayment__c newPayment = PMT_PaymentCreator.constructOppPayment(parentOppt,
+                                                                    PMT_PaymentCreator.PaymentCurrencyField,
+                                                                    PMT_PaymentCreator.OppCurrencyField);
+                paymentsByDataImportId.put(di.Id,newPayment);
+            }
+        }
+    }
 } // BDI_Donations
