@@ -24,7 +24,7 @@ const mockGetData = require('./data/getData.json');
 const mockGetDataErrorLogs = require('./data/getDataErrorLogs.json');
 
 const RECORD_ID = "a0900000008MR9bQAG";
-const QA_LOCATOR_RECORD_PAGE = "breadcrumb Record View Page";
+const QA_LOCATOR_RECORD_VIEW_PAGE = "breadcrumb Record View Page";
 const QA_LOCATOR_RECORD_SOBJECT_PAGE = "breadcrumb Record SObject Page";
 const QA_LOCATOR_NO_ITEM_MESSAGE = "text No Items Message";
 const QA_LOCATOR_DATATABLE = "datatable Logs";
@@ -75,10 +75,10 @@ describe('c-err-record-log', () => {
             document.body.appendChild(component);
         });
 
-        it("should navigate to the record detail page", async () => {
+        it("should navigate to the record view page", async () => {
             return global.flushPromises()
                 .then(async () => {
-                    const recordViewBreadcrumb = getElement(component, QA_LOCATOR_RECORD_PAGE);
+                    const recordViewBreadcrumb = getElement(component, QA_LOCATOR_RECORD_VIEW_PAGE);
                     expect(recordViewBreadcrumb).not.toBeNull();
                     expect(recordViewBreadcrumb.label).toBe(mockGetData.recordName);
 
@@ -250,10 +250,10 @@ describe('c-err-record-log', () => {
             });
         });
 
-        it("should not display record SObject and detail page breadcrumbs", async () => {
+        it("should not display record SObject and view page breadcrumbs", async () => {
             return global.flushPromises()
                 .then(async () => {
-                    const recordViewBreadcrumb = getElement(component, QA_LOCATOR_RECORD_PAGE);
+                    const recordViewBreadcrumb = getElement(component, QA_LOCATOR_RECORD_VIEW_PAGE);
                     expect(recordViewBreadcrumb).toBeNull();
 
                     const recordSObjectBreadcrumb = getElement(component, QA_LOCATOR_RECORD_SOBJECT_PAGE);
