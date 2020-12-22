@@ -191,6 +191,11 @@ tasks:
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
 
+    github_release_notes:
+        description: Creates a section in github release notes for a trialforce template ID placeholder.
+        options:
+            trial_info: "`TBD`"
+
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
         class_path: tasks.is_rd2_enabled
