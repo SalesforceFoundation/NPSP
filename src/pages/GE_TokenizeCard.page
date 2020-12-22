@@ -43,7 +43,10 @@
             .error-wrapper.fieldset.cvc {
                 max-width: fit-content;
             }
-            .ACHInput__ButtonContainer-sc-6riaoe-0 {
+            label.routing-number-label span button {
+                display: none;
+            }
+            label.account-number-label span button {
                 display: none;
             }
         `;
