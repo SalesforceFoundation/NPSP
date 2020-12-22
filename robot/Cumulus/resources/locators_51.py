@@ -19,7 +19,7 @@ npsp_lex_locators={
         "header_text_spl": "//h1//lightning-formatted-text",
     },
     "record": {
-        'button':"//lightning-button/button[@title='{}']",
+        'button':"//lightning-button/button[.='{}']",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'ltdatepicker':"//table/tbody/tr/td[@class='slds-day_adjacent-month']/span",

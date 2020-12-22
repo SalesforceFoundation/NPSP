@@ -81,6 +81,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             Salesforce.lex_locators["modal"]["button"] = (
                 "//div[contains(@class,'uiModal')]//*//button[.='{}']"
             )
+            Salesforce.lex_locators["record"]["related"]["button"] = (
+                "//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']"
+            )
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
