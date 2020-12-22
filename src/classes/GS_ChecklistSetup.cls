@@ -43,9 +43,9 @@ public with sharing class GS_ChecklistSetup {
      * @return List<ChecklistSection>
      */
     @AuraEnabled
-    public static List<ChecklistSection> getChecklists() {
+    public static List<ChecklistSection> getChecklists(String pageType) {
         storedItemsId = getMarkedAsCompletedCheckListItemByUser();
-        List<GetStartedChecklistSection__mdt> checklistSections = getSectionsAndSubsections();
+        List<GetStartedChecklistSection__mdt> checklistSections = getSectionsAndSubsections(pageType);
         List<ChecklistSection> checklistWrapers = new List<ChecklistSection>();
         for (GetStartedChecklistSection__mdt checklistSection : checklistSections) {
             checklistWrapers.add(wrapChecklistSection(checklistSection));
@@ -129,7 +129,7 @@ public with sharing class GS_ChecklistSetup {
      * @return List<GetStartedChecklistSection__mdt>
      * @note [ORDER BY Position__c ASC] doesn't work well in the inner query, I need to sort outside SOQL
      */
-    private static List<GetStartedChecklistSection__mdt> getSectionsAndSubsections() {
+    private static List<GetStartedChecklistSection__mdt> getSectionsAndSubsections(String pageType) {
         return [
             SELECT Id, Title_Label__c, Description_Label__c, Position__c,
                 (
@@ -140,6 +140,7 @@ public with sharing class GS_ChecklistSetup {
                     FROM GetStartedChecklistItems__r
                 )
             FROM GetStartedChecklistSection__mdt
+            WHERE Page_Type__c = :pageType
             WITH SECURITY_ENFORCED
             ORDER BY Position__c ASC
         ];
