@@ -14,6 +14,19 @@
         <name>Description_Label__c</name>
     </fields>
     <fields>
+        <help><!-- Determines which checklist will display this section --></help>
+        <label><!-- Page Type --></label>
+        <name>Page_Type__c</name>
+        <picklistValues>
+            <masterLabel>Admin</masterLabel>
+            <translation><!-- Admin --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>End User</masterLabel>
+            <translation><!-- End User --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help><!-- The position of this section on the Get Started page. --></help>
         <label><!-- Position --></label>
         <name>Position__c</name>
