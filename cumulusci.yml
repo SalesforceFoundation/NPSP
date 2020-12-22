@@ -760,7 +760,7 @@ flows:
             12:
                 task: assign_permission_sets
                 options:
-                    api_names: QA
+                    api_names: QA,Gift_Entry
 
 
     qa_org_namespaced:
