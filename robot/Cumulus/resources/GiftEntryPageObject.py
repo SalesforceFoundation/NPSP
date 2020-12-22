@@ -448,8 +448,121 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 raise Exception(f'{key} does not contain specified {value}')
 
+    def verify_modal_default_value(self,**kwargs):
+        """verifies that the field contains given default value
+        where key=field name and value=default value"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+
+            if 'textarea' in type :
+                field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+            else:
+                field=npsp_lex_locators["gift_entry"]["id"].format(key)
+                self.selenium.wait_until_page_contains_element(field)
+                time.sleep(1)
+                element=self.selenium.get_webelement(field)
+                default_value=element.get_attribute("value")
+                assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
+
+    def fill_modal_form(self,**kwargs):
+        """Fill the gift entry modal form fields with specified values.
+        Key is field name and value is value to be entered for field """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["modal_id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"input")
+            print(f"type is {type}")
+            if 'input autocomplete' in type :
+                self.salesforce._populate_field(locator,value)
+                qa_id="Select "+value
+                option=npsp_lex_locators["gift_entry"]["modal_id"].format(qa_id)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.scroll_element_into_view(option)
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif type.startswith("autocomplete"):
+                self.salesforce._populate_field(field_locator,value)
+                option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.scroll_element_into_view(option)
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.click_element(field_locator)
+                popup=npsp_lex_locators["newflexi-popup"]
+                self.selenium.wait_until_page_contains_element(popup)
+                option=npsp_lex_locators["modalspan_button"].format(value)
+                self.selenium.scroll_element_into_view(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'textarea' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+            elif 'datetime' in type :
+                locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
+                self.selenium.click_element(field_locator)
+                self.selenium.wait_until_page_contains_element(locator)
+                self.selenium.input_text(field_locator,value,clear=True)
+                self.selenium.input_text(field_locator,value)
+            else:
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+
+    def clear_form_fields(self,**kwargs):
+        """clear the gift entry modal form fields with specified values.
+        Key is field name and value is value to be entered for field """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["modal_id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"input")
+            print(f"type is {type}")
+            if 'input autocomplete' in type :
+                self.salesforce._populate_field(locator,value)
+                value_locator=npsp_lex_locators["gift_entry"]["remove_lookup"].format(value)
+                self.selenium.wait_until_page_contains_element(value_locator)
+                self.selenium.scroll_element_into_view(value_locator)
+                self.selenium.click_element(value_locator)
+            elif type.startswith("autocomplete"):
+                self.salesforce._populate_field(field_locator,value)
+                option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.click_element(field_locator)
+                popup=npsp_lex_locators["newflexi-popup"]
+                self.selenium.wait_until_page_contains_element(popup)
+                option=npsp_lex_locators["modalspan_button"].format(value)
+                self.selenium.scroll_element_into_view(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'textarea' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.input_text(field_locator,value,clear=True)
+            else:
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+
     def clear_lookup_value(self,field):
         """clear the value in lookup field on batch gift wizard """
         locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
+
