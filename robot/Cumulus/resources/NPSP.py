@@ -31,12 +31,12 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
-
+from locators_51 import npsp_lex_locators as locators_51
 from locators_50 import npsp_lex_locators as locators_50
-from locators_49 import npsp_lex_locators as locators_49
+
 locators_by_api_version = {
-    49.0: locators_49,   # summer '20
-    50.0: locators_50,   # winter '21
+    50.0: locators_50,   # winter '20
+    51.0: locators_51   # spring '21
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -1424,11 +1424,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 self._check_and_populate_lightning_fields(**kwargs)
             else:
                 locator = npsp_lex_locators["modal-form"]["label"].format(key)
+                print(locator)
                 if self.check_if_element_exists(locator):
                     ele=self.selenium.get_webelements(locator)
                     for e in ele:
                         classname=e.get_attribute("class")
-#                       print("key is {} and class is {}".format(key,classname))
+                        print("key is {} and class is {}".format(key,classname))
                         if "Lookup" in classname and "readonly" not in classname:
                             self.salesforce.populate_lookup_field(key,value)
                             print("Executed populate lookup field for {}".format(key))
