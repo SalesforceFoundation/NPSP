@@ -75,6 +75,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
+        # patch salesforce locators for winter 21
+        if int(self.latest_api_version) == 51:
+            from cumulusci.robotframework import Salesforce
+            Salesforce.lex_locators["modal"]["button"] = (
+                "//div[contains(@class,'uiModal')]//*//button[.='{}']"
+            )
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
