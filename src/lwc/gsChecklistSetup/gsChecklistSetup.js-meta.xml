@@ -6,4 +6,9 @@
     <targets>
         <target>lightning__AppPage</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property name="pageType" label="Page Type" type="String" datasource="Admin,End User" />
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
