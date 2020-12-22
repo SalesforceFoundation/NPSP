@@ -1423,6 +1423,7 @@
         <members>GetStartedChecklistItem__mdt.Secondary_Button_Value__c</members>
         <members>GetStartedChecklistItem__mdt.Title_Label__c</members>
         <members>GetStartedChecklistSection__mdt.Description_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Page_Type__c</members>
         <members>GetStartedChecklistSection__mdt.Position__c</members>
         <members>GetStartedChecklistSection__mdt.Title_Label__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
@@ -3253,7 +3254,6 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
-        <members>gsVideoHeaderLength</members>
         <name>CustomLabel</name>
     </types>
     <types>

@@ -42,18 +42,17 @@ private with sharing class GS_ChecklistSetup_TEST {
     @isTest
     static void getChecklistsTest() {
 
-        Id firstItemId = [SELECT Id, Position__c
-                          FROM GetStartedChecklistItem__mdt
-                          LIMIT 1].Id;
+        Id firstItemId = [ SELECT Id FROM GetStartedChecklistItem__mdt LIMIT 1 ].Id;
 
         GetStartedCompletionChecklistState__c checkedItem = new GetStartedCompletionChecklistState__c(Item_Id__c = firstItemId,
                                                                                                 User__c = UserInfo.getUserId());
         insert checkedItem;
 
-        List<GS_ChecklistSetup.ChecklistSection> checklists = GS_ChecklistSetup.getChecklists();
+        List<GS_ChecklistSetup.ChecklistSection> checklists = GS_ChecklistSetup.getChecklists('Admin');
         List<GetStartedChecklistSection__mdt> metadataSections = [
             SELECT Id, Label, Position__c
             FROM GetStartedChecklistSection__mdt
+            WHERE Page_Type__c = 'Admin'
             ORDER BY Position__c ASC
         ];
 
