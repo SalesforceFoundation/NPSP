@@ -7,6 +7,10 @@
         <value xsi:type="xsd:string">gsChecklistExploreNPSPDesc</value>
     </values>
     <values>
+        <field>Page_Type__c</field>
+        <value xsi:type="xsd:string">Admin</value>
+    </values>
+    <values>
         <field>Position__c</field>
         <value xsi:type="xsd:double">1.0</value>
     </values>
