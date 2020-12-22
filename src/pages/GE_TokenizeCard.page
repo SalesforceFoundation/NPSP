@@ -43,6 +43,9 @@
             .error-wrapper.fieldset.cvc {
                 max-width: fit-content;
             }
+            .ACHInput__ButtonContainer-sc-6riaoe-0 {
+                display: none;
+            }
         `;
 
         /*******************************************************************************
