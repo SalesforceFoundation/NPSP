@@ -71,7 +71,7 @@
             <template if:false={error.detail}>
                 <template if:false={hasAccess}>
                     <div class='slds-p-around_medium'>
-                        <c-util-illustration heading2={labels.insufficientPermissions}
+                        <c-util-illustration heading={labels.insufficientPermissions}
                             message={labels.accessDeniedMessage} size="small" variant="no-access"
                             data-qa-locator={qaLocatorNoAccessIllustration}>
                         </c-util-illustration>

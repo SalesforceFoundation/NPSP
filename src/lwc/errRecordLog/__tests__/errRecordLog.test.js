@@ -245,7 +245,7 @@ describe('c-err-record-log', () => {
                 const illustration = getElement(component, QA_LOCATOR_NO_ACCESS_ILLUSTRATION);
                 expect(illustration).not.toBeNull();
 
-                expect(illustration.heading2).toBe('c.commonInsufficientPermissions');
+                expect(illustration.heading).toBe('c.commonInsufficientPermissions');
                 expect(illustration.message).toBe('c.addrCopyConAddBtnFls');
             });
         });

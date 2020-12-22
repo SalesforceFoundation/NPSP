@@ -65,9 +65,9 @@ describe('c-util-illustration', () => {
             is: UtilIllustration
         });
 
-        const heading2Text = 'Test header 2 when required for accessibility';
+        const headingText = 'Test header 2 when required for accessibility';
 
-        element.heading2 = heading2Text;
+        element.heading = headingText;
         element.message = ILLUSTRATION_MESSAGE;
         element.size = ILLUSTATION_SIZE_SMALL;
         element.variant = 'no-access';
@@ -78,9 +78,9 @@ describe('c-util-illustration', () => {
             const messageDiv = element.shadowRoot.querySelector('div.slds-text-longform');
             expect(messageDiv).toBeDefined();
 
-            const heading2 = element.shadowRoot.querySelector('h2');
-            expect(heading2).not.toBeNull();
-            expect(heading2.textContent).toBe(heading2Text);
+            const heading = element.shadowRoot.querySelector('h2');
+            expect(heading).not.toBeNull();
+            expect(heading.textContent).toBe(headingText);
 
             const heading3 = element.shadowRoot.querySelector('h3');
             expect(heading3).toBeNull();

@@ -3,7 +3,7 @@ import { LightningElement, api } from 'lwc';
 export default class UtilIllustration extends LightningElement {
     @api illustrationClass;
     @api size;
-    @api heading2;
+    @api heading;
     @api title;
     @api message;
     @api shouldWrapText;
@@ -12,8 +12,8 @@ export default class UtilIllustration extends LightningElement {
     // Pulled from https://lightningdesignsystem.com/components/illustration
     @api variant;
 
-    get hasHeading2() {
-        return this.heading2 ? true : false;
+    get hasHeading() {
+        return this.heading ? true : false;
     }
 
     get hasTitle() {
