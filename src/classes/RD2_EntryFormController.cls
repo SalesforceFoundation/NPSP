@@ -71,24 +71,33 @@ public with sharing class RD2_EntryFormController {
 
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
-    * @param parentId The parentId of the new RD
+    * @param parentId The Contact or Account Id for which Recurring Donation will be created
+    * @param recordId Recurring Donation Id
     * @return Map<String, Object>
     */
     @AuraEnabled(cacheable=true)
-    public static Map<String, Object> getRecurringSettings(Id parentId) {
+    public static Map<String, Object> getRecurringSettings(Id parentId, Id recordId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
             
-        return new Map<String, Object> {
+        Map<String, Object> data = new Map<String, Object>{
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled()
+            'customFieldSets' => getCustomFieldSectionFields()
         };
+
+        Boolean isElevateCustomer = RD2_ElevateIntegrationService.isElevateCreateEnabled();
+        data.put('isElevateCustomer', isElevateCustomer);
+
+        if (isElevateCustomer && recordId != null) {
+            data.put('commitmentId', getCommitmentId(recordId));
+        }
+
+        return data;
     }
 
     /**
@@ -104,7 +113,6 @@ public with sharing class RD2_EntryFormController {
     * @description Get the Elevate recurring commitment Id
     * @return String
     */
-    @AuraEnabled(cacheable=true)
     public static String getCommitmentId(Id recordId) {
         String commitmentId;
 

@@ -42,10 +42,9 @@ import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommit
 import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
 import unknownError from '@salesforce/label/c.commonUnknownError';
 
-import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
+import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
-import getCommitmentId from '@salesforce/apex/RD2_EntryFormController.getCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 import validate from '@salesforce/apex/RD2_EntryFormController.validate';
@@ -115,6 +114,7 @@ export default class rd2EntryForm extends LightningElement {
     @track isElevateWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
+    commitmentId = null;
     paymentMethodToken;
     cardholderName;
 
@@ -139,7 +139,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Get settings required to enable or disable fields and populate their values
     */
     connectedCallback() {
-        getSetting({ parentId: this.parentId })
+        getRecurringSettings({ parentId: this.parentId, recordId: this.recordId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
@@ -149,6 +149,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.commitmentId = response.commitmentId;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -536,13 +537,11 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         if (this.isEdit) {
-            const commitmentId = await getCommitmentId({ recordId: this.recordId });
-
-            return !isNull(commitmentId);
+            return !isNull(this.commitmentId);
 
         } else {
             // A new Recurring Donation will be a new Elevate recurring commitment
-            // when the Elevate widget is displayed
+            // when the Elevate widget is displayed on the entry form.
             return this.isElevateWidgetDisplayed();
         }
     }

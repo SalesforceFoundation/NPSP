@@ -120,7 +120,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         /**
          * @description Retrieve special RD settings and permissions from Apex that cannot be retrieved effecively here.
          */
-        getRecurringSettings({ parentId: null })
+        getRecurringSettings({ parentId: null, recordId: null })
             .then(response => {
                 this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
                 this.hidePeriodPicklistField = this.shouldHideField(response.InstallmentPeriodPermissions);
