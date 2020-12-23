@@ -101,6 +101,25 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
+    * @description Get the Elevate recurring commitment Id
+    * @return String
+    */
+    @AuraEnabled(cacheable=true)
+    public static String getCommitmentId(Id recordId) {
+        String commitmentId;
+
+        try {
+            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+            commitmentId = rd.CommitmentId__c;
+
+        } catch (Exception ex) {            
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return commitmentId;
+    }
+
+    /**
     * @description Retrieve the donor type for an existing RD record
     * @param recordId RecurringDonation.RecordId
     * @return Map<String, Object> of specific type of RD data
@@ -178,7 +197,8 @@ public with sharing class RD2_EntryFormController {
             'npe03__Organization__c',
             'npe03__Organization__r.RecordTypeId',
             'npe03__Contact__r.Account.RecordTypeId',
-            'npe03__Installments__c'
+            'npe03__Installments__c',
+            'CommitmentId__c'
         };
 
         String soql = new UTIL_Query()
@@ -268,11 +288,12 @@ public with sharing class RD2_EntryFormController {
     * @description 
     * @param recordId Recurring Donation Id
     * @param jsonAllFields Recurring Donation fields as entered by the user before the record is saved
-    * @return String: JSON containing validation errors (if any)
+    * @return void
     */
     @AuraEnabled
-    public static String validate(Id recordId, String jsonAllFields) {
-        return null;
+    public static void validate(Id recordId, String jsonAllFields) {
+        
+        //UTIL_AuraEnabledCommon.throwAuraHandledException('Rad test');
     }
 
     /***

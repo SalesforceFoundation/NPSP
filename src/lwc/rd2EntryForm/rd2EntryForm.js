@@ -45,6 +45,7 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
+import getCommitmentId from '@salesforce/apex/RD2_EntryFormController.getCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 import validate from '@salesforce/apex/RD2_EntryFormController.validate';
@@ -378,7 +379,7 @@ export default class rd2EntryForm extends LightningElement {
     * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
-    handleSubmit(event) {
+    async handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
@@ -386,7 +387,7 @@ export default class rd2EntryForm extends LightningElement {
 
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
-            const isCommitment = this.isCommitmentCreate() || this.isCommitmentUpdate(allFields);
+            const isCommitment = await this.isCommitment();
 
             if (isCommitment) {
                 this.processCommitmentSubmit(allFields);
@@ -422,7 +423,13 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.processSubmit(allFields);
+        await validate({ recordId: this.recordId, jsonAllFields: JSON.stringify(allFields) })
+            .then(() => {
+                this.processSubmit(allFields);
+            })
+            .catch((error) => {
+                this.handleSaveError(error);
+            });
     }
 
     /***
@@ -519,23 +526,25 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
-    /***
-    * @description Determines if the Recurring Donation is a new Elevate recurring commitment
-    */
-    isCommitmentCreate() {
-        return !this.isEdit
-            && this.isElevateWidgetDisplayed();
-    }
 
     /***
-    * @description Determines if the Recurring Donation is an existing Elevate recurring commitment
+    * @description Determines if the Recurring Donation is an Elevate recurring commitment
     */
-    isCommitmentUpdate(allFields) {
-        const commitmentId = allFields[FIELD_COMMITMENT_ID.fieldApiName];
+    async isCommitment() {
+        if (!this.isElevateCustomer) {
+            return false;
+        }
 
-        return this.isEdit
-            && !isUndefined(commitmentId)
-            && !isNull(commitmentId);
+        if (this.isEdit) {
+            const commitmentId = await getCommitmentId({ recordId: this.recordId });
+
+            return !isNull(commitmentId);
+
+        } else {
+            // A new Recurring Donation will be a new Elevate recurring commitment
+            // when the Elevate widget is displayed
+            return this.isElevateWidgetDisplayed();
+        }
     }
 
     /***
