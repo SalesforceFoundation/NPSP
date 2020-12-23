@@ -38,14 +38,14 @@ Create Donation and Opportunity and Create Payment Manually
     Wait For Modal                          New                       Opportunity: Donation
     # Create a new Opportunity from the UI
 
-    Populate Modal Form
-    ...                                     Opportunity Name=${opp_name}
-    ...                                     Account Name=${data}[contact][LastName] Household
-    ...                                     Amount=${Amount}
-    ...                                     Do Not Automatically Create Payment=checked
+
+    Populate Field                          Opportunity Name    ${opp_name}
+    Populate Lookup Field                   Account Name        ${data}[contact][LastName] Household
+    Populate Field                          Amount   ${Amount}
     Select Value From Dropdown              Stage    ${Stage_Type}
     Open Date Picker                        Close Date
     Pick Date                               Today
+    Set Checkbutton To                      Do Not Automatically Create Payment     checked
     Click Modal Button                      Save
     Wait Until Modal Is Closed
     Current Page Should Be                  Details                                 Opportunity
@@ -64,8 +64,6 @@ Create Donation and Opportunity and Create Payment Manually
     Choose Date                             Today
 
     Click Modal Footer Button               Save
-    Click Modal Footer Button               Cancel
-
 
     Scroll Page To Location                 0    0
     Validate Related Record Count           Payments                                1

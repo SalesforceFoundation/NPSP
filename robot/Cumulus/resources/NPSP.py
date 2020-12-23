@@ -202,7 +202,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(option)
 
     def open_date_picker(self, title):
-        if self.latest_api_version == 50.0 and title in ("Payment Date"):
+        if (self.latest_api_version == 51.0) or (self.latest_api_version == 50.0 and title in ("Payment Date")):
             locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
         else:
             locator = npsp_lex_locators['record']['list'].format(title)
@@ -211,17 +211,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def choose_date(self, value):
         """To pick a date from the lightning date picker"""
-        if self.latest_api_version == 50.0:
-            locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
-        else:
-            locator = npsp_lex_locators['record']['datepicker'].format(value)
+        locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
         if self.latest_api_version == 50.0:
-            btnlocator = npsp_lex_locators["button-with-text"].format(value)
+            btnlocator = npsp_lex_locators["button-text"].format(value)
             self.selenium.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
         else:
@@ -229,9 +226,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def pick_date(self, value):
         """To pick a date from the date picker"""
-        locator = npsp_lex_locators['record']['datepicker'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+        if self.latest_api_version == 51.0:
+            self.choose_date(value)
+        else:
+            locator = npsp_lex_locators['record']['datepicker'].format(value)
+            self.selenium.set_focus_to_element(locator)
+            self.selenium.get_webelement(locator).click()
 
     def change_month(self, value):
         """To pick month in the date picker"""
@@ -453,7 +453,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if self.check_if_element_exists(locator):
                 checkbox=self.selenium.get_webelement(locator)
                 if (status == 'checked' and checkbox.is_selected() == False) or (status == 'unchecked' and checkbox.is_selected() == True):
-                    self.selenium.click_element(checkbox)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
                 else:
                     self.builtin.log("This checkbox is already in the expected status", "WARN")
                 cb_found = True
@@ -1217,23 +1218,25 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-
-        if dropdown in ("Open Ended Status","Payment Method") and self.latest_api_version == 50.0:
-            locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
-            selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
-            if self.npsp.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.wait_until_element_is_visible(locator)
-                self.selenium.scroll_element_into_view(locator)
-                self.salesforce._jsclick(locator)
-                self.selenium.wait_until_element_is_visible(selection_value)
-                self.selenium.click_element(selection_value)
+        if self.latest_api_version == 51.0:
+            self.click_flexipage_dropdown(dropdown,value)
         else:
-            locator = npsp_lex_locators['record']['list'].format(dropdown)
-            self.selenium.scroll_element_into_view(locator)
-            self.selenium.get_webelement(locator).click()
-            self.wait_for_locator('popup')
-            self.npsp.click_link_with_text(value)
+            if dropdown in ("Open Ended Status","Payment Method") and self.latest_api_version == 50.0:
+                locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
+                selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.selenium.wait_until_element_is_visible(locator)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
+                    self.selenium.wait_until_element_is_visible(selection_value)
+                    self.selenium.click_element(selection_value)
+            else:
+                locator = npsp_lex_locators['record']['list'].format(dropdown)
+                self.selenium.scroll_element_into_view(locator)
+                self.selenium.get_webelement(locator).click()
+                self.wait_for_locator('popup')
+                self.npsp.click_link_with_text(value)
 
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
