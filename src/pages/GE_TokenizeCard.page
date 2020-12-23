@@ -43,11 +43,11 @@
             .error-wrapper.fieldset.cvc {
                 max-width: fit-content;
             }
-            label.routing-number-label span button {
-                display: none;
+            div[class^="ACHInput__TooltipContainer"] {
+                display: none !important;
             }
-            label.account-number-label span button {
-                display: none;
+            button[class^="ACHInput__ButtonContainer"] {
+                display: none !important;
             }
         `;
 
