@@ -263,6 +263,18 @@ public with sharing class RD2_EntryFormController {
         }
     }
 
+
+    /***
+    * @description 
+    * @param recordId Recurring Donation Id
+    * @param jsonAllFields Recurring Donation fields as entered by the user before the record is saved
+    * @return String: JSON containing validation errors (if any)
+    */
+    @AuraEnabled
+    public static String validate(Id recordId, String jsonAllFields) {
+        return null;
+    }
+
     /***
     * @description Builds an Elevate Commitment request body
     * @param recordId Recurring Donation Id

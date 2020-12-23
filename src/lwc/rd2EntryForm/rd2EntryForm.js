@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
+import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isUndefined } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -47,6 +47,7 @@ import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormControlle
 import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
+import validate from '@salesforce/apex/RD2_EntryFormController.validate';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
@@ -188,7 +189,7 @@ export default class rd2EntryForm extends LightningElement {
         if (response.data) {
             let rdObjectInfo = response.data;
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = this.buildFieldDescribes(
+            this.fieldInfos = buildFieldDescribes(
                 rdObjectInfo.fields,
                 rdObjectInfo.apiName
             );
@@ -202,46 +203,16 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Method converts field describe info into objects that the
-    * getRecord method can accept into its 'fields' parameter.
-    */
-    buildFieldDescribes(fields, objectApiName) {
-        return Object.keys(fields).map((fieldApiName) => {
-            return {
-                fieldApiName: fieldApiName,
-                objectApiName: objectApiName
-            }
-        });
-    }
-
-    /***
     * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
-        this.fields.campaign = this.extractFieldInfo(fieldInfos, FIELD_CAMPAIGN.fieldApiName);
-        this.fields.name = this.extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
-        this.fields.amount = this.extractFieldInfo(fieldInfos, FIELD_AMOUNT.fieldApiName);
-        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
-        this.fields.status = this.extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
-        this.fields.statusReason = this.extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
+        this.fields.campaign = extractFieldInfo(fieldInfos, FIELD_CAMPAIGN.fieldApiName);
+        this.fields.name = extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
+        this.fields.amount = extractFieldInfo(fieldInfos, FIELD_AMOUNT.fieldApiName);
+        this.fields.paymentMethod = extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
+        this.fields.status = extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
+        this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
-    }
-
-    /***
-    * @description Method converts field describe info into a object that is easily accessible from the front end.
-    * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
-    * (i.e, the field isn't accessible).
-    */
-    extractFieldInfo(fieldInfos, fldApiName) {
-        try {
-            const field = fieldInfos[fldApiName];
-            return {
-                apiName: field.apiName,
-                label: field.label,
-                inlineHelpText: field.inlineHelpText,
-                dataType: field.dataType
-            };
-        } catch (error) { }
     }
 
     /***
@@ -413,15 +384,45 @@ export default class rd2EntryForm extends LightningElement {
         this.loadingText = this.customLabels.waitMessage;
         this.isSaveButtonDisabled = true;
 
-        const allFields = this.getAllSectionsInputValues();
+        if (this.isFormValid()) {
+            const allFields = this.getAllFields();
+            const isCommitment = this.isCommitmentCreate() || this.isCommitmentUpdate(allFields);
 
-        if (this.isSectionInputsValid()) {
-            this.processSubmit(allFields);
+            if (isCommitment) {
+                this.processCommitmentSubmit(allFields);
+
+            } else {
+                this.processSubmit(allFields);
+            }
 
         } else {
             this.isLoading = false;
             this.isSaveButtonDisabled = false;
         }
+    }
+
+
+    /***
+    * @description Overrides the standard submit when an Elevate recurring commitment 
+    * record is to be created or updated.
+    */
+    processCommitmentSubmit = async (allFields) => {
+        try {
+            await this.setPaymentMethodToken();
+
+            if (!this.isEdit) {
+                const tempId = await getTempCommitmentId();
+                allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
+            }
+
+        } catch (error) {
+            // The error is displayed at the Elevate credit card widget, thus
+            // the "handleError(error)" is not called to display it on the entry form as well.
+            this.setSaveButtonDisabled(false);
+            return;
+        }
+
+        this.processSubmit(allFields);
     }
 
     /***
@@ -430,23 +431,6 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateWidgetDisplayed()) {
-            try {
-                this.loadingText = this.customLabels.validatingCardMessage;
-                const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                this.paymentMethodToken = await elevateWidget.returnToken().payload;
-
-                if (!this.isEdit) {
-                    const tempId = await getTempCommitmentId();
-                    allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
-                }
-
-            } catch (error) {
-                this.setSaveButtonDisabled(false);
-                return;
-            }
-        }
-
         try {
             this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
@@ -454,46 +438,6 @@ export default class rd2EntryForm extends LightningElement {
         } catch (error) {
             this.handleSaveError(error);
         }
-    }
-
-    /***
-    * @description Collects fields displayed on the form and any integrated LWC
-    */
-    getAllSectionsInputValues() {
-        const donorFields = (isNull(this.donorComponent))
-            ? {}
-            : this.donorComponent.returnValues();
-
-        const scheduleFields = (isNull(this.scheduleComponent))
-            ? {}
-            : this.scheduleComponent.returnValues();
-
-        const extrafields = (isNull(this.customFieldsComponent))
-            ? {}
-            : this.customFieldsComponent.returnValues();
-
-        return { ...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues() };
-    }
-
-    /***
-    * @description Validate all fields on the integrated LWC sections
-    */
-    isSectionInputsValid() {
-        const isDonorSectionValid = (isNull(this.donorComponent))
-            ? true
-            : this.donorComponent.isValid();
-
-        const isScheduleSectionValid = (isNull(this.scheduleComponent))
-            ? true
-            : this.scheduleComponent.isValid();
-
-        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
-            ? true
-            : this.customFieldsComponent.isValid();
-
-        const isEntryFormValid = this.isValid();
-
-        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
     }
 
     /**
@@ -532,9 +476,8 @@ export default class rd2EntryForm extends LightningElement {
 
         this.isLoading = disableBtn;
         this.isSaveButtonDisabled = disableBtn;
-        
-        
     }
+
     /**
     * @description Scroll to error if the error is rendered 
     */
@@ -568,12 +511,46 @@ export default class rd2EntryForm extends LightningElement {
         const recordId = event.detail.id;
 
         if (this.isElevateWidgetDisplayed()) {
-            this.handleElevateCommitment(recordId);
+            this.handleCommitment(recordId);
 
         } else {
             this.showToastSuccess();
             this.closeModal(recordId);
         }
+    }
+
+    /***
+    * @description Determines if the Recurring Donation is a new Elevate recurring commitment
+    */
+    isCommitmentCreate() {
+        return !this.isEdit
+            && this.isElevateWidgetDisplayed();
+    }
+
+    /***
+    * @description Determines if the Recurring Donation is an existing Elevate recurring commitment
+    */
+    isCommitmentUpdate(allFields) {
+        const commitmentId = allFields[FIELD_COMMITMENT_ID.fieldApiName];
+
+        return this.isEdit
+            && !isUndefined(commitmentId)
+            && !isNull(commitmentId);
+    }
+
+    /***
+    * @description Generates the payment method token 
+    * when the Elevate credit card widget is displayed
+    */
+    async setPaymentMethodToken() {
+        if (!this.isElevateWidgetDisplayed()) {
+            return;
+        }
+
+        this.loadingText = this.customLabels.validatingCardMessage;
+        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
+
+        this.paymentMethodToken = await elevateWidget.returnToken().payload;
     }
 
     /**
@@ -583,7 +560,7 @@ export default class rd2EntryForm extends LightningElement {
      * it should be displayed, and the modal closed since
      * the another creation of the same Recurring Donation should be prevented.
      */
-    handleElevateCommitment(recordId) {
+    handleCommitment(recordId) {
         this.loadingText = this.customLabels.creatingCommitmentMessage;
 
         getCommitmentRequestBody({
@@ -735,7 +712,7 @@ export default class rd2EntryForm extends LightningElement {
         this.resetAllValues();
 
         const closeModalEvent = new CustomEvent('closemodal', {
-            detail :{recordId: recordId},
+            detail: { recordId: recordId },
         });
         this.dispatchEvent(closeModalEvent);
     }
@@ -819,18 +796,60 @@ export default class rd2EntryForm extends LightningElement {
         return paymentMethod ? paymentMethod.value : null;
     }
 
+    /***
+    * @description Collects fields displayed on the form and any integrated LWC
+    */
+    getAllFields() {
+        const donorFields = (isNull(this.donorComponent))
+            ? {}
+            : this.donorComponent.returnValues();
+
+        const scheduleFields = (isNull(this.scheduleComponent))
+            ? {}
+            : this.scheduleComponent.returnValues();
+
+        const extrafields = (isNull(this.customFieldsComponent))
+            ? {}
+            : this.customFieldsComponent.returnValues();
+
+        return { ...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues() };
+    }
+
+    /***
+    * @description Validate all fields on the integrated LWC sections
+    */
+    isFormValid() {
+        const isDonorSectionValid = (isNull(this.donorComponent))
+            ? true
+            : this.donorComponent.isValid();
+
+        const isScheduleSectionValid = (isNull(this.scheduleComponent))
+            ? true
+            : this.scheduleComponent.isValid();
+
+        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
+            ? true
+            : this.customFieldsComponent.isValid();
+
+        const isEntryFormValid = this.isValid();
+
+        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
+    }
+
     /**
      * @description Checks if values specified on fields are valid
      * @return Boolean
      */
     isValid() {
         let isValid = true;
+
         this.template.querySelectorAll('lightning-input-field')
             .forEach(field => {
                 if (!field.reportValidity()) {
                     isValid = false;
                 }
             });
+
         return isValid;
     }
 
