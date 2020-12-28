@@ -31,8 +31,7 @@ Create Grant
     Populate Field                     Amount                               100
     Populate Lookup Field              Account Name                         ${data}[contact][LastName] Household
     Select Value From Dropdown         Stage                                Awarded
-    Open Date Picker                   Close Date
-    Pick Date                          Today
+    Select Date From Datepicker        Close Date                           Today
     Set Checkbutton To                 Do Not Automatically Create Payment  checked
     Click Modal Button                 Save
     Wait Until Modal Is Closed

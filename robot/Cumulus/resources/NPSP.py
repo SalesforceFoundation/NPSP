@@ -207,19 +207,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.scroll_element_into_view(option)
             self.selenium.click_element(option)
 
-    def open_date_picker(self, title):
-        if (self.latest_api_version == 51.0) or (self.latest_api_version == 50.0 and title in ("Payment Date")):
-            locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
-        else:
-            locator = npsp_lex_locators['record']['list'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+    # def open_date_picker(self, title):
+    #     if (self.latest_api_version == 51.0) or (self.latest_api_version == 50.0 and title in ("Payment Date")):
+    #         locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
+    #     else:
+    #         locator = npsp_lex_locators['record']['list'].format(title)
+    #     self.selenium.set_focus_to_element(locator)
+    #     self.selenium.get_webelement(locator).click()
 
-    def choose_date(self, value):
-        """To pick a date from the lightning date picker"""
-        locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+    # def choose_date(self, value):
+    #     """To pick a date from the lightning date picker"""
+    #     locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
+    #     self.selenium.set_focus_to_element(locator)
+    #     self.selenium.get_webelement(locator).click()
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
@@ -230,14 +230,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             self.salesforce.click_modal_button(value)
 
-    def pick_date(self, value):
-        """To pick a date from the date picker"""
-        if self.latest_api_version == 51.0:
-            self.choose_date(value)
-        else:
-            locator = npsp_lex_locators['record']['datepicker'].format(value)
-            self.selenium.set_focus_to_element(locator)
-            self.selenium.get_webelement(locator).click()
+    # def pick_date(self, value):
+    #     """To pick a date from the date picker"""
+    #     if self.latest_api_version == 51.0:
+    #         self.choose_date(value)
+    #     else:
+    #         locator = npsp_lex_locators['record']['datepicker'].format(value)
+    #         self.selenium.set_focus_to_element(locator)
+    #         self.selenium.get_webelement(locator).click()
 
     def change_month(self, value):
         """To pick month in the date picker"""
@@ -1565,11 +1565,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def select_date_from_datepicker(self,field,value):
         field_loc=npsp_lex_locators["bge"]["field-input"].format(field)
-        self.selenium.click_element(field_loc)
-        locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)
-        self.selenium.wait_until_page_contains_element(locator)
-        self.click_bge_button(value)
-        self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
+        if self.check_if_element_exists(field_loc):
+            locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)
+            self.selenium.click_element(field_loc)
+            self.selenium.wait_until_page_contains_element(locator)
+            self.click_bge_button(value)
+            self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
+        else:
+            field_loc=npsp_lex_locators['record']['lt_date_picker'].format(field)
+            locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
+            self.selenium.click_element(field_loc)
+            self.selenium.wait_until_page_contains_element(locator)
+            self.selenium.click_element(locator)
+
 
     def click_more_actions_button(self):
         """clicks on the more actions dropdown button in the actions container on record page"""

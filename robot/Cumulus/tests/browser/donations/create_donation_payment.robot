@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+# Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Sets up all the required data for the test based on the keyword requests
@@ -43,8 +43,7 @@ Create Donation and Opportunity and Create Payment Manually
     Populate Lookup Field                   Account Name        ${data}[contact][LastName] Household
     Populate Field                          Amount   ${Amount}
     Select Value From Dropdown              Stage    ${Stage_Type}
-    Open Date Picker                        Close Date
-    Pick Date                               Today
+    Select Date From Datepicker             Close Date          Today
     Set Checkbutton To                      Do Not Automatically Create Payment     checked
     Click Modal Button                      Save
     Wait Until Modal Is Closed
@@ -59,9 +58,7 @@ Create Donation and Opportunity and Create Payment Manually
     Select Window
     Populate Modal Form                     Payment Method=Credit Card
     ...                                     Payment Amount=100
-
-    Open Date Picker                        Payment Date
-    Choose Date                             Today
+    Select Date From Datepicker             Payment Date          Today
 
     Click Modal Footer Button               Save
 

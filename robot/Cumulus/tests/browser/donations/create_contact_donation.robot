@@ -39,9 +39,7 @@ Create Donation from a Contact
     Populate Modal Form
     ...                                  Stage=${Stage_Type}
     ...                                  Amount=${Amount}
-
-    Open Date Picker                     Close Date
-    Pick Date                            ${Date}
+    Select Date From Datepicker          Close Date                ${Date}
     Click Modal Button                   Save
     Wait Until Modal Is Closed
     ${value}                             Return Locator Value      alert
