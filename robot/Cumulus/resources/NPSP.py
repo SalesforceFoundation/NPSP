@@ -191,15 +191,21 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_flexipage_dropdown(self, title,value):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
+        option=npsp_lex_locators['span'].format(value)
         self.selenium.wait_until_page_contains_element(locator)
         self.selenium.scroll_element_into_view(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)
-        # self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('flexipage-popup')
-        option=npsp_lex_locators['span'].format(value)
-        self.selenium.scroll_element_into_view(option)
-        self.selenium.click_element(option)
+        try:
+            self.selenium.get_webelement(locator).click()
+            self.wait_for_locator('flexipage-popup')
+            self.selenium.scroll_element_into_view(option)
+            self.selenium.click_element(option)
+        except Exception:
+            self.builtin.sleep(1,"waiting for a second and retrying click again")
+            self.selenium.driver.execute_script('arguments[0].click()', element)
+            self.wait_for_locator('flexipage-popup')
+            self.selenium.scroll_element_into_view(option)
+            self.selenium.click_element(option)
 
     def open_date_picker(self, title):
         if (self.latest_api_version == 51.0) or (self.latest_api_version == 50.0 and title in ("Payment Date")):
