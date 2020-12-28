@@ -2471,6 +2471,7 @@
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>
+        <members>geTextFieldBundlePaymentMethod</members>
         <members>geTextListViewItemCount</members>
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>

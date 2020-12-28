@@ -197,6 +197,7 @@ import geTabBatchSettings from '@salesforce/label/c.geTabBatchSettings';
 import geTabBatchTableColumns from '@salesforce/label/c.geTabBatchTableColumns';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
+import geTextFieldBundlePaymentMethod from '@salesforce/label/c.geTextFieldBundlePaymentMethod';
 import geTextChargingCard from '@salesforce/label/c.geTextChargingCard';
 import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
@@ -424,6 +425,7 @@ class GeLabelService {
         geTabBatchTableColumns,
         geTabFormFields,
         geTabTemplateInfo,
+        geTextFieldBundlePaymentMethod,
         geTextChargingCard,
         geTextListViewItemCount,
         geTextListViewItemsCount,
