@@ -43,6 +43,12 @@
             .error-wrapper.fieldset.cvc {
                 max-width: fit-content;
             }
+            div[class^="ACHInput__TooltipContainer"] {
+                display: none !important;
+            }
+            button[class^="ACHInput__ButtonContainer"] {
+                display: none !important;
+            }
         `;
 
         /*******************************************************************************
