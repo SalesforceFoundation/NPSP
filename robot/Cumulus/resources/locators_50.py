@@ -2,7 +2,16 @@ from locators_51 import *
 import copy
 
 npsp_lex_locators = copy.deepcopy(npsp_lex_locators)
+
+# current version (Sravani's )
 npsp_lex_locators['delete_icon']='//span[contains(text() ,"{}")]/following::span[. = "{}"]/following-sibling::a/child::span[@class = "deleteIcon"]'
 npsp_lex_locators['object']['field']= "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]"
 npsp_lex_locators["record"]["related"]["dd-link"]='//div[contains(@class,"actionMenu")]//a[@title="{}"]'
 npsp_lex_locators["record"]["related"]["button"]="//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//a[@title='{}']"
+
+# stashed (Noah's version)
+
+# npsp_lex_locators["delete_icon"]= "//span[contains(text(),'{}')]/../following::div//span[text() = '{}']/following-sibling::a/child::span[@class = 'deleteIcon']"
+# npsp_lex_locators['object']['field']= "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]"
+# npsp_lex_locators["record"]["related"]["dd-link"]='//div[contains(@class,"actionMenu")]//a[@title="{}"]'
+
