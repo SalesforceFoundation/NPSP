@@ -729,6 +729,10 @@ flows:
                 task: test_data_relationships
             10:
                 task: deploy_reports
+            11:
+                task: assign_permission_sets
+                options:
+                    api_names: QA,Gift_Entry
 
     config_qa_namespaced:
         steps:
@@ -757,6 +761,10 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
+            12:
+                task: assign_permission_sets
+                options:
+                    api_names: QA,Gift_Entry
 
 
     qa_org_namespaced:
