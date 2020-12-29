@@ -553,7 +553,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void cancelCommitments(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction ) {
         if (triggerAction != TDTM_Runnable.Action.BeforeUpdate
-            || TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.PS_doNotSendToElevate)
             || !RD2_ElevateIntegrationService.isIntegrationEnabled()) {
             return;
         }
