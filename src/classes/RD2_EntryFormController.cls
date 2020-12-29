@@ -305,11 +305,13 @@ public with sharing class RD2_EntryFormController {
         );
 
         if (String.isBlank(rd.Status__c)) {
-            rd.Status__c = 'Active';//TODO
+            rd.Status__c = 'Active';//TODO populate defaults that DML does by default
         }
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
-        List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();//TODO
+        List<npe03__Recurring_Donation__c> oldRds = recordId == null
+            ? new List<npe03__Recurring_Donation__c>()
+            : new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
 
         RD2_RecurringDonations_TDTM.DataAuditor auditor = new RD2_RecurringDonations_TDTM.DataAuditor();        
         auditor.adjust(rds, oldRds);

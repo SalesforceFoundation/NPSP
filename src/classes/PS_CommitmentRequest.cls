@@ -246,7 +246,7 @@ public inherited sharing class PS_CommitmentRequest {
             fields.add('CurrencyIsoCode');
         }
 
-        fields.add(getScheduleSubQuery());
+        fields.add(new RD2_QueryService().getScheduleSubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -256,16 +256,6 @@ public inherited sharing class PS_CommitmentRequest {
             .build();
 
         return Database.query(soql);
-    }
-
-    /**
-     * @description Returns query on Recurring Donation Schedule
-     * @return String RD Schedule subquery used in the Recurring Donation SOQL
-     */
-    private String getScheduleSubQuery() {
-        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
-
-        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
     /**
