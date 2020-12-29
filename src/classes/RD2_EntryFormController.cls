@@ -295,14 +295,35 @@ public with sharing class RD2_EntryFormController {
     /***
     * @description 
     * @param recordId Recurring Donation Id
-    * @param jsonAllFields Recurring Donation fields as entered by the user before the record is saved
+    * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
     * @return void
     */
     @AuraEnabled
-    public static void validate(Id recordId, String jsonAllFields) {
-        
-        //UTIL_AuraEnabledCommon.throwAuraHandledException('Rad test');
+    public static void validate(Id recordId, String jsonRecord) {
+        npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
+            jsonRecord, npe03__Recurring_Donation__c.class
+        );
+
+        if (String.isBlank(rd.Status__c)) {
+            rd.Status__c = 'Active';//TODO
+        }
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
+        List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();//TODO
+
+        RD2_RecurringDonations_TDTM.DataAuditor auditor = new RD2_RecurringDonations_TDTM.DataAuditor();        
+        auditor.adjust(rds, oldRds);
+
+        List<RD2_ValidationService.Notification> notifications = auditor.validate(rds, oldRds);
+
+        if (!notifications.isEmpty()) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(
+                notifications[0].getErrors()[0]
+            );
+        }        
     }
+
+
 
     /***
     * @description Builds an Elevate Commitment request body

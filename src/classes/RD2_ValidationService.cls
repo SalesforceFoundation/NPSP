@@ -172,50 +172,69 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate RD data on insert
-    * @return void
+    * @return List<Notification>
     */
-    public void validate() {
+    public List<Notification> validate() {
+        List<Notification> notifications = new List<Notification>();
+
         for (npe03__Recurring_Donation__c rd : rds) {
-            validateActiveRecurringDonation(rd);
-            validateInstallmentFrequency(rd);
-            validateDonor(rd, accountById.get(rd.npe03__Organization__c));
-            validateStatus(rd);
-            validateRD2MetadataDeployed(rd);
+            Notification notification = new Notification();
+
+            validateActiveRecurringDonation(rd, notification);
+            validateInstallmentFrequency(rd, notification);
+            validateDonor(rd, accountById.get(rd.npe03__Organization__c), notification);
+            validateStatus(rd, notification);
+            validateRD2MetadataDeployed(rd, notification);
+            
+            if (notification.hasErrors()) {
+                notification.trackRecord(rd);
+                notifications.add(notification);
+            }
         }
+
+        return notifications;
     }
 
     /**
     * @description Validates Recurring Donation on update DML
-    * @return void
+    * @return List<Notification>
     */
-    public void validateOnChange() {
+    public List<Notification> validateOnChange() {
+        List<Notification> notifications = new List<Notification>();
+
         for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
+            Notification notification = new Notification();
 
             if (elevateService.isElevateRecordReactivated(rd, oldRd)) {
-                rd.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
-                continue;
+                notification.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
+
+            } else if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
+                notification.addError(System.Label.RD2_ElevatePermissionRequired);
+
+            } else {
+                validateActiveRecurringDonation(rd, notification);
+                validateInstallmentFrequency(rd, notification);
+                validateCurrencyChange(rd, oldRd, notification);
+                validateRecurringDonationEndDate(rd, notification);
+                validateStatus(rd, notification);
+
+                Boolean isValid = validateDonorChange(rd, oldRd, notification);
+                if (isValid) {
+                    validateDonor(rd, accountById.get(rd.npe03__Organization__c), notification);
+                }
+
+                validateRD2MetadataDeployed(rd, notification);
             }
 
-            if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
-                rd.addError(System.Label.RD2_ElevatePermissionRequired);
-                continue;
+            if (notification.hasErrors()) {
+                notification.trackRecord(rd);
+                notifications.add(notification);
             }
-
-            validateActiveRecurringDonation(rd);
-            validateInstallmentFrequency(rd);
-            validateCurrencyChange(rd, oldRd);
-            validateRecurringDonationEndDate(rd);
-            validateStatus(rd);
-
-            Boolean isValid = validateDonorChange(rd, oldRd);
-            if (isValid) {
-                validateDonor(rd, accountById.get(rd.npe03__Organization__c));
-            }
-
-            validateRD2MetadataDeployed(rd);
         }
+
+        return notifications;
     }
 
     /**
@@ -226,16 +245,18 @@ public with sharing class RD2_ValidationService {
         return UTIL_Describe.isValidPicklistOption(
             'npe03__Recurring_Donation__c',
             String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            RD2_Constants.STATUS_PAUSED);
+            RD2_Constants.STATUS_PAUSED
+        );
     }
+
     /***
     * @description Validates Enhanced Recurring Donations metadata has been deployed
     * @param rd The Recurring Donation to validate
     * @return void
     */
-    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd) {
+    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd, Notification notification) {
         if (!RD2_EnablementService.isMetadataDeployed) {
-            rd.addError(System.Label.RD2_EnablementIncomplete);
+            notification.addError(System.Label.RD2_EnablementIncomplete);
         }
     }
 
@@ -244,35 +265,36 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @return void
     */
-    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
+    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, Notification notification) {
         if (new RD2_RecurringDonation(rd).isClosed()) {
             return;
         }
 
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
-            rd.addError(System.Label.RD2_AmountMustBeValid);
+            notification.addError(System.Label.RD2_AmountMustBeValid);
         }
 
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
-            rd.addError(
+            notification.addError(
                 String.format(
                     System.Label.RD2_InstallmentPeriodMustBeValid,
-                    new String[]{ rd.npe03__Installment_Period__c })
+                    new String[]{ rd.npe03__Installment_Period__c }
+                )
             );
         }
 
-        validateDayOfMonth(rd);
+        validateDayOfMonth(rd, notification);
 
-        validateFixedLength(rd);
+        validateFixedLength(rd, notification);
     }
 
     /***
      * @description Validate Installment Frequency to be in the range
      * @param rd Recurring Donation record to validate
      */
-    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
+    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd, Notification notification) {
         if (!(new RD2_RecurringDonation(rd)).isValidInstallmentFrequency()) {
-            rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
+            notification.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
     }
 
@@ -282,10 +304,10 @@ public with sharing class RD2_ValidationService {
     * @param acct The associated account for the Recurring Donation
     * @return void
     */
-    private void validateDonor(npe03__Recurring_Donation__c rd, Account acct) {
+    private void validateDonor(npe03__Recurring_Donation__c rd, Account acct, Notification notification) {
         //either Account or Contact must be specified
         if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-            rd.addError(System.Label.RD_DonorIsRequired);
+            notification.addError(System.Label.RD_DonorIsRequired);
             return;
         }
 
@@ -295,9 +317,10 @@ public with sharing class RD2_ValidationService {
         }
 
         if (rd.npe03__Contact__c == null) {
-            rd.addError(System.Label.RD_ContactMustBelongToAccount);
+            notification.addError(System.Label.RD_ContactMustBelongToAccount);
+
         } else if (!UTIL_SObject.extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
-            rd.addError(System.Label.RD_ContactMustBelongToAccount);
+            notification.addError(System.Label.RD_ContactMustBelongToAccount);
         }
     }
 
@@ -307,7 +330,7 @@ public with sharing class RD2_ValidationService {
     * @param oldRd The previous version of the Recurring Donation
     * @return Boolean True when the validation pass, otherwise, false
     */
-    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, Notification notification) {
         if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
             && rd.npe03__Contact__c == oldRd.npe03__Contact__c
         ) {
@@ -321,7 +344,7 @@ public with sharing class RD2_ValidationService {
             return true;
         }
 
-        rd.addError(System.Label.RD2_ContactChangeIsRestricted);
+        notification.addError(System.Label.RD2_ContactChangeIsRestricted);
         return false;
     }
 
@@ -333,7 +356,7 @@ public with sharing class RD2_ValidationService {
     * @param oldRd The previous version of the Recurring Donation
     * @return void
     */
-    private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+    private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, Notification notification) {
         if (!isMultiCurrencyEnabled) {
             return;
         }
@@ -342,7 +365,7 @@ public with sharing class RD2_ValidationService {
         if ((String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD)
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
-            rd.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
+            notification.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
         }
     }
 
@@ -351,7 +374,7 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @return void
     */
-    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
+    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd, Notification notification) {
         if (rd.EndDate__c == null) {
             return;
         }
@@ -362,14 +385,14 @@ public with sharing class RD2_ValidationService {
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.addError(System.Label.RD2_EndDateElevateCannotBeInFuture);
+            notification.addError(System.Label.RD2_EndDateElevateCannotBeInFuture);
         }
 
         if (rdRecord.isFixedLength()
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.addError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+            notification.addError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
         }
 
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
@@ -378,7 +401,7 @@ public with sharing class RD2_ValidationService {
         }
 
         if (rd.EndDate__c < mostRecentCloseWonDate) {
-            rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
+            notification.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
         }
 
     }
@@ -389,12 +412,13 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     @TestVisible
-    private void validateStatus(npe03__Recurring_Donation__c rd) {
+    private void validateStatus(npe03__Recurring_Donation__c rd, Notification notification) {
         if (String.isBlank((new RD2_RecurringDonation(rd)).getState())) {
-            rd.addError(
+            notification.addError(
                 String.format(
                     System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
-                    new String[]{rd.Status__c})
+                    new String[]{rd.Status__c}
+                )
             );
         }
     }
@@ -440,13 +464,13 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @return void
     */
-    private void validateDayOfMonth(npe03__Recurring_Donation__c rd) {
+    private void validateDayOfMonth(npe03__Recurring_Donation__c rd, Notification notification) {
         if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
             return;
         }
 
         if (String.IsBlank(rd.Day_of_Month__c)) {
-            rd.addError(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment);
+            notification.addError(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment);
             return;
         }
 
@@ -463,10 +487,11 @@ public with sharing class RD2_ValidationService {
         Boolean isValid = dayOfMonth > 0 && dayOfMonth < 31;
 
         if (!isValid) {
-            rd.addError(
+            notification.addError(
                 String.format(
                     System.Label.RD2_DayOfMonthMustBeValid,
-                    new String[]{ rd.Day_of_Month__c })
+                    new String[]{ rd.Day_of_Month__c }
+                )
             );
         }
     }
@@ -476,12 +501,13 @@ public with sharing class RD2_ValidationService {
      * Open Recurring Donations
      * @param rd The recurring donation to validate
      */
-    private void validateFixedLength(npe03__Recurring_Donation__c rd) {
+    private void validateFixedLength(npe03__Recurring_Donation__c rd, Notification notification) {
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        
         if (rdRecord.isOpenEnded()
             && rd.npe03__Installments__c > 1
         ) {
-            rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
+            notification.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
         if (!rdRecord.isFixedLength()) {
@@ -489,12 +515,12 @@ public with sharing class RD2_ValidationService {
         }
 
         if (rd.npe03__Installments__c == null || rd.npe03__Installments__c < 0) {
-            rd.addError(System.Label.RD2_NumberInstallmentsRequiredWhenFixed);
+            notification.addError(System.Label.RD2_NumberInstallmentsRequiredWhenFixed);
 
         } else if (rd.npe03__Total_Paid_Installments__c > 0
             && rd.npe03__Installments__c < rd.npe03__Total_Paid_Installments__c
         ) {
-            rd.addError(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid);
+            notification.addError(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid);
         }
     }
 
@@ -573,6 +599,74 @@ public with sharing class RD2_ValidationService {
         }
 
         return closeWonDateByRdId;
+    }
+
+
+    /***
+    * @description Notification class containing validation errors 
+    */
+    public class Notification {
+        npe03__Recurring_Donation__c rd;
+
+        /***
+        * @description Contains validation errors 
+        */
+        private String[] errors = new String[0];
+
+        /***
+        * @description 
+        */
+        public Notification trackRecord(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
+            return this;
+        }
+
+        /***
+        * @description 
+        */
+        public npe03__Recurring_Donation__c getRecord() {
+            return rd;
+        }
+        
+        /***
+        * @description Adds specified errors into the list of all errors
+        * @return Notification The instance of itself
+        */
+        public Notification addErrors(String[] errors) {
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
+
+            return this;
+        }
+
+        /***
+        * @description Adds specified error into the list of all errors
+        * @return Notification The instance of itself
+        */
+        public Notification addError(String error) {
+            if (!String.isBlank(error)) {
+                errors.add(error);
+            }
+
+            return this;
+        }
+
+        /***
+        * @description Returns errors
+        * @return String[] List of errors
+        */
+        public String[] getErrors() {
+            return errors.clone();
+        }
+
+        /***
+        * @description Specifies if the Notification contains no error
+        * @return Boolean True if there are no errors, false otherwise
+        */
+        public Boolean hasErrors() {
+            return !errors.isEmpty();
+        }
     }
 
 }

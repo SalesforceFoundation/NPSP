@@ -419,12 +419,15 @@ export default class rd2EntryForm extends LightningElement {
 
         } catch (error) {
             // The error is displayed at the Elevate credit card widget, thus
-            // the "handleError(error)" is not called to display it on the entry form as well.
+            // the "handleSaveError(error)" is not called so that 
+            // the error is not displayed on the entry form as well.
             this.setSaveButtonDisabled(false);
             return;
         }
 
-        await validate({ recordId: this.recordId, jsonAllFields: JSON.stringify(allFields) })
+        let rd = { ...allFields };
+
+        await validate({ recordId: this.recordId, jsonRecord: JSON.stringify(rd) })
             .then(() => {
                 this.processSubmit(allFields);
             })
