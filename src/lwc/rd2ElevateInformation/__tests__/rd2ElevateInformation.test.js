@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
@@ -146,6 +147,23 @@ describe('c-rd2-elevate-information', () => {
             return global.flushPromises().then(async () => {
                 assertViewErrorLogIsDisplayed(component);
             });
+        });
+
+        it("should navigate to the record Error Log page", async () => {
+            return global.flushPromises()
+                .then(async () => {
+                    const errorLogButton = getViewErrorLogButton(component);
+                    expect(errorLogButton).not.toBeNull();
+
+                    dispatchClickEvent(errorLogButton);
+                })
+                .then(async () => {
+                    const { pageReference } = getNavigateCalledWith();
+
+                    expect(pageReference.type).toBe("standard__component");
+                    expect(pageReference.state.c__recordId).toBe(component.recordId);
+                    expect(pageReference.attributes.componentName).toContain("ERR_RecordLog");
+                });
         });
 
         it('should not display any illustration', async () => {
@@ -569,4 +587,13 @@ const getErrorNotification = (component) => {
     const notification = component.shadowRoot.querySelector('[data-qa-locator="error Notification"]');
 
     return notification;
+}
+
+/***
+* @description Dispatch event when user clicks on the element
+*/
+const dispatchClickEvent = (element) => {
+    element.dispatchEvent(
+        new CustomEvent('click')
+    );
 }
