@@ -1045,6 +1045,10 @@
             </svg>
         </template>
         <div class="slds-text-longform">
+            <h2 if:true={hasHeading}
+                class="slds-text-heading_medium">
+                {heading}
+            </h2>
             <h3 if:true={hasTitle}
                 class="slds-text-heading_medium">
                 {title}
