@@ -168,7 +168,9 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
      * @description Checks if the form still has outstanding data to load
      */
     checkLoading() {
-        if (this.hasAccess === false) {
+        const hasError = this.error && this.error.detail;
+
+        if (this.hasAccess === false || hasError) {
             this.isLoading = false;
 
         } else {
@@ -266,7 +268,6 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
 
         if (this.error.detail && this.error.detail.includes('ERR_Log_CTRL')) {
             this.error.header = this.labels.insufficientPermissions;
-            this.isLoading = false;
         }
     }
 
@@ -278,12 +279,24 @@ export default class errRecordLog extends NavigationMixin(LightningElement) {
         return `spinner ${this.labels.loadingMessage}`;
     }
 
-    get qaLocatorDatatable() {
-        return `datatable Logs`;
+    get qaLocatorError() {
+        return `error Notification`;
+    }
+
+    get qaLocatorRecordViewPage() {
+        return `breadcrumb Record View Page`;
+    }
+
+    get qaLocatorRecordSObjectPage() {
+        return `breadcrumb Record SObject Page`;
     }
 
     get qaLocatorSummary() {
         return `text Summary`;
+    }
+
+    get qaLocatorDatatable() {
+        return `datatable Logs`;
     }
 
     get qaLocatorNoItemsMessage() {
