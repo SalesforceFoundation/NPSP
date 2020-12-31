@@ -6,5 +6,3 @@ npsp_lex_locators['delete_icon']='//span[contains(text() ,"{}")]/following::span
 npsp_lex_locators['object']['field']= "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]"
 npsp_lex_locators["record"]["related"]["dd-link"]='//div[contains(@class,"actionMenu")]//a[@title="{}"]'
 npsp_lex_locators["record"]["related"]["button"]="//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//a[@title='{}']"
-
-

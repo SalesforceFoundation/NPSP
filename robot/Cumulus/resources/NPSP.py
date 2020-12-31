@@ -35,7 +35,7 @@ from locators_51 import npsp_lex_locators as locators_51
 from locators_50 import npsp_lex_locators as locators_50
 
 locators_by_api_version = {
-    50.0: locators_50,   # winter '20
+    50.0: locators_50,   # winter '21
     51.0: locators_51   # spring '21
 }
 # will get populated in _init_locators
@@ -78,12 +78,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # patch salesforce locators for winter 21
         if int(self.latest_api_version) == 51:
             from cumulusci.robotframework import Salesforce
-            Salesforce.lex_locators["modal"]["button"] = (
-                "//div[contains(@class,'uiModal')]//*//button[.='{}']"
-            )
-            Salesforce.lex_locators["record"]["related"]["button"] = (
-                "//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']"
-            )
+            Salesforce.lex_locators["modal"]["button"] = ("//div[contains(@class,'uiModal')]//*//button[.='{}']")
+            Salesforce.lex_locators["record"]["related"]["button"] = ("//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']")
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -207,20 +203,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.scroll_element_into_view(option)
             self.selenium.click_element(option)
 
-    # def open_date_picker(self, title):
-    #     if (self.latest_api_version == 51.0) or (self.latest_api_version == 50.0 and title in ("Payment Date")):
-    #         locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
-    #     else:
-    #         locator = npsp_lex_locators['record']['list'].format(title)
-    #     self.selenium.set_focus_to_element(locator)
-    #     self.selenium.get_webelement(locator).click()
-
-    # def choose_date(self, value):
-    #     """To pick a date from the lightning date picker"""
-    #     locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
-    #     self.selenium.set_focus_to_element(locator)
-    #     self.selenium.get_webelement(locator).click()
-
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
         if self.latest_api_version == 50.0:
@@ -230,14 +212,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             self.salesforce.click_modal_button(value)
 
-    # def pick_date(self, value):
-    #     """To pick a date from the date picker"""
-    #     if self.latest_api_version == 51.0:
-    #         self.choose_date(value)
-    #     else:
-    #         locator = npsp_lex_locators['record']['datepicker'].format(value)
-    #         self.selenium.set_focus_to_element(locator)
-    #         self.selenium.get_webelement(locator).click()
 
     def change_month(self, value):
         """To pick month in the date picker"""
@@ -1227,7 +1201,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if self.latest_api_version == 51.0:
             self.click_flexipage_dropdown(dropdown,value)
         else:
-            if dropdown in ("Open Ended Status","Payment Method") and self.latest_api_version == 50.0:
+            if dropdown in ("Open Ended Status","Payment Method"):
                 locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
                 selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
                 if self.npsp.check_if_element_exists(locator):
@@ -1442,12 +1416,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 self._check_and_populate_lightning_fields(**kwargs)
             else:
                 locator = npsp_lex_locators["modal-form"]["label"].format(key)
-                print(locator)
                 if self.check_if_element_exists(locator):
                     ele=self.selenium.get_webelements(locator)
                     for e in ele:
                         classname=e.get_attribute("class")
-                        print("key is {} and class is {}".format(key,classname))
+                        self.builtin.log(f"key is {key} and class is {classname}")
                         if "Lookup" in classname and "readonly" not in classname:
                             self.salesforce.populate_lookup_field(key,value)
                             print("Executed populate lookup field for {}".format(key))
@@ -1462,8 +1435,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                                 self.selenium.get_webelement(locator).click()
                                 break
                         elif "Date" in classname and "readonly" not in classname:
-                            self.open_date_picker(key)
-                            self.pick_date(value)
+                            self.select_date_from_datepicker(key,value)
                             print("Executed open date picker and pick date for {}".format(key))
                             break
                         else:
