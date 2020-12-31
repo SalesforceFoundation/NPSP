@@ -31,12 +31,12 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
-
+from locators_51 import npsp_lex_locators as locators_51
 from locators_50 import npsp_lex_locators as locators_50
-from locators_49 import npsp_lex_locators as locators_49
+
 locators_by_api_version = {
-    49.0: locators_49,   # summer '20
     50.0: locators_50,   # winter '21
+    51.0: locators_51   # spring '21
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -75,6 +75,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
+        # patch salesforce locators for winter 21
+        if int(self.latest_api_version) == 51:
+            from cumulusci.robotframework import Salesforce
+            Salesforce.lex_locators["modal"]["button"] = ("//div[contains(@class,'uiModal')]//*//button[.='{}']")
+            Salesforce.lex_locators["record"]["related"]["button"] = ("//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']")
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -182,47 +187,31 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_flexipage_dropdown(self, title,value):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
+        option=npsp_lex_locators['span'].format(value)
         self.selenium.wait_until_page_contains_element(locator)
         self.selenium.scroll_element_into_view(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)
-        # self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('flexipage-popup')
-        option=npsp_lex_locators['span'].format(value)
-        self.selenium.scroll_element_into_view(option)
-        self.selenium.click_element(option)
-
-    def open_date_picker(self, title):
-        if self.latest_api_version == 50.0 and title in ("Payment Date"):
-            locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
-        else:
-            locator = npsp_lex_locators['record']['list'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
-
-    def choose_date(self, value):
-        """To pick a date from the lightning date picker"""
-        if self.latest_api_version == 50.0:
-            locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
-        else:
-            locator = npsp_lex_locators['record']['datepicker'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+        try:
+            self.selenium.get_webelement(locator).click()
+            self.wait_for_locator('flexipage-popup')
+            self.selenium.scroll_element_into_view(option)
+            self.selenium.click_element(option)
+        except Exception:
+            self.builtin.sleep(1,"waiting for a second and retrying click again")
+            self.selenium.driver.execute_script('arguments[0].click()', element)
+            self.wait_for_locator('flexipage-popup')
+            self.selenium.scroll_element_into_view(option)
+            self.selenium.click_element(option)
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
         if self.latest_api_version == 50.0:
-            btnlocator = npsp_lex_locators["button-with-text"].format(value)
+            btnlocator = npsp_lex_locators["button-text"].format(value)
             self.selenium.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
         else:
             self.salesforce.click_modal_button(value)
 
-    def pick_date(self, value):
-        """To pick a date from the date picker"""
-        locator = npsp_lex_locators['record']['datepicker'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
 
     def change_month(self, value):
         """To pick month in the date picker"""
@@ -444,7 +433,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if self.check_if_element_exists(locator):
                 checkbox=self.selenium.get_webelement(locator)
                 if (status == 'checked' and checkbox.is_selected() == False) or (status == 'unchecked' and checkbox.is_selected() == True):
-                    self.selenium.click_element(checkbox)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
                 else:
                     self.builtin.log("This checkbox is already in the expected status", "WARN")
                 cb_found = True
@@ -1208,23 +1198,25 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-
-        if dropdown in ("Open Ended Status","Payment Method") and self.latest_api_version == 50.0:
-            locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
-            selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
-            if self.npsp.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.wait_until_element_is_visible(locator)
-                self.selenium.scroll_element_into_view(locator)
-                self.salesforce._jsclick(locator)
-                self.selenium.wait_until_element_is_visible(selection_value)
-                self.selenium.click_element(selection_value)
+        if self.latest_api_version == 51.0:
+            self.click_flexipage_dropdown(dropdown,value)
         else:
-            locator = npsp_lex_locators['record']['list'].format(dropdown)
-            self.selenium.scroll_element_into_view(locator)
-            self.selenium.get_webelement(locator).click()
-            self.wait_for_locator('popup')
-            self.npsp.click_link_with_text(value)
+            if dropdown in ("Open Ended Status","Payment Method"):
+                locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
+                selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.selenium.wait_until_element_is_visible(locator)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
+                    self.selenium.wait_until_element_is_visible(selection_value)
+                    self.selenium.click_element(selection_value)
+            else:
+                locator = npsp_lex_locators['record']['list'].format(dropdown)
+                self.selenium.scroll_element_into_view(locator)
+                self.selenium.get_webelement(locator).click()
+                self.wait_for_locator('popup')
+                self.npsp.click_link_with_text(value)
 
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
@@ -1428,7 +1420,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     ele=self.selenium.get_webelements(locator)
                     for e in ele:
                         classname=e.get_attribute("class")
-#                       print("key is {} and class is {}".format(key,classname))
+                        self.builtin.log(f"key is {key} and class is {classname}")
                         if "Lookup" in classname and "readonly" not in classname:
                             self.salesforce.populate_lookup_field(key,value)
                             print("Executed populate lookup field for {}".format(key))
@@ -1443,8 +1435,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                                 self.selenium.get_webelement(locator).click()
                                 break
                         elif "Date" in classname and "readonly" not in classname:
-                            self.open_date_picker(key)
-                            self.pick_date(value)
+                            self.select_date_from_datepicker(key,value)
                             print("Executed open date picker and pick date for {}".format(key))
                             break
                         else:
@@ -1546,11 +1537,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def select_date_from_datepicker(self,field,value):
         field_loc=npsp_lex_locators["bge"]["field-input"].format(field)
-        self.selenium.click_element(field_loc)
-        locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)
-        self.selenium.wait_until_page_contains_element(locator)
-        self.click_bge_button(value)
-        self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
+        if self.check_if_element_exists(field_loc):
+            locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)
+            self.selenium.click_element(field_loc)
+            self.selenium.wait_until_page_contains_element(locator)
+            self.click_bge_button(value)
+            self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
+        else:
+            field_loc=npsp_lex_locators['record']['lt_date_picker'].format(field)
+            locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
+            self.selenium.click_element(field_loc)
+            self.selenium.wait_until_page_contains_element(locator)
+            self.selenium.click_element(locator)
+
 
     def click_more_actions_button(self):
         """clicks on the more actions dropdown button in the actions container on record page"""
