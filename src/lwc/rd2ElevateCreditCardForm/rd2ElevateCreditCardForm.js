@@ -1,8 +1,15 @@
-import { api, track, LightningElement } from 'lwc';
-import { constructErrorMessage } from 'c/utilCommon';
+import { api, track, wire, LightningElement } from 'lwc';
+import { constructErrorMessage, extractFieldInfo } from 'c/utilCommon';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
+
+import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
+import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
+import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
+import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
@@ -10,12 +17,22 @@ import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableBut
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
+import updatePaymentButtonLabel from '@salesforce/label/c.RD2_ElevateUpdatePaymentButtonLabel';
+import cancelLabel from '@salesforce/label/c.commonCancel';
+
+
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
 * on the RD2 entry form
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
+
+const FIELDS = [
+    FIELD_CARD_LAST4,
+    FIELD_CARD_EXPIRY_MONTH,
+    FIELD_CARD_EXPIRY_YEAR
+];
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
@@ -28,12 +45,18 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateDisableButtonLabel,
         elevateDisabledMessage,
         elevateEnableButtonLabel,
-        cardholderNameLabel
+        updatePaymentButtonLabel,
+        cardholderNameLabel,
+        cancelLabel
     };
 
+    @api recordId;
+    @api isEdit;
     @track isLoading = true;
     @track isDisabled = false;
     @track alert = {};
+    @track fields = {};
+    @track record;
 
     /***
     * @description Get the organization domain information such as domain and the pod name
@@ -46,6 +69,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             });
 
         tokenHandler.setVisualforceOriginURLs(domainInfo);
+
+        this.isDisabled = this.isEdit;
     }
 
     /***
@@ -54,6 +79,65 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     renderedCallback() {
         let component = this;
         tokenHandler.registerPostMessageListener(component);
+    }
+
+    /***
+    * @description Retrieves Recurring Donation Object and fields labels/help text
+    */
+    @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
+    wiredRecurringDonationObjectInfo(response) {
+        if (response.data) {
+            this.setFields(response.data.fields);
+        }
+
+        if (response.error) {
+            this.handleError(response.error);
+        }
+    }
+
+    /***
+     * @description Tracks specified fields so when the Recurring Donation record is updated,
+     * this method is called to force refresh of the data and the component.
+     */
+    @wire(getRecord, {
+        recordId: '$recordId',
+        fields: FIELDS
+    })
+    wiredRecurringDonation(response) {
+        if (response.data) {
+            this.record = response.data;
+        }
+
+        if (response.error) {
+            this.handleError(response.error);
+        }
+    }
+
+    /**
+     * @description Construct field describe info from the Recurring Donation SObject info
+     */
+    setFields(rdObjectInfo) {
+        this.fields.cardLast4 = extractFieldInfo(rdObjectInfo, FIELD_CARD_LAST4.fieldApiName);
+        this.fields.cardExpiryMonth = extractFieldInfo(rdObjectInfo, FIELD_CARD_EXPIRY_MONTH.fieldApiName);
+        this.fields.cardExpiryYear = extractFieldInfo(rdObjectInfo, FIELD_CARD_EXPIRY_YEAR.fieldApiName);
+    }
+
+    get cardLast4() {
+        return getFieldValue(this.record, FIELD_CARD_LAST4);
+    }
+
+    get cardExpiryMonth() {
+        return getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+    }
+
+    get cardExpiryYear() {
+        return getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+    }
+
+    get disabledEntryLabel() {
+        return this.isEdit 
+            ? this.labels.cancelLabel 
+            : this.labels.elevateDisableButtonLabel;
     }
 
     /***

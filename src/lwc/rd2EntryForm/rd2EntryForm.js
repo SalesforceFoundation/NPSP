@@ -306,7 +306,9 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            //&& !this.isEdit
+            && (!this.isEdit 
+                || (this.isEdit && !isNull(this.commitmentId))
+            )
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
