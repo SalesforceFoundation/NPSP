@@ -16,8 +16,8 @@
 
                                 <lightning-layout-item size='6'>
                                     <template if:false={isDisabled}>
-                                        <lightning-button variant="base" label={disabledEntryLabel}
-                                            alternative-text={disabledEntryLabel} icon-name='utility:close'
+                                        <lightning-button variant="base" label={disableInputLabel}
+                                            alternative-text={disableInputLabel} icon-name='utility:close'
                                             icon-position="right" onclick={handleUserDisabledWidget}
                                             class='slds-button slds-button_base slds-float_right hide-card-button'
                                             data-qa-locator='button Do Not Use Elevate'>
@@ -58,8 +58,9 @@
                             </template>
 
                             <template if:true={isEdit}>
-                                <lightning-layout multiple-rows="false" class="slds-p-top_small slds-p-bottom_large slds-p-horizontal_x-small">
-                                    <lightning-layout-item size="3">
+                                <lightning-layout multiple-rows="false"
+                                    class="slds-p-top_small slds-p-bottom_large slds-p-horizontal_x-small">
+                                    <lightning-layout-item size="4">
                                         <label for="cardLast4" class="slds-form-element__label">
                                             {fields.cardLast4.label}
                                         </label>
@@ -70,23 +71,13 @@
                                         </div>
                                     </lightning-layout-item>
 
-                                    <lightning-layout-item size="3">
-                                        <label for="cardExpiryMonth" class="slds-form-element__label">
-                                            {fields.cardExpiryMonth.label}
+                                    <lightning-layout-item size="4">
+                                        <label for="cardExpirationDate" class="slds-form-element__label">
+                                            {labels.cardExpirationDate}
                                         </label>
                                         <div class="slds-form-element__control">
-                                            <lightning-formatted-text id="cardExpiryMonth" data-id="cardExpiryMonth"
-                                                value={cardExpiryMonth}>
-                                            </lightning-formatted-text>
-                                        </div>
-                                    </lightning-layout-item>
-
-                                    <lightning-layout-item size="3">
-                                        <label for="cardExpiryYear" class="slds-form-element__label">
-                                            {fields.cardExpiryYear.label}
-                                        </label>
-                                        <div class="slds-form-element__control">
-                                            <lightning-formatted-text id="cardExpiryYear" data-id="cardExpiryYear" value={cardExpiryYear}>
+                                            <lightning-formatted-text id="cardExpirationDate"
+                                                data-id="cardExpirationDate" value={cardExpirationDate}>
                                             </lightning-formatted-text>
                                         </div>
                                     </lightning-layout-item>

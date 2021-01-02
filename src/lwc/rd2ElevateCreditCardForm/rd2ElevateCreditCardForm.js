@@ -15,9 +15,10 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
-import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 import updatePaymentButtonLabel from '@salesforce/label/c.RD2_ElevateUpdatePaymentButtonLabel';
+import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
+import cardExpirationDate from '@salesforce/label/c.commonMMYY';
 import cancelLabel from '@salesforce/label/c.commonCancel';
 
 
@@ -47,6 +48,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateEnableButtonLabel,
         updatePaymentButtonLabel,
         cardholderNameLabel,
+        cardExpirationDate,
         cancelLabel
     };
 
@@ -118,25 +120,19 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
      */
     setFields(rdObjectInfo) {
         this.fields.cardLast4 = extractFieldInfo(rdObjectInfo, FIELD_CARD_LAST4.fieldApiName);
-        this.fields.cardExpiryMonth = extractFieldInfo(rdObjectInfo, FIELD_CARD_EXPIRY_MONTH.fieldApiName);
-        this.fields.cardExpiryYear = extractFieldInfo(rdObjectInfo, FIELD_CARD_EXPIRY_YEAR.fieldApiName);
     }
 
     get cardLast4() {
         return getFieldValue(this.record, FIELD_CARD_LAST4);
     }
 
-    get cardExpiryMonth() {
-        return getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+    get cardExpirationDate() {
+        return getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + "/" + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
     }
 
-    get cardExpiryYear() {
-        return getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
-    }
-
-    get disabledEntryLabel() {
-        return this.isEdit 
-            ? this.labels.cancelLabel 
+    get disableInputLabel() {
+        return this.isEdit
+            ? this.labels.cancelLabel
             : this.labels.elevateDisableButtonLabel;
     }
 
