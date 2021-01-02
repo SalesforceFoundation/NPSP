@@ -274,10 +274,11 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Recurring Type change might hide or display the credit card widget
+    * @description Handle schedule form fields:
+    * - Recurring Type change might hide or display the credit card widget.
     * @param event
     */
-    handleRecurringTypeChange(event) {
+    handleScheduleChange(event) {
         this.handleElevateWidgetDisplay();
     }
 
@@ -305,9 +306,9 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && !this.isEdit
+            //&& !this.isEdit
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
-            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN
+            && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
@@ -802,7 +803,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Returns value of the Payment Method field
      */
     getPaymentMethod() {
-        const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
+        const paymentMethod = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
 
         return paymentMethod ? paymentMethod.value : null;
     }

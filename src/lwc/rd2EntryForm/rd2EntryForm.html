@@ -120,16 +120,19 @@
 
                                 </lightning-layout>
 
-                                <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"
-                                    onerrorevent={handleChildComponentError} ontypechange={handleRecurringTypeChange} if:true={isSettingReady}>
-                                </c-rd2-entry-form-schedule-section>
+                                <template if:true={isSettingReady}>
+                                    <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"
+                                        onerrorevent={handleChildComponentError} 
+                                        onschedulechange={handleScheduleChange} >
+                                    </c-rd2-entry-form-schedule-section>
+                                </template>
 
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
                                         if:true={fields.paymentMethod}>
                                         <lightning-input-field field-name={fields.paymentMethod.apiName}
                                             onchange={handlePaymentChange}
-                                            data-id='{fields.paymentMethod.apiName}'>
+                                            data-id="paymentMethod">
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
