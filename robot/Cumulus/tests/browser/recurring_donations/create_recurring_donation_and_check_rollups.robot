@@ -42,17 +42,19 @@ Create Recurring Donation And Check Rollups
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
     Go To Page                   Details                        Opportunity                 object_id=${opportunity1}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-
+    Wait Until Modal Is Closed
     #Find 2nd Opportunity for Recurring Donation and Close It
     @{opportunity2} =            API Query Installment          ${data}[contact_rd][Id]    (2 of 12)
     Store Session Record         Opportunity                    ${opportunity2}[0][Id]
     Go To Page                   Details                        Opportunity                 object_id=${opportunity2}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-
+    Wait Until Modal Is Closed
     #Open NPSP Settings and run Rollups Donations Batch job
     Run Donations Batch Process
 
