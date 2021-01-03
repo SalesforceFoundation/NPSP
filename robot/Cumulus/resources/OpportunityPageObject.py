@@ -36,7 +36,10 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
-        self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
+        if self.npsp.latest_api_version==51.0:
+            self.npsp.click_related_list_dd_button('Payments', 'Show more actions', 'Writeoff_Payments')
+        else:
+            self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
         self.npsp.wait_for_locator('frame','Write Off Remaining Balance')
         self.npsp.choose_frame("Write Off Remaining Balance")
         self.selenium.wait_until_page_contains("You are preparing to write off")

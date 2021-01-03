@@ -8,7 +8,7 @@ Suite Setup     Run Keywords
 ...             Open Test Browser
 ...             Setup Variables
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
@@ -40,22 +40,25 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
     Go To Page                   Details                        Opportunity                 object_id=${opportunity1}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
+    Wait Until Modal Is Closed
 
     #Find 2nd Opportunity for Recurring Donation and Close It
     @{opportunity2} =            API Query Installment          ${data}[contact_rd][Id]               (2)
     Store Session Record         Opportunity                    ${opportunity2}[0][Id]
     Go To Page                   Details                        Opportunity                           object_id=${opportunity2}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-
+    Wait Until Modal Is Closed
     #Close Recurring Donation and Refresh Opportunities
     Go To Page                   Details                        npe03__Recurring_Donation__c          object_id=${data}[contact_rd][Id]
     Click Actions Button         Edit
     Click Flexipage Dropdown     Open Ended Status              Closed
-    Click Button With Title      Save
+    Click Button                 npsp:button-text:Save
     Wait Until Modal Is Closed
     Refresh Opportunities
 
