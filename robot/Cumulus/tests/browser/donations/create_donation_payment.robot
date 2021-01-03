@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 # Sets up all the required data for the test based on the keyword requests
@@ -38,14 +38,13 @@ Create Donation and Opportunity and Create Payment Manually
     Wait For Modal                          New                       Opportunity: Donation
     # Create a new Opportunity from the UI
 
-    Populate Modal Form
-    ...                                     Opportunity Name=${opp_name}
-    ...                                     Account Name=${data}[contact][LastName] Household
-    ...                                     Amount=${Amount}
-    ...                                     Do Not Automatically Create Payment=checked
+
+    Populate Field                          Opportunity Name    ${opp_name}
+    Populate Lookup Field                   Account Name        ${data}[contact][LastName] Household
+    Populate Field                          Amount   ${Amount}
     Select Value From Dropdown              Stage    ${Stage_Type}
-    Open Date Picker                        Close Date
-    Pick Date                               Today
+    Select Date From Datepicker             Close Date          Today
+    Set Checkbutton To                      Do Not Automatically Create Payment     checked
     Click Modal Button                      Save
     Wait Until Modal Is Closed
     Current Page Should Be                  Details                                 Opportunity
@@ -59,13 +58,9 @@ Create Donation and Opportunity and Create Payment Manually
     Select Window
     Populate Modal Form                     Payment Method=Credit Card
     ...                                     Payment Amount=100
-
-    Open Date Picker                        Payment Date
-    Choose Date                             Today
+    Select Date From Datepicker             Payment Date          Today
 
     Click Modal Footer Button               Save
-    Click Modal Footer Button               Cancel
-
 
     Scroll Page To Location                 0    0
     Validate Related Record Count           Payments                                1
