@@ -141,11 +141,3 @@ Batch Template Default values Setting
     ...                              Opportunity: Record Type=NPSP Default
 
     Query And Store Records To Delete    ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${batch_id}
-
-
-
-
-
-
-
-
