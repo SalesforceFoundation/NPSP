@@ -68,14 +68,13 @@ Create An Opportunity Related to Recurring Donation
        Select Record Type                      Donation
        Wait For Modal                          New                       Opportunity: Donation
        # Create a new Opportunity from the UI
-       Populate Modal Form
+       Populate Form
        ...                                     Opportunity Name=Manual Opportunity
-       ...                                     Account Name=${data}[contact][LastName] Household
        ...                                     Amount=25
-       ...                                     Do Not Automatically Create Payment=checked
+       Populate Lookup Field                   Account Name              ${data}[contact][LastName] Household
+       Set Checkbutton To                      Do Not Automatically Create Payment         checked
        Select Value From Dropdown              Stage    ${Stage_Type}
-       Open Date Picker                        Close Date
-       Pick Date                               Today
+       Select Date From Datepicker             Close Date                Today
        Click Modal Button                      Save
        Wait Until Modal Is Closed
 
