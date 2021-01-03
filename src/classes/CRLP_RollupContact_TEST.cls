@@ -314,6 +314,8 @@ public class CRLP_RollupContact_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
+        Integer lastYear = Date.Today().addYears(-1).year();
+        Integer twoYearsAgo = Date.Today().addYears(-2).year();
         Decimal totalDonations = 0, total2YearsAgo = 0, last365Days = 0;
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
@@ -334,21 +336,22 @@ public class CRLP_RollupContact_TEST {
                     Type = 'New'
             ));
             totalDonations += amt;
-            if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
+            Date targetDate = closeDate.addMonths(n);
+            if (targetDate.year() == twoYearsAgo) {
                 total2YearsAgo += amt;
             }
-            if (closeDate.addMonths(n).year() == Date.Today().addYears(-1).year()) {
+            if (targetDate.year() == lastYear) {
                 wonCountLastYear++;
             }
             if (closeDate.addMonths(n).daysBetween(Date.Today()) <= 365) {
                 last365Days += amt;
             }
-            String donationYr = UTIL_String.removeNonNumericCharacters(closeDate.addMonths(n).year().format());
+            String donationYr = UTIL_String.removeNonNumericCharacters(targetDate.year().format());
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;
             }
-            lastCloseDate = closeDate.addMonths(n);
+            lastCloseDate = targetDate;
         }
 
         // create one closed opportunity to ensure it's not included in our rollups
@@ -382,6 +385,10 @@ public class CRLP_RollupContact_TEST {
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
             String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
             donationYears.add(donationYr);
+
+            if (orgDonationDate.year() == lastYear) {
+                wonCountLastYear++;
+            }
         }
 
         // create 4 opps for con4 to test single result opp edge cases
@@ -557,7 +564,7 @@ public class CRLP_RollupContact_TEST {
         if (!UserInfo.isMultiCurrencyOrganization()) {
             return;
         }
-        
+
         // Enable Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true,
