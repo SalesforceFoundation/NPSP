@@ -37,7 +37,7 @@ Setup Test Data
 
 Create Fixed Length Recurring Donation Multiply By
     [Documentation]              This test verifies that Opportunities with the proper mulitplied amount are created for a Recurring Donation.
-    ...                          This test case also verified the correct number of opportunities are created and related Account, Contact, 
+    ...                          This test case also verified the correct number of opportunities are created and related Account, Contact,
     ...                          and Soft Credit Contact rollups are udpated.
     [tags]                                   W-039820                            feature:Recurring Donations
 
@@ -46,17 +46,19 @@ Create Fixed Length Recurring Donation Multiply By
     Store Session Record         Opportunity                   ${opportunity1}[0][Id]
     Go To Page                   Details                       Opportunity                 object_id=${opportunity1}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-
+    Wait Until Modal Is Closed
     #Find 2nd Opportunity for Recurring Donation and Close It
     @{opportunity2} =            API Query Installment         ${data}[contact1_rd][Id]     (2 of 50)
     Store Session Record         Opportunity                   ${opportunity2}[0][Id]
     Go To Page                   Details                       Opportunity                 object_id=${opportunity2}[0][Id]
     Click Object Button          Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-
+    Wait Until Modal Is Closed
 
     #Open NPSP Settings and run Rollups Donations Batch job
     Run Donations Batch Process
