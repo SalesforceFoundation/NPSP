@@ -22,22 +22,20 @@ Setup Test Data
 Create Grant
     [Documentation]                      Create a Grant from the UI
 
-    Go To Page                             Listing
-     ...                                   Opportunity
-    Click Object Button                    New
-    Wait For Modal                         New                       Opportunity
-    Select Record Type                     Grant
-    Populate Modal Form
-    ...                                   Opportunity Name=Robot $100 grant
-    ...                                   Amount=100
-    ...                                   Account Name=${data}[contact][LastName] Household
-    ...                                   Do Not Automatically Create Payment=checked
-    Select Value From Dropdown            Stage    Awarded
-    Open Date Picker                      Close Date
-    Pick Date                             Today
-    Click Modal Button                    Save
+    Go To Page                         Listing
+     ...                               Opportunity
+    Click Object Button                New
+    Wait For Modal                     New                                  Opportunity
+    Select Record Type                 Grant
+    Populate Field                     Opportunity Name                     Robot $100 grant
+    Populate Field                     Amount                               100
+    Populate Lookup Field              Account Name                         ${data}[contact][LastName] Household
+    Select Value From Dropdown         Stage                                Awarded
+    Select Date From Datepicker        Close Date                           Today
+    Set Checkbutton To                 Do Not Automatically Create Payment  checked
+    Click Modal Button                 Save
     Wait Until Modal Is Closed
-    ${grant_name}                         Get Main Header
-    Go To Page                            Listing
-    ...                                   Opportunity
-    Click Link                            link=${grant_name}
+    ${grant_name}                      Get Main Header
+    Go To Page                         Listing
+    ...                                Opportunity
+    Click Link                         link=${grant_name}
