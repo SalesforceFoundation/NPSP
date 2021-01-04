@@ -291,122 +291,8 @@ public with sharing class RD2_EntryFormController {
     * @return String Commitment create/update response
     */
     @AuraEnabled
-    public static String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {
-        npe03__Recurring_Donation__c rd = constructRecurringDonation(recordId, jsonRecord);
-        
-        validate(rd);
-
-        PS_CommitmentRequest.RequestBody requestBody = getRequestBody(rd, paymentMethodToken);
-        
-        return processCommitment(recordId, rd.CommitmentId__c, JSON.serialize(requestBody));
-    }
-
-
-    private static npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord) {
-        npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
-            jsonRecord, npe03__Recurring_Donation__c.class
-        );
-
-        if (recordId != null) {
-            rd.Id = recordId;
-        }
-
-        if (String.isBlank(rd.Status__c)) {
-            rd.Status__c = 'Active';//TODO populate defaults that DML does by default, currency? etc.
-        }
-
-        return rd;
-    }
-
-    @TestVisible
-    private static void validate(npe03__Recurring_Donation__c rd) {
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
-        List<npe03__Recurring_Donation__c> oldRds = rd.Id == null
-            ? new List<npe03__Recurring_Donation__c>()
-            : new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ rd.Id });
-
-        RD2_RecurringDonations_TDTM.DataAuditor auditor = new RD2_RecurringDonations_TDTM.DataAuditor();        
-        auditor.adjust(rds, oldRds);
-
-        List<RD2_ValidationService.Notification> notifications = auditor.validate(rds, oldRds);
-
-        if (!notifications.isEmpty()) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(
-                notifications[0].getErrors()[0]
-            );
-        }        
-    }
-
-    @TestVisible
-    private static PS_CommitmentRequest.RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-        try {
-            PS_CommitmentRequest request = new PS_CommitmentRequest();
-
-            return request.getRequestBody(rd, paymentMethodToken);
-
-        } catch (Exception ex) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
-        }
-
-        return null;
-    }
-    
-    @TestVisible
-    private static String processCommitment(Id recordId, String commitmentId, String jsonRequestBody) {
-        UTIL_Http.Response response;
-
-        try {
-            response = sendRequest(commitmentId, jsonRequestBody);
-
-            if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
-                processError(recordId, response.getErrorMessages());
-            }
-
-        } catch (Exception e) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
-         }
-
-        return JSON.serialize(response);
-    }
-
-    @TestVisible
-    private static UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
-        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
-        UTIL_Http.Response response;
-
-        try {
-            HttpRequest request = new PS_CommitmentRequest()
-                .buildRequest(commitmentId, jsonRequestBody);
-
-            response = requestService.sendRequest(request);
-
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
-        }
-
-        return response;
-    }
-
-
-    /**
-    * @description Creates an error record for the specified record Id and error message
-    * @param recordId Recurring Donation Id
-    * @param errorMessage Error message
-    * @return void
-    */
-    private static void processError(Id recordId, String errorMessage) {
-        ERR_LogService.Logger logger = new ERR_LogService.Logger(
-            ERR_Handler_API.Context.Elevate,
-            npe03__Recurring_Donation__c.SObjectType
-        );
-
-        logger.addError(
-            recordId,
-            errorMessage,
-            RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
-        );
-
-        logger.processErrors();
+    public static String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {        
+        return commitmentService.handleCommitment(recordId, jsonRecord, paymentMethodToken);
     }
     
 
@@ -426,6 +312,163 @@ public with sharing class RD2_EntryFormController {
                 return requestService;
             }
             set;
+        }
+
+        /**
+        * @description Used to adjust and validate Recurring Donation data
+        */
+        private RD2_RecurringDonations_TDTM.DataAuditor auditor {
+            get {
+                if (auditor == null) {
+                    auditor = new RD2_RecurringDonations_TDTM.DataAuditor();
+                }
+                return auditor;
+            }
+            set;
+        }     
+
+
+        public String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {
+            npe03__Recurring_Donation__c rd = constructRecurringDonation(recordId, jsonRecord);
+            
+            validate(rd, paymentMethodToken);
+
+            if (shouldSendToElevate(recordId, paymentMethodToken)) {
+                PS_CommitmentRequest.RequestBody requestBody = getRequestBody(rd, paymentMethodToken);
+                
+                return processCommitment(recordId, rd.CommitmentId__c, JSON.serialize(requestBody));
+
+            } else {
+                return buildOkResponse();
+            }
+        }
+
+        private Boolean shouldSendToElevate(Id recordId, String paymentMethodToken) {
+            // Data should be sent to Elevate if it is a new commitment or
+            // the existing commitment has credit card data changed
+            return recordId == null 
+                || (recordId != null && String.isNotBlank(paymentMethodToken));
+        }
+
+        private String buildOkResponse() {
+            UTIL_Http.Response response = new UTIL_Http.Response();
+            response.statusCode = UTIL_Http.STATUS_CODE_OK;
+            response.status = UTIL_Http.STATUS_OK;
+
+            return JSON.serialize(response);
+        }
+
+
+        private npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord) {
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+
+            if (recordId != null) {
+                rd.Id = recordId;
+            }
+
+            if (String.isBlank(rd.Status__c)) {
+                rd.Status__c = 'Active';//TODO populate defaults that DML does by default, currency? etc.
+            }
+
+            return rd;
+        }
+
+        private void validate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+            if (rd.Id == null && String.isBlank(paymentMethodToken)) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(
+                    'Payment method token must be provided for a new Elevate recurring payment.'//TODO Custom Label
+                );
+            }
+
+            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
+            List<npe03__Recurring_Donation__c> oldRds = rd.Id == null
+                ? new List<npe03__Recurring_Donation__c>()
+                : new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ rd.Id });
+            
+            auditor.adjust(rds, oldRds);
+
+            List<RD2_ValidationService.Notification> notifications = auditor.validate(rds, oldRds);
+
+            if (!notifications.isEmpty()) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(
+                    notifications[0].getErrors()[0]
+                );
+            }        
+        }
+
+        @TestVisible
+        private PS_CommitmentRequest.RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+            try {
+                PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+                return request.getRequestBody(rd, paymentMethodToken);
+
+            } catch (Exception ex) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+            }
+
+            return null;
+        }
+        
+        @TestVisible
+        private String processCommitment(Id recordId, String commitmentId, String jsonRequestBody) {
+            UTIL_Http.Response response;
+
+            try {
+                response = sendRequest(commitmentId, jsonRequestBody);
+
+                if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+                    && response.statusCode != UTIL_Http.STATUS_CODE_OK
+                ) {
+                    processError(recordId, response.getErrorMessages());
+                }
+
+            } catch (Exception e) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+            }
+
+            return JSON.serialize(response);
+        }
+
+        @TestVisible
+        private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
+            UTIL_Http.Response response;
+
+            try {
+                HttpRequest request = new PS_CommitmentRequest()
+                    .buildRequest(commitmentId, jsonRequestBody);
+
+                response = requestService.sendRequest(request);
+
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            return response;
+        }
+
+
+        /**
+        * @description Creates an error record for the specified record Id and error message
+        * @param recordId Recurring Donation Id
+        * @param errorMessage Error message
+        * @return void
+        */
+        private void processError(Id recordId, String errorMessage) {
+            ERR_LogService.Logger logger = new ERR_LogService.Logger(
+                ERR_Handler_API.Context.Elevate,
+                npe03__Recurring_Donation__c.SObjectType
+            );
+
+            String errorType = recordId == null
+                ? RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
+                : RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_UPDATE;
+
+            logger.addError(recordId, errorMessage, errorType);
+
+            logger.processErrors();
         }
     }
 

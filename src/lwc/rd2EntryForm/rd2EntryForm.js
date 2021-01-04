@@ -425,6 +425,7 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         this.loadingText = this.customLabels.savingCommitmentMessage;
+
         const rd = this.constructRecurringDonation(allFields);
 
         handleCommitment({
@@ -478,21 +479,32 @@ export default class rd2EntryForm extends LightningElement {
             rd[FIELD_INSTALLMENT_FREQUENCY.fieldApiName] = 1;
         }
 
-        rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
-        
+        if (this.commitmentId) {
+            rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
+        }
+
         return rd;
     }
 
     populateCommitmentFields(response, allFields) {
-        let responseBody = JSON.parse(response.body);
-        let cardData = responseBody.cardData;
+        if (isNull(response) || isUndefined(response)
+            || isNull(response.body) || isUndefined(response.body)
+        ) {
+            return;
+        }
+
+        const responseBody = JSON.parse(response.body);
+        const cardData = responseBody.cardData;
 
         if (response.statusCode === HTTP_CODES.Created) {
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = responseBody.id;
         }
-        allFields[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
-        allFields[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
-        allFields[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
+
+        if (cardData) {
+            allFields[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
+            allFields[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
+            allFields[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
+        }
     }
 
 
@@ -584,7 +596,7 @@ export default class rd2EntryForm extends LightningElement {
         const message = this.isEdit
             ? updateSuccessMessage.replace("{0}", this.recordName)
             : insertSuccessMessage.replace("{0}", this.recordName);
-            
+
         showToast(message, '', 'success');
 
         this.closeModal(recordId);
@@ -614,7 +626,7 @@ export default class rd2EntryForm extends LightningElement {
 
         let errors = this.getErrors(response);
 
-        const message = '{0}.\n' + this.customLabels.contactAdminMessage; 
+        const message = '{0} \n' + this.customLabels.contactAdminMessage;
 
         return format(message, [errors]);
     }

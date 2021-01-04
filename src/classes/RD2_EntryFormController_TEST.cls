@@ -243,7 +243,8 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldReturnCommitmentRequestBody() {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
-        PS_CommitmentRequest.RequestBody requestBody = RD2_EntryFormController.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
+        RD2_EntryFormController.CommitmentService commitmentService = new RD2_EntryFormController.CommitmentService();
+        PS_CommitmentRequest.RequestBody requestBody = commitmentService.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
 
         System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
         System.assertEquals(PAYMENT_METHOD_TOKEN, requestBody.paymentMethodToken, 'The payment token should match');
@@ -261,8 +262,9 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.startTest();
         mockRecordCreatedCalloutResponse();
 
-        PS_CommitmentRequest.RequestBody requestBody = RD2_EntryFormController.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
-        UTIL_Http.Response response = RD2_EntryFormController.sendRequest(rd.Id, JSON.serialize(requestBody));
+        RD2_EntryFormController.CommitmentService commitmentService = new RD2_EntryFormController.CommitmentService();
+        PS_CommitmentRequest.RequestBody requestBody = commitmentService.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
+        UTIL_Http.Response response = commitmentService.sendRequest(rd.Id, JSON.serialize(requestBody));
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');

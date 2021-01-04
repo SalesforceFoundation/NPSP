@@ -73,6 +73,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         tokenHandler.setVisualforceOriginURLs(domainInfo);
 
         this.isDisabled = this.isEdit;
+        if (this.isDisabled === true) {
+            this.handleUserDisabledWidget();
+        }
     }
 
     /***

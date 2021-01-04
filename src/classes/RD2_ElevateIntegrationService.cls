@@ -36,6 +36,7 @@
 public inherited sharing class RD2_ElevateIntegrationService {
 
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
+    public static final String LOG_TYPE_COMMITMENT_UPDATE = 'payment.commitment.update';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
     /***
