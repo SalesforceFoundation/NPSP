@@ -11,7 +11,7 @@ Suite Setup     Run keywords
 Suite Teardown  Run keywords
 ...             API Modify Allocations Setting  ${NS}Default_Allocations_Enabled__c=false   ${NS}Default__c=None
 ...     AND     Query And Store Records To Delete    ${NS}DataImport__c   ${NS}Account1_Name__c=${ACCOUNT_NAME}
-...     AND     Query And Store Records To Delete    ${NS}DataImport__c   ${NS}Contact1_Firstname__c=${FIRST_NAME}  Contact1_Lastname__c=${LAST_NAME}
+...     AND     Query And Store Records To Delete    ${NS}DataImport__c   ${NS}Contact1_Firstname__c=${FIRST_NAME}  ${NS}Contact1_Lastname__c=${LAST_NAME}
 ...     AND     Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
