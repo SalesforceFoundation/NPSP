@@ -8,7 +8,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
 ...             Enable Advanced Mapping
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
@@ -68,10 +68,8 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
 
     #Update DI record and reprocess batch and verify status messages
     Click Show More Actions Button   Edit
-    Wait Until Modal Is Open
     Click Flexipage Dropdown         Donation Donor    Account1
-    Click Button With Title          Save
-    Wait Until Modal Is Closed
+    Click Special Button             Save
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Open Data Import Record          ${data_import_upd}[Name]
