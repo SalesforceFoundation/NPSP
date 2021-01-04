@@ -325,41 +325,39 @@ public with sharing class RD2_EntryFormController {
                 return auditor;
             }
             set;
-        }     
-
+        }   
 
         public String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {
-            npe03__Recurring_Donation__c rd = constructRecurringDonation(recordId, jsonRecord);
-            
-            validate(rd, paymentMethodToken);
 
-            if (shouldSendToElevate(recordId, paymentMethodToken)) {
+            npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(recordId);
+            npe03__Recurring_Donation__c rd = constructRecurringDonation(recordId, jsonRecord, oldRd);
+            
+            validate(rd, oldRd, paymentMethodToken);
+
+            if (shouldSendToElevate(rd, paymentMethodToken)) {
                 PS_CommitmentRequest.RequestBody requestBody = getRequestBody(rd, paymentMethodToken);
                 
-                return processCommitment(recordId, rd.CommitmentId__c, JSON.serialize(requestBody));
+                return processCommitment(rd.Id, rd.CommitmentId__c, JSON.serialize(requestBody));
 
             } else {
                 return buildOkResponse();
             }
         }
 
-        private Boolean shouldSendToElevate(Id recordId, String paymentMethodToken) {
-            // Data should be sent to Elevate if it is a new commitment or
-            // the existing commitment has credit card data changed
-            return recordId == null 
-                || (recordId != null && String.isNotBlank(paymentMethodToken));
+        private npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
+            npe03__Recurring_Donation__c oldRd = null;
+
+            if (recordId != null) {
+                List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
+                if (oldRds != null && !oldRds.isEmpty()) {
+                    oldRd = oldRds[0];
+                }
+            }
+
+            return oldRd;
         }
 
-        private String buildOkResponse() {
-            UTIL_Http.Response response = new UTIL_Http.Response();
-            response.statusCode = UTIL_Http.STATUS_CODE_OK;
-            response.status = UTIL_Http.STATUS_OK;
-
-            return JSON.serialize(response);
-        }
-
-
-        private npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord) {
+        private npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord, npe03__Recurring_Donation__c oldRd) {
             npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
@@ -369,33 +367,61 @@ public with sharing class RD2_EntryFormController {
             }
 
             if (String.isBlank(rd.Status__c)) {
-                rd.Status__c = 'Active';//TODO populate defaults that DML does by default, currency? etc.
+                rd.Status__c = 'Active';//TODO populate defaults applied by DML (trigger), currency in a multi-currency org? etc.
             }
+
+            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
+            if (oldRd != null) {
+                oldRds.add(oldRd);
+            }
+            
+            auditor.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
 
             return rd;
         }
 
-        private void validate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            if (rd.Id == null && String.isBlank(paymentMethodToken)) {
-                UTIL_AuraEnabledCommon.throwAuraHandledException(
-                    'Payment method token must be provided for a new Elevate recurring payment.'//TODO Custom Label
-                );
+        private void validate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
+            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
+            if (oldRd != null) {
+                oldRds.add(oldRd);
             }
 
-            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
-            List<npe03__Recurring_Donation__c> oldRds = rd.Id == null
-                ? new List<npe03__Recurring_Donation__c>()
-                : new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ rd.Id });
-            
-            auditor.adjust(rds, oldRds);
-
-            List<RD2_ValidationService.Notification> notifications = auditor.validate(rds, oldRds);
+            List<RD2_ValidationService.Notification> notifications = auditor.validate(
+                new List<npe03__Recurring_Donation__c>{ rd }, oldRds
+            );
 
             if (!notifications.isEmpty()) {
                 UTIL_AuraEnabledCommon.throwAuraHandledException(
                     notifications[0].getErrors()[0]
                 );
             }        
+        }
+
+        private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+            // Data should be sent to Elevate if it is a new commitment 
+            if (rd.Id == null) {
+                return true;
+            }
+
+            // If a Recurring Donation is just being closed or has been closed,
+            // do not send update commitment request.
+            // The commitment cancel will be handled from the RD2 trigger.
+            if (new RD2_RecurringDonation(rd).isClosed()) {
+                return false;
+            }
+
+            // Data should be sent to Elevate if the existing commitment has the credit card changed
+            // or the amount has been changed //TODO
+            // or the schedule has been changed //TODO
+            return String.isNotBlank(paymentMethodToken);
+        }
+
+        private String buildOkResponse() {
+            UTIL_Http.Response response = new UTIL_Http.Response();
+            response.statusCode = UTIL_Http.STATUS_CODE_OK;
+            response.status = UTIL_Http.STATUS_OK;
+
+            return JSON.serialize(response);
         }
 
         @TestVisible
