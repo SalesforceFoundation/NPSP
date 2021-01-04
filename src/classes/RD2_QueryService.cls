@@ -186,11 +186,13 @@ public inherited sharing class RD2_QueryService {
         //and Opps with Close Date >= current date regardless if closed or open
         //and all Opps with Close Date in this current year
         Set<String> oppSubqueryFields = new Set<String>{
-            'Id', 'Name', 'AccountId', 'Primary_Contact__c',
+            'Id', 'Name', 'AccountId', 
+            String.valueOf(Opportunity.Primary_Contact__c),
             'npe03__Recurring_Donation__c',
             'Amount', 'CloseDate',
             'StageName', 'IsClosed', 'IsWon',
-            'CampaignId', 'Recurring_Donation_Installment_Number__c'
+            'CampaignId', 
+            String.valueOf(Opportunity.Recurring_Donation_Installment_Number__c)
         };
 
         if (isMultiCurrencyEnabled) {
