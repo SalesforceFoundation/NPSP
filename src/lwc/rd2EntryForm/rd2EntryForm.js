@@ -16,6 +16,10 @@ import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
+import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
+import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
+import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
+import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -37,7 +41,7 @@ import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import waitMessage from '@salesforce/label/c.commonWaitMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
 import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
-import creatingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
+import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
 import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
 import unknownError from '@salesforce/label/c.commonUnknownError';
@@ -80,7 +84,7 @@ export default class rd2EntryForm extends LightningElement {
         waitMessage,
         savingRDMessage,
         validatingCardMessage,
-        creatingCommitmentMessage,
+        savingCommitmentMessage,
         commitmentFailedMessage,
         contactAdminMessage,
         unknownError
@@ -420,9 +424,8 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.loadingText = this.customLabels.creatingCommitmentMessage;
-        let rd = { ...allFields };
-        rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
+        this.loadingText = this.customLabels.savingCommitmentMessage;
+        const rd = this.constructRecurringDonation(allFields);
 
         handleCommitment({
             recordId: this.recordId,
@@ -432,7 +435,11 @@ export default class rd2EntryForm extends LightningElement {
             .then(jsonResponse => {
                 let response = JSON.parse(jsonResponse);
 
-                if (response.statusCode === HTTP_CODES.Created) {// or updated//TODO
+                if (response.statusCode === HTTP_CODES.Created
+                    || response.statusCode === HTTP_CODES.OK
+                ) {
+                    this.populateCommitmentFields(response, allFields);
+
                     this.processSubmit(allFields);
 
                 } else {
@@ -461,6 +468,31 @@ export default class rd2EntryForm extends LightningElement {
             // when the Elevate widget is displayed on the entry form.
             return this.isElevateWidgetDisplayed();
         }
+    }
+
+    constructRecurringDonation(allFields) {
+        let rd = { ...allFields };
+
+        const installmentFrequency = rd[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
+        if (isNull(installmentFrequency) || isUndefined(installmentFrequency)) {
+            rd[FIELD_INSTALLMENT_FREQUENCY.fieldApiName] = 1;
+        }
+
+        rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
+        
+        return rd;
+    }
+
+    populateCommitmentFields(response, allFields) {
+        let responseBody = JSON.parse(response.body);
+        let cardData = responseBody.cardData;
+
+        if (response.statusCode === HTTP_CODES.Created) {
+            allFields[FIELD_COMMITMENT_ID.fieldApiName] = responseBody.id;
+        }
+        allFields[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
+        allFields[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
+        allFields[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
     }
 
 
@@ -549,7 +581,12 @@ export default class rd2EntryForm extends LightningElement {
         this.recordName = event.detail.fields.Name.value;
         const recordId = event.detail.id;
 
-        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
+        const message = this.isEdit
+            ? updateSuccessMessage.replace("{0}", this.recordName)
+            : insertSuccessMessage.replace("{0}", this.recordName);
+            
+        showToast(message, '', 'success');
+
         this.closeModal(recordId);
     }
 
@@ -599,15 +636,6 @@ export default class rd2EntryForm extends LightningElement {
             || response.body.message
             || response.errorMessage
             || JSON.stringify(response.body);
-    }
-
-    /**
-     * @description Message displayed when the Recurring Donation is created or updated successfully
-     */
-    getRecurringDonationSuccessMessage() {
-        return (this.isEdit)
-            ? updateSuccessMessage.replace("{0}", this.recordName)
-            : insertSuccessMessage.replace("{0}", this.recordName);
     }
 
     /**

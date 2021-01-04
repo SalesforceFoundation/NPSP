@@ -2228,8 +2228,8 @@
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
-        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+        <shortDescription>Spinner text when Elevate Commitment is being created or updated</shortDescription>
+        <value>Saving Elevate recurring payment...This may take a few minutes.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>

@@ -165,7 +165,14 @@ public inherited sharing class PS_CommitmentRequest {
     */
 
     public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
+        Boolean isCreateCommitment = String.isBlank(rd.CommitmentId__c);
 
+        return isCreateCommitment
+            ? getCreateRequestBody(rd, token)
+            : getUpdateRequestBody(rd, token);
+    }
+
+    private RequestBody getCreateRequestBody(npe03__Recurring_Donation__c rd, String token) {
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
@@ -187,6 +194,14 @@ public inherited sharing class PS_CommitmentRequest {
 
         setDonorInfo(reqBody, rd);
         setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
+
+        return reqBody;
+    }
+
+    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, String token) {
+        RequestBody reqBody = new RequestBody()
+            .withCommitmentId(rd.CommitmentId__c)
+            .withPaymentMethodToken(token);
 
         return reqBody;
     }
@@ -304,6 +319,7 @@ public inherited sharing class PS_CommitmentRequest {
         /***
          * Required properties
          */
+        public String id;
         public String firstName;
         public String lastName;
         public String merchantId;
@@ -328,6 +344,16 @@ public inherited sharing class PS_CommitmentRequest {
             currencyCode = UserInfo.getDefaultCurrency();
             type = CommitmentType.SUSTAINER.name();
             paymentMethodType = PaymentMethod.CARD.name();
+        }
+
+        /**
+         * @description Sets merchant Id
+         * @param commitmentId Recurring commitment Id
+         * @return RequestBody This request body instance
+         */
+        public RequestBody withCommitmentId(String commitmentId) {
+            this.id = commitmentId;
+            return this;
         }
 
         /**
