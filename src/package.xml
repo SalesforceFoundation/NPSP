@@ -3254,7 +3254,6 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
-        <members>gsVideoHeaderLength</members>
         <name>CustomLabel</name>
     </types>
     <types>
