@@ -115,6 +115,7 @@ export default class rd2EntryForm extends LightningElement {
     @track isElevateWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
+    isElevateEditEnabled = false;
     commitmentId = null;
     paymentMethodToken;
     cardholderName;
@@ -150,6 +151,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.isElevateEditEnabled = response.isElevateEditEnabled;
                 this.commitmentId = response.commitmentId;
             })
             .catch((error) => {
@@ -308,7 +310,7 @@ export default class rd2EntryForm extends LightningElement {
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetEnabled = this.isElevateCustomer === true
             && (!this.isEdit
-                || (this.isEdit && !isNull(this.commitmentId))
+                || (this.isEdit && !isNull(this.commitmentId) && this.isElevateEditEnabled)
             )
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)

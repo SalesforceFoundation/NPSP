@@ -82,10 +82,20 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
     /***
     * @description Returns the Elevate Integration service enablement status for Create Commitment feature.
-    * The "Pilot Enabled" flag check should be removed when Create Commiment becomes GA.
+    * The method should be removed and replaced with "isIntegrationEnabled()" when the feature becomes GA.
     * @return Boolean
     */
     public static Boolean isElevateCreateEnabled() {
+        return config.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled();
+    }
+
+    /***
+    * @description Returns the Elevate Integration service enablement status for Edit Commitment feature.
+    * The method should be removed and replaced with "isIntegrationEnabled()" when the feature becomes GA.
+    * @return Boolean
+    */
+    public static Boolean isElevateEditEnabled() {
         return config.isIntegrationEnabled()
             && UTIL_FeatureEnablement.isPilotEnabled();
     }

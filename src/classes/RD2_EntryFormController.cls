@@ -93,7 +93,11 @@ public with sharing class RD2_EntryFormController {
         Boolean isElevateCustomer = RD2_ElevateIntegrationService.isElevateCreateEnabled();
         data.put('isElevateCustomer', isElevateCustomer);
 
-        if (isElevateCustomer && recordId != null) {
+        // Use above "isElevateCustomer" instead the "isElevateEditEnabled" when Edit Commitment becomes GA.
+        Boolean isElevateEditEnabled = RD2_ElevateIntegrationService.isElevateEditEnabled();
+        data.put('isElevateEditEnabled', isElevateEditEnabled);
+
+        if (isElevateEditEnabled && recordId != null) {
             data.put('commitmentId', getCommitmentId(recordId));
         }
 
@@ -366,7 +370,7 @@ public with sharing class RD2_EntryFormController {
                 rd.Id = recordId;
             }
 
-            if (String.isBlank(rd.Status__c)) {
+            if (rd.Id == null && String.isBlank(rd.Status__c)) {
                 rd.Status__c = 'Active';//TODO populate defaults applied by DML (trigger), currency in a multi-currency org? etc.
             }
 
@@ -405,14 +409,15 @@ public with sharing class RD2_EntryFormController {
 
             // If a Recurring Donation is just being closed or has been closed,
             // do not send update commitment request.
-            // The commitment cancel will be handled from the RD2 trigger.
+            // The commitment cancel will be handled from the RD2 trigger on update DML.
             if (new RD2_RecurringDonation(rd).isClosed()) {
                 return false;
             }
 
-            // Data should be sent to Elevate if the existing commitment has the credit card changed
-            // or the amount has been changed //TODO
-            // or the schedule has been changed //TODO
+            // Data should be sent to Elevate when:
+            // the RD has a credit card changed for existing commitment or added for a new commitment
+            // or the amount has been changed for existing commitment //TODO
+            // or the schedule has been changed for an existing commitment//TODO
             return String.isNotBlank(paymentMethodToken);
         }
 
