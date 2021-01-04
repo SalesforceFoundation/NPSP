@@ -436,7 +436,8 @@ export default class rd2EntryForm extends LightningElement {
                     this.processSubmit(allFields);
 
                 } else {
-                    this.displayCommitmentErrorResponse(response);
+                    let message = this.getCommitmentError(response);
+                    this.handleSaveError(message);
                 }
             })
             .catch((error) => {
@@ -556,7 +557,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Displayes errors extracted from the error response
      * returned from the Elevate API when the Commitment cannot be created
      */
-    displayCommitmentErrorResponse(response) {
+    getCommitmentError(response) {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
             // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
@@ -575,7 +576,10 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         let errors = this.getErrors(response);
-        this.showToastCommitmentError(errors);
+
+        const message = '{0}.\n' + this.customLabels.contactAdminMessage; 
+
+        return format(message, [errors]);
     }
 
     /***
@@ -595,27 +599,6 @@ export default class rd2EntryForm extends LightningElement {
             || response.body.message
             || response.errorMessage
             || JSON.stringify(response.body);
-    }
-
-    /**
-     * @description Displays errors generated during commitment callout
-     */
-    showToastCommitmentError(errors) {
-        const title = this.customLabels.elevateWidgetLabel;
-
-        // The space is required before the param {0},
-        // otherwise the errors are duplicated when the message is formatted.
-        // Moreover, the '\n {0}' cannot be part of the commitment failed message
-        // since the new line is not replaced with a return.
-        const message = this.getRecurringDonationSuccessMessage()
-            + '\n' + this.customLabels.commitmentFailedMessage
-            + '\n {0}'
-            + '\n' + this.customLabels.contactAdminMessage;
-
-        let replacements = [errors];
-        let formattedMessage = format(message, replacements);
-
-        showToast(title, formattedMessage, 'error', 'sticky');
     }
 
     /**
