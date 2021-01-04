@@ -35,12 +35,17 @@
 */
 @IsTest
 public class RD2_ElevateIntegrationService_TEST {
+    public static final String COMMITMENT_ID = '11a1c101-bcde-001-111f-g1dh00i0jk111';
+
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
+
+    private static final String RD_SOBJECT_TYPE = String.valueOf(npe03__Recurring_Donation__c.SObjectType);
+    private static final String LOG_TYPE_COMMITMENT_CREATE = RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE;
+
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
-
-    public static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -108,6 +113,48 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
+    * @description Verifies user is prevented from updating the Status of an Elevate RD when
+    * the state of the RD is Closed
+    */
+    @isTest
+    private static void shouldPreventElevateRDStatusUpdateWhenStatusClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+
+        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
+
+        System.assertEquals(true, service.isElevateRecordReactivated(rd, oldRd),
+            'Elevate RD Status update should not be permitted when Status is Closed');
+    }
+
+    /***
+    * @description Verifies user is permitted to update the Status of a non-Elevate RD when
+    * the state of the RD is Closed
+    */
+    @isTest
+    private static void shouldAllowNonElevateRDUpdateWhenStateClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBaseBuilder()
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+
+        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
+
+        System.assertEquals(false, service.isElevateRecordReactivated(rd, oldRd),
+            'RD Status update should be permitted when Status is Closed for Non Elevate RD');
+    }
+
+    /***
     * @description Verifies user can update an RD originated in Elevate when
     * integration is enabled and user does not have permissions assigned
     * but the changed RD field is unrestricted (unlocked) field
@@ -126,6 +173,77 @@ public class RD2_ElevateIntegrationService_TEST {
 
         System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to update unrestricted field on an Elevate RD');
+    }
+
+    /***
+    * @description Verifies user cannot update Elevate Recurring Id (Commitment Id)
+    * on an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned
+    */
+    @isTest
+    private static void shouldPreventElevateRDUpdateWhenNonElevateUserChangesCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(UTIL_String.getGUID())
+            .build();
+
+        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have not permission to update Commitment Id on an active Elevate RD');
+    }
+
+    /***
+    * @description Verifies user can update Elevate Recurring Id (Commitment Id)
+    * from a temp value to the valid value
+    * on an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned.
+    * This scenario is applicable when user creates a new Recurring Donation on the RD entry form
+    * but connects the record to an Elevate commitment by specifying the Payment Method = Credit Card.
+    */
+    @isTest
+    private static void shouldAllowElevateRDUpdateWhenNonElevateUserChangesTempCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        String tempCommitmentId = RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(tempCommitmentId)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have permission to update Commitment Id from a temp value to the actual Id');
+    }
+
+    /***
+    * @description Verifies user is allowed to close an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned
+    */
+    @isTest
+    private static void shouldAllowElevateRDUpdateWhenNonElevateUserClosesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        final Date startDate = Date.today().addMonths(-2);
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStartDate(startDate)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withStartDate(startDate)
+            .withStatusClosed()
+            .withEndDate(Date.today())
+            .withClosedReason('test')
+            .build();
+
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have permission to close an active Elevate RD');
     }
 
     /***
@@ -366,7 +484,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is linked to an existing RD
-    * when the CommitmentId matches and the opportunity is not referencing any RD 
+    * when the CommitmentId matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldLinkOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -386,14 +504,14 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Recurring Donation field on Opp should be linked to the matching RD');
     }
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId does not matches and the opportunity is not referencing any RD 
+    * when the CommitmentId does not matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldNotLinkOppToRDWhenCommitmentIdDoesNotMatch() {
@@ -413,7 +531,7 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(null, opp.npe03__Recurring_Donation__c,
             'The Opp should not link to any RD if the Commitment Id field does not match');
     }
@@ -444,7 +562,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId matches and the opportunity is already referencing an RD 
+    * when the CommitmentId matches and the opportunity is already referencing an RD
     */
     @isTest
     private static void shouldNotLinkAlreadyAssignedOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -495,10 +613,100 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Opportunity should not link to any RD through CommitmentId on update');
     }
+
+    /**
+    * @description Verifies RD Closed Reason will be switched to
+    * the user provided Closed Reason value
+    * when the Commitment in Elevate is cancelled.
+    */
+    @isTest
+    private static void shouldSetClosedReasonToUserSpecifiedValueWhenCancelIsSuccess() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
+        insert rd;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockSuccessCalloutResponse(buildCommitmentCanceledResponseBody());
+
+        String closedReason = 'Original Reason';
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(closedReason, rd.ClosedReason__c,
+            'RD Closed Reason should be swapped back to the user provided value');
+
+        assertNoError();
+    }
+
+    /***
+    * @description Should determine that event is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyEventFromElevateWhenLastElevateEventPlayedChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+        newRd.LastElevateEventPlayed__c = 'event-v2';
+        oldRd.LastElevateEventPlayed__c = 'event-v1';
+
+        System.assertEquals(
+            true,
+            RD2_ElevateIntegrationService.isElevateEvent(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the event is from Elevate');
+    }
+
+    /***
+    * @description Should determine that event is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyEventNotFromElevateWhenLastElevateEventPlayedUnchanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+        newRd.LastElevateEventPlayed__c = 'event-v1';
+        oldRd.LastElevateEventPlayed__c = 'event-v1';
+
+        System.assertEquals(
+            false,
+            RD2_ElevateIntegrationService.isElevateEvent(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the event is not from Elevate');
+    }
+
+    /***
+    * @description Should determine that event is from Elevate when Last Elevate Event Played changes
+    */
+    @isTest
+    private static void shouldIdentifyEventNotFromElevateWhenLastElevateEventPlayedEmpty() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = newRd.clone();
+
+        System.assertEquals(
+            false,
+            RD2_ElevateIntegrationService.isElevateEvent(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the event is not from Elevate');
+    }
+
 
     // Helpers
     ///////////////////
@@ -507,7 +715,7 @@ public class RD2_ElevateIntegrationService_TEST {
     * @description Returns Elevate Recurring Donation with default values
     * @return TEST_RecurringDonationBuilder instance
     */
-    private static TEST_RecurringDonationBuilder getElevateRecurringDonationBaseBuilder() {
+    public static TEST_RecurringDonationBuilder getElevateRecurringDonationBaseBuilder() {
         return getRecurringDonationBaseBuilder()
             .withCommitmentId(COMMITMENT_ID);
     }
@@ -516,7 +724,7 @@ public class RD2_ElevateIntegrationService_TEST {
     * @description Returns Recurring Donation with default values
     * @return TEST_RecurringDonationBuilder instance
     */
-    private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
+    public static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(getContact().Id)
             .withDefaultValues()
@@ -616,6 +824,48 @@ public class RD2_ElevateIntegrationService_TEST {
 
         System.assertEquals(hasPermission, service.hasUpdatePermissions(rd, oldRd),
             'User should ' + (hasPermission ? '' : 'not ') + 'have permission to update Elevate RD: ' + configStub);
+    }
+
+    /****
+    * @description Builds a cancel commitment response body
+    * returned when the commitment is successfully cancelled
+    * @return String
+    */
+    private static String buildCommitmentCanceledResponseBody() {
+        return '{"id":"' + COMMITMENT_ID
+            + '","status":"INACTIVE","statusReason":"DONOR_CANCELED"'
+            + '"}}';
+    }
+
+    /****
+    * @description Verifies no error is created
+    * @return void
+    */
+    public static void assertNoError() {
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+    }
+
+    /****
+    * @description Verifies an error is created with
+    * the specified error message and referencing expected record Id
+    * @param message Expected error message
+    * @param recordId Expected Recurring Donation Id
+    * @param errorType Expected error type
+    * @return void
+    */
+    public static void assertError(String message, Id recordId, String errorType) {
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
+
+        Error__c error = errors[0];
+        System.assertEquals(message, error.Full_Message__c, 'The error message should match');
+        System.assertEquals(errorType, error.Error_Type__c, 'The error type should match');
+
+        System.assertEquals(RD_SOBJECT_TYPE, error.Object_Type__c, 'The SObject type should match');
+        System.assertEquals(recordId, error.Related_Record_ID__c, 'The record Id should match');
+        System.assert(error.Record_URL__c.contains(recordId),
+            'The record URL (' + error.Record_URL__c + ') should contain record Id: ' + recordId);
     }
 
 }

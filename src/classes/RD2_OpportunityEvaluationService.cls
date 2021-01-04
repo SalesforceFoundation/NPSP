@@ -390,7 +390,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
                 .revisePaidInstallments(paidInstallmentsByRDId.get(rd.Id))
-                .reviseStatus(currentDate)
+                .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
             //evaluate Opportunities
@@ -676,8 +676,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
      * @description Database DML service to insert/update/delete records and keep track of failed RD Ids
+     *    Use without sharing context so Guest Site User can perform DML operation
      */
-    public class DatabaseService {
+    public without sharing class DatabaseService {
         private SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
         private SObjectType oppSObjectType = Opportunity.SObjectType;
 

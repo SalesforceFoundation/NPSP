@@ -37,7 +37,7 @@
 *
 */
 @isTest
-private class UTIL_FeatureEnablement_TEST {
+public class UTIL_FeatureEnablement_TEST {
 
     /**
      * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
@@ -45,13 +45,7 @@ private class UTIL_FeatureEnablement_TEST {
      */
     @isTest
     private static void shouldReturnTrueWhenPilotIsEnabled() {
-        UTIL_FeatureManagement featureManagement = (UTIL_FeatureManagement)
-            Test.createStub(UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock());
-
-        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
-        featureEnablement.featureManagement = featureManagement;
-
-        featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
+        setPilotEnabledParameter(true);
 
         System.assertEquals(true, UTIL_FeatureEnablement.isPilotEnabled());
     }
@@ -98,5 +92,26 @@ private class UTIL_FeatureEnablement_TEST {
     @isTest
     private static void shouldReturnFalseWhenPilotNotEnabled() {
         System.assertEquals(false, UTIL_FeatureEnablement.isPilotEnabled());
+    }
+
+
+    // Helpers
+    ///////////////////
+
+    /***
+    * @description Stubs PilotEnabled feature parameter enablement
+    * @param isEnabled Indicates if the PilotEnabled should be enabled using a Mock feature management
+    * @return none
+    */
+    public static void setPilotEnabledParameter(Boolean isEnabled) {
+        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
+
+        featureEnablement.featureManagement = (UTIL_FeatureManagement) Test.createStub(
+            UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock()
+        );
+
+        featureEnablement.featureManagement.setPackageBooleanValue(
+            UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), isEnabled
+        );
     }
 }

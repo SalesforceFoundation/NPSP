@@ -31,23 +31,23 @@ Setup Test Data
 Verify Changing Labels on Template Gets Updated on Batches
     [Documentation]                         Create a template with Record Type and Campagin Lookup fields, custom labels for lookup, date and text fields
     ...                                     and finally add these fields to batch table. Using this new template create a batch and verify that labels are updated on batch form
-    ...                                     Create a gift and verify batch table field names are updated as well and verify that batch is processed without errors.  
-    [tags]                                  unstable      feature:GE        W-042499   
-    #Create new template with new field labels                            
-    Go To Page                              Landing                         GE_Gift_Entry         
+    ...                                     Create a gift and verify batch table field names are updated as well and verify that batch is processed without errors.
+    [tags]                                  unstable      feature:GE        W-042499
+    #Create new template with new field labels
+    Go To Page                              Landing                         GE_Gift_Entry
     Click Link                              Templates
     Click Gift Entry Button                 Create Template
     Current Page Should Be                  Template                        GE_Gift_Entry
     Enter Value In Field
     ...                                     Template Name=${TEMPLATE}
-    ...                                     Description=This is created by automation script  
+    ...                                     Description=This is created by automation script
     Click Gift Entry Button                 Next: Form Fields
     Perform Action On Object Field          select                          Opportunity           Record Type ID
-    Fill Template Form                      
+    Fill Template Form
     ...                                     Opportunity: Close Date=&{DATE}
     ...                                     Opportunity: Campaign ID=&{CAMPAIGN}
     ...                                     Payment: Check/Reference Number=&{PAY}
-    ...                                     Opportunity: Record Type ID=&{RECORD_TYPE} 
+    ...                                     Opportunity: Record Type ID=&{RECORD_TYPE}
     Click Gift Entry Button                 Next: Batch Settings
     Add Batch Table Columns                 Campaign                        Check Number          Record Type
     Click Gift Entry Button                 Save & Close
@@ -56,15 +56,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     Wait Until Page Contains                ${TEMPLATE}
     Store Template Record Id                ${TEMPLATE}
     #Verify new field labels are displayed on newly created batch with new template
-    Click Gift Entry Button                 New Batch
-    Wait Until Modal Is Open
-    Select Template                         ${TEMPLATE}
-    Load Page Object                        Form                            Gift Entry
-    Fill Gift Entry Form
-    ...                                     Batch Name=${CAMPAIGN_REC}[Name] Automation Batch
-    ...                                     Batch Description=This is a test batch created via automation script
-    Click Gift Entry Button                 Next
-    Click Gift Entry Button                 Save
+    Create Gift Entry Batch                 ${TEMPLATE}                     ${CAMPAIGN_REC}[Name] Automation Batch
     Current Page Should Be                  Form                            Gift Entry            title=Gift Entry Form
     ${batch_id} =                           Save Current Record ID For Deletion     ${NS}DataImportBatch__c
     Wait Until Page Contains Element        npsp:label:${DATE}[Field Label]
@@ -97,5 +89,4 @@ Verify Changing Labels on Template Gets Updated on Batches
     Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process               BDI_DataImport_BATCH            Completed
     Click Button With Value                 Close
-    
-    
+

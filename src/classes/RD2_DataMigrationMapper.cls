@@ -151,11 +151,28 @@ public class RD2_DataMigrationMapper {
             handleCustomInstallmentPeriod(rd);
         }
 
+        validateAmountCanBeCalculated(rd);
+
         if ((rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY || rd.npe03__Schedule_Type__c == null)
             && rd.npe03__Installment_Amount__c != null
             && rd.npe03__Installment_Amount__c != 0
         ) {
             rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
+        }
+    }
+
+    /**
+     * @description Determines whether Amount can be calculated.  Throws an exception if not.
+     * @param rd Recurring Donation
+     */
+    private void validateAmountCanBeCalculated(npe03__Recurring_Donation__c rd) {
+
+        if (rd.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_CLOSED
+            && String.isBlank(rd.npe03__Schedule_Type__c)
+            && rd.npe03__Installments__c != null
+            && Math.abs(rd.npe03__Installments__c) > 1)
+        {
+            throw new MigrationException(System.Label.RD2_DataMigrationInvalidPlannedInstallments);
         }
     }
 
@@ -209,25 +226,31 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Sets Recurring Donation Start Date field as the earliest Opp Close Date.
-     * If the Recurring Donation has no Opportunity, the Start Date is Date Established.
+     * @description Sets Recurring Donation Start Date field as Date Established.
+     * If Date Established is null, earliest related Opportunity Close Date is used.
+     * If both of those options result in null Start Date, Created Date is used.
      * @param rd Recurring Donation in the legacy format
      * @return void
      */
     private void setStartDate(npe03__Recurring_Donation__c rd) {
 
-        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
+        if (rd.npe03__Date_Established__c != null) {
             rd.StartDate__c = rd.npe03__Date_Established__c;
+            return;
+        }
 
-        } else {
+        if (allRelatedOpps != null && !allRelatedOpps.isEmpty()) {
             Date startDate;
             for (Opportunity opp : allRelatedOpps) {
                 if (startDate == null || startDate > opp.CloseDate) {
                     startDate = opp.CloseDate;
                 }
             }
-
             rd.StartDate__c = startDate;
+        }
+
+        if (rd.StartDate__c == null) {
+            rd.StartDate__c = rd.CreatedDate.dateGmt();
         }
     }
 

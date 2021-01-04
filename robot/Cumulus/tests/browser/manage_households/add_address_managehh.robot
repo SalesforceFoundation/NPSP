@@ -35,13 +35,13 @@ Add New Address to Household
     ...                                  Verify the new address persists under both Mailing and Billing address details
     ...                                  Verify Same address should be present on Account and Contacts
 
-    [tags]                               W-038348             feature: Manage Households
+    [tags]                               unstable             W-038348             feature: Manage Households
 
     Go To Page                           Details
     ...                                  Account
     ...                                  object_id=${contact1}[AccountId]
 
-    Click Actions Link                   Manage Household
+    Click Button                         Manage Household
     Current Page Should Be               Custom                             ManageHousehold
     Select Frame And Click Element       Manage Household
     ...                                  span_button

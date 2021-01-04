@@ -42,7 +42,7 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l&apos;importation d&apos;un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
+        <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l&apos;importation d&apos;un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
         <label>Statut du lot</label>
         <name>Batch_Status__c</name>
         <picklistValues>

@@ -15,6 +15,10 @@
         "click_through_agreement": {
             "message": "Nonprofit Success Pack (「NPSP」) は、Salesforce.org (「SFDO」) が 3 条項 BSD ライセンス [https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause) の下でライセンスを供与するオープンソースパッケージです。お客様またはお客様の法人と SFDO との間のマスターサブスクリプション契約は、NPSP の使用には適用されません。NPSP は「現状有姿」及び「現状渡し」で提供され、SFDO は、準拠法により許容される最大限において、明示的、黙示的、法律上、その他一切の NPSP に関するいかなる保証 (商品性、特定の目的に対する適合性、欠陥がないこと、不侵害の黙示的な保証を含むが、それに限定されない) も行いません。\r\n\r\nSFDO は、お客様の NPSP の使用に起因するまたはそれに関連する直接の損害、または利益、収入、業務上の信用の喪失、または間接的、特別、偶発的、派生的、懲罰的、補償、事業の中断による損害に関して、その行為が契約内か不法行為かどうか、あるいは責任論に関係なく、そのような損害の発生の可能性について予告がなされていた場合であっても、救済措置がその本来の目的を果たせなかった場合であっても、一切の責任を負わないものとします。上記の免責事項は、法律で禁止されている範囲においては適用されません。SFDO は、サードパーティのホスティングプロバイダによる損傷または損害について、あらゆる法的責任および賠償義務を負わないものとします。",
             "description": "legal text shown in modal dialog"
+        },
+        "error_message": {
+            "message": "インストールで問題が発生した場合は、[Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp) に投稿してください。",
+            "description": "shown after failed installation (markdown)"
         }
     },
     "plan:existing_org": {
@@ -37,11 +41,11 @@
             "description": "title of installation step"
         },
         "Account Record Types": {
-            "message": "団体レコードタイプ",
+            "message": "取引先レコードタイプ",
             "description": "title of installation step"
         },
         "Opportunity Record Types": {
-            "message": "支援レコードタイプ",
+            "message": "商談レコードタイプ",
             "description": "title of installation step"
         },
         "NPSP Config for Salesforce Mobile App": {
@@ -121,7 +125,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "NPSP のレポートとダッシュボードは、バージョン 3.90 (2017 年 2 月) 以降の NPSP の新しいトライアルとインストールに付属しています。このバージョンより前に NPSP のトライアルまたはインストールを開始した場合は、このインストーラを使用してレポートとダッシュボードを追加できます。NPSP のレポートとダッシュボードに関する詳細は、[NPSP Reports Workbook (NPSP レポートワークブック)](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook) を参照してください。\n\nこのインストーラには、標準 Nonprofit Starter Pack トライアルテンプレートに含まれている 5 つの支援レコードタイプが必要であり、それらが組織に存在しない場合には作成されます。レコードタイプは表示ラベルではなく API 参照名によって検索されるため、元のレコードタイプの API 参照名を変更した場合は、インストーラによってそれらがもう一度追加されます。レコードタイプの API 参照名は次のとおりです。\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
+            "message": "NPSP のレポートとダッシュボードは、バージョン 3.90 (2017 年 2 月) 以降の NPSP の新しいトライアルとインストールに付属しています。このバージョンより前に NPSP のトライアルまたはインストールを開始した場合は、このインストーラを使用してレポートとダッシュボードを追加できます。NPSP のレポートとダッシュボードに関する詳細は、[NPSP Reports Workbook (NPSP レポートワークブック)](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook) を参照してください。\n\nこのインストーラには、標準 Nonprofit Starter Pack トライアルテンプレートに含まれている 5 つの商談レコードタイプが必要であり、それらが組織に存在しない場合には作成されます。レコードタイプは表示ラベルではなく API 参照名によって検索されるため、元のレコードタイプの API 参照名を変更した場合は、インストーラによってそれらがもう一度追加されます。レコードタイプの API 参照名は次のとおりです。\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
     }

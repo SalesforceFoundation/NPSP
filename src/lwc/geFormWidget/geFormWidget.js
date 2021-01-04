@@ -1,5 +1,8 @@
-import { LightningElement, api } from 'lwc';
-import {hasNestedProperty, isUndefined} from 'c/utilCommon';
+import { LightningElement, api, track } from 'lwc';
+import {apiNameFor, getSubsetObject, isEmptyObject, isNotEmpty, isUndefined} from 'c/utilCommon';
+
+import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -10,26 +13,43 @@ export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
 
-    @api
-    reset() {
-        this.widgetComponent.reset();
-    }
+    @track widgetDataFromState = {};
 
+    _formState = {};
     @api
-    load(data) {
-        this.widgetComponent.load(data);
+    get formState() {
+        return this._formState;
     }
-
-    @api
-    get widgetAndValues() {
-        let widgetAndValues = {};
-        const thisWidget = this.widgetComponent;
-        // Need to make sure all widget components support returnValue()
-        if(this.isValid && typeof thisWidget.returnValues === 'function') {
-            // thisWidget.returnValues() can return promises
-            widgetAndValues = thisWidget.returnValues();
+    set formState(formState) {
+        if (isEmptyObject(formState)) {
+            return;
         }
-        return widgetAndValues;
+
+        if (this.hasAllocationValuesChanged(formState)) {
+            this.sliceAllocationWidgetDataFromState(formState);
+        }
+        this._formState = Object.assign({}, formState);
+    }
+
+    sliceAllocationWidgetDataFromState(formState) {
+        this.widgetDataFromState = getSubsetObject(
+            formState,
+            [apiNameFor(DI_DONATION_AMOUNT_FIELD), apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)]);
+    }
+
+    handleFormWidgetChange(event) {
+        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}))
+    }
+
+    hasAllocationValuesChanged(formState) {
+        const donationFieldApiName = apiNameFor(DI_DONATION_AMOUNT_FIELD);
+        const additionalObjectFieldApiName = apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)
+
+        return formState[donationFieldApiName] !==
+            this.formState[donationFieldApiName]
+            ||
+            formState[additionalObjectFieldApiName] !==
+            this.formState[additionalObjectFieldApiName]
     }
 
     get isValid() {
@@ -66,29 +86,12 @@ export default class GeFormWidget extends LightningElement {
         return WIDGET_LIST.indexOf(this.element.componentName) < 0
     }
 
-    get totalAmount() {
-        return hasNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
-    }
-
-    /**
-     * @description This method should return a list of DataImport__c field api names
-     *              that the widget uses so that parent components (geFormSection) know
-     *              which fields to include when calling this component's load() function.
-     * @returns An Array of field names used by this component.
-     */
     @api
-    get allFieldsByAPIName() {
-        if (this.widgetComponent.allFieldsByAPIName) {
-            return this.widgetComponent.allFieldsByAPIName;
-        } else {
-            return null;
+    get paymentToken() {
+        const thisWidget = this.widgetComponent;
+        if (this.isValid) {
+            return thisWidget.paymentToken;
         }
-    }
-
-    @api
-    setCardHolderName(value) {
-        let creditCardWidget = this.template.querySelector('c-ge-form-widget-tokenize-card');
-        creditCardWidget.setNameOnCard(value);
     }
 
 }

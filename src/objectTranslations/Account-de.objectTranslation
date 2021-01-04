@@ -57,58 +57,58 @@
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>Der Name des Verwalters von übereinstimmenden Schenkungen des Unternehmens</help>
-        <label>Administratorname übereinst. Schenkungen</label>
+        <help>Der Name des Administrators für Spendenverdopplungen im Unternehmen.</help>
+        <label>Administratorname Spendenverdopplung</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
         <help>Der maximale Betrag, den das Unternehmen mit jeder Schenkung abgleicht.</help>
-        <label>Max. Betrag übereinstimm. Schenkungen</label>
+        <label>Max. Betrag Spendenverdopplung</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
-        <help>Der kleinste Betrag, den das Unternehmen mit einer einzelnen Spende abgleicht.</help>
-        <label>Min. Betrag übereinstimm. Schenkungen</label>
+        <help>Der kleinste Betrag, den das Unternehmen bei Einzelspenden verdoppelt.</help>
+        <label>Min. Betrag Spendenverdopplung</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
         <help>Der maximale Betrag, den das Unternehmen pro Jahr mit einem Mitarbeiter abgleicht</help>
-        <label>Übereinst. Schenkung/Jahr f. Mitar. max.</label>
+        <label>Max. Spendenverdopplung/Jahr f. Mitarb.</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
-        <help>Weitere Hinweise zum Verwalter von übereinstimmenden Schenkungen im Unternehmen</help>
-        <label>Kommentare zu übereinstimm. Schenkungen</label>
+        <help>Weitere Anmerkungen zum Spendenverdopplungsprogramm des Unternehmens</help>
+        <label>Kommentare zu Spendenverdopplung</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>Gibt an, dass dies ein Unternehmen ist, das übereinstimmende Schenkungen anbietet.</help>
-        <label>Firma mit übereinstimmenden Schenkungen</label>
+        <help>Gibt an, dass dies ein Unternehmen ist, das Spendenverdopplung anbietet.</help>
+        <label>Firma mit Spendenverdopplungsprogramm</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
-        <help>Die E-Mail-Adresse des Verwalters von übereinstimmenden Schenkungen im Unternehmen</help>
-        <label>E-Mail zu übereinstimmenden Schenkungen</label>
+        <help>Die E-Mail-Adresse des Administrators für Spendenverdopplung im Unternehmen</help>
+        <label>E-Mail zur Spendenverdopplung</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>Das Datum, an dem die Informationen über übereinstimmenden Schenkungen zuletzt aktualisiert wurden</help>
-        <label>Aktualis. Info zu übereinst. Schenkungen</label>
+        <help>Das Datum, an dem die Informationen zur Spendenverdopplung zuletzt aktualisiert wurden</help>
+        <label>Info zu Spendenverdopplung aktualisiert</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
-        <help>Der Anteil einer Schenkung, den das Unternehmen abgleicht</help>
-        <label>Prozentsatz der übereinst. Schenkungen</label>
+        <help>Der Anteil einer Spende, den das Unternehmen verdoppelt.</help>
+        <label>Prozentsatz der verdoppelten Spenden</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Die Telefonnummer des Büros des Verwalters von übereinstimmenden Schenkungen</help>
-        <label>Telefonnr. übereinstimmende Schenkung</label>
+        <help>Die Telefonnummer des Administrators für Spendenverdopplung im Unternehmen</help>
+        <label>Telefonnummer Spendenverdopplung</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für den Abgleich von Schenkungen zu vermerken.</help>
-        <label>Stichtag für Anfr. übereinst. Schenkung</label>
+        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für Spendenverdopplung zu vermerken.</help>
+        <label>Stichtag für Spendenverdopplungs-Anfrage</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
@@ -188,11 +188,11 @@
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label>Kommentare zu übereinstimmender Schenkung</label>
+            <label>Kommentare zu Spendenverdopplung</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>Informationen zu übereinstimmender Schenkung</label>
+            <label>Informationen zur Spendenverdopplung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>

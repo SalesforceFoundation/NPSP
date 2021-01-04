@@ -1,0 +1,15 @@
+{
+    "customLabel": "Donation Record Type",
+    "dataImportFieldMappingDevNames": [
+      "Donation_Record_47eed4419"
+    ],
+    "dataType": "REFERENCE",
+    "defaultValue": "test",
+    "elementType": "field",
+    "fieldApiName": "RecordTypeId",
+    "id": "6c2da11a-8b5c-a885-c355-85dea3d52d6a",
+    "label": "Donation Record Type",
+    "objectApiName": "Opportunity",
+    "required": false,
+    "sectionId": "349da17f-20fc-de89-ad04-3bcfea525573"
+  }

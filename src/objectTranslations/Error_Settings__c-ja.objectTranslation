@@ -10,6 +10,11 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
+        <help>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。組織に大量のレコードがあり、状態チェックがなかなか完了しない場合は、このオプションを選択してください。</help>
+        <label>レコードデータの状態チェックを無効化</label>
+        <name>DisableRecordDataHealthChecks__c</name>
+    </fields>
+    <fields>
         <help>オンにすると、NPSP のエラー処理フレームワークが無効になります。</help>
         <label>エラー処理の無効化</label>
         <name>Disable_Error_Handling__c</name>

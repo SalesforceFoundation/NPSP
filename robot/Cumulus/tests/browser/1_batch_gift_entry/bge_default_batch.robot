@@ -51,9 +51,8 @@ Create New gift and process batch and validate
     Select Value From BGE DD    Donor Type    Contact
     Wait Until Keyword Succeeds          1 minute
     ...                          5 seconds
-    ...                          Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
+    ...                          Search Field And Perform Action    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
 
-    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Fill BGE Form    Donation Amount=100
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save

@@ -448,6 +448,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         if (ctrl.isAdvancedMappingEnabled) {
             List<String> newDefaultMappingStrings = new List<String>{
+                    'Payment_ACH_Code',
+                    'Payment_ACH_Last_4',
                     'Payment_Authorized_Date',
                     'Payment_Authorized_UTC_Timestamp',
                     'Payment_Card_Expiration_Month',
@@ -455,6 +457,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Card_Last_4',
                     'Payment_Card_Network',
                     'Payment_Donor_Cover_Amount',
+                    'Payment_Elevate_API_Declined_Reason',
+                    'Payment_Elevate_API_Status',
                     'Payment_Elevate_Created_Date',
                     'Payment_Elevate_Created_UTC_Timestamp',
                     'Payment_Elevate_ID',
@@ -464,6 +468,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Origin_ID',
                     'Payment_Origin_Name',
                     'Payment_Origin_Type',
+                    'Payment_Paid',
                     'Payment_Type',
                     'Donation_Elevate_Recurring_ID',                    
                     'Recurring_Donation_Amount',

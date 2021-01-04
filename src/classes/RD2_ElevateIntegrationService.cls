@@ -34,6 +34,18 @@
 * @description Services related to the RecurringDonation <-> Elevate integration
 */
 public inherited sharing class RD2_ElevateIntegrationService {
+
+    /***
+     * @description Contains a prefix appended to a GUID to indicate the RD is in draft
+     * and has a temp commitment Id so future installment Opportunities are not
+     * created for this Recurring Donation and any user can change it
+     * from a temp value to the actual value.
+     */
+    public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
+
+    public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
+    public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
+
     /***
      * @description CurrencyIsoCode field name
      */
@@ -76,6 +88,31 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Returns the Elevate Integration service enablement status for Create Commitment feature.
+    * The "Pilot Enabled" flag check should be removed when Create Commiment becomes GA.
+    * @return Boolean
+    */
+    public static Boolean isElevateCreateEnabled() {
+        return config.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled();
+    }
+
+    /***
+    * @description Determines whether a Recurring Donation event is from the Elevate integration
+    * @param rd Changed Recurring Donation
+    * @param oldRd Old Recurring Donation
+    * @return Boolean
+    */
+    public static Boolean isElevateEvent(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
+        String elevateEvent = rd.getSObject().LastElevateEventPlayed__c;
+
+        Boolean isElevateEventChanged = String.isNotBlank(elevateEvent)
+            && elevateEvent != oldRd.getSObject().LastElevateEventPlayed__c;
+
+        return isElevateEventChanged;
+    }
+
+    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
@@ -104,9 +141,16 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.StartDate__c != oldRd.StartDate__c
             || rd.Day_of_Month__c != oldRd.Day_of_Month__c
             || rd.RecurringType__c != oldRd.RecurringType__c
-            || rd.PaymentMethod__c != oldRd.PaymentMethod__c
-            || rd.Status__c != oldRd.Status__c
-            || rd.CommitmentId__c != oldRd.CommitmentId__c;
+            || rd.PaymentMethod__c != oldRd.PaymentMethod__c;
+
+        if (!isChanged) {
+            String oldCommitmentId = oldRd.CommitmentId__c;
+            Boolean isTempIdOverwrite = String.isNotBlank(oldCommitmentId)
+                && oldCommitmentId.startsWith(TEMP_COMMITMENT_ID_PREFIX);
+
+            isChanged = rd.CommitmentId__c != oldCommitmentId
+                && !isTempIdOverwrite;
+        }
 
         if (!isChanged && !(new RD2_RecurringDonation(rd)).isClosed()) {
             isChanged = rd.ClosedReason__c != oldRd.ClosedReason__c;
@@ -118,6 +162,27 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         // If any of the restricted fields has been changed, prevent the RD update
         return !isChanged;
+    }
+
+    /***
+     * @description Determines whether an Elevate Recurring Donation is changing from closed state to another state
+     * @param rd Changed Recurring Donation
+     * @param oldRd Old Recurring Donation
+     * @return Boolean
+     */
+    public Boolean isElevateRecordReactivated(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (!isIntegrationEnabled()) {
+            return false;
+        }
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        RD2_RecurringDonation oldRDRecord = new RD2_RecurringDonation(oldRd);
+
+        Boolean isReactivated = oldRDRecord.isElevateRecord()
+            && oldRDRecord.isClosed()
+            && !rdRecord.isClosed();
+
+        return isReactivated;
     }
 
     /**
@@ -155,14 +220,14 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
     /***
     * @description Match Opportunities originated in Elevate that are not referencing any Recurring Donation
-    * with an Recurring Donation having the same Commitment Id value 
+    * with an Recurring Donation having the same Commitment Id value
     * @param opps Opportunities
     * @return void
     */
     public void matchOppsToRecurringDonations(List<Opportunity> opps) {
         Map<String, List<Opportunity>> oppsByCommitmentId = new Map<String, List<Opportunity>>();
 
-        //extract Opps originated in Elevate that are not referencing a Recurring Donation 
+        //extract Opps originated in Elevate that are not referencing a Recurring Donation
         for (Opportunity opp : opps) {
             if (opp.npe03__Recurring_Donation__c != null || String.isBlank(opp.CommitmentId__c)) {
                 continue;
@@ -183,10 +248,11 @@ public inherited sharing class RD2_ElevateIntegrationService {
             SELECT CommitmentId__c
             FROM npe03__Recurring_Donation__c
             WHERE CommitmentId__c IN :oppsByCommitmentId.keySet()]) {
-            
+
             for (Opportunity opp : oppsByCommitmentId.get(rd.CommitmentId__c)) {
                 opp.npe03__Recurring_Donation__c = rd.Id;
             }
         }
     }
+
 }

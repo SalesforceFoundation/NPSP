@@ -35,7 +35,7 @@
 *
 */
 public class UTIL_String {
-    
+
     /**
      * @description Removes from a string all values that are not an english language alpha character
      * @param target The target string for the operation
@@ -45,7 +45,7 @@ public class UTIL_String {
 
         if (target == null) {
             return null;
-        }    
+        }
 
         return target.replaceAll('[^A-Za-z]', '');
 
@@ -60,7 +60,7 @@ public class UTIL_String {
 
         if (target == null) {
             return null;
-        }    
+        }
 
         return target.replaceAll('[^0-9]', '');
 
@@ -75,7 +75,7 @@ public class UTIL_String {
 
         if (target == null) {
             return null;
-        }    
+        }
 
         return target.replaceAll('[^A-Za-z0-9]', '');
 
@@ -103,5 +103,22 @@ public class UTIL_String {
 
             return null;
         }
+    }
+
+    /***
+    * @description @description Creates a 'unique' id made to look like a UUID.
+    * @return {String} guid: Generated UUID.
+    */
+    public static String getGUID() {
+        Blob key = Crypto.generateAesKey(128);
+        String hexString = EncodingUtil.convertToHex(key);
+
+        String uniqueId = hexString.substring(0,8)
+            + '-' + hexString.substring(8,12)
+            + '-' + hexString.substring(12,16)
+            + '-' + hexString.substring(16,20)
+            + '-' + hexString.substring(20);
+
+        return uniqueId;
     }
 }

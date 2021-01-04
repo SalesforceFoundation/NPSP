@@ -22,8 +22,8 @@
   </recordTypes>
   <recordTypes>
     <name>MatchingGift</name>
-    <label>Zugewiesene Schenkung</label>
-    <description>Zugewiesene Spende vom Arbeitgeber eines Spenders oder einer anderen Organisation</description>
+    <label>Spendenverdopplung</label>
+    <description>Verdoppelte Spende vom Arbeitgeber eines Spenders oder einer anderen Organisation</description>
   </recordTypes>
   <recordTypes>
     <name>Membership</name>
@@ -60,7 +60,7 @@
       <section>Tribute Information</section>
     </sections>
     <sections>
-      <label>Informationen zur zugewiesenen Schenkung</label>
+      <label>Informationen zur Spendenverdopplung</label>
       <section>Matching Gift Information</section>
     </sections>
   </layouts>

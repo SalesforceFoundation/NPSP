@@ -10,46 +10,22 @@
             parentId = helper.getParentId();
             component.set('v.parentId', parentId);
         }
-
-        $A.createComponent("c:rd2EntryForm", { parentId, recordId },
-            function (content, status, error) {
-                if (status === "SUCCESS") {
-                    const modalBody = content;
-
-                    let modalReference = component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        cssClass: component.getName() + ' slds-modal_medium custom-modal',
-                        showCloseButton: true,
-                        closeCallback: function () {
-                            helper.redirectToPage(component);
-                        }
-                    });
-                    component.set('v.modal', modalReference);
-                } else {
-                    console.error(JSON.stringify(error));
-                }
-            });
     },
 
     /**
     * @description Handle events sent from the modal
     */
     handleModalEvent: function (component, event) {
-        component.set('v.recordId', event.getParams('detail').recordId);
-        this.redirectToPage(component);
+        this.redirectToPage(component, event);
     },
 
     /**
      * @description: Redirect the page to either parent or RD record
      */
-    redirectToPage: function (component) {
-        component.get('v.modal').then(modal => {
-            modal.close();
-        });
-        let navigateToId = component.get('v.parentId') || component.get('v.recordId');
+    redirectToPage: function (component, event) {
+        let navigateToId = component.get('v.parentId') || event.getParams('detail').recordId;
 
         let navEvt = this.constructNavigationEvent(navigateToId);
-
         navEvt.fire();
     },
 

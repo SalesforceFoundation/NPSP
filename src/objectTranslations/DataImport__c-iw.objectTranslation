@@ -402,6 +402,11 @@
         <name>Donation_Type__c</name>
     </fields>
     <fields>
+        <help><!-- Custom metadata from Elevate Giving Pages, stored as JSON. --></help>
+        <label><!-- Elevate Custom Metadata --></label>
+        <name>Elevate_Custom_Metadata__c</name>
+    </fields>
+    <fields>
         <help>תיאור הגורמים לכישלון הייבוא של רשומת יבוא הנתונים.</help>
         <label>פרטי כישלון</label>
         <name>FailureInformation__c</name>
@@ -591,6 +596,11 @@
         <help><!-- Provides detail about why a transaction was declined. --></help>
         <label><!-- Payment Declined Reason --></label>
         <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
+        <label><!-- Payment Donor Cover Amount --></label>
+        <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help><!-- The date and time the transaction was created. --></help>

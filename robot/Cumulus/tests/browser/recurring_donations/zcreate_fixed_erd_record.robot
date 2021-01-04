@@ -16,7 +16,8 @@ Suite Teardown  Delete Records and Close Browser
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${date} =           Get Current Date      result_format=%-m/%-d/%Y
+    ${now}              Evaluate            '01/10/{dt.year}'.format(dt=datetime.datetime.now())    modules=datetime
+    ${date}             Convert Date        ${now}    result_format=%-m/%-d/%Y   date_format=%d/%m/%Y
     Set Suite Variable  ${date}
     ${ns} =             Get NPSP Namespace Prefix
     Set Suite Variable  ${ns}
@@ -25,7 +26,7 @@ Setup Test Data
 &{account_fields}  Type=Organization
 ${installments}  6
 ${frequency}  1
-${day_of_month}  2
+${day_of_month}  1
 ${amount}  100
 ${method}  Credit Card
 ${type}    Fixed
@@ -41,12 +42,9 @@ Create Fixed Recurring Donation With Monthly Installment
     [tags]                       unstable                     W-040346               feature:RD2
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
-
-    Click Object Button                     New
-    Wait For Modal                          New                                       Recurring Donation
-    # Reload page is a temporary fix till the developers fix the ui-modal
     Reload Page
-    Wait For Modal                          New                                       Recurring Donation
+    Click Link                              New
+    Wait For Rd2 Modal
     # Create Enhanced recurring donation of type Fixed
     Populate Rd2 Modal Form
     ...                                     Donor Type=Account

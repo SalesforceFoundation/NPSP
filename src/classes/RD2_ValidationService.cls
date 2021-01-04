@@ -193,6 +193,11 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
+            if (elevateService.isElevateRecordReactivated(rd, oldRd)) {
+                rd.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
+                continue;
+            }
+
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 rd.addError(System.Label.RD2_ElevatePermissionRequired);
                 continue;
@@ -213,6 +218,16 @@ public with sharing class RD2_ValidationService {
         }
     }
 
+    /**
+    * @description Validates if Enhanced Recurring Donation Paused Status is Active
+    * @return Boolean 
+    */
+    public static Boolean isStatusPausedActive() {
+        return UTIL_Describe.isValidPicklistOption(
+            'npe03__Recurring_Donation__c',
+            String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            RD2_Constants.STATUS_PAUSED);
+    }
     /***
     * @description Validates Enhanced Recurring Donations metadata has been deployed
     * @param rd The Recurring Donation to validate
@@ -343,11 +358,18 @@ public with sharing class RD2_ValidationService {
 
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
+        if (rdRecord.isElevateRecord()
+            && rdRecord.isClosed()
+            && rd.EndDate__c > currentDate
+        ) {
+            rd.addError(System.Label.RD2_EndDateElevateCannotBeInFuture);
+        }
+
         if (rdRecord.isFixedLength()
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+            rd.addError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
         }
 
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
