@@ -101,15 +101,6 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
-    * @description Get a GUID to store as a temp Commitment Id
-    * @return String
-    */
-    @AuraEnabled(cacheable=false)
-    public static String getTempCommitmentId() {
-        return RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
-    }
-
-    /**
     * @description Get the Elevate recurring commitment Id
     * @return String
     */
@@ -307,9 +298,9 @@ public with sharing class RD2_EntryFormController {
         
         validate(rd);
 
-        String jsonRequestBody = getCommitmentRequestBody(rd, paymentMethodToken);
+        PS_CommitmentRequest.RequestBody requestBody = getRequestBody(rd, paymentMethodToken);
         
-        return processCommitment(recordId, rd.CommitmentId__c, jsonRequestBody);
+        return processCommitment(recordId, rd.CommitmentId__c, JSON.serialize(requestBody));
     }
 
 
@@ -329,6 +320,7 @@ public with sharing class RD2_EntryFormController {
         return rd;
     }
 
+    @TestVisible
     private static void validate(npe03__Recurring_Donation__c rd) {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
         List<npe03__Recurring_Donation__c> oldRds = rd.Id == null
@@ -347,12 +339,12 @@ public with sharing class RD2_EntryFormController {
         }        
     }
 
-    private static String getCommitmentRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+    @TestVisible
+    private static PS_CommitmentRequest.RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
         try {
             PS_CommitmentRequest request = new PS_CommitmentRequest();
 
-            PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, paymentMethodToken);
-            return JSON.serialize(requestBody);
+            return request.getRequestBody(rd, paymentMethodToken);
 
         } catch (Exception ex) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
@@ -361,6 +353,7 @@ public with sharing class RD2_EntryFormController {
         return null;
     }
     
+    @TestVisible
     private static String processCommitment(Id recordId, String commitmentId, String jsonRequestBody) {
         UTIL_Http.Response response;
 
@@ -378,6 +371,7 @@ public with sharing class RD2_EntryFormController {
         return JSON.serialize(response);
     }
 
+    @TestVisible
     private static UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
         UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
         UTIL_Http.Response response;
