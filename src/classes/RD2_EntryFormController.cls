@@ -188,26 +188,24 @@ public with sharing class RD2_EntryFormController {
     * @return Recurring Donation object
     */
     private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
-        Set<String> queryFields = new Set<String>{
-            'Id',
-            'RecurringType__c',
-            'npe03__Installment_Period__c',
-            'InstallmentFrequency__c',
-            'npe03__Organization__c',
-            'npe03__Organization__r.RecordTypeId',
-            'npe03__Contact__r.Account.RecordTypeId',
-            'npe03__Installments__c',
-            'CommitmentId__c'
-        };
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>([
+            SELECT Id, 
+                RecurringType__c,
+                npe03__Installment_Period__c,
+                InstallmentFrequency__c,
+                npe03__Organization__c,
+                npe03__Organization__r.RecordTypeId,
+                npe03__Contact__r.Account.RecordTypeId,
+                npe03__Installments__c,
+                CommitmentId__c
+            FROM npe03__Recurring_Donation__c
+            WHERE Id = :recordId
+            LIMIT 1
+        ]);
 
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id = :recordId')
-            .withLimit(1)
-            .build();
-
-        return Database.query(soql);
+        return (rds == null || rds.isEmpty())
+            ? null
+            : rds[0];
     }
 
     /***
