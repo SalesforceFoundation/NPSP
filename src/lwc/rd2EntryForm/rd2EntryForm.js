@@ -380,7 +380,7 @@ export default class rd2EntryForm extends LightningElement {
     * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
-    async handleSubmit(event) {
+    handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
@@ -388,9 +388,8 @@ export default class rd2EntryForm extends LightningElement {
 
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
-            const isCommitment = await this.isCommitment();
 
-            if (isCommitment) {
+            if (this.isCommitment()) {
                 this.processCommitmentSubmit(allFields);
 
             } else {
@@ -408,23 +407,21 @@ export default class rd2EntryForm extends LightningElement {
     * @description Overrides the standard submit when an Elevate recurring commitment 
     * record is to be created or updated.
     */
-    processCommitmentSubmit = async (allFields) => {
+    async processCommitmentSubmit(allFields) {
         try {
-            await this.setPaymentMethodToken();
-            console.log('********this.paymentMethodToken: ' + this.paymentMethodToken);
+            if (this.isElevateWidgetDisplayed()) {
+                this.loadingText = this.customLabels.validatingCardMessage;
+                const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
+                this.paymentMethodToken = await elevateWidget.returnToken().payload;
+            }
         } catch (error) {
-            console.log('********this.paymentMethodToken error: ' + JSON.stringify(error));
-            // The error is displayed at the Elevate credit card widget, thus
-            // the "handleSaveError(error)" is not called so that 
-            // the error is not displayed on the entry form as well.
             this.setSaveButtonDisabled(false);
             return;
         }
 
         this.loadingText = this.customLabels.creatingCommitmentMessage;
         let rd = { ...allFields };
-        console.log('********set commitment Id');
         rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
 
         handleCommitment({
@@ -433,7 +430,6 @@ export default class rd2EntryForm extends LightningElement {
             paymentMethodToken: this.paymentMethodToken
         })
             .then(jsonResponse => {
-                console.log('********jsonResponse: ' + jsonResponse);
                 let response = JSON.parse(jsonResponse);
 
                 if (response.statusCode === HTTP_CODES.Created) {// or updated//TODO
@@ -451,7 +447,7 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Determines if the Recurring Donation is an Elevate recurring commitment
     */
-    async isCommitment() {
+    isCommitment() {
         if (!this.isElevateCustomer) {
             return false;
         }
@@ -466,27 +462,13 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
-    /***
-    * @description Generates the payment method token 
-    * when the Elevate credit card widget is displayed
-    */
-    async setPaymentMethodToken() {
-        if (!this.isElevateWidgetDisplayed()) {
-            return;
-        }
-
-        this.loadingText = this.customLabels.validatingCardMessage;
-        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-
-        this.paymentMethodToken = await elevateWidget.returnToken().payload;
-    }
 
     /***
     * @description Overrides the standard submit.
     * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
-    processSubmit = async (allFields) => {
+    processSubmit(allFields) {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
