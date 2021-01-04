@@ -44,10 +44,7 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
-import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
-import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
-import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
-import validate from '@salesforce/apex/RD2_EntryFormController.validate';
+import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
@@ -306,7 +303,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && (!this.isEdit 
+            && (!this.isEdit
                 || (this.isEdit && !isNull(this.commitmentId))
             )
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
@@ -414,13 +411,10 @@ export default class rd2EntryForm extends LightningElement {
     processCommitmentSubmit = async (allFields) => {
         try {
             await this.setPaymentMethodToken();
-
-            if (!this.isEdit) {
-                const tempId = await getTempCommitmentId();
-                allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
-            }
+            console.log('********this.paymentMethodToken: ' + this.paymentMethodToken);
 
         } catch (error) {
+            console.log('********this.paymentMethodToken error: ' + JSON.stringify(error));
             // The error is displayed at the Elevate credit card widget, thus
             // the "handleSaveError(error)" is not called so that 
             // the error is not displayed on the entry form as well.
@@ -428,15 +422,63 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
+        this.loadingText = this.customLabels.creatingCommitmentMessage;
         let rd = { ...allFields };
+        console.log('********set commitment Id');
+        rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
 
-        await validate({ recordId: this.recordId, jsonRecord: JSON.stringify(rd) })
-            .then(() => {
-                this.processSubmit(allFields);
+        handleCommitment({
+            recordId: this.recordId,
+            jsonRecord: JSON.stringify(rd),
+            paymentMethodToken: this.paymentMethodToken
+        })
+            .then(jsonResponse => {
+                console.log('********jsonResponse: ' + jsonResponse);
+                let response = JSON.parse(jsonResponse);
+
+                if (response.statusCode === HTTP_CODES.Created) {// or updated//TODO
+                    this.processSubmit(allFields);
+
+                } else {
+                    this.displayCommitmentErrorResponse(response);
+                }
             })
             .catch((error) => {
                 this.handleSaveError(error);
             });
+    }
+
+    /***
+    * @description Determines if the Recurring Donation is an Elevate recurring commitment
+    */
+    async isCommitment() {
+        if (!this.isElevateCustomer) {
+            return false;
+        }
+
+        if (this.isEdit) {
+            return !isNull(this.commitmentId);
+
+        } else {
+            // A new Recurring Donation will be a new Elevate recurring commitment
+            // when the Elevate widget is displayed on the entry form.
+            return this.isElevateWidgetDisplayed();
+        }
+    }
+
+    /***
+    * @description Generates the payment method token 
+    * when the Elevate credit card widget is displayed
+    */
+    async setPaymentMethodToken() {
+        if (!this.isElevateWidgetDisplayed()) {
+            return;
+        }
+
+        this.loadingText = this.customLabels.validatingCardMessage;
+        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
+
+        this.paymentMethodToken = await elevateWidget.returnToken().payload;
     }
 
     /***
@@ -524,94 +566,8 @@ export default class rd2EntryForm extends LightningElement {
         this.recordName = event.detail.fields.Name.value;
         const recordId = event.detail.id;
 
-        if (this.isElevateWidgetDisplayed()) {
-            this.handleCommitment(recordId);
-
-        } else {
-            this.showToastSuccess();
-            this.closeModal(recordId);
-        }
-    }
-
-
-    /***
-    * @description Determines if the Recurring Donation is an Elevate recurring commitment
-    */
-    async isCommitment() {
-        if (!this.isElevateCustomer) {
-            return false;
-        }
-
-        if (this.isEdit) {
-            return !isNull(this.commitmentId);
-
-        } else {
-            // A new Recurring Donation will be a new Elevate recurring commitment
-            // when the Elevate widget is displayed on the entry form.
-            return this.isElevateWidgetDisplayed();
-        }
-    }
-
-    /***
-    * @description Generates the payment method token 
-    * when the Elevate credit card widget is displayed
-    */
-    async setPaymentMethodToken() {
-        if (!this.isElevateWidgetDisplayed()) {
-            return;
-        }
-
-        this.loadingText = this.customLabels.validatingCardMessage;
-        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-
-        this.paymentMethodToken = await elevateWidget.returnToken().payload;
-    }
-
-    /**
-     * @description Sends Commitment request to the Elevate API and
-     * updates the Recurring Donation Commitment Id on the successfull creation
-     * If an error occurs when the Commitment is created,
-     * it should be displayed, and the modal closed since
-     * the another creation of the same Recurring Donation should be prevented.
-     */
-    handleCommitment(recordId) {
-        this.loadingText = this.customLabels.creatingCommitmentMessage;
-
-        getCommitmentRequestBody({
-            recordId: recordId,
-            paymentMethodToken: this.paymentMethodToken
-        })
-            .then(jsonRequestBody => {
-                createCommitment({ recordId: recordId, jsonRequestBody: jsonRequestBody })
-                    .then(jsonResponse => {
-                        this.processCommitmentResponse(jsonResponse);
-                    })
-                    .catch((error) => {
-                        this.displayCommitmentError(error);
-                    })
-                    .finally(() => {
-                        this.closeModal(recordId);
-                    });
-            })
-            .catch(error => {
-                this.displayCommitmentError(error);
-                this.closeModal(recordId);
-            });
-    }
-
-    /**
-     * @description Verifies if the Commitment was successfully created,
-     * and displays the error if the error response has been returned.
-     */
-    processCommitmentResponse(jsonResponse) {
-        let response = JSON.parse(jsonResponse);
-
-        if (response.statusCode === HTTP_CODES.Created) {
-            this.showToastSuccess();
-
-        } else {
-            this.displayCommitmentErrorResponse(response);
-        }
+        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
+        this.closeModal(recordId);
     }
 
     /**
@@ -660,29 +616,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Processes unexpected error from the commitment response
-     */
-    displayCommitmentError(errorException) {
-        let error = constructErrorMessage(errorException);
-
-        let message;
-        if (error) {
-            if (error.body && error.body.message) {
-                message = error.body.message;
-            } else if (error.message) {
-                message = error.message;
-            } else if (error.detail) {
-                message = error.detail;
-            }
-        }
-        if (isNull(message)) {
-            message = JSON.stringify(error);
-        }
-
-        this.showToastCommitmentError(message);
-    }
-
-    /**
      * @description Displays errors generated during commitment callout
      */
     showToastCommitmentError(errors) {
@@ -701,13 +634,6 @@ export default class rd2EntryForm extends LightningElement {
         let formattedMessage = format(message, replacements);
 
         showToast(title, formattedMessage, 'error', 'sticky');
-    }
-
-    /**
-     * @description Displays toast message on successful save
-     */
-    showToastSuccess() {
-        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
     }
 
     /**
