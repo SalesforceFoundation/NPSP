@@ -2,15 +2,9 @@
   "orgName": "NPSP - Enterprise Workspace",
   "edition": "Enterprise",
   "hasSampleData": "false",
-  "features": [
-    "EventLogFile", "AnalyticsAdminPerms", "EinsteinAnalyticsPlus", "SecurityEventEnabled"
-  ],
   "settings": {
     "chatterSettings": {
       "enableChatter": true
-    },
-    "userManagementSettings": {
-      "enableNewProfileUI": true
     },
     "apexSettings": {
       "enableDisableParallelApexTesting": true
