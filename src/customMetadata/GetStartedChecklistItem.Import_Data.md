@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/projects/import-your-data-using-npsp-data-importer</value>
+        <value xsi:type="xsd:string">https://sforce.co/3aRCykI</value>
     </values>
     <values>
         <field>Position__c</field>
