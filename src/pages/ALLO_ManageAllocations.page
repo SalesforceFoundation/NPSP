@@ -219,7 +219,7 @@
                                         <div class="slds-form-element">
                                             <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!fieldSetMember.label} {!cnt}</label>
                                             <div id="alloInputGAU{!cnt}" >
-                                                <c:UTIL_InputField sObj="{!Allo}" sObjType="npsp__Allocation__c" field="{!fieldSetMember.fieldPath}"/>
+                                                <c:UTIL_InputField sObj="{!Allo}" sObjType="Allocation__c" field="{!fieldSetMember.fieldPath}"/>
                                             </div>
                                         </div>
                                     </td>

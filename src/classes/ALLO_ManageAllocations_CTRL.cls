@@ -191,11 +191,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         defaultAllo = new Allocation__c();
         String queryString = 'SELECT ' + getQueryFields(getBaseAllocationFields(), fsmlColumns, false) +
-                             'FROM npsp__Allocation__c ' +
-                             'WHERE npsp__Opportunity__c = :parentId ' +
-                             'OR npsp__Campaign__c = :parentId ' +
-                             'OR npsp__Recurring_Donation__c = :parentId ' +
-                             'OR npsp__Payment__c = :parentId ';
+                             'FROM Allocation__c ' +
+                             'WHERE Opportunity__c = :parentId ' +
+                             'OR Campaign__c = :parentId ' +
+                             'OR Recurring_Donation__c = :parentId ' +
+                             'OR Payment__c = :parentId ';
 
         listAllo = (List<npsp__Allocation__c>)Database.query(queryString);
         //find default allocation if enabled, remove from list
