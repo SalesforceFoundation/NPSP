@@ -178,6 +178,9 @@
                                 <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                                 <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
                                 <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                                <apex:repeat var="fieldSetMember" value="{!fsmlColumns}">
+                                <th scope="col" width="150px"><span class="slds-truncate">{!fieldSetMember.label}</span></th>
+                                </apex:repeat>
                                 <th scope="col" width="100px"></th>
                             </tr>
                         </thead>
@@ -211,6 +214,16 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <apex:repeat var="fieldSetMember" value="{!fsmlColumns}">
+                                    <td>
+                                        <div class="slds-form-element">
+                                            <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!fieldSetMember.label} {!cnt}</label>
+                                            <div id="alloInputGAU{!cnt}" >
+                                                <c:UTIL_InputField sObj="{!Allo}" sObjType="npsp__Allocation__c" field="{!fieldSetMember.fieldPath}"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    </apex:repeat>
                                     <td>
                                         <apex:commandButton
                                             styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}"
