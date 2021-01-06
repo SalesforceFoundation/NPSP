@@ -6028,22 +6028,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Unsupported Operation: Unable to log an Error for this type of DML operation.</value>
     </labels>
     <labels>
-        <fullName>euExploreTrailheadButton</fullName>
-        <categories>End User Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text displayed in the button of the trailhead component</shortDescription>
-        <value>Explore Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>euTrailheadText</fullName>
-        <categories>End User Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text displayed in the trailhead component</shortDescription>
-        <value>Completing all the units on this page will get you N,NNN points, earn N badges and be on your way to Explorer!</value>
-    </labels>
-    <labels>
         <fullName>exceptionDeletePermission</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -8345,6 +8329,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Days Remaining in Free Trial</value>
     </labels>
     <labels>
+        <fullName>gseuExploreTrailheadButton</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the button of the trailhead component</shortDescription>
+        <value>Explore Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuTrailheadText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component</shortDescription>
+        <value>Completing all the units on this page will get you N,NNN points, earn N badges and be on your way to Explorer!</value>
+    </labels>
+    <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -8376,7 +8376,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Submitted Status label for the application status component</shortDescription>
         <value>Submitted</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>gsVideoHeaderLength</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

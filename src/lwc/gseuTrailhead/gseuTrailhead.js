@@ -1,19 +1,19 @@
 import { LightningElement } from 'lwc';
 import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
-import euTrailheadText from '@salesforce/label/c.euTrailheadText'
-import euExploreTrailheadButton from '@salesforce/label/c.euExploreTrailheadButton'
+import gseuTrailheadText from '@salesforce/label/c.gseuTrailheadText'
+import gseuExploreTrailheadButton from '@salesforce/label/c.gseuExploreTrailheadButton'
 export default class EuTrailhead extends LightningElement {
     /**
      * Url of the image shown in the component
      */
-    imgUrl = Resources + '/euAssets/trailheadLogo.png';
+    imgUrl = Resources + '/gseuAssets/trailheadLogo.png';
 
     /**
      * Object to reference the labels
      */
     labels = {
-        euTrailheadText,
-        euExploreTrailheadButton
+        gseuTrailheadText,
+        gseuExploreTrailheadButton
     }
 
     /**
