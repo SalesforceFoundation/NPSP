@@ -415,6 +415,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
                             // there are known scenarios that result in an invalid deployment id
                             // - metadata deployments older than 30 days can no longer be retrieved
                             // - sandbox created/refreshed from org with RD2 and a status to state mapping
+                            deployResult = null;
                         }
                     }
                 }
