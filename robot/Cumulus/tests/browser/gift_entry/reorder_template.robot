@@ -12,7 +12,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 
 Get Template Builder Field Names
-  @{builder_form_fields} =  Return Template Builder Fields
+  @{builder_form_fields} =  Return Form Field Titles  template_builder_fields
   ${builder_labels} =  Create List
 
   FOR  ${label}  IN  @{builder_form_fields}
@@ -24,7 +24,7 @@ Get Template Builder Field Names
 
 
 Get Template Form Field Names
-  @{gift_form_fields} =  Return Gift Form Fields
+  @{gift_form_fields} =  Return Form Field Titles  gift_entry_form
   ${form_labels} =  Create List
 
   FOR  ${label}  IN  @{gift_form_fields}
@@ -33,6 +33,29 @@ Get Template Form Field Names
   END
   
   Set Suite Variable  ${form_labels}
+
+Get Template Builder Section Names
+  @{builder_section_titles} =  Return Form Field Titles  template_builder_sections
+  ${builder_s_titles} =  Create List
+
+  FOR  ${label}  IN  @{builder_section_titles}
+      ${name} =  Get Text  ${label}
+      Append to List  ${builder_s_titles}  ${name}
+  END
+
+  Set Suite Variable  ${builder_section_titles}
+
+Get Form Section Names
+  @{form_section_titles} =  Return Form Field Titles  template_builder_sections
+  ${form_s_titles} =  Create List
+
+  FOR  ${label}  IN  @{form_section_titles}
+      ${name} =  Get Text  ${label}
+      Append to List  ${form_s_titles}  ${name}
+  END
+
+  Set Suite Variable  ${form_section_titles}
+
 
 *** Test Cases ***
 
@@ -55,6 +78,8 @@ Reorder and Modify GE Template Fields
   Perform Action On Object Field        select                     CustomObject1  CustomObject1Imported
   #Moves the CustomObject1Imported field up in the field order
   Click Gift Entry Button               button Up Data Import: CustomObject1Imported
+  #Moves the Add or Edit Organization Account section up in the field order
+  Click Gift Entry Button               button Up Add or Edit Organization Account
   #Deletes the Payment: Check/Reference Number field from the template
   Perform Action On Object Field        unselect                   Payment       Check/Reference Number
   Verify Template Builder               contains                   AccountSoftCredits: Role
@@ -79,8 +104,5 @@ Reorder and Modify GE Template Fields
   #Gets form field labels and compares the order to the template builder page
   Get Template Form Field Names
   Lists Should Be Equal                 ${builder_labels}  ${form_labels}
+  Lists Should Be Equal                 ${builder_section_titles}  ${form_section_titles}
   ${batch_id} =                         Save Current Record ID For Deletion      DataImportBatch__c
-
-# build keyword for page-agnostic label returns
-# Add test step for adjusting form sections
-# Add test step for verifying section order
