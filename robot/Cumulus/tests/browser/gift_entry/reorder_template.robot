@@ -45,7 +45,7 @@ Get Template Builder Section Names
 
   Set Suite Variable  ${builder_section_titles}
 
-Get Form Section Names
+Get Template Section Names
   @{form_section_titles} =  Return Form Field Titles  template_builder_sections
   ${form_s_titles} =  Create List
 
@@ -85,6 +85,7 @@ Reorder and Modify GE Template Fields
   Verify Template Builder               contains                   AccountSoftCredits: Role
   Verify Template Builder               does not contain           Payment: Check/Reference Number
   Get Template Builder Field Names
+  Get Template Builder Section Names
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                    GE_Gift_Entry
   #Creates new batch with the new template
@@ -103,6 +104,7 @@ Reorder and Modify GE Template Fields
   Page Should Not Contain               Check/Reference Number
   #Gets form field labels and compares the order to the template builder page
   Get Template Form Field Names
+  Get Template Section Names
   Lists Should Be Equal                 ${builder_labels}  ${form_labels}
   Lists Should Be Equal                 ${builder_section_titles}  ${form_section_titles}
   ${batch_id} =                         Save Current Record ID For Deletion      DataImportBatch__c
