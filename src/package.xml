@@ -2294,8 +2294,6 @@
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>
         <members>errErrorUnsupportedDMLType</members>
-        <members>euExploreTrailheadButton</members>
-        <members>euTrailheadText</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
@@ -2596,6 +2594,8 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuExploreTrailheadButton</members>
+        <members>gseuTrailheadText</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -4036,7 +4036,6 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
-        <members>euTrailhead</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -4079,6 +4078,7 @@
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
+        <members>gseuTrailhead</members>
         <members>libsMoment</members>
         <members>modal</members>
         <members>progressRing</members>
