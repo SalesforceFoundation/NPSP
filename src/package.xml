@@ -2594,6 +2594,20 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuChecklistItemGlobalSearchDesc</members>
+        <members>gseuChecklistItemGlobalSearchLinkLabel</members>
+        <members>gseuChecklistItemGlobalSearchPriBtnLabel</members>
+        <members>gseuChecklistItemGlobalSearchTitle</members>
+        <members>gseuChecklistItemStayTrackDesc</members>
+        <members>gseuChecklistItemStayTrackLinkLabel</members>
+        <members>gseuChecklistItemStayTrackPriBtnLabel</members>
+        <members>gseuChecklistItemStayTrackTitle</members>
+        <members>gseuChecklistItemWorkMultipleRecordsDesc</members>
+        <members>gseuChecklistItemWorkMultipleRecordsLinkLabel</members>
+        <members>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</members>
+        <members>gseuChecklistItemWorkMultipleRecordsTitle</members>
+        <members>gseuChecklistWorkRecordsDesc</members>
+        <members>gseuChecklistWorkRecordsTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3380,6 +3394,7 @@
         <members>GetStartedChecklistItem.Create_a_Donation</members>
         <members>GetStartedChecklistItem.Custom_Fields</members>
         <members>GetStartedChecklistItem.Fundraising_process</members>
+        <members>GetStartedChecklistItem.Global_Search</members>
         <members>GetStartedChecklistItem.Go_Further</members>
         <members>GetStartedChecklistItem.Import_Data</members>
         <members>GetStartedChecklistItem.Manage_Change</members>
@@ -3392,10 +3407,13 @@
         <members>GetStartedChecklistItem.Running_Reports</members>
         <members>GetStartedChecklistItem.Setup_Contact</members>
         <members>GetStartedChecklistItem.Stay_Track</members>
+        <members>GetStartedChecklistItem.Stay_Track_End_User</members>
         <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistItem.Work_Multiple_Records</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Work_with_Records</members>
         <name>CustomMetadata</name>
     </types>
     <types>

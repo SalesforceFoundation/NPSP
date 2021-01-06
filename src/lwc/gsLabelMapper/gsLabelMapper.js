@@ -72,7 +72,20 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
-
+import gseuChecklistWorkRecordsDesc from '@salesforce/label/c.gseuChecklistWorkRecordsDesc';
+import gseuChecklistWorkRecordsTitle from '@salesforce/label/c.gseuChecklistWorkRecordsTitle';
+import gseuChecklistItemGlobalSearchDesc from '@salesforce/label/c.gseuChecklistItemGlobalSearchDesc';
+import gseuChecklistItemGlobalSearchLinkLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchLinkLabel';
+import gseuChecklistItemGlobalSearchPriBtnLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchPriBtnLabel';
+import gseuChecklistItemGlobalSearchTitle from '@salesforce/label/c.gseuChecklistItemGlobalSearchTitle';
+import gseuChecklistItemStayTrackDesc from '@salesforce/label/c.gseuChecklistItemStayTrackDesc';
+import gseuChecklistItemStayTrackLinkLabel from '@salesforce/label/c.gseuChecklistItemStayTrackLinkLabel';
+import gseuChecklistItemStayTrackPriBtnLabel from '@salesforce/label/c.gseuChecklistItemStayTrackPriBtnLabel';
+import gseuChecklistItemStayTrackTitle from '@salesforce/label/c.gseuChecklistItemStayTrackTitle';
+import gseuChecklistItemWorkMultipleRecordsDesc from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsDesc';
+import gseuChecklistItemWorkMultipleRecordsLinkLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsLinkLabel';
+import gseuChecklistItemWorkMultipleRecordsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsPriBtnLabel';
+import gseuChecklistItemWorkMultipleRecordsTitle from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -152,6 +165,20 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistWorkRecordsDesc,
+    gseuChecklistWorkRecordsTitle,
+    gseuChecklistItemGlobalSearchDesc,
+    gseuChecklistItemGlobalSearchLinkLabel,
+    gseuChecklistItemGlobalSearchPriBtnLabel,
+    gseuChecklistItemGlobalSearchTitle,
+    gseuChecklistItemStayTrackDesc,
+    gseuChecklistItemStayTrackLinkLabel,
+    gseuChecklistItemStayTrackPriBtnLabel,
+    gseuChecklistItemStayTrackTitle,
+    gseuChecklistItemWorkMultipleRecordsDesc,
+    gseuChecklistItemWorkMultipleRecordsLinkLabel,
+    gseuChecklistItemWorkMultipleRecordsPriBtnLabel,
+    gseuChecklistItemWorkMultipleRecordsTitle,
 }
 
 /**
