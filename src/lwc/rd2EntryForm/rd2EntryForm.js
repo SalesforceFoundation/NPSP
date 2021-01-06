@@ -500,6 +500,11 @@ export default class rd2EntryForm extends LightningElement {
 
         if (response.statusCode === HTTP_CODES.Created) {
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = responseBody.id;
+
+            // Track the commitment Id: 
+            // relevant for error handling if the RD insert fails and
+            // user attempts to save again
+            this.commitmentId = responseBody.id;
         }
 
         if (cardData) {

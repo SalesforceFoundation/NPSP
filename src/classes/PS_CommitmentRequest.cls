@@ -292,25 +292,6 @@ public inherited sharing class PS_CommitmentRequest {
             : accounts[0];
     }
 
-    /**
-     * @description Parses the response and returns the commitment data contained in the response body
-     * @param response Create commitment request response
-     * @return ResponseBody
-     */
-    public ResponseBody getCommitment(UTIL_Http.Response response) {
-        ResponseBody commitment = new ResponseBody();
-
-        if (response != null
-            && response.statusCode == UTIL_Http.STATUS_CODE_CREATED
-            && String.isNotBlank(response.body)
-        ) {
-            commitment = (ResponseBody) JSON.deserialize(response.body, ResponseBody.class);
-        }
-
-        return commitment;
-    }
-
-
 
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
