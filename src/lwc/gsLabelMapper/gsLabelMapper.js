@@ -73,11 +73,55 @@ import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYou
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
 
+import euChecklistItemCaptureDonorIntentDesc from '@salesforce/label/c.euChecklistItemCaptureDonorIntentDesc';
+import euChecklistItemCaptureDonorIntentLinkLabel from '@salesforce/label/c.euChecklistItemCaptureDonorIntentLinkLabel';
+import euChecklistItemCaptureDonorIntentPriBtnLabel from '@salesforce/label/c.euChecklistItemCaptureDonorIntentPriBtnLabel';
+import euChecklistItemCaptureDonorIntentTitle from '@salesforce/label/c.euChecklistItemCaptureDonorIntentTitle';
+import euChecklistItemCollectGiftsDesc from '@salesforce/label/c.euChecklistItemCollectGiftsDesc';
+import euChecklistItemCollectGiftsLinkLabel from '@salesforce/label/c.euChecklistItemCollectGiftsLinkLabel';
+import euChecklistItemCollectGiftsPriBtnLabel from '@salesforce/label/c.euChecklistItemCollectGiftsPriBtnLabel';
+import euChecklistItemCollectGiftsTitle from '@salesforce/label/c.euChecklistItemCollectGiftsTitle';
+import euChecklistItemDonationIndividualDesc from '@salesforce/label/c.euChecklistItemDonationIndividualDesc';
+import euChecklistItemDonationIndividualLinkLabel from '@salesforce/label/c.euChecklistItemDonationIndividualLinkLabel';
+import euChecklistItemDonationIndividualPriBtnLabel from '@salesforce/label/c.euChecklistItemDonationIndividualPriBtnLabel';
+import euChecklistItemDonationIndividualTitle from '@salesforce/label/c.euChecklistItemDonationIndividualTitle';
+import euChecklistItemDonationOrganizationDesc from '@salesforce/label/c.euChecklistItemDonationOrganizationDesc';
+import euChecklistItemDonationOrganizationLinkLabel from '@salesforce/label/c.euChecklistItemDonationOrganizationLinkLabel';
+import euChecklistItemDonationOrganizationPriBtnLabel from '@salesforce/label/c.euChecklistItemDonationOrganizationPriBtnLabel';
+import euChecklistItemDonationOrganizationTitle from '@salesforce/label/c.euChecklistItemDonationOrganizationTitle';
+import euChecklistItemTrackDonationDesc from '@salesforce/label/c.euChecklistItemTrackDonationDesc';
+import euChecklistItemTrackDonationLinkLabel from '@salesforce/label/c.euChecklistItemTrackDonationLinkLabel';
+import euChecklistItemTrackDonationPriBtnLabel from '@salesforce/label/c.euChecklistItemTrackDonationPriBtnLabel';
+import euChecklistItemTrackDonationTitle from '@salesforce/label/c.euChecklistItemTrackDonationTitle';
+import euChecklistTrackDonationDesc from '@salesforce/label/c.euChecklistTrackDonationDesc';
+import euChecklistTrackDonationTitle from '@salesforce/label/c.euChecklistTrackDonationTitle';
 
 /**
 * @description Map of getLabelValue labels
 */
 const labelMap = {
+    euChecklistItemCaptureDonorIntentDesc,
+    euChecklistItemCaptureDonorIntentLinkLabel,
+    euChecklistItemCaptureDonorIntentPriBtnLabel,
+    euChecklistItemCaptureDonorIntentTitle,
+    euChecklistItemCollectGiftsDesc,
+    euChecklistItemCollectGiftsLinkLabel,
+    euChecklistItemCollectGiftsPriBtnLabel,
+    euChecklistItemCollectGiftsTitle,
+    euChecklistItemDonationIndividualDesc,
+    euChecklistItemDonationIndividualLinkLabel,
+    euChecklistItemDonationIndividualPriBtnLabel,
+    euChecklistItemDonationIndividualTitle,
+    euChecklistItemDonationOrganizationDesc,
+    euChecklistItemDonationOrganizationLinkLabel,
+    euChecklistItemDonationOrganizationPriBtnLabel,
+    euChecklistItemDonationOrganizationTitle,
+    euChecklistItemTrackDonationDesc,
+    euChecklistItemTrackDonationLinkLabel,
+    euChecklistItemTrackDonationPriBtnLabel,
+    euChecklistItemTrackDonationTitle,
+    euChecklistTrackDonationDesc,
+    euChecklistTrackDonationTitle,
     gsChecklistExploreNPSPTitle,
     gsChecklistExploreNPSPDesc,
     gsChecklistItemAddUserDesc,

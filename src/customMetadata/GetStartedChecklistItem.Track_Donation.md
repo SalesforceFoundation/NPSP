@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>Go Further</label>
+    <label>Track Donation</label>
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherDesc</value>
+        <value xsi:type="xsd:string">euChecklistItemTrackDonationDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>GS_Checklist_Section__c</field>
-        <value xsi:type="xsd:string">Bring_Users_Onboard</value>
+        <value xsi:type="xsd:string">Track_Donations</value>
     </values>
     <values>
         <field>Has_Link__c</field>
@@ -20,15 +20,15 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">nature_run_illustration.svg</value>
+        <value xsi:type="xsd:string">import_illustration_1.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherLinkLabel</value>
+        <value xsi:type="xsd:string">euChecklistItemTrackDonationLinkLabel</value>
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/trails/nonprofit_fundraising</value>
+        <value xsi:type="xsd:string">https://sforce.co/3oumoRK</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -36,11 +36,11 @@
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">euChecklistItemTrackDonationPriBtnLabel</value>
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
-        <value xsi:type="xsd:string">Disabled</value>
+        <value xsi:type="xsd:string">link</value>
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherTitle</value>
+        <value xsi:type="xsd:string">euChecklistItemTrackDonationTitle</value>
     </values>
 </CustomMetadata>

@@ -2294,6 +2294,28 @@
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>
         <members>errErrorUnsupportedDMLType</members>
+        <members>euChecklistItemCaptureDonorIntentDesc</members>
+        <members>euChecklistItemCaptureDonorIntentLinkLabel</members>
+        <members>euChecklistItemCaptureDonorIntentPriBtnLabel</members>
+        <members>euChecklistItemCaptureDonorIntentTitle</members>
+        <members>euChecklistItemCollectGiftsDesc</members>
+        <members>euChecklistItemCollectGiftsLinkLabel</members>
+        <members>euChecklistItemCollectGiftsPriBtnLabel</members>
+        <members>euChecklistItemCollectGiftsTitle</members>
+        <members>euChecklistItemDonationIndividualDesc</members>
+        <members>euChecklistItemDonationIndividualLinkLabel</members>
+        <members>euChecklistItemDonationIndividualPriBtnLabel</members>
+        <members>euChecklistItemDonationIndividualTitle</members>
+        <members>euChecklistItemDonationOrganizationDesc</members>
+        <members>euChecklistItemDonationOrganizationLinkLabel</members>
+        <members>euChecklistItemDonationOrganizationPriBtnLabel</members>
+        <members>euChecklistItemDonationOrganizationTitle</members>
+        <members>euChecklistItemTrackDonationDesc</members>
+        <members>euChecklistItemTrackDonationLinkLabel</members>
+        <members>euChecklistItemTrackDonationPriBtnLabel</members>
+        <members>euChecklistItemTrackDonationTitle</members>
+        <members>euChecklistTrackDonationDesc</members>
+        <members>euChecklistTrackDonationTitle</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
@@ -3376,9 +3398,13 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GetStartedChecklistItem.Add_User</members>
+        <members>GetStartedChecklistItem.Capture_Donor_Intent</members>
+        <members>GetStartedChecklistItem.Collect_Gifts</members>
         <members>GetStartedChecklistItem.Communicate_With_Users</members>
         <members>GetStartedChecklistItem.Create_a_Donation</members>
         <members>GetStartedChecklistItem.Custom_Fields</members>
+        <members>GetStartedChecklistItem.Donation_Individual</members>
+        <members>GetStartedChecklistItem.Donation_Organization</members>
         <members>GetStartedChecklistItem.Fundraising_process</members>
         <members>GetStartedChecklistItem.Go_Further</members>
         <members>GetStartedChecklistItem.Import_Data</members>
@@ -3392,10 +3418,12 @@
         <members>GetStartedChecklistItem.Running_Reports</members>
         <members>GetStartedChecklistItem.Setup_Contact</members>
         <members>GetStartedChecklistItem.Stay_Track</members>
+        <members>GetStartedChecklistItem.Track_Donation</members>
         <members>GetStartedChecklistItem.Train_Users</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Track_Donations</members>
         <name>CustomMetadata</name>
     </types>
     <types>
