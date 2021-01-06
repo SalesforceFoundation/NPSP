@@ -197,7 +197,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                              'OR Recurring_Donation__c = :parentId ' +
                              'OR Payment__c = :parentId ';
 
-        listAllo = (List<npsp__Allocation__c>)Database.query(queryString);
+        listAllo = (List<Allocation__c>)Database.query(queryString);
         //find default allocation if enabled, remove from list
         if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
             for (integer i=0; i<listAllo.size(); i++) {
