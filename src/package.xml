@@ -2294,6 +2294,8 @@
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>
         <members>errErrorUnsupportedDMLType</members>
+        <members>euExploreTrailheadButton</members>
+        <members>euTrailheadText</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
@@ -4034,6 +4036,7 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
+        <members>euTrailhead</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
