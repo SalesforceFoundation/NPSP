@@ -239,6 +239,15 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/Insert_Tests.robot
 
+    test_rollup_performance:
+        description: Runs Robot Framework performance tests for BDI Complex Objects
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/Rollups.robot
+            include: rollups
+            vars: persistent_org:True
+
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Org Config
@@ -1109,15 +1118,26 @@ flows:
                     include: medium
                     vars: persistent_org:False
 
+    test_rollup_performance_LDV:
+        description: Run rollup performance tests against a pre-existing org
+        group: Performance Tests
+        steps:
+            1: 
+                flow: max_feature_parameter_limit_work_around
+            2:  
+                task: deploy
+            3:
+                task: test_rollup_performance
+                options:
+                    include: rollups
+                    vars: persistent_org:True
+
     test_performance_LDV:
-        description: 'Runs BDI performance tests against a pre-existing org'
+        description: MetaCI will look for this flow for LDV builds
         group: Performance Tests
         steps:
             1:
-                task: test_performance
-                options:
-                    include: ultra-long
-                    vars: persistent_org:True
+                flow: test_rollup_performance_LDV
 
     beta_dependencies:
         steps:
