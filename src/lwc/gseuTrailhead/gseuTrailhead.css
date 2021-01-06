@@ -8,6 +8,7 @@ p {
     margin-right: 70px;
     margin-top: 13px;
     margin-bottom: 16px;
+    font-size: 16px;
 }
 
 .button {
@@ -15,4 +16,5 @@ p {
     height: 3rem;
     margin-left: 30px;
     margin-right: 30px;
+    font-size: 17px;
 }

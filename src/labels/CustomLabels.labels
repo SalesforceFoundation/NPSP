@@ -8333,7 +8333,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>End User Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text displayed in the button of the trailhead component</shortDescription>
+        <shortDescription>Text displayed in the button on the Trailhead component.</shortDescription>
         <value>Explore Trailhead</value>
     </labels>
     <labels>
@@ -8342,7 +8342,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text displayed in the trailhead component</shortDescription>
-        <value>Completing all the units on this page will get you N,NNN points, earn N badges and be on your way to Explorer!</value>
+        <value>Learn even more about Nonprofit Cloud and Salesforce.</value>
     </labels>
     <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
