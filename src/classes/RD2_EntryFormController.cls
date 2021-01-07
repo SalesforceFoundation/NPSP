@@ -527,6 +527,43 @@ public with sharing class RD2_EntryFormController {
             return response;
         }
 
+        /***
+        * @description Saves commitment Id and the credit card data onto the Recurring Donation record
+        * when commitment is created or updated from the Elevate Information widget.
+        * @param recordId Recurring Donation Id
+        * @param response Response from Elevate on the commitment create request
+        * @return void
+        */
+        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
+            if (response == null
+                || (response.statusCode != UTIL_Http.STATUS_CODE_CREATED 
+                    && response.statusCode != UTIL_Http.STATUS_CODE_OK
+                )
+            ) {
+                return;
+            }
+
+            try {
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+
+                if (commitment.hasId()) {
+                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                        Id = recordId,
+                        CommitmentId__c = commitment.id,
+                        CardLast4__c = commitment.getCardLast4(),
+                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                        CardExpirationYear__c = commitment.getCardExpirationYear()
+                    );
+
+                    UTIL_DMLService.updateRecordBatchAndLogErrors(
+                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                    );
+                }
+            } catch (Exception e) {
+                throw e;
+            }           
+        }
+
         /**
         * @description Creates an error record for the specified record Id and error message
         * @param recordId Recurring Donation Id

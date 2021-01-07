@@ -510,8 +510,8 @@ export default class rd2EntryForm extends LightningElement {
     * @description Constructs a Recurring Donation record to pass into commitment Apex method(s)
     */
     constructRecurringDonation(allFields) {
-        // Always set the commitment Id regardless if it is displayed or not,
-        // or if it is overwritten by the user or not.
+        // If the commitment Id is retrieved from DB upon the form load, or
+        // overwrite any user entered value and use the value to construct the RD record.
         if (!isEmpty(this.getCommitmentId())) {
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.getCommitmentId();
         }
