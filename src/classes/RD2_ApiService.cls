@@ -185,7 +185,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         if (startDate == null) {
-            startDate = Date.today();
+            startDate = RD2_ScheduleService.currentDate;
         }
 
         if (endDate == null) {
@@ -222,9 +222,11 @@ public inherited sharing class RD2_ApiService {
      */
     private Date getDefaultEndDate(Date startDate) {
         Date endDate = startDate.addYears(1);
+
         if (startDate.day() == endDate.day()) {
-            endDate.addDays(-1);
+            endDate = endDate.addDays(-1);
         }
+        
         return endDate;
     }
 
