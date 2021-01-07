@@ -1418,6 +1418,14 @@
         <value>to</value>
     </labels>
     <labels>
+        <fullName>ERR_RecordLogTitle</fullName>
+        <categories>Error Log</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title on a page displaying error logs for a record</shortDescription>
+        <value>Error Log</value>
+    </labels>
+    <labels>
         <fullName>ErrorEmailMessage</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -1513,7 +1521,7 @@
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1578,6 +1586,14 @@
         <value>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
     </labels>
     <labels>
+        <fullName>RD2_DataMigrationInvalidPlannedInstallments</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Planned Installments cannot be migrated to enhanced Recurring Donation format</shortDescription>
+        <value>When Open Ended Status is Closed and Schedule Type is not populated, Number of Planned Installments must be 1.</value>
+    </labels>
+    <labels>
         <fullName>RD2_DayOfMonthMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1602,12 +1618,60 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevatePermissionRequired</fullName>
-        <categories>Recurring-Donations, Error</categories>
+        <fullName>RD2_ElevateCancelInProgress</fullName>
+        <categories>Recurring-Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
-        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+        <shortDescription>Indicates Elevate recurring commitment cancel is in progress</shortDescription>
+        <value>Recurring Payment Cancel in Progress</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
+        <value>Don&apos;t enter payment information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisabledHeader</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header indicating the org is not connected to Elevate</shortDescription>
+        <value>Elevate is not enabled for your Salesforce org</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisabledMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation will not be committed to Elevate</shortDescription>
+        <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateEnableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
+        <value>Alternatively, enter payment details now.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateInformationHeader</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate information widget header</shortDescription>
+        <value>Elevate Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateInformationStatusSuccess</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status description displayed when no error is active</shortDescription>
+        <value>No Errors</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
@@ -1616,6 +1680,38 @@
         <protected>true</protected>
         <shortDescription>Error when the functionality is not supported for Elevate Recurring Donation.</shortDescription>
         <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePendingStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
+        <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
+        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRecordCreateFailed</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
+        <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -1984,6 +2080,14 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
+        <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate connected Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2048,6 +2152,14 @@
         <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormPeriodAdvanced</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2104,6 +2216,38 @@
         <value>Years</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveCommitmentMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
+        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
+        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Validating credit card...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveRecurringDonationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Recurring Donation record is being saved</shortDescription>
+        <value>Saving Recurring Donation...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2128,14 +2272,6 @@
         <value>Recurring Donation &quot;{0}&quot; was saved.</value>
     </labels>
     <labels>
-        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
-        <categories>Recurring-Donations, Entry-Form</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
-        <value>Other Information</value>
-    </labels>
-    <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2150,6 +2286,14 @@
         <protected>true</protected>
         <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ErrorRDIdIsMissingForCommitment</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Id must be specified</shortDescription>
+        <value>There was an error creating the Recurring Donation record. No Recurring payment request was sent to Elevate. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
@@ -2302,6 +2446,14 @@
         <protected>true</protected>
         <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
         <value>You&apos;ve selected 1 installment.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseStatusMustExist</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
+        <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -2832,6 +2984,22 @@
         <protected>true</protected>
         <shortDescription>Zipcode Verification Limit</shortDescription>
         <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenClosed</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it&apos;s closed</shortDescription>
+        <value>Click to expand this section.</value>
+    </labels>
+    <labels>
+        <fullName>accordionSection_ToggleInstructionsWhenOpen</fullName>
+        <categories>accordionSection</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Accordion instruction when it&apos;s open</shortDescription>
+        <value>Click to close this section.</value>
     </labels>
     <labels>
         <fullName>adapterException</fullName>
@@ -5009,6 +5177,136 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>batchNumberSettingsDescActivation</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of how to use the batch number format table</shortDescription>
+        <value>Activate or deactivate batch number formats. One batch number format can be active at time.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderFormats</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for table of batch number formats</shortDescription>
+        <value>Batch Number Formats</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsActivate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to save and activate the new batch number format</shortDescription>
+        <value>Save &amp; Activate</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Display Format options</shortDescription>
+        <value>Display Format allows you to control the appearance of your auto-numbered
+            field. It must be unique and include the number of digits as well as a prefix, if
+            desired. Your format can be up to 30 characters.&lt;/br&gt;&lt;/br&gt;
+            Examples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as {00000} with a starting number of 9 displays as 00009,
+            00010, 00011, etc.&#10;
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as ABC-{0000} with a starting number of 9 displays as
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsError</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for auto-number format setting</shortDescription>
+        <value>Cannot save auto-number format. Please review the errors and try again.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for explanation of Display Format options</shortDescription>
+        <value>Learn more about display formats.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescriptionCreate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for creating a batch number format</shortDescription>
+        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format. Only one batch number format can be active at a time. </value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when auto-number Display Format is invalid</shortDescription>
+        <value>Invalid Display Format.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorDuplicate</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for duplicate auto-number format</shortDescription>
+        <value>This Display Format is already in use.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsConfigureHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number configuration</shortDescription>
+        <value>Configure Batch Number</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescription</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of the batch number settings</shortDescription>
+        <value>Batch numbers are unique identifiers used in Gift Entry and NPSP Data Importer. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number settings in NPSP Settings</shortDescription>
+        <value>Batch Number Settings</value>
+    </labels>
+    <labels>
+        <fullName>commonActivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activate</shortDescription>
+        <value>Activate</value>
+    </labels>
+    <labels>
+        <fullName>commonDeactivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivate</shortDescription>
+        <value>Deactivate</value>
+    </labels>
+    <labels>
         <fullName>commonAmount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5065,6 +5363,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
+        <fullName>commonCardholderName</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
+        <value>Cardholder Name</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5096,6 +5402,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
     </labels>
+        <labels>
+        <fullName>commonClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close button label</shortDescription>
+        <value>Close</value>
+    </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
         <categories>Settings</categories>
@@ -5103,6 +5417,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
+        <fullName>commonContactSystemAdminMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message indicating user should contact the system administrator for help</shortDescription>
+        <value>Contact your system administrator for help.</value>
     </labels>
     <labels>
         <fullName>commonCreditNumber</fullName>
@@ -5159,6 +5481,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error</shortDescription>
         <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>commonErrorPrefix</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error prefix</shortDescription>
+        <value>Error: {0}</value>
     </labels>
     <labels>
         <fullName>commonFieldLabel</fullName>
@@ -5385,6 +5715,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>View All</value>
     </labels>
     <labels>
+        <fullName>commonViewErrorLog</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link value displaying error logs for a record</shortDescription>
+        <value>View Error Log</value>
+    </labels>
+    <labels>
         <fullName>commonViewMore</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5399,6 +5737,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Unknown Error</shortDescription>
         <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWaitMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text displayed to indicate process might take long time</shortDescription>
+        <value>Please wait...</value>
     </labels>
     <labels>
         <fullName>commonWarning</fullName>
@@ -6382,6 +6728,607 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This form contains fields that can't be found. Please check with your administrator.</value>
     </labels>
     <labels>
+        <fullName>gsAdminSetupTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title in Get Started</shortDescription>
+        <value>ADMIN SETUP CHECKLIST</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Explore Nonprofit in Get Started</shortDescription>
+        <value>Get comfortable with key concepts and features.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Explore Nonprofit in Get Started</shortDescription>
+        <value>Explore the Nonprofit Success Pack (NPSP)</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemAddUserDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Add User in Get Started</shortDescription>
+        <value>Give users access to NPSP and manage permissions for your org to ensure the right people have access to just what they need to keep things running smoothly.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemAddUserLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Add User in Get Started</shortDescription>
+        <value>Learn more about adding users in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemAddUserTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Add User in Get Started</shortDescription>
+        <value>Add Users</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Long before you flip the switch and start using Salesforce, you should make a plan for communicating clearly, compassionately, and transparently with your organization about the shift.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Learn more about Chatter in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCommunicateWithUserskTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Communicate with Users in Get Started</shortDescription>
+        <value>Communicate with Your Users</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Create Donation in Get Started</shortDescription>
+        <value>Keep track of donations, grants, or any other type of revenue so you can identify giving patterns and understand what drives giving at the constituent level. Start by learning how to enter donations into NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
+        <value>Learn more about Donations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Create Donation in Get Started</shortDescription>
+        <value>Create Donations</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Create Donation in Get Started</shortDescription>
+        <value>Create a Donation</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemCustomFieldsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Learn best practices for using picklists, filters, formulas, and other tools in the Object Manager to customize objects in your org.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCustomFieldsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Learn more about Object Manager in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCustomFieldsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Custom Fields in Get Started</shortDescription>
+        <value>Customize Objects</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;1 Minute Video&apos;</shortDescription>
+        <value>1 Minute Video</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemExtraSixtyMinuteVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;60 Minute Video&apos;</shortDescription>
+        <value>60 Minute Video</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemGoFurtherDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Go Further in Get Started</shortDescription>
+        <value>These initial steps will get you started, but keep in mind that the possibilities within Salesforce are limitless. Learn more about additional features as well as some of the incredible things other organizations have accomplished with the platform.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemGoFurtherLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Go Further in Get Started</shortDescription>
+        <value>Discover more about NPSP in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemGoFurtherTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Go Further in Get Started</shortDescription>
+        <value>Go Further</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Import Data in Get Started</shortDescription>
+        <value>Use the NPSP Data Importer to get your records into Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Import Data in Get Started</shortDescription>
+        <value>Import Data</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemImportDataLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Import Data in Get Started</shortDescription>
+        <value>Learn more about importing data in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Import Data in Get Started</shortDescription>
+        <value>See Documentation</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemImportDataTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Import Data in Get Started</shortDescription>
+        <value>Import Data</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangeDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Manage Change in Get Started</shortDescription>
+        <value>Salesforce is updated frequently to address issues and add new features. Understanding these changes and how to manage the update process will ensure your organization is always ready to take full advantage of the platform.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangeLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Manage Change in Get Started</shortDescription>
+        <value>Learn more about Release Readiness in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Manage Change in Get Started</shortDescription>
+        <value>View Release Readiness Group</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemManageChangeTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Manage Change in Get Started</shortDescription>
+        <value>Manage Changes to Your Org</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPCloudDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>This brief overview is meant to dip your toes into what&apos;s possible with NPSP, but you can dive deeper and discover the many other features available to your organization.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPCloudPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>See Features</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPCloudLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>Learn more about NPSP Features in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPCloudTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Cloud in Get Started</shortDescription>
+        <value>Learn about Other Nonprofit Cloud Features</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPGuideDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>Take the time to carefully plan your implementation and ensure your Salesforce org meets the needs of your nonprofit.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPGuidePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>Download PDF</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPGuideTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Guide in Get Started</shortDescription>
+        <value>NPSP Planning Guide</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Navigate to the NPSP Settings page and do a thorough review to confirm the settings are correct for your organization and are functioning the way you expect them to.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Learn more about NPSP Settings in the Planning Guide</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemNPSPSettingsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item NPSP Settings in Get Started</shortDescription>
+        <value>Adjust NPSP Settings</value>
+    </labels>
+      <labels>
+        <fullName>gsChecklistItemPageLayoutsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Take the time to customize your org&apos;s look and feel, so you can be sure your users can easily find the data they need.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPageLayoutsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Learn more about Page Layouts in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPageLayoutsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Page Layouts in Get Started</shortDescription>
+        <value>Customize Page Layouts</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Set specific goals and learn best practices for implementing Nonprofit Cloud.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Set Goals</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Learn more about NPSP Success in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemPrepareNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Prepare NPSP in Get Started</shortDescription>
+        <value>Prepare for Success with Nonprofit Cloud</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemReviewCompanyDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Review Company in Get Started</shortDescription>
+        <value>Within Salesforce, organizational information is referred to as &quot;Company Information.&quot; Here you&apos;ll set up your org&apos;s default time zone, currency locale, and fiscal year start month. You can also find information about your license usage.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemReviewCompanyLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Review Company in Get Started</shortDescription>
+        <value>Learn more about Company Information settings in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemReviewCompanyTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Review Company in Get Started</shortDescription>
+        <value>Review Company Information</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
+        <value>Learn how to build reports and dashboards to bring your data to life and help tell the story of your organization&apos;s impact.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Running Reports in Get Started</shortDescription>
+        <value>Explore Reports</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Running Reports in Get Started</shortDescription>
+        <value>Learn how to customize NPSP Reports &amp; Dashboards in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemRunningReportsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Running Reports in Get Started</shortDescription>
+        <value>Run Reports on Constituent Data</value>
+    </labels> 
+    <labels>
+        <fullName>gsChecklistItemSetupContactDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Learn how to add relevant constituent data (for example a name, address, or employer) into your Salesforce instance.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Create Households</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Learn more about Contacts and Accounts</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Explore Contacts</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Set Up a Contact and Household Account</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
+        <value>Activities are tasks, events, or other interactions tracked in the Activity Timeline. Activities allow you to keep track of each time you have contact with a constituent. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Stay Track in Get Started</shortDescription>
+        <value>Learn more about Activities in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Stay Track in Get Started</shortDescription>
+        <value>Create Activities</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Stay Track in Get Started</shortDescription>
+        <value>Stay on Track with Activities</value>
+    </labels>
+  
+    <labels>
+        <fullName>gsChecklistItemTrainUsersDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Train Users in Get Started</shortDescription>
+        <value>When the day to launch your Salesforce org arrives, you want every user in your organization to be ready. That&apos;s why it&apos;s important to make a plan for onboarding your users and helping them get the most out of Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemTrainUsersLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Train Users in Get Started</shortDescription>
+        <value>Learn more about training your users in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemTrainUsersTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Train Users in Get Started</shortDescription>
+        <value>Train Your users</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistMakeItYourDesc</fullName>
+        <categories>Adoption, Group, Description</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Make Your in Get Started</shortDescription>
+        <value>Customize Salesforce with information that&apos;s unique to your organization.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistMakeItYourTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Make Your in Get Started</shortDescription>
+        <value>Make it Your Own</value>
+    </labels>
+    <labels>
+       <fullName>gsChecklistOnboardUsersDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist User Onboard in Get Started</shortDescription>
+        <value>Add your users to Salesforce and plan your rollout.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistOnboardUsersTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
+        <value>Onboard Your Users</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Learn how to leverage built-in tools like list views and Path to effectively manage your fundraising and donation processes.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Learn more about list views and Path in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Create List Views</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemFundraisingProcessTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
+        <value>Visualize Your Fundraising Processes</value>
+    </labels>
+    <labels>
         <fullName>commonFieldsNotFound</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7065,7 +8012,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure messge if invalid configuration params was provided for onboarding</shortDescription>
+        <shortDescription>Failure message if invalid configuration params was provided for onboarding</shortDescription>
         <value>Invalid configuration parameters were provided</value>
     </labels>
     <labels>
@@ -7332,6 +8279,94 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Gift Processing configuration error</shortDescription>
         <value>Your org is missing required configuration for Gift Processing. Contact your admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>gsApplicationStatus</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Application Status label for the application status component</shortDescription>
+        <value>Application Status: </value>
+    </labels>
+    <labels>
+        <fullName>gsApplicationStatusModalHeader</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of the modal label for the application status component</shortDescription>
+        <value>Check Application Status</value>
+    </labels>
+    <labels>
+        <fullName>gsApplyForFreeLicenses</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Apply for licenses button label for the application status component</shortDescription>
+        <value>Apply for Salesforce Licenses</value>
+    </labels>
+    <labels>
+        <fullName>gsCheckStatus</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Check Status label for the application status component</shortDescription>
+        <value>Check Status</value>
+    </labels>
+    <labels>
+        <fullName>gsDaysAdded</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Days added label for the application status component</shortDescription>
+        <value>30 Days Added</value>
+    </labels>
+    <labels>
+        <fullName>gsDaysRemainingInFreeTrial</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription> Days remaining in the free trial label for the application status component</shortDescription>
+        <value>Days Remaining in Free Trial</value>
+    </labels>
+    <labels>
+        <fullName>gsFollowUpApplicationStatus</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Follow up Application Status label for the application status component</shortDescription>
+        <value>To follow up on your application status, please email us at: </value>
+    </labels>
+    <labels>
+        <fullName>gsLearnMore</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Learn more label for the application status component</shortDescription>
+        <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>gsNoApplicationSubmitted</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No application submitted label for the application status component</shortDescription>
+        <value>No Application Submitted</value>
+    </labels>
+    <labels>
+        <fullName>gsSubmitted</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Submitted Status label for the application status component</shortDescription>
+        <value>Submitted</value>
+    </labels>
+        <labels>
+        <fullName>gsVideoHeaderLength</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Video Duration displayed in the Video Header Component</shortDescription>
+        <value>in 2 minutes</value>
     </labels>
     <labels>
         <fullName>healthButtonRun</fullName>
@@ -12730,5 +13765,149 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
+    </labels>
+     <labels>
+        <fullName>gsResourcesTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The page title in the Get Started Resources section</shortDescription>
+        <value>Resources</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemNonprofitCloudLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Nonprofit Cloud label in Get Started Resources section</shortDescription>
+        <value>Nonprofit Cloud Basics</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemNonprofitCloudLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Nonprofit Cloud link label in Get Started Resources section</shortDescription>
+        <value>Get to Know Nonprofit Cloud</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemFundraisingLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Fundraising label in Get Started Resources section</shortDescription>
+        <value>Fundraising Learning Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemFundraisingLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Fundraising link label in Get Started Resources section</shortDescription>
+        <value>Start Fundraising</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemProgramManagementLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Program Management label in Get Started Resources section</shortDescription>
+        <value>Program Management Learning Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
+        <value>Manage Programs</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
+        <value>Marketing/Engagement Learning Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Marketing Engagement link label in Get Started Resources section</shortDescription>
+        <value>Engage Constituents</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemWebinarsLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Webinars label in Get Started Resources section</shortDescription>
+        <value>Salesforce Events Calendar</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemWebinarsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Webinars link label in Get Started Resources section</shortDescription>
+        <value>Find Events and Webinars</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemHubLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Hub label in Get Started Resources section</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemHubLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Hub link label in Get Started Resources section</shortDescription>
+        <value>Learn from Other Nonprofits</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemPartnersLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Partners label in Get Started Resources section</shortDescription>
+        <value>Implementation Partners</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemPartnersLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Partners link label in Get Started Resources section</shortDescription>
+        <value>Find a Partner</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesVideographyLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Videography label in Get Started Resources section</shortDescription>
+        <value>NPSP Videography Channel</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesVideographyLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Videography link label in Get Started Resources section</shortDescription>
+        <value>Watch Videos</value>
+    </labels>
+    <labels>
+        <fullName>gsVideoHeaderTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Video header title in Get Started</shortDescription>
+        <value>Get Started on NPSP</value>
     </labels>
 </CustomLabels>

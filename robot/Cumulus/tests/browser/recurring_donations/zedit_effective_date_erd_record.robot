@@ -60,6 +60,7 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
+    Current Page Should Be                   Details                        npe03__Recurring_Donation__c
     Validate Field Values Under Section
     ...                                      Amount=$100.00
     ...                                      Status=Active
@@ -83,6 +84,7 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
+    Current Page Should Be                   Details                        npe03__Recurring_Donation__c
     # Verify that Future schedule section shows up and the values reflect the changes
     Validate Field Values Under Section      Future Schedule
     ...                                      Amount=$150.00
@@ -93,7 +95,9 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
+    Current Page Should Be                   Details                        npe03__Recurring_Donation__c
     @{opportunity1} =                        API Query Opportunity For Recurring Donation                   ${data}[contact_rd][Id]
     Store Session Record                     Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                               Details                        Opportunity                     object_id=${opportunity1}[0][Id]
+    Current Page Should Be                   Details                        Opportunity
     Navigate To And Validate Field Value     Stage                          contains                        Pledged

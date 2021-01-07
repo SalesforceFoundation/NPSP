@@ -390,6 +390,11 @@
         <name>Donation_Type__c</name>
     </fields>
     <fields>
+        <help>Metadatos personalizados procedentes de páginas de aportación de Elevate, almacenados como JSON.</help>
+        <label>Metadatos personalizados de Elevate</label>
+        <name>Elevate_Custom_Metadata__c</name>
+    </fields>
+    <fields>
         <help>Descripción de lo que provocó que el registro de importación no se importara.</help>
         <label>Información del fallo</label>
         <name>FailureInformation__c</name>
@@ -579,6 +584,11 @@
         <help>Proporciona detalles sobre el motivo por el que se rechazó una transacción.</help>
         <label>Motivo de rechazo de pago</label>
         <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
+        <label><!-- Payment Donor Cover Amount --></label>
+        <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>La fecha y la hora en las que se creó la transacción.</help>

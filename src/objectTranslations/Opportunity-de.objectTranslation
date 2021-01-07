@@ -154,18 +154,18 @@
     </fields>
     <fields>
         <help>Nachschlagen im Account-Datensatz des Unternehmens, mit dem diese Spende übereinstimmt.</help>
-        <label>Account für übereinstimmende Schenkung</label>
+        <label>Account für verdoppelte Spende</label>
         <name>Matching_Gift_Account__c</name>
-        <relationshipLabel>Übereinstimmende Schenkungen</relationshipLabel>
+        <relationshipLabel>Verdoppelte Spenden</relationshipLabel>
     </fields>
     <fields>
-        <help>Der Name des Unternehmens, der diese Spende entspricht.</help>
-        <label>Arbeitgeber der übereinstimm. Schenkung</label>
+        <help>Der Name des Unternehmens, das diese Spende verdoppelt.</help>
+        <label>Arbeitgeber mit Spendenverdopplung</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help>Der Status der übereinstimmenden Schenkung für diese Spende, wie z. B. &quot;Übermittelt&quot; oder &quot;Empfangen&quot;.</help>
-        <label>Status der übereinstimmenden Schenkung</label>
+        <help>Der Status der Spendenverdopplung für diese Spende, wie z. B. &quot;Übermittelt&quot; oder &quot;Empfangen&quot;.</help>
+        <label>Spendenverdopplungs-Status</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
@@ -181,10 +181,10 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Nachschlagen im Opportunity-Datensatz für die mit dieser Spende übereinstimmenden Schenkung</help>
-        <label>Zugewiesene Schenkung</label>
+        <help>Nachschlagen im Opportunity-Datensatz für die verdoppelte Spende für diese Spende</help>
+        <label>Spendenverdopplung</label>
         <name>Matching_Gift__c</name>
-        <relationshipLabel>Übereinstimmende Schenkungen</relationshipLabel>
+        <relationshipLabel>Verdoppelte Spenden</relationshipLabel>
     </fields>
     <fields>
         <help>Das Fälligkeitsdatum der nächsten Lieferung dieser Opportunity (schreibgeschützt).</help>
@@ -290,7 +290,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Informationen zur übereinstimmenden Schenkung</label>
+            <label>Informationen zur Spendenverdopplung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -343,7 +343,7 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label>Informationen zur übereinstimmenden Schenkung</label>
+            <label>Informationen zur Spendenverdopplung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -406,7 +406,7 @@
         <name>Email_Acknowledgments</name>
     </webLinks>
     <webLinks>
-        <label>Übereinstimmende Schenkungen suchen</label>
+        <label>Verdoppelte Spenden suchen</label>
         <name>Find_Matched_Gifts</name>
     </webLinks>
     <webLinks>

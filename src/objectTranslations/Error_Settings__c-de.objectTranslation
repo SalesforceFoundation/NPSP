@@ -46,6 +46,11 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
+        <help>Wenn dies aktiviert ist, prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</help>
+        <label>Statusprüfungen für Daten in Datensätzen deaktivieren</label>
+        <name>DisableRecordDataHealthChecks__c</name>
+    </fields>
+    <fields>
         <help>Bei Aktivierung dieser Option wird das NPSP-Fehlerbehandlungs-Framework deaktiviert.</help>
         <label>Fehlerbehandlung deaktivieren</label>
         <name>Disable_Error_Handling__c</name>

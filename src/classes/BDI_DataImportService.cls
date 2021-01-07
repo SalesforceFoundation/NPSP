@@ -38,8 +38,19 @@
 *
 */
 global with sharing class BDI_DataImportService {
+    private static DescribeFieldResult batchNumberDescribe = UTIL_Describe.getFieldDescribe(
+        String.valueOf(DataImport__c.SObjectType),
+        String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c)
+    );
+
+    public static final String DATAIMPORT_BATCH_NUMBER_FIELD = String.join(new List<String>{
+        batchNumberDescribe.getRelationshipName(),
+        String.valueOf(DataImportBatch__c.Batch_Number__c)
+    }, '.');
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+    public static final String ACH_PAYMENT_METHOD = 'ACH';
+
 
     public BDI_MappingService mappingService;
 
@@ -78,19 +89,19 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
-        String dataImportQuery;
+        List<String> whereClauses = new List<String>{
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
+            'Id =: dataImportIds'
+        };
 
-        // construct or SOQL for the batch
-        dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-        dataImportQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
-        dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
-
-        dataImportQuery += ' AND Id =: dataImportIds';
-
-        // this ensures consistency for our test code, but also should
-        // help users figure out import problems by importing in a consistent order.
-        dataImportQuery += ' ORDER BY Name ';
-        return dataImportQuery;
+        return new UTIL_Query()
+            .withSelectFields(listStrDataImportFields)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+            // this ensures consistency for our test code, but also should
+            // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
     }
 
     /*******************************************************************************************************
@@ -99,22 +110,30 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForBatchProcess(Id batchId) {
-        String batchQuery;
-
-        // construct or SOQL for the batch
-        batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-        batchQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
-        batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
+        List<String> selectClause = new List<String>{
+            String.join(listStrDataImportFields, ','),
+                DATAIMPORT_BATCH_NUMBER_FIELD
+        };
+        String batchIdClause;
 
         if (batchId != null) {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
         } else {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = NULL';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = NULL';
         }
-        // this ensures consistency for our test code, but also should
-        // help users figure out import problems by importing in a consistent order.
-        batchQuery += ' ORDER BY Name ';
-        return batchQuery;
+        List<String> whereClauses = new List<String>{
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
+            batchIdClause
+        };
+
+        return new UTIL_Query()
+            .withSelectFields(selectClause)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+                // this ensures consistency for our test code, but also should
+                // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
     }
 
     /*******************************************************************************************************
@@ -669,18 +688,18 @@ global with sharing class BDI_DataImportService {
     /**
      * @description Checks a collection of data imports and returns a filtered list of only those data import records
      * that have been successfully charged by payment services or those with a blank payment status which were not
-     * sent to payment services because a credit card charge was not required.
+     * sent to payment services because a credit card charge was not required.  Also allow processing of all ACH
+     * Payment Types since we do need to process DI for Elevate ACH payments of several payment statuses.
      *
-     * @param dataImport {DataImport__c} List of data import records to be filtered
+     * @param di DataImport__c record to be filtered
      * @return Boolean
      */
-    private Boolean isSuccessfulPayment(DataImport__c dataImport) {
-        String paymentStatus = dataImport.Payment_Status__c;
+    private Boolean isSuccessfulPayment(DataImport__c di) {
+        String paymentStatus = di.Payment_Status__c;
 
-        return String.isBlank(paymentStatus) ||
-            dataImport.Payment_Status__c.equalsIgnoreCase(
-                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
-            );
+        return String.isBlank(paymentStatus) || 
+            di.Payment_Status__c.equalsIgnoreCase(GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()) ||
+                (di.Payment_Method__c == ACH_PAYMENT_METHOD && di.Payment_Elevate_ID__c != null);
     }
 
     /**

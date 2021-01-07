@@ -451,14 +451,28 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 // User defined match, so we do nothing and retain the values
             } else {
                 // Clear Dry Run fields before running Dry Run so new field values are accounted for
-                dataImportRecord.Status__c = null;
-                dataImportRecord.FailureInformation__c = null;
-                dataImportRecord.DonationImported__c = null;
-                dataImportRecord.DonationImportStatus__c = null;
-                dataImportRecord.PaymentImported__c = null;
-                dataImportRecord.PaymentImportStatus__c = null;
+                if (dataImportRecord.Status__c != null) {
+                    dataImportRecord.Status__c = null;
+                }
+                if (dataImportRecord.FailureInformation__c != null) {
+                    dataImportRecord.FailureInformation__c = null;
+                }
+                if (dataImportRecord.DonationImported__c != null) {
+                    dataImportRecord.DonationImported__c = null;
+                }
+                if (dataImportRecord.DonationImportStatus__c != null) {
+                    dataImportRecord.DonationImportStatus__c = null;
+                }
+                if (dataImportRecord.PaymentImported__c != null) {
+                    dataImportRecord.PaymentImported__c = null;
+                }
+                if (dataImportRecord.PaymentImportStatus__c != null) {
+                    dataImportRecord.PaymentImportStatus__c = null;
+                }
+
             }
         }
+
         update dataImportRecords;
 
         return dataImportRecords;

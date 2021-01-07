@@ -14,6 +14,11 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
+        <help>Lorsque cette option est sélectionnée, le Contrôle d&apos;intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d&apos;exécution du Contrôle d&apos;intégrité.</help>
+        <label>Désactiver contrôles données enregistr.</label>
+        <name>DisableRecordDataHealthChecks__c</name>
+    </fields>
+    <fields>
         <help>Si cette option est activée, l&apos;infrastructure de gestion d’erreur de NPSP est désactivée.</help>
         <label>Désactiver la gestion d’erreur</label>
         <name>Disable_Error_Handling__c</name>

@@ -1,7 +1,7 @@
 import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
 import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
-
+import getFieldMappings from '@salesforce/apex/GE_GiftEntryController.getFieldMappings';
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
@@ -50,9 +50,7 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             getRenderWrapper({})
                 .then((result) => {
-                    this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
-                    this.fieldTargetMappings = result.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+                    this.readFieldMappings(result.fieldMappingSetWrapper);
                     if (isEmpty(this.donationFieldTemplateLabel)) {
                         this.donationFieldTemplateLabel = this.getDonationAmountCustomLabel(result.formTemplate);
                     }
@@ -69,6 +67,17 @@ class GeFormService {
             getAllocationSettings()
                 .then(resolve)
                 .catch(handleError)
+        });
+    }
+
+    getFieldMappings() {
+        return new Promise((resolve, reject) => {
+           getFieldMappings()
+               .then(result => {
+                   this.readFieldMappings(result);
+                   resolve(result);
+               })
+               .catch(handleError)
         });
     }
 
@@ -109,12 +118,12 @@ class GeFormService {
     }
 
     /**
-     * Get a object info object by dev name from the render wrapper object
-     * @param objectDevName
+     * Get a object info object by dev name
+     * @param objectMappingDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectMappingWrapper(objectDevName) {
-        return this.objectMappings[objectDevName];
+    getObjectMapping(objectMappingDevName) {
+        return this.objectMappings[objectMappingDevName];
     }
 
     /**
@@ -145,12 +154,7 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             getFormRenderWrapper({ templateId: templateId })
                 .then(renderWrapper => {
-                    this.fieldMappings =
-                        renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings =
-                        renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
-                    this.fieldTargetMappings =
-                        renderWrapper.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+                    this.readFieldMappings(renderWrapper.fieldMappingSetWrapper)
                     resolve(renderWrapper);
                 })
                 .catch(err => {
@@ -173,16 +177,37 @@ class GeFormService {
     }
 
     get importedRecordFieldNames() {
-        return Object.values(this.objectMappings).map(
-            ({ Imported_Record_Field_Name }) =>
-                Imported_Record_Field_Name
-        );
+        return this.objectMappings && Object.values(this.objectMappings)
+            .map(
+                ({Imported_Record_Field_Name}) => Imported_Record_Field_Name
+            );
     }
 
-    getObjectMappingWrapperByImportedFieldName(importedFieldName) {
-        return Object.values(this.objectMappings)
-            .find(({ Imported_Record_Field_Name }) =>
+    readFieldMappings(fieldMappingSetWrapper) {
+        this.fieldMappings = fieldMappingSetWrapper.fieldMappingByDevName;
+        this.objectMappings = fieldMappingSetWrapper.objectMappingByDevName;
+        this.fieldTargetMappings = fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+    }
+
+    fieldMappingsForImportedRecordFieldName(importedRecordFieldName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(
+                fieldMapping =>
+                    fieldMapping.Target_Object_Mapping_Dev_Name ===
+                    this.objectMappingWrapperFor(importedRecordFieldName).DeveloperName
+            );
+    }
+
+    objectMappingWrapperFor(importedFieldName) {
+        return this.objectMappings && Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
                 Imported_Record_Field_Name === importedFieldName);
+    }
+
+    fieldMappingsForObjectMappingDevName(objectMappingDevName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .filter(fieldMapping =>
+                fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
     }
 
 }

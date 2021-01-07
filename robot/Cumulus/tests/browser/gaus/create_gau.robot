@@ -16,10 +16,11 @@ Create GAU and Verify
      Go To Page                        Listing
      ...                               General_Accounting_Unit__c
      Click Object Button               New
-     Populate Modal Form
+     Wait Until Modal Is Open
+     Populate Form
      ...                               General Accounting Unit Name=${gau_name}
      ...                               Largest Allocation=5
-     Click Modal Button                Save
+     Click Button                      title=Save
      Wait Until Modal Is Closed
      ${gau_name}                       Get Main Header
      Go To Page                        Listing

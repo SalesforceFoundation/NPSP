@@ -336,7 +336,7 @@
     </fields>
     <fields>
         <help>Specificeert of de donatie een individuele donatie is van Contact1, of een organisatiedonatie is van Account1.</help>
-        <label>Donateur donatie</label>
+        <label>Donateur Donatie</label>
         <name>Donation_Donor__c</name>
         <picklistValues>
             <masterLabel>Account1</masterLabel>
@@ -388,6 +388,11 @@
     <fields>
         <label>Donatietype</label>
         <name>Donation_Type__c</name>
+    </fields>
+    <fields>
+        <help>Aangepaste metagegevens van Elevate Giving Pages, opgeslagen als JSON.</help>
+        <label>Aangepaste metagegevens in Elevate</label>
+        <name>Elevate_Custom_Metadata__c</name>
     </fields>
     <fields>
         <help>Beschrijving van de reden waarom de Gegevensimportrecord niet is geïmporteerd.</help>
@@ -579,6 +584,11 @@
         <help>Biedt informatie over waarom een transactie is geweigerd.</help>
         <label>Reden betalingsweigering</label>
         <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
+        <label><!-- Payment Donor Cover Amount --></label>
+        <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>

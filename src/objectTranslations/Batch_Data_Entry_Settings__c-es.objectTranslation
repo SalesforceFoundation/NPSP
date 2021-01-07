@@ -18,5 +18,9 @@
         <label>Nomenclatura de oportunidades</label>
         <name>Opportunity_Naming__c</name>
     </fields>
+    <fields>
+        <label>Alerta de retirada vista</label>
+        <name>Viewed_Retirement_Alert__c</name>
+    </fields>
     <gender><!-- Feminine --></gender>
 </CustomObjectTranslation>

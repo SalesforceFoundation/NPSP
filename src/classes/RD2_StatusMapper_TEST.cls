@@ -33,11 +33,7 @@
 */
 @IsTest(IsParallel=true)
 public with sharing class RD2_StatusMapper_TEST {
-    private static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
-        RD2_Constants.STATUS_ACTIVE,
-        RD2_Constants.STATUS_LAPSED,
-        RD2_Constants.STATUS_CLOSED
-    };
+    private static final Set<String> READ_ONLY_STATUS_VALUES = RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.keySet();
 
     /**
      * @description Verifies default Status picklist field mapping is returned
@@ -161,8 +157,8 @@ public with sharing class RD2_StatusMapper_TEST {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
 
         for (String status : READ_ONLY_STATUS_VALUES) {
-            System.assertEquals(status, mapper.getState(status),
-                'State should equal to the Status for required read-only value'
+            System.assertEquals(RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.get(status), mapper.getState(status),
+                'State should mapped to pre-defined state for required read-only value'
             );
         }
     }
@@ -218,7 +214,7 @@ public with sharing class RD2_StatusMapper_TEST {
             return;
         }
 
-        System.assertEquals(mapping.status, mapping.state,
+        System.assertEquals(RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.get(mapping.state), mapping.state,
             'State should equal to the Status for required read-only value: ' + mapping
         );
     }

@@ -18,21 +18,21 @@ Setup Test Data
     Set suite variable   &{ACCOUNT}
     ${date} =            Get Current Date         result_format=%Y-%m-%d
     Set suite variable   ${DATE}
-    &{opportunity} =     API Create Opportunity   ${account}[Id]              Donation  
-    ...                  StageName=Prospecting    
-    ...                  Amount=150    
-    ...                  CloseDate=${date}    
-    ...                  npe01__Do_Not_Automatically_Create_Payment__c=false    
+    &{opportunity} =     API Create Opportunity   ${account}[Id]              Donation
+    ...                  StageName=Prospecting
+    ...                  Amount=150
+    ...                  CloseDate=${date}
+    ...                  npe01__Do_Not_Automatically_Create_Payment__c=false
     ...                  Name=${account}[Name] Donation
 
 *** Test Cases ***
 Review Donation And Create Opportunity For SGE
     [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
     ...                                  select the donor as account and the account created. Verify review donations modal but select to create alternative opportunity.
-    ...                                  Enter details and save. Verify that new opportunity and payment are created with right info 
-    [tags]                               unstable      feature:GE                    W-039564   
-    #verify Review Donations link is available and create a new opportunity using SGE form                           
-    Go To Page                           Landing                       GE_Gift_Entry         
+    ...                                  Enter details and save. Verify that new opportunity and payment are created with right info
+    [tags]                               unstable      feature:GE                    W-039564
+    #verify Review Donations link is available and create a new opportunity using SGE form
+    Go To Page                           Landing                       GE_Gift_Entry
     Click Gift Entry Button              New Single Gift
     Current Page Should Be               Form                          Gift Entry
     Fill Gift Entry Form
@@ -41,7 +41,7 @@ Review Donation And Create Opportunity For SGE
     Click Button                         Review Donations
     Wait Until Modal Is Open
     Click Button                         Alternatively, create a new Opportunity.
-    Wait Until Modal Is Closed 
+    Wait Until Modal Is Closed
     Fill Gift Entry Form
     ...                                  Donation Date=Today
     ...                                  Donation Amount=150
@@ -63,6 +63,5 @@ Review Donation And Create Opportunity For SGE
     ...                                  npe01__Paid__c=True
     #verify account has two opportunities listed
     Go To Page                           Details                        Account         object_id=${ACCOUNT}[Id]
-    Select Tab                           Related
-    Verify Occurence                     Opportunities                  2
+    Validate Related Record Count        Opportunities                  2
 

@@ -71,13 +71,13 @@ public class TEST_SObjectGateway {
         */
         public List<npe03__Recurring_Donation__c> getRecords(Set<Id> rdIds) {
             List<npe03__Recurring_Donation__c> records = new List<npe03__Recurring_Donation__c>();
-            
+
             for (npe03__Recurring_Donation__c rd : getRecords()) {
                 if (rdIds.contains(rd.Id)) {
                     records.add(rd);
                 }
             }
-            
+
             return records;
         }
 
@@ -111,7 +111,11 @@ public class TEST_SObjectGateway {
                     Status__c,
                     ClosedReason__c,
                     CurrentYearValue__c,
-                    NextYearValue__c
+                    NextYearValue__c,
+                    CommitmentId__c,
+                    CardExpirationMonth__c,
+                    CardExpirationYear__c,
+                    CardLast4__c
                 FROM npe03__Recurring_Donation__c
             ];
         }

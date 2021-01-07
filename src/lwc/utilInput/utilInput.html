@@ -42,19 +42,15 @@
         </template>
 
         <template if:true={isLightningCombobox}>
-            <c-ge-form-field-picklist class-name="slds-m-around_none"
-                                      data-id='inputComponent'
-                                      label={uiLabel}
-                                      required={isRequired}
-                                      field-name={fieldApiName}
-                                      object-name={uiObjectApiName}
-                                      object-describe-info={objectInfo}
-                                      onchange={handleChangeCombobox}
-                                      value={fieldValue}
-                                      variant={variant}
-                                      tab-index={tabIndex}
-                                      qa-locator-base={uiLabel}>
-            </c-ge-form-field-picklist>
+            <lightning-combobox data-id='inputComponent'
+                                value={fieldValue}
+                                onchange={handleChangeCombobox}
+                                label={uiLabel}
+                                options={picklistValues}
+                                data-qa-locator={qaLocatorPicklist}
+                                required={isRequired}
+                                variant={variant}>
+            </lightning-combobox>
         </template>
 
         <template if:true={isLightningCheckbox}>
@@ -74,18 +70,24 @@
         </template>
 
         <template if:true={isLightningSearch}>
-            <c-ge-form-field-lookup id={fieldApiName}
-                                    data-id='inputComponent'
-                                    field-api-name={fieldApiName}
-                                    object-api-name={objectApiName}
-                                    onchange={handleValueChange}
-                                    default-value={fieldValue}
-                                    required={isRequired}
-                                    object-describe-info={objectInfo}
-                                    label={uiLabel}
-                                    variant={variant}
-                                    qa-locator-base={uiLabel}>
-            </c-ge-form-field-lookup>
+            <lightning-record-edit-form object-api-name={objectApiName}>
+                <div class={lookupFormElementClass}>
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required" if:true={isRequired}>* </abbr>
+                        {uiLabel}</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field data-id='inputComponent'
+                                               field-name={fieldApiName}
+                                               onchange={handleValueChange}
+                                               required={isRequired}
+                                               variant='label-hidden'
+                                               class="help-text-hidden"
+                                               value={fieldValue}
+                                               data-qa-locator={qaLocatorLookup}>
+                        </lightning-input-field>
+                    </div>
+                </div>
+            </lightning-record-edit-form>
         </template>
 
         <template if:true={isLightningDateOrDatetime}>

@@ -178,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Voorkomt het maken van de eerste termijnopportunity voor een nieuwe terugkerende donatie, onafhankelijk van de instelling &apos;Opportunity voor termijnen autom. maken&apos; in de NPSP-instellingen.</help>
+        <label>Eerste termijn uitschakelen</label>
+        <name>DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
         <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
         <label>Einddatum</label>
         <name>EndDate__c</name>
@@ -197,8 +202,8 @@
         <label>Betalingswijze</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
-            <masterLabel>ACH/EFT</masterLabel>
-            <translation>ACH/EFT</translation>
+            <masterLabel>ACH</masterLabel>
+            <translation>ACH</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
@@ -251,6 +256,10 @@
     <quickActions>
         <label>Nieuwe Opportunity</label>
         <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label>Onderbreken</label>
+        <name>Pause</name>
     </quickActions>
     <quickActions>
         <label>Snelle Update</label>

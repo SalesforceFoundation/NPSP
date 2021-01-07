@@ -47,11 +47,11 @@
                                           data-id='batchHeaderField'
                                           type={batchField.dataType}
                                           field-api-name={batchField.apiName}
+                                          object-api-name={dataImportBatchName}
                                           label={batchField.customLabel}
                                           default-value={batchField.defaultValue}
                                           value={batchField.value}
-                                          required={batchField.required}
-                                          object-info={dataImportBatchInfo}>
+                                          required={batchField.required}>
                             </c-util-input>
                         </template>
                     </div>
@@ -71,7 +71,8 @@
                                         <template iterator:it={section.elements}>
 
                                             <div key={it.value.id}
-                                                 class="slds-grid slds-wrap slds-p-top_x-small">
+                                                 if:true={it.value.showDefaultValueInput}
+                                                 class="slds-grid slds-wrap slds-p-top_x-small" >
                                                 <template if:true={it.first}>
                                                     <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3 default-value">
                                                         <span class="bold">
@@ -85,6 +86,7 @@
                                                                   form-field-type={it.value.elementType}
                                                                   field-api-name={it.value.fieldApiName}
                                                                   object-api-name={it.value.objectApiName}
+                                                                  picklist-options-override={it.value.picklistOptionsOverride}
                                                                   label={it.value.customLabel}
                                                                   default-value={it.value.defaultValue}
                                                                   value={it.value.value}

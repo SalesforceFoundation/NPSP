@@ -2,8 +2,6 @@
 ${database_url} =    
 ${persistent_org} =     ${False}
 
-${data_generation_task} =       tasks.generate_bdi_data.GenerateBDIData
-
 *** Settings ***
 
 Resource  cumulusci/robotframework/CumulusCI.robot
@@ -28,12 +26,12 @@ Generate Data
     [Arguments]    ${count}
     ${count} =  Convert To Integer	${count}
 
-    Run Task Class   cumulusci.tasks.bulkdata.generate_and_load_data.GenerateAndLoadData
+    Run Task   generate_and_load_from_yaml
     ...                 num_records=${count}
+    ...                 num_records_tablename=DataImport__c
     ...                 batch_size=${500000}
 #    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
-    ...                 mapping=datasets/bdi_benchmark/mapping.yml
-    ...                 data_generation_task=${data_generation_task}
+    ...                 generator_yaml=datasets/bdi_benchmark/BDI.recipe.yml
 
 Setup BDI
     [Arguments]     ${field_mapping_method}

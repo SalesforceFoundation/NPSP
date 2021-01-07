@@ -50,9 +50,9 @@ Edit An Enhanced Recurring donation record of type open
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
-    Click Object Button                           New
-    Wait For Modal                                New                                       Recurring Donation
     Reload Page
+    Click Link                                    New
+    Wait For Rd2 Modal
     Go To Page                                    Details
     ...                                           npe03__Recurring_Donation__c
     ...                                           object_id=${data}[contact_rd][Id]
@@ -61,13 +61,18 @@ Edit An Enhanced Recurring donation record of type open
 
     #Get the next payment installment date and pause the recurring donation for the next payment date
     ${date}                                       Get Next Payment Date Number        1     False
+    ${PAUSE_DATES}=                               Create List           ${date}
     Pause Recurring Donation
     # Verify user is able to enter the paused reason and check the date and hit submit button
     Populate Pause Modal
     ...	                                          Paused Reason=Card Expired
-    ...	                                          Date=${date}
+    ...	                                          Date=@{PAUSE_DATES}
 
     # Verify Paused text appears next to the date specified
-    Verify Pause Text Next To Installment Date	  ${date}
+    Verify Pause Text Next To Installment Date	  @{PAUSE_DATES}
+    Run Recurring Donations Batch                 RD2
     # Verify the calculations for current and next year payments
+    Go To Page                                    Details
+    ...                                           npe03__Recurring_Donation__c
+    ...                                           object_id=${data}[contact_rd][Id]
     Validate Current And Next Year values         100

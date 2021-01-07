@@ -1,0 +1,124 @@
+# run it like this:
+#
+# cci task run generate_and_load_from_yaml -o num_records_tablename DataImport__c -o num_records 100000 -o generator_yaml datasets/bdi_benchmark/BDI.recipe.yml --org whatever
+
+# this file has some fields disabled because they depend on custom
+# metadata. Rename them back to the original if you have custom
+# metadata in your org.
+
+
+- option: total_data_imports
+  default: 16
+
+- macro: ReusableCustomObject1_DIFields
+  fields:
+      __disabled_custom_object__CO_currency__c: 100
+      __disabled_custom_object__CO_Number__c: 1
+      __disabled_custom_object__CO_Date__c: ${{today}}
+      __disabled_custom_object__CO_Picklist__c: 
+        random_choice: 
+          - Option1
+          - Option2
+          - Option3
+          - Option4
+      __disabled_custom_object__CO_Phone__c: 123
+      __disabled_custom_object__CO_textarea__c: Long text
+      __disabled_custom_object__CO_url__c: http://www.url.com/
+      __disabled_custom_object__CO_Currency2__c: 200
+      __disabled_custom_object__CO_Text__c: BDI Text${{id}}
+      __disabled_custom_object__CO_text2__c: BDI Text${{id}}
+
+- macro: ReusableCustomObject3_DIFields
+  fields:
+      __disabled_custom_object__CO_Text__c: BDI Text${{id}}
+      __disabled_custom_object__CO_Currency__c: 100
+      __disabled_custom_object__CO_Number__c: 1
+      __disabled_custom_object__CO_Phone__c: 123
+      __disabled_custom_object__CO_Date__c: ${{today}}
+      __disabled_custom_object__CO_Picklist__c: 
+        random_choice: 
+            - Option1
+            - Option2
+            - Option3
+
+- macro: ReusableDIFields
+  fields: 
+      Account1_Country__c: Tuvalu
+      Account1_Street__c: Cordova Street
+      Donation_Date__c: ${{today}}
+      GAU_Allocation_1_Percent__c: 10
+
+
+- object: General_Accounting_Unit__c
+  nickname: the_gau
+  fields:
+      Name: Scholarship
+
+- object: DataImport__c
+  count: ${{total_data_imports / 4}}
+  include: ReusableDIFields, ReusableCustomObject1_DIFields, ReusableCustomObject3_DIFields
+  fields:
+      Donation_Donor__c: Account1
+      Account1_Name__c: Alan Alda BDITEST ${{batchnum}} ${{id}}
+      __disabled_custom_field__ASC_Role__c: match
+      __disabled_custom_field__ASC_Amount__c: 100
+      __disabled_custom_object__CO_Text__c: BDI Text ${{id}}  # override with extra space
+      __disabled_custom_object__CO_currency__c: 300
+      __disabled_custom_object__CO_currency_2__c: 400
+      Donation_Amount__c: ${{id * 100}}
+      GAU_Allocation_1_GAU__c:
+        reference: the_gau
+      __disabled_custom_field__Opp_Do_Not_Automatically_Create_Payment__c: 0
+  friends:
+      - object: Account
+        fields:
+            name: ${{DataImport__c.Account1_Name__c}}
+            BillingStreet: ${{DataImport__c.Account1_Street__c}}
+            BillingCountry: ${{DataImport__c.Account1_Country__c}}
+            description: Pre-existing
+            # record_type: HH_Account
+
+- object: DataImport__c       # no friends from matching
+  count: ${{total_data_imports / 4}}
+  include: ReusableDIFields, ReusableCustomObject1_DIFields, ReusableCustomObject3_DIFields
+  fields:
+      Donation_Donor__c: Account1
+      Account1_Name__c: Boris Becker BDITEST ${{batchnum}} ${{id}}
+      __disabled_custom_field__ASC_Role__c: match
+      __disabled_custom_field__ASC_Amount__c: 100
+      __disabled_custom_object__CO_currency__c: 300
+      __disabled_custom_object__CO_currency_2__c: 400
+      Donation_Amount__c: ${{id * 100}}
+      GAU_Allocation_1_GAU__c: ${{reference(the_gau)}}
+      __disabled_custom_field__Opp_Do_Not_Automatically_Create_Payment__c: 0
+
+- object:  DataImport__c      # Matches contacts
+  count: ${{total_data_imports / 4}}
+  include: ReusableDIFields, ReusableCustomObject1_DIFields, ReusableCustomObject3_DIFields
+  fields:
+      Donation_Donor__c: Contact1
+      Contact1_Lastname__c: Charisma Carpenter BDITEST ${{batchnum}} ${{id}}
+      Donation_Amount__c: ${{id * 100}}
+      GAU_Allocation_1_GAU__c:
+        reference:
+          - the_gau
+      Donation_Donor__c: Contact1
+      __disabled_custom_field__Opp_Do_Not_Automatically_Create_Payment__c: 0
+      Opportunity_Contact_Role_1_Role__c: Influencer
+  friends:
+      - object: Contact  # Contact for matching
+        fields:
+            LastName: ${{DataImport__c.Contact1_Lastname__c}}
+            description: Pre-existing
+
+- object: DataImport__c       # does not match contacts
+  count: ${{total_data_imports / 4}}
+  include: ReusableDIFields, ReusableCustomObject1_DIFields, ReusableCustomObject3_DIFields
+  fields:
+      Donation_Donor__c: Contact1
+      Contact1_Lastname__c: Danny Devito BDITEST ${{batchnum}} ${{id}}
+      Donation_Amount__c: ${{id * 100}}
+      GAU_Allocation_1_GAU__c: ${{reference(the_gau)}}
+      Donation_Donor__c: Contact1
+      __disabled_custom_field__Opp_Do_Not_Automatically_Create_Payment__c: 0
+      Opportunity_Contact_Role_1_Role__c: Influencer

@@ -16,8 +16,8 @@
 
     <c:autocomplete aura:id="autocomplete"
                     isListVisible="{!v.isListVisible}"
-                    label=""
-                    placeholder="{!$Label.c.lblFindOrAddContact}"
+                    label="{!$Label.c.lblFindOrAddContact}"
+                    placeholder=""
                     searchContext="{!$Label.c.lblFindInContacts}">
 
         <aura:set attribute="itemTemplate">

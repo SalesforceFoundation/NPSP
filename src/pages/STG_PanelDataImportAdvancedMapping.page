@@ -16,9 +16,14 @@
         #invalidHelpTextMappingsIcon {
             fill: rgb(81, 79, 77);
         }
+
+        .stg-panel-data-import-advanced-mapping .slds-section {
+            margin-left: 0;
+            margin-right: 0;
+        }
     </style>
 
-    <div class="slds-scope">
+    <div class="slds-scope stg-panel-data-import-advanced-mapping">
         <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
 
@@ -184,60 +189,78 @@
 
 
             <div class="{!IF(isPolling, 'slds-hide', '')}">
-                <div class="slds-grid">
-                    <div class="slds-col slds-size_1-of-1">
-                        <div class="slds-section-title_divider">{!$Label.geHeaderGiftEntry}</div>
-                    </div>
-                </div>
+                <div class="slds-m-horizontal_xxx-small slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-section-title_divider"
+                              title="{!$Label.geHeaderGiftEntry}">
+                              {!$Label.geHeaderGiftEntry}
+                        </span>
+                    </h3>
+                    <div aria-hidden="false"
+                         class="slds-section__content">
 
-                <div class="slds-m-vertical_medium">
-                    <c:UTIL_HtmlOutput
-                            html="{!$Label.geBodyGiftEntryHelp}"
-                            hasLink="true"
-                            styleClass="slds-text-body_small" />
-                </div>
+                         <div class="slds-m-vertical_medium">
+                            <c:UTIL_HtmlOutput
+                                    html="{!$Label.geBodyGiftEntryHelp}"
+                                    hasLink="true"
+                                    styleClass="slds-text-body_regular" />
+                        </div>
 
-                <label class="slds-checkbox_toggle slds-grid slds-m-vertical_large" style="width: fit-content;">
-                    <span class="slds-form-element__label slds-m-bottom_none">{!$Label.geHeaderGiftEntry}</span>
-                    <apex:inputCheckbox onClick="toggleGiftEntry(); return false;"
-                                        id="enableGiftEntryToggle"
-                                        html-name="checkbox-toggle-2"
-                                        value="{!isGiftEntryEnabled}"
-                                        html-aria-describedby="checkbox-toggle-2"
-                                        disabled="{!NOT(isAdvancedMappingEnabled)}"/>
+                        <label class="slds-checkbox_toggle slds-grid slds-m-vertical_large" style="width: fit-content;">
+                            <span class="slds-form-element__label slds-m-bottom_none">{!$Label.geHeaderGiftEntry}</span>
+                            <apex:inputCheckbox onClick="toggleGiftEntry(); return false;"
+                                                id="enableGiftEntryToggle"
+                                                html-name="checkbox-toggle-2"
+                                                value="{!isGiftEntryEnabled}"
+                                                html-aria-describedby="checkbox-toggle-2"
+                                                disabled="{!NOT(isAdvancedMappingEnabled)}"/>
 
-                    <span class="slds-checkbox_faux_container" aria-live="assertive">
+                            <span class="slds-checkbox_faux_container" aria-live="assertive">
                                 <span class="slds-checkbox_faux"></span>
                                 <span class="slds-checkbox_on">Enabled</span>
                                 <span class="slds-checkbox_off">Disabled</span>
-                </span>
-                </label>
+                            </span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
         </apex:form>
 
-        <script type="text/javascript">
-            function toggle() {
-                let advancedMappingToggle = document.getElementById('{!$Component.form.enableDIFMToggle}');
-                if (advancedMappingToggle.checked) {
-                    advancedMappingToggle.setAttribute('disabled', 'true');
-                    enableDataImportFieldMapping();
-                } else {
-                    disableDataImportFieldMapping();
-                }
-            }
-
-            function toggleGiftEntry() {
-                let giftEntryToggle = document.getElementById('{!$Component.form.enableGiftEntryToggle}');
-                let advancedMappingToggle = document.getElementById('{!$Component.form.enableDIFMToggle}');
-                if (giftEntryToggle.checked && advancedMappingToggle.checked) {
-                    enableGiftEntry();
-                } else {
-                    disableGiftEntry();
-                }
-            }
-        </script>
-
+        <div id="stgPanelBatchNumberSettings"></div>
     </div>
 
+    <script type="text/javascript">
+        const renderBatchNumberSettingsComponent = function () {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent(
+                    "{!namespace}" + ":bdiBatchNumberSettings",
+                    {},
+                    "stgPanelBatchNumberSettings",
+                    function () { }
+                );
+            });
+        }
+        renderBatchNumberSettingsComponent();
+
+        function toggle() {
+            let advancedMappingToggle = document.getElementById('{!$Component.form.enableDIFMToggle}');
+            if (advancedMappingToggle.checked) {
+                advancedMappingToggle.setAttribute('disabled', 'true');
+                enableDataImportFieldMapping();
+            } else {
+                disableDataImportFieldMapping();
+            }
+        }
+
+        function toggleGiftEntry() {
+            let giftEntryToggle = document.getElementById('{!$Component.form.enableGiftEntryToggle}');
+            let advancedMappingToggle = document.getElementById('{!$Component.form.enableDIFMToggle}');
+            if (giftEntryToggle.checked && advancedMappingToggle.checked) {
+                enableGiftEntry();
+            } else {
+                disableGiftEntry();
+            }
+        }
+    </script>
 </apex:page>

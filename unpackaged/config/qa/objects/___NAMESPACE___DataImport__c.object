@@ -548,4 +548,56 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
+    <fields>
+        <fullName>Opportunity_Test__c</fullName>
+        <externalId>false</externalId>
+        <label>Opportunity Test</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead_Company__c</fullName>
+        <externalId>false</externalId>
+        <label>Lead Company</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead_Imported_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Lead Imported Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead_Last_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Lead Last Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead_Lookup__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Lead Lookup</label>
+        <referenceTo>Lead</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
 </CustomObject>

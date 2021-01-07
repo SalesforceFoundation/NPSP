@@ -23,6 +23,42 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>CardExpirationMonth__c</fullName>
+        <description>The expiration month of the card used for this Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration month of the card used for this Recurring Donation.</inlineHelpText>
+        <label>Card Expiration Month</label>
+        <length>2</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CardExpirationYear__c</fullName>
+        <description>The expiration year of the card used for this Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration year of the card used for this Recurring Donation.</inlineHelpText>
+        <label>Card Expiration Year</label>
+        <length>4</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CardLast4__c</fullName>
+        <description>The last four digits of the card used for this Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last four digits of the card used for this Recurring Donation.</inlineHelpText>
+        <label>Card Last 4</label>
+        <length>4</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>ClosedReason__c</fullName>
         <description>The reason this Recurring Donation has its current Status value.</description>
         <externalId>false</externalId>
@@ -301,6 +337,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>LastElevateEventPlayed__c</fullName>
+        <description>The last Elevate event played resulting in an update to this Recurring Donation.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The last Elevate event played resulting in an update to this Recurring Donation.</inlineHelpText>
+        <label>Last Elevate Event Played</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>NextYearValue__c</fullName>
         <description>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</description>
         <externalId>false</externalId>
@@ -337,9 +385,9 @@
                     <label>Check</label>
                 </value>
                 <value>
-                    <fullName>ACH/EFT</fullName>
+                    <fullName>ACH</fullName>
                     <default>false</default>
-                    <label>ACH/EFT</label>
+                    <label>ACH</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
@@ -411,6 +459,11 @@
                     <fullName>Closed</fullName>
                     <default>false</default>
                     <label>Closed</label>
+                </value>
+                <value>
+                    <fullName>Paused</fullName>
+                    <default>false</default>
+                    <label>Paused</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

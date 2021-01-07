@@ -55,7 +55,8 @@
                     <lightning-layout-item size='12'>
                         <c-ge-review-donations ontogglemodal={toggleModal}
                                                onchangeselecteddonation={handleChangeSelectedDonation}
-                                               donor-id={selectedDonorId}>
+                                               donor-id={donorId}
+                                               selected-donation={selectedDonationCopyForReviewDonationsModal}>
                         </c-ge-review-donations>
                     </lightning-layout-item>
                 </template>
@@ -79,7 +80,8 @@
                                           for:item='errorMessageWrapper'>
                                     <li key={errorMessageWrapper.index}>
                                         <p>{errorMessageWrapper.errorMessage}</p>
-                                        <ul class="slds-list_dotted slds-text-color_error">
+                                        <ul if:true={errorMessageWrapper.multilineMessages}
+                                            class="slds-list_dotted slds-text-color_error">
                                             <template for:each={errorMessageWrapper.multilineMessages}
                                                       for:item='error'>
                                                 <li key={error.index}>{error.message}</li>
@@ -104,10 +106,11 @@
                               for:item='section'>
                         <c-ge-form-section key={section.id}
                                            section={section}
-                                           onlookuprecordselect={handleLookupRecordSelect}
-                                           onchangedonationdonor={handleChangeDonationDonor}
-                                           onchangenameoncardfield={handleNameOnCardFieldChange}
-                                           widget-data={widgetData}>
+                                           onregistercreditcardwidget={handleRegisterCreditCardWidget}
+                                           widget-data={widgetData}
+                                           onformfieldchange={handleFormFieldChange}
+                                           onformwidgetchange={handleFormWidgetChange}
+                                           form-state={formState}>
                         </c-ge-form-section>
                     </template>
 

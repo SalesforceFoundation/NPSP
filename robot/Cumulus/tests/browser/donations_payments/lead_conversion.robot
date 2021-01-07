@@ -31,7 +31,7 @@ Convert Lead To Account
     Wait Until Modal Is Closed
     Go To Page                       Listing                 Lead
     Click Link                       link=${first_name} ${last_name}
-    Click Actions Link               Convert
+    Wait And Click Button                     title:Convert
     Current Page Should Be           Custom                  Lead
     Click lead convert button
     Go To Page                       Listing                 Contact

@@ -34,7 +34,7 @@
 * @description Unit Test for the data migration batch job
 *
 */
-@IsTest(isParallel=true)
+@IsTest(isParallel=false)
 private class RD2_DataMigration_TEST {
 
     private static final Date TODAY = System.today();
@@ -256,7 +256,7 @@ private class RD2_DataMigration_TEST {
         npe03__Recurring_Donation__c convertedRD = getRecords()[0];
 
         System.assertEquals(rd.npe03__Date_Established__c, convertedRD.npe03__Date_Established__c, 'Date Established should be unchanged');
-        System.assertEquals(DATE_ESTABLISHED.addMonths(1), convertedRD.StartDate__c, 'Effective Date should match with the earliest Opp Close Date');
+        System.assertEquals(DATE_ESTABLISHED, convertedRD.StartDate__c, 'Effective Date should match Date Established');
         System.assertEquals(rd.Day_of_Month__c, convertedRD.Day_of_Month__c, 'Day of Month should be unchanged');
 
         System.assertEquals(rd.npe03__Amount__c, convertedRD.npe03__Amount__c, 'Amount should be unchanged');
@@ -639,28 +639,29 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies Start Date is set to Date Established when
-     * the Recurring Donation does not have assigned Opportunities
+     * @description Verifies Start Date is set to Created Date when Date Established is null
      */
     @IsTest
-    private static void shouldSetStartDateAsEstablishedDateWhenRDHasNoOpps() {
+    private static void shouldSetStartDateAsCreatedDateWhenDateEstablishedIsNull() {
+        Date createdOn = DATE_ESTABLISHED;
+
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
-            .withDateEstablished(DATE_ESTABLISHED)
+            .withCreatedDate(createdOn)
+            .withDateEstablished(null)
             .build();
 
         npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
             .convertToEnhancedRD();
 
-        System.assertEquals(DATE_ESTABLISHED, convertedRD.StartDate__c,
-            'Effective Date should match the Recurring Donation Established Date');
+        System.assertEquals(createdOn, convertedRD.StartDate__c, 'Effective Date should match Created Date');
     }
 
     /**
-     * @description Verifies Start Date is set to the earliest Opp Close Date when
+     * @description Verifies Start Date is set to Established Date when
      * the Recurring Donation has assigned Opportunities
      */
     @IsTest
-    private static void shouldSetStartDateAsTheEarliestOppCloseDate() {
+    private static void shouldSetStartDateAsEstablishedDate() {
         Id accId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
@@ -688,8 +689,7 @@ private class RD2_DataMigration_TEST {
             .withRelatedOpportunities(opps)
             .convertToEnhancedRD();
 
-        System.assertEquals(opps[0].CloseDate, convertedRD.StartDate__c,
-            'Effective Date should match the earliest Opportunity Close Date');
+        System.assertEquals(DATE_ESTABLISHED, convertedRD.StartDate__c, 'Effective Date should match Date Established');
     }
 
     /**
@@ -742,6 +742,7 @@ private class RD2_DataMigration_TEST {
                 rdBuilder
                     .withNextPaymentDate(Date.newInstance(2019, 10, i))
                     .withDateEstablished(null)
+                    .withCreatedDate(DATE_ESTABLISHED)
                     .withDayOfMonth(null)
                     .build()
                 ).convertToEnhancedRD()
@@ -1932,6 +1933,82 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies RD is successfully converted when Amount can be calculated for an
+     * RD with Open Ended Status set to Closed
+     */
+    @IsTest
+    private static void shouldConvertWhenOpenEndedStatusClosedAmountCanBeCalculated() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusClosed()
+            .withPlannedInstallments(1)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = 0;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = -1;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+
+        rd.npe03__Installments__c = 12;
+        rd.npe03__Schedule_Type__c = RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY;
+        convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+        System.assertNotEquals(null, convertedRD, 'RD should be successfully converted');
+    }
+
+    /**
+     * @description Verifies Exception is thrown when Amount cannot be calculated for an
+     * RD with Open Ended Status set to Closed
+     */
+    @IsTest
+    private static void shouldThrowExceptionWhenOpenEndedStatusClosedAmountCannotBeCalculated() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusClosed()
+            .withPlannedInstallments(12)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD;
+        Exception actualException = null;
+        try {
+            convertedRD = new RD2_DataMigrationMapper(rd)
+                .convertToEnhancedRD();
+        }
+        catch (RD2_DataMigrationMapper.MigrationException e) {
+            actualException = e;
+        }
+
+        System.assertEquals(true,
+            actualException.getMessage()
+                .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
+        System.assertEquals(null, convertedRD, 'RD should not be converted');
+
+        actualException = null;
+        rd.npe03__Installments__c = -12;
+        try {
+            convertedRD = new RD2_DataMigrationMapper(rd)
+                .convertToEnhancedRD();
+        }
+        catch (RD2_DataMigrationMapper.MigrationException e) {
+            actualException = e;
+        }
+
+        System.assertEquals(true,
+            actualException.getMessage()
+                .contains(System.Label.RD2_DataMigrationInvalidPlannedInstallments));
+        System.assertEquals(null, convertedRD, 'RD should not be converted');
+    }
+
+    /**
      * @description Verifies Account on RD is populated when it is not already specified
      */
     @IsTest
@@ -2092,6 +2169,7 @@ private class RD2_DataMigration_TEST {
         return TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withMockId()
             .withDateEstablished(DATE_ESTABLISHED)
+            .withCreatedDate(DATE_ESTABLISHED)
             .withOpenEndedStatusOpen()
             .withContact(contactId)
             .withAmount(AMOUNT_VALUE)

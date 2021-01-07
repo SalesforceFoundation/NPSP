@@ -854,6 +854,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when the functionality is not supported for Elevate Recurring Donation. --></label>
+        <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when user does not have a permission to change an RD originated in Elevate --></label>
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
@@ -1126,6 +1130,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label><!-- Status of an installment that is skipped --></label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Validate Planned Installments field is greater than number of Paid Installments --></label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1146,8 +1154,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Cannot change specific fields causing schedule change when a pause exists --></label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error message when trying to pause Closed Recurring Donation. --></label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contains message indicating a pause has been removed successfully --></label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- Recurring Donation Pause description --></label>
@@ -1158,8 +1174,28 @@
         <name>RD2_PauseFirstDonationDateDynamicText</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2 Pause Header --></label>
+        <label><!-- RD2 Pause Header containing the Recurring Donation name --></label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- User does not have a permission to edit or create Recurring Donations --></label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contains message indicating a pause has been saved successfully --></label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contains message indicating multiple installments have been selected to skip --></label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contains message indicating one installment has been selected to skip --></label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Paused Reason field label on the Recurring Donation Pause page --></label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label><!-- The end date of the recurring donation schedule --></label>
@@ -1648,6 +1684,22 @@
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry retirement &amp; recommendations --></label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for warning about Batch Data Entry retiring --></label>
+        <name>bdeRetirementWarningHeader</name>
+    </customLabels>
+    <customLabels>
         <label>לשדה ההגדרה {0} של המזהה הייחודי והמותאם אישית של החשבון חייבים להיות שדות תואמים באובייקט של ייבוא נתוני NPSP ששמות ה-API שלו הם {1} ו-{2}.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -2102,6 +2154,18 @@
     <customLabels>
         <label><!-- Error displayed when there are no valid options for &quot;Through This Field&quot; --></label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Toast warning header about Field Mapping issues --></label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning body, first part, about Field Mapping issues --></label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning body, second part, about Field Mapping issues --></label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
     </customLabels>
     <customLabels>
         <label><!-- Object Group Name Help Text --></label>
@@ -2604,12 +2668,24 @@
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Common label for GAU Allocations --></label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label><!-- Common label for General Accounting Unit --></label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Indicates user does not have permissions for the action --></label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label><!-- Failure message if an invalid key was provided --></label>
@@ -2642,6 +2718,10 @@
     <customLabels>
         <label><!-- Notification for empty tables --></label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Okay --></label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label><!-- Open --></label>
@@ -2678,6 +2758,10 @@
     <customLabels>
         <label><!-- Save and Close --></label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Contains value for a placeholder on a dropdown field --></label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label><!-- Template --></label>
@@ -2880,6 +2964,14 @@
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label><!-- Alt text: indicates a form field is optional --></label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: indicates a form field has been set as required --></label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Alt text: Arrow button to move field down --></label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2910,6 +3002,10 @@
     <customLabels>
         <label><!-- Alt Text: Button to remove selected option --></label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: explains the function of the required checkbox --></label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label><!-- Alt text: Arrow button to move section down --></label>
@@ -3262,6 +3358,10 @@
     <customLabels>
         <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 4 --></label>
         <name>geErrorUncertainCardChargePart4</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- Header for advanced form fields --></label>
@@ -3876,8 +3976,8 @@
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- Description for Disable Health Check Record Batch Setting --></label>	
-        <name>healthLabelDisableRecordBatchDescription</name>	
+        <label><!-- Description for Disable Health Check Record Batch Setting --></label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>נמען הודעות השגיאה חוקי.</label>

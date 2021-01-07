@@ -70,12 +70,17 @@
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
+        <members>AN_AutoNumberService</members>
+        <members>AN_AutoNumberService_TEST</members>
+        <members>AN_AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
         <members>BDI_AdditionalObjectService_TEST</members>
+        <members>BDI_BatchNumberSettingsController</members>
+        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
@@ -100,6 +105,7 @@
         <members>BDI_DataImport_TEST2</members>
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
+        <members>BDI_Donations_TEST2</members>
         <members>BDI_DryRun_TEST</members>
         <members>BDI_DynamicSource</members>
         <members>BDI_DynamicSourceGroup</members>
@@ -277,6 +283,10 @@
         <members>ERR_Handler_API</members>
         <members>ERR_Handler_CTRL_TEST</members>
         <members>ERR_Handler_TEST</members>
+        <members>ERR_LogService</members>
+        <members>ERR_LogService_TEST</members>
+        <members>ERR_Log_CTRL</members>
+        <members>ERR_Log_TEST</members>
         <members>ERR_Notifier</members>
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
@@ -293,6 +303,11 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
+        <members>GS_ApplicationStatusController</members>
+        <members>GS_ApplicationStatusController_TEST</members>
+        <members>GS_ChecklistSetup</members>
+        <members>GS_ChecklistSetup_TEST</members>
+        <members>GS_NonprofitTrialOrgService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -371,10 +386,18 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_CommitmentRequest</members>
+        <members>PS_CommitmentRequest_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
         <members>PS_IntegrationService_TEST</members>
+        <members>PS_Request</members>
+        <members>PS_Request_TEST</members>
+        <members>RD2_ApiService</members>
+        <members>RD2_ApiService_TEST</members>
+        <members>RD2_CancelCommitmentService</members>
+        <members>RD2_CancelCommitmentService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -387,6 +410,8 @@
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
+        <members>RD2_ElevateInformation_CTRL</members>
+        <members>RD2_ElevateInformation_TEST</members>
         <members>RD2_ElevateIntegrationService</members>
         <members>RD2_ElevateIntegrationService_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
@@ -556,6 +581,8 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
+        <members>UTIL_AuraEnabledCommon</members>
+        <members>UTIL_AuraEnabledCommon_TEST</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
@@ -583,6 +610,8 @@
         <members>UTIL_FiscalYearInfo_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
+        <members>UTIL_Http</members>
+        <members>UTIL_Http_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
@@ -780,6 +809,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>ERR_RecordLog</members>
         <members>GE_GiftEntry</members>
         <members>GE_GiftEntryForm</members>
         <members>GE_TemplateBuilder</members>
@@ -929,6 +959,13 @@
         <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
+        <members>AutoNumber__c.Description__c</members>
+        <members>AutoNumber__c.Display_Format__c</members>
+        <members>AutoNumber__c.Field_API_Name__c</members>
+        <members>AutoNumber__c.IsActive__c</members>
+        <members>AutoNumber__c.Max_Used_Number__c</members>
+        <members>AutoNumber__c.Object_API_Name__c</members>
+        <members>AutoNumber__c.Starting_Number__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
         <members>Batch_Data_Entry_Settings__c.Viewed_Retirement_Alert__c</members>
@@ -988,6 +1025,7 @@
         <members>DataImportBatch__c.Batch_Defaults__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
+        <members>DataImportBatch__c.Batch_Number__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
         <members>DataImportBatch__c.Batch_Status__c</members>
         <members>DataImportBatch__c.Batch_Table_Columns__c</members>
@@ -1008,6 +1046,7 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>DataImport__c.ACH_Consent__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -1115,6 +1154,8 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_ACH_Code__c</members>
+        <members>DataImport__c.Payment_ACH_Last_4__c</members>
         <members>DataImport__c.Payment_Authorization_Token__c</members>
         <members>DataImport__c.Payment_Authorized_Date__c</members>
         <members>DataImport__c.Payment_Authorized_UTC_Timestamp__c</members>
@@ -1135,6 +1176,7 @@
         <members>DataImport__c.Payment_Origin_ID__c</members>
         <members>DataImport__c.Payment_Origin_Name__c</members>
         <members>DataImport__c.Payment_Origin_Type__c</members>
+        <members>DataImport__c.Payment_Paid__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
@@ -1240,6 +1282,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>GetStartedCompletionChecklistState__c.Item_Id__c</members>
+        <members>GetStartedCompletionChecklistState__c.User__c</members>
         <members>Gift_Entry_Settings__c.Default_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
@@ -1275,6 +1319,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
+        <members>Opportunity.Batch_Number__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.CommitmentId__c</members>
@@ -1380,6 +1425,25 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
+        <members>GetStartedChecklistItem__mdt.Description_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Extra_Info_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.GS_Checklist_Section__c</members>
+        <members>GetStartedChecklistItem__mdt.Has_Link__c</members>
+        <members>GetStartedChecklistItem__mdt.Image__c</members>
+        <members>GetStartedChecklistItem__mdt.Link_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Link_URL__c</members>
+        <members>GetStartedChecklistItem__mdt.Position__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Type__c</members>
+        <members>GetStartedChecklistItem__mdt.Primary_Button_Value__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Label__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Type__c</members>
+        <members>GetStartedChecklistItem__mdt.Secondary_Button_Value__c</members>
+        <members>GetStartedChecklistItem__mdt.Title_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Description_Label__c</members>
+        <members>GetStartedChecklistSection__mdt.Page_Type__c</members>
+        <members>GetStartedChecklistSection__mdt.Position__c</members>
+        <members>GetStartedChecklistSection__mdt.Title_Label__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>RecurringDonationStatusMapping__mdt.State__c</members>
@@ -1415,14 +1479,19 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.ACH_Code__c</members>
+        <members>npe01__OppPayment__c.ACH_Last_4__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Batch_Number__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
         <members>npe01__OppPayment__c.Card_Last_4__c</members>
         <members>npe01__OppPayment__c.Card_Network__c</members>
         <members>npe01__OppPayment__c.Donor_Cover_Amount__c</members>
         <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_API_Declined_Reason__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_API_Status__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_ID__c</members>
@@ -1435,6 +1504,9 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.Type__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationMonth__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationYear__c</members>
+        <members>npe03__Recurring_Donation__c.CardLast4__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
@@ -1442,6 +1514,7 @@
         <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
+        <members>npe03__Recurring_Donation__c.LastElevateEventPlayed__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
@@ -1657,6 +1730,7 @@
         <members>EPTaskDependency</members>
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
+        <members>ERR_RecordLogTitle</members>
         <members>ErrorEmailMessage</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
@@ -1678,11 +1752,22 @@
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
+        <members>RD2_DataMigrationInvalidPlannedInstallments</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateCancelInProgress</members>
+        <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledHeader</members>
+        <members>RD2_ElevateDisabledMessage</members>
+        <members>RD2_ElevateEnableButtonLabel</members>
+        <members>RD2_ElevateInformationHeader</members>
+        <members>RD2_ElevateInformationStatusSuccess</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
@@ -1725,6 +1810,7 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
+        <members>RD2_EndDateElevateCannotBeInFuture</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
@@ -1743,11 +1829,16 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
+        <members>RD2_EntryFormSaveCommitmentMessage</members>
+        <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
+        <members>RD2_EntryFormSaveRecurringDonationMessage</members>
         <members>RD2_EntryFormScheduleEveryLabel</members>
         <members>RD2_EntryFormStatusSectionHeader</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
+        <members>RD2_ErrorRDIdIsMissingForCommitment</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
@@ -1766,6 +1857,7 @@
         <members>RD2_PauseSaveSuccessMessage</members>
         <members>RD2_PauseSelectedInstallmentTextPlural</members>
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
@@ -1836,6 +1928,8 @@
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>accordionSection_ToggleInstructionsWhenClosed</members>
+        <members>accordionSection_ToggleInstructionsWhenOpen</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnConfirm</members>
@@ -1887,6 +1981,18 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>autoNumberErrorDuplicate</members>
+        <members>autoNumberErrorInvalidDisplayFormat</members>
+        <members>batchNumberSettingsActivate</members>
+        <members>batchNumberSettingsConfigureHeader</members>
+        <members>batchNumberSettingsDescActivation</members>
+        <members>batchNumberSettingsDescDisplayFormat</members>
+        <members>batchNumberSettingsDescription</members>
+        <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsError</members>
+        <members>batchNumberSettingsHeader</members>
+        <members>batchNumberSettingsHeaderDisplayFormat</members>
+        <members>batchNumberSettingsHeaderFormats</members>
         <members>bdeRetirementBlockerHeader</members>
         <members>bdeRetirementBlockerMessage</members>
         <members>bdeRetirementWarningBody</members>
@@ -2111,6 +2217,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonActivate</members>
         <members>commonAdminPermissionErrorMessage</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
@@ -2123,15 +2230,20 @@
         <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
+        <members>commonCardholderName</members>
         <members>commonClone</members>
+        <members>commonClose</members>
         <members>commonConcurrentBatchError</members>
+        <members>commonContactSystemAdminMessage</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
+        <members>commonDeactivate</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
+        <members>commonErrorPrefix</members>
         <members>commonFieldLabel</members>
         <members>commonFieldNotFound</members>
         <members>commonFieldsNotFound</members>
@@ -2162,7 +2274,9 @@
         <members>commonUnknownError</members>
         <members>commonUpdate</members>
         <members>commonViewAll</members>
+        <members>commonViewErrorLog</members>
         <members>commonViewMore</members>
+        <members>commonWaitMessage</members>
         <members>commonWarning</members>
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
@@ -2394,6 +2508,110 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsAdminSetupTitle</members>
+        <members>gsApplicationStatus</members>
+        <members>gsApplicationStatusModalHeader</members>
+        <members>gsApplyForFreeLicenses</members>
+        <members>gsCheckStatus</members>
+        <members>gsChecklistExploreNPSPDesc</members>
+        <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistItemAddUserDesc</members>
+        <members>gsChecklistItemAddUserLinkLabel</members>
+        <members>gsChecklistItemAddUserTitle</members>
+        <members>gsChecklistItemCommunicateWithUserskDesc</members>
+        <members>gsChecklistItemCommunicateWithUserskLinkLabel</members>
+        <members>gsChecklistItemCommunicateWithUserskTitle</members>
+        <members>gsChecklistItemCreateDonationDesc</members>
+        <members>gsChecklistItemCreateDonationLinkLabel</members>
+        <members>gsChecklistItemCreateDonationPriBtnLabel</members>
+        <members>gsChecklistItemCreateDonationTitle</members>
+        <members>gsChecklistItemCustomFieldsDesc</members>
+        <members>gsChecklistItemCustomFieldsLinkLabel</members>
+        <members>gsChecklistItemCustomFieldsTitle</members>
+        <members>gsChecklistItemExtraOneMinuteVideo</members>
+        <members>gsChecklistItemExtraSixtyMinuteVideo</members>
+        <members>gsChecklistItemFundraisingProcessDesc</members>
+        <members>gsChecklistItemFundraisingProcessLinkLabel</members>
+        <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
+        <members>gsChecklistItemFundraisingProcessTitle</members>
+        <members>gsChecklistItemGoFurtherDesc</members>
+        <members>gsChecklistItemGoFurtherLinkLabel</members>
+        <members>gsChecklistItemGoFurtherTitle</members>
+        <members>gsChecklistItemImportDataDesc</members>
+        <members>gsChecklistItemImportDataLinkLabel</members>
+        <members>gsChecklistItemImportDataPriBtnLabel</members>
+        <members>gsChecklistItemImportDataSecBtnLabel</members>
+        <members>gsChecklistItemImportDataTitle</members>
+        <members>gsChecklistItemManageChangeDesc</members>
+        <members>gsChecklistItemManageChangeLinkLabel</members>
+        <members>gsChecklistItemManageChangePriBtnLabel</members>
+        <members>gsChecklistItemManageChangeTitle</members>
+        <members>gsChecklistItemNPSPCloudDesc</members>
+        <members>gsChecklistItemNPSPCloudLinkLabel</members>
+        <members>gsChecklistItemNPSPCloudPriBtnLabel</members>
+        <members>gsChecklistItemNPSPCloudTitle</members>
+        <members>gsChecklistItemNPSPGuideDesc</members>
+        <members>gsChecklistItemNPSPGuidePriBtnLabel</members>
+        <members>gsChecklistItemNPSPGuideTitle</members>
+        <members>gsChecklistItemNPSPSettingsDesc</members>
+        <members>gsChecklistItemNPSPSettingsLinkLabel</members>
+        <members>gsChecklistItemNPSPSettingsPriBtnLabel</members>
+        <members>gsChecklistItemNPSPSettingsTitle</members>
+        <members>gsChecklistItemPageLayoutsDesc</members>
+        <members>gsChecklistItemPageLayoutsLinkLabel</members>
+        <members>gsChecklistItemPageLayoutsTitle</members>
+        <members>gsChecklistItemPrepareNPSPDesc</members>
+        <members>gsChecklistItemPrepareNPSPLinkLabel</members>
+        <members>gsChecklistItemPrepareNPSPPriBtnLabel</members>
+        <members>gsChecklistItemPrepareNPSPTitle</members>
+        <members>gsChecklistItemReviewCompanyDesc</members>
+        <members>gsChecklistItemReviewCompanyLinkLabel</members>
+        <members>gsChecklistItemReviewCompanyTitle</members>
+        <members>gsChecklistItemRunningReportsDesc</members>
+        <members>gsChecklistItemRunningReportsLinkLabel</members>
+        <members>gsChecklistItemRunningReportsPriBtnLabel</members>
+        <members>gsChecklistItemRunningReportsTitle</members>
+        <members>gsChecklistItemSetupContactDesc</members>
+        <members>gsChecklistItemSetupContactLinkLabel</members>
+        <members>gsChecklistItemSetupContactPriBtnLabel</members>
+        <members>gsChecklistItemSetupContactSecBtnLabel</members>
+        <members>gsChecklistItemSetupContactTitle</members>
+        <members>gsChecklistItemStayTrackDesc</members>
+        <members>gsChecklistItemStayTrackLinkLabel</members>
+        <members>gsChecklistItemStayTrackPriBtnLabel</members>
+        <members>gsChecklistItemStayTrackTitle</members>
+        <members>gsChecklistItemTrainUsersDesc</members>
+        <members>gsChecklistItemTrainUsersLinkLabel</members>
+        <members>gsChecklistItemTrainUsersTitle</members>
+        <members>gsChecklistMakeItYourDesc</members>
+        <members>gsChecklistMakeItYourTitle</members>
+        <members>gsChecklistOnboardUsersDesc</members>
+        <members>gsChecklistOnboardUsersTitle</members>
+        <members>gsDaysAdded</members>
+        <members>gsDaysRemainingInFreeTrial</members>
+        <members>gsFollowUpApplicationStatus</members>
+        <members>gsLearnMore</members>
+        <members>gsNoApplicationSubmitted</members>
+        <members>gsResourcesItemFundraisingLabel</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
+        <members>gsResourcesItemHubLabel</members>
+        <members>gsResourcesItemHubLinkLabel</members>
+        <members>gsResourcesItemMarketingEngagementLabel</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
+        <members>gsResourcesItemNonprofitCloudLabel</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
+        <members>gsResourcesItemPartnersLabel</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
+        <members>gsResourcesItemProgramManagementLabel</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
+        <members>gsResourcesItemWebinarsLabel</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
+        <members>gsResourcesTitle</members>
+        <members>gsResourcesVideographyLabel</members>
+        <members>gsResourcesVideographyLinkLabel</members>
+        <members>gsSubmitted</members>
+        <members>gsVideoHeaderLength</members>
+        <members>gsVideoHeaderTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3137,6 +3355,8 @@
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_ACH_Code</members>
+        <members>Data_Import_Field_Mapping.Payment_ACH_Last_4</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Authorized_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Card_Expiration_Month</members>
@@ -3145,6 +3365,8 @@
         <members>Data_Import_Field_Mapping.Payment_Card_Network</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
         <members>Data_Import_Field_Mapping.Payment_Donor_Cover_Amount</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_API_Declined_Reason</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_API_Status</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_ID</members>
@@ -3155,6 +3377,7 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Name</members>
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
+        <members>Data_Import_Field_Mapping.Payment_Paid</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Amount</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Campaign</members>
@@ -3186,6 +3409,27 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping.Recurring_Donation</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
+        <members>GetStartedChecklistItem.Add_User</members>
+        <members>GetStartedChecklistItem.Communicate_With_Users</members>
+        <members>GetStartedChecklistItem.Create_a_Donation</members>
+        <members>GetStartedChecklistItem.Custom_Fields</members>
+        <members>GetStartedChecklistItem.Fundraising_process</members>
+        <members>GetStartedChecklistItem.Go_Further</members>
+        <members>GetStartedChecklistItem.Import_Data</members>
+        <members>GetStartedChecklistItem.Manage_Change</members>
+        <members>GetStartedChecklistItem.NPSP_Cloud</members>
+        <members>GetStartedChecklistItem.NPSP_Guide</members>
+        <members>GetStartedChecklistItem.NPSP_Settings</members>
+        <members>GetStartedChecklistItem.Page_Layouts</members>
+        <members>GetStartedChecklistItem.Prepare_NPSP_Cloud</members>
+        <members>GetStartedChecklistItem.Review_Company</members>
+        <members>GetStartedChecklistItem.Running_Reports</members>
+        <members>GetStartedChecklistItem.Setup_Contact</members>
+        <members>GetStartedChecklistItem.Stay_Track</members>
+        <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
+        <members>GetStartedChecklistSection.Explore_NPSP</members>
+        <members>GetStartedChecklistSection.Make_it_your_own</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -3195,6 +3439,7 @@
         <members>Address__c</members>
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
+        <members>AutoNumber__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
         <members>Custom_Column_Header__c</members>
@@ -3210,6 +3455,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStartedCompletionChecklistState__c</members>
         <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
@@ -3230,6 +3476,8 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
+        <members>GetStartedChecklistItem__mdt</members>
+        <members>GetStartedChecklistSection__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
@@ -3290,6 +3538,13 @@
         <members>Allocations_Settings__c-iw</members>
         <members>Allocations_Settings__c-ja</members>
         <members>Allocations_Settings__c-nl_NL</members>
+        <members>AutoNumber__c-de</members>
+        <members>AutoNumber__c-en_US</members>
+        <members>AutoNumber__c-es</members>
+        <members>AutoNumber__c-fr</members>
+        <members>AutoNumber__c-iw</members>
+        <members>AutoNumber__c-ja</members>
+        <members>AutoNumber__c-nl_NL</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
@@ -3406,6 +3661,13 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
+        <members>GetStartedCompletionChecklistState__c-de</members>
+        <members>GetStartedCompletionChecklistState__c-en_US</members>
+        <members>GetStartedCompletionChecklistState__c-es</members>
+        <members>GetStartedCompletionChecklistState__c-fr</members>
+        <members>GetStartedCompletionChecklistState__c-iw</members>
+        <members>GetStartedCompletionChecklistState__c-ja</members>
+        <members>GetStartedCompletionChecklistState__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
         <members>Gift_Entry_Settings__c-en_US</members>
         <members>Gift_Entry_Settings__c-es</members>
@@ -3558,6 +3820,20 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>GetStartedChecklistItem__mdt-de</members>
+        <members>GetStartedChecklistItem__mdt-en_US</members>
+        <members>GetStartedChecklistItem__mdt-es</members>
+        <members>GetStartedChecklistItem__mdt-fr</members>
+        <members>GetStartedChecklistItem__mdt-iw</members>
+        <members>GetStartedChecklistItem__mdt-ja</members>
+        <members>GetStartedChecklistItem__mdt-nl_NL</members>
+        <members>GetStartedChecklistSection__mdt-de</members>
+        <members>GetStartedChecklistSection__mdt-en_US</members>
+        <members>GetStartedChecklistSection__mdt-es</members>
+        <members>GetStartedChecklistSection__mdt-fr</members>
+        <members>GetStartedChecklistSection__mdt-iw</members>
+        <members>GetStartedChecklistSection__mdt-ja</members>
+        <members>GetStartedChecklistSection__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
@@ -3645,6 +3921,7 @@
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
+        <members>GetStarted</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -3678,6 +3955,10 @@
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>PilotEnabled</members>
         <name>FeatureParameterBoolean</name>
+    </types>
+    <types>
+        <members>P10_Application_Date</members>
+        <name>FeatureParameterDate</name>
     </types>
     <types>
         <members>DataCount_ONETIME_Use</members>
@@ -3718,7 +3999,12 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
+        <members>GetStarted</members>
         <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Payment_ACH_Code</members>
+        <name>GlobalValueSet</name>
     </types>
     <types>
         <members>Account-Household Layout</members>
@@ -3726,6 +4012,7 @@
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
+        <members>AutoNumber__c-AutoNumber Layout</members>
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
@@ -3738,6 +4025,7 @@
         <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>GetStartedCompletionChecklistState__c-Get Started Completion Checklist State Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Level__c-Level Layout</members>
         <members>Opportunity-Donation Layout</members>
@@ -3757,6 +4045,8 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>GetStartedChecklistItem__mdt-GS Checklist Item Layout</members>
+        <members>GetStartedChecklistSection__mdt-GS Checklist Section Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
@@ -3767,16 +4057,17 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>accordionSection</members>
         <members>batchProgress</members>
         <members>bdeRetirementAlert</members>
+        <members>bdiBatchNumberSettings</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
         <members>customDatatable</members>
         <members>customPicklistType</members>
-        <members>geAutocomplete</members>
-        <members>geAutocompleteOption</members>
+        <members>errRecordLog</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -3785,8 +4076,6 @@
         <members>geDonationMatchingOpportunityCard</members>
         <members>geDonationMatchingPaymentCard</members>
         <members>geFormField</members>
-        <members>geFormFieldLookup</members>
-        <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
@@ -3811,9 +4100,23 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsAccordionLabel</members>
+        <members>gsAccordionSection</members>
+        <members>gsApplicationStatus</members>
+        <members>gsChecklist</members>
+        <members>gsChecklistIcon</members>
+        <members>gsChecklistItem</members>
+        <members>gsChecklistSetup</members>
+        <members>gsLabelMapper</members>
+        <members>gsResources</members>
+        <members>gsVideoHeader</members>
         <members>libsMoment</members>
+        <members>modal</members>
         <members>progressRing</members>
+        <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2ElevateCreditCardForm</members>
+        <members>rd2ElevateInformation</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>
@@ -3826,7 +4129,6 @@
         <members>utilAlertBanner</members>
         <members>utilCard</members>
         <members>utilCommon</members>
-        <members>utilCustomErrors</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilExpandableSection</members>
