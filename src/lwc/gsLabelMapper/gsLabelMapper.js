@@ -73,7 +73,6 @@ import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYou
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
 
-
 /**
 * @description Map of getLabelValue labels
 */

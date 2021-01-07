@@ -13910,4 +13910,84 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Video header title in Get Started</shortDescription>
         <value>Get Started on NPSP</value>
     </labels>
+    <labels>
+        <fullName>gseuResourcesItemQuestionsAnsweredLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Questions Answered label in GS Resources section for End User</shortDescription>
+        <value>Get Your Questions Answered</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemQuestionsAnsweredLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Questions Answered link label in GS Resources section for End User</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemAboutNPSPLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource About NPSP label in GS Resources section for End User</shortDescription>
+        <value>Learn More About NPSP</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemAboutNPSPLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource About NPSP link label in GS Resources section for End User</shortDescription>
+        <value>NPSP Documentation</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWatchVideosLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Watch Videos label in GS Resources section for End User</shortDescription>
+        <value>Watch How-To Videos</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWatchVideosLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Watch Videos link label in GS Resources section for End User</shortDescription>
+        <value>NPSP Videography Channel</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWebinarsLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Webinars label in GS Resources section for End User</shortDescription>
+        <value>Find Events and Webinar</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWebinarsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Webinars link label in GS Resources section for End User</shortDescription>
+        <value>Salesforce Calendar</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemCommunityGroupLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Community Group link label in GS Resources section for End User</shortDescription>
+        <value>Find a Community Group</value>
+    </labels>
+     <labels>
+        <fullName>gseuResourcesItemCommunityGroupLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resource Community Group link label in GS Resources section for End User</shortDescription>
+        <value>Trailhead Community</value>
+    </labels>
 </CustomLabels>
