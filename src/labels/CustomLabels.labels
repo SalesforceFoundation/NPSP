@@ -7334,7 +7334,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Work Records in GS for End Users</shortDescription>
-        <value> After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you're working on.</value>
+        <value> After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistWorkRecordsTitle</fullName>
@@ -7350,7 +7350,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Global Search in GS for End Users</shortDescription>
-        <value>When you’re just getting started with NPSP, finding records can be tricky. Use Global search to search across your entire Salesforce org and find what you need fast.</value>
+        <value>When you&apos;re just getting started with NPSP, finding records can be tricky. Use Global search to search across your entire Salesforce org and find what you need fast.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemGlobalSearchLinkLabel</fullName>
@@ -7382,7 +7382,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist item Stay Track in GS for End Users</shortDescription>
-        <value>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organization, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you’re working on.</value>
+        <value>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organization, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you&apos;re working on.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemStayTrackLinkLabel</fullName>
