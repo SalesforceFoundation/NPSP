@@ -5371,14 +5371,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
-        <fullName>commonCardholderName</fullName>
-        <categories>Gift Entry, Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
-        <value>Cardholder Name</value>
-    </labels>
-    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5393,6 +5385,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Cancel</shortDescription>
         <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>commonCardholderName</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
+        <value>Cardholder Name</value>
     </labels>
     <labels>
         <fullName>commonCardType</fullName>
@@ -5585,6 +5585,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Notification for empty tables</shortDescription>
         <value>No items to display.</value>
+    </labels>
+    <labels>
+        <fullName>commonNotAvailable</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating data is not available</shortDescription>
+        <value>Not Available</value>
     </labels>
     <labels>
         <fullName>commonOkay</fullName>

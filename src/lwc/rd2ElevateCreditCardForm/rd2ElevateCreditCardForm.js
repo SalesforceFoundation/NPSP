@@ -1,5 +1,5 @@
 import { api, track, wire, LightningElement } from 'lwc';
-import { constructErrorMessage, extractFieldInfo } from 'c/utilCommon';
+import { constructErrorMessage, extractFieldInfo, isEmpty} from 'c/utilCommon';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
@@ -19,6 +19,7 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 import updatePaymentButtonLabel from '@salesforce/label/c.RD2_ElevateUpdatePaymentButtonLabel';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import cardExpirationDate from '@salesforce/label/c.commonMMYY';
+import commonNotAvailable from '@salesforce/label/c.commonNotAvailable';
 import cancelLabel from '@salesforce/label/c.commonCancel';
 
 
@@ -49,6 +50,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         updatePaymentButtonLabel,
         cardholderNameLabel,
         cardExpirationDate,
+        commonNotAvailable,
         cancelLabel
     };
 
@@ -126,11 +128,17 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get cardLast4() {
-        return getFieldValue(this.record, FIELD_CARD_LAST4);
+        let value = getFieldValue(this.record, FIELD_CARD_LAST4);
+
+        return !isEmpty(value) ? value : this.labels.commonNotAvailable;
     }
 
     get cardExpirationDate() {
-        return getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + "/" + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+        let expiryMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+
+        return !isEmpty(expiryMonth) 
+            ? (expiryMonth + "/" + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR))
+            : this.labels.commonNotAvailable;
     }
 
     get disableInputLabel() {

@@ -289,7 +289,7 @@ public with sharing class RD2_EntryFormController {
 
     /***
     * @description Constructs the Recurring Donation based on the entry form fields.
-    * Validates the Recurring Donation and creates or updates the commitments depending
+    * Validates the Recurring Donation and creates or updates the commitment depending
     * if it is a new or existing recurring commitment in Elevate.
     * @param recordId Recurring Donation Id
     * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
@@ -300,6 +300,18 @@ public with sharing class RD2_EntryFormController {
     public static String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {        
         return commitmentService.handleCommitment(recordId, jsonRecord, paymentMethodToken);
     }
+
+    /***
+    * @description Logs an error when Recurring Donation cannot be created/updated after
+    * related commitment is created/updated
+    * @param recordId Recurring Donation Id
+    * @param errorMessage Error message
+    */
+    @AuraEnabled
+    public static void logError(Id recordId, String errorMessage) {        
+        commitmentService.logError(recordId, errorMessage);
+    }
+    
     
 
     /**
@@ -485,7 +497,7 @@ public with sharing class RD2_EntryFormController {
                 if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED
                     && response.statusCode != UTIL_Http.STATUS_CODE_OK
                 ) {
-                    processError(recordId, response.getErrorMessages());
+                    logError(recordId, response.getErrorMessages());
                 }
 
             } catch (Exception e) {
@@ -521,7 +533,7 @@ public with sharing class RD2_EntryFormController {
         * @param errorMessage Error message
         * @return void
         */
-        private void processError(Id recordId, String errorMessage) {
+        public void logError(Id recordId, String errorMessage) {
             ERR_LogService.Logger logger = new ERR_LogService.Logger(
                 ERR_Handler_API.Context.Elevate,
                 npe03__Recurring_Donation__c.SObjectType

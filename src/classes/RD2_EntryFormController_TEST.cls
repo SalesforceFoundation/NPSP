@@ -280,13 +280,15 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
         Test.startTest();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();
 
-        //String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);//TODO
+        String jsonResponse = RD2_EntryFormController.handleCommitment(rd.Id, JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
-        /*List<Error__c> errors = errorGateway.getRecords();
+        List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(),
             'An error record should be created for an error response.');
         System.assertEquals(rd.Id, errors[0].Related_Record_Id__c,
@@ -294,7 +296,7 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(ERR_Handler_API.Context.Elevate.name(),errors[0].Context_Type__c,
             'The error record context type should match with Elevate context.');
         System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
-            'The error record should contain error response message.');*/
+            'The error record should contain error response message.');
     }
     
 
