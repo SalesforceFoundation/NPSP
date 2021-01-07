@@ -83,27 +83,57 @@ public class UTIL_Profile {
         }
     }
 
+    /** @description Minimum Access - Salesforce Profile Name */
+    public static final String PROFILE_MINIMUM_ACCESS = 'Minimum Access - Salesforce';
+
     /** @description Read Only Profile Name */
     public static final String PROFILE_READ_ONLY {
         get {
+            String readOnly = 'Read Only';
+
             switch on (UserInfo.getLanguage()) {
                 when 'es' {
-                    return 'Sólo lectura';
+                    readOnly = 'Sólo lectura';
                 }
                 when 'de' {
-                    return 'Standardbenutzer';
+                    readOnly = 'Standardbenutzer';
                 }
                 when 'ja' {
-                    return '参照のみ';
+                    readOnly = '参照のみ';
                 }
                 when 'fr' {
-                    return 'Lecture seule';
+                    readOnly = 'Lecture seule';
                 }
                 when 'NL_nl' {
-                    return 'Alleen-lezen';
+                    readOnly = 'Alleen-lezen';
                 }
             }
-            return 'Read Only';
+
+            if (hasReadOnlyProfile == null) {
+                hasReadOnlyProfile = hasProfile(readOnly);
+            }
+
+            if (hasReadOnlyProfile == true) {
+                return readOnly;
+            } else {
+                return PROFILE_MINIMUM_ACCESS;
+            }
+        }
+    }
+
+    /** @description True if the Read Only profile exists in the org */
+    private static Boolean hasReadOnlyProfile;
+
+    /*********************************************************************************************************
+    * @description Checks for any Profile records with the provided Name
+    * @return BOOLEAN True if query returns at least 1 profile record by the provided Name exists
+    */
+    private static Boolean hasProfile(String profileName) {
+        Integer profileRecordCount = [SELECT count() FROM Profile WHERE Name = :profileName];
+        if (profileRecordCount != null && profileRecordCount > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
