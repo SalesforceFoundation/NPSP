@@ -268,7 +268,8 @@ npsp_lex_locators={
         'object_result': '//th/a[text()="{}"]',
 		'field_result': '//td/a/span[text()="{}"]',
         'new_picklist_btn': '//td[@class="pbButton"]/input[@title="{}"]',
-        'picklist_txtarea': '//textarea[@title = "{}"]'
+        'picklist_txtarea': '//textarea[@title = "{}"]',
+        'field_dropdown':'//tr[./td/a/span[text()="{}"]]/td//div[contains(@class,"slds-dropdown-trigger")]/a',
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
