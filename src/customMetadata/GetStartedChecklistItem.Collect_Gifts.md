@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCollectGiftsDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCollectGiftsDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -20,11 +20,11 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">Train_users.svg</value>
+        <value xsi:type="xsd:string">Collect_Sustaining_Gifts_with_Recurring_Donations.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCollectGiftsLinkLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCollectGiftsLinkLabel</value>
     </values>
     <values>
         <field>Link_URL__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCollectGiftsPriBtnLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCollectGiftsPriBtnLabel</value>
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCollectGiftsTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCollectGiftsTitle</value>
     </values>
 </CustomMetadata>

@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCaptureDonorIntentDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCaptureDonorIntentDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -20,11 +20,11 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">import_illustration_1.svg</value>
+        <value xsi:type="xsd:string">Capture_Donor_Intent_with_Donation_Allocations.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCaptureDonorIntentLinkLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCaptureDonorIntentLinkLabel</value>
     </values>
     <values>
         <field>Link_URL__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCaptureDonorIntentPriBtnLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCaptureDonorIntentPriBtnLabel</value>
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemCaptureDonorIntentTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemCaptureDonorIntentTitle</value>
     </values>
 </CustomMetadata>

@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistTrackDonationDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistTrackDonationDesc</value>
     </values>
     <values>
         <field>Page_Type__c</field>
@@ -16,6 +16,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistTrackDonationTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistTrackDonationTitle</value>
     </values>
 </CustomMetadata>

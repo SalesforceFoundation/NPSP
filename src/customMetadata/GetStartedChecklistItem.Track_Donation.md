@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemTrackDonationDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemTrackDonationDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -20,11 +20,11 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">import_illustration_1.svg</value>
+        <value xsi:type="xsd:string">Track_Donation_Sources_with_Campaigns.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemTrackDonationLinkLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemTrackDonationLinkLabel</value>
     </values>
     <values>
         <field>Link_URL__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemTrackDonationPriBtnLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemTrackDonationPriBtnLabel</value>
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">euChecklistItemTrackDonationTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemTrackDonationTitle</value>
     </values>
 </CustomMetadata>

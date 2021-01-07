@@ -1434,182 +1434,6 @@
         <value>Salesforce encountered these NPSP errors. To learn more about common errors, see "Troubleshoot the Nonprofit Success Pack" on the Power of Us Hub. If you're unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
-        <fullName>euChecklistItemCaptureDonorIntentDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
-        <value>When you raise funds for a specific purpose, you want to be sure you are honoring the donor intent. Ensure donations are allocated correctly with General Allocation Units.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCaptureDonorIntentLinkLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
-        <value>Learn more about Donation Allocations in Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCaptureDonorIntentPriBtnLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
-        <value>Create Allocations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCaptureDonorIntentTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
-        <value>Capture Donor Intent with Donation Allocations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCollectGiftsDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
-        <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit’s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCollectGiftsLinkLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link label of checklist Item Collect Gifts in GS for End User</shortDescription>
-        <value>Learn more about Recurring Donations in Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCollectGiftsPriBtnLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Collect Gifts in GS for End User</shortDescription>
-        <value>Create Recurring Donations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemCollectGiftsTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
-        <value>Collect Sustaining Gifts with Recurring Donations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationIndividualDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
-        <value>For most nonprofits, donations come from individual contributions. Track individual donations by creating an Opportunity from a Contact record.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationIndividualLinkLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link label of checklist Item Donation Individual in GS for End User</shortDescription>
-        <value>Learn more about Individual Donations in Trailhead</value>
-    </labels>
-     <labels>
-    <fullName>euChecklistItemDonationIndividualPriBtnLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Donation Individual in GS for End User</shortDescription>
-        <value>Enter Individual Donations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationIndividualTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
-        <value>Enter a Donation from an Individual</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationOrganizationDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
-        <value>Institutional and corporate giving are an important source of nonprofit support. Track organizational giving by creating an Opportunity from an Account record.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationOrganizationLinkLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link label of checklist Item Donation Organization in GS for End User</shortDescription>
-        <value>Learn more about Organization Donations in Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationOrganizationPriBtnLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Donation Organization in GS for End User</shortDescription>
-        <value>Enter Organization Donations</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemDonationOrganizationTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
-        <value>Enter a Donation from an Organization</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemTrackDonationDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
-        <value>Campaigns let you to track your constituent outreach in Salesforce. Use the Primary Campaign field on Opportunities to better evaluate your fundraising efforts.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemTrackDonationLinkLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link label of checklist Item Track Donation in GS for End User</shortDescription>
-        <value>Learn more about Campaigns in Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemTrackDonationPriBtnLabel</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Track Donation in GS for End User</shortDescription>
-        <value>Track Constituent Outreach</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistItemTrackDonationTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
-        <value>Track Donation Sources with Campaigns</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistTrackDonationDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description of checklist Track Donation in GS for End User</shortDescription>
-        <value>In NPSP, you track donations, grants, pledges, and other types of revenue using the Opportunity object. You can create donations from an individual or from an organization such as a foundation, business, or government entity.</value>
-    </labels>
-    <labels>
-        <fullName>euChecklistTrackDonationTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of checklist Track Donation in GS for End User</shortDescription>
-        <value>Track Donations and Other Income Types with NPSP</value>
-    </labels>
-    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>
@@ -7503,6 +7327,182 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
         <value>Visualize Your Fundraising Processes</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <value>When you raise funds for a specific purpose, you want to be sure you are honoring the donor intent. Ensure donations are allocated correctly with General Allocation Units.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <value>Learn more about Donation Allocations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary button label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <value>Create Allocations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <value>Capture Donor Intent with Donation Allocations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit’s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <value>Learn more about Recurring Donations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary button label of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <value>Create Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <value>Collect Sustaining Gifts with Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
+        <value>For most nonprofits, donations come from individual contributions. Track individual donations by creating an Opportunity from a Contact record.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist Item Donation Individual in GS for End User</shortDescription>
+        <value>Learn more about Individual Donations in Trailhead</value>
+    </labels>
+     <labels>
+    <fullName>gseuChecklistItemDonationIndividualPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary button label of checklist Item Donation Individual in GS for End User</shortDescription>
+        <value>Enter Individual Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
+        <value>Enter a Donation from an Individual</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
+        <value>Institutional and corporate giving are an important source of nonprofit support. Track organizational giving by creating an Opportunity from an Account record.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist Item Donation Organization in GS for End User</shortDescription>
+        <value>Learn more about Organization Donations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary button label of checklist Item Donation Organization in GS for End User</shortDescription>
+        <value>Enter Organization Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
+        <value>Enter a Donation from an Organization</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
+        <value>Campaigns let you to track your constituent outreach in Salesforce. Use the Primary Campaign field on Opportunities to better evaluate your fundraising efforts.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist Item Track Donation in GS for End User</shortDescription>
+        <value>Learn more about Campaigns in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Primary button label of checklist Item Track Donation in GS for End User</shortDescription>
+        <value>Track Constituent Outreach</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
+        <value>Track Donation Sources with Campaigns</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistTrackDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Track Donation in GS for End User</shortDescription>
+        <value>In NPSP, you track donations, grants, pledges, and other types of revenue using the Opportunity object. You can create donations from an individual or from an organization such as a foundation, business, or government entity.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistTrackDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Track Donation in GS for End User</shortDescription>
+        <value>Track Donations and Other Income Types with NPSP</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>

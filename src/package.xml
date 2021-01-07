@@ -2294,28 +2294,6 @@
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>
         <members>errErrorUnsupportedDMLType</members>
-        <members>euChecklistItemCaptureDonorIntentDesc</members>
-        <members>euChecklistItemCaptureDonorIntentLinkLabel</members>
-        <members>euChecklistItemCaptureDonorIntentPriBtnLabel</members>
-        <members>euChecklistItemCaptureDonorIntentTitle</members>
-        <members>euChecklistItemCollectGiftsDesc</members>
-        <members>euChecklistItemCollectGiftsLinkLabel</members>
-        <members>euChecklistItemCollectGiftsPriBtnLabel</members>
-        <members>euChecklistItemCollectGiftsTitle</members>
-        <members>euChecklistItemDonationIndividualDesc</members>
-        <members>euChecklistItemDonationIndividualLinkLabel</members>
-        <members>euChecklistItemDonationIndividualPriBtnLabel</members>
-        <members>euChecklistItemDonationIndividualTitle</members>
-        <members>euChecklistItemDonationOrganizationDesc</members>
-        <members>euChecklistItemDonationOrganizationLinkLabel</members>
-        <members>euChecklistItemDonationOrganizationPriBtnLabel</members>
-        <members>euChecklistItemDonationOrganizationTitle</members>
-        <members>euChecklistItemTrackDonationDesc</members>
-        <members>euChecklistItemTrackDonationLinkLabel</members>
-        <members>euChecklistItemTrackDonationPriBtnLabel</members>
-        <members>euChecklistItemTrackDonationTitle</members>
-        <members>euChecklistTrackDonationDesc</members>
-        <members>euChecklistTrackDonationTitle</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
@@ -2616,6 +2594,28 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuChecklistItemCaptureDonorIntentDesc</members>
+        <members>gseuChecklistItemCaptureDonorIntentLinkLabel</members>
+        <members>gseuChecklistItemCaptureDonorIntentPriBtnLabel</members>
+        <members>gseuChecklistItemCaptureDonorIntentTitle</members>
+        <members>gseuChecklistItemCollectGiftsDesc</members>
+        <members>gseuChecklistItemCollectGiftsLinkLabel</members>
+        <members>gseuChecklistItemCollectGiftsPriBtnLabel</members>
+        <members>gseuChecklistItemCollectGiftsTitle</members>
+        <members>gseuChecklistItemDonationIndividualDesc</members>
+        <members>gseuChecklistItemDonationIndividualLinkLabel</members>
+        <members>gseuChecklistItemDonationIndividualPriBtnLabel</members>
+        <members>gseuChecklistItemDonationIndividualTitle</members>
+        <members>gseuChecklistItemDonationOrganizationDesc</members>
+        <members>gseuChecklistItemDonationOrganizationLinkLabel</members>
+        <members>gseuChecklistItemDonationOrganizationPriBtnLabel</members>
+        <members>gseuChecklistItemDonationOrganizationTitle</members>
+        <members>gseuChecklistItemTrackDonationDesc</members>
+        <members>gseuChecklistItemTrackDonationLinkLabel</members>
+        <members>gseuChecklistItemTrackDonationPriBtnLabel</members>
+        <members>gseuChecklistItemTrackDonationTitle</members>
+        <members>gseuChecklistTrackDonationDesc</members>
+        <members>gseuChecklistTrackDonationTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
