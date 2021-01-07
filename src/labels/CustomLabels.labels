@@ -7366,7 +7366,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
-        <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit’s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
+        <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit&apos;s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemCollectGiftsLinkLabel</fullName>
