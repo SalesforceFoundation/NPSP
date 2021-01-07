@@ -7438,7 +7438,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Your Data in GS for End User</shortDescription>
-        <value>Reports and Dashboards help organize your data so that you can tell the story of your organization’s impact. NPSP includes out-of-the-box reports, or you can create your own.</value>
+        <value>Reports and Dashboards help organize your data so that you can tell the story of your organization&apos;s impact. NPSP includes out-of-the-box reports, or you can create your own.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistYourDataTitle</fullName>
