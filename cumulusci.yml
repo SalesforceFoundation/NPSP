@@ -240,12 +240,12 @@ tasks:
             suites: robot/Cumulus/perftests/Insert_Tests.robot
 
     test_rollup_performance:
-        description: Runs Robot Framework performance tests for BDI Complex Objects
+        description: Runs Robot Framework performance tests for Customizable Rollups
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/Rollups.robot
-            include: rollups
+#            include: crlp
             vars: persistent_org:True
 
     platformencryption_deploy_permset:
@@ -1119,13 +1119,13 @@ flows:
                     vars: persistent_org:False
 
     test_rollup_performance_LDV:
-        description: Run rollup performance tests against a pre-existing org
+        description: Run customizable rollup performance tests against a pre-existing org
         group: Performance Tests
         steps:
-            1: 
-                flow: max_feature_parameter_limit_work_around
-            2:  
-                task: deploy
+#            1:
+#                flow: max_feature_parameter_limit_work_around
+#            2:
+#                task: deploy
             3:
                 task: test_rollup_performance
                 options:
