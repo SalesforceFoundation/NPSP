@@ -614,7 +614,9 @@ public with sharing class RD2_ValidationService {
         private String[] errors = new String[0];
 
         /***
-        * @description 
+        * @description Tracks Recurring Donation record that can be
+        * used to addError() outside of the validation service when
+        * validation is applied in the trigger context
         */
         public Notification trackRecord(npe03__Recurring_Donation__c rd) {
             this.rd = rd;
@@ -622,7 +624,7 @@ public with sharing class RD2_ValidationService {
         }
 
         /***
-        * @description 
+        * @description Returns Recurring Donation record
         */
         public npe03__Recurring_Donation__c getRecord() {
             return rd;

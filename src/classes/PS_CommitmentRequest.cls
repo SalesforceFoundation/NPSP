@@ -158,12 +158,12 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-    * @description Constructs the Commitment request body for the specified Recurring Donation
+    * @description Constructs the commitment request body for the specified Recurring Donation.
+    * The commitment Id is used to differentiate between the create and edit commitment request content.
     * @param rd Recurring Donation record
     * @param token Payment Method Token
     * @return RequestBody
     */
-
     public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
         Boolean isCreateCommitment = String.isBlank(rd.CommitmentId__c);
 
@@ -172,6 +172,12 @@ public inherited sharing class PS_CommitmentRequest {
             : getUpdateRequestBody(rd, token);
     }
 
+    /***
+    * @description Constructs the create commitment request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
     private RequestBody getCreateRequestBody(npe03__Recurring_Donation__c rd, String token) {
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
@@ -198,6 +204,12 @@ public inherited sharing class PS_CommitmentRequest {
         return reqBody;
     }
 
+    /***
+    * @description Constructs the edit commitment request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
     private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, String token) {
         RequestBody reqBody = new RequestBody()
             .withCommitmentId(rd.CommitmentId__c)
@@ -265,12 +277,18 @@ public inherited sharing class PS_CommitmentRequest {
             : currencyMultiplier;
     }
 
-    private Contact getContact(Id recordId) {
+    /***
+    * @description Retrieves Contact data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param contactId Contact Id
+    * @return Contact
+    */
+    private Contact getContact(Id contactId) {
         List<Contact> contacts = new List<Contact>([
             SELECT
                 AccountId, FirstName, LastName
             FROM Contact
-            WHERE Id = :recordId
+            WHERE Id = :contactId
             LIMIT 1
         ]);
         
@@ -279,11 +297,17 @@ public inherited sharing class PS_CommitmentRequest {
             : contacts[0];
     }
 
-    private Account getAccount(Id recordId) {
+    /***
+    * @description Retrieves Account data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param accountId Account Id
+    * @return Account
+    */
+    private Account getAccount(Id accountId) {
         List<Account> accounts = new List<Account>([
             SELECT Name
             FROM Account
-            WHERE Id = :recordId
+            WHERE Id = :accountId
             LIMIT 1
         ]);
         

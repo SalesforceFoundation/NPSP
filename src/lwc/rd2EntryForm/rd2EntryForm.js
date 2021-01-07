@@ -151,7 +151,14 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+
+                // This field will be replaced by above isElevateCustomer when edit commitment becomes GA
                 this.isElevateEditEnabled = response.isElevateEditEnabled;
+
+                // There is an option to get commitment Id in wired "getRecord",
+                // however, it is safer to get it from the back end in the case
+                // the user does not have permission on the commitment field causing
+                // the record to be handled as non-Elevate record.
                 this.commitmentId = response.commitmentId;
             })
             .catch((error) => {
@@ -410,8 +417,8 @@ export default class rd2EntryForm extends LightningElement {
 
 
     /***
-    * @description Overrides the standard submit when an Elevate recurring commitment 
-    * record is to be created or updated.
+    * @description Overrides the standard submit when an 
+    * Elevate recurring commitment record is to be created or updated.
     */
     async processCommitmentSubmit(allFields) {
         try {
@@ -428,35 +435,40 @@ export default class rd2EntryForm extends LightningElement {
 
         this.loadingText = this.customLabels.savingCommitmentMessage;
 
-        const rd = this.constructRecurringDonation(allFields);
+        try {//ensure all errors are handled and displayed to the user
+            const rd = this.constructRecurringDonation(allFields);
 
-        handleCommitment({
-            recordId: this.recordId,
-            jsonRecord: JSON.stringify(rd),
-            paymentMethodToken: this.paymentMethodToken
-        })
-            .then(jsonResponse => {
-                let response = JSON.parse(jsonResponse);
-
-                if (response.statusCode === HTTP_CODES.Created
-                    || response.statusCode === HTTP_CODES.OK
-                ) {
-                    this.populateCommitmentFields(response, allFields);
-
-                    this.processSubmit(allFields);
-
-                } else {
-                    let message = this.getCommitmentError(response);
-                    this.handleSaveError(message);
-                }
+            handleCommitment({
+                recordId: this.recordId,
+                jsonRecord: JSON.stringify(rd),
+                paymentMethodToken: this.paymentMethodToken
             })
-            .catch((error) => {
-                this.handleSaveError(error);
-            });
+                .then(jsonResponse => {
+                    let response = JSON.parse(jsonResponse);
+
+                    if (response.statusCode === HTTP_CODES.Created
+                        || response.statusCode === HTTP_CODES.OK
+                    ) {
+                        this.populateCommitmentFields(response, allFields);
+
+                        this.processSubmit(allFields);
+
+                    } else {
+                        let message = this.getCommitmentError(response);
+                        this.handleSaveError(message);
+                    }
+                })
+                .catch((error) => {
+                    this.handleSaveError(error);
+                });
+
+        } catch (error) {
+            this.handleSaveError(error);
+        }
     }
 
     /***
-    * @description Determines if the Recurring Donation is an Elevate recurring commitment
+    * @description Determines if new or existing Recurring Donation is an Elevate recurring commitment
     */
     isCommitment() {
         if (!this.isElevateCustomer) {
@@ -473,6 +485,9 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    /***
+    * @description Constructs a Recurring Donation record to pass into commitment Apex method(s)
+    */
     constructRecurringDonation(allFields) {
         let rd = { ...allFields };
 
@@ -488,6 +503,10 @@ export default class rd2EntryForm extends LightningElement {
         return rd;
     }
 
+    /***
+    * @description Populates Recurring Donation fields upon receiving successful 
+    * Payments API commitment create/edit response
+    */
     populateCommitmentFields(response, allFields) {
         if (isNull(response) || isUndefined(response)
             || isNull(response.body) || isUndefined(response.body)
@@ -633,9 +652,7 @@ export default class rd2EntryForm extends LightningElement {
 
         let errors = this.getErrors(response);
 
-        const message = '{0} \n' + this.customLabels.contactAdminMessage;
-
-        return format(message, [errors]);
+        return format('{0}', [errors]);
     }
 
     /***

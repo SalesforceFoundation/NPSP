@@ -303,7 +303,7 @@ public with sharing class RD2_EntryFormController {
     
 
     /**
-    * @description Handles sending commitment request and saving its values on the RD
+    * @description Handles sending commitment create and edit requests 
     */
     public without sharing class CommitmentService {
 
@@ -323,16 +323,19 @@ public with sharing class RD2_EntryFormController {
         /**
         * @description Used to adjust and validate Recurring Donation data
         */
-        private RD2_RecurringDonations_TDTM.DataAuditor auditor {
+        private RD2_RecurringDonations_TDTM.DataController controller {
             get {
-                if (auditor == null) {
-                    auditor = new RD2_RecurringDonations_TDTM.DataAuditor();
+                if (controller == null) {
+                    controller = new RD2_RecurringDonations_TDTM.DataController();
                 }
-                return auditor;
+                return controller;
             }
             set;
         }   
 
+        /**
+        * @description Handles validation and Elevate commitment creation/edit
+        */
         public String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {
 
             npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(recordId);
@@ -350,6 +353,11 @@ public with sharing class RD2_EntryFormController {
             }
         }
 
+        /**
+        * @description Retrieves Recurring Donation from database.
+        * The currently stored record is called "old" since it is a previous version
+        * of the record user submitted on the form which is not saved yet. 
+        */
         private npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
             npe03__Recurring_Donation__c oldRd = null;
 
@@ -363,6 +371,9 @@ public with sharing class RD2_EntryFormController {
             return oldRd;
         }
 
+        /**
+        * @description Constructs Recurring Donation record from received fields specified in the JSON string
+        */
         private npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord, npe03__Recurring_Donation__c oldRd) {
             npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
@@ -373,7 +384,9 @@ public with sharing class RD2_EntryFormController {
             }
 
             if (rd.Id == null && String.isBlank(rd.Status__c)) {
-                rd.Status__c = 'Active';//TODO populate defaults applied by DML (trigger), currency in a multi-currency org? etc.
+                // Populate defaults otherwise applied by the DML operation and available in the trigger context//TODO
+                // Should currency be defaulted in a multi-currency org? Probably not.
+                rd.Status__c = 'Active';// use the Status__c default picklist value //TODO
             }
 
             List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
@@ -381,18 +394,21 @@ public with sharing class RD2_EntryFormController {
                 oldRds.add(oldRd);
             }
             
-            auditor.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
+            controller.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
 
             return rd;
         }
 
+        /**
+        * @description Validates Recurring Donation record before sending commitment create/edit request
+        */
         private void validate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
             List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
             if (oldRd != null) {
                 oldRds.add(oldRd);
             }
 
-            List<RD2_ValidationService.Notification> notifications = auditor.validate(
+            List<RD2_ValidationService.Notification> notifications = controller.validate(
                 new List<npe03__Recurring_Donation__c>{ rd }, oldRds
             );
 
@@ -403,6 +419,9 @@ public with sharing class RD2_EntryFormController {
             }        
         }
 
+        /**
+        * @description Checks if the commitment record should be sent to Elevate
+        */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
             // Data should be sent to Elevate if it is a new commitment 
             if (rd.Id == null) {
@@ -423,6 +442,10 @@ public with sharing class RD2_EntryFormController {
             return String.isNotBlank(paymentMethodToken);
         }
 
+        /**
+        * @description If the commitment record should not be sent to Elevate,
+        * send OK response to entry form so it can submit the RD to database.
+        */
         private String buildOkResponse() {
             UTIL_Http.Response response = new UTIL_Http.Response();
             response.statusCode = UTIL_Http.STATUS_CODE_OK;
@@ -431,6 +454,10 @@ public with sharing class RD2_EntryFormController {
             return JSON.serialize(response);
         }
 
+        /**
+        * @description Constructs commitment request body. 
+        * Commitment Id is used to differentiate between create and edit commitment request content.
+        */
         @TestVisible
         private PS_CommitmentRequest.RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
             try {
@@ -445,6 +472,9 @@ public with sharing class RD2_EntryFormController {
             return null;
         }
         
+        /**
+        * @description Creates or edits commitment record
+        */
         @TestVisible
         private String processCommitment(Id recordId, String commitmentId, String jsonRequestBody) {
             UTIL_Http.Response response;
@@ -465,6 +495,9 @@ public with sharing class RD2_EntryFormController {
             return JSON.serialize(response);
         }
 
+        /**
+        * @description Sends commitment request to Elevate
+        */
         @TestVisible
         private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
             UTIL_Http.Response response;
@@ -481,7 +514,6 @@ public with sharing class RD2_EntryFormController {
 
             return response;
         }
-
 
         /**
         * @description Creates an error record for the specified record Id and error message
