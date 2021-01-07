@@ -1,31 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Étape d&apos;opportunité pour le mappage d&apos;état</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Étapes d&apos;opportunité pour le mappage d&apos;état</value>
-    </caseValues>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étape d&apos;opportunité qui est mappée avec l&apos;état.</help>
-        <label>Étape d&apos;opportunité</label>
-        <name>Opportunity_Stage__c</name>
-    </fields>
-    <fields>
-        <help>Les entrées valides sont « Non engagée », « Engagée » et « Finalisée ».</help>
-        <label>État de l&apos;opportunité</label>
-        <name>Opportunity_State__c</name>
-        <picklistValues>
-            <masterLabel>Committed</masterLabel>
-            <translation>Engagée</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Finalized</masterLabel>
-            <translation>Finalisée</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <startsWith>Vowel</startsWith>
+  <fields>
+    <name>Opportunity_Stage__c</name>
+    <help>Le nom d'API de l'étape d'opportunité qui est mappée avec l'état.</help>
+    <label>Étape d'opportunité</label>
+  </fields>
+  <fields>
+    <name>Opportunity_State__c</name>
+    <help>Les entrées valides sont « Non engagée », « Engagée » et « Finalisée ».</help>
+    <label>État de l'opportunité</label>
+    <picklistValues>
+      <masterLabel>Committed</masterLabel>
+      <translation>Engagée</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Finalized</masterLabel>
+      <translation>Finalisée</translation>
+    </picklistValues>
+  </fields>
+  <gender>Feminine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Étape d'opportunité pour le mappage d'état</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Étapes d'opportunité pour le mappage d'état</value>
+  </caseValues>
 </CustomObjectTranslation>

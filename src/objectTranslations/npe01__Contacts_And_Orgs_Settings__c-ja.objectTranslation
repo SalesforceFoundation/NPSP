@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>システム使用目的のみ: クロスパッケージ機能用の名前空間。</help>
-        <label>GEM 名前空間</label>
-        <name>Advancement_Namespace__c</name>
-    </fields>
-    <fields>
-        <help>選択すると、主取引先責任者と主キャンペーンソースを含む商談を作成したり、商談を成立フェーズに更新したりするときに、キャンペーンメンバーレコードが自動的に作成されます。</help>
-        <label>キャンペーンメンバーの自動管理</label>
-        <name>Automatic_Campaign_Member_Management__c</name>
-    </fields>
-    <fields>
-        <help>主取引先責任者と主キャンペーンソースがキャンペーンメンバーに関連付けられている商談が進行中または不成立の場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
-        <label>キャンペーンメンバーレスポンスなしの状況</label>
-        <name>Campaign_Member_Non_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>主取引先責任者と主キャンペーンソースがキャンペーンメンバーに関連付けられている商談が成立済みの場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスありの状況が使用されます。</help>
-        <label>キャンペーンメンバーレスポンスありの状況</label>
-        <name>Campaign_Member_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>デフォルトの取引先責任者の役割は、商談の取引先が世帯、1 対 1、または個人の取引先でない場合に、商談の主取引先責任者に自動的に割り当てられます。</help>
-        <label>団体支援の取引先責任者の役割</label>
-        <name>Contact_Role_for_Organizational_Opps__c</name>
-    </fields>
-    <fields>
-        <help>会計データが完全であり、一貫性を保つように、支払と商談で複数のルールと自動化を有効にします。</help>
-        <label>会計データの一貫性</label>
-        <name>Enforce_Accounting_Data_Consistency__c</name>
-    </fields>
-    <fields>
-        <help>この設定に入力すると、商談での取引先責任者の役割レコードが名誉会員取引先責任者に対して自動作成されます。</help>
-        <label>名誉会員商談取引先責任者の役割</label>
-        <name>Honoree_Opportunity_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>選択すると、世帯取引先用の住所管理が無効になります。</help>
-        <label>世帯取引先住所の無効化</label>
-        <name>Household_Account_Addresses_Disabled__c</name>
-    </fields>
-    <fields>
-        <help>商談の支払のスケジュール時に許可する支払の最大回数を決定します。</help>
-        <label>最大支払回数</label>
-        <name>Max_Payments__c</name>
-    </fields>
-    <fields>
-        <help>この設定に入力すると、商談での取引先責任者の役割レコードが通知受信者取引先責任者に対して自動作成されます。</help>
-        <label>通知受信者商談個人の役割</label>
-        <name>Notification_Recipient_Opp_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>すべてのレコードタイプの商談の支払レコードが自動的に作成されます。自動的に作成しないレコードタイプをこちらで選択します。複数のレコードタイプを選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
-        <label>支払から除外する支援レコードタイプ</label>
-        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>[種別] 選択リストのあらゆる値を使用する商談に対して、支払レコードが自動的に作成されます。自動的に作成しない種別をこちらで選択します。複数の種別を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
-        <label>除外する支援種別</label>
-        <name>Opp_Types_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>選択すると、団体取引先のような、世帯取引先以外の住所管理が有効になります。</help>
-        <label>団体取引先住所の有効化</label>
-        <name>Organizational_Account_Addresses_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>受取支払金額が商談金額と同額になると、商談のフェーズは自動的にこの値に設定されます。フェーズが選択されていない場合、商談フェーズは支払完了時に変更されません。</help>
-        <label>全額支払時の商談フェーズ</label>
-        <name>Payments_Auto_Close_Stage_Name__c</name>
-    </fields>
-    <fields>
-        <help>オンの場合、1 つの取引先責任者または取引先の住所項目を変更すると、新しい住所が作成される代わりに既存の住所が更新されます。</help>
-        <label>1 つの住所の変更を更新として処理</label>
-        <name>Simple_Address_Change_Treated_as_Update__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Advancement_Namespace__c</name>
+    <help>システム使用目的のみ: クロスパッケージ機能用の名前空間。</help>
+    <label>GEM 名前空間</label>
+  </fields>
+  <fields>
+    <name>Automatic_Campaign_Member_Management__c</name>
+    <help>選択すると、主取引先責任者と主キャンペーンソースを含む商談を作成したり、商談を成立フェーズに更新したりするときに、キャンペーンメンバーレコードが自動的に作成されます。</help>
+    <label>キャンペーンメンバーの自動管理</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>主取引先責任者と主キャンペーンソースがキャンペーンメンバーに関連付けられている商談が進行中または不成立の場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
+    <label>キャンペーンメンバーレスポンスなしの状況</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Responded_Status__c</name>
+    <help>主取引先責任者と主キャンペーンソースがキャンペーンメンバーに関連付けられている商談が成立済みの場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスありの状況が使用されます。</help>
+    <label>キャンペーンメンバーレスポンスありの状況</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>デフォルトの取引先責任者の役割は、商談の取引先が世帯、1 対 1、または個人の取引先でない場合に、商談の主取引先責任者に自動的に割り当てられます。</help>
+    <label>団体支援の取引先責任者の役割</label>
+  </fields>
+  <fields>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+    <help>会計データが完全であり、一貫性を保つように、支払と商談で複数のルールと自動化を有効にします。</help>
+    <label>会計データの一貫性</label>
+  </fields>
+  <fields>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>この設定に入力すると、商談での取引先責任者の役割レコードが名誉会員取引先責任者に対して自動作成されます。</help>
+    <label>名誉会員商談取引先責任者の役割</label>
+  </fields>
+  <fields>
+    <name>Household_Account_Addresses_Disabled__c</name>
+    <help>選択すると、世帯取引先用の住所管理が無効になります。</help>
+    <label>世帯取引先住所の無効化</label>
+  </fields>
+  <fields>
+    <name>Max_Payments__c</name>
+    <help>商談の支払のスケジュール時に許可する支払の最大回数を決定します。</help>
+    <label>最大支払回数</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    <help>この設定に入力すると、商談での取引先責任者の役割レコードが通知受信者取引先責任者に対して自動作成されます。</help>
+    <label>通知受信者商談個人の役割</label>
+  </fields>
+  <fields>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    <help>すべてのレコードタイプの商談の支払レコードが自動的に作成されます。自動的に作成しないレコードタイプをこちらで選択します。複数のレコードタイプを選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+    <label>支払から除外する支援レコードタイプ</label>
+  </fields>
+  <fields>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+    <help>[種別] 選択リストのあらゆる値を使用する商談に対して、支払レコードが自動的に作成されます。自動的に作成しない種別をこちらで選択します。複数の種別を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+    <label>除外する支援種別</label>
+  </fields>
+  <fields>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+    <help>選択すると、団体取引先のような、世帯取引先以外の住所管理が有効になります。</help>
+    <label>団体取引先住所の有効化</label>
+  </fields>
+  <fields>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+    <help>受取支払金額が商談金額と同額になると、商談のフェーズは自動的にこの値に設定されます。フェーズが選択されていない場合、商談フェーズは支払完了時に変更されません。</help>
+    <label>全額支払時の商談フェーズ</label>
+  </fields>
+  <fields>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+    <help>オンの場合、1 つの取引先責任者または取引先の住所項目を変更すると、新しい住所が作成される代わりに既存の住所が更新されます。</help>
+    <label>1 つの住所の変更を更新として処理</label>
+  </fields>
+</CustomObjectTranslation>

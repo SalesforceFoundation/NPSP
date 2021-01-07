@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fields>
-        <help>Der Batch, aus dem dieser Lead erstellt wurde.</help>
-        <label>Batch</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Leads</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Unternehmen Stadt</label>
-        <name>CompanyCity__c</name>
-    </fields>
-    <fields>
-        <label>Unternehmen Land</label>
-        <name>CompanyCountry__c</name>
-    </fields>
-    <fields>
-        <label>Unternehmen Postleitzahl</label>
-        <name>CompanyPostalCode__c</name>
-    </fields>
-    <fields>
-        <label>Unternehmen Bundesstaat/Provinz</label>
-        <name>CompanyState__c</name>
-    </fields>
-    <fields>
-        <label>Unternehmen Straße</label>
-        <name>CompanyStreet__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Batch__c</name>
+    <help>[The batch this lead was created from.]o'介引户הаí先ร简]</help>
+    <relationshipLabel>[Leads]o'介引户]</relationshipLabel>
+    <label>[Batch]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>CompanyCity__c</name>
+    <label>[Company City]o'介引]</label>
+  </fields>
+  <fields>
+    <name>CompanyCountry__c</name>
+    <label>[Company Country]o'介引]</label>
+  </fields>
+  <fields>
+    <name>CompanyPostalCode__c</name>
+    <label>[Company Zip/Postal Code]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>CompanyState__c</name>
+    <label>[Company State/Province]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>CompanyStreet__c</name>
+    <label>[Company Street]o'介引]</label>
+  </fields>
+</CustomObjectTranslation>

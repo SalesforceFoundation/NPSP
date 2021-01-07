@@ -1,130 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Filterregel</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Filterregeln</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Filterregel</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Filterregeln</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Filterregel</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Filterregeln</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Filterregel</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Filterregeln</value>
-    </caseValues>
-    <fields>
-        <label>Wert</label>
-        <name>Constant__c</name>
-    </fields>
-    <fields>
-        <label>Feld</label>
-        <name>Field__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Filtergruppe</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Filterregeln</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Gelöscht</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Objekt</label>
-        <name>Object__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Operator</label>
-        <name>Operator__c</name>
-        <picklistValues>
-            <masterLabel>Contains</masterLabel>
-            <translation>Enthält</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Does Not Contain</masterLabel>
-            <translation>Enthält nicht</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Equals</masterLabel>
-            <translation>Gleich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater Than</masterLabel>
-            <translation>Größer als</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater or Equal</masterLabel>
-            <translation>Größer/Gleich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In List</masterLabel>
-            <translation>In Liste</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Included</masterLabel>
-            <translation>Ist eingeschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Not Included</masterLabel>
-            <translation>Ist nicht eingeschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less Than</masterLabel>
-            <translation>Kleiner als</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less or Equal</masterLabel>
-            <translation>Kleiner/Gleich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Equals</masterLabel>
-            <translation>Ungleich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not In List</masterLabel>
-            <translation>Nicht in Liste</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Starts With</masterLabel>
-            <translation>Beginnt mit</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Constant__c</name>
+    <label>[Value]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Field__c</name>
+    <relationshipLabel>[Filter_Rules]o'介引]</relationshipLabel>
+    <label>[Field]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>[Filter Rules]o'介引]</relationshipLabel>
+    <label>[Filter Group]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>[Deleted]o']</label>
+  </fields>
+  <fields>
+    <name>Object__c</name>
+    <relationshipLabel>[Filter_Rules]o'介引]</relationshipLabel>
+    <label>[Object]o']</label>
+  </fields>
+  <fields>
+    <name>Operator__c</name>
+    <label>[Operator]o'介]</label>
+    <picklistValues>
+      <masterLabel>Equals</masterLabel>
+      <translation>[Equals]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not Equals</masterLabel>
+      <translation>[Not Equals]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater Than</masterLabel>
+      <translation>[Greater Than]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less Than</masterLabel>
+      <translation>[Less Than]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater or Equal</masterLabel>
+      <translation>[Greater or Equal]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less or Equal</masterLabel>
+      <translation>[Less or Equal]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Starts With</masterLabel>
+      <translation>[Starts With]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contains</masterLabel>
+      <translation>[Contains]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Does Not Contain</masterLabel>
+      <translation>[Does Not Contain]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In List</masterLabel>
+      <translation>[In List]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not In List</masterLabel>
+      <translation>[Not In List]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Included</masterLabel>
+      <translation>[Is Included]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Not Included</masterLabel>
+      <translation>[Is Not Included]o'介引]</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Filter Rule Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Filter Rule]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Filter Rules]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

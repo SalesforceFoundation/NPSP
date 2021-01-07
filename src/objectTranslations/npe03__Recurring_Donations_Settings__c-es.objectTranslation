@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>El número de registros para procesar en el momento de migrar registros de Donaciones recurrentes existentes al modelo de datos de Donaciones recurrentes mejoradas.</help>
-        <label>Tamaño lote migración datos DR mejoradas</label>
-        <name>DataMigrationBatchSize__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, y si las Totalizaciones personalizables están activadas, se desactivan los cálculos de totalización inmediatos cuando se crean nuevas oportunidades de cuota para una Donación recurrente.</help>
-        <label>Desactivar CRLP al crear cuotas</label>
-        <name>DisableRollupsWhenCreatingInstallments__c</name>
-    </fields>
-    <fields>
-        <help>Si está activada, Salesforce rellena automáticamente el Nombre de donación recurrente.</help>
-        <label>Nomenclatura autom. donación recurrente</label>
-        <name>EnableAutomaticNaming__c</name>
-    </fields>
-    <fields>
-        <help>Especifica el momento en que NPSP creará oportunidades de cuota para Donaciones recurrentes. El valor predeterminado es Crear siempre siguiente cuota.</help>
-        <label>Creación automática Oportunidad de cuota</label>
-        <name>InstallmentOppAutoCreateOption__c</name>
-    </fields>
-    <fields>
-        <help>Especifica cómo NPSP creará la primera oportunidad de cuota de oportunidad para donaciones recurrentes. El valor predeterminado es Síncrona.</help>
-        <label>Comportamiento asíncr. oportunidad cuota</label>
-        <name>InstallmentOppFirstCreateMode__c</name>
-    </fields>
-    <fields>
-        <help>La etapa de oportunidad que NPSP aplica a cada Oportunidad de cuota cuando crea una Donación recurrente.</help>
-        <label>Nombre de etapa para oportunidades cuota</label>
-        <name>InstallmentOppStageName__c</name>
-    </fields>
-    <fields>
-        <help>Esta opción activa Donaciones recurrentes mejoradas. IMPORTANTE: Debe activar Donaciones recurrentes mejoradas en Configuración de NPSP. La activación en Configuración personalizada puede provocar incoherencias en los datos.</help>
-        <label>Donaciones recurrentes mejoradas</label>
-        <name>IsRecurringDonations2Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Número de días antes o después de la Fecha de próxima donación en el que NPSP no creará una nueva Oportunidad de cuota si cambia la siguiente Fecha de cierre de oportunidad abierta. Se aplica a Donaciones recurrentes donde el Período de cuota es mensual.</help>
-        <label>Intervalo coinc. fechas próxima donación</label>
-        <name>NextDonationDateMatchRangeDays__c</name>
-    </fields>
-    <fields>
-        <help>El formato que se utiliza para la nomenclatura de las Donaciones recurrentes.</help>
-        <label>Formato de nombre de Donación recurrente</label>
-        <name>RecurringDonationNameFormat__c</name>
-    </fields>
-    <fields>
-        <help>Contiene confirmaciones y estado de activación de Donaciones recurrentes mejoradas.</help>
-        <label>Estado activación Donaciones recurrentes</label>
-        <name>RecurringDonations2EnablementState__c</name>
-    </fields>
-    <fields>
-        <help>Contiene los resultados más recientes de ejecución en seco y migración de datos.</help>
-        <label>Estado de migración datos DR mejoradas</label>
-        <name>RecurringDonations2MigrationState__c</name>
-    </fields>
-    <fields>
-        <help>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes de donaciones recurrentes falla debido a limites del sistema</help>
-        <label>Tamaño lote de donaciones recurrentes</label>
-        <name>Recurring_Donation_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Id. de la implementación de metadatos personalizados de asignación de estado</help>
-        <label>Id. de Implementación asignación estado</label>
-        <name>StatusMappingDeploymentId__c</name>
-    </fields>
-    <fields>
-        <help>Activa los totales de valores del año fiscal para Donaciones recurrentes. Para establecer el mes de inicio del año fiscal, vaya a Configuración | Configuración de empresa | Año fiscal. NOTA: Utilice solo el año fiscal estándar, no active el personalizado.</help>
-        <label>Usar año fiscal Donaciones recurrentes</label>
-        <name>UseFiscalYearForRecurringDonationValue__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>DataMigrationBatchSize__c</name>
+    <help>El número de registros para procesar en el momento de migrar registros de Donaciones recurrentes existentes al modelo de datos de Donaciones recurrentes mejoradas.</help>
+    <label>Tamaño lote migración datos DR mejoradas</label>
+  </fields>
+  <fields>
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
+    <help>Cuando se selecciona, y si las Totalizaciones personalizables están activadas, se desactivan los cálculos de totalización inmediatos cuando se crean nuevas oportunidades de cuota para una Donación recurrente.</help>
+    <label>Desactivar CRLP al crear cuotas</label>
+  </fields>
+  <fields>
+    <name>EnableAutomaticNaming__c</name>
+    <help>Si está activada, Salesforce rellena automáticamente el Nombre de donación recurrente.</help>
+    <label>Nomenclatura autom. donación recurrente</label>
+  </fields>
+  <fields>
+    <name>InstallmentOppFirstCreateMode__c</name>
+    <help>Especifica cómo NPSP creará la primera oportunidad de cuota de oportunidad para donaciones recurrentes. El valor predeterminado es Síncrona.</help>
+    <label>Comportamiento asíncr. oportunidad cuota</label>
+  </fields>
+  <fields>
+    <name>InstallmentOppStageName__c</name>
+    <help>La etapa de oportunidad que NPSP aplica a cada Oportunidad de cuota cuando crea una Donación recurrente.</help>
+    <label>Nombre de etapa para oportunidades cuota</label>
+  </fields>
+  <fields>
+    <name>InstallmentOppAutoCreateOption__c</name>
+    <help>Especifica el momento en que NPSP creará oportunidades de cuota para Donaciones recurrentes. El valor predeterminado es Crear siempre siguiente cuota.</help>
+    <label>Creación automática Oportunidad de cuota</label>
+  </fields>
+  <fields>
+    <name>IsRecurringDonations2Enabled__c</name>
+    <help>Esta opción activa Donaciones recurrentes mejoradas. IMPORTANTE: Debe activar Donaciones recurrentes mejoradas en Configuración de NPSP. La activación en Configuración personalizada puede provocar incoherencias en los datos.</help>
+    <label>Donaciones recurrentes mejoradas</label>
+  </fields>
+  <fields>
+    <name>NextDonationDateMatchRangeDays__c</name>
+    <help>Número de días antes o después de la Fecha de próxima donación en el que NPSP no creará una nueva Oportunidad de cuota si cambia la siguiente Fecha de cierre de oportunidad abierta. Se aplica a Donaciones recurrentes donde el Período de cuota es mensual.</help>
+    <label>Intervalo coinc. fechas próxima donación</label>
+  </fields>
+  <fields>
+    <name>RecurringDonations2EnablementState__c</name>
+    <help>Contiene confirmaciones y estado de activación de Donaciones recurrentes mejoradas.</help>
+    <label>Estado activación Donaciones recurrentes</label>
+  </fields>
+  <fields>
+    <name>RecurringDonations2MigrationState__c</name>
+    <help>Contiene los resultados más recientes de ejecución en seco y migración de datos.</help>
+    <label>Estado de migración datos DR mejoradas</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Batch_Size__c</name>
+    <help>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes de donaciones recurrentes falla debido a limites del sistema</help>
+    <label>Tamaño lote de donaciones recurrentes</label>
+  </fields>
+  <fields>
+    <name>RecurringDonationNameFormat__c</name>
+    <help>El formato que se utiliza para la nomenclatura de las Donaciones recurrentes.</help>
+    <label>Formato de nombre de Donación recurrente</label>
+  </fields>
+  <fields>
+    <name>StatusMappingDeploymentId__c</name>
+    <help>Id. de la implementación de metadatos personalizados de asignación de estado</help>
+    <label>Id. de Implementación asignación estado</label>
+  </fields>
+  <fields>
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
+    <help>Activa los totales de valores del año fiscal para Donaciones recurrentes. Para establecer el mes de inicio del año fiscal, vaya a Configuración | Configuración de empresa | Año fiscal. NOTA: Utilice solo el año fiscal estándar, no active el personalizado.</help>
+    <label>Usar año fiscal Donaciones recurrentes</label>
+  </fields>
+</CustomObjectTranslation>

@@ -1,103 +1,77 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Engagementpläne</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Engagementplans</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Engagementpläne</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Engagementplänen</value>
-    </caseValues>
-    <fields>
-        <label>Account</label>
-        <name>Account__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Kampagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Fall</label>
-        <name>Case__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Abgeschlossene Aufgaben</label>
-        <name>Completed_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Kontakt</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Engagementplan-Vorlage</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Wiederkehrende Spende</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Engagementpläne</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Status</label>
-        <name>Status__c</name>
-    </fields>
-    <fields>
-        <label>EP-Aufgaben insgesamt</label>
-        <name>Total_EP_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Aufgaben insgesamt</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Engagement Plan Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Engagementplan-Nummer</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Account]o']</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Campaign]o'介]</label>
+  </fields>
+  <fields>
+    <name>Case__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Case]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Completed_Tasks__c</name>
+    <label>[Completed Tasks]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Contact]o']</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Engagement Plan Template]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>[Engagement Plans]o'介引]</relationshipLabel>
+    <label>[Recurring Donation]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>[Status]o']</label>
+  </fields>
+  <fields>
+    <name>Total_EP_Tasks__c</name>
+    <label>[Total EP Tasks]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>[Total Tasks]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Engagement Plan Number]o'介引户ה]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Engagement Plan Number]o'介引户ה]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plans]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,79 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Account-Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Account-Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Account-Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Account-Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Account-Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Account-Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Account-Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Account-Soft Credits</value>
-    </caseValues>
-    <fields>
-        <help>Der Account, der diesen Soft Credit erhält.</help>
-        <label>Account</label>
-        <name>Account__c</name>
-        <relationshipLabel>Soft Credits-Account</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Der Betrag für den Soft Credit</help>
-        <label>Betrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>Die Opportunity, auf die dieser &quot;Soft Credit&quot; angewendet wird.</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Soft Credits-Account</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die mit diesem Soft Credit verbundene Rolle. Mithilfe der Rolle wird beschrieben, in welchem Verhältnis der Account zu der Opportunity stand.</help>
-        <label>Rolle</label>
-        <name>Role__c</name>
-        <picklistValues>
-            <masterLabel>Donation Source</masterLabel>
-            <translation>Spendenquelle</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Influencer</masterLabel>
-            <translation>Einflussnehmer</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Match</masterLabel>
-            <translation>Übereinstimmung</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Name des Soft Credit-Accounts</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <help>[The Account that gets this soft credit.]o'介引户הаí先ร简]</help>
+    <relationshipLabel>[Account Soft Credits]o'介引户ה]</relationshipLabel>
+    <label>[Account]o']</label>
+  </fields>
+  <fields>
+    <name>Amount__c</name>
+    <help>[The amount to be soft credited.]o'介引户הаí先]</help>
+    <label>[Amount]o']</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>[The Opportunity that this soft credit applies to.]o'介引户הаí先ร简аน取]</help>
+    <relationshipLabel>[Account Soft Credits]o'介引户ה]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Role__c</name>
+    <help>[The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Role]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Donation Source</masterLabel>
+      <translation>[Donation Source]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Influencer</masterLabel>
+      <translation>[Influencer]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Match</masterLabel>
+      <translation>[Match]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <nameFieldLabel>[Account Soft Credit Name]o'介引户הа]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Account Soft Credit Name]o'介引户הа]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Account Soft Credit]gr''介引户]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Account Soft Credits]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

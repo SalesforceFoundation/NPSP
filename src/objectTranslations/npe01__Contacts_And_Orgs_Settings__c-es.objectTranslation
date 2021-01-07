@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Solo para uso del sistema: Espacio de nombres para funciones entre paquetes.</help>
-        <label>Espacio de nombres de GEM</label>
-        <name>Advancement_Namespace__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, NPSP crea automáticamente un registro de miembro de campaña cuando se crea una oportunidad que tiene un contacto principal y un origen de campaña principal o cuando se actualiza esa oportunidad a la etapa Cerrada/Ganada.</help>
-        <label>Automatización de miembros de campaña</label>
-        <name>Automatic_Campaign_Member_Management__c</name>
-    </fields>
-    <fields>
-        <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades abiertas o cerradas perdidas con origen de campaña principal y contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado no respondido.</help>
-        <label>Estado miembro campaña que no responde</label>
-        <name>Campaign_Member_Non_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades cerradas ganadas que tiene un origen de campaña principal y un contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado respondido.</help>
-        <label>Estado de miembro campaña que responde</label>
-        <name>Campaign_Member_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>La función de contacto predeterminada que se asigna automáticamente al contacto principal de la oportunidad cuando la cuenta de la oportunidad NO es una cuenta Hogar, Uno a uno o Individuo.</help>
-        <label>Función contacto oportunidades organiz.</label>
-        <name>Contact_Role_for_Organizational_Opps__c</name>
-    </fields>
-    <fields>
-        <help>Activa múltiples reglas y automatizaciones en pagos y oportunidades para garantizar que los datos contables están completos y son coherentes.</help>
-        <label>Aplicar coherencia de datos contables</label>
-        <name>Enforce_Accounting_Data_Consistency__c</name>
-    </fields>
-    <fields>
-        <help>Si rellena este parámetro, NPSP crea automáticamente un registro de función de contacto para oportunidades con un contacto Homenajeado.</help>
-        <label>Función de contacto en op. Homenajeado</label>
-        <name>Honoree_Opportunity_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, deshabilita la gestión de direcciones para cuentas Hogar.</help>
-        <label>Direcciones cuentas Hogar deshabilitadas</label>
-        <name>Household_Account_Addresses_Disabled__c</name>
-    </fields>
-    <fields>
-        <help>Determina el número máximo de pagos permitidos cuando se programan pagos para una oportunidad.</help>
-        <label>Cantidad máxima de pagos</label>
-        <name>Max_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Si rellena este parámetro, NPSP crea automáticamente un registro de función de contacto para oportunidades con un contacto destinatario de notificaciones.</help>
-        <label>Func contacto destinat oport notificac</label>
-        <name>Notification_Recipient_Opp_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>NPSP crea automáticamente registros de pagos para oportunidades de todo tipo de registros. Seleccione cualquier tipo de registro para el que no desee que se creen automáticamente registros de pago. Utilice control o comando para seleccionar más de uno.</help>
-        <label>Tipos registros oportunidades excluidos</label>
-        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>NPSP crea automáticamente registros de pagos para oportunidades con valores en lista de selección Tipo. Seleccione cualquier tipo para el que no desee que se creen automáticamente registros de pago. Utilice control o comando para seleccionar más de uno.</help>
-        <label>Tipos de oportunidades excluidos</label>
-        <name>Opp_Types_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, habilita la gestión de direcciones para cuentas que no son Hogar, como cuentas organizativas.</help>
-        <label>Direcciones cuentas organizativas habil.</label>
-        <name>Organizational_Account_Addresses_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>NPSP establece automáticamente la etapa de una oportunidad a este valor cuando Importe de pago recibido es igual a Importe de oportunidad. Si no se selecciona una etapa, la etapa de la oportunidad no cambiará cuando se completen los pagos.</help>
-        <label>Estado oportunidad para pagado completo</label>
-        <name>Payments_Auto_Close_Stage_Name__c</name>
-    </fields>
-    <fields>
-        <help>Si se selecciona, los cambios en un único campo de dirección de contacto o cuenta actualizan la dirección existente en vez de crear una nueva dirección.</help>
-        <label>Cambios en dirección son actualizaciones</label>
-        <name>Simple_Address_Change_Treated_as_Update__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Advancement_Namespace__c</name>
+    <help>Solo para uso del sistema: Espacio de nombres para funciones entre paquetes.</help>
+    <label>Espacio de nombres de GEM</label>
+  </fields>
+  <fields>
+    <name>Automatic_Campaign_Member_Management__c</name>
+    <help>Cuando se selecciona, NPSP crea automáticamente un registro de miembro de campaña cuando se crea una oportunidad que tiene un contacto principal y un origen de campaña principal o cuando se actualiza esa oportunidad a la etapa Cerrada/Ganada.</help>
+    <label>Automatización de miembros de campaña</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades abiertas o cerradas perdidas con origen de campaña principal y contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado no respondido.</help>
+    <label>Estado miembro campaña que no responde</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Responded_Status__c</name>
+    <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades cerradas ganadas que tiene un origen de campaña principal y un contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado respondido.</help>
+    <label>Estado de miembro campaña que responde</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>La función de contacto predeterminada que se asigna automáticamente al contacto principal de la oportunidad cuando la cuenta de la oportunidad NO es una cuenta Hogar, Uno a uno o Individuo.</help>
+    <label>Función contacto oportunidades organiz.</label>
+  </fields>
+  <fields>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+    <help>Activa múltiples reglas y automatizaciones en pagos y oportunidades para garantizar que los datos contables están completos y son coherentes.</help>
+    <label>Aplicar coherencia de datos contables</label>
+  </fields>
+  <fields>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>Si rellena este parámetro, NPSP crea automáticamente un registro de función de contacto para oportunidades con un contacto Homenajeado.</help>
+    <label>Función de contacto en op. Homenajeado</label>
+  </fields>
+  <fields>
+    <name>Household_Account_Addresses_Disabled__c</name>
+    <help>Cuando se selecciona, deshabilita la gestión de direcciones para cuentas Hogar.</help>
+    <label>Direcciones cuentas Hogar deshabilitadas</label>
+  </fields>
+  <fields>
+    <name>Max_Payments__c</name>
+    <help>Determina el número máximo de pagos permitidos cuando se programan pagos para una oportunidad.</help>
+    <label>Cantidad máxima de pagos</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    <help>Si rellena este parámetro, NPSP crea automáticamente un registro de función de contacto para oportunidades con un contacto destinatario de notificaciones.</help>
+    <label>Func contacto destinat oport notificac</label>
+  </fields>
+  <fields>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    <help>NPSP crea automáticamente registros de pagos para oportunidades de todo tipo de registros. Seleccione cualquier tipo de registro para el que no desee que se creen automáticamente registros de pago. Utilice control o comando para seleccionar más de uno.</help>
+    <label>Tipos registros oportunidades excluidos</label>
+  </fields>
+  <fields>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+    <help>NPSP crea automáticamente registros de pagos para oportunidades con valores en lista de selección Tipo. Seleccione cualquier tipo para el que no desee que se creen automáticamente registros de pago. Utilice control o comando para seleccionar más de uno.</help>
+    <label>Tipos de oportunidades excluidos</label>
+  </fields>
+  <fields>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+    <help>Cuando se selecciona, habilita la gestión de direcciones para cuentas que no son Hogar, como cuentas organizativas.</help>
+    <label>Direcciones cuentas organizativas habil.</label>
+  </fields>
+  <fields>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+    <help>NPSP establece automáticamente la etapa de una oportunidad a este valor cuando Importe de pago recibido es igual a Importe de oportunidad. Si no se selecciona una etapa, la etapa de la oportunidad no cambiará cuando se completen los pagos.</help>
+    <label>Estado oportunidad para pagado completo</label>
+  </fields>
+  <fields>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+    <help>Si se selecciona, los cambios en un único campo de dirección de contacto o cuenta actualizan la dirección existente en vez de crear una nueva dirección.</help>
+    <label>Cambios en dirección son actualizaciones</label>
+  </fields>
+</CustomObjectTranslation>

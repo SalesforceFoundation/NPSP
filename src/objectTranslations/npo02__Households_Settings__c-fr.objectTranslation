@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Le rôle de contact que vous voulez utiliser pour les donateurs jumelés. Nous recommandons d’utiliser « Donateur jumelé ».</help>
-        <label>Rôle de donateur jumelé</label>
-        <name>Matched_Donor_Role__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors de la configuration d&apos;adresse saisonnière en tant qu&apos;adresse postale.</help>
-        <label>Taille du lot d&apos;adresses saisonnières</label>
-        <name>Seasonal_Addresses_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Si coché, les taux de conversion datés sont utilisés lorsque la gestion avancée des devises est activée. Si décochée et que la gestion avancée des devises est activée, tous les cumuls NPSP utiliseront le taux de change par défaut pour la devise.</help>
-        <label>Utiliser taux convers. datés si néces.</label>
-        <name>Use_Dated_Conversion_Rates__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Matched_Donor_Role__c</name>
+    <help>Le rôle de contact que vous voulez utiliser pour les donateurs jumelés. Nous recommandons d’utiliser « Donateur jumelé ».</help>
+    <label>Rôle de donateur jumelé</label>
+  </fields>
+  <fields>
+    <name>Use_Dated_Conversion_Rates__c</name>
+    <help>Si coché, les taux de conversion datés sont utilisés lorsque la gestion avancée des devises est activée. Si décochée et que la gestion avancée des devises est activée, tous les cumuls NPSP utiliseront le taux de change par défaut pour la devise.</help>
+    <label>Utiliser taux convers. datés si néces.</label>
+  </fields>
+  <fields>
+    <name>Seasonal_Addresses_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors de la configuration d'adresse saisonnière en tant qu'adresse postale.</help>
+    <label>Taille du lot d'adresses saisonnières</label>
+  </fields>
+</CustomObjectTranslation>

@@ -1,88 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Teilweiser Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Teilweise Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <fields>
-        <help>Der Betrag für den Soft Credit.</help>
-        <label>Betrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>Der vollständige Name des Kontakts, der diesen Soft Credit erhält (schreibgeschützt).</help>
-        <label>Kontaktname</label>
-        <name>Contact_Name__c</name>
-    </fields>
-    <fields>
-        <help>Die &quot;Opportunity-Kontaktrolle&quot;, für die dieser Soft Credit gilt.</help>
-        <label>Kontaktrollenkennung</label>
-        <name>Contact_Role_ID__c</name>
-    </fields>
-    <fields>
-        <help>Der Kontakt, der diesen weichen Kredit erhält.</help>
-        <label>Kontakt</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Teilweise Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die Opportunity, für die dieser Soft Credit gilt</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Teilweise Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die Rolle dieses Soft Credit</help>
-        <label>Rollenname</label>
-        <name>Role_Name__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Partial Soft Credit Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Name des teilweisen Soft Credits</nameFieldLabel>
-    <webLinks>
-        <label>Soft Credits verwalten</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>[The amount to be soft credited.]o'介引户הаí先]</help>
+    <label>[Amount]o']</label>
+  </fields>
+  <fields>
+    <name>Contact_Name__c</name>
+    <help>[The full name of the Contact who gets this soft credit (read only).]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Contact Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_ID__c</name>
+    <help>[The Opportunity Contact Role this soft credit applies to.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Contact Role ID]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <help>[Lookup to the Contact who gets this soft credit.]o'介引户הаí先ร简аน取]</help>
+    <relationshipLabel>[Partial Soft Credits]o'介引户ה]</relationshipLabel>
+    <label>[Contact]o']</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>[The Opportunity this soft credit applies to.]o'介引户הаí先ร简аน]</help>
+    <relationshipLabel>[Partial Soft Credits]o'介引户ה]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Role_Name__c</name>
+    <help>[The Role of this soft credit.]o'介引户הаí]</help>
+    <label>[Role Name]o'介]</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>[Manage Soft Credits]o'介引户]</label>
+  </webLinks>
+  <layouts>
+    <layout>Partial Soft Credit Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Partial Soft Credit Name]o'介引户הа]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Partial Soft Credit Name]o'介引户הа]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Partial Soft Credit]gr''介引户]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Partial Soft Credits]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

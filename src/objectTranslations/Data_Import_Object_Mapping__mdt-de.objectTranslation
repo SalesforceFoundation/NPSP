@@ -1,117 +1,87 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Objektzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Objektzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Objektzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Objektzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Objektzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Objektzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Objektzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Objektzuordnungen</value>
-    </caseValues>
-    <fields>
-        <help>Wenn Felder für dieses Objekt mit benutzerdefinierter Apex-Logik zugeordnet werden sollen, sollte das Feld den Namen einer Klasse (ggf. mit Namespace) enthalten, die die BDI_ObjectMappingLogic-Klasse erweitert und die populateObject-Methode überschreibt.</help>
-        <label>Benutzerdef. Zuordnungslogik-Klasse</label>
-        <name>Custom_Mapping_Logic_Class__c</name>
-    </fields>
-    <fields>
-        <help>Die Datenimport-Objektgruppe, die diesen Datensatz enthält.</help>
-        <label>Datenimport-Objektzuordnungssatz</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Datenimport-Objektzuordnungen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Der API-Name des Felds auf dem NPSP-Datenimportobjekt, in dem die ID des importierten Datensatzes platziert wird, wenn der Import erfolgreich ist. Dies ist zugleich der Ort, an dem der Code überprüft, ob der Datensatz importiert oder abgeglichen wurde.</help>
-        <label>Name des importierten Datensatzfelds</label>
-        <name>Imported_Record_Field_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name des Felds, in dem der Erfolg oder Misserfolg des Imports für einen NPSP-Datenimport-Datensatz aufgezeichnet wird.</help>
-        <label>Name importiertes Datensatz-Statusfeld</label>
-        <name>Imported_Record_Status_Field_Name__c</name>
-    </fields>
-    <fields>
-        <label>Ist gelöscht</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Der Name des Legacy-Datenimportobjekts, auf dem diese Datenimport-Objektgruppe basiert.</help>
-        <label>Name des Legacy-Datenimportobjekts</label>
-        <name>Legacy_Data_Import_Object_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name des Zielobjekts für diese Objektgruppe.</help>
-        <label>Objekt-API-Name</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der Datensatz der Datenimport-Objektgruppe, der vorhanden sein muss, damit dieser Datensatz erstellt werden kann (entweder übergeordnetes ober untergeordnetes Element).</help>
-        <label>Vorgänger</label>
-        <name>Predecessor__c</name>
-    </fields>
-    <fields>
-        <help>Wenn es sich bei dieser Objektgruppe um ein untergeordnetes Element des Vorgängers handelt, sollte dieses Feld im übergeordneten Element nachschlagen. Ist es dem Vorgänger übergeordnet, sollte es das Nachschlagefeld des untergeordneten Elements bilden.</help>
-        <label>Feld &quot;Beziehung&quot;</label>
-        <name>Relationship_Field__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, ob es sich bei dem Element um ein unter- oder ein übergeordnetes Element des Vorgängers handelt.</help>
-        <label>Beziehung zum Vorgänger</label>
-        <name>Relationship_To_Predecessor__c</name>
-        <picklistValues>
-            <masterLabel>Child</masterLabel>
-            <translation>Kind</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Predecessor</masterLabel>
-            <translation>Kein Vorgänger</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Parent</masterLabel>
-            <translation>Elternteil</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Beziehungsdetails zu benutzerdefiniertem Objekt</label>
-            <section>Custom Object Relationship Details</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Custom_Mapping_Logic_Class__c</name>
+    <help>[If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčنご]</help>
+    <label>[Custom Mapping Logic Class]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>[The Data Import Object Group containing this record.]o'介引户הаí先ร简аน取정]</help>
+    <relationshipLabel>[Data Import Object Mappings]o'介引户הаí]</relationshipLabel>
+    <label>[Data Import Object Mapping Set]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Field_Name__c</name>
+    <help>[The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介น]</help>
+    <label>[Imported Record Field Name]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Status_Field_Name__c</name>
+    <help>[The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Imported Record Status Field Name]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>[Is Deleted]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>[The API name of the target object for this Object Group.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Object API Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Legacy_Data_Import_Object_Name__c</name>
+    <help>[The legacy Data Import object name of the object this Data Import Object Group is based on.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Legacy Data Import Object Name]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Predecessor__c</name>
+    <help>[The Data Import Object Group record that must exist before this record can be created (either Parent or Child).]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Predecessor]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Relationship_Field__c</name>
+    <help>[If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт]</help>
+    <label>[Relationship Field]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Relationship_To_Predecessor__c</name>
+    <help>[This indicates if this object is a parent or child of the predecessor.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Relationship To Predecessor]o'介引户הаí]</label>
+    <picklistValues>
+      <masterLabel>Parent</masterLabel>
+      <translation>[Parent]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Child</masterLabel>
+      <translation>[Child]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Predecessor</masterLabel>
+      <translation>[No Predecessor]o'介引]</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Data Import Object Mapping Layout</layout>
+    <sections>
+      <label>[Custom Object Relationship Details]o'介引户הаí先ร]</label>
+      <section>Custom Object Relationship Details</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Object Mapping]gr''介引户הа]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Object Mappings]gr''介引户הаí]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <label>Engagementplan-Aufgabe</label>
-        <name>Engagement_Plan_Task__c</name>
-        <relationshipLabel>Aufgaben</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Engagementplan</label>
-        <name>Engagement_Plan__c</name>
-        <relationshipLabel>Aufgaben</relationshipLabel>
-    </fields>
+  <fields>
+    <name>Engagement_Plan_Task__c</name>
+    <relationshipLabel>[Tasks]o'介引户]</relationshipLabel>
+    <label>[Engagement Plan Task]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan__c</name>
+    <relationshipLabel>[Tasks]o'介引户]</relationshipLabel>
+    <label>[Engagement Plan]o'介引]</label>
+  </fields>
 </CustomObjectTranslation>

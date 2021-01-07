@@ -1,63 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Filtergruppe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Filtergruppen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Filtergruppe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Filtergruppen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Filtergruppe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Filtergruppen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Filtergruppe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Filtergruppen</value>
-    </caseValues>
-    <fields>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Gelöscht</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Group Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Neuer Abschnitt</label>
-            <section>New Section</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description__c</name>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>[Deleted]o']</label>
+  </fields>
+  <layouts>
+    <layout>Filter Group Layout</layout>
+    <sections>
+      <label>[New Section]o'介引]</label>
+      <section>New Section</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Filter Group]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Filter Groups]gr''介]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,40 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>VEROUDERD-Planbaar item</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>VEROUDERD-Planbare items</value>
-    </caseValues>
-    <fields>
-        <help>Bepaalt of de opdracht actief zal zijn of niet.</help>
-        <label>Actief</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Klasse die wordt gepland om te draaien op een bepaalde frequentie.</help>
-        <label>Naam van Klasse</label>
-        <name>Class_Name__c</name>
-    </fields>
-    <fields>
-        <help>Hoe vaak de opdracht moet worden uitgevoerd.</help>
-        <label>Frequentie</label>
-        <name>Frequency__c</name>
-        </fields>
-    <fields>
-        <help>Laatste keer dat de opdracht werd uitgevoerd.</help>
-        <label>Laatste Uitvoer</label>
-        <name>Last_Time_Run__c</name>
-    </fields>
-    <gender>Neuter</gender>
-    <layouts>
-        <layout>Schedulable Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Naam van Opdracht</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>Bepaalt of de opdracht actief zal zijn of niet.</help>
+    <label>Actief</label>
+  </fields>
+  <fields>
+    <name>Class_Name__c</name>
+    <help>Klasse die wordt gepland om te draaien op een bepaalde frequentie.</help>
+    <label>Naam van Klasse</label>
+  </fields>
+  <fields>
+    <name>Frequency__c</name>
+    <help>Hoe vaak de opdracht moet worden uitgevoerd.</help>
+    <label>Frequentie</label>
+    <picklistValues>
+      <masterLabel>Hourly</masterLabel>
+      <translation>Per uur</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Dagelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Wekelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Maandelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Driemaandelijks</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Last_Time_Run__c</name>
+    <help>Laatste keer dat de opdracht werd uitgevoerd.</help>
+    <label>Laatste Uitvoer</label>
+  </fields>
+  <layouts>
+    <layout>Schedulable Layout</layout>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam van Opdracht</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam van Opdracht</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>VEROUDERD-Planbaar item</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>VEROUDERD-Planbare items</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Die Anzahl der Kontakte im Haushalt.</help>
-        <label>Anzahl der Haushalt-Mitglieder</label>
-        <name>Number_of_Household_Members__c</name>
-    </fields>
-    <quickActions>
-        <label>Haushalt aktualisieren</label>
-        <name>Update_Household</name>
-    </quickActions>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Number_of_Household_Members__c</name>
+    <help>[the number of Contacts in the Household.]o'介引户הаí先ร简а]</help>
+    <label>[Number of Household Members]o'介引户הаí]</label>
+  </fields>
+</CustomObjectTranslation>

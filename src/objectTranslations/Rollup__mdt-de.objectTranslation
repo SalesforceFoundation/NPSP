@@ -1,188 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Rollups</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Rollups</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Rollups</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Rollups</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Rollups</value>
-    </caseValues>
-    <fields>
-        <label>Aktiv</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <label>Betragsfeld</label>
-        <name>Amount_Field__c</name>
-        <relationshipLabel>RollupsAmount</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Betragsobjekt</label>
-        <name>Amount_Object__c</name>
-        <relationshipLabel>RollupAmount</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Datumsfeld</label>
-        <name>Date_Field__c</name>
-        <relationshipLabel>RollupsDate</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Datumsobjekt</label>
-        <name>Date_Object__c</name>
-        <relationshipLabel>RollupsDate</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Feld für Rollup</label>
-        <name>Detail_Field__c</name>
-        <relationshipLabel>RollupsDetail</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Detailobjekt</label>
-        <name>Detail_Object__c</name>
-        <relationshipLabel>RollupsDetail</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Filtergruppe</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Rollups</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Ganze Zahl</label>
-        <name>Integer__c</name>
-    </fields>
-    <fields>
-        <label>IsDeleted</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Vorgang</label>
-        <name>Operation__c</name>
-        <picklistValues>
-            <masterLabel>Average</masterLabel>
-            <translation>Durchschnitt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year</masterLabel>
-            <translation>Bestes Jahr</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year Total</masterLabel>
-            <translation>Bestes Jahr gesamt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Count</masterLabel>
-            <translation>Anzahl</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Donor Streak</masterLabel>
-            <translation>Erfolgsserie des Spenders</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>First</masterLabel>
-            <translation>Vorname</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Largest</masterLabel>
-            <translation>Größter</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last</masterLabel>
-            <translation>Nachname</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Smallest</masterLabel>
-            <translation>Kleinster</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Sum</masterLabel>
-            <translation>Summe</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Donated</masterLabel>
-            <translation>Spendenjahre</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Zielfeld</label>
-        <name>Summary_Field__c</name>
-        <relationshipLabel>RollupsSummary</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Zielobjekt</label>
-        <name>Summary_Object__c</name>
-        <relationshipLabel>RollupsSummary</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Zeitrahmen</label>
-        <name>Time_Bound_Operation_Type__c</name>
-        <picklistValues>
-            <masterLabel>All Time</masterLabel>
-            <translation>Gesamte Zeit</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Days Back</masterLabel>
-            <translation>Vor {0} Tagen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Ago</masterLabel>
-            <translation>Vor {0} Jahren</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Geschäftsjahr verwenden</label>
-        <name>Use_Fiscal_Year__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Rollup Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Neuer Abschnitt</label>
-            <section>New Section</section>
-        </sections>
-        <sections>
-            <label>Rollup-Details</label>
-            <section>Rollup Details</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Active__c</name>
+    <label>[Active]o']</label>
+  </fields>
+  <fields>
+    <name>Amount_Field__c</name>
+    <relationshipLabel>[RollupsAmount]o'介]</relationshipLabel>
+    <label>[Amount Field]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Amount_Object__c</name>
+    <relationshipLabel>[RollupAmount]o'介引]</relationshipLabel>
+    <label>[Amount Object]o'介]</label>
+  </fields>
+  <fields>
+    <name>Date_Field__c</name>
+    <relationshipLabel>[RollupsDate]o'介引]</relationshipLabel>
+    <label>[Date Field]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Date_Object__c</name>
+    <relationshipLabel>[RollupsDate]o'介引]</relationshipLabel>
+    <label>[Date Object]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Detail_Field__c</name>
+    <relationshipLabel>[RollupsDetail]o'介]</relationshipLabel>
+    <label>[Field to Roll Up]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Detail_Object__c</name>
+    <relationshipLabel>[RollupsDetail]o'介]</relationshipLabel>
+    <label>[Detail Object]o'介]</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>[Rollups]o']</relationshipLabel>
+    <label>[Filter Group]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Integer__c</name>
+    <label>[Integer]o']</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>[IsDeleted]o'介]</label>
+  </fields>
+  <fields>
+    <name>Operation__c</name>
+    <label>[Operation]o'介]</label>
+    <picklistValues>
+      <masterLabel>Count</masterLabel>
+      <translation>[Count]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Sum</masterLabel>
+      <translation>[Sum]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Average</masterLabel>
+      <translation>[Average]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Largest</masterLabel>
+      <translation>[Largest]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Smallest</masterLabel>
+      <translation>[Smallest]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>First</masterLabel>
+      <translation>[First]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last</masterLabel>
+      <translation>[Last]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Donated</masterLabel>
+      <translation>[Years Donated]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Donor Streak</masterLabel>
+      <translation>[Donor Streak]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year</masterLabel>
+      <translation>[Best Year]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year Total</masterLabel>
+      <translation>[Best Year Total]o'介引]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Summary_Field__c</name>
+    <relationshipLabel>[RollupsSummary]o'介引]</relationshipLabel>
+    <label>[Target Field]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Summary_Object__c</name>
+    <relationshipLabel>[RollupsSummary]o'介引]</relationshipLabel>
+    <label>[Target Object]o'介]</label>
+  </fields>
+  <fields>
+    <name>Time_Bound_Operation_Type__c</name>
+    <label>[Time Frame]o'介引]</label>
+    <picklistValues>
+      <masterLabel>All Time</masterLabel>
+      <translation>[All Time]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Ago</masterLabel>
+      <translation>[Years Ago]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Days Back</masterLabel>
+      <translation>[Days Back]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year__c</name>
+    <label>[Use Fiscal Year]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>Rollup Layout</layout>
+    <sections>
+      <label>[New Section]o'介引]</label>
+      <section>New Section</section>
+    </sections>
+    <sections>
+      <label>[Rollup Details]o'介引]</label>
+      <section>Rollup Details</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Rollup]gr'']</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Rollups]gr'']</value>
+  </caseValues>
 </CustomObjectTranslation>

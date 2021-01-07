@@ -1,149 +1,123 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Allgemeine Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Allgemeine Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <fields>
-        <help>Legt fest, ob dieser Verwendungszweck zur Auswahl für Zuweisungen zur Verfügung steht. Nur aktive Verwendungszwecke stehen zur Auswahl zur Verfügung.</help>
-        <label>Aktiv</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Der Durchschnitt aller Zuweisungen insgesamt zu diesem Verwendungszweck. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Durchschnitt Zuweisung</label>
-        <name>Average_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Zusätzliche Informationen zu diesem Verwendungszweck</help>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Der Schlusstermin der ersten Opportunity, die diesem Verwendungszweck zugewiesen ist. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Erstes Zuweisungsdatum</label>
-        <name>First_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag der größten Zuweisung zu diesem Verwendungszweck. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Größte Zuweisung</label>
-        <name>Largest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Der letzte Opportunity-Schlusstermin einer Zuweisung, die mit diesem Verwendungszweck verknüpft ist</help>
-        <label>Letztes Zuweisungsdatum</label>
-        <name>Last_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>Gesamtanzahl der Zuweisungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert N kann in den Einstellungen geändert werden.</help>
-        <label>Anzahl Zuweisungen in d. letzten N Tagen</label>
-        <name>Number_of_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Gesamtzahl der Zuweisungen von geschlossenen/gewonnenen Opportunities im letzten Jahr. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Anzahl der Zuweisungen letztes Jahr</label>
-        <name>Number_of_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtzahl der Zuweisungen dieses Jahr aus geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Anzahl der Zuweisungen dieses Jahr</label>
-        <name>Number_of_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtzahl der Zuweisungen von geschlossenen/gewonnenen Opportunities vor zwei Jahren. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Anzahl der Zuweisungen vor zwei Jahren</label>
-        <name>Number_of_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag der kleinsten Zuweisung zu diesem Verwendungszweck. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Kleinste Zuweisung</label>
-        <name>Smallest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl aller Zuweisungen von geschl./gew. Opp. in den letzten N Tagen. (Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot;, &quot;Zuweisungen Verwendungszweck&quot; festgelegt.) NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Zuweisungen gesamt in d. letzten N Tagen</label>
-        <name>Total_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtsumme aller Zuweisungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr.</help>
-        <label>Zuweisungen gesamt im letzten Jahr</label>
-        <name>Total_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtsumme aller Zuweisungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Zuweisungen gesamt in diesem Jahr</label>
-        <name>Total_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Gesamtsumme aller Zuweisungen von geschlossenen/gewonnenen Opportunities vor zwei Jahren. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Zuweisungen gesamt vor zwei Jahren</label>
-        <name>Total_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtsumme aller Zuweisungen von geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Zuweisungen insgesamt</label>
-        <name>Total_Allocations__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtzahl der Zuweisungen von geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
-        <label>Anzahl der Zuweisungen gesamt</label>
-        <name>Total_Number_of_Allocations__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>General Accounting Unit Layout</layout>
-        <sections>
-            <label>Zuweisungsinformationen</label>
-            <section>Allocation Information</section>
-        </sections>
-        <sections>
-            <label>Zuweisungen gesamt</label>
-            <section>Allocation Totals</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Name des Verwendungszwecks</nameFieldLabel>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+  <fields>
+    <name>Active__c</name>
+    <help>[Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <label>[Active]o']</label>
+  </fields>
+  <fields>
+    <name>Average_Allocation__c</name>
+    <help>[The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Average Allocation]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>[Additional information about this General Accounting Unit.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>First_Allocation_Date__c</name>
+    <help>[The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[First Allocation Date]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Largest_Allocation__c</name>
+    <help>[The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Largest Allocation]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Last_Allocation_Date__c</name>
+    <help>[The last Opportunity Close Date of an allocation associated with this general accounting unit.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Last Allocation Date]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_N_Days__c</name>
+    <help>[Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Number of Allocations Last N Days]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_Year__c</name>
+    <help>[The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Number of Allocations Last Year]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_This_Year__c</name>
+    <help>[TThe total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Number of Allocations This Year]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    <help>[The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Number of Allocations Two Years Ago]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Smallest_Allocation__c</name>
+    <help>[The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Smallest Allocation]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_N_Days__c</name>
+    <help>[The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ]</help>
+    <label>[Total Allocations Last N Days]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_Year__c</name>
+    <help>[Sum total of all allocations of opportunities in a closed and won stage last year.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Total Allocations Last Year]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_This_Year__c</name>
+    <help>[The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Total Allocations This Year]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Two_Years_Ago__c</name>
+    <help>[The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Total Allocations Two Years Ago]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations__c</name>
+    <help>[The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Total Allocations]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Total_Number_of_Allocations__c</name>
+    <help>[The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Total Number of Allocations]o'介引户הаí]</label>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>[Recalculate Rollups]o'介引户]</label>
+  </webLinks>
+  <layouts>
+    <layout>General Accounting Unit Layout</layout>
+    <sections>
+      <label>[Allocation Information]o'介引户ה]</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>[Allocation Totals]o'介引户]</label>
+      <section>Allocation Totals</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[General Accounting Unit Name]o'介引户הаí]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[General Accounting Unit Name]o'介引户הаí]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[General Accounting Unit]gr''介引户ה]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[General Accounting Units]gr''介引户הа]</value>
+  </caseValues>
 </CustomObjectTranslation>

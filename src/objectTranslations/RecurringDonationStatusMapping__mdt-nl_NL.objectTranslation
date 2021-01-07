@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Toewijzing status terugkerende donatie(s)</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Toewijzingen status terugkerende donatie(s)</value>
-    </caseValues>
-    <fields>
-        <help>Geldige vermeldingen zijn Actief, Verstreken en Gesloten.</help>
-        <label>Staat terugkerende donatie(s)</label>
-        <name>State__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Actief</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Gesloten</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Verstreken</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>API-naam van de Status terugkerende donatie(s) die is toegewezen aan een staat.</help>
-        <label>Status terugkerende donatie(s)</label>
-        <name>Status__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>State__c</name>
+    <help>Geldige vermeldingen zijn Actief, Verstreken en Gesloten.</help>
+    <label>Staat terugkerende donatie(s)</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Actief</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Verstreken</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Gesloten</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>API-naam van de Status terugkerende donatie(s) die is toegewezen aan een staat.</help>
+    <label>Status terugkerende donatie(s)</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Toewijzing status terugkerende donatie(s)</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Toewijzingen status terugkerende donatie(s)</value>
+  </caseValues>
 </CustomObjectTranslation>

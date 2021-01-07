@@ -1,50 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnungssatz</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungssätze</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnungssatz</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungssätze</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnungssatzes</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungssätze</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnungssatz</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungssätzen</value>
-    </caseValues>
-    <fields>
-        <help>Die Datenimport-Objektgruppe, die diesen Feldzuordnungssatz enthält.</help>
-        <label>Datenimport-Objektzuordnungssatz</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Datenimport-Feldzuordnungssätze</relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>[The Data Import Object Group that contains this Field Mapping Set.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <relationshipLabel>[Data Import Field Mapping Sets]o'介引户הаí先]</relationshipLabel>
+    <label>[Data Import Object Mapping Set]o'介引户הаí先]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Field Mapping Set]gr''介引户הаí]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Field Mapping Sets]gr''介引户הаí先]</value>
+  </caseValues>
 </CustomObjectTranslation>

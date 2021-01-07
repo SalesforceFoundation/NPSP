@@ -1,76 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plantilla de plan de acción</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Plantillas de planes de acción</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <fields>
-        <help>Recalcula la fecha de vencimiento de una tarea dependiente basado en cuándo se completó realmente la tarea principal.</help>
-        <label>Actualizar f. de venc. tarea secundaria</label>
-        <name>Automatically_Update_Child_Task_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se deja en blanco el campo &quot;Asignado a&quot; en una tarea del plan de acción, ¿a quién se debe asignar la tarea?</help>
-        <label>Persona asignada predeterminada</label>
-        <name>Default_Assignee__c</name>
-        <picklistValues>
-            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation>Propietario del objeto para el plan de acción</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation>Usuario que crea el plan de acción</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Descripción</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>¿Deben las tareas con fechas de vencimiento en un día de fin de semana estar programadas para el viernes antes del fin de semana o el lunes después? Esto sólo se aplica si se selecciona Saltar fines de semana.</help>
-        <label>Reprogramar para</label>
-        <name>Reschedule_To__c</name>
-        <picklistValues>
-            <masterLabel>Friday</masterLabel>
-            <translation>Viernes</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monday</masterLabel>
-            <translation>Lunes</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Si se selecciona, las tareas creadas en este plan de acción no tendrán fechas de vencimiento que caigan en sábado o en domingo.</help>
-        <label>Omitir fines de semana</label>
-        <name>Skip_Weekends__c</name>
-    </fields>
-    <fields>
-        <label>Cantidad de planes de acción</label>
-        <name>Total_Engagement_Plans__c</name>
-    </fields>
-    <fields>
-        <label>Cantidad de tareas</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Engagement Plan Template Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de plantilla del plan de acción</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar plantilla</label>
-        <name>Manage_Template</name>
-    </webLinks>
+  <fields>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    <help>Recalcula la fecha de vencimiento de una tarea dependiente basado en cuándo se completó realmente la tarea principal.</help>
+    <label>Actualizar f. de venc. tarea secundaria</label>
+  </fields>
+  <fields>
+    <name>Default_Assignee__c</name>
+    <help>Cuando se deja en blanco el campo "Asignado a" en una tarea del plan de acción, ¿a quién se debe asignar la tarea?</help>
+    <label>Persona asignada predeterminada</label>
+    <picklistValues>
+      <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+      <translation>Propietario del objeto para el plan de acción</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>User Creating Engagement Plan</masterLabel>
+      <translation>Usuario que crea el plan de acción</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Descripción</label>
+  </fields>
+  <fields>
+    <name>Reschedule_To__c</name>
+    <help>¿Deben las tareas con fechas de vencimiento en un día de fin de semana estar programadas para el viernes antes del fin de semana o el lunes después? Esto sólo se aplica si se selecciona Saltar fines de semana.</help>
+    <label>Reprogramar para</label>
+    <picklistValues>
+      <masterLabel>Monday</masterLabel>
+      <translation>Lunes</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Friday</masterLabel>
+      <translation>Viernes</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Skip_Weekends__c</name>
+    <help>Si se selecciona, las tareas creadas en este plan de acción no tendrán fechas de vencimiento que caigan en sábado o en domingo.</help>
+    <label>Omitir fines de semana</label>
+  </fields>
+  <fields>
+    <name>Total_Engagement_Plans__c</name>
+    <label>Cantidad de planes de acción</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>Cantidad de tareas</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Template</name>
+    <label>Gestionar plantilla</label>
+  </webLinks>
+  <layouts>
+    <layout>Engagement Plan Template Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de plantilla del plan de acción</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de plantilla del plan de acción</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Plantilla de plan de acción</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Plantillas de planes de acción</value>
+  </caseValues>
 </CustomObjectTranslation>

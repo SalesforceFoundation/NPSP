@@ -1,40 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>DESUSADO-Programable</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>DESUSADO-Programables</value>
-    </caseValues>
-    <fields>
-        <help>Determina si un trabajo estará activo o no.</help>
-        <label>Activo</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Clase que se programará para ejecutarse con cierta frecuencia.</help>
-        <label>Nombre de clase</label>
-        <name>Class_Name__c</name>
-    </fields>
-    <fields>
-        <help>Frecuencia de ejecución del trabajo.</help>
-        <label>Frecuencia</label>
-        <name>Frequency__c</name>
-        </fields>
-    <fields>
-        <help>Última vez que el trabajo se ejecutó.</help>
-        <label>Fecha y hora de última ejecución</label>
-        <name>Last_Time_Run__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Schedulable Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre del trabajo</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>Determina si un trabajo estará activo o no.</help>
+    <label>Activo</label>
+  </fields>
+  <fields>
+    <name>Class_Name__c</name>
+    <help>Clase que se programará para ejecutarse con cierta frecuencia.</help>
+    <label>Nombre de clase</label>
+  </fields>
+  <fields>
+    <name>Frequency__c</name>
+    <help>Frecuencia de ejecución del trabajo.</help>
+    <label>Frecuencia</label>
+    <picklistValues>
+      <masterLabel>Hourly</masterLabel>
+      <translation>Cada hora</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Cada día</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Semanalmente</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensualmente</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Trimestralmente</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Last_Time_Run__c</name>
+    <help>Última vez que el trabajo se ejecutó.</help>
+    <label>Fecha y hora de última ejecución</label>
+  </fields>
+  <layouts>
+    <layout>Schedulable Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre del trabajo</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre del trabajo</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>DESUSADO-Programable</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>DESUSADO-Programables</value>
+  </caseValues>
 </CustomObjectTranslation>

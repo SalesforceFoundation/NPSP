@@ -1,98 +1,98 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Regla de filtro</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Reglas de filtros</value>
-    </caseValues>
-    <fields>
-        <label>Valor</label>
-        <name>Constant__c</name>
-    </fields>
-    <fields>
-        <label>Campo</label>
-        <name>Field__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Grupo de filtros</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Reglas de filtros</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Eliminado</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Objeto</label>
-        <name>Object__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Operador</label>
-        <name>Operator__c</name>
-        <picklistValues>
-            <masterLabel>Contains</masterLabel>
-            <translation>Contiene</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Does Not Contain</masterLabel>
-            <translation>No contiene</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Equals</masterLabel>
-            <translation>Es igual a</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater Than</masterLabel>
-            <translation>Mayor que</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater or Equal</masterLabel>
-            <translation>Mayor o igual a</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In List</masterLabel>
-            <translation>En lista</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Included</masterLabel>
-            <translation>Incluido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Not Included</masterLabel>
-            <translation>No incluido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less Than</masterLabel>
-            <translation>Menor que</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less or Equal</masterLabel>
-            <translation>Menor o igual</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Equals</masterLabel>
-            <translation>No es igual a</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not In List</masterLabel>
-            <translation>No en lista</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Starts With</masterLabel>
-            <translation>Empieza por</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Constant__c</name>
+    <label>Valor</label>
+  </fields>
+  <fields>
+    <name>Field__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>Campo</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>Reglas de filtros</relationshipLabel>
+    <label>Grupo de filtros</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Eliminado</label>
+  </fields>
+  <fields>
+    <name>Object__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>Objeto</label>
+  </fields>
+  <fields>
+    <name>Operator__c</name>
+    <label>Operador</label>
+    <picklistValues>
+      <masterLabel>Equals</masterLabel>
+      <translation>Es igual a</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not Equals</masterLabel>
+      <translation>No es igual a</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater Than</masterLabel>
+      <translation>Mayor que</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less Than</masterLabel>
+      <translation>Menor que</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater or Equal</masterLabel>
+      <translation>Mayor o igual a</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less or Equal</masterLabel>
+      <translation>Menor o igual</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Starts With</masterLabel>
+      <translation>Empieza por</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contains</masterLabel>
+      <translation>Contiene</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Does Not Contain</masterLabel>
+      <translation>No contiene</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In List</masterLabel>
+      <translation>En lista</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not In List</masterLabel>
+      <translation>No en lista</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Included</masterLabel>
+      <translation>Incluido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Not Included</masterLabel>
+      <translation>No incluido</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Filter Rule Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Regla de filtro</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Reglas de filtros</value>
+  </caseValues>
 </CustomObjectTranslation>
