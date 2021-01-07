@@ -7329,6 +7329,126 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Visualize Your Fundraising Processes</value>
     </labels>
     <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <value>NPSP includes 87 of the most commonly-used constituent and fundraising reports. Use these reports as is, or customize them.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <value>Learn more about NPSP Reports in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <value>Run Reports</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <value>Reports Workbook</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <value>Run a Prebuilt NPSP Report</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Standard Report Type in GS for End User</shortDescription>
+        <value>The Lightning Report Builder gives you the ability to create your own custom reports using standard report types. The report type you choose determines the objects and fields available in your report.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item Standard Report Type in GS for End User</shortDescription>
+        <value>Learn more about Standard Report Types in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Standard Report Type in GS for End User</shortDescription>
+        <value>Create Reports</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Standard Report Type in GS for End User</shortDescription>
+        <value>Create a Report from a Standard Report Type</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item View Dashboard in GS for End User</shortDescription>
+        <value>Dashboards pull data from one of more reports and display it side by side in the same window. NPSP includes three dashboards that you can use as is or customize.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of checklist item View Dashboard in GS for End User</shortDescription>
+        <value>Learn more about Dashboards in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item View Dashboard in GS for End User</shortDescription>
+        <value>View Dashboards</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item View Dashboard in GS for End User</shortDescription>
+        <value>View a Dashboard</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistYourDataDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Your Data in GS for End User</shortDescription>
+        <value>Reports and Dashboards help organize your data so that you can tell the story of your organization’s impact. NPSP includes out-of-the-box reports, or you can create your own.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistYourDataTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Your Data in GS for End User</shortDescription>
+        <value>Understand Your Data</value>
+    </labels>
+    <labels>
         <fullName>commonFieldsNotFound</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

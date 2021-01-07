@@ -2594,6 +2594,21 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportDesc</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportLinkLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportTitle</members>
+        <members>gseuChecklistItemStandardReportTypeDesc</members>
+        <members>gseuChecklistItemStandardReportTypeLinkLabel</members>
+        <members>gseuChecklistItemStandardReportTypePriBtnLabel</members>
+        <members>gseuChecklistItemStandardReportTypeTitle</members>
+        <members>gseuChecklistItemViewDashboardDesc</members>
+        <members>gseuChecklistItemViewDashboardLinkLabel</members>
+        <members>gseuChecklistItemViewDashboardPriBtnLabel</members>
+        <members>gseuChecklistItemViewDashboardTitle</members>
+        <members>gseuChecklistYourDataDesc</members>
+        <members>gseuChecklistYourDataTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3387,15 +3402,19 @@
         <members>GetStartedChecklistItem.NPSP_Guide</members>
         <members>GetStartedChecklistItem.NPSP_Settings</members>
         <members>GetStartedChecklistItem.Page_Layouts</members>
+        <members>GetStartedChecklistItem.Prebuilt_NPSP_Report</members>
         <members>GetStartedChecklistItem.Prepare_NPSP_Cloud</members>
         <members>GetStartedChecklistItem.Review_Company</members>
         <members>GetStartedChecklistItem.Running_Reports</members>
         <members>GetStartedChecklistItem.Setup_Contact</members>
+        <members>GetStartedChecklistItem.Standard_Repor_Type</members>
         <members>GetStartedChecklistItem.Stay_Track</members>
         <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistItem.View_Dashboard</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Your_Data</members>
         <name>CustomMetadata</name>
     </types>
     <types>

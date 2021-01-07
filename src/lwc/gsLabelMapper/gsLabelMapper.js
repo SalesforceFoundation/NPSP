@@ -73,6 +73,21 @@ import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYou
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
 
+import gseuChecklistItemPrebuiltNPSPReportDesc from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportDesc';
+import gseuChecklistItemPrebuiltNPSPReportLinkLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportLinkLabel';
+import gseuChecklistItemPrebuiltNPSPReportPriBtnLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportPriBtnLabel';
+import gseuChecklistItemPrebuiltNPSPReportSecBtnLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportSecBtnLabel';
+import gseuChecklistItemPrebuiltNPSPReportTitle from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportTitle';
+import gseuChecklistItemStandardReportTypeDesc from '@salesforce/label/c.gseuChecklistItemStandardReportTypeDesc';
+import gseuChecklistItemStandardReportTypeLinkLabel from '@salesforce/label/c.gseuChecklistItemStandardReportTypeLinkLabel';
+import gseuChecklistItemStandardReportTypePriBtnLabel from '@salesforce/label/c.gseuChecklistItemStandardReportTypePriBtnLabel';
+import gseuChecklistItemStandardReportTypeTitle from '@salesforce/label/c.gseuChecklistItemStandardReportTypeTitle';
+import gseuChecklistItemViewDashboardDesc from '@salesforce/label/c.gseuChecklistItemViewDashboardDesc';
+import gseuChecklistItemViewDashboardLinkLabel from '@salesforce/label/c.gseuChecklistItemViewDashboardLinkLabel';
+import gseuChecklistItemViewDashboardPriBtnLabel from '@salesforce/label/c.gseuChecklistItemViewDashboardPriBtnLabel';
+import gseuChecklistItemViewDashboardTitle from '@salesforce/label/c.gseuChecklistItemViewDashboardTitle';
+import gseuChecklistYourDataDesc from '@salesforce/label/c.gseuChecklistYourDataDesc';
+import gseuChecklistYourDataTitle from '@salesforce/label/c.gseuChecklistYourDataTitle';
 
 /**
 * @description Map of getLabelValue labels
@@ -152,6 +167,21 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistItemPrebuiltNPSPReportDesc,
+    gseuChecklistItemPrebuiltNPSPReportLinkLabel,
+    gseuChecklistItemPrebuiltNPSPReportPriBtnLabel,
+    gseuChecklistItemPrebuiltNPSPReportSecBtnLabel,
+    gseuChecklistItemPrebuiltNPSPReportTitle,
+    gseuChecklistItemStandardReportTypeDesc,
+    gseuChecklistItemStandardReportTypeLinkLabel,
+    gseuChecklistItemStandardReportTypePriBtnLabel,
+    gseuChecklistItemStandardReportTypeTitle,
+    gseuChecklistItemViewDashboardDesc,
+    gseuChecklistItemViewDashboardLinkLabel,
+    gseuChecklistItemViewDashboardPriBtnLabel,
+    gseuChecklistItemViewDashboardTitle,
+    gseuChecklistYourDataTitle,
+    gseuChecklistYourDataDesc,
 }
 
 /**
