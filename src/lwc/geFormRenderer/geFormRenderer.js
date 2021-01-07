@@ -122,6 +122,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 const ACH_CONSENT_MESSAGE = 'true';
+const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -2268,7 +2269,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isCreditCardTransaction() {
-        return this.selectedPaymentMethod() === PAYMENT_METHODS.CREDIT_CARD;
+        return this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     processDataImport = async () => {
