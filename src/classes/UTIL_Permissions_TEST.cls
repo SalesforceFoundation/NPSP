@@ -157,6 +157,38 @@ public with sharing class UTIL_Permissions_TEST {
     }
 
     @isTest
+    static void shouldReturnFalseForUserWithoutCreateAccessToFieldByString() {
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false),
+                'Minimum access user should not have create access to standard field.');
+        }
+    }
+
+    @isTest
+    static void shouldReturnFalseForUserWithoutReadAccessToCustomFieldByString() {
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName, false),
+                'Minimum access user should not have read access to custom field.');
+        }
+    }
+
+    @isTest
+    static void shouldReturnFalseForUserWithoutUpdateAccessToFieldByString() {
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false),
+                'Minimum access user should not have update access to standard field.');
+        }
+    }
+
+    @isTest
+    static void shouldReturnFalseForUserWithoutDeleteAccessToCustomFieldByString() {
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!UTIL_Permissions.canUpdate(customObjectName, customFieldName, false),
+                'Minimum access user should not have delete access to custom field.');
+        }
+    }
+
+    @isTest
     static void shouldReturnTrueForUserWithoutCreateAccessAfterPermissionAssignment() {
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_READ_ONLY);
         User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
