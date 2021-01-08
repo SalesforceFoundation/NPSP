@@ -47,6 +47,145 @@ public with sharing class UTIL_Permissions_TEST {
     private static String standardObjectName = 'Contact';
     private static String standardFieldName = 'FirstName';
 
+
+    @isTest
+    static void shouldReturnTrueForUserWithCreateAccessToObjectByString() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canCreate(standardObjectName),
+                'Privileged user should have create access to standard object.');
+        }
+    }
+
+    @isTest
+    static void shouldThrowExceptionForUserWithoutCreateAccessToObjectByString() {
+        System.runAs(getReadOnlyUser()) {
+            try {
+                UTIL_Permissions.canCreate(standardObjectName);
+            } catch (Exception ex) {
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
+                    'Minimum access user should not have create access to standard/custom object.');
+            }
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithReadAccessToObjectByString() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canRead(standardObjectName),
+                'Privileged user should have read access to standard object.');
+        }
+    }
+
+    @isTest
+    static void shouldThrowExceptionForUserWithoutReadAccessToObjectByString() {
+        System.runAs(getReadOnlyUser()) {
+            try {
+                UTIL_Permissions.canRead(standardObjectName);
+            } catch (Exception ex) {
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
+                    'Minimum access user should not have read access to standard/custom object.');
+            }
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithEditAccessToObjectByString() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canUpdate(standardObjectName),
+                'Privileged user should have update access to standard object.');
+        }
+    }
+
+    @isTest
+    static void shouldThrowExceptionForUserWithoutEditAccessToObjectByString() {
+        System.runAs(getReadOnlyUser()) {
+            try {
+                UTIL_Permissions.canUpdate(standardObjectName);
+            } catch (Exception ex) {
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
+            }
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithDeleteAccessToObjectByString() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canDelete(standardObjectName),
+                'Privileged user should have delete access to standard object.');
+        }
+    }
+
+    @isTest
+    static void shouldThrowExceptionForUserWithoutDeleteAccessToObjectByString() {
+        System.runAs(getReadOnlyUser()) {
+            try {
+                UTIL_Permissions.canDelete(standardObjectName);
+            } catch (Exception ex) {
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
+                    'Minimum access user should not have delete access to standard/custom object.');
+            }
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithDeleteAccessToSObjectType() {
+        System.runAs(getSysAdmin()) {
+            UTIL_Permissions utilPermissions = UTIL_Permissions.getInstance();
+            System.assert(utilPermissions.canDelete(Contact.SObjectType),
+                'Privileged user should have delete access to standard object.');
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithCreateAccessToFieldByDescribeFieldResult() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canCreate(Contact.LastName.getDescribe()),
+                'Privileged user should have create access to standard field.');
+        }
+    }
+
+    @isTest
+    static void shouldThrowExceptionForUserWithoutCreateAccessToFieldByDescribeFieldResult() {
+        System.runAs(getReadOnlyUser()) {
+            try {
+                UTIL_Permissions.canCreate(Contact.LastName.getDescribe());
+            } catch (Exception ex) {
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
+                    'Minimum access user should not have create access to standard field.');
+            }
+        }
+    }
+
+    @isTest
+    static void shouldReturnTrueForUserWithoutCreateAccessAfterPermissionAssignment() {
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_READ_ONLY);
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        System.runas(adminUser) {
+            Boolean canCreate = true;
+            Boolean canRead = true;
+            Boolean canUpdate = false;
+            Boolean canDelete = false;
+            Boolean canViewAllRecords = false;
+
+            Id permissionSetId = createPermissionSet(
+                standardObjectName,
+                canCreate,
+                canRead,
+                canUpdate,
+                canDelete,
+                canViewAllRecords);
+
+            assignPermissionSet(permissionSetId, readOnlyUser.Id);
+        }
+
+        Test.startTest();
+        System.runas(readOnlyUser) {
+            System.assert(UTIL_Permissions.canCreate(standardObjectName),
+                'Minimum access user should have create access after being assigned permission set.');
+        }
+        Test.stopTest();
+    }
+
     @isTest
     static void readOnlyUserCannotReadCustomObjectException() {
         Boolean exceptionCaught = false;
@@ -77,21 +216,6 @@ public with sharing class UTIL_Permissions_TEST {
         }
 
         System.assert(exceptionCaught);
-    }
-
-    @isTest
-    static void readOnlyUserObjectCheckNoException() {
-        System.runAs(getReadOnlyUser()) {
-            System.assert(!UTIL_Permissions.canRead(customObjectName, false));
-            System.assert(!UTIL_Permissions.canCreate(customObjectName, false));
-            System.assert(!UTIL_Permissions.canUpdate(customObjectName, false));
-            System.assert(!UTIL_Permissions.canDelete(customObjectName, false));
-            System.assert(!UTIL_Permissions.canCreate(standardObjectName, false));
-            System.assert(!UTIL_Permissions.canUpdate(standardObjectName, false));
-            System.assert(!UTIL_Permissions.canDelete(standardObjectName, false));
-            // this one is positive!
-            System.assert(UTIL_Permissions.canRead(standardObjectName, false));
-        }
     }
 
     @isTest
@@ -157,30 +281,6 @@ public with sharing class UTIL_Permissions_TEST {
     }
 
     @isTest
-    static void readOnlyUserFieldCheckNoException() {
-        System.runAs(getReadOnlyUser()) {
-            DescribeFieldResult customFieldResult =
-                UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
-            DescribeFieldResult standardFieldResult =
-                UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
-
-            System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName, false));
-            System.assert(!UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
-            System.assert(!UTIL_Permissions.canUpdate(customObjectName, customFieldName, false));
-            System.assert(!UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false));
-            System.assert(!UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false));
-            System.assert(!UTIL_Permissions.canCreate(customFieldResult, false));
-            System.assert(!UTIL_Permissions.canUpdate(customFieldResult, false));
-            System.assert(!UTIL_Permissions.canCreate(standardFieldResult, false));
-            System.assert(!UTIL_Permissions.canUpdate(standardFieldResult, false));
-
-            // these two are positive!
-            System.assert(UTIL_Permissions.canRead(standardObjectName, standardFieldName, false));
-            System.assert(UTIL_Permissions.canRead(standardFieldResult, false));
-        }
-    }
-
-    @isTest
     static void sysAdminCanUpdateCustomFieldException() {
         Boolean exceptionCaught = false;
 
@@ -237,6 +337,47 @@ public with sharing class UTIL_Permissions_TEST {
             System.assert(perms.canRead(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
             System.assert(perms.canUpdate(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
         }
+    }
+
+    /***
+    * @description Inserts a permission set for a provided object
+    */
+    private static Id createPermissionSet(
+        String objectName,
+        Boolean canCreate,
+        Boolean canRead,
+        Boolean canUpdate,
+        Boolean canDelete,
+        Boolean canViewAllRecords) {
+
+        PermissionSet permissionSet = new PermissionSet(
+            Name = 'PermissionTest',
+            Label = 'PermissionTest'
+        );
+
+        insert permissionSet;
+
+        insert new ObjectPermissions (
+            SObjectType = objectName,
+            ParentId = permissionSet.id,
+            PermissionsCreate = canCreate,
+            PermissionsRead = canRead,
+            PermissionsEdit = canUpdate,
+            PermissionsDelete = canDelete,
+            PermissionsViewAllRecords = canViewAllRecords
+        );
+
+        return permissionSet.Id;
+    }
+
+    /***
+    * @description Assigns permission set to user by id
+    */
+    private static void assignPermissionSet(Id permissionSetId, Id userId) {
+        insert new PermissionSetAssignment(
+            AssigneeId = userId,
+            PermissionSetId = permissionSetId
+        );
     }
 
     /***
