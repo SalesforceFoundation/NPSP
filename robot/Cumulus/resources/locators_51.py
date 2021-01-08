@@ -328,7 +328,7 @@ npsp_lex_locators={
         'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
-        'ge_form_sections':'//button[@class="slds-button slds-section__title-action"]//span'
+        'ge_form_sections':'//h3[@class="slds-section__title"]/button/span'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{

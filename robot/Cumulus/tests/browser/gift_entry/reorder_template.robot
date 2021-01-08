@@ -51,7 +51,7 @@ Get Gift Entry Form Field Names
   Set Suite Variable  ${form_labels}
 
 Get Gift Entry Form Section Names
-  @{form_section_titles} =  Return Gift Form Titles  template_builder_sections
+  @{form_section_titles} =  Return Gift Form Titles  gift_entry_form_sections
   ${form_s_titles} =  Create List
 
   FOR  ${label}  IN  @{form_section_titles}
@@ -70,6 +70,8 @@ Reorder and Modify GE Template Fields
   ...                                   gift form in a batch created from that template.
   [tags]                                unstable                    feature:GE          W-039563
   ${template} =                         Generate Random String
+  ${section_one} =                      Generate Randdom String
+  ${section_two} =                      Generate Randdom String
   Go to Page                            Landing                     GE_Gift_Entry
   Click Link                            Templates
   Click Gift Entry Button               Create Template
@@ -87,9 +89,11 @@ Reorder and Modify GE Template Fields
   Scroll Page To Location               0  900          
   Click Button                          Add Section
   Click Gift Entry Button               button Settings New Section
+  Enter Value in Field                  
+  ...                                   Section Name=${section_two}
   Click Button                          Save
   #Moves the new form section section up in the field order
-  Click Gift Entry Button               button Up New Section
+  Click Gift Entry Button               button Up Second Section
   #Deletes the Payment: Check/Reference Number field from the template
   Perform Action On Object Field        unselect                   Payment       Check/Reference Number
   Verify Template Builder               contains                   AccountSoftCredits: Role
