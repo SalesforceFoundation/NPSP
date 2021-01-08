@@ -6,13 +6,19 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
+...             Setup Test Data
 ...             API Check And Enable Gift Entry
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 
+Setup Test Data
+    [Documentation]     Setsup namespace prefix
+    ${ns} =  Get NPSP Namespace Prefix
+    Set suite variable    ${ns}
+
 Get Template Builder Field Names
-  @{builder_form_fields} =  Return Form Field Titles  template_builder_fields
+  @{builder_form_fields} =  Return Template Builder Titles  template_builder_fields
   ${builder_labels} =  Create List
 
   FOR  ${label}  IN  @{builder_form_fields}
@@ -22,20 +28,8 @@ Get Template Builder Field Names
 
   Set Suite Variable  ${builder_labels}
 
-
-Get Template Form Field Names
-  @{gift_form_fields} =  Return Form Field Titles  gift_entry_form
-  ${form_labels} =  Create List
-
-  FOR  ${label}  IN  @{gift_form_fields}
-      ${name} =  Get Text  ${label}
-      Append to List  ${form_labels}  ${name}
-  END
-  
-  Set Suite Variable  ${form_labels}
-
 Get Template Builder Section Names
-  @{builder_section_titles} =  Return Form Field Titles  template_builder_sections
+  @{builder_section_titles} =  Return Template Builder Titles  template_builder_sections
   ${builder_s_titles} =  Create List
 
   FOR  ${label}  IN  @{builder_section_titles}
@@ -45,8 +39,19 @@ Get Template Builder Section Names
 
   Set Suite Variable  ${builder_section_titles}
 
-Get Template Section Names
-  @{form_section_titles} =  Return Form Field Titles  template_builder_sections
+Get Gift Entry Form Field Names
+  @{gift_form_fields} =  Return Gift Form Titles  gift_entry_form
+  ${form_labels} =  Create List
+
+  FOR  ${label}  IN  @{gift_form_fields}
+      ${name} =  Get Text  ${label}
+      Append to List  ${form_labels}  ${name}
+  END
+  
+  Set Suite Variable  ${form_labels}
+
+Get Gift Entry Form Section Names
+  @{form_section_titles} =  Return Gift Form Titles  template_builder_sections
   ${form_s_titles} =  Create List
 
   FOR  ${label}  IN  @{form_section_titles}
@@ -78,8 +83,13 @@ Reorder and Modify GE Template Fields
   Perform Action On Object Field        select                     CustomObject1  CustomObject1Imported
   #Moves the CustomObject1Imported field up in the field order
   Click Gift Entry Button               button Up Data Import: CustomObject1Imported
-  #Moves the Add or Edit Organization Account section up in the field order
-  Click Gift Entry Button               button Up Add or Edit Organization Account
+  #Creates new section on form
+  Scroll Page To Location               0  900          
+  Click Button                          Add Section
+  Click Gift Entry Button               button Settings New Section
+  Click Button                          Save
+  #Moves the new form section section up in the field order
+  Click Gift Entry Button               button Up New Section
   #Deletes the Payment: Check/Reference Number field from the template
   Perform Action On Object Field        unselect                   Payment       Check/Reference Number
   Verify Template Builder               contains                   AccountSoftCredits: Role
@@ -103,8 +113,8 @@ Reorder and Modify GE Template Fields
   Page Should Contain                   AccountSoftCredits: Role        
   Page Should Not Contain               Check/Reference Number
   #Gets form field labels and compares the order to the template builder page
-  Get Template Form Field Names
-  Get Template Section Names
+  Get Gift Entry Form Field Names
+  Get Gift Entry Form Section Names
   Lists Should Be Equal                 ${builder_labels}  ${form_labels}
   Lists Should Be Equal                 ${builder_section_titles}  ${form_section_titles}
-  ${batch_id} =                         Save Current Record ID For Deletion      DataImportBatch__c
+  ${batch_id} =                         Save Current Record ID For Deletion      ${ns}DataImportBatch__c

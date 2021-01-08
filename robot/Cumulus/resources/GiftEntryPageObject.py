@@ -280,6 +280,17 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
 
+    def return_template_builder_titles(self,page=None):
+        """Scrapes the specified page for the form field titles or section titles based on the argument passed and
+        stores them for recalling."""
+        if page == 'template_builder_fields' :
+            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
+            return form_titles
+        elif page == 'template_builder_sections' :
+            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
+            return form_titles
+
+
 @pageobject("Form", "Gift Entry")
 class GiftEntryFormPage(BaseNPSPPage, BasePage):
 
@@ -565,18 +576,12 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
 
-    def return_form_field_titles(self,page=None):
+    def return_gift_form_titles(self,page=None):
         """Scrapes the specified page for the form field titles and
         stores them for recalling."""
         if page == 'gift_entry_form' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
-            return form_titles
-        elif page == 'template_builder_fields' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
-            return form_titles
-        elif page == 'template_builder_sections' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
-            return form_titles
+            field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
+            return field_titles
         elif page == 'gift_entry_form_sections' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_sections'])
-            return form_titles
+            section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_sections'])
+            return section_titles
