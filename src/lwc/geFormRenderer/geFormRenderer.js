@@ -92,6 +92,7 @@ import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
     PAYMENT_METHODS, ACH_CODE,
+    PAYMENT_METHOD_CREDIT_CARD
 } from 'c/geConstants';
 
 
@@ -122,7 +123,6 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 const ACH_CONSENT_MESSAGE = 'true';
-const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record

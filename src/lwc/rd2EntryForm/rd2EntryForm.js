@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
-import { HTTP_CODES } from 'c/geConstants';
+import { HTTP_CODES, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -51,7 +51,6 @@ import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCom
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
 const RECURRING_TYPE_OPEN = 'Open';
-const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 

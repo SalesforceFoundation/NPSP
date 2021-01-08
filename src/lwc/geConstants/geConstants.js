@@ -19,6 +19,7 @@ const ACCOUNT_HOLDER_BANK_TYPES = Object.freeze({
 });
 
 const ACH_CODE = 'WEB';
+const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 
 const PAYMENT_METHODS = Object.freeze({
     ACH: 'ACH',
@@ -31,5 +32,6 @@ export {
     ACCOUNT_HOLDER_TYPES,
     ACCOUNT_HOLDER_BANK_TYPES,
     PAYMENT_METHODS,
-    ACH_CODE
+    ACH_CODE,
+    PAYMENT_METHOD_CREDIT_CARD
 };
