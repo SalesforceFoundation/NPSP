@@ -13915,7 +13915,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Questions Answered label in GS Resources section for End User</shortDescription>
+        <shortDescription>Questions Answered label in Get Started Resources section for End Users</shortDescription>
         <value>Get Your Questions Answered</value>
     </labels>
     <labels>
@@ -13923,7 +13923,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Questions Answered link label in GS Resources section for End User</shortDescription>
+        <shortDescription>Questions Answered link label in Get Started Resources section for End Users</shortDescription>
         <value>Power of Us Hub</value>
     </labels>
     <labels>
@@ -13931,7 +13931,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource About NPSP label in GS Resources section for End User</shortDescription>
+        <shortDescription>About NPSP label in Get Started Resources section for End Users</shortDescription>
         <value>Learn More About NPSP</value>
     </labels>
     <labels>
@@ -13939,7 +13939,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource About NPSP link label in GS Resources section for End User</shortDescription>
+        <shortDescription>About NPSP link label in Get Started Resources section for End Users</shortDescription>
         <value>NPSP Documentation</value>
     </labels>
     <labels>
@@ -13947,7 +13947,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Watch Videos label in GS Resources section for End User</shortDescription>
+        <shortDescription>Watch Videos label in Get Started Resources section for End Users</shortDescription>
         <value>Watch How-To Videos</value>
     </labels>
     <labels>
@@ -13955,7 +13955,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Watch Videos link label in GS Resources section for End User</shortDescription>
+        <shortDescription>Watch Videos link label in Get Started Resources section for End Users</shortDescription>
         <value>NPSP Videography Channel</value>
     </labels>
     <labels>
@@ -13963,7 +13963,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Webinars label in GS Resources section for End User</shortDescription>
+        <shortDescription>Webinars label in Get Started Resources section for End Users</shortDescription>
         <value>Find Events and Webinar</value>
     </labels>
     <labels>
@@ -13971,7 +13971,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Webinars link label in GS Resources section for End User</shortDescription>
+        <shortDescription>Webinars link label in Get Started Resources section for End Users</shortDescription>
         <value>Salesforce Calendar</value>
     </labels>
     <labels>
@@ -13979,7 +13979,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Community Group link label in GS Resources section for End User</shortDescription>
+        <shortDescription>Community Group label in Get Started Resources section for End Users</shortDescription>
         <value>Find a Community Group</value>
     </labels>
      <labels>
@@ -13987,7 +13987,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Community Group link label in GS Resources section for End User</shortDescription>
+        <shortDescription>Community Group link label in Get Started Resources section for End Users</shortDescription>
         <value>Trailhead Community</value>
     </labels>
 </CustomLabels>
