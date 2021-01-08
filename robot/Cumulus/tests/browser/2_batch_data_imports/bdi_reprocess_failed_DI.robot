@@ -70,6 +70,7 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Click Show More Actions Button   Edit
     Click Flexipage Dropdown         Donation Donor    Account1
     Click Special Button             Save
+    Sleep                            2
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Open Data Import Record          ${data_import_upd}[Name]

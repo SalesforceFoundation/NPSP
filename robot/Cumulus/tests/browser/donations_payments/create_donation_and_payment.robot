@@ -42,7 +42,7 @@ Create Donation from a Contact
     Select Tab                           Related
     Load Related List                    Payments
     Wait Until Loading Is Complete
-    Click Special Related List Button    Payments               Schedule Payments
+    Click Special Button                 Schedule Payments
     Current Page Should Be               Custom                 SchedulePayment
 
     Enter Text Field Value               ${date}
@@ -54,7 +54,6 @@ Create Donation from a Contact
     Wait until page contains             ${opp_name}
     Go To Page                           Listing                                       Opportunity
     Wait Until Loading Is Complete
-    Current Page Should Be               Listing                                       Opportunity
     Wait Until Keyword Succeeds          1 minute
     ...                                  5 seconds
     ...                                  Ensure Opportunity Details Are Loaded        ${data}[contact_opportunity][Id]        ${data}[contact_opportunity][Name]
@@ -63,4 +62,5 @@ Create Donation from a Contact
 
     Click ViewAll Related List           Payments
     Wait until page contains             Payments
+    Sleep                                2
     Verify payment
