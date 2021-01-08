@@ -1224,9 +1224,15 @@ plans:
         title: Install NPSP
         tier: primary
         checks:
-            - when: "'.my.' not in org_config.instance_url"
+            - when: "not tasks.check_my_domain_active()"
               action: error
               message: "Please enable My Domain in your org prior to installing."
+            - when: "not tasks.check_chatter_enabled()"
+              action: error
+              message: "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again."
+            - when: "tasks.check_advanced_currency_management()"
+              action: error
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
         steps:
             1:
                 task: update_dependencies
@@ -1260,9 +1266,21 @@ plans:
         tier: additional
         is_listed: False
         checks:
-            - when: "'.my.' not in org_config.instance_url"
+            - when: "not tasks.check_my_domain_active()"
               action: error
               message: "Please enable My Domain in your org prior to installing."
+            - when: "not tasks.check_chatter_enabled()"
+              action: error
+              message: "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again."
+            - when: "'npsp' in org_config.installed_packages"
+              action: error
+              message: "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP."
+            - when: "tasks.check_advanced_currency_management()"
+              action: error
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
+            - when: "'trlhdtips' not in org_config.installed_packages"
+              action: warn
+              message: "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org."
         steps:
             1:
                 task: update_dependencies
@@ -1335,6 +1353,10 @@ plans:
         title: Install Reports & Dashboards
         tier: additional
         is_listed: True
+        checks:
+            - when: "'npsp' not in org_config.installed_packages"
+              action: error
+              message: "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again."
         steps:
             1:
                 task: deploy_reports
