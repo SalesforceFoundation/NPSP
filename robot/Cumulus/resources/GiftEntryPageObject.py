@@ -284,11 +284,11 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         """Scrapes the specified page for the form field titles or section titles based on the argument passed and
         stores them for recalling."""
         if page == 'template_builder_fields' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
-            return form_titles
+            form_field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
+            return form_field_titles
         elif page == 'template_builder_sections' :
-            form_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
-            return form_titles
+            form_section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
+            return form_section_titles
 
 
 @pageobject("Form", "Gift Entry")
@@ -579,7 +579,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
     def return_gift_form_titles(self,page=None):
         """Scrapes the specified page for the form field titles and
         stores them for recalling."""
-        if page == 'gift_entry_form' :
+        if page == 'gift_entry_form_fields' :
             field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
             return field_titles
         elif page == 'gift_entry_form_sections' :
