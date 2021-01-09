@@ -86,6 +86,9 @@ public class UTIL_Profile {
     /** @description Minimum Access - Salesforce Profile Name */
     public static final String PROFILE_MINIMUM_ACCESS = 'Minimum Access - Salesforce';
 
+    /** @description True if the Read Only profile exists in the org */
+    private static Boolean hasReadOnlyProfile;
+
     /** @description Read Only Profile Name */
     public static final String PROFILE_READ_ONLY {
         get {
@@ -120,9 +123,6 @@ public class UTIL_Profile {
             }
         }
     }
-
-    /** @description True if the Read Only profile exists in the org */
-    private static Boolean hasReadOnlyProfile;
 
     /*********************************************************************************************************
     * @description Checks for any Profile records with the provided Name

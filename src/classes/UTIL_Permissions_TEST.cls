@@ -189,36 +189,6 @@ public with sharing class UTIL_Permissions_TEST {
     }
 
     @isTest
-    static void shouldReturnTrueForUserWithoutCreateAccessAfterPermissionAssignment() {
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_READ_ONLY);
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        System.runas(adminUser) {
-            Boolean canCreate = true;
-            Boolean canRead = true;
-            Boolean canUpdate = false;
-            Boolean canDelete = false;
-            Boolean canViewAllRecords = false;
-
-            Id permissionSetId = createPermissionSet(
-                standardObjectName,
-                canCreate,
-                canRead,
-                canUpdate,
-                canDelete,
-                canViewAllRecords);
-
-            assignPermissionSet(permissionSetId, readOnlyUser.Id);
-        }
-
-        Test.startTest();
-        System.runas(readOnlyUser) {
-            System.assert(UTIL_Permissions.canCreate(standardObjectName),
-                'Minimum access user should have create access after being assigned permission set.');
-        }
-        Test.stopTest();
-    }
-
-    @isTest
     static void readOnlyUserCannotReadCustomObjectException() {
         Boolean exceptionCaught = false;
 
@@ -369,47 +339,6 @@ public with sharing class UTIL_Permissions_TEST {
             System.assert(perms.canRead(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
             System.assert(perms.canUpdate(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
         }
-    }
-
-    /***
-    * @description Inserts a permission set for a provided object
-    */
-    private static Id createPermissionSet(
-        String objectName,
-        Boolean canCreate,
-        Boolean canRead,
-        Boolean canUpdate,
-        Boolean canDelete,
-        Boolean canViewAllRecords) {
-
-        PermissionSet permissionSet = new PermissionSet(
-            Name = 'PermissionTest',
-            Label = 'PermissionTest'
-        );
-
-        insert permissionSet;
-
-        insert new ObjectPermissions (
-            SObjectType = objectName,
-            ParentId = permissionSet.id,
-            PermissionsCreate = canCreate,
-            PermissionsRead = canRead,
-            PermissionsEdit = canUpdate,
-            PermissionsDelete = canDelete,
-            PermissionsViewAllRecords = canViewAllRecords
-        );
-
-        return permissionSet.Id;
-    }
-
-    /***
-    * @description Assigns permission set to user by id
-    */
-    private static void assignPermissionSet(Id permissionSetId, Id userId) {
-        insert new PermissionSetAssignment(
-            AssigneeId = userId,
-            PermissionSetId = permissionSetId
-        );
     }
 
     /***
