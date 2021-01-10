@@ -16,8 +16,8 @@ Resource        cumulusci/robotframework/Salesforce.robot
 Resource        cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
 Resource        robot/Cumulus/resources/Data.robot
-#Suite Setup     Initial Setup
-#Suite Teardown  Delete Test Opportunities
+Suite Setup     Initial Setup
+Suite Teardown  Delete Test Opportunities
 
 *** Keywords ***
 ## =============================================================================================
@@ -31,7 +31,8 @@ Insert Opportunities for Rollups
 
     ${accounts}=    Set Variable    ${query_results}[records]
     ${numaccounts}=  Get Length     ${accounts}
-    Log to Console  Number of Records: ${numaccounts}
+
+    Log to Console  Number of Accounts Queried: ${numaccounts}
 
     Disable Rollup Triggers
 
@@ -40,6 +41,8 @@ Insert Opportunities for Rollups
         Create 200 Opportunities     ${index}    ${accounts}
     END
 
+    Log to Console  Number of Opportunities Created: ${numaccounts}
+
     Enable Rollup Triggers
 
 Execute Account Hard Credit Rollups
@@ -47,18 +50,32 @@ Execute Account Hard Credit Rollups
 
     Run Task    execute_anon
         ...     apex=CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+    Run Task    batch_apex_wait
+        ...     class_name=CRLP_Account_BATCH
 
 Execute Contact Hard Credit Rollups
     [Documentation]     Kickoff the CRLP_Contact_HardCredit rollup job
 
     Run Task    execute_anon
         ...     apex=CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+    Run Task    batch_apex_wait
+        ...     class_name=CRLP_Contact_BATCH
 
 Execute Contact Soft Credit Rollups
     [Documentation]     Kickoff the CRLP_Contact_SoftCredit rollup job
 
     Run Task    execute_anon
         ...     apex=CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+    Run Task    batch_apex_wait
+        ...     class_name=CRLP_Contact_SoftCredit_BATCH
+
+Execute RD2 Batch Job
+    [Documentation]     Kickoff the RD2_OpportunityEvaluation_BATCH rollup job
+
+    Run Task    execute_anon
+        ...     apex=RD2_OpportunityEvaluation_BATCH rdBatchJob = new RD2_OpportunityEvaluation_BATCH(); Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+    Run Task    batch_apex_wait
+        ...     class_name=RD2_OpportunityEvaluation_BATCH
 
 ## =============================================================================================
 ## Data Creation Keywords:
@@ -67,12 +84,12 @@ Create 200 Opportunities
     [Arguments]         ${acctstartindex}     ${accounts}
     [Documentation]     Generate 200 Opportunity objects for the related Account/Contact
 
-    ${random_amt}=      Generate Random String     16
-    ${date}=        Get Current Date        result_format=%Y-%m-%d
+    ${random_amt}=      Generate Random String    6     [NUMBERS]
+    ${date}=     Get Current Date        result_format=%Y-%m-%d
     @{opps}=     Generate Test Data      Opportunity  200
-        ...  Name=Performance Test Opportunity {{number}}
+        ...  Name=Performance Test Opportunity ${acctstartindex}-{{number}}
         ...  StageName=Closed Won
-        ...  Amount={{100 + number}}
+        ...  Amount=${random_amt}
         ...  CloseDate=${date}
         ...  npe01__Do_Not_Automatically_Create_Payment__c=true
 
@@ -133,18 +150,20 @@ Disable Default GAU Allocation
 Delete Test Opportunities
     [Documentation]     Delete All Created Records
     Log to Console      Deleting All Created Opporutnities
+    Disable Rollup Triggers
     Bulk Delete     Opportunity     where=Name Like '%Performance Test Opportunity%'
+    Enable Rollup Triggers
 
 
 *** Test Cases ***
-CRLP Account Hard Credit
+CRLP Account Hard Credit Batch Job
     [Tags]    crlp account hardcredit
     Execute Account Hard Credit Rollups
 
-CRLP Contact Hard Credit
+CRLP Contact Hard Credit Batch Job
     [Tags]    crlp contact hardcredit
     Execute Contact Hard Credit Rollups
 
-CRLP Contact Soft Credit
+CRLP Contact Soft Credit Batch Job
     [Tags]    crlp contact softcredit
     Execute Contact Soft Credit Rollups

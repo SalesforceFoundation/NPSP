@@ -248,6 +248,14 @@ tasks:
 #            include: crlp
             vars: persistent_org:True
 
+    test_rd_batch_performance:
+        description: Runs Robot Framework performance tests for Enhanced Recurring Donations Batch Job
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/RdBatch.robot
+            vars: persistent_org:True
+
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Org Config
@@ -1119,18 +1127,53 @@ flows:
                     vars: persistent_org:False
 
     test_rollup_performance_LDV:
-        description: Run customizable rollup performance tests against a pre-existing org
+        description: Run customizable rollup performance tests against a pre-existing Sandbox org
         group: Performance Tests
         steps:
-#            1:
-#                flow: max_feature_parameter_limit_work_around
-#            2:
-#                task: deploy
-            3:
-                task: test_rollup_performance
+            1:
+                flow: max_feature_parameter_limit_work_around
+                ## This is required because it's a sandbox
+            2:
+                flow: dependencies
+            2.5:
+                flow: deploy_unmanaged_ee
+                ## Deploy the latest unmanaged code into the Sandbox org before running any tests
                 options:
-                    include: rollups
-                    vars: persistent_org:True
+                    uninstall_packaged_incremental:
+                        ignore:
+                            QuickAction:
+                                - NewEvent
+                                - NewCase
+                                - SendEmail
+                            FlexiPage:
+                                - NPSP_Address_Record_Page
+                                - NPSP_Deliverable
+                                - NPSP_Engagement_Plan_Record_Page
+                                - NPSP_GAU_Allocation
+                                - NPSP_General_Accounting_Unit
+                            Object:
+                                - BatchResultLog__c
+                            CompactLayout:
+                                - Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template
+                                - Engagement_Plan__c.NPSP_Engagement_Plan
+                                - General_Accounting_Unit__c.NPSP_General_Accounting_Unit
+                                - Grant_Deadline__c.Deliverable_Layout
+                                - Allocation__c.NPSP_GAU_Allocation
+                            Layout:
+                                - Grant_Deadline__c-Deliverable
+                            ListView:
+                                - Error__c.All
+                                - Grant_Deadline__c.All
+                                - Trigger_Handler__c.All_Triggers
+            #            2.7:
+            #                task: deploy
+            #                ## Deploy a set of special config data into the org (not needed to every run)
+            #                options:
+            #                    path: unpackaged/config/perf_test_utils
+            3:
+                task: test_rd_batch_performance
+            4:
+                task: test_rollup_performance
 
     test_performance_LDV:
         description: MetaCI will look for this flow for LDV builds
