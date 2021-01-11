@@ -350,7 +350,7 @@ private class ALLO_ManageAllocations_TEST {
         retPage = ctrl.saveClose();
         Test.stopTest();
 
-        System.assert(ctrl.redirect, 'The page redirect should be set to true. Page messages: ' + ApexPages.getMessages());
+        System.assertEquals(true, retPage.getRedirect(), 'Should redirect to the parent page');
 
         actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
         System.assertEquals(3, actualAllocationsById.size(), 'New Allocations should be created: ' + actualAllocationsById.values());

@@ -72,10 +72,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     private sObjectType sObjType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
-    /** @description after successful save set to true to redirect page */
-    public Boolean redirect {get; set;}
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
-    public id parentId {get;set;}
+    public Id parentId {get;set;}
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
     public Opportunity opp {get;set;}
     /** @description The parent payment, if we're dealing with payment allocations.*/
@@ -363,7 +361,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Discards all changes and returns user to parent object detail page.*/
     public PageReference cancel() {
-        PageReference source = new PageReference('/'+parentId);
+        PageReference source = new PageReference('/' + parentId);
         return source;
     }
 
@@ -373,7 +371,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @return PageReference 
     */
     public PageReference redirect(Id parentId) {
-        PageReference pg = new PageReference('/'+ parentId);
+        PageReference pg = new PageReference('/' + parentId);
         pg.setRedirect(true);
         return pg;  
     }
