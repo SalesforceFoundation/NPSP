@@ -40,7 +40,7 @@
     </values>
     <values>
         <field>Primary_Button_Type__c</field>
-        <value xsi:type="xsd:string">link</value>
+        <value xsi:type="xsd:string">Disabled</value>
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
