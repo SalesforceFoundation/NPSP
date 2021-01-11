@@ -259,10 +259,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        DataController controller = new DataController(currentDate);        
-        controller.adjust(rds, oldRds);
+        DataRegulator dataRegulator = new DataRegulator(currentDate);        
+        dataRegulator.adjust(rds, oldRds);
 
-        List<RD2_ValidationService.Notification> notifications = controller.validate(rds, oldRds);
+        List<RD2_ValidationService.Notification> notifications = dataRegulator.validate(rds, oldRds);
         
         for (RD2_ValidationService.Notification notification : notifications) {
             notification.getRecord().addError(notification.getErrors()[0]);
@@ -272,7 +272,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Ensures data integrity on Recurring Donation records
     */
-    public class DataController {
+    public class DataRegulator {
         private Date currentDate {
             get {
                 if (currentDate == null) {
@@ -282,10 +282,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             } set;
         }
 
-        public DataController() {
+        public DataRegulator() {
         }
 
-        public DataController(Date currentDate) {
+        public DataRegulator(Date currentDate) {
             this.currentDate = currentDate;
         }
 

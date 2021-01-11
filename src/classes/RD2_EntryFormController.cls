@@ -335,12 +335,12 @@ public with sharing class RD2_EntryFormController {
         /**
         * @description Used to adjust and validate Recurring Donation data
         */
-        private RD2_RecurringDonations_TDTM.DataController controller {
+        private RD2_RecurringDonations_TDTM.DataRegulator dataRegulator {
             get {
-                if (controller == null) {
-                    controller = new RD2_RecurringDonations_TDTM.DataController();
+                if (dataRegulator == null) {
+                    dataRegulator = new RD2_RecurringDonations_TDTM.DataRegulator();
                 }
-                return controller;
+                return dataRegulator;
             }
             set;
         }   
@@ -406,7 +406,7 @@ public with sharing class RD2_EntryFormController {
                 oldRds.add(oldRd);
             }
             
-            controller.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
+            dataRegulator.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
 
             return rd;
         }
@@ -420,7 +420,7 @@ public with sharing class RD2_EntryFormController {
                 oldRds.add(oldRd);
             }
 
-            List<RD2_ValidationService.Notification> notifications = controller.validate(
+            List<RD2_ValidationService.Notification> notifications = dataRegulator.validate(
                 new List<npe03__Recurring_Donation__c>{ rd }, oldRds
             );
 

@@ -491,27 +491,16 @@ export default class rd2EntryForm extends LightningElement {
     * set by the user in the custom fields section
     */
     getCommitmentId() {
-        if (!isEmpty(this.commitmentId)) {
-            return this.commitmentId;
-        }
-
-        const customFields = (isUndefined(this.customFieldsComponent) || isNull(this.customFieldsComponent))
-            ? null
-            : this.customFieldsComponent.returnValues();
-
-        if (customFields && !isEmpty(customFields[FIELD_COMMITMENT_ID.fieldApiName])) {
-            return customFields[FIELD_COMMITMENT_ID.fieldApiName];
-        }
-
-        return null;
+        return !isEmpty(this.commitmentId)
+            ? this.commitmentId
+            : null;
     }
 
     /***
     * @description Constructs a Recurring Donation record to pass into commitment Apex method(s)
     */
     constructRecurringDonation(allFields) {
-        // If the commitment Id is retrieved from DB upon the form load, or
-        // overwrite any user entered value and use the value to construct the RD record.
+        // Populate commitment Id if provided
         if (!isEmpty(this.getCommitmentId())) {
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.getCommitmentId();
         }
@@ -589,9 +578,11 @@ export default class rd2EntryForm extends LightningElement {
         this.error = constructErrorMessage(error);
 
         if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
-            const message = 'A Recurring Donation failed to be created for an Elevate recurring payment (Id: {0}) due to the following error: '//TODO custom label
-                + '\n{1}'
-                + '\n' + this.customLabels.contactAdminMessage;
+            const message = 'A recurring commitment has been created. Please record Elevate Recurring Id {0} to verify the record in Elevate. ' 
+                + 'However, a matching Recurring Donation failed due to the following error: '//TODO custom label
+                + '\n{0}'
+                + '\nYou might want to fix the error and save Recurring donation again, or wait for the integration data process to attempt Recurring Donation creation asynchronously. ' 
+                + this.customLabels.contactAdminMessage;
 
             this.error.detail = format(message, [this.getCommitmentId(), this.error.detail]);
 
