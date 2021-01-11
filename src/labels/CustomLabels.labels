@@ -7512,8 +7512,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Reason for system error when uncertain if card charged</shortDescription>
-        <value>Request to process the payment timed out.</value>
+        <shortDescription>Reason for system error when uncertain if payment was processed</shortDescription>
+        <value>Request to process payment timed out.</value>
     </labels>
     <labels>
         <fullName>geErrorRequiredField</fullName>
@@ -7528,7 +7528,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 1</shortDescription>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Part 1</shortDescription>
         <!-- {0} = Donation Amount {1} = Donor Name {2} = custom label commonPaymentServices i.e. Payment Services -->
         <value>A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the payment was processed.</value>
     </labels>
@@ -7537,17 +7537,17 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 2</shortDescription>
-        <value>- If the payment was not processed, reenter the gift and payment information in Gift Entry.</value>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Part 2</shortDescription>
+        <value>If the payment was not processed, reenter the gift and payment information in Gift Entry.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart3</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 3</shortDescription>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Part 3</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>- If the payment was processed, note the Transaction ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
+        <value>If the payment was processed, note the Transaction ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart4</fullName>
