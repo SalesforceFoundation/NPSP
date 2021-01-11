@@ -48,7 +48,18 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         set;
     }
 
-    public List<Schema.FieldSetMember> fsmlColumns {get; set;}
+    /**
+    * @description Manage Allocation additional fields to be edited 
+    */
+    public List<Schema.FieldSetMember> additionalFields {
+        get {
+            if (additionalFields == null) {
+                additionalFields = Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsTableFields.getFields();
+            }
+            return additionalFields;
+        }
+        set;
+    }
     
     /** @description The set of allowed object types this page should be used with */
     private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
@@ -113,11 +124,19 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     @TestVisible
     private String parentCurrencyCode;
 
+    /**
+    * @description Default Allocation__c fields to be queried 
+    */
+    private Set<String> defaultAllocationFields = new Set<String> {
+        'Id',
+        'Name',
+        'Amount__c',
+        'Percent__c',
+        'General_Accounting_Unit__c'
+    };
+
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
-
-        
-        fsmlColumns = FieldSetService.createService().getFieldSetMembers('ManageAllocationsTableFields', 'Allocation__c');
         parentId = ApexPages.currentPage().getParameters().get('id');
         sObjType = parentId.getSObjectType();
         parentAmount = 0;
@@ -190,15 +209,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         defaultAllo = new Allocation__c();
-        String queryString = 'SELECT ' + getQueryFields(getBaseAllocationFields(), fsmlColumns, false) +
-                             'FROM Allocation__c ' +
-                             'WHERE Opportunity__c = :parentId ' +
-                             'OR Campaign__c = :parentId ' +
-                             'OR Recurring_Donation__c = :parentId ' +
-                             'OR Payment__c = :parentId ';
 
-        listAllo = (List<Allocation__c>)Database.query(queryString);
-        //find default allocation if enabled, remove from list
+        listAllo = getAllocations(parentId);
+
         if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
             for (integer i=0; i<listAllo.size(); i++) {
                 if (listAllo[i].General_Accounting_Unit__c == settings.Default__c) {
@@ -304,8 +317,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
-            if (allo.id!=null) listAlloForUpdate.add(allo);
-            else listAlloForInsert.add(allo);
+            if (allo.Id != null) {
+                listAlloForUpdate.add(allo);
+            }
+            else {
+                listAlloForInsert.add(allo);
+            }
         }
 
         Savepoint sp = Database.setSavepoint(); 
@@ -315,24 +332,32 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 delete listAlloForDelete;
 
                 //allow user to delete all GAUs and save with one empty GAU
-                if (listAllo.size()==1 && listAllo[0].General_Accounting_Unit__c==null && listAllo[0].Amount__c==null && listAllo[0].Percent__c==null)
+                if (listAllo.size() == 1
+                    && listAllo[0].General_Accounting_Unit__c == null
+                    && listAllo[0].Amount__c == null
+                    && listAllo[0].Percent__c == null
+                ) {
                     redirect = true;
+                }
             }
+
             if (!listAlloForUpdate.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 update listAlloForUpdate;
             }
+
             if (!listAlloForInsert.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
             
             redirect = true;
+
         } catch (Exception e) {
             Database.rollback(sp);
-
             ApexPages.addMessages(e);
         }
+
         return null;
     }
 
@@ -366,41 +391,32 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     
     }
 
-    private static Set<String> getBaseAllocationFields() {
+    /**
+    * @description Contrcut and query Recurring Donation's children Allocations
+    * @param parentId Recurring Donation Id
+    * @return List<Allocation__c> 
+    */
+    private List<Allocation__c> getAllocations(Id parentId) {
+        Set<String> queryFields = new Set<String>();
+        queryFields.addAll(defaultAllocationFields);
 
-        Set<String> fields = new Set<String> {
-            'Id',
-            'Name',
-            'Amount__c',
-            'Percent__c',
-            'General_Accounting_Unit__c'
-        };
-
-        return fields;
-    }
-
-    private static String getQueryFields(Set<String> baseFields, List<Schema.FieldSetMember> fieldSetMembers, Boolean addTrailingComma) {
-        String queryString = '';
-        Set<String> allFields = new Set<String>();
-        allFields.addAll(baseFields);
-
-        if(fieldSetMembers != null) {
-            for(Schema.FieldSetMember fsm : fieldSetMembers) {
-                allFields.add(fsm.getFieldPath());
-
-                // add lookup object Name field
-                if(!Test.isRunningTest()) {
-                    if(fsm.getSObjectField().getDescribe().getReferenceTo().size() > 0) {
-                        allFields.add(fsm.getFieldPath().replace('__c', '__r').replace('Id', '') + '.Name');
-                    }
-                }
+        for(Schema.FieldSetMember additionalField : additionalFields) {
+            if (!additionalField.getFieldPath().contains('__r.')) {
+                queryFields.add(additionalField.getFieldPath());
             }
         }
 
-        if(!allFields.isEmpty()) {
-            queryString = String.join(new List<String>(allFields), ', ');
-            queryString += addTrailingComma ? ', ' : ' ';
-        }
-        return queryString;
+        String soql = new UTIL_Query()
+            .withFrom(Allocation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere(
+                'Opportunity__c = :parentId ' +
+                'OR Campaign__c = :parentId ' +
+                'OR Recurring_Donation__c = :parentId ' +
+                'OR Payment__c = :parentId '
+            )
+            .build();
+
+        return Database.query(soql);
     }
 }
