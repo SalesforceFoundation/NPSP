@@ -7,8 +7,7 @@
     sidebar="true"
     cache="false"
     action="{!getPageLoadValidationMessages}"
-    lightningStylesheets="true"
-    docType="html-5.0">
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>

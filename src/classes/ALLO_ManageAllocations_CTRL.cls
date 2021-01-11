@@ -315,6 +315,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
+        convertDateFieldValues();
+
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
             if (allo.Id != null) {
@@ -418,5 +420,21 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             .build();
 
         return Database.query(soql);
+    }
+
+    /**
+    * @description Convert Date field value from String to Date.
+        VF page does not convert the String value into Date if the Date field is required
+    * @return void 
+    */
+    private void convertDateFieldValues() {
+        for(Schema.FieldSetMember additionalField : additionalFields) {
+            if (additionalField.getType() == Schema.DisplayType.Date) {
+                for (Allocation__c allo : listAllo) {
+                    Date convertedDate = Date.valueOf((allo.get(additionalField.getFieldPath())));
+                    allo.put(additionalField.getFieldPath(), convertedDate);
+                }
+            }
+        }
     }
 }
