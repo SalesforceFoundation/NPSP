@@ -8,6 +8,7 @@ import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Cont
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
@@ -32,7 +33,8 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME),
         apiNameFor(DATA_IMPORT_CONTACT_LASTNAME),
         apiNameFor(DATA_IMPORT_DONATION_DONOR),
-        apiNameFor(DATA_IMPORT_ACCOUNT_NAME)
+        apiNameFor(DATA_IMPORT_ACCOUNT_NAME),
+        apiNameFor(DATA_IMPORT_PAYMENT_STATUS)
     ];
 
     get sourceFieldsUsedInTemplate() {

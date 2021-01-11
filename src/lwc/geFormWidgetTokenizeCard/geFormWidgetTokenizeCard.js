@@ -2,7 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { apiNameFor, format } from 'c/utilCommon';
+import {apiNameFor, format, isEmptyObject} from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -62,7 +62,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-        this.handleWidgetDataChange(widgetState);
+        if (this.shouldHandleWidgetDataChange(widgetState)) {
+            this.handleWidgetDataChange(widgetState);
+        }
     }
 
     handleWidgetDataChange(widgetState) {
@@ -84,6 +86,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         } else {
             this._currentPaymentMethod = CREDIT_CARD;
         }
+    }
+
+    shouldHandleWidgetDataChange(widgetState) {
+        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM)) {
+            return true;
+        }
+
+        return (widgetState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
+                this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED ||
+
+                widgetState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
+                this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
     }
 
     hasValidPaymentMethod(paymentMethod) {
