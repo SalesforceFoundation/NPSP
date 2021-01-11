@@ -6708,8 +6708,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure  description if card is charged and donation record has not been created</shortDescription>
-        <value>The card has been successfully charged but the payment has not been recorded in Salesforce. Please correct the errors and resubmit the form to record the donation in Salesforce.</value>
+        <shortDescription>Failure msg when transaction is processed but record isn't created in Salesforce</shortDescription>
+        <value>Elevate successfully processed the payment, but NPSP didn't create the record for the transaction in Salesforce. Please correct the errors and resubmit the form.</value>
     </labels>
     <labels>
         <fullName>geDonorColumnLabel</fullName>
