@@ -62,17 +62,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-        if (this.shouldHandleWidgetDataChange(widgetState)) {
-            this.handleWidgetDataChange(widgetState);
+
+        if (this.shouldHandleWidgetDataChange()) {
+            this.handleWidgetDataChange();
         }
     }
 
-    handleWidgetDataChange(widgetState) {
+    handleWidgetDataChange() {
         this._hasPaymentMethodInTemplate =
             this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
-            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+            this._currentPaymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
 
             if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
                 if (this.isMounted) {
@@ -88,16 +89,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         }
     }
 
-    shouldHandleWidgetDataChange(widgetState) {
+    shouldHandleWidgetDataChange() {
+        return this.isPaymentCharged();
+    }
+
+    isPaymentCharged() {
         if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM)) {
             return true;
         }
 
-        return (widgetState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
-                this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED ||
+        return (this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
 
-                widgetState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
-                this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
     }
 
     hasValidPaymentMethod(paymentMethod) {
