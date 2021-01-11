@@ -58,7 +58,8 @@ private class ALLO_ManageAllocations_TEST {
     * @description Runs manage allocations page on an opportunity with no allocations. Adds then deletes a
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
-    static testMethod void testOpp() {
+    @isTest
+    static void testOpp() {
         setupSettings(null);
         
         Account acc = new Account(Name='foo');
@@ -95,7 +96,8 @@ private class ALLO_ManageAllocations_TEST {
     * @description Runs manage allocations page on a payment with no allocations. Adds then deletes a
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
-    static testMethod void testPayment() {
+    @isTest
+    static void testPayment() {
         Decimal amt = 100;
         Account acc = new Account(Name='foo');
         insert acc;
@@ -149,7 +151,8 @@ private class ALLO_ManageAllocations_TEST {
     * @description Runs manage allocations page on a campaign with two allocations. Adds a new allocation,
     * deletes an existing one, and verifies the results.
     ********************************************************************************************************/
-    @isTest static void testCam() {
+    @isTest
+    static void testCam() {
         setupSettings(null);
         
         General_Accounting_Unit__c campaigngau = new General_Accounting_Unit__c(Name='foo');
@@ -189,7 +192,8 @@ private class ALLO_ManageAllocations_TEST {
     * @description Runs manage allocations page on a recurring with two allocations. Adds a new allocation,
     * deletes an existing one, and verifies the results.
     ********************************************************************************************************/
-    @isTest static void testRD() {
+    @isTest
+    static void testRD() {
         setupSettings(null);
         
         Account acc = new Account(Name='foo');
@@ -248,7 +252,8 @@ private class ALLO_ManageAllocations_TEST {
     verify:
         The transaction is completely rolled back and there is no partial commit
     **********************************************************************************************************/ 
-    private static testMethod void testSaveRollsBackAllDmlsOnError() {
+    @isTest
+    private static void testSaveRollsBackAllDmlsOnError() {
         setupSettings(null);
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
@@ -303,7 +308,8 @@ private class ALLO_ManageAllocations_TEST {
     verify:
         Records are saved as expected
     **********************************************************************************************************/ 
-    private static testMethod void testResaveSucceedsWhenErrorIsFixed() {
+    @isTest
+    private static void testResaveSucceedsWhenErrorIsFixed() {
         setupSettings(null);
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
@@ -470,6 +476,29 @@ private class ALLO_ManageAllocations_TEST {
         ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
         system.AssertNotEquals(null, controller.getDecimalSeparator());
         system.AssertNotEquals(null, controller.getThousandsSeparator());
+    }
+
+    /**
+    * @description Verifies that the controller should not include Rich Text Field type and parent sobject field 
+    */
+    @isTest
+    private static void shouldReturnFieldSetsWithoutRichTextAndParentSobjectFields() {
+        ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+
+        Test.startTest();
+        List<Schema.FieldSetMember> additionalFields = controller.getAddationalAllocationFields();
+        Test.stopTest();
+
+        for (Schema.FieldSetMember field : additionalFields) {
+            Boolean isRichTextField = 
+                field.getType() == Schema.DisplayType.TEXTAREA && field.getSObjectField().getDescribe().isHtmlFormatted();
+            Boolean isParentSobjectField = field.getFieldPath().contains('__r.');
+
+            System.assert(isRichTextField == false,
+                'Rich Text field should not be included in the Manage Allocation Additional Fields fieldset');
+            System.assert(isParentSobjectField == false,
+                'Parent Sobject field should not be included in the Manage Allocation Additional Fields fieldset ');
+        }
     }
 
     // Helpers
