@@ -396,6 +396,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @param parentId Recurring Donation Id
     * @return List<Allocation__c> 
     */
+    @TestVisible
     private List<Allocation__c> getAllocations(Id parentId) {
         Set<String> queryFields = new Set<String>();
         queryFields.addAll(defaultAllocationFields);
@@ -422,11 +423,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @description Retrieve Manage Allocations Table Fields Field Set and exclude any parent record field and rich text area
     * @return List<Schema.FieldSetMember>
     */
+    @TestVisible
     private List<Schema.FieldSetMember> getAddationalAllocationFields() {
         List<Schema.FieldSetMember> qualifiedFields = new List<Schema.FieldSetMember>();
 
         List<Schema.FieldSetMember> extraFields = 
-            Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsTableFields.getFields();
+            Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsAdditionalFields.getFields();
 
         for (Schema.FieldSetMember field : extraFields) {
             if (field.getFieldPath().contains('__r.')
