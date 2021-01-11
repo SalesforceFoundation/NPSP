@@ -7554,7 +7554,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 4</shortDescription>
+        <shortDescription>Failure msg  description for system error &amp; uncertain if card charged - Part
+            4</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
         <value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
     </labels>
