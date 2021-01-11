@@ -54,7 +54,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public List<Schema.FieldSetMember> additionalFields {
         get {
             if (additionalFields == null) {
-                additionalFields = Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsTableFields.getFields();
+                additionalFields = getAddationalAllocationFields();
             }
             return additionalFields;
         }
@@ -315,8 +315,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
-        convertDateFieldValues();
-
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
             if (allo.Id != null) {
@@ -403,9 +401,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         queryFields.addAll(defaultAllocationFields);
 
         for(Schema.FieldSetMember additionalField : additionalFields) {
-            if (!additionalField.getFieldPath().contains('__r.')) {
-                queryFields.add(additionalField.getFieldPath());
-            }
+            queryFields.add(additionalField.getFieldPath());
         }
 
         String soql = new UTIL_Query()
@@ -423,18 +419,23 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
 
     /**
-    * @description Convert Date field value from String to Date.
-        VF page does not convert the String value into Date if the Date field is required
-    * @return void 
+    * @description Retrieve Manage Allocations Table Fields Field Set and exclude any parent record field and rich text area
+    * @return List<Schema.FieldSetMember>
     */
-    private void convertDateFieldValues() {
-        for(Schema.FieldSetMember additionalField : additionalFields) {
-            if (additionalField.getType() == Schema.DisplayType.Date) {
-                for (Allocation__c allo : listAllo) {
-                    Date convertedDate = Date.valueOf((allo.get(additionalField.getFieldPath())));
-                    allo.put(additionalField.getFieldPath(), convertedDate);
-                }
+    private List<Schema.FieldSetMember> getAddationalAllocationFields() {
+        List<Schema.FieldSetMember> qualifiedFields = new List<Schema.FieldSetMember>();
+
+        List<Schema.FieldSetMember> extraFields = 
+            Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsTableFields.getFields();
+
+        for (Schema.FieldSetMember field : extraFields) {
+            if (field.getFieldPath().contains('__r.')
+                || (field.getType() == Schema.DisplayType.TEXTAREA && field.getSObjectField().getDescribe().isHtmlFormatted())) {
+                continue;
             }
+            qualifiedFields.add(field);
         }
+
+        return qualifiedFields;
     }
 }
