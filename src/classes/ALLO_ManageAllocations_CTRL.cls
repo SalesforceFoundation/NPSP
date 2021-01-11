@@ -275,7 +275,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
     
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
-    public pageReference addRow() {
+    public PageReference addRow() {
         Allocation__c allo = new Allocation__c();
 
         if (opp!=null)
@@ -294,7 +294,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
-    public pageReference delRow() {
+    public PageReference delRow() {
         Boolean hasId = listAllo[rowNumber].id != null;
 
         //add to deletion list if the allocation has an id
@@ -311,7 +311,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
 
     /** @description Saves changes and returns user to parent object detail page.*/
-    public pageReference saveClose() {
+    public PageReference saveClose() {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
@@ -337,7 +337,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                     && listAllo[0].Amount__c == null
                     && listAllo[0].Percent__c == null
                 ) {
-                    redirect = true;
+                    return redirect(parentId);
                 }
             }
 
@@ -350,21 +350,32 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
-            
-            redirect = true;
 
         } catch (Exception e) {
             Database.rollback(sp);
             ApexPages.addMessages(e);
+            return null;
         }
 
-        return null;
+        return redirect(parentId);
+        
     }
 
     /** @description Discards all changes and returns user to parent object detail page.*/
-    public pageReference cancel() {
-        pageReference source = new pageReference('/'+parentId);
+    public PageReference cancel() {
+        PageReference source = new PageReference('/'+parentId);
         return source;
+    }
+
+    /**
+    * @description Redirect to parent record page
+    * @param parentId parent Id
+    * @return PageReference 
+    */
+    public PageReference redirect(Id parentId) {
+        PageReference pg = new PageReference('/'+ parentId);
+        pg.setRedirect(true);
+        return pg;  
     }
 
     /** @description Returns the decimal separator character in use for the Users current Locale setting */
