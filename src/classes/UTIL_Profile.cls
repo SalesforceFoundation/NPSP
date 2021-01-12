@@ -89,7 +89,10 @@ public class UTIL_Profile {
     /** @description True if the Read Only profile exists in the org */
     private static Boolean hasReadOnlyProfile;
 
-    /** @description Read Only Profile Name */
+    /*********************************************************************************************************
+    * @description Read Only Profile Name
+    * Returns PROFILE_MINIMUM_ACCESS if 'Read Only' profile isn't found.
+    */
     public static final String PROFILE_READ_ONLY {
         get {
             String readOnly = 'Read Only';
@@ -118,9 +121,8 @@ public class UTIL_Profile {
 
             if (hasReadOnlyProfile == true) {
                 return readOnly;
-            } else {
-                return PROFILE_MINIMUM_ACCESS;
             }
+            return PROFILE_MINIMUM_ACCESS;
         }
     }
 
