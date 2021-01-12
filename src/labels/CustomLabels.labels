@@ -7333,15 +7333,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Work Records in GS for End Users</shortDescription>
-        <value> After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</value>
+        <shortDescription>Description of Work with Records checklist in Get Started for End Users</shortDescription>
+        <value>After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistWorkRecordsTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist Work Records in GS for End Users</shortDescription>
+        <shortDescription>Title of Work with Records checklist in Get Started for End Users</shortDescription>
         <value>Work with Records</value>
     </labels>
     <labels>
@@ -7349,8 +7349,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item Global Search in GS for End Users</shortDescription>
-        <value>When you&apos;re just getting started with NPSP, finding records can be tricky. Use Global search to search across your entire Salesforce org and find what you need fast.</value>
+        <shortDescription>Description of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>When you&apos;re just getting started with NPSP, finding records can be tricky. Use global search to search across your entire Salesforce org and find what you need fast.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemGlobalSearchLinkLabel</fullName>
@@ -7365,7 +7365,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Global Search in GS for End Users</shortDescription>
+        <shortDescription>Button label of Global Search checklist item in Get Started for End Users</shortDescription>
         <value>Find Records</value>
     </labels>
     <labels>
@@ -7373,7 +7373,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Global Search in GS for End Users</shortDescription>
+        <shortDescription>Title of Global Search checklist item in Get Started for End Users</shortDescription>
         <value>Find Records with Global Search</value>
     </labels>
     <labels>
@@ -7389,7 +7389,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Stay Track in GS for End Users</shortDescription>
+        <shortDescription>Link label of Stay on Track checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Activities in Trailhead</value>
     </labels>
     <labels>
@@ -7397,7 +7397,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Stay Track in GS for End Users</shortDescription>
+        <shortDescription>Button label of Stay on Track checklist item in Get Started for End Users</shortDescription>
         <value>Track Activities</value>
     </labels>
     <labels>
@@ -7405,7 +7405,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Stay Track in GS for End Users</shortDescription>
+        <shortDescription>Title of Stay on Track checklist item in Get Started for End Users</shortDescription>
         <value>Stay on Track with Activities</value>
     </labels>
     <labels>
@@ -7413,15 +7413,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item Work Multiple Records in GS for End Users</shortDescription>
-        <value>List views help you easily find what you need by providing filtered groups of Contacts, Accounts, Opportunities, or other objects.</value>
+        <shortDescription>Description of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>List views help you easily find what you need by providing filtered groups of Contacts, Accounts, Opportunities, and other objects.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemWorkMultipleRecordsLinkLabel</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Work Multiple Records in GS for End Users</shortDescription>
+        <shortDescription>Link label of Multiple Records checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about List Views in Trailhead</value>
     </labels>
     <labels>
@@ -7429,7 +7429,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Work Multiple Records in GS for End Users</shortDescription>
+        <shortDescription>Button label of Multiple Records checklist item in Get Started for End Users</shortDescription>
         <value>Visualize Processes</value>
     </labels>
     <labels>
@@ -7437,7 +7437,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Work Multiple Records in GS for End Users</shortDescription>
+        <shortDescription>Title of Work with Multiple Records checklist item in Get Started for End Users</shortDescription>
         <value>Work with Multiple Records Using List Views</value>
     </labels>
     <labels>
