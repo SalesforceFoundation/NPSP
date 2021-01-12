@@ -7265,7 +7265,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Train Your users</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPCloudLink</fullName>
+        <fullName>gseuChecklistItemWhatIsNPCloudLink</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7273,7 +7273,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Learn more about the Nonprofit Cloud in Trailhead</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPCloudTitle</fullName>
+        <fullName>gseuChecklistItemWhatIsNPCloudTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7281,7 +7281,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>What is NonProfit Cloud?</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPCloudTitleDesc</fullName>
+        <fullName>gseuChecklistItemWhatIsNPCloudTitleDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7289,7 +7289,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Nonprofit Cloud includes apps, tools, features, services, and technology designed to meet the unique needs of nonprofits.</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPSPDesc</fullName>
+        <fullName>gseuChecklistItemWhatIsNPSPDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7297,7 +7297,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they&apos;re using the &quot;nonprofit version&quot; of Salesforce, they&apos;re usually talking about NPSP.</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPSPLink</fullName>
+        <fullName>gseuChecklistItemWhatIsNPSPLink</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7305,23 +7305,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Learn more about the Nonprofit Success Pack in Trailhead</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemWhatIsNPSPTitle</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title for checkbox item What is NPSP in Welcome section</shortDescription>
-        <value>What is Nonprofit Success Pack?</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistItemWhatIsNPSPLink</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Link text for What is NPSP checklist item in Welcome section</shortDescription>
-        <value>Learn more about the Nonprofit Success Pack in Trailhead</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistItemWhatIsNPSPTitle</fullName>
+        <fullName>gseuChecklistItemWhatIsNPSPTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -7361,15 +7345,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Onboard Your Users</value>
     </labels>
     <labels>
-        <fullName>gsChecklistWelcomeNPSPDesc</fullName>
+        <fullName>gseuChecklistWelcomeNPSPDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist section Welcome to Nonprofit in Get Started</shortDescription>
+        <shortDescription>Description of checklist section Welcome to NonProfit in Get Started</shortDescription>
         <value>Use these essentials resources to help you get started with your NPSP journey.</value>
     </labels>
     <labels>
-        <fullName>gsChecklistWelcomeNPSPTitle</fullName>
+        <fullName>gseuChecklistWelcomeNPSPTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>

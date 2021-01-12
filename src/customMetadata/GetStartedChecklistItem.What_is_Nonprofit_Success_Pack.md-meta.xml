@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPSPDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPSPDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPSPLink</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPSPLink</value>
     </values>
     <values>
         <field>Link_URL__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPSPTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPSPTitle</value>
     </values>
 </CustomMetadata>

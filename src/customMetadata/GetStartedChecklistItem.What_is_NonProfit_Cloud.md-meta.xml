@@ -4,7 +4,7 @@
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPCloudTitleDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudTitleDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPCloudLink</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudLink</value>
     </values>
     <values>
         <field>Link_URL__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemWhatIsNPCloudTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudTitle</value>
     </values>
 </CustomMetadata>
