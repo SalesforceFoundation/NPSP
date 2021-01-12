@@ -7269,7 +7269,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link text for What is Nonprofit Cloud checklist item in Welcome section</shortDescription>
+        <shortDescription>Link text for What is NonProfit Cloud checklist item in Welcome section</shortDescription>
         <value>Learn more about the Nonprofit Cloud in Trailhead</value>
     </labels>
     <labels>
@@ -7277,15 +7277,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title for checklist item What is Nonprofit Cloud in Welcome section</shortDescription>
-        <value>What is Nonprofit Cloud?</value>
+        <shortDescription>Title for checklist item What is NonProfit Cloud in Welcome section</shortDescription>
+        <value>What is NonProfit Cloud?</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemWhatIsNPCloudTitleDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description for checklist item What is Nonprofit Cloud in Welcome section</shortDescription>
+        <shortDescription>Description for checklist item What is NonProfit Cloud in Welcome section</shortDescription>
         <value>Nonprofit Cloud includes apps, tools, features, services, and technology designed to meet the unique needs of nonprofits.</value>
     </labels>
     <labels>
@@ -7294,7 +7294,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for checklist item What is NPSP in Welcome section</shortDescription>
-        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they’re using the “nonprofit version” of Salesforce, they’re usually talking about NPSP.</value>
+        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they&apos;re using the &quot;nonprofit version&quot; of Salesforce, they&apos;re usually talking about NPSP.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemWhatIsNPSPLink</fullName>
@@ -7311,14 +7311,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title for checkbox item What is NPSP in Welcome section</shortDescription>
         <value>What is Nonprofit Success Pack?</value>
-    </labels>
-    <labels>
-        <fullName>gsChecklistItemWhatIsNPSPDesc</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Description for checklist item What is NPSP in Welcome section</shortDescription>
-        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they’re using the “nonprofit version” of Salesforce, they’re usually talking about NPSP.</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemWhatIsNPSPLink</fullName>

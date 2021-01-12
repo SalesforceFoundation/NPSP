@@ -2565,10 +2565,18 @@
         <members>gsChecklistItemTrainUsersDesc</members>
         <members>gsChecklistItemTrainUsersLinkLabel</members>
         <members>gsChecklistItemTrainUsersTitle</members>
+        <members>gsChecklistItemWhatIsNPCloudLink</members>
+        <members>gsChecklistItemWhatIsNPCloudTitle</members>
+        <members>gsChecklistItemWhatIsNPCloudTitleDesc</members>
+        <members>gsChecklistItemWhatIsNPSPDesc</members>
+        <members>gsChecklistItemWhatIsNPSPLink</members>
+        <members>gsChecklistItemWhatIsNPSPTitle</members>
         <members>gsChecklistMakeItYourDesc</members>
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
         <members>gsChecklistOnboardUsersTitle</members>
+        <members>gsChecklistWelcomeNPSPDesc</members>
+        <members>gsChecklistWelcomeNPSPTitle</members>
         <members>gsDaysAdded</members>
         <members>gsDaysRemainingInFreeTrial</members>
         <members>gsFollowUpApplicationStatus</members>
