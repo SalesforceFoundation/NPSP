@@ -256,7 +256,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
-        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
+        registerListener('doNotChargeState', this.handleDisableWidgetState, this);
         registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
@@ -1033,11 +1033,10 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     /**
-     * @description Set variable that informs the form renderer when the
-     *  credit card widget is in a 'do not charge' state
+     * @description Set variable that informs the form renderer when the widget is in a disabled state
      * @param event
      */
-    handleDoNotChargeCardState (event) {
+    handleDisableWidgetState (event) {
         this._isPaymentWidgetInDoNotChargeState = event.isWidgetDisabled;
         if (this._isPaymentWidgetInDoNotChargeState) {
             this.removePaymentFieldsFromFormState([
@@ -2293,16 +2292,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleBdiProcessingError(error) {
-        if (this.hasCapturedPayment) {
+        if (this.isProcessableElevateTransaction) {
             const exceptionDataError = new ExceptionDataError(error);
-            this.handleCardChargedBDIFailedError(exceptionDataError);
+            this.handleElevateTransactionBDIError(exceptionDataError);
         } else {
             this.handleCatchOnSave(error);
             this.toggleSpinner();
         }
     }
 
-    get hasCapturedPayment() {
+    get isProcessableElevateTransaction() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         return paymentStatus
             && (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
@@ -2310,18 +2309,18 @@ export default class GeFormRenderer extends LightningElement{
 
     }
 
-    handleCardChargedBDIFailedError(exceptionDataError) {
+    handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
 
-        const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
+        const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
         this.addPageLevelErrorMessage(pageLevelError);
 
         this.disabled = false;
         this.toggleSpinner();
     }
 
-    buildCardChargedBDIFailedError(exceptionDataError) {
+    buildElevateTransactionBDIError(exceptionDataError) {
         return {
             index: 0,
             errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,

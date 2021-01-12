@@ -190,7 +190,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Returns true if the Elevate credit card widget is enabled
     * and the user did not click an action to hide it
     */
-    get displayDoNotChargeCardButton() {
+    get displayDisableWidgetButton() {
         return !(this.hasEventDisabledWidget || this.hasUserDisabledWidget);
     }
 
@@ -220,7 +220,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     /***
     * @description Handles receipt of an event to disable this widget. Currently
-    * used when we've charged a card, but BDI processing failed.
+    * used when we've submitted a payment, but BDI processing failed.
     */
     handleEventDisabledWidget(event) {
         this.toggleWidget(true, event.detail.message);
