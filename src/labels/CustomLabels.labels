@@ -7333,7 +7333,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <shortDescription>Description of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
         <value>When you raise funds for a specific purpose, you want to be sure you are honoring the donor intent. Ensure donations are allocated correctly with General Allocation Units.</value>
     </labels>
     <labels>
@@ -7341,7 +7341,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <shortDescription>Link label of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Donation Allocations in Trailhead</value>
     </labels>
     <labels>
@@ -7349,7 +7349,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <shortDescription>Button label of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
         <value>Create Allocations</value>
     </labels>
     <labels>
@@ -7357,7 +7357,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Capture Donor Intent in GS for End User</shortDescription>
+        <shortDescription>Description of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
         <value>Capture Donor Intent with Donation Allocations</value>
     </labels>
     <labels>
@@ -7365,7 +7365,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <shortDescription>Description of Collect Gifts checklist item in Get Started for End Users</shortDescription>
         <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit&apos;s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
     </labels>
     <labels>
@@ -7373,7 +7373,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <shortDescription>Link label of Collect Gifts checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Recurring Donations in Trailhead</value>
     </labels>
     <labels>
@@ -7381,7 +7381,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <shortDescription>Button label of Collect Gifts checklist item in Get Started for End Users</shortDescription>
         <value>Create Recurring Donations</value>
     </labels>
     <labels>
@@ -7389,7 +7389,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Collect Gifts in GS for End User</shortDescription>
+        <shortDescription>Title of Collect Gifts checklist item in Get Started for End Users</shortDescription>
         <value>Collect Sustaining Gifts with Recurring Donations</value>
     </labels>
     <labels>
@@ -7397,7 +7397,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
+        <shortDescription>Description of Individual Donation checklist item in Get Started for End Users</shortDescription>
         <value>For most nonprofits, donations come from individual contributions. Track individual donations by creating an Opportunity from a Contact record.</value>
     </labels>
     <labels>
@@ -7405,7 +7405,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist Item Donation Individual in GS for End User</shortDescription>
+        <shortDescription>Link label of Individual Donation checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Individual Donations in Trailhead</value>
     </labels>
      <labels>
@@ -7413,7 +7413,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Donation Individual in GS for End User</shortDescription>
+        <shortDescription>Button label of Individual Donation checklist item in Get Started for End Users</shortDescription>
         <value>Enter Individual Donations</value>
     </labels>
     <labels>
@@ -7421,7 +7421,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Individual in GS for End User</shortDescription>
+        <shortDescription>Title of Individual Donation checklist item in Get Started for End Users</shortDescription>
         <value>Enter a Donation from an Individual</value>
     </labels>
     <labels>
@@ -7429,7 +7429,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
+        <shortDescription>Description of Organization Donation checklist item in Get Started for End Users</shortDescription>
         <value>Institutional and corporate giving are an important source of nonprofit support. Track organizational giving by creating an Opportunity from an Account record.</value>
     </labels>
     <labels>
@@ -7437,7 +7437,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist Item Donation Organization in GS for End User</shortDescription>
+        <shortDescription>Link label of Organization Donation checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Organization Donations in Trailhead</value>
     </labels>
     <labels>
@@ -7445,7 +7445,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Donation Organization in GS for End User</shortDescription>
+        <shortDescription>Button label of Org Donation checklist item in Get Started for End Users</shortDescription>
         <value>Enter Organization Donations</value>
     </labels>
     <labels>
@@ -7453,7 +7453,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Donation Organization in GS for End User</shortDescription>
+        <shortDescription>Title of Organization Donation checklist item in Get Started for End Users</shortDescription>
         <value>Enter a Donation from an Organization</value>
     </labels>
     <labels>
@@ -7461,7 +7461,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
+        <shortDescription>Description of Track Donation checklist item in Get Started for End Users</shortDescription>
         <value>Campaigns let you to track your constituent outreach in Salesforce. Use the Primary Campaign field on Opportunities to better evaluate your fundraising efforts.</value>
     </labels>
     <labels>
@@ -7469,7 +7469,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist Item Track Donation in GS for End User</shortDescription>
+        <shortDescription>Link label of Track Donation checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Campaigns in Trailhead</value>
     </labels>
     <labels>
@@ -7477,7 +7477,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Primary button label of checklist Item Track Donation in GS for End User</shortDescription>
+        <shortDescription>Button label of Track Donation checklist item in Get Started for End Users</shortDescription>
         <value>Track Constituent Outreach</value>
     </labels>
     <labels>
@@ -7485,7 +7485,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Item Track Donation in GS for End User</shortDescription>
+        <shortDescription>Title of Track Donation checklist item in Get Started for End Users</shortDescription>
         <value>Track Donation Sources with Campaigns</value>
     </labels>
     <labels>
@@ -7493,7 +7493,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Track Donation in GS for End User</shortDescription>
+        <shortDescription>Description of Track Donation checklist in Get Started for End Users</shortDescription>
         <value>In NPSP, you track donations, grants, pledges, and other types of revenue using the Opportunity object. You can create donations from an individual or from an organization such as a foundation, business, or government entity.</value>
     </labels>
     <labels>
@@ -7501,7 +7501,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist Track Donation in GS for End User</shortDescription>
+        <shortDescription>Title of Track Donation checklist in Get Started for End Users</shortDescription>
         <value>Track Donations and Other Income Types with NPSP</value>
     </labels>
     <labels>
