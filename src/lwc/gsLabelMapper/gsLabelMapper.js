@@ -80,6 +80,21 @@ import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistIt
 import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
 import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
 import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
+import gseuChecklistCreateConstituentRecordsTitle from '@salesforce/label/c.gseuChecklistCreateConstituentRecordsTitle';
+import gseuChecklistCreateConstituentRecordsDesc from '@salesforce/label/c.gseuChecklistCreateConstituentRecordsDesc';
+import gseuChecklistItemCreateContactAndAccountTitle from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountTitle';
+import gseuChecklistItemCreateContactAndAccountDesc from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountDesc';
+import gseuChecklistItemCreateContactAndAccountLink from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountLink';
+import gseuChecklistItemCreateContactAndAccountBlueButton from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountBlueButton';
+import gseuChecklistItemConnectContactsRelationshipsTitle from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsTitle';
+import gseuChecklistItemConnectContactsRelationshipsDesc from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsDesc';
+import gseuChecklistItemConnectContactsRelationshipsLink from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsLink';
+import gseuChecklistItemConnectContactsRelationshipsBlueButton from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsBlueButton';
+import gseuChecklistItemConnectContactOrganizationTitle from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationTitle';
+import gseuChecklistItemConnectContactOrganizationDesc from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationDesc';
+import gseuChecklistItemConnectContactOrganizationLink from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationLink';
+import gseuChecklistItemConnectContactOrganizationBlueButton from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationBlueButton';
+
 
 
 /**
@@ -167,7 +182,21 @@ const labelMap = {
     gseuChecklistItemWhatIsNPSPLink,
     gseuChecklistItemWhatIsNPCloudTitle,
     gseuChecklistItemWhatIsNPCloudTitleDesc,
-    gseuChecklistItemWhatIsNPCloudLink
+    gseuChecklistItemWhatIsNPCloudLink,
+    gseuChecklistCreateConstituentRecordsTitle,
+    gseuChecklistCreateConstituentRecordsDesc,
+    gseuChecklistItemCreateContactAndAccountTitle,
+    gseuChecklistItemCreateContactAndAccountDesc,
+    gseuChecklistItemCreateContactAndAccountLink,
+    gseuChecklistItemCreateContactAndAccountBlueButton,
+    gseuChecklistItemConnectContactsRelationshipsTitle,
+    gseuChecklistItemConnectContactsRelationshipsDesc,
+    gseuChecklistItemConnectContactsRelationshipsLink,
+    gseuChecklistItemConnectContactsRelationshipsBlueButton,
+    gseuChecklistItemConnectContactOrganizationTitle,
+    gseuChecklistItemConnectContactOrganizationDesc,
+    gseuChecklistItemConnectContactOrganizationLink,
+    gseuChecklistItemConnectContactOrganizationBlueButton
 
 }
 

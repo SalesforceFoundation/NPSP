@@ -2565,6 +2565,20 @@
         <members>gsChecklistItemTrainUsersDesc</members>
         <members>gsChecklistItemTrainUsersLinkLabel</members>
         <members>gsChecklistItemTrainUsersTitle</members>
+        <members>gseuChecklistCreateConstituentRecordsTitle</memebers>
+        <members>gseuChecklistCreateConstituentRecordsDesc</members>
+        <members>gseuChecklistItemCreateContactAndAccountTitle</members>
+        <members>gseuChecklistItemCreateContactAndAccountDesc</members>
+        <members>gseuChecklistItemCreateContactAndAccountLink</members>
+        <members>gseuChecklistItemCreateContactAndAccountBlueButton</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsTitle</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsDesc</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsLink</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsBlueButton</members>
+        <members>gseuChecklistItemConnectContactOrganizationTitle</members>
+        <members>gseuChecklistItemConnectContactOrganizationDesc</members>
+        <members>gseuChecklistItemConnectContactOrganizationLink</members>
+        <members>gseuChecklistItemConnectContactOrganizationBlueButton</members>
         <members>gseuChecklistItemWhatIsNPCloudLink</members>
         <members>gseuChecklistItemWhatIsNPCloudTitle</members>
         <members>gseuChecklistItemWhatIsNPCloudTitleDesc</members>
@@ -3385,7 +3399,10 @@
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GetStartedChecklistItem.Add_User</members>
         <members>GetStartedChecklistItem.Communicate_With_Users</members>
+        <members>GetStartedChecklistItem.Connect_a_Contact_to_an_Organization</members>
+        <members>GetStartedChecklistItem.Connect_Two_Contacts_with_Relationships</members>
         <members>GetStartedChecklistItem.Create_a_Donation</members>
+        <members>GetStartedChecklistItem.Create_Contacts_and_Household_Accounts</members>
         <members>GetStartedChecklistItem.Custom_Fields</members>
         <members>GetStartedChecklistItem.Fundraising_process</members>
         <members>GetStartedChecklistItem.Go_Further</members>
@@ -3404,6 +3421,7 @@
         <members>GetStartedChecklistItem.What_is_Nonprofit_Cloud</members>
         <members>GetStartedChecklistItem.What_is_Nonprofit_Success_Pack</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
+        <members>GetStartedChecklistSection.CreateConstituentRecords_NPSP</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
         <members>GetStartedChecklistSection.Welcome_NPSP</members>

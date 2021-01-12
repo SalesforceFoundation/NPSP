@@ -8433,6 +8433,118 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>in 2 minutes</value>
     </labels>
     <labels>
+        <fullName>gseuChecklistCreateConstituentRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Create Constituent Records section in Get Started</shortDescription>
+        <value>People are the heart of any nonprofit. Explore Nonprofit Success Pack features to learn how to manage your constituents and their household, personal, and professional connections.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistCreateConstituentRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Create Constituent Records section in Gest Started</shortDescription>
+        <value>Create Constituent Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Blue button text for Connect Contacts to Organization checklist item</shortDescription>
+        <value>Create Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Connect Contact to Organization checklist item in Get Started</shortDescription>
+        <value>Affiliations in NPSP let you capture important connections between your constituents and related organizations such as work, school, or business. Connect a Contact to an Organization using Organization Affiliations.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Connect Contacts to Organization checklist item in Get Started</shortDescription>
+        <value>Learn more about Affiliations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Connect Contact to Organization checklist item in Get Started page</shortDescription>
+        <value>Connect a Contact to an Organization with Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Blue button text for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Create Relationships</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Relationships in NPSP let you to capture important connections between your constituents. Connect Contacts using the Relationships related list on the Contact records.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Learn more about Relationships in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Connect Two Contacts with Relationships checklist item in Get Started</shortDescription>
+        <value>Connect Two Contacts with Relationships</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Blue button text for Create Contacts and Account checklist item in Get Started</shortDescription>
+        <value>Create Contacts</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Create Contacts and Account checklist item in Get Started page</shortDescription>
+        <value>People are the most important resource for a nonprofit, so understanding how we use the Contact object to track them in NPSP is key. The Contact object stores constituent data such as name, address, and employer.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Contact and Accounts checklist item in Get Started page</shortDescription>
+        <value>Learn more about Contact and Accounts in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Create Contacts and Account checkbox item in Get Started page</shortDescription>
+        <value>Create Contacts and Household Accounts</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
