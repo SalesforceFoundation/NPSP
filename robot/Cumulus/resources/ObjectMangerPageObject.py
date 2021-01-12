@@ -193,7 +193,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 
 	def rename_object_field(self,object_name,field_name,new_name):
 		""""""
-		edit_button=npsp_lex_locators['object_manager']['button'].format("Edit")
 		save_button=npsp_lex_locators['object_manager']['button'].format("Save")
 		self.open_fields_and_relationships(object_name)
 		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
@@ -205,24 +204,19 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		search_result = npsp_lex_locators['object_manager']['search_result'].format(field_name)
 		self.selenium.click_element(search_result)
 		self.npsp.select_frame_and_click_element("Account Custom Field","object_manager.button","Edit")
-		# self.selenium.click_element(edit_button)
 		self.selenium.unselect_frame()
-		time.sleep(1)
-		# self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
+		self.npsp.wait_for_locator('frame_new', 'Edit Account Custom Field', 'Edit Account Custom Field')
 		self.npsp.choose_frame('Edit Account Custom Field')
-		print("inside second frame")
 		self.selenium.wait_until_page_contains_element(save_button)
-		# self.selenium.input_text("//textarea[@name='Description']", "testing")
-		print("after field label")
+		locator = self.salesforce._get_input_field_locator('Field Label')
+		element = self.selenium.get_webelement(locator)
+		self.selenium.driver.execute_script("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "onChange", "")
 		self.salesforce.populate_field('Field Label', new_name)
-		time.sleep(0.5)
-		# self.selenium.press_keys(None,"RETURN")
-		self.selenium.handle_alert()
-		# self.builtin.sleep(2,"waiting for alert to be handled")
-		# self.salesforce.populate_field('Field Name', new_name)
-		# self.selenium.handle_alert()
-		# self.builtin.sleep(2,"waiting for alert to be handled")
-		# self.selenium.click_element(save_button)
+		locator = self.salesforce._get_input_field_locator('Field Name')
+		element = self.selenium.get_webelement(locator)
+		self.selenium.driver.execute_script("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "onChange", "")
+		self.salesforce.populate_field('Field Name', new_name)
+		self.selenium.click_element(save_button)
 
 	def delete_object_field(self,object_name,field_name):
 		"""Deletes the specified object field"""
@@ -240,4 +234,4 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.click_element(delete_button)
 		self.salesforce.wait_until_modal_is_open()
 		self.salesforce.click_modal_button("Delete")
-		self.selenium.wait_until_location_contains("")
+		self.salesforce.wait_until_loading_is_complete()

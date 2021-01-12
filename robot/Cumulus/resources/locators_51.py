@@ -213,7 +213,9 @@ npsp_lex_locators={
         'checkbox':'//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]',
 		'erd_status_mapping_header':"//div/h1[contains(text(),'{}')]",
 		'erd_state_status_mapping':"//tr[@data-row-key-value='{}']//lightning-primitive-cell-factory[@data-label='State']//lightning-base-formatted-text",
-        'table_dropdown':"//tbody/tr[./th//*[text()='{}']]/td//button"
+        'table_dropdown':"//tbody/tr[./th//*[text()='{}']]/td//button",
+        'page_error':'//div[.//span[text()="{}"]]/slot//li[text()="{}"]',
+        'field_error':'//tr[./td[@data-label="Field API Name"]//*[text()="{}"]]/td//button[contains(@class,"error")]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
@@ -317,7 +319,7 @@ npsp_lex_locators={
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
         'alert':'//div[@role="alert" and contains(@class,"slds-theme_{}")][./span[text()="{}"]]/h2[text()="{}"]',
         'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]',
-        'page_error':'//div[@class="pageLevelErrors"]',
+        'page_error':'//div[contains(@class,"pageLevelErrors")]',
         'picklist_values':'//*[contains(@data-qa-locator,"{}")]//child::lightning-base-combobox-item[@data-value="{}"]',
         'modal_field':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"{}")]//child::{}',
         'modal_button':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"{}")]/button',
@@ -326,6 +328,8 @@ npsp_lex_locators={
         'remove_lookup':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"button Remove selected option Opportunity: Record Type")]',
         'click-dropkown-value':"//div[@class='modal-body scrollable slds-modal__content slds-p-around--medium']//*[contains(@class,'slds-combobox')]//span[text()='{}'']",
         'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
+        'form_error':'//div[.//span[text()="{}"]]/div[text()="{}"]',
+        'field_error':'//*[contains(@data-qa-locator,"{}")]/div[text()="{}"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
