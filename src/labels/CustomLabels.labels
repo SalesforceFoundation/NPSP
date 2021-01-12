@@ -8329,6 +8329,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Days Remaining in Free Trial</value>
     </labels>
     <labels>
+        <fullName>gseuExploreTrailheadButton</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the button on the Trailhead component.</shortDescription>
+        <value>Explore Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuTrailheadText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component</shortDescription>
+        <value>Learn even more about Nonprofit Cloud and Salesforce.</value>
+    </labels>
+    <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -8360,7 +8376,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Submitted Status label for the application status component</shortDescription>
         <value>Submitted</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>gsVideoHeaderLength</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -13828,7 +13844,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
-        <value>Marketing/Engagement Learning Path</value>
+        <value>Engagement</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
