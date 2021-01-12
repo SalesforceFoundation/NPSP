@@ -51,12 +51,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /**
     * @description Manage Allocation additional fields to be edited 
     */
-    public List<Schema.FieldSetMember> additionalFields {
+    public List<Schema.FieldSetMember> additionalAllocationFields {
         get {
-            if (additionalFields == null) {
-                additionalFields = getAddationalAllocationFields();
+            if (additionalAllocationFields == null) {
+                additionalAllocationFields = getAdditionalAllocationFields();
             }
-            return additionalFields;
+            return additionalAllocationFields;
         }
         set;
     }
@@ -410,7 +410,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         Set<String> queryFields = new Set<String>();
         queryFields.addAll(defaultAllocationFields);
 
-        for(Schema.FieldSetMember additionalField : additionalFields) {
+        for(Schema.FieldSetMember additionalField : additionalAllocationFields) {
             queryFields.add(additionalField.getFieldPath());
         }
 
@@ -433,13 +433,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @return List<Schema.FieldSetMember>
     */
     @TestVisible
-    private List<Schema.FieldSetMember> getAddationalAllocationFields() {
+    private List<Schema.FieldSetMember> getAdditionalAllocationFields() {
         List<Schema.FieldSetMember> qualifiedFields = new List<Schema.FieldSetMember>();
 
-        List<Schema.FieldSetMember> extraFields = 
+        List<Schema.FieldSetMember> fieldSetFields = 
             Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsAdditionalFields.getFields();
 
-        for (Schema.FieldSetMember field : extraFields) {
+        for (Schema.FieldSetMember field : fieldSetFields) {
             if (field.getFieldPath().contains('__r.')
                 || (field.getType() == Schema.DisplayType.TEXTAREA && field.getSObjectField().getDescribe().isHtmlFormatted())) {
                 continue;

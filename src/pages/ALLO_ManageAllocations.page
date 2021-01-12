@@ -175,8 +175,8 @@
                                     <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                                     <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
                                     <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
-                                    <apex:repeat var="fieldSetMember" value="{!additionalFields}">
-                                    <th scope="col"><span class="slds-truncate">{!fieldSetMember.label}</span></th>
+                                    <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
+                                    <th scope="col"><span class="slds-truncate">{!additionalField.label}</span></th>
                                     </apex:repeat>
                                     <th scope="col" width="100px"></th>
                                 </tr>
@@ -211,7 +211,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <apex:repeat var="additionalField" value="{!additionalFields}">
+                                        <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
                                         <td>
                                             <div class="slds-form-element">
                                                 <div id="alloInputGAU{!cnt}" >

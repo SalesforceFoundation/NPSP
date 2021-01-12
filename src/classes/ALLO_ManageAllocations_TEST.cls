@@ -486,7 +486,7 @@ private class ALLO_ManageAllocations_TEST {
         ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
 
         Test.startTest();
-        List<Schema.FieldSetMember> additionalFields = controller.getAddationalAllocationFields();
+        List<Schema.FieldSetMember> additionalFields = controller.getAdditionalAllocationFields();
         Test.stopTest();
 
         for (Schema.FieldSetMember field : additionalFields) {
@@ -494,9 +494,9 @@ private class ALLO_ManageAllocations_TEST {
                 field.getType() == Schema.DisplayType.TEXTAREA && field.getSObjectField().getDescribe().isHtmlFormatted();
             Boolean isParentSobjectField = field.getFieldPath().contains('__r.');
 
-            System.assert(isRichTextField == false,
+            System.assertEquals(false, isRichTextField,
                 'Rich Text field should not be included in the Manage Allocation Additional Fields fieldset');
-            System.assert(isParentSobjectField == false,
+            System.assertEquals(false, isParentSobjectField,
                 'Parent Sobject field should not be included in the Manage Allocation Additional Fields fieldset ');
         }
     }
