@@ -2594,6 +2594,16 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuResourcesItemAboutNPSPLabel</members>
+        <members>gseuResourcesItemAboutNPSPLinkLabel</members>
+        <members>gseuResourcesItemCommunityGroupLabel</members>
+        <members>gseuResourcesItemCommunityGroupLinkLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLinkLabel</members>
+        <members>gseuResourcesItemWatchVideosLabel</members>
+        <members>gseuResourcesItemWatchVideosLinkLabel</members>
+        <members>gseuResourcesItemWebinarsLabel</members>
+        <members>gseuResourcesItemWebinarsLinkLabel</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
