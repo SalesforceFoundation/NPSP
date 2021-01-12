@@ -1997,15 +1997,20 @@ export default class GeFormRenderer extends LightningElement{
     hasChargeableTransactionStatus = () => {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         switch (paymentStatus) {
+            case '': return true;
+            case undefined: return true;
+            case null: return true;
+
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED: return false;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
-            default: return true;
+            default: return false;
         }
     }
 
