@@ -63,7 +63,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
 
-        if (this.shouldHandleWidgetDataChange()) {
+        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) ||
+            this.shouldHandleWidgetDataChange()) {
+
             this.handleWidgetDataChange();
         }
     }
@@ -94,10 +96,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     isPaymentCharged() {
-        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM)) {
-            return true;
-        }
-
         return (this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
             this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
 
