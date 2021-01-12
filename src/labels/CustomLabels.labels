@@ -7333,7 +7333,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <shortDescription>Description of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
         <value>NPSP includes 87 of the most commonly-used constituent and fundraising reports. Use these reports as is, or customize them.</value>
     </labels>
     <labels>
@@ -7341,7 +7341,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <shortDescription>Link label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about NPSP Reports in Trailhead</value>
     </labels>
     <labels>
@@ -7349,7 +7349,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <shortDescription>Button label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
         <value>Run Reports</value>
     </labels>
     <labels>
@@ -7357,7 +7357,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button label of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <shortDescription>Button label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
         <value>Reports Workbook</value>
     </labels>
     <labels>
@@ -7365,7 +7365,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Prebuilt NPSP Report in GS for End User</shortDescription>
+        <shortDescription>Title of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
         <value>Run a Prebuilt NPSP Report</value>
     </labels>
     <labels>
@@ -7373,7 +7373,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item Standard Report Type in GS for End User</shortDescription>
+        <shortDescription>Description of Standard Report Type checklist item in Get Started for End Users</shortDescription>
         <value>The Lightning Report Builder gives you the ability to create your own custom reports using standard report types. The report type you choose determines the objects and fields available in your report.</value>
     </labels>
     <labels>
@@ -7381,7 +7381,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist item Standard Report Type in GS for End User</shortDescription>
+        <shortDescription>Link label of Standard Report Type checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Standard Report Types in Trailhead</value>
     </labels>
     <labels>
@@ -7389,7 +7389,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button label of checklist item Standard Report Type in GS for End User</shortDescription>
+        <shortDescription>Button label of Standard Report Type checklist item in Get Started for End Users</shortDescription>
         <value>Create Reports</value>
     </labels>
     <labels>
@@ -7397,7 +7397,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Standard Report Type in GS for End User</shortDescription>
+        <shortDescription>Title of Standard Report Type checklist item in Get Started for End Users</shortDescription>
         <value>Create a Report from a Standard Report Type</value>
     </labels>
     <labels>
@@ -7413,7 +7413,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link label of checklist item View Dashboard in GS for End User</shortDescription>
+        <shortDescription>Link label of View Dashboard checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Dashboards in Trailhead</value>
     </labels>
     <labels>
@@ -7421,7 +7421,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button label of checklist item View Dashboard in GS for End User</shortDescription>
+        <shortDescription>Button label of View Dashboard checklist item in Get Started for End Users</shortDescription>
         <value>View Dashboards</value>
     </labels>
     <labels>
@@ -7429,7 +7429,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item View Dashboard in GS for End User</shortDescription>
+        <shortDescription>Title of View Dashboard checklist item in Get Started for End Users</shortDescription>
         <value>View a Dashboard</value>
     </labels>
     <labels>
@@ -7437,7 +7437,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist Your Data in GS for End User</shortDescription>
+        <shortDescription>Description of Understand Your Data checklist item in Get Started for End Users</shortDescription>
         <value>Reports and Dashboards help organize your data so that you can tell the story of your organization&apos;s impact. NPSP includes out-of-the-box reports, or you can create your own.</value>
     </labels>
     <labels>
@@ -7445,7 +7445,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist item Your Data in GS for End User</shortDescription>
+        <shortDescription>Title of Understand Your Data checklist item in Get Started for End Users</shortDescription>
         <value>Understand Your Data</value>
     </labels>
     <labels>
