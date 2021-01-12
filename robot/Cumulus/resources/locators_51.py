@@ -325,6 +325,10 @@ npsp_lex_locators={
         'remove_lookup':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"button Remove selected option Opportunity: Record Type")]',
         'click-dropkown-value':"//div[@class='modal-body scrollable slds-modal__content slds-p-around--medium']//*[contains(@class,'slds-combobox')]//span[text()='{}'']",
         'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
+        'dropdown_button':'//table//tbody[contains(@style,"counter-reset")]/tr[1]/td/lightning-primitive-cell-factory/span/div/lightning-primitive-cell-actions//button',
+        'dropdown_value':'//div[@role="menu"]//span[text()="Open"]',
+        'payment_imported_lookup':'//*[contains(@data-qa-locator,"Payment Imported")]//input[@placeholder="Search Payments..."]',
+        'payment_imported_value':'//div[contains(@class,"slds-listbox")]//ul[@aria-label="Recent Payments"]//span[text()="{}"]',
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
