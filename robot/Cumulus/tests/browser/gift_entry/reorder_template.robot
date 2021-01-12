@@ -14,8 +14,8 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 Setup Test Data
   [Documentation]     Setsup namespace prefix
-  ${ns} =  Get NPSP Namespace Prefix
-  Set suite variable    ${ns}
+  ${NS} =  Get NPSP Namespace Prefix
+  Set suite variable    ${NS}
 
 Get Template Builder Field Names
   [Documentation]       Gets and stores the text values of template builder form field names in the BUILDER_FIELD_LABELS list.
@@ -111,4 +111,4 @@ Reorder and Modify GE Template Fields
   Get Gift Entry Form Section Names
   Lists Should Be Equal                 ${BUILDER_FIELD_LABELS}  ${FORM_FIELD_LABELS}
   Lists Should Be Equal                 ${BUILDER_S_TITLES}  ${FORM_S_TITLES}                       
-  ${batch_id} =                         Save Current Record ID For Deletion      ${ns}DataImportBatch__c
+  ${batch_id} =                         Save Current Record ID For Deletion      ${NS}DataImportBatch__c
