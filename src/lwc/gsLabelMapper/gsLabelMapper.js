@@ -72,7 +72,6 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
-
 import gseuChecklistItemPrebuiltNPSPReportDesc from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportDesc';
 import gseuChecklistItemPrebuiltNPSPReportLinkLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportLinkLabel';
 import gseuChecklistItemPrebuiltNPSPReportPriBtnLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportPriBtnLabel';
