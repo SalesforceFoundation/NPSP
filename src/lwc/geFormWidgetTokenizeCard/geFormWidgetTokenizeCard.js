@@ -92,14 +92,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     shouldHandleWidgetDataChange() {
-        return this.isPaymentCharged();
+        return !this.isPaymentCharged();
     }
 
     isPaymentCharged() {
-        return (this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
+        return (this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED ||
 
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] !==
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] ===
             this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
     }
 
