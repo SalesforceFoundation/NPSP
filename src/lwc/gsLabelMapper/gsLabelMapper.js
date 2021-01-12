@@ -72,6 +72,14 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gsChecklistWelcomeNPSPTitle from '@salesforce/label/c.gsChecklistWelcomeNPSPTitle';
+import gsChecklistWelcomeNPSPDesc from '@salesforce/label/c.gsChecklistWelcomeNPSPDesc';
+import gsChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gsChecklistItemWhatIsNPSPTitle';
+import gsChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gsChecklistItemWhatIsNPSPDesc';
+import gsChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gsChecklistItemWhatIsNPSPLink';
+import gsChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudTitle';
+import gsChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudTitleDesc';
+import gsChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudLink';
 
 
 /**
@@ -152,6 +160,15 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gsChecklistWelcomeNPSPTitle,
+    gsChecklistWelcomeNPSPDesc,
+    gsChecklistItemWhatIsNPSPTitle,
+    gsChecklistItemWhatIsNPSPDesc,
+    gsChecklistItemWhatIsNPSPLink,
+    gsChecklistItemWhatIsNPCloudTitle,
+    gsChecklistItemWhatIsNPCloudTitleDesc,
+    gsChecklistItemWhatIsNPCloudLink
+
 }
 
 /**

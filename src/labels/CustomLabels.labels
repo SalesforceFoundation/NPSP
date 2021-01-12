@@ -7265,6 +7265,78 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Train Your users</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemWhatIsNPCloudLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for What is Nonprofit Cloud checklist item in Welcome section</shortDescription>
+        <value>Learn more about the Nonprofit Cloud in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPCloudTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for checklist item What is Nonprofit Cloud in Welcome section</shortDescription>
+        <value>What is Nonprofit Cloud?</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPCloudTitleDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for checklist item What is Nonprofit Cloud in Welcome section</shortDescription>
+        <value>Nonprofit Cloud includes apps, tools, features, services, and technology designed to meet the unique needs of nonprofits.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for checklist item What is NPSP in Welcome section</shortDescription>
+        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they’re using the “nonprofit version” of Salesforce, they’re usually talking about NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for What is NPSP checklist item in Welcome section</shortDescription>
+        <value>Learn more about the Nonprofit Success Pack in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for checkbox item What is NPSP in Welcome section</shortDescription>
+        <value>What is Nonprofit Success Pack?</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for checklist item What is NPSP in Welcome section</shortDescription>
+        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they’re using the “nonprofit version” of Salesforce, they’re usually talking about NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for What is NPSP checklist item in Welcome section</shortDescription>
+        <value>Learn more about the Nonprofit Success Pack in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemWhatIsNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for checkbox item What is NPSP in Welcome section</shortDescription>
+        <value>What is Nonprofit Success Pack?</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>
@@ -7295,6 +7367,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
         <value>Onboard Your Users</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistWelcomeNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist section Welcome to Nonprofit in Get Started</shortDescription>
+        <value>Use these essentials resources to help you get started with your NPSP journey.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistWelcomeNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist section Welcome to Nonprofit in Get Started</shortDescription>
+        <value>Welcome to Nonprofit Success Pack and Nonprofit Cloud</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemFundraisingProcessDesc</fullName>
