@@ -50,9 +50,10 @@ Setup Test Data
 
 *** Test Cases ***
 Lookup Related Fields Validation for Payment 
-    [Documentation]          Create template with different types of payment  fields, with default values in payment imported.
+    [Documentation]          Create template with different default values in payment imported.
     ...                      Verify  payment related fields are autopopulated in gift entry form.
-    ...                      When batch created and contract is selected, select payment from Review Donations and verifies related values are autopopulated correctly.
+    ...                      When batch created and contact is selected, select payment from Review Donations and verifies related values are autopopulated correctly.
+    ...                      Edit the batch and clear out template values, then verify fields are empty.
     ...                      When a gift is saved verify that the valus are displayed in table row correctly.
     ...                      When a batch is saved with a gift, open the batch and verify the values are displayed in the form.
     [tags]                                 unstable      feature:GE        W-8523468
