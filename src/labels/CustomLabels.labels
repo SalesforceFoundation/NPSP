@@ -7357,7 +7357,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title of checklist section Welcome to Nonprofit in Get Started</shortDescription>
+        <shortDescription>Title of Welcome to Nonprofit checklist section in Get Started</shortDescription>
         <value>Welcome to Nonprofit Success Pack and Nonprofit Cloud</value>
     </labels>
     <labels>
