@@ -6,7 +6,7 @@ export default class EuTrailhead extends LightningElement {
     /**
      * Url of the image shown in the component
      */
-    imgUrl = Resources + '/gsAssets/trailheadComponent/trailheadLogo.png';
+    imgUrl = Resources + '/gsAssets/trailheadComponent/trailheadLogo.svg';
 
     /**
      * Object to reference the labels
