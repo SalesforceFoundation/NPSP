@@ -72,14 +72,14 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
-import gsChecklistWelcomeNPSPTitle from '@salesforce/label/c.gsChecklistWelcomeNPSPTitle';
-import gsChecklistWelcomeNPSPDesc from '@salesforce/label/c.gsChecklistWelcomeNPSPDesc';
-import gsChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gsChecklistItemWhatIsNPSPTitle';
-import gsChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gsChecklistItemWhatIsNPSPDesc';
-import gsChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gsChecklistItemWhatIsNPSPLink';
-import gsChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudTitle';
-import gsChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudTitleDesc';
-import gsChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gsChecklistItemWhatIsNPCloudLink';
+import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
+import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
+import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
+import gseuChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPDesc';
+import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPLink';
+import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
+import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
+import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
 
 
 /**
@@ -160,14 +160,14 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
-    gsChecklistWelcomeNPSPTitle,
-    gsChecklistWelcomeNPSPDesc,
-    gsChecklistItemWhatIsNPSPTitle,
-    gsChecklistItemWhatIsNPSPDesc,
-    gsChecklistItemWhatIsNPSPLink,
-    gsChecklistItemWhatIsNPCloudTitle,
-    gsChecklistItemWhatIsNPCloudTitleDesc,
-    gsChecklistItemWhatIsNPCloudLink
+    gseuChecklistWelcomeNPSPTitle,
+    gseuChecklistWelcomeNPSPDesc,
+    gseuChecklistItemWhatIsNPSPTitle,
+    gseuChecklistItemWhatIsNPSPDesc,
+    gseuChecklistItemWhatIsNPSPLink,
+    gseuChecklistItemWhatIsNPCloudTitle,
+    gseuChecklistItemWhatIsNPCloudTitleDesc,
+    gseuChecklistItemWhatIsNPCloudLink
 
 }
 
