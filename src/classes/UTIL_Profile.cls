@@ -132,9 +132,8 @@ public class UTIL_Profile {
         Integer profileRecordCount = [SELECT count() FROM Profile WHERE Name = :profileName];
         if (profileRecordCount != null && profileRecordCount > 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context */

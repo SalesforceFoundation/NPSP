@@ -63,7 +63,7 @@ public with sharing class UTIL_Permissions_TEST {
                 UTIL_Permissions.canCreate(standardObjectName);
             } catch (Exception ex) {
                 System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
-                    'Minimum access user should not have create access to standard/custom object.');
+                    'Minimum access user should not have create access to standard object.');
             }
         }
     }
@@ -83,7 +83,7 @@ public with sharing class UTIL_Permissions_TEST {
                 UTIL_Permissions.canRead(standardObjectName);
             } catch (Exception ex) {
                 System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
-                    'Minimum access user should not have read access to standard/custom object.');
+                    'Minimum access user should not have read access to standard.');
             }
         }
     }
@@ -102,7 +102,8 @@ public with sharing class UTIL_Permissions_TEST {
             try {
                 UTIL_Permissions.canUpdate(standardObjectName);
             } catch (Exception ex) {
-                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
+                    'Minimum access user should not have edit access to standard.');
             }
         }
     }
@@ -122,7 +123,7 @@ public with sharing class UTIL_Permissions_TEST {
                 UTIL_Permissions.canDelete(standardObjectName);
             } catch (Exception ex) {
                 System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException,
-                    'Minimum access user should not have delete access to standard/custom object.');
+                    'Minimum access user should not have delete access to standard.');
             }
         }
     }
