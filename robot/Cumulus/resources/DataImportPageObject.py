@@ -46,9 +46,8 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         #self.pageobjects.current_page_should_be("Listing","DataImport__c")
         time.sleep(2)
         self.npsp.click_link_with_text(di_name)
-#         self.pageobjects.current_page_should_be("Details","DataImport__c")
-
-
+        self.pageobjects.current_page_should_be("Details","DataImport__c")
+        
 
 @pageobject("Details", "DataImport__c")
 class DataImportDetailPage(BaseNPSPPage, DetailPage):
