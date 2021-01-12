@@ -5,12 +5,10 @@ public inherited sharing class CRLP_PlatformCache {
     // ====================================================================
 
     /**
-     * @description CacheBuilder implementation to retrieve/load TriggerHandler__c records.
+     * @description CacheBuilder implementation to retrieve/load Rollup__Mdt records.
      * CacheBuilder is smart enough to use the values in the cache if they exist and if not it will call the
      * code witin the doLoad() method below to retrieve the values and then store them in the cache so they're
      * available on the next call.
-     * The string param in the doLoad() method is not used in the TriggerHandlerCache implementation, but is required
-     * by CacheBuilder.
      */
     public class RollupDefinitionsCache implements Cache.CacheBuilder {
         public List<Rollup__mdt> doLoad(String dummyParam) {
@@ -19,20 +17,20 @@ public inherited sharing class CRLP_PlatformCache {
     }
 
     /**
-     * @description CacheBuilder implementation to retrieve/load TriggerHandler__c records.
+     * @description CacheBuilder implementation to retrieve/load Filter_Group__mdt records.
      */
     public class RollupFilterGroupsCache implements Cache.CacheBuilder {
         public List<Filter_Group__mdt> doLoad(String dummyParam) {
-            return new List<Filter_Group__mdt>();
+            return CMT_FilterRule_SEL.queryFilterGroupRecords();
         }
     }
 
     /**
-     * @description CacheBuilder implementation to retrieve/load TriggerHandler__c records.
+     * @description CacheBuilder implementation to retrieve/load Filter_Rule__mdt records.
      */
     public class RollupFilterRulesCache implements Cache.CacheBuilder {
         public List<Filter_Rule__mdt> doLoad(String dummyParam) {
-            return new List<Filter_Rule__mdt>();
+            return CMT_FilterRule_SEL.queryFilterRuleRecords();
         }
     }
 }
