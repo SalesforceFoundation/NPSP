@@ -280,6 +280,20 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
 
+    def return_template_builder_titles(self,page=None):
+        """Gets the values of either the template builder form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        template_builder_fields: Returns the titles of the template builder form fields
+        template_builder_sections: Returns the titles of the template builder form sections"""
+        if page == 'template_builder_fields' :
+            form_field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
+            return form_field_titles
+        elif page == 'template_builder_sections' :
+            form_section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
+            return form_section_titles
+        else :
+            raise Exception ("Invalid argument passed!")
+
 
 @pageobject("Form", "Gift Entry")
 class GiftEntryFormPage(BaseNPSPPage, BasePage):
@@ -566,3 +580,16 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
 
+    def return_gift_form_titles(self,page=None):
+        """Gets the values of either the form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        gift_entry_form_fields: Returns the titles of the gift entry form fields
+        gift_entry_form_sections: Returns the titles of the gift entry form sections"""
+        if page == 'gift_entry_form_fields' :
+            field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
+            return field_titles
+        elif page == 'gift_entry_form_sections' :
+            section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_sections'].format("FormSection"))
+            return section_titles
+        else :
+            raise Exception ("Invalid argument passed!")
