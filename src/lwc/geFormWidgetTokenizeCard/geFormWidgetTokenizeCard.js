@@ -80,10 +80,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 if (this.isMounted) {
                     this.requestSetPaymentMethod(this._currentPaymentMethod);
                 } else {
-                    this.handleUserEnabledWidget();
+                    if (!this.hasUserDisabledWidget) {
+                        this.handleUserEnabledWidget();
+                    }
                 }
             } else {
-                this.handleUserDisabledWidget();
+                this.toggleWidget(true, this.disabledWidgetMessage);
             }
         } else {
             this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
