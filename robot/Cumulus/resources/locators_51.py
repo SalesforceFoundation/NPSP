@@ -329,7 +329,7 @@ npsp_lex_locators={
         'click-dropkown-value':"//div[@class='modal-body scrollable slds-modal__content slds-p-around--medium']//*[contains(@class,'slds-combobox')]//span[text()='{}'']",
         'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
         'form_error':'//div[.//span[text()="{}"]]/div[text()="{}"]',
-        'field_error':'//*[contains(@data-qa-locator,"{}")]/div[text()="{}"]'
+        'field_error':'//*[contains(@data-qa-locator,"{}")]/div[text()="{}"]',
         'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
