@@ -7405,7 +7405,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item View Dashboard in GS for End User</shortDescription>
+        <shortDescription>Description of View Dashboard checklist item in Get Started for End Users</shortDescription>
         <value>Dashboards pull data from one of more reports and display it side by side in the same window. NPSP includes three dashboards that you can use as is or customize.</value>
     </labels>
     <labels>
