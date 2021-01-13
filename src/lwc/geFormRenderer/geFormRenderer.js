@@ -92,6 +92,7 @@ import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
     PAYMENT_METHODS, ACH_CODE,
+    PAYMENT_METHOD_CREDIT_CARD
 } from 'c/geConstants';
 
 
@@ -2268,7 +2269,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isCreditCardTransaction() {
-        return this.selectedPaymentMethod() === PAYMENT_METHODS.CREDIT_CARD;
+        return this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     processDataImport = async () => {
