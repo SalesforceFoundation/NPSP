@@ -550,6 +550,7 @@ tasks:
                 - "unable to obtain exclusive access to this record"
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
+                - "None"
             retry_always: True
             required_org_code_coverage_percent: 86
 
