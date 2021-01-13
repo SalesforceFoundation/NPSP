@@ -2616,6 +2616,18 @@
         <members>gseuChecklistItemTrackDonationTitle</members>
         <members>gseuChecklistTrackDonationDesc</members>
         <members>gseuChecklistTrackDonationTitle</members>
+        <members>gseuExploreTrailheadButton</members>
+        <members>gseuResourcesItemAboutNPSPLabel</members>
+        <members>gseuResourcesItemAboutNPSPLinkLabel</members>
+        <members>gseuResourcesItemCommunityGroupLabel</members>
+        <members>gseuResourcesItemCommunityGroupLinkLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLinkLabel</members>
+        <members>gseuResourcesItemWatchVideosLabel</members>
+        <members>gseuResourcesItemWatchVideosLinkLabel</members>
+        <members>gseuResourcesItemWebinarsLabel</members>
+        <members>gseuResourcesItemWebinarsLinkLabel</members>
+        <members>gseuTrailheadText</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -4104,6 +4116,7 @@
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
+        <members>gseuTrailhead</members>
         <members>libsMoment</members>
         <members>modal</members>
         <members>progressRing</members>
