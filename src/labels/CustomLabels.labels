@@ -8445,7 +8445,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title for Create Constituent Records section in Gest Started</shortDescription>
+        <shortDescription>Title for Create Constituent Records section in Get Started</shortDescription>
         <value>Create Constituent Records</value>
     </labels>
     <labels>
@@ -8453,7 +8453,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Blue button text for Connect Contacts to Organization checklist item</shortDescription>
+        <shortDescription>Button text for Connect Contacts to Organization checklist item</shortDescription>
         <value>Create Affiliations</value>
     </labels>
     <labels>
@@ -8477,7 +8477,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title for Connect Contact to Organization checklist item in Get Started page</shortDescription>
+        <shortDescription>Title for Connect Contact to Organization checklist item in Get Started</shortDescription>
         <value>Connect a Contact to an Organization with Affiliations</value>
     </labels>
     <labels>
@@ -8485,7 +8485,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Blue button text for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <shortDescription>Button text for Connect Two Contacts with Relationships checklist item</shortDescription>
         <value>Create Relationships</value>
     </labels>
     <labels>
@@ -8517,7 +8517,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Blue button text for Create Contacts and Account checklist item in Get Started</shortDescription>
+        <shortDescription>Button text for Create Contacts and Account checklist item in Get Started</shortDescription>
         <value>Create Contacts</value>
     </labels>
     <labels>
@@ -8525,7 +8525,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description for Create Contacts and Account checklist item in Get Started page</shortDescription>
+        <shortDescription>Description for Contacts and Account checklist item in Get Started</shortDescription>
         <value>People are the most important resource for a nonprofit, so understanding how we use the Contact object to track them in NPSP is key. The Contact object stores constituent data such as name, address, and employer.</value>
     </labels>
     <labels>
@@ -8533,7 +8533,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link text for Contact and Accounts checklist item in Get Started page</shortDescription>
+        <shortDescription>Link text for Contacts and Accounts checklist item in Get Started</shortDescription>
         <value>Learn more about Contact and Accounts in Trailhead</value>
     </labels>
     <labels>
@@ -8541,7 +8541,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Title for Create Contacts and Account checkbox item in Get Started page</shortDescription>
+        <shortDescription>Title for Contacts and Accounts checklist item in Get Started</shortDescription>
         <value>Create Contacts and Household Accounts</value>
     </labels>
     <labels>
