@@ -2,7 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import {apiNameFor, format, isEmptyObject} from 'c/utilCommon';
+import { apiNameFor, format, isEmptyObject } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -24,11 +24,10 @@ import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donatio
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+    PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
     LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
 } from 'c/geConstants';
 
-const ACH = 'ACH';
-const CREDIT_CARD = 'Credit Card';
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 const CONTACT_DONOR_TYPE = 'Contact1';
@@ -87,7 +86,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 this.handleUserDisabledWidget();
             }
         } else {
-            this._currentPaymentMethod = CREDIT_CARD;
+            this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
         }
     }
 
@@ -104,11 +103,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod(paymentMethod) {
-        return paymentMethod === ACH || paymentMethod === CREDIT_CARD;
+        return paymentMethod === PAYMENT_METHODS.ACH
+            || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     tokenizeEventAction() {
-        return this._currentPaymentMethod === ACH
+        return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             ? TOKENIZE_ACH_EVENT_ACTION
             : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
     }
@@ -276,7 +276,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     buildTokenizeParameters() {
-        if (this._currentPaymentMethod === CREDIT_CARD) {
+        if (this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
             //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
             return { nameOnCard: null };
