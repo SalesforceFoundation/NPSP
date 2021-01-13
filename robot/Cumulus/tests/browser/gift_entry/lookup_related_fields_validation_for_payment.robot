@@ -142,7 +142,7 @@ Lookup Related Fields Validation for Payment
     ...                                    Payment: Paid=--None--
     ...                                    Payment: Payment Method=Check
     ...                                    Data Import: Payment Imported=
-    Click Table Row Button                 Open
+    Perform Action On Datatable Row   	    ${CONTACT}[Name]                Open
     Verify Field Default Value
     ...                                    Data Import: Donation Donor=Contact1
     ...                                    Data Import: Contact1 Imported=${CONTACT}[Name]

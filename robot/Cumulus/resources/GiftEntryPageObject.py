@@ -580,23 +580,6 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
 
-
-    def click_table_row_button(self,title):
-        """clicks on gifts table row  dropdown button and selects a value"""
-        locator=npsp_lex_locators["gift_entry"]["dropdown_button"]
-        self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.scroll_element_into_view(locator)
-        try:   
-            self.selenium.click_element(locator)
-        except ElementClickInterceptedException:
-            self.selenium.execute_javascript("window.scrollBy(0,200)")
-            self.selenium.click_element(locator)
-        time.sleep(2)
-        loc=npsp_lex_locators["gift_entry"]["dropdown_value"].format(title)
-        self.selenium.wait_until_page_contains_element(loc)
-        self.selenium.scroll_element_into_view(loc)
-        self.selenium.click_element(loc)
-
     def select_value_from_lookup(self, value):
         """Selects the first value from a lookup field"""
         locator=npsp_lex_locators["gift_entry"]["payment_imported_lookup"]
