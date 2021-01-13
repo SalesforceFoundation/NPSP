@@ -13927,6 +13927,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Get Started on NPSP</value>
     </labels>
     <labels>
+        <fullName>gseuPageTitle </fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the End User Get Started Page</shortDescription>
+        <value>SETUP CHECKLIST</value>
+    </labels>
+    <labels>
         <fullName>gseuResourcesItemQuestionsAnsweredLabel</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

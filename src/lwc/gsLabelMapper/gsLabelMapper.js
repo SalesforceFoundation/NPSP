@@ -72,11 +72,14 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
-
+import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
+import gseuPageTitle from '@salesforce/label/c.gseuPageTitle';
 /**
 * @description Map of getLabelValue labels
 */
 const labelMap = {
+    gsAdminSetupTitle,
+    gseuPageTitle,
     gsChecklistExploreNPSPTitle,
     gsChecklistExploreNPSPDesc,
     gsChecklistItemAddUserDesc,
