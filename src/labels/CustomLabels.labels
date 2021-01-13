@@ -7357,7 +7357,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link Label of checklist item Global Search in GS for End Users</shortDescription>
+        <shortDescription>Link label of Global Search checklist item in Get Started for End Users</shortDescription>
         <value>Learn more about Search Results in Trailhead</value>
     </labels>
     <labels>
@@ -7381,7 +7381,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of checklist item Stay Track in GS for End Users</shortDescription>
+        <shortDescription>Description of Stay on Track checklist item in Get Started for End Users</shortDescription>
         <value>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organization, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you&apos;re working on.</value>
     </labels>
     <labels>
