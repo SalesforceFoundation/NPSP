@@ -59,7 +59,8 @@ import {
     getNamespace,
     validateJSONString,
     relatedRecordFieldNameFor,
-    apiNameFor
+    apiNameFor,
+    isString
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -1995,7 +1996,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
+        const paymentStatus = this.convertPaymentStatusToUpperCase(
+            this.getFieldValueFromFormState(PAYMENT_STATUS));
+
         switch (paymentStatus) {
             case '':
             case undefined:
@@ -2008,6 +2011,13 @@ export default class GeFormRenderer extends LightningElement{
             default:
                 return false;
         }
+    }
+
+    convertPaymentStatusToUpperCase(paymentStatus) {
+        if (isString(paymentStatus)) {
+            return paymentStatus.toUpperCase();
+        }
+        return paymentStatus;
     }
 
     /*******************************************************************************
