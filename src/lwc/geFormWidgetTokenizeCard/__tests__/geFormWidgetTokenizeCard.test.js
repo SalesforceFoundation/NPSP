@@ -1,5 +1,7 @@
 import { createElement } from 'lwc';
 import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
+import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 const CASH = 'Cash';
 const CREDIT_CARD = 'Credit Card';
@@ -7,6 +9,7 @@ const ACH = 'ACH';
 const PATH_GE_TOKENIZE_CARD = '/apex/GE_TokenizeCard';
 const DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction';
 const EXTENDED_DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction c.psSelectValidPaymentMethod';
+const BDI_FAILURE_DISABLED_MESSAGE = 'c.geErrorCardChargedBDIFailed';
 const PAYMENT_METHOD_FIELD = 'Payment_Method__c';
 
 const createWidgetWithPaymentMethod = (paymentMethod) => {
@@ -108,6 +111,21 @@ describe('c-ge-form-widget-tokenize-card', () => {
                 expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
             });
     });
+
+    it('should permanently disable itself if an payment transaction has been successful', async () => {
+        const element = createWidgetWithPaymentMethod(ACH);
+        document.body.appendChild(element);
+
+        return Promise.resolve()
+        .then(() => {
+            expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
+            dispatchApplicationEvent(element,
+                BDI_FAILURE_DISABLED_MESSAGE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
+        })
+        .then(() => {
+            expect(spanDisabledMessage(element).innerHTML).toBe(BDI_FAILURE_DISABLED_MESSAGE);
+        });
+    });
 });
 
 const enterPaymentButton = (element) => {
@@ -144,4 +162,9 @@ const getShadowRoot = (element) => {
 
 const shadowQuerySelector = (element, selector) => {
     return getShadowRoot(element).querySelector(selector);
+}
+
+const dispatchApplicationEvent = (element, value, eventName) => {
+    fireEvent(this, eventName,
+        { detail: { message: value } });
 }
