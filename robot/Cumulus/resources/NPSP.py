@@ -1636,7 +1636,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        locator=npsp_lex_locators['button-with-text'].format(title)
+        if title=="Schedule Payments" and self.latest_api_version == 50.0:
+            locator=npsp_lex_locators['schedule_payments'].format(title)
+        else:
+            locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.set_focus_to_element(locator)
