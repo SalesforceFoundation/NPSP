@@ -31,7 +31,10 @@ Setup Test Data
 *** Test Cases ***
 
 Validate Errors When Field Is Renamed
-    [Documentation]
+    [Documentation]         Creates a template with a custom field on template form, renames the field, verifies warnings and error are thrown on AM
+    ...                     Object group page, template builder. Verify field is not present on batch gift form. Save the gift and verify gift
+    ...                     status is dry run error. Rename the field to correct it and verify no errors or warnings are thrown on AM, object group,
+    ...                     and template builder. Creates a batch and verifys field is back on form and on saving gift its status is dry run validated.
 
     [tags]                              unstable                      feature:GE        W-8292840
     Go To Page                          Landing                       GE_Gift_Entry

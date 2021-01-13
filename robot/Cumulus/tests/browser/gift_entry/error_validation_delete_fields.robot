@@ -24,7 +24,9 @@ Setup Test Data
 *** Test Cases ***
 
 Validate Errors When Field Is Deleted
-    [Documentation]
+    [Documentation]         Deletes a field thats mapped, verifies warnings and error are thrown on AM, Object group page, template builder.
+    ...                     Verifys that saving the gift throws an error. Creates the field and verifys no errors or warnings are thrown on AM,
+    ...                     object group, and template builder. Verifys that gift can be created successfully.
 
     [tags]                              unstable                      feature:GE          W-8292840
     Load Page Object                    Custom                        ObjectManager
