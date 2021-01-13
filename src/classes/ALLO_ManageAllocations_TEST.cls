@@ -341,7 +341,10 @@ private class ALLO_ManageAllocations_TEST {
         System.assertEquals(null, retPage, 'The return page on the error should be null');
 
         Map<Id, Allocation__c> actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
-        System.assertEquals(allocations.size(), actualAllocationsById.size(), 'The Allocations should be unchanged: ' + actualAllocationsById.values());
+        System.assertEquals(allocations.size(), actualAllocationsById.size(),
+        'The Allocations should be unchanged: ' + actualAllocationsById.values());
+        System.assertEquals(false, ctrl.isLoading,
+            'isLoading should be set back to false when there is an error');
 
         //fix the error
         ctrl.listAllo[2].Percent__c = 20; 
@@ -350,7 +353,8 @@ private class ALLO_ManageAllocations_TEST {
         retPage = ctrl.saveClose();
         Test.stopTest();
 
-        System.assertEquals(true, retPage.getRedirect(), 'Should redirect to the parent page');
+        System.assertEquals(true, ctrl.redirect,
+        'The page redirect should be set to true. Page messages: ' + ApexPages.getMessages());
 
         actualAllocationsById = new Map<Id, Allocation__c>([SELECT Percent__c, Amount__c FROM Allocation__c WHERE Campaign__c = :campaign.id]);
         System.assertEquals(3, actualAllocationsById.size(), 'New Allocations should be created: ' + actualAllocationsById.values());

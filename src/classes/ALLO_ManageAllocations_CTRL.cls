@@ -95,6 +95,23 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         set;
     }
 
+    /**
+    * @description Determine if the page is loading
+    */
+    public Boolean isLoading {
+        get {
+            if (isLoading == null) {
+                isLoading = true;
+            }
+            return isLoading;
+        }set;
+    }
+
+    /**
+    * description After successful save set to true to redirect page 
+    */
+    public Boolean redirect {get;set;}
+
     /** @description The page title based on which type of allocation we're using. */
     public string pageTitle {get;set;}
     /** @description The name of the object we're adding allocations to. */
@@ -220,8 +237,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             }
         }
 
-        if (listAllo.isEmpty())
+        if (listAllo.isEmpty()) {
             addRow();
+        }
+
+        isLoading = false;
     }
 
     /**
@@ -308,8 +328,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return null;
     }
 
-    /** @description Saves changes and returns user to parent object detail page.*/
+    /** 
+    * @description Saves changes and returns user to parent object detail page.
+    * @return PageReference
+    */
     public PageReference saveClose() {
+        isLoading = true;
+
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
@@ -335,7 +360,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                     && listAllo[0].Amount__c == null
                     && listAllo[0].Percent__c == null
                 ) {
-                    return redirect(parentId);
+                    redirect = true;
                 }
             }
 
@@ -348,14 +373,15 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
+            redirect = true;
 
         } catch (Exception e) {
             Database.rollback(sp);
             ApexPages.addMessages(e);
-            return null;
+            isLoading = false;
         }
 
-        return redirect(parentId);
+        return null;
         
     }
 
@@ -363,17 +389,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public PageReference cancel() {
         PageReference source = new PageReference('/' + parentId);
         return source;
-    }
-
-    /**
-    * @description Redirect to parent record page
-    * @param parentId parent Id
-    * @return PageReference 
-    */
-    public PageReference redirect(Id parentId) {
-        PageReference pg = new PageReference('/' + parentId);
-        pg.setRedirect(true);
-        return pg;  
     }
 
     /** @description Returns the decimal separator character in use for the Users current Locale setting */

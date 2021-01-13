@@ -157,18 +157,28 @@
     })(jQuery);
 
     </script>
-
     <div class="slds-scope">
         <apex:form id="theForm">
+            <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
                 <!-- PAGE HEADER -->
                 <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                     parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
                     header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}" cancelReRender="cancelBTN" cancelDisabledOnClick="true"
                     saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}" saveDisabledOnClick="true"/>
 
+                <apex:outputPanel rendered="{!isLoading}" >
+                    <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
+                        <div role="status" class="slds-spinner slds-spinner_medium">
+                            <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
                 <c:UTIL_PageMessages id="messages"/>
                 <div>
-                    <apex:outputPanel id="theTable">
+                    <apex:outputPanel id="theTable" rendered="{!!isLoading}">
                         <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
                             <thead>
                                 <tr class="slds-text-heading_label">
