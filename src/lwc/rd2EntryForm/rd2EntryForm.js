@@ -578,10 +578,10 @@ export default class rd2EntryForm extends LightningElement {
         this.error = constructErrorMessage(error);
 
         if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
-            const message = 'A recurring commitment has been created. Please record Elevate Recurring Id {0} to verify the record in Elevate. ' 
-                + 'However, a matching Recurring Donation failed due to the following error: '//TODO custom label
-                + '\n{0}'
-                + '\nYou might want to fix the error and save Recurring donation again, or wait for the integration data process to attempt Recurring Donation creation asynchronously. ' 
+            const message = 'A recurring commitment has been created in Elevate with tracking "Elevate Recurring Id" {0}. ' //TODO custom label
+                + 'However, a matching Recurring Donation failed due to the following error: '
+                + '\n{1}. '
+                + '\nYou might want to keep this form open, fix the error, and save this Recurring donation again. Alternatively, wait for the integration process to attempt Recurring Donation creation asynchronously. ' 
                 + this.customLabels.contactAdminMessage;
 
             this.error.detail = format(message, [this.getCommitmentId(), this.error.detail]);
