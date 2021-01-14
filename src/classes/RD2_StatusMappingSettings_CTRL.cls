@@ -116,6 +116,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     * The state values and labels are sourced from the RD Status field picklist field
     * since state values are already contained in the Status field
     * so there is no need to create new custom labels to hold the state labels.
+    @ @return Map<String, String>
     */
     private static Map<String, String> mapStateLabelByValue() {
         Map<String, String> stateLabelByValue = new Map<String, String>();
@@ -139,6 +140,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
     /***
     * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    * @return String
     */
     public String getNamespace() {
         return UTIL_Namespace.getNamespace();
@@ -405,7 +407,16 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
             get {
                 if (deployResult == null) {
                     if (String.isNotBlank(deploymentId)) {
-                        deployResult = CMT_MetadataAPI.getDeploymentResult(deploymentId);
+                        try {
+                            deployResult = CMT_MetadataAPI.getDeploymentResult(deploymentId);
+                        }
+                        catch (Exception e) {
+                            // deployResult should remain null if retrieval by deploymentId is unsuccessful
+                            // there are known scenarios that result in an invalid deployment id
+                            // - metadata deployments older than 30 days can no longer be retrieved
+                            // - sandbox created/refreshed from org with RD2 and a status to state mapping
+                            deployResult = null;
+                        }
                     }
                 }
                 return deployResult;
@@ -432,6 +443,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         /**
          * @description Returns deployment Id
+         * @return String
          */
         public String getDeploymentId() {
             return deploymentId;
@@ -439,6 +451,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         /**
          * @description Checks if deployment exists for the specified deployment Id
+         * @return Boolean
          */
         public Boolean hasDeployResult() {
             return deployResult != null;
@@ -446,6 +459,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         /**
          * @description Checks if deployment is in progress
+         * @return Boolean
          */
         public Boolean isInProgress() {
             return hasDeployResult()
@@ -458,6 +472,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         /**
          * @description Checks if deployment succeeded
+         * @return Boolean
          */
         public Boolean isSuccess() {
             return hasDeployResult()
@@ -466,6 +481,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
         /**
          * @description Returns deployment error message
+         * @return String
          */
         public String getDeployErrorMessage() {
             if (!hasDeployResult()
