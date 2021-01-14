@@ -35,6 +35,8 @@ Setup Test Data
     ...                                  npe01__Payment_Amount__c=100.0
     ...                                  npe01__Scheduled_Date__c=${DATE}
     Set suite variable    &{PAYMENT1}
+    &{PMT_IMP} =          Create Dictionary         Default Value=${PAYMENT1}[Name]
+    Set Suite Variable    &{PMT_IMP}
     &{PAYMENT2} =         API Create Payment            ${OPPORTUNITY}[Id]
     ...                                  npe01__Payment_Amount__c=300.0
     ...                                  npe01__Scheduled_Date__c=${DATE}
@@ -49,7 +51,7 @@ Setup Test Data
     Set suite variable    ${NS}
 
 *** Test Cases ***
-Lookup Related Fields Validation for Payment 
+Lookup Related Fields Validation for Payment
     [Documentation]          Create template with different default values in payment imported.
     ...                      Verify  payment related fields are autopopulated in gift entry form.
     ...                      When batch created and contact is selected, select payment from Review Donations and verifies related values are autopopulated correctly.
@@ -66,16 +68,15 @@ Lookup Related Fields Validation for Payment
     ...                                    Template Name=${TEMPLATE_NAME}
     ...                                    Description=This Template is created by automation script
     Click Gift Entry Button                Next: Form Fields
-    Perform Action On Object Field         select          Payment         Paid         
+    Perform Action On Object Field         select          Payment         Paid
     Perform Action On Object Field         select          Payment           Payment Imported
-    Fill Template Form 
-    ...                                    Payment: Paid=&{PAID}                     
+    Fill Template Form
+    ...                                    Payment: Paid=&{PAID}
     ...                                    Payment: Check/Reference Number=&{PAYMENT_REF}
-    ...                                    Payment: Payment Method=&{PAYMENT_METHOD}   
-    Load Page Object                       Form         Gift Entry
-    Select Value From lookup               ${PAYMENT1}[Name]                     
+    ...                                    Data Import: Payment Imported=&{PMT_IMP}
+    ...                                    Payment: Payment Method=&{PAYMENT_METHOD}
     Click Gift Entry Button                Next: Batch Settings
-    Add Batch Table Columns                
+    Add Batch Table Columns
     ...                                    Payment: Check/Reference Number
     ...                                    Payment: Payment Method
     ...                                    Payment: Paid
@@ -117,7 +118,7 @@ Lookup Related Fields Validation for Payment
     Click Gift Entry Button                Save & Enter New Gift
     Verify Table Field Values              Batch Gifts
     ...                                    Data Import: Donation Donor=Contact1
-    ...                                    Data Import: Contact1 Imported=${CONTACT}[Name] 
+    ...                                    Data Import: Contact1 Imported=${CONTACT}[Name]
     ...                                    Opportunity: Close Date=${UI_DATE}
     ...                                    Opportunity: Amount=$300.00
     ...                                    Payment: Check/Reference Number=123abc

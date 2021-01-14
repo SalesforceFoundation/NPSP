@@ -212,10 +212,9 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.selenium.wait_until_page_contains_element(popup)
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
-                    elif placeholder=="Search...":
+                    elif placeholder in ("Search...","Search Payments..."):
                         self.salesforce._populate_field(field_loc,value)
-                        qa_id="Select "+value
-                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                         self.selenium.wait_until_page_contains_element(option)
                         try:
                             self.selenium.click_element(option)
@@ -582,19 +581,6 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
-
-    def select_value_from_lookup(self, value):
-        """Selects the first value from a lookup field"""
-        locator=npsp_lex_locators["gift_entry"]["payment_imported_lookup"]
-        self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.execute_javascript("window.scrollBy(0,200)")
-        self.selenium.scroll_element_into_view(locator)
-        self.selenium.click_element(locator)
-        time.sleep(2)
-        loc=npsp_lex_locators["gift_entry"]["payment_imported_value"].format(value)
-        self.selenium.wait_until_page_contains_element(loc)
-        self.selenium.scroll_element_into_view(loc)
-        self.selenium.click_element(loc)
 
     def return_gift_form_titles(self,page=None):
         """Gets the values of either the form field titles or the form section titles and stores them for recalling.
