@@ -66,11 +66,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
-            updateOpportunityNames((list<Opportunity>) newList);
-
+            try {
+                updateOpportunityNames((list<Opportunity>) newList);
+            } catch (Exception ex) {
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
+            }
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             upsertContactRolesAfterUpdate((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
-            updateOpportunityNames((list<Opportunity>) newList);
         }
 
         // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
@@ -323,29 +325,23 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param listOpps List of opportunities from trigger.new
     ********************************************************************************************************/
     private void updateOpportunityNames(list<Opportunity> listOpps) {
-        try {
-            //name opportunities
-            Map<Id,Opportunity> mapOppNaming = new Map<Id,Opportunity>(OPP_OpportunityNaming.getOppNamesAfterInsert(listOpps));
+        //name opportunities
+        Map<Id,Opportunity> mapOppNaming = new Map<Id,Opportunity>(OPP_OpportunityNaming.getOppNamesAfterInsert(listOpps));
 
-            //update existing dmlWrapper objects with opp name to avoid errors updating the same opportunity twice
-            for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
-                Id objId = (Id) dmlObj.get('id');
-                if (mapOppNaming.containsKey(objId)) {
-                    dmlObj.put('Name', mapOppNaming.get(objId).Name);
-                    mapOppNaming.remove(objId);
-                }
+        //update existing dmlWrapper objects with opp name to avoid errors updating the same opportunity twice
+        for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
+            Id objId = (Id) dmlObj.get('id');
+            if (mapOppNaming.containsKey(objId)) {
+                dmlObj.put('Name', mapOppNaming.get(objId).Name);
+                mapOppNaming.remove(objId);
             }
+        }
 
-            for (Opportunity opp : listOpps) {
-                //add renamed opportunities that weren't updated as part of the contact roles fixing
-                if (mapOppNaming.containsKey(opp.Id) && mapOppNaming.get(opp.id).Name != opp.Name) {
-                    System.debug('Opportunity name after Contact Roles name update - ' + mapOppNaming.get(opp.id).Name);
-                    dmlWrapper.objectsToUpdate.add((sObject) mapOppNaming.get(opp.id));
-                }
+        for (Opportunity opp : listOpps) {
+            //add renamed opportunities that weren't updated as part of the contact roles fixing
+            if (mapOppNaming.containsKey(opp.Id) && mapOppNaming.get(opp.id).Name != opp.Name) {
+                dmlWrapper.objectsToUpdate.add((sObject) mapOppNaming.get(opp.id));
             }
-
-        } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
         }
     }
 
