@@ -1997,7 +1997,7 @@ export default class GeFormRenderer extends LightningElement{
 
     hasChargeableTransactionStatus = () => {
         if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
-            this.selectedPaymentMethod() !== PAYMENT_METHODS.CREDIT_CARD) {
+            this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
 
             return false;
         }
