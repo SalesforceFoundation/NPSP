@@ -1198,12 +1198,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        if self.latest_api_version == 51.0:
+        if self.latest_api_version == 51.0 and dropdown not in ("Installment Period","Role"):
             self.click_flexipage_dropdown(dropdown,value)
         else:
             if dropdown in ("Open Ended Status","Payment Method"):
                 locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
                 selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.selenium.wait_until_element_is_visible(locator)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
+                    self.selenium.wait_until_element_is_visible(selection_value)
+                    self.selenium.click_element(selection_value)
+            if self.latest_api_version == 51.0 and dropdown in ("Installment Period","Role"):
+                locator =  npsp_lex_locators['record']['select_dropdown']
+                selection_value = npsp_lex_locators["record"]["select_value"].format(value)
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.selenium.wait_until_element_is_visible(locator)
@@ -1626,7 +1636,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        locator=npsp_lex_locators['button-with-text'].format(title)
+        if title=="Schedule Payments" and self.latest_api_version == 50.0:
+            locator=npsp_lex_locators['schedule_payments'].format(title)
+        else:
+            locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.set_focus_to_element(locator)
