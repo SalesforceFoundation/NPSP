@@ -68,10 +68,9 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
 
     #Update DI record and reprocess batch and verify status messages
     Click Show More Actions Button   Edit
-    Wait Until Modal Is Open
     Click Flexipage Dropdown         Donation Donor    Account1
-    Click Button With Title          Save
-    Wait Until Modal Is Closed
+    Click Special Button             Save
+    Sleep                            2
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Open Data Import Record          ${data_import_upd}[Name]
