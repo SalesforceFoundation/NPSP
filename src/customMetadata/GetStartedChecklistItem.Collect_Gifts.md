@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://sforce.co/3op6jNu</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
