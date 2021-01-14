@@ -48,7 +48,6 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
     Current Page Should be                  Listing                                   npe03__Recurring_Donation__c
-    Reload Page
     Click Link                              New
     Wait For Rd2 Modal
     Go To Page                              Details
