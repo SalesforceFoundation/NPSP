@@ -1221,7 +1221,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            else:
+            elif dropdown not in ("Payment Method"):
                 locator = npsp_lex_locators['record']['list'].format(dropdown)
                 self.selenium.scroll_element_into_view(locator)
                 self.selenium.get_webelement(locator).click()
