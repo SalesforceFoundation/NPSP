@@ -589,10 +589,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains_element(locator)
         self.selenium.execute_javascript("window.scrollBy(0,200)")
         self.selenium.scroll_element_into_view(locator)
-        try:   
-            self.selenium.click_element(locator)
-        except ElementClickInterceptedException:
-            self.selenium.click_element(locator)
+        self.selenium.click_element(locator)
         time.sleep(2)
         loc=npsp_lex_locators["gift_entry"]["payment_imported_value"].format(value)
         self.selenium.wait_until_page_contains_element(loc)
@@ -612,4 +609,3 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             return section_titles
         else :
             raise Exception ("Invalid argument passed!")
-
