@@ -4,6 +4,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
+import time
 
 @pageobject("Listing", "DataImport__c")
 class DataImportPage(BaseNPSPPage, ListingPage):
@@ -42,11 +43,11 @@ class DataImportPage(BaseNPSPPage, ListingPage):
 
     def open_data_import_record(self,di_name):
         """Clicks on the specified data import record to open the record"""
-        self.pageobjects.current_page_should_be("Listing","DataImport__c")
+        #self.pageobjects.current_page_should_be("Listing","DataImport__c")
+        time.sleep(2)
         self.npsp.click_link_with_text(di_name)
-#         self.pageobjects.current_page_should_be("Details","DataImport__c")
-
-
+        self.pageobjects.current_page_should_be("Details","DataImport__c")
+        
 
 @pageobject("Details", "DataImport__c")
 class DataImportDetailPage(BaseNPSPPage, DetailPage):
