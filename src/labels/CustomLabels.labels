@@ -7366,7 +7366,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link text for Contacts and Accounts checklist item in Get Started</shortDescription>
-        <value>Learn more about Contact and Accounts in Trailhead</value>
+        <value>Learn more about Contacts and Accounts in Trailhead</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemCreateContactAndAccountTitle</fullName>
