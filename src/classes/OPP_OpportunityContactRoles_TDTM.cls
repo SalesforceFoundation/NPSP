@@ -67,7 +67,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
             try {
-                updateOpportunityNames((list<Opportunity>) newList);            	
+                updateOpportunityNames((list<Opportunity>) newList);            
             } catch (Exception ex) {
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
             }
@@ -327,7 +327,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     private void updateOpportunityNames(list<Opportunity> listOpps) {
         //name opportunities
         Map<Id,Opportunity> mapOppNaming = new Map<Id,Opportunity>(OPP_OpportunityNaming.getOppNamesAfterInsert(listOpps));
-        	
+        
         //update existing dmlWrapper objects with opp name to avoid errors updating the same opportunity twice
         for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
             Id objId = (Id) dmlObj.get('id');
@@ -336,7 +336,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 mapOppNaming.remove(objId);
             }
         }
-        	
+        
         for (Opportunity opp : listOpps) {
             //add renamed opportunities that weren't updated as part of the contact roles fixing
             if (mapOppNaming.containsKey(opp.Id) && mapOppNaming.get(opp.id).Name != opp.Name) {
