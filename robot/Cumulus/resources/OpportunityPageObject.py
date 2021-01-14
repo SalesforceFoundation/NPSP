@@ -29,11 +29,13 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
             self.selenium.wait_until_element_is_visible(locator)
             self.salesforce._jsclick(locator)
             time.sleep(2)
+            self.selenium.click_link('Find Matched Gifts')
+            self.npsp.choose_frame("vfFrameId")
         else:
             self.npsp.click_more_actions_button()
             time.sleep(2)
-        self.selenium.click_link('Find Matched Gifts')
-        self.npsp.choose_frame("vfFrameId")
+            self.selenium.click_link('Find Matched Gifts')
+            self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
         if self.npsp.latest_api_version==51.0:

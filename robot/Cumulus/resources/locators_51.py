@@ -21,6 +21,8 @@ npsp_lex_locators={
     },
     "record": {
         'button':"//lightning-button/button[.='{}']",
+        'select_value':"//li/a[text()='{}']",
+        'select_dropdown':"//a[@class='select']",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         # 'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'ltdatepicker':"//td[not(contains(@class,'slds-disabled-text'))]/*[text()='{}']",
@@ -183,7 +185,7 @@ npsp_lex_locators={
         },
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
-        'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[3]',
+        'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[2]',
         'pays':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[.//span[text()="{}"]]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
@@ -325,11 +327,15 @@ npsp_lex_locators={
         'remove_lookup':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"button Remove selected option Opportunity: Record Type")]',
         'click-dropkown-value':"//div[@class='modal-body scrollable slds-modal__content slds-p-around--medium']//*[contains(@class,'slds-combobox')]//span[text()='{}'']",
         'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
+        'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
+        'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
+        'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
+        'ge_form_sections':'//span[contains(@title,"{}")]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
-        'modal_dropdown_selector': "//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
+        'modal_dropdown_selector': "//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger')]",
         'modal_input_field': "//label[text()='{}']/following-sibling::div/input",
         'modal_selection_value': "//lightning-base-combobox-item[@data-value='{}']",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
