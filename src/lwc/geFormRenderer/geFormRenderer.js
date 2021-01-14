@@ -664,8 +664,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenizeCard() {
-        return !!(this.showPaymentSaveNotice &&
-            this.hasChargeableTransactionStatus());
+        return !!(this.showPaymentSaveNotice) && this.hasChargeableTransactionStatus();
     }
 
     /*******************************************************************************
@@ -1997,6 +1996,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
+        if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
+            this.selectedPaymentMethod() !== PAYMENT_METHODS.CREDIT_CARD) {
+
+            return false;
+        }
+
         const paymentStatus = this.convertPaymentStatusToUpperCase(
             this.getFieldValueFromFormState(PAYMENT_STATUS));
 
