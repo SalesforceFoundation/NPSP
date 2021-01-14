@@ -204,7 +204,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.hasUserDisabledWidget = true;
         this.isMounted = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 
@@ -216,7 +216,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 

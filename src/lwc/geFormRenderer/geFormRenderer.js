@@ -154,7 +154,7 @@ export default class GeFormRenderer extends LightningElement{
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
-    _isPaymentWidgetInDoNotChargeState = false;
+    _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
 
     erroredFields = [];
@@ -222,7 +222,7 @@ export default class GeFormRenderer extends LightningElement{
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
-        return this._hasPaymentWidget && this._isPaymentWidgetInDoNotChargeState === false;
+        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -259,7 +259,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
-        registerListener('doNotChargeState', this.handleDisableWidgetState, this);
+        registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
@@ -1039,9 +1039,9 @@ export default class GeFormRenderer extends LightningElement{
      * @description Set variable that informs the form renderer when the widget is in a disabled state
      * @param event
      */
-    handleDisableWidgetState (event) {
-        this._isPaymentWidgetInDoNotChargeState = event.isWidgetDisabled;
-        if (this._isPaymentWidgetInDoNotChargeState) {
+    handleDisableElevateWidgetState (event) {
+        this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
+        if (this._isElevateWidgetInDisabledState) {
             this.removePaymentFieldsFromFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -1982,7 +1982,7 @@ export default class GeFormRenderer extends LightningElement{
 
     hasProcessableDataImport() {
         return !this.hasFailedPurchaseRequest ||
-            this._isPaymentWidgetInDoNotChargeState;
+            this._isElevateWidgetInDisabledState;
     }
 
     hasAuthorizationToken() {
@@ -1993,7 +1993,7 @@ export default class GeFormRenderer extends LightningElement{
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
             this.hasChargeableTransactionStatus() &&
-            !this._isPaymentWidgetInDoNotChargeState;
+            !this._isElevateWidgetInDisabledState;
     }
 
     hasChargeableTransactionStatus = () => {
