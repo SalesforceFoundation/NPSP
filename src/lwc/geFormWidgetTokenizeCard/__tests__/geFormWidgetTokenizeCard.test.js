@@ -100,6 +100,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
     it('should re-enable itself after switch to valid payment method', async () => {
         const element = createWidgetWithPaymentMethod(CASH);
         document.body.appendChild(element);
+        expect(doNotEnterPaymentButton(element)).toBeFalsy();
 
         return Promise.resolve()
             .then(() => {
@@ -109,6 +110,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
             })
             .then(() => {
                 expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
+                expect(doNotEnterPaymentButton(element)).toBeTruthy();
             });
     });
 
