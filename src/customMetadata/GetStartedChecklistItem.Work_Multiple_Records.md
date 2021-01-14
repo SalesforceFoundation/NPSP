@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://sforce.co/2VQOfz9</value>
+        <value xsi:type="xsd:string">https://sforce.co/3gpCr0i</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://sforce.co/3nif8ra</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
