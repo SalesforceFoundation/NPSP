@@ -545,7 +545,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 value_locator=npsp_lex_locators["gift_entry"]["remove_lookup"].format(value)
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.scroll_element_into_view(value_locator)
-                self.selenium.click_element(value_locator)
+                try:
+                    self.selenium.click_element(value_locator)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(value_locator)
             elif type.startswith("autocomplete"):
                 self.salesforce._populate_field(field_locator,value)
                 option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
