@@ -93,7 +93,8 @@ import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
     PAYMENT_METHODS, ACH_CODE,
-    PAYMENT_METHOD_CREDIT_CARD
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_UNKNOWN_ERROR_STATUS
 } from 'c/geConstants';
 
 
@@ -2006,6 +2007,7 @@ export default class GeFormRenderer extends LightningElement{
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
+            case PAYMENT_UNKNOWN_ERROR_STATUS:
                 return true;
 
             default:
