@@ -195,7 +195,7 @@ private class AN_AutoNumberService_TEST {
         utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 100, true);
 
-        System.runAs(UTIL_UnitTestData_TEST.createUser('Standard User')) {
+        System.runAs(UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER)) {
             System.assertEquals(false, Schema.SObjectType.DataImportBatch__c.fields
                     .Batch_Number__c.isAccessible(),
                     'This Standard User created for the test should not have read access ' +
