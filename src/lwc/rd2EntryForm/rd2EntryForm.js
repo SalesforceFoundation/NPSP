@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
-import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
+import { registerListener } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 
@@ -532,8 +532,16 @@ export default class rd2EntryForm extends LightningElement {
 
         this.isLoading = disableBtn;
         this.isSaveButtonDisabled = disableBtn;
-
-        this.template.querySelector(".slds-modal__header").scrollIntoView();
+        
+        
+    }
+    /**
+    * @description Scroll to error if the error is rendered 
+    */
+    renderedCallback() {
+        if (this.error.detail && this.isLoading === false) {
+            this.template.querySelector(".error-container").scrollIntoView(true);
+        }
     }
 
     /**
@@ -549,7 +557,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the cancel action
     */
     handleCancel() {
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel', recordId: this.recordId });
+        this.closeModal(this.recordId);
     }
 
     /***
@@ -724,7 +732,43 @@ export default class rd2EntryForm extends LightningElement {
      * @description Dispatches an event to close the Recurring Donation entry form modal
      */
     closeModal(recordId) {
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: recordId });
+        this.resetAllValues();
+
+        const closeModalEvent = new CustomEvent('closemodal', {
+            detail :{recordId: recordId},
+        });
+        this.dispatchEvent(closeModalEvent);
+    }
+
+    /**
+    * @description Reset all input values when entry form modal is closed, Reset all values in LWC
+    *   because New override button will not refresh in the same lightning session
+    */
+    resetAllValues() {
+        this.recordId = null;
+        this.isLoading = false;
+        this.isSaveButtonDisabled = false;
+        this.isElevateWidgetEnabled = false;
+        this.error = {}
+
+        const inputFields = this.template.querySelectorAll('lightning-input-field');
+        inputFields.forEach(field => {
+            if (field.value) {
+                field.clean();
+            }
+        });
+
+        if (!isNull(this.donorComponent)) {
+            this.donorComponent.resetValues();
+            this.donorComponent.forceRefresh();
+        }
+        if (!isNull(this.scheduleComponent)) {
+            this.scheduleComponent.resetValues();
+            this.scheduleComponent.forceRefresh();
+        }
+        if (!isNull(this.customFieldsComponent)) {
+            this.customFieldsComponent.resetValues();
+        }
     }
 
     /**
@@ -805,4 +849,32 @@ export default class rd2EntryForm extends LightningElement {
         return data;
     }
 
+    /**
+     * @description Close the modal when Escape key is pressed
+     */
+    handleKeyUp(event) {
+        if (event.keyCode === 27 || event.code === 'Escape') {
+            this.handleCancel();
+        }
+    }
+
+    /**
+     * @description Trap focus onto the modal when the focus reaches the top
+     */
+    handleClosedButtonTrapFocus(event) {
+        if (event.shiftKey && event.code === 'Tab') {
+            event.stopPropagation();
+            this.template.querySelector('[data-id="submitButton"]').focus();
+        }
+    }
+
+    /**
+     * @description Trap focus onto the modal when the focus reaches the end
+     */
+    handleSaveButtonTrapFocus(event) {
+        if (event.code === 'Tab') {
+            event.stopPropagation();
+            this.template.querySelector('[data-id="closeButton"]').focus();
+        }
+    }
 }

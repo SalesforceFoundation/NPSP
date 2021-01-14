@@ -202,8 +202,8 @@
         <label>Mode de paiement</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
-            <masterLabel>ACH/EFT</masterLabel>
-            <translation>CCA/TEF</translation>
+            <masterLabel>ACH</masterLabel>
+            <translation>CCA</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>

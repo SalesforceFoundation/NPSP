@@ -360,20 +360,38 @@ public with sharing class RD2_VisualizeScheduleController {
     /**
      * @description Validates if enhanced Recurring Donation format is enabled
      * and if component is being used for the Recurring Donation page.
+     * Throws an exception if validation results in an alert.
      * @param recordId Record Id
      * @return void
      */
     private static void validate(Id recordId) {
+        String alert = getValidationAlert(recordId);
+
+        if (String.isNotBlank(alert)) {
+            throwAuraHandledException(alert);
+        }
+    }
+
+    /**
+     * @description Validates if enhanced Recurring Donation format is enabled
+     * and if component is being used for the Recurring Donation page.
+     * @param recordId Record Id
+     * @return String An alert message if validation failes, otherwise null.
+     */
+    public static String getValidationAlert(Id recordId) {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             // The label value: "You must enable Enhanced Recurring Donations to use this component."
-            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+            return System.Label.RD2_ScheduleVisualizerErrorInvalidUsage;
         }
 
         if (recordId == null || recordId.getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
             // The label value: "This component must be used on a Recurring Donations record page."
-            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+           return System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot;
         }
+
+        return null;
     }
+    
 
     /***
     * @description Throws AuraHandledException

@@ -8,11 +8,13 @@
 * Check out existing <a href="https://github.com/SalesforceFoundation/NPSP/labels/bug" target="_blank">bugs</a> and <a href="https://powerofus.force.com/hub-ideas?product=NPSP" target="_blank">feature and enhancement requests.</a>
 * <a href="https://github.com/SalesforceFoundation/NPSP/releases" target="_blank">Release Notes and Beta Releases</a>
 
-#### For Developers
+#### Try it out
+You can install NPSP utilizing our custom application installer into any Developer Edition, Sandbox or Enterprise Edition Salesforce org.
+* <a href="https://install.salesforce.org/products/npsp" target="_blank">NPSP Installer</a>
 
-The Nonprofit Success Pack is released under the open source BSD license (see link below for additional license information).  Contributions (code and otherwise) are welcome and encouraged.  
-For information on contributing code, see our <a href="http://www.salesforce.org/help/nonprofitstarterpack/contribute/" target="_blank">code contributor's guide</a> and our <a href="http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/" target="_blank">NPSP 3 codebase documentation</a>.
-Please see the <a href="https://github.com/SalesforceFoundation/NPSP/wiki" target="_blank">project wiki</a> for additional information.
+#### Resources
+* <a href="https://powerofus.force.com/s/article/NPSP-Apex-Class-Descriptions" target="_blank">NPSP Apex class documentation</a>
+* <a href="https://powerofus.force.com/s/article/NPSP-Data-Dictionary" target="_blank">NPSP Data Dictionary</a>
 
 #### Meta
 

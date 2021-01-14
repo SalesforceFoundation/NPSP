@@ -29,7 +29,7 @@ jest.mock('c/geFormService', () => {
         getNumberFormatterByDescribeType: jest.fn(() => {
             return null;
         }),
-        getObjectMappingWrapper: jest.fn(() => {
+        getObjectMapping: jest.fn(() => {
             return require('./data/objectMapping.json');
         }),
         importedRecordFieldNames: jest.fn(() => {
@@ -42,7 +42,8 @@ jest.mock('c/geFormService', () => {
             if (targetFieldName === 'RecordTypeId') {
                 return require('./data/recordTypeIdFieldMapping.json');
             }
-        })
+        }),
+
     };
 });
 
@@ -51,7 +52,7 @@ const createStandardPicklistElement = () => {
     const element = createElement('c-ge-form-field', { is: GeFormField });
     element.element = elementJSON;
     element.formState = {
-        [fieldMapping.Source_Field_API_Name]: '--None--'
+        [fieldMapping.Source_Field_API_Name]: null
     };
 
     return element;
@@ -63,7 +64,7 @@ const createRecordTypeIdPicklistElement = () => {
     element.element = recordTypeIdElementJSON;
     element.targetFieldName = 'RecordTypeId';
     element.formState = {
-        [recordTypeIdFieldMapping.Source_Field_API_Name]: ''
+        [recordTypeIdFieldMapping.Source_Field_API_Name]: null
     };
 
     return element;
@@ -144,7 +145,7 @@ describe('c-ge-form-field', () => {
         const picklist = getSubComponentCombobox(element);
 
         return Promise.resolve().then(() => {
-            expect(picklist.value).toBe('--None--');
+            expect(picklist.value).toBe('c.stgLabelNone');
         });
     });
 
@@ -177,7 +178,7 @@ describe('c-ge-form-field', () => {
 
         return Promise.resolve()
             .then(() => {
-                expect(picklist.value).toBe('--None--');
+                expect(picklist.value).toBe('c.stgLabelNone');
 
                 dispatchChangeEvent(picklist, 'Picklist_Option_1');
 

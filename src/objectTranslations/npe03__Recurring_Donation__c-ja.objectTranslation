@@ -202,8 +202,8 @@
         <label>支払方法</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
-            <masterLabel>ACH/EFT</masterLabel>
-            <translation>ACH/EFT</translation>
+            <masterLabel>ACH</masterLabel>
+            <translation>ACH</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>

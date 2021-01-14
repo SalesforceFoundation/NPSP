@@ -9,19 +9,14 @@
         }
     </aura:html>
 
-    <aura:dependency resource="c:rd2EntryForm" />
-    <aura:dependency resource="c:rd2EntryFormScheduleSection" />
-    <aura:dependency resource="c:rd2EntryFormDonorSection" />
-    <aura:dependency resource="c:rd2EntryFormCustomFieldsSection" />
-
-    <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if open from related list" />
-
-    <aura:attribute name="modal" type="Object"
-        description="Reference to the modal in which RD2 entry form is displayed" />
-
-    <lightning:overlayLibrary aura:id="overlayLib" />
+    <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if opened from related list" />
+    <aura:attribute name="recordId" type="Id" description="Reference to the record Id" />
+    <aura:attribute name="renderModal" type="Boolean" default="false" description="Boolean to render Modal" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <c:utilDedicatedListener eventName="rd2EntryFormEvent" onreceiveevent="{!c.handleModalEvent}" />
+    <aura:if isTrue="{!v.renderModal}">
+        <c:rd2EntryForm parentId="{!v.parentId}" recordId="{!v.recordId}" onclosemodal="{!c.handleModalEvent}"/>
+    </aura:if>
+
 </aura:component>

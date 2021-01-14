@@ -4,6 +4,7 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementNotInteractableException
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -19,7 +20,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         otherwise waits until page contains batches table"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
@@ -194,8 +195,12 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                             self.salesforce._jsclick(field_checkbox)
                 elif section=="Default Value":
                     key=f'{section} {field}'
-                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
-                    placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
+                    if "Description" in field:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                        placeholder=None
+                    else:
+                        field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                        placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
                     self.selenium.scroll_element_into_view(field_loc)
                     try:
                         self.selenium.click_element(field_loc)
@@ -208,7 +213,14 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
                     elif placeholder=="Search...":
-                        self.salesforce.populate_lookup_field(key,value)
+                        self.salesforce._populate_field(field_loc,value)
+                        qa_id="Select "+value
+                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        self.selenium.wait_until_page_contains_element(option)
+                        try:
+                            self.selenium.click_element(option)
+                        except ElementNotInteractableException:
+                            self.salesforce._jsclick(option)
                     elif "Date" in field:
                         locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
                         self.selenium.wait_until_page_contains_element(locator)
@@ -222,13 +234,19 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     self.selenium.input_text(field_name,value,clear=True)
 
 
-    def add_field_bundle_to_new_section(self,bundle):
-        """Adds the specified field bundle to the template builder form if not already added"""
-        try:
-            self.selenium.click_button("Add Section")
-        except ElementClickInterceptedException:
-            self.selenium.execute_javascript("window.scrollBy(0,100)")
-            self.selenium.click_button("Add Section")
+    def add_field_bundle_to_section(self,bundle,section=None):
+        """Adds the specified field bundle to the template builder form if not already added.
+           If section is not specified then adds to the first section of the form,
+           else creates a new section and adds to it"""
+        label_text=bundle+' field bundle includes the following fields:'
+        bundle_label=npsp_lex_locators["label"].format(label_text)
+        new_section_bundle_label=npsp_lex_locators["gift_entry"]["new-section-field-bundle"].format(label_text)
+        if section is not None:
+            try:
+                self.selenium.click_button("Add Section")
+            except ElementClickInterceptedException:
+                self.selenium.execute_javascript("window.scrollBy(0,100)")
+                self.selenium.click_button("Add Section")
         checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(bundle,"input")
         self.selenium.scroll_element_into_view(checkbox)
         cb_loc=self.selenium.get_webelement(checkbox)
@@ -238,6 +256,10 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             except ElementClickInterceptedException:
                 self.selenium.execute_javascript("window.scrollBy(0,100)")
                 self.salesforce._jsclick(checkbox)
+        if section is not None:
+            self.selenium.wait_until_page_contains_element(new_section_bundle_label)
+        else:
+            self.selenium.wait_until_page_contains_element(bundle_label)
 
     def add_batch_table_columns(self,*args):
         """Adds specified batch columns to the visible section if they are not already added"""
@@ -252,10 +274,25 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     position=args.index(i)
                 else:
                     self.selenium.click_element(locator,'COMMAND')
-        self.selenium.click_button("Move selection to Visible Fields")
+        if not first_element:
+            self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
+
+    def return_template_builder_titles(self,page=None):
+        """Gets the values of either the template builder form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        template_builder_fields: Returns the titles of the template builder form fields
+        template_builder_sections: Returns the titles of the template builder form sections"""
+        if page == 'template_builder_fields' :
+            form_field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
+            return form_field_titles
+        elif page == 'template_builder_sections' :
+            form_section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
+            return form_section_titles
+        else :
+            raise Exception ("Invalid argument passed!")
 
 
 @pageobject("Form", "Gift Entry")
@@ -280,7 +317,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             self.selenium.wait_until_page_contains_element(field)
-            time.sleep(1)
+            self.builtin.sleep(2,"waiting for couple of seconds for field default value to be updated")
             element=self.selenium.get_webelement(field)
             default_value=element.get_attribute("value")
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
@@ -303,7 +340,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(field_locator,value)
                 option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
-                self.selenium.click_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
@@ -390,3 +430,169 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 if not (actual_value == None or actual_value == False):
                     raise Exception (f"Expected {key} status to be {value} but found {actual_value}")
 
+    def validate_error_message(self,type,**kwargs):
+        """Validates that page contains specified type of message.
+        Example: Validate Error Message |error |Allocations Error=Test Error Message"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["alert"].format(type,key,value)
+            self.selenium.wait_until_page_contains_element(locator)
+
+    def verify_allocation_remaining_balance(self,amount):
+        """Validates that the GAU allocation remaining balance is correct"""
+        locator=npsp_lex_locators["gift_entry"]["element_text"].format("Remaining Allocation Amount",amount)
+        self.selenium.wait_until_page_contains_element(locator,error=f'Remaining allocation amount of {amount} could not be found on page')
+
+    @capture_screenshot_on_error
+    def verify_record_picklist_values(self,field,*args,**kwargs):
+        """Verifies that picklist field values change based on Record Type selected.
+        Arguments: field | Picklist field name
+                   *args | Expected values to be loaded in the picklist field
+                **kwargs | Record Type field name=Record Type Value
+        Example: Verify Record Picklist Values | Opportunity Stage | @{GRANT_STAGES} | Opportunity Record Type=Grant"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+            field_value=self.selenium.get_element_attribute(locator,"value")
+            if field_value==value:
+                option_field=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+                self.selenium.click_element(option_field) # clicking in the field inorder to trigger picklist values to load
+                for item in args:
+                    options=npsp_lex_locators["gift_entry"]["picklist_values"].format(field,item)
+                    self.selenium.page_should_contain_element(options,message=f'{field} does not contain {item} option')
+                self.selenium.click_element(option_field) # clicking again to close the picklist after verification
+            else:
+                raise Exception(f'{key} does not contain specified {value}')
+
+    def verify_modal_default_value(self,**kwargs):
+        """verifies that the field contains given default value
+        where key=field name and value=default value"""
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+
+            if 'textarea' in type :
+                field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+            else:
+                field=npsp_lex_locators["gift_entry"]["id"].format(key)
+                self.selenium.wait_until_page_contains_element(field)
+                time.sleep(1)
+                element=self.selenium.get_webelement(field)
+                default_value=element.get_attribute("value")
+                assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
+
+    def fill_modal_form(self,**kwargs):
+        """Fill the gift entry modal form fields with specified values.
+        Key is field name and value is value to be entered for field """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["modal_id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"input")
+            print(f"type is {type}")
+            if 'input autocomplete' in type :
+                self.salesforce._populate_field(locator,value)
+                qa_id="Select "+value
+                option=npsp_lex_locators["gift_entry"]["modal_id"].format(qa_id)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.scroll_element_into_view(option)
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif type.startswith("autocomplete"):
+                self.salesforce._populate_field(field_locator,value)
+                option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.scroll_element_into_view(option)
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.click_element(field_locator)
+                popup=npsp_lex_locators["newflexi-popup"]
+                self.selenium.wait_until_page_contains_element(popup)
+                option=npsp_lex_locators["modalspan_button"].format(value)
+                self.selenium.scroll_element_into_view(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'textarea' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+            elif 'datetime' in type :
+                locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
+                self.selenium.click_element(field_locator)
+                self.selenium.wait_until_page_contains_element(locator)
+                self.selenium.input_text(field_locator,value,clear=True)
+                self.selenium.input_text(field_locator,value)
+            else:
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+
+    def clear_form_fields(self,**kwargs):
+        """clear the gift entry modal form fields with specified values.
+        Key is field name and value is value to be entered for field """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["modal_id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"input")
+            print(f"type is {type}")
+            if 'input autocomplete' in type :
+                self.salesforce._populate_field(locator,value)
+                value_locator=npsp_lex_locators["gift_entry"]["remove_lookup"].format(value)
+                self.selenium.wait_until_page_contains_element(value_locator)
+                self.selenium.scroll_element_into_view(value_locator)
+                try:
+                    self.selenium.click_element(value_locator)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(value_locator)
+            elif type.startswith("autocomplete"):
+                self.salesforce._populate_field(field_locator,value)
+                option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
+                self.selenium.wait_until_page_contains_element(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.click_element(field_locator)
+                popup=npsp_lex_locators["newflexi-popup"]
+                self.selenium.wait_until_page_contains_element(popup)
+                option=npsp_lex_locators["modalspan_button"].format(value)
+                self.selenium.scroll_element_into_view(option)
+                try:
+                    self.selenium.click_element(option)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(option)
+            elif 'textarea' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
+                self.selenium.input_text(field_locator,value,clear=True)
+            else:
+                self.selenium.scroll_element_into_view(field_locator)
+                self.salesforce._populate_field(field_locator,value)
+
+    def clear_lookup_value(self,field):
+        """clear the value in lookup field on batch gift wizard """
+        locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_button(locator)
+
+    def return_gift_form_titles(self,page=None):
+        """Gets the values of either the form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        gift_entry_form_fields: Returns the titles of the gift entry form fields
+        gift_entry_form_sections: Returns the titles of the gift entry form sections"""
+        if page == 'gift_entry_form_fields' :
+            field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
+            return field_titles
+        elif page == 'gift_entry_form_sections' :
+            section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_sections'].format("FormSection"))
+            return section_titles
+        else :
+            raise Exception ("Invalid argument passed!")

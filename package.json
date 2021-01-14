@@ -1,13 +1,20 @@
 {
   "devDependencies": {
-    "@salesforce/sfdx-lwc-jest": "^0.7.1"
+    "@sa11y/jest": "^0.2.0",
+    "@salesforce/sfdx-lwc-jest": "^0.7.1",
+    "jest": "^26.0.1"
   },
   "resolutions": {
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "node-notifier": "^8.0.1",
+    "axios": "^0.21.1"
   },
   "scripts": {
     "test:unit": "lwc-jest",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:debug": "lwc-jest --debug"
+  },
+  "dependencies": {
+    "js-yaml": "^4.0.0"
   }
 }

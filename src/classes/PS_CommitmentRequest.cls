@@ -143,18 +143,26 @@ public inherited sharing class PS_CommitmentRequest {
     * @return RequestBody
     */
     public RequestBody getRequestBody(Id recordId, String token) {
-        RequestBody reqBody = new RequestBody()
-            .withMerchantId(configService.getMerchantIds())
-            .withGatewayId(configService.getGatewayIds())
-            .withPaymentMethodToken(token);
-
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
-        reqBody.withCurrency(currencyCode);
+        Metadata metadata = new Metadata()
+            .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
+
+        ProductMetaData productMetaData = new ProductMetaData()
+            .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
+            .withOrigin(PS_Request.OriginType.CRM.name());
+    
+        RequestBody reqBody =  new RequestBody()
+            .withMerchantId(configService.getMerchantIds())
+            .withGatewayId(configService.getGatewayIds())
+            .withPaymentMethodToken(token)
+            .withCurrency(currencyCode)
+            .withMetadata(metadata)
+            .withProductMetaData(productMetaData);
 
         setDonorInfo(reqBody, rd);
         setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);
@@ -172,7 +180,7 @@ public inherited sharing class PS_CommitmentRequest {
     private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
         Boolean isContactDonor = rd.npe03__Contact__c != null
             && (
-                rd.npe03__Organization__c == null 
+                rd.npe03__Organization__c == null
                 || rd.npe03__Organization__c == rd.npe03__Contact__r.AccountId
             );
 
@@ -230,7 +238,8 @@ public inherited sharing class PS_CommitmentRequest {
             'npe03__Contact__c',
             'npe03__Contact__r.AccountId',
             'npe03__Contact__r.FirstName',
-            'npe03__Contact__r.LastName'
+            'npe03__Contact__r.LastName',
+            'npe03__Recurring_Donation_Campaign__c'
         };
 
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -267,7 +276,7 @@ public inherited sharing class PS_CommitmentRequest {
     public ResponseBody getCommitment(UTIL_Http.Response response) {
         ResponseBody commitment = new ResponseBody();
 
-        if (response != null 
+        if (response != null
             && response.statusCode == UTIL_Http.STATUS_CODE_CREATED
             && String.isNotBlank(response.body)
         ) {
@@ -295,6 +304,12 @@ public inherited sharing class PS_CommitmentRequest {
         public String paymentMethodToken;
         public String currencyCode;
         public List<Schedule> schedules;
+
+        /***
+         * Optional properties
+         */
+        public Metadata metadata;
+        public ProductMetaData productMetaData;
 
         /***
          * @description Constructor
@@ -398,6 +413,26 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         /**
+         * @description Sets metadata
+         * @param metadata Payments API metadata
+         * @return RequestBody This request body instance
+         */
+        public RequestBody withMetadata(Metadata metadata) {
+            this.metadata = metadata;
+            return this;
+        }
+
+        /**
+         * @description Sets product metadata
+         * @param productMetaData Payments API product metadata
+         * @return RequestBody This request body instance
+         */
+        public RequestBody withProductMetaData(productMetaData productMetaData) {
+            this.productMetaData = productMetaData;
+            return this;
+        }
+
+        /**
          * @description Returns this request body as a JSON string
          * @return String
          */
@@ -455,7 +490,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String statusReason;
         public CardData cardData;
 
-        /** 
+        /**
          * @description Returns true if the commitment data has the id specified
          * @return Boolean
          */
@@ -463,7 +498,7 @@ public inherited sharing class PS_CommitmentRequest {
             return String.isNotBlank(id);
         }
 
-        /** 
+        /**
          * @description Returns true if the commitment has new or active status
          * @return Boolean
          */
@@ -471,16 +506,16 @@ public inherited sharing class PS_CommitmentRequest {
             return status == STATUS_NEW || status == STATUS_ACTIVE;
         }
 
-        /** 
+        /**
          * @description Returns true if the commitment has just been created
          * @return Boolean
          */
         public Boolean isCreated() {
-            return isActive() 
-                && statusReason == CommitmentStatusReason.COMMITMENT_CREATED.name(); 
+            return isActive()
+                && statusReason == CommitmentStatusReason.COMMITMENT_CREATED.name();
         }
 
-        /** 
+        /**
          * @description Returns true if the commitment credit card data has been returned
          * @return Boolean
          */
@@ -488,7 +523,7 @@ public inherited sharing class PS_CommitmentRequest {
             return cardData != null;
         }
 
-        /** 
+        /**
          * @description Returns credit card last 4 digits
          * @return String
          */
@@ -496,7 +531,7 @@ public inherited sharing class PS_CommitmentRequest {
             return hasCardData() ? cardData.last4 : null;
         }
 
-        /** 
+        /**
          * @description Returns credit card expiration month
          * @return String
          */
@@ -504,7 +539,7 @@ public inherited sharing class PS_CommitmentRequest {
             return hasCardData() ? cardData.expirationMonth : null;
         }
 
-        /** 
+        /**
          * @description Returns credit card expiration year
          * @return String
          */
@@ -520,5 +555,81 @@ public inherited sharing class PS_CommitmentRequest {
         public String last4;
         public String expirationMonth;
         public String expirationYear;
+    }
+
+    /***
+     * @description Metadata property on the commitment request
+     */
+    public class Metadata {
+        public String originType;
+        public String campaignCode;
+
+        /**
+         * @description Metadata constructor
+         */
+        public Metadata() {
+            //set defaults
+            this.originType = PS_Request.OriginType.CRM.name();
+        }
+
+        /**
+         * @description Sets campaign info
+         * @param campaignId campaign Id
+         * @return productMetaData This product metadata instance
+         */
+        public Metadata withCampaignCode(Id campaignId) {
+            this.campaignCode = campaignId;
+            return this;
+        }
+    }
+
+    /***
+    * @description Product metadata property on the commitment request
+    */
+    public class ProductMetaData {
+        public Origin origin;
+        public Campaign campaign;
+
+        /**
+        * @description Sets origin info
+        * @param type origin type
+        * @return productMetaData This product metadata instance
+        */
+        public ProductMetaData withOrigin(String type) {
+            this.origin = new Origin(type);
+            return this;
+        }
+
+        /**
+        * @description Sets campaign info
+        * @param campaignId campaign Id
+        * @return productMetaData This product metadata instance
+        */
+        public ProductMetaData withCampaign(Id campaignId) {
+            this.campaign = new Campaign(campaignId);
+            return this;
+        }
+    }
+
+    /***
+    * @description Origin property on the commitment product metadata request
+    */
+    public class Origin {
+        public String type;
+
+        public Origin(String type) {
+            this.type = type;
+        }
+    }
+
+    /***
+    * @description Campaign property on the commitment product metadata request
+    */
+    public class Campaign {
+        public String id;
+
+        public Campaign(Id campaignId) {
+            this.id = campaignId;
+        }
     }
 }

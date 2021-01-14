@@ -47,11 +47,6 @@ Edit An Enhanced Recurring donation record of type open
 
     [tags]                                  unstable               W-8116628            feature:RD2
 
-    Go To Page                              Listing                                   npe03__Recurring_Donation__c
-
-    Click Object Button                     New
-    Wait For Modal                          New                                       Recurring Donation
-    Reload Page
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
@@ -62,8 +57,11 @@ Edit An Enhanced Recurring donation record of type open
     Edit Recurring Donation Status
     ...                                     Status=Closed
     ...                                     Status Reason=Financial Difficulty
+    Go To Page                              Details
+    ...                                     npe03__Recurring_Donation__c
+    ...                                     object_id=${data}[contact_rd][Id]
 
     Current Page Should be                  Details                                  npe03__Recurring_Donation__c
     #Pause the recurring donation and validate the warning message displayed
-    Pause_Recurring Donation
+    Pause Recurring Donation                Closed
     Validate Message Text                   You can't Pause a Closed Recurring Donation

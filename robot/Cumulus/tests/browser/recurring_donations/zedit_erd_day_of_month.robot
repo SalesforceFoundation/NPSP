@@ -45,10 +45,8 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
     Current Page Should Be                  Listing                                   npe03__Recurring_Donation__c
-    Click Object Button                     New
-    Wait For Modal                          New                                       Recurring Donation
-    # Reload page is a temporary fix till the developers fix the ui-modal
-    Reload Page
+    Click Link                              New
+    Wait For Rd2 Modal
 
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
@@ -59,6 +57,10 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Edit Recurring Donation Status
         ...                                 Recurring Period=Monthly
         ...                                 Day of Month=1
+
+    Go To Page                              Details
+        ...                                 npe03__Recurring_Donation__c
+        ...                                 object_id=${data}[contact_rd][Id]
     Current Page Should be                  Details    npe03__Recurring_Donation__c
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count           Opportunities                                                    1

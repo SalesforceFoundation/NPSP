@@ -385,9 +385,9 @@
                     <label>Check</label>
                 </value>
                 <value>
-                    <fullName>ACH/EFT</fullName>
+                    <fullName>ACH</fullName>
                     <default>false</default>
-                    <label>ACH/EFT</label>
+                    <label>ACH</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

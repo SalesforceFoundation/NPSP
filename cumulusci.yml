@@ -1,4 +1,4 @@
-minimum_cumulusci_version: 2.5.0
+minimum_cumulusci_version: 3.23.0
 project:
     name: Cumulus
     package:
@@ -38,6 +38,16 @@ sources:
 
 
 tasks:
+    modify_xml_file:
+        description: Make changes to an XML file
+        group: Salesforce Metadata
+        class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
+
+    delete_files:
+        description: Delete the specified files from the current working folder
+        group: Salesforce Metadata
+        class_path: cumulusci.tasks.util.Delete
+
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -180,6 +190,10 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
+
+    github_release_notes:
+        options:
+            trial_info: "`TBD`"
 
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
@@ -536,7 +550,9 @@ tasks:
                 - "unable to obtain exclusive access to this record"
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
+                - "None"
             retry_always: True
+            required_org_code_coverage_percent: 86
 
     disable_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
@@ -662,7 +678,6 @@ tasks:
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 
-
 flows:
     install_regression:
         steps:
@@ -716,6 +731,10 @@ flows:
                 task: test_data_relationships
             10:
                 task: deploy_reports
+            11:
+                task: assign_permission_sets
+                options:
+                    api_names: QA,Gift_Entry
 
     config_qa_namespaced:
         steps:
@@ -744,6 +763,10 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
+            12:
+                task: assign_permission_sets
+                options:
+                    api_names: QA,Gift_Entry
 
 
     qa_org_namespaced:
@@ -757,6 +780,13 @@ flows:
                 flow: config_qa_namespaced
             4:
                 task: snapshot_changes
+
+    qa_org_2gp:
+    # This override allows QA Org 2GP to be functional.
+    # NPSP's config_qa is not currently compatible with managed installations.
+        steps:
+            2:
+                flow: config_regression
 
     config_trial:
         steps:
@@ -1132,6 +1162,32 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
+    max_feature_parameter_limit_work_around:
+        description: Deletes feature parameters from local repo to allow deployment to Sandbox and other orgs where max of 25 FP's still exists
+        group: Salesforce Metadata
+        steps:
+            5:
+                task: modify_xml_file
+                options:
+                    output_style: salesforce
+                    path: src/package.xml
+                    xpath: /ns:Package/ns:types/ns:members
+                                [../ns:name='FeatureParameterInteger']
+                                [.='Data_CountGERowsLast30DaysBatch']
+
+            6:
+                task: modify_xml_file
+                options:
+                    output_style: salesforce
+                    path: src/package.xml
+                    xpath: /ns:Package/ns:types/ns:members
+                                [../ns:name='FeatureParameterDate']
+                                [.='P10_Application_Date']
+            10:
+                task: delete_files
+                options:
+                    path: ["*/*/Data_CountGERowsLast30DaysBatch.featureParameterInteger",
+                            "*/*/P10_Application_Date.featureParameterDate"]
 
 orgs:
     scratch:
@@ -1170,9 +1226,15 @@ plans:
         title: Install NPSP
         tier: primary
         checks:
-            - when: "'.my.' not in org_config.instance_url"
+            - when: "not tasks.check_my_domain_active()"
               action: error
               message: "Please enable My Domain in your org prior to installing."
+            - when: "not tasks.check_chatter_enabled()"
+              action: error
+              message: "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again."
+            - when: "tasks.check_advanced_currency_management()"
+              action: error
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
         steps:
             1:
                 task: update_dependencies
@@ -1206,9 +1268,21 @@ plans:
         tier: additional
         is_listed: False
         checks:
-            - when: "'.my.' not in org_config.instance_url"
+            - when: "not tasks.check_my_domain_active()"
               action: error
               message: "Please enable My Domain in your org prior to installing."
+            - when: "not tasks.check_chatter_enabled()"
+              action: error
+              message: "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again."
+            - when: "'npsp' in org_config.installed_packages"
+              action: error
+              message: "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP."
+            - when: "tasks.check_advanced_currency_management()"
+              action: error
+              message: "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation."
+            - when: "'trlhdtips' not in org_config.installed_packages"
+              action: warn
+              message: "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org."
         steps:
             1:
                 task: update_dependencies
@@ -1281,6 +1355,10 @@ plans:
         title: Install Reports & Dashboards
         tier: additional
         is_listed: True
+        checks:
+            - when: "'npsp' not in org_config.installed_packages"
+              action: error
+              message: "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again."
         steps:
             1:
                 task: deploy_reports

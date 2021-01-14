@@ -325,6 +325,18 @@ pre {
                 <td class="kwdoc"><p>verifies if the specified checkbox is with expected status in readonly mode</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Choose Date">
+                <td class="kwname">
+                  Choose Date
+                </td>
+                <td class="kwargs">
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>To pick a date from the lightning date picker</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Choose Frame">
                 <td class="kwname">
                   Choose Frame
@@ -469,6 +481,18 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Click Link With Spantext">
+                <td class="kwname">
+                  Click Link With Spantext
+                </td>
+                <td class="kwargs">
+                  
+                  <i>text</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Click Link With Text">
                 <td class="kwname">
                   Click Link With Text
@@ -505,9 +529,31 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Click Modal Footer Button">
+                <td class="kwname">
+                  Click Modal Footer Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Click the specified lightning button on modal footer</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Click More Actions Button">
                 <td class="kwname">
                   Click More Actions Button
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>clicks on the more actions dropdown button in the actions container on record page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Click More Actions Lightning Button">
+                <td class="kwname">
+                  Click More Actions Lightning Button
                 </td>
                 <td class="kwargs">
                   
@@ -1244,18 +1290,20 @@ pre {
                 <td class="kwdoc"><p>Scrolls the button element into view and clicksthe button using JS</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Search Field And Wait For Modal">
+              <tr class="kwrow" id="NPSP.py.Search Field And Perform Action">
                 <td class="kwname">
-                  Search Field And Wait For Modal
+                  Search Field And Perform Action
                 </td>
                 <td class="kwargs">
                   
                   <i>fieldname</i>, 
                   
-                  <i>value</i>
+                  <i>value</i>, 
+                  
+                  <i>type=None</i>
                   
                 </td>
-                <td class="kwdoc"><p>Searches the field with the placeholder given by 'fieldname' for the given 'value' and wait for the modal to appear.</p></td>
+                <td class="kwdoc"><p>Searches the field with the placeholder given by 'fieldname' for the given 'value' and clicks on the option containing the value from the dropdown if the value is found if the type is specified as "New' then enter key is pressed for the modal to appear.</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Search Field By Value">
@@ -1578,7 +1626,7 @@ pre {
                   <i>value</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Navigates to the Related tab and validates the record count for the specified title section</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Verify Address Details">
@@ -1885,6 +1933,22 @@ pre {
                 <td class="kwdoc"><p>verifies if actual row count matches with expected value</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Verify Table Contains Row">
+                <td class="kwname">
+                  Verify Table Contains Row
+                </td>
+                <td class="kwargs">
+                  
+                  <i>table_name</i>, 
+                  
+                  <i>record</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies that batch number format table contains a record with given name and record field contains specified value. Example usage: Verify Table Contains Row | Batches | MyBatch | Batch Number=MyBatch-01</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Verify Title">
                 <td class="kwname">
                   Verify Title
@@ -1909,6 +1973,18 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Verifies that toast contains specified value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Wait And Click Button">
+                <td class="kwname">
+                  Wait And Click Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>click_locator</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on the button with locator 'click_locator' if it doesn't exist, repeat the click (loops for 3 times)</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Wait For Aura">
@@ -2021,6 +2097,18 @@ pre {
           <table class="kwtable" title='Table of keywords'>
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Add Custom Picklist Values To Field">
+                <td class="kwname">
+                  Add Custom Picklist Values To Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Reads key value pair arguments. Navigates to Object Manager page and load fields and relationships for the specific object Runs keyword to add picklist values Example key,value pairs Object=Recurring Donation Field_Name=Status Values=@{picklistvalues}</p></td>
+              </tr>
               
               <tr class="kwrow" id="NPSP.robot.Add instance to suite metadata">
                 <td class="kwname">
@@ -2167,9 +2255,9 @@ pre {
                   API Create Lead
                 </td>
                 <td class="kwargs">
-
+                  
                   <i>**fields</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>creates a lead record using given field api name and value pairs and returns the lead dictionary when called. Syntax for passing parameters:</p>
 <table border="1">
@@ -2179,7 +2267,7 @@ pre {
 </tr>
 </table></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.API Create Opportunity">
                 <td class="kwname">
                   API Create Opportunity
@@ -2550,6 +2638,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Reads key value pair arguments. Navigates to Object Manager page and load fields and relationships for the specific object Runs keyword to create custom field Example key,value pairs Object=Payment Field_Type=Formula Field_Name=Is Opportunity From Prior Year Formula=YEAR( npe01__Opportunity__r.CloseDate ) &lt; YEAR( npe01__Payment_Date__c )</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.Create Gift Entry Batch">
+                <td class="kwname">
+                  Create Gift Entry Batch
+                </td>
+                <td class="kwargs">
+                  
+                  <i>template</i>, 
+                  
+                  <i>batch_name</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.Enable Advanced Mapping">
                 <td class="kwname">
                   Enable Advanced Mapping
@@ -2859,6 +2961,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Click on Create New Field Mapping button on the page select 'src_fld' arg in Source Field Label box 'tgt_fld' arg in Target Field Label box</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="AdvancedMappingPageObject.py.Create New Object Group">
+                <td class="kwname">
+                  Create New Object Group
+                </td>
+                <td class="kwargs">
+                  
+                  <i>obj_grp_name</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If page doesn't contain the given object group then Clicks on Create New Object Group button and creates with given values obj_group value is the Object Group to create</p></td>
               </tr>
               
               <tr class="kwrow" id="AdvancedMappingPageObject.py.Delete Field Mapping">
@@ -3175,6 +3291,16 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ContactPageObject.py.Open Relationships Viewer">
+                <td class="kwname">
+                  Open Relationships Viewer
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on the Relationships Viewer link on the contact page</p></td>
               </tr>
               
               <tr class="kwrow" id="ContactPageObject.py.Perform Action On Related Item">
@@ -4132,6 +4258,44 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Select the specific gift entry data row based on the name parameter and selects the action from the dropdown menu. Eg: |Perform Action On Datatable Row  | ${contact2}[Name]     |     Delete</p></td>
               </tr>
+
+              <tr class="kwrow" id="GiftEntryPageObject.py.Perform Action On Datatable Row">
+                <td class="kwname">
+                  Return Gift Form Titles
+                </td>
+                <td class="kwargs">
+                  <i>value</i> 
+                </td>
+                <td class="kwdoc"><p>Gets the text values for the titles of either the form fields or the section titles on the Gift Entry form, depending on the argument passed.</p>
+                  <p></p>Arguments: <b>gift_entry_form_fields</b> for form field titles, <b>gift_entry_form_sections</b> for section titles.</p>
+                </td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Validate Error Message">
+                <td class="kwname">
+                  Validate Error Message
+                </td>
+                <td class="kwargs">
+                  
+                  <i>type</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Validates that page contains specified type of message. Example: Validate Error Message |error |Allocations Error=Test Error Message</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Allocation Remaining Balance">
+                <td class="kwname">
+                  Verify Allocation Remaining Balance
+                </td>
+                <td class="kwargs">
+                  
+                  <i>amount</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Validates that the GAU allocation remaining balance is correct</p></td>
+              </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Error For Field">
                 <td class="kwname">
@@ -4179,6 +4343,22 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Verify the link is disabled/enabled, pass the name of the link and the expected status of the link as either enabled or disabled Eg: |Verify Link Status  |  Update this Payment=enabled ...                    Update this Opportunity=disabled  |</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Record Picklist Values">
+                <td class="kwname">
+                  Verify Record Picklist Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that picklist field values change based on Record Type selected. Arguments: field | Picklist field name *args | Expected values to be loaded in the picklist field **kwargs | Record Type field name=Record Type Value Example: Verify Record Picklist Values | Opportunity Stage | @{GRANT_STAGES} | Opportunity Record Type=Grant</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
@@ -4352,16 +4532,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Adds specified batch columns to the visible section if they are not already added</p></td>
               </tr>
               
-              <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To New Section">
+              <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To Section">
                 <td class="kwname">
-                  Add Field Bundle To New Section
+                  Add Field Bundle To Section
                 </td>
                 <td class="kwargs">
                   
-                  <i>bundle</i>
+                  <i>bundle</i>, 
+                  
+                  <i>section=None</i>
                   
                 </td>
-                <td class="kwdoc"><p>Adds the specified field bundle to the template builder form if not already added</p></td>
+                <td class="kwdoc"><p>Adds the specified field bundle to the template builder form if not already added. If section is not specified then adds to the first section of the form, else creates a new section and adds to it</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Enter Value In Field">
@@ -4413,6 +4595,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>If action is 'select' then selects the specified field under specified object group to add the field to gift entry form and verify field is added If action is 'unselect'then Unselects the specified field under specified object group to remove the field from gift entry template</p></td>
+              </tr>
+
+              <tr class="kwrow" id="GiftEntryPageObject.py.Perform Action On Datatable Row">
+                <td class="kwname">
+                  Return Template Builder Titles
+                </td>
+                <td class="kwargs">
+                  <i>value</i> 
+                </td>
+                <td class="kwdoc"><p>Gets the text values for the titles of either the form fields or the section titles on the template builder page, depending on the argument passed.</p>
+                  <p></p>Arguments: <b>template_builder_fields</b> for form field titles, <b>template_builder_sections</b> for section titles.</p>
+                </td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Template Builder">
@@ -4999,6 +5193,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Selects value from list identified by list_name. uses selenium select from list by label keyword</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Set Batch Number Format Status">
+                <td class="kwname">
+                  Set Batch Number Format Status
+                </td>
+                <td class="kwargs">
+                  
+                  <i>number_format</i>, 
+                  
+                  <i>status</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Activates or Deactivates the given batch number format by clicking on dropdown and selecting option And verifies that the format has been activated or deactivated based on selection</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Advanced Mapping Is Not Enabled">
                 <td class="kwname">
                   Verify Advanced Mapping Is Not Enabled
@@ -5031,6 +5239,32 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>waits to exit edit mode and verifies list contains specified value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Status To State Mappings">
+                <td class="kwname">
+                  Verify Status To State Mappings
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies the default status to state mappings for recurring donations</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Sub Link Present">
+                <td class="kwname">
+                  Verify Sub Link Present
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>, 
+                  
+                  <i>bool</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Asserts if the sublink is present or not present eg: Verify Sub Link Present     &lt;Linkoption&gt;   True/False</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Wait For Message">
@@ -5084,6 +5318,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
           <table class="kwtable" title='Table of keywords'>
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Add Picklist Values">
+                <td class="kwname">
+                  Add Picklist Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Searches for the specified field and if the field exits, Navigates throught the steps to add the picklist value(s)</p></td>
+              </tr>
               
               <tr class="kwrow" id="ObjectMangerPageObject.py.Create Currency Field">
                 <td class="kwname">
@@ -5519,7 +5765,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                   <i>paynum</i>, 
                   
-                  <i>format=None</i>
+                  <i>format=True</i>
                   
                 </td>
                 <td class="kwdoc"><p>Returns the next payment date from the list of payment schedules taking in the payment number as input The date if formatted to ignore the preceding zeros. But if format is set to false, the date is returned as is without any formatting |Example</p>
@@ -5558,7 +5804,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>**kwargs</i>
+                  <i>type=None</i>
                   
                 </td>
                 <td class="kwdoc"><p>Finds the pause button on the recurring donations details view page, clicks the button and waits for the modal to appear</p></td>
@@ -5573,7 +5819,12 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Populate the values in the pause recurring donation modal based on the key value pair options in the kwargs passed as parameter</p>
+<pre>
+Populate Pause Modal
+...                     Paused Reason=Card Expired
+...                     Date=${date}
+</pre></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Refresh Opportunities">
@@ -5592,10 +5843,12 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>amount</i>
+                  <i>amount</i>, 
+                  
+                  <i>rdtype=None</i>
                   
                 </td>
-                <td class="kwdoc"><p>Takes in the parameter current installment payment (amount) calculates the current and next year value payments and validates them with the values displayed on the UI.</p></td>
+                <td class="kwdoc"><p>Takes in the parameter current installment payment (amount) and an optional field of the rd type calculates the current and next year value payments and validates them with the values displayed on the UI.</p></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Field Values Under Section">
@@ -5610,6 +5863,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs. If the section is current schedule, waits for the Current schedule section card on the side bar Validates the display fields in the card match with the values passed in the key value pair</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Message Text">
+                <td class="kwname">
+                  Validate Message Text
+                </td>
+                <td class="kwargs">
+                  
+                  <i>txt</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Find the element containing warning message on the pause modal and asserts the text displayed matches with the expected text</p></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Upcoming Schedules">
@@ -5628,28 +5893,16 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Takes in the parameter (number of payments) and the donation start date verifies that the payment schedules created on UI reflect the total number verifies that the next payment dates are reflected correctly for all the schedules</p></td>
               </tr>
               
-              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Warning Text">
-                <td class="kwname">
-                  Validate Warning Text
-                </td>
-                <td class="kwargs">
-                  
-                  <i>txt</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Find the element containing warning message on the pause modal and asserts the text displayed matches with the expected text</p></td>
-              </tr>
-              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Pause Text Next To Installment Date">
                 <td class="kwname">
                   Verify Pause Text Next To Installment Date
                 </td>
                 <td class="kwargs">
                   
-                  <i>date</i>
+                  <i>*dates</i>
                   
                 </td>
-                <td class="kwdoc"><p>Looks for the date element with the paused text next to it</p></td>
+                <td class="kwdoc"><p>Accepts a list of dates and validates the presence of date element with the paused text next to it</p></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Schedule Warning Messages Present">
@@ -5738,6 +5991,16 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Wait For Rd2 Modal">
+                <td class="kwname">
+                  Wait For Rd2 Modal
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
               </tr>
               
             </tbody>
@@ -5913,7 +6176,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Friday October 16, 09:54 AM - cumulusci v3.21.0
+      Generated on Friday January 8, 10:46 PM - cumulusci v3.25.0
     </div>
   </body>
 </html>

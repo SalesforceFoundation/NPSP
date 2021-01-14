@@ -80,12 +80,20 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     @track scheduleRowColumnSize = 6;
 
     /***
-    * @description Get settings required to enable or disable fields and populate their values
+    * @description Init function
     */
     connectedCallback() {
+        this.init();
+    }
+
+     /***
+    * @description Get settings required to enable or disable fields and populate their values
+    */
+    init() {
         if (isNull(this.recordId)) {
             this.isNew = true;
-
+            this.updateScheduleFieldVisibility(PERIOD_MONTHLY, PERIOD_MONTHLY);
+            this.updatePlannedInstallmentsVisibility();
         } else {
             /**
              * @description Retrieve the RD Schedule related fields from apex to configure the custom picklist values
@@ -521,4 +529,27 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
         return data;
     }
+
+    /**
+    * @description run init function 
+    */
+    @api
+    forceRefresh() {
+       this.init();
+    }
+
+    /**
+    * @description reset all lighning-input-field value 
+    */
+    @api
+    resetValues() {
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (field.value) {
+                    field.reset();
+                }
+            });
+        this.isLoading = true;
+    }
+        
 }

@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Data Imports
-
+    [tags]                     unstable
     ${first_name1} =           Generate Random String
     ${last_name1} =            Generate Random String
     ${acc1}=                   Generate Random String
@@ -26,7 +26,7 @@ Data Imports
     ...                       Contact2 First Name=${first_name2}
     ...                       Contact2 Last Name=${last_name2}
     ...                       Account2 Name=${acc2}
-    Click Button With Title   Save
+    Click Button              npsp:button-text:Save
     Wait Until Modal Is Closed
     Process Data Import Batch    Completed
 

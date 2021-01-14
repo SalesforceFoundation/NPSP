@@ -29,14 +29,19 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
             self.selenium.wait_until_element_is_visible(locator)
             self.salesforce._jsclick(locator)
             time.sleep(2)
+            self.selenium.click_link('Find Matched Gifts')
+            self.npsp.choose_frame("vfFrameId")
         else:
             self.npsp.click_more_actions_button()
             time.sleep(2)
-        self.selenium.click_link('Find Matched Gifts')
-        self.npsp.choose_frame("vfFrameId")
+            self.selenium.click_link('Find Matched Gifts')
+            self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
-        self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
+        if self.npsp.latest_api_version==51.0:
+            self.npsp.click_related_list_dd_button('Payments', 'Show more actions', 'Writeoff_Payments')
+        else:
+            self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
         self.npsp.wait_for_locator('frame','Write Off Remaining Balance')
         self.npsp.choose_frame("Write Off Remaining Balance")
         self.selenium.wait_until_page_contains("You are preparing to write off")

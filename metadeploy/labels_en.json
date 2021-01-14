@@ -169,6 +169,30 @@
         "Please enable My Domain in your org prior to installing.": {
             "message": "Please enable My Domain in your org prior to installing.",
             "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.": {
+            "message": "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+            "message": "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.": {
+            "message": "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.": {
+            "message": "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.": {
+            "message": "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.",
+            "description": "shown if validation fails"
+        },
+        "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
+            "message": "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.",
+            "description": "shown if validation fails"
         }
     },
     "plan:reports": {

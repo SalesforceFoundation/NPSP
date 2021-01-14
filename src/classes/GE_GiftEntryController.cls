@@ -66,7 +66,7 @@ public with sharing class GE_GiftEntryController {
     public static String sendPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
         UTIL_Http.Response response = processPurchaseRequest(requestBodyParameters, dataImportRecordId);
 
-        return JSON.serialize(response);
+        return response.body;
     }
 
     /***
@@ -106,10 +106,11 @@ public with sharing class GE_GiftEntryController {
     * @return void
     */
     private static void processPurchaseTimeoutResponse(UTIL_Http.Response response, String dataImportRecordId) {   
-
-        response.status = response.getErrorMessages();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
-
+        response.body = JSON.serialize(new Map<String, String> {
+            'message' => PURCHASE_CALL_TIMEOUT_MESSAGE,
+            'statusCode' => String.valueOf(response.statusCode),
+            'status' => response.getErrorMessages()
+        });
         logTimeoutError(dataImportRecordId);
     }
 
@@ -160,6 +161,7 @@ public with sharing class GE_GiftEntryController {
         try {
             dataImport.Additional_Object_JSON__c =
                 convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+
             upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
@@ -180,9 +182,8 @@ public with sharing class GE_GiftEntryController {
     */
     @AuraEnabled
     public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
-        // Check for widget data and convert it to the correct format for processing
         dataImport.Additional_Object_JSON__c =
-            convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
         processDataImport(dataImport, false, updateGift);
@@ -521,7 +522,6 @@ public with sharing class GE_GiftEntryController {
             objMappingDevNameToObjList = (Map<String, Object>) JSON.deserializeUntyped(widgetData);
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
         }
 
@@ -531,19 +531,18 @@ public with sharing class GE_GiftEntryController {
 
             BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
 
-            String[] tempObjStrings = new String[]{
-            };
+            List<String> serializedSObjects = new List<String>();
 
             //Reserializing the object strings to resolve platform issue with deserializing SObjects
             for (Object obj : (List<Object>) objMappingDevNameToObjList.get(objMappingDevName)) {
-                tempObjStrings.add(JSON.serialize(obj));
+                serializedSObjects.add(JSON.serialize(obj));
             }
 
-            if (tempObjStrings != null && tempObjStrings.size() > 0) {
+            if (serializedSObjects != null && serializedSObjects.size() > 0) {
 
                 Integer i = 0;
                 //Loop through the sObjects and construct DI records to hold the data in the expected fields
-                for (String objString : tempObjStrings) {
+                for (String objString : serializedSObjects) {
 
                     SObject sObj = (SObject) JSON.deserialize(objString, Sobject.class);
 
@@ -606,6 +605,15 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static RenderWrapper retrieveDefaultSGERenderWrapper() {
         return getDefaultSGERenderWrapper();
+    }
+
+    /**
+     * @description Retrieves field mappings when a template is not needed, no render wrapper.
+     * @return {BDI_FieldMappingSet}
+     */
+    @AuraEnabled
+    public static BDI_FieldMappingSet getFieldMappings() {
+        return BDI_MappingServiceAdvanced.getInstance().fieldMappingSet;
     }
 
     public class RenderWrapper {
