@@ -82,10 +82,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 } else {
                     if (!this.hasUserDisabledWidget) {
                         this.handleUserEnabledWidget();
+                        this.hasEventDisabledWidget = false;
                     }
                 }
             } else {
                 this.toggleWidget(true, this.disabledWidgetMessage);
+                this.hasEventDisabledWidget = true;
             }
         } else {
             this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
