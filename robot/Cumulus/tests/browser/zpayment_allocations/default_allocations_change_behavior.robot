@@ -70,4 +70,5 @@ Setup Test Data
     Set suite variable              &{gau}
     ${ns} =       Get Npsp Namespace Prefix
     Set suite variable              ${ns}
+    
 
