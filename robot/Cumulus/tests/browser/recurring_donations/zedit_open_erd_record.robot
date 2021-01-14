@@ -45,7 +45,6 @@ Edit An Enhanced Recurring donation record of type open
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
 
-    Reload Page
     Click Link                              New
     Wait For Rd2 Modal
 
@@ -59,7 +58,9 @@ Edit An Enhanced Recurring donation record of type open
     ...                                    Status Reason=Commitment Completed
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-    Reload Page
+    Go To Page                             Details
+    ...                                    npe03__Recurring_Donation__c
+    ...                                    object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
     Current Page Should be                 Details    npe03__Recurring_Donation__c
     # Verify that "no active schedules are present" messages appear

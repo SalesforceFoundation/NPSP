@@ -16,7 +16,7 @@ Suite Teardown  Delete Records and Close Browser
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${now}              Evaluate            '01/10/{dt.year}'.format(dt=datetime.datetime.now())    modules=datetime
+    ${now}              Evaluate            '01/01/{dt.year}'.format(dt=datetime.datetime.now())    modules=datetime
     ${date}             Convert Date        ${now}    result_format=%-m/%-d/%Y   date_format=%d/%m/%Y
     Set Suite Variable  ${date}
     ${ns} =             Get NPSP Namespace Prefix
