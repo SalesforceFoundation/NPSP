@@ -216,6 +216,21 @@ private with sharing class RD2_StatusMappingSettings_TEST {
     }
 
     /**
+     * @description Verifies no exception is generated when attempt is made to retrieve
+     * deployment result with an invalid deployment Id.
+     */
+    @IsTest
+    private static void shouldNotThrowExceptionWhenDeploymentIdIsInvalid() {
+        final String invalidDeploymentId = 'invalidId';
+
+        RD2_StatusMappingSettings_CTRL.DeploymentHandler deploymentHandler =
+            new RD2_StatusMappingSettings_CTRL.DeploymentHandler(invalidDeploymentId);
+
+        System.assertEquals(null, deploymentHandler.deployResult,
+            'Null result is expected when DeploymentHandler attempts retrieval with invalid Deployment Id');
+    }
+
+    /**
      * @description Verifies deployment result is returned for the specified deployment Id
      */
     @IsTest
