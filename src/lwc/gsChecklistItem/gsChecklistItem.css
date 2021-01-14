@@ -16,6 +16,7 @@
     padding-left: 6px;
     padding-right: 24px;
     border-right: 1px solid lightgray;
+    align-self: center;
 }
 
 .item-card .card-image img {
