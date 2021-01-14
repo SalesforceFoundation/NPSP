@@ -83,28 +83,59 @@ public class UTIL_Profile {
         }
     }
 
-    /** @description Read Only Profile Name */
+    /** @description Minimum Access - Salesforce Profile Name */
+    public static final String PROFILE_MINIMUM_ACCESS = 'Minimum Access - Salesforce';
+
+    /** @description True if the Read Only profile exists in the org */
+    private static Boolean hasReadOnlyProfile;
+
+    /*********************************************************************************************************
+    * @description Read Only Profile Name
+    * Returns PROFILE_MINIMUM_ACCESS if 'Read Only' profile isn't found.
+    */
     public static final String PROFILE_READ_ONLY {
         get {
+            String readOnly = 'Read Only';
+
             switch on (UserInfo.getLanguage()) {
                 when 'es' {
-                    return 'Sólo lectura';
+                    readOnly = 'Sólo lectura';
                 }
                 when 'de' {
-                    return 'Standardbenutzer';
+                    readOnly = 'Standardbenutzer';
                 }
                 when 'ja' {
-                    return '参照のみ';
+                    readOnly = '参照のみ';
                 }
                 when 'fr' {
-                    return 'Lecture seule';
+                    readOnly = 'Lecture seule';
                 }
                 when 'NL_nl' {
-                    return 'Alleen-lezen';
+                    readOnly = 'Alleen-lezen';
                 }
             }
-            return 'Read Only';
+
+            if (hasReadOnlyProfile == null) {
+                hasReadOnlyProfile = hasProfile(readOnly);
+            }
+
+            if (hasReadOnlyProfile == true) {
+                return readOnly;
+            }
+            return PROFILE_MINIMUM_ACCESS;
         }
+    }
+
+    /*********************************************************************************************************
+    * @description Checks for any Profile records with the provided Name
+    * @return BOOLEAN True if query returns at least 1 profile record by the provided Name exists
+    */
+    private static Boolean hasProfile(String profileName) {
+        Integer profileRecordCount = [SELECT count() FROM Profile WHERE Name = :profileName];
+        if (profileRecordCount != null && profileRecordCount > 0) {
+            return true;
+        }
+        return false;
     }
 
     /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context */
