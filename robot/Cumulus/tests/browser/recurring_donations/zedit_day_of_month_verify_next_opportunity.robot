@@ -56,6 +56,7 @@ Edit Opportunity Stage
     Click Button                            Edit
     Wait until Modal Is Open
     Select Value From Dropdown              Stage                          ${stage}
+    Sleep                                   2
     Click Modal Button                      Save
 
 
