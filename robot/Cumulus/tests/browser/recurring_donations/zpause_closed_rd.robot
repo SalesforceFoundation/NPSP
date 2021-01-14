@@ -47,11 +47,6 @@ Edit An Enhanced Recurring donation record of type open
 
     [tags]                                  unstable               W-8116628            feature:RD2
 
-    Go To Page                              Listing                                   npe03__Recurring_Donation__c
-
-    Reload Page
-    Click Link                              New
-    Wait For Rd2 Modal
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
@@ -62,6 +57,9 @@ Edit An Enhanced Recurring donation record of type open
     Edit Recurring Donation Status
     ...                                     Status=Closed
     ...                                     Status Reason=Financial Difficulty
+    Go To Page                              Details
+    ...                                     npe03__Recurring_Donation__c
+    ...                                     object_id=${data}[contact_rd][Id]
 
     Current Page Should be                  Details                                  npe03__Recurring_Donation__c
     #Pause the recurring donation and validate the warning message displayed
