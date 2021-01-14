@@ -30,7 +30,7 @@ Create Open Recurring Donation With Monthly Installment
     Wait Until Loading Is Complete
     Current Page Should Be               Details                      Contact
     Click More Actions Lightning Button
-    Click Link With Spantext                 New Open Recurring Donation
+    Click Link With Spantext             New Open Recurring Donation
 
     Wait Until Modal Is Open
     Populate Modal Form
