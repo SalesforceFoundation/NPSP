@@ -42,7 +42,7 @@ Validate Errors When Field Is Deleted
     ...                                 warning
     ...                                 This form contains fields that can't be found. Please check with your administrator.
     Perform Action On Object Field      unselect                      Account 1          Field not found
-    Click Gift Entry Button             Save & Close
+    Click Gift Entry Button             Cancel
     Go To Page                          Landing                       GE_Gift_Entry
     Click Gift Entry Button             New Single Gift
     Current Page Should Be              Form                          Gift Entry
@@ -70,7 +70,7 @@ Validate Errors When Field Is Deleted
     Perform Action On Object Field      select                      Account 1          custom_acc_text
     Page Should Not Contain Locator     gift_entry.field_error      custom_acc_text    Field not found
     Perform Action On Object Field      unselect                    Account 1          custom_acc_text
-    Click Gift Entry Button             Save & Close
+    Click Gift Entry Button             Cancel
     Go To Page                          Landing                       GE_Gift_Entry
     Click Gift Entry Button             New Single Gift
     Current Page Should Be              Form                          Gift Entry
