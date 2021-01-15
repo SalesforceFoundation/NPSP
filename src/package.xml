@@ -3947,6 +3947,7 @@
         <members>Account.BDE_Entry_FS</members>
         <members>Account.BDE_List_FS</members>
         <members>Account.Manage_Household_Custom</members>
+        <members>Allocation__c.ManageAllocationsAdditionalFields</members>
         <members>Batch__c.BatchDetailView</members>
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>

@@ -51,6 +51,11 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <description>Fields added to this field set will be displayed as editable columns in the Manage Allocations table</description>
+        <fullName>ManageAllocationsAdditionalFields</fullName>
+        <label>Manage Allocations Additional Fields</label>
+    </fieldSets>
     <fields>
         <fullName>Amount__c</fullName>
         <description>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</description>
