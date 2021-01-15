@@ -95,6 +95,14 @@ import gseuChecklistItemTrackDonationPriBtnLabel from '@salesforce/label/c.gseuC
 import gseuChecklistItemTrackDonationTitle from '@salesforce/label/c.gseuChecklistItemTrackDonationTitle';
 import gseuChecklistTrackDonationDesc from '@salesforce/label/c.gseuChecklistTrackDonationDesc';
 import gseuChecklistTrackDonationTitle from '@salesforce/label/c.gseuChecklistTrackDonationTitle';
+import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
+import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
+import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
+import gseuChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPDesc';
+import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPLink';
+import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
+import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
+import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
 
 /**
 * @description Map of getLabelValue labels
@@ -197,6 +205,14 @@ const labelMap = {
     gseuChecklistItemTrackDonationTitle,
     gseuChecklistTrackDonationDesc,
     gseuChecklistTrackDonationTitle,
+    gseuChecklistWelcomeNPSPTitle,
+    gseuChecklistWelcomeNPSPDesc,
+    gseuChecklistItemWhatIsNPSPTitle,
+    gseuChecklistItemWhatIsNPSPDesc,
+    gseuChecklistItemWhatIsNPSPLink,
+    gseuChecklistItemWhatIsNPCloudTitle,
+    gseuChecklistItemWhatIsNPCloudTitleDesc,
+    gseuChecklistItemWhatIsNPCloudLink,
 }
 
 /**
