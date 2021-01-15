@@ -23,6 +23,7 @@
 
 .item-card .card-image img {
     width: 100%;
+    height: 150px;
 }
 
 .item-card .card-content {
