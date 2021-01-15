@@ -1,13 +1,15 @@
 import { LightningElement, api, track } from 'lwc';
 import {apiNameFor, getSubsetObject, isEmptyObject, isUndefined} from 'c/utilCommon';
 
-import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
-import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DATA_IMPORT_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
+
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -23,15 +25,16 @@ export default class GeFormWidget extends LightningElement {
     _formState = {};
 
     _allocationFields = [
-        apiNameFor(DI_DONATION_AMOUNT_FIELD),
-        apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)
+        apiNameFor(DATA_IMPORT_DONATION_AMOUNT_FIELD),
+        apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD)
     ];
     _elevateFields = [
         apiNameFor(DATA_IMPORT_PAYMENT_METHOD),
         apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME),
         apiNameFor(DATA_IMPORT_CONTACT_LASTNAME),
         apiNameFor(DATA_IMPORT_DONATION_DONOR),
-        apiNameFor(DATA_IMPORT_ACCOUNT_NAME)
+        apiNameFor(DATA_IMPORT_ACCOUNT_NAME),
+        apiNameFor(DATA_IMPORT_PAYMENT_STATUS)
     ];
 
     get sourceFieldsUsedInTemplate() {
@@ -79,8 +82,8 @@ export default class GeFormWidget extends LightningElement {
     }
 
     hasAllocationValuesChanged(formState) {
-        const donationFieldApiName = apiNameFor(DI_DONATION_AMOUNT_FIELD);
-        const additionalObjectFieldApiName = apiNameFor(DI_ADDITIONAL_OBJECT_JSON_FIELD)
+        const donationFieldApiName = apiNameFor(DATA_IMPORT_DONATION_AMOUNT_FIELD);
+        const additionalObjectFieldApiName = apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD)
 
         return formState[donationFieldApiName] !==
             this.formState[donationFieldApiName]

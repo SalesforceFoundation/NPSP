@@ -2,7 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { apiNameFor, format } from 'c/utilCommon';
+import { apiNameFor, format, isEmptyObject } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -24,11 +24,10 @@ import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donatio
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+    PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
     LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
 } from 'c/geConstants';
 
-const ACH = 'ACH';
-const CREDIT_CARD = 'Credit Card';
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 const CONTACT_DONOR_TYPE = 'Contact1';
@@ -62,36 +61,58 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-        this.handleWidgetDataChange(widgetState);
+
+        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) ||
+            this.shouldHandleWidgetDataChange()) {
+
+            this.handleWidgetDataChange();
+        }
     }
 
-    handleWidgetDataChange(widgetState) {
+    handleWidgetDataChange() {
         this._hasPaymentMethodInTemplate =
             this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
-            this._currentPaymentMethod = widgetState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+            this._currentPaymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
 
             if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
                 if (this.isMounted) {
                     this.requestSetPaymentMethod(this._currentPaymentMethod);
                 } else {
-                    this.handleUserEnabledWidget();
+                    if (!this.hasUserDisabledWidget) {
+                        this.handleUserEnabledWidget();
+                        this.hasEventDisabledWidget = false;
+                    }
                 }
             } else {
-                this.handleUserDisabledWidget();
+                this.toggleWidget(true, this.disabledWidgetMessage);
+                this.hasEventDisabledWidget = true;
             }
         } else {
-            this._currentPaymentMethod = CREDIT_CARD;
+            this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
         }
     }
 
+    shouldHandleWidgetDataChange() {
+        return !this.isPaymentCharged();
+    }
+
+    isPaymentCharged() {
+        return (this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED ||
+
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)] ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
+    }
+
     hasValidPaymentMethod(paymentMethod) {
-        return paymentMethod === ACH || paymentMethod === CREDIT_CARD;
+        return paymentMethod === PAYMENT_METHODS.ACH
+            || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     tokenizeEventAction() {
-        return this._currentPaymentMethod === ACH
+        return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             ? TOKENIZE_ACH_EVENT_ACTION
             : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
     }
@@ -171,7 +192,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Returns true if the Elevate credit card widget is enabled
     * and the user did not click an action to hide it
     */
-    get displayDoNotChargeCardButton() {
+    get displayDisableWidgetButton() {
         return !(this.hasEventDisabledWidget || this.hasUserDisabledWidget);
     }
 
@@ -183,7 +204,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.hasUserDisabledWidget = true;
         this.isMounted = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 
@@ -195,13 +216,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 
     /***
     * @description Handles receipt of an event to disable this widget. Currently
-    * used when we've charged a card, but BDI processing failed.
+    * used when we've submitted a payment, but BDI processing failed.
     */
     handleEventDisabledWidget(event) {
         this.toggleWidget(true, event.detail.message);
@@ -259,7 +280,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     buildTokenizeParameters() {
-        if (this._currentPaymentMethod === CREDIT_CARD) {
+        if (this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
             //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
             return { nameOnCard: null };

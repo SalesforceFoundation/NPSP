@@ -59,7 +59,8 @@ import {
     getNamespace,
     validateJSONString,
     relatedRecordFieldNameFor,
-    apiNameFor
+    apiNameFor,
+    isString
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -92,7 +93,8 @@ import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
     PAYMENT_METHODS, ACH_CODE,
-    PAYMENT_METHOD_CREDIT_CARD
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_UNKNOWN_ERROR_STATUS
 } from 'c/geConstants';
 
 
@@ -152,7 +154,7 @@ export default class GeFormRenderer extends LightningElement{
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
-    _isPaymentWidgetInDoNotChargeState = false;
+    _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
 
     erroredFields = [];
@@ -220,7 +222,7 @@ export default class GeFormRenderer extends LightningElement{
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
-        return this._hasPaymentWidget && this._isPaymentWidgetInDoNotChargeState === false;
+        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -257,7 +259,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
-        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
+        registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
@@ -662,8 +664,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenizeCard() {
-        return !!(this.showPaymentSaveNotice &&
-            this.hasChargeableTransactionStatus());
+        return !!(this.showPaymentSaveNotice) && this.hasChargeableTransactionStatus();
     }
 
     /*******************************************************************************
@@ -1034,13 +1035,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     /**
-     * @description Set variable that informs the form renderer when the
-     *  credit card widget is in a 'do not charge' state
+     * @description Set variable that informs the form renderer when the widget is in a disabled state
      * @param event
      */
-    handleDoNotChargeCardState (event) {
-        this._isPaymentWidgetInDoNotChargeState = event.isWidgetDisabled;
-        if (this._isPaymentWidgetInDoNotChargeState) {
+    handleDisableElevateWidgetState (event) {
+        this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
+        if (this._isElevateWidgetInDisabledState) {
             this.removePaymentFieldsFromFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -1981,7 +1981,7 @@ export default class GeFormRenderer extends LightningElement{
 
     hasProcessableDataImport() {
         return !this.hasFailedPurchaseRequest ||
-            this._isPaymentWidgetInDoNotChargeState;
+            this._isElevateWidgetInDisabledState;
     }
 
     hasAuthorizationToken() {
@@ -1992,22 +1992,39 @@ export default class GeFormRenderer extends LightningElement{
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
             this.hasChargeableTransactionStatus() &&
-            !this._isPaymentWidgetInDoNotChargeState;
+            !this._isElevateWidgetInDisabledState;
     }
 
     hasChargeableTransactionStatus = () => {
-        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-        switch (paymentStatus) {
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
-            default: return true;
+        if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
+            this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+
+            return false;
         }
+
+        const paymentStatus = this.convertPaymentStatusToUpperCase(
+            this.getFieldValueFromFormState(PAYMENT_STATUS));
+
+        switch (paymentStatus) {
+            case '':
+            case undefined:
+            case null:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
+            case PAYMENT_UNKNOWN_ERROR_STATUS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    convertPaymentStatusToUpperCase(paymentStatus) {
+        if (isString(paymentStatus)) {
+            return paymentStatus.toUpperCase();
+        }
+        return paymentStatus;
     }
 
     /*******************************************************************************
@@ -2289,16 +2306,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleBdiProcessingError(error) {
-        if (this.hasCapturedPayment) {
+        if (this.isProcessableElevateTransaction) {
             const exceptionDataError = new ExceptionDataError(error);
-            this.handleCardChargedBDIFailedError(exceptionDataError);
+            this.handleElevateTransactionBDIError(exceptionDataError);
         } else {
             this.handleCatchOnSave(error);
             this.toggleSpinner();
         }
     }
 
-    get hasCapturedPayment() {
+    get isProcessableElevateTransaction() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         return paymentStatus
             && (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
@@ -2306,18 +2323,18 @@ export default class GeFormRenderer extends LightningElement{
 
     }
 
-    handleCardChargedBDIFailedError(exceptionDataError) {
+    handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
 
-        const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
+        const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
         this.addPageLevelErrorMessage(pageLevelError);
 
         this.disabled = false;
         this.toggleSpinner();
     }
 
-    buildCardChargedBDIFailedError(exceptionDataError) {
+    buildElevateTransactionBDIError(exceptionDataError) {
         return {
             index: 0,
             errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
