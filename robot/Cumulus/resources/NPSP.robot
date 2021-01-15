@@ -555,7 +555,7 @@ API Create Lead
     [return]            &{lead}
 
 Create Gift Entry Batch
-    [Documentation]
+    [Documentation]     Creates a new gift entry batch using the template specified and with given name
     [Arguments]         ${template}    ${batch_name}
     Click Gift Entry Button                 New Batch
     Wait Until Modal Is Open
@@ -566,3 +566,28 @@ Create Gift Entry Batch
     ...                                     Batch Description=This is a test batch created via automation script
     Click Gift Entry Button                 Next
     Click Gift Entry Button                 Save
+
+Verify Error Message on AM Page And Object Group
+    [Documentation]         Verifies error is thrown on Advanced mapping and object group page for missing field mapping
+    [Arguments]             ${object_group}     ${field}
+    Go To Page                          Custom          NPSP_Settings
+    Open Main Menu                      System Tools
+    Click Link With Text                Advanced Mapping for Data Import & Gift Entry
+    Click Configure Advanced Mapping
+    Wait Until Page Contains Element    npsp:npsp_settings.page_error:warning,${object_group} : ${field} (${field}__c)
+    View Field Mappings Of The Object   Account 1
+    Wait Until Page Contains Element    npsp:npsp_settings.page_error:warning,${object_group} : ${field} (${field}__c)
+    Page Should Contain Element         npsp:npsp_settings.field_error:custom_acc_text__c
+
+Verify No Errors Displayed on AM Page And Object Group
+    [Documentation]         Verifies error is not thrown on Advanced mapping and object group page for given field mapping
+    [Arguments]             ${object_group}     ${field}
+    Go To Page                          Custom          NPSP_Settings
+    Open Main Menu                      System Tools
+    Click Link With Text                Advanced Mapping for Data Import & Gift Entry
+    Click Configure Advanced Mapping
+    Page Should Not Contain Locator     npsp_settings.page_error    warning     ${object_group} : ${field} (${field}__c)
+    Page Should Not Contain Locator     gift_entry.page_error
+    View Field Mappings Of The Object   Account 1
+    Page Should Not Contain Locator     npsp_settings.page_error    warning     ${object_group} : ${field} (${field}__c)
+    Wait For Locator Is Not Visible     npsp_settings.field_error   ${field}__c
