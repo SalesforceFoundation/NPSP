@@ -2510,6 +2510,7 @@
         <members>gsChecklistItemCustomFieldsDesc</members>
         <members>gsChecklistItemCustomFieldsLinkLabel</members>
         <members>gsChecklistItemCustomFieldsTitle</members>
+        <members>gsChecklistItemExtraFourMinuteVideo</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemExtraSixtyMinuteVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>

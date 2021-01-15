@@ -13,6 +13,7 @@ import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChec
 import gsChecklistItemCustomFieldsDesc from '@salesforce/label/c.gsChecklistItemCustomFieldsDesc';
 import gsChecklistItemCustomFieldsLinkLabel from '@salesforce/label/c.gsChecklistItemCustomFieldsLinkLabel';
 import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistItemCustomFieldsTitle';
+import gsChecklistItemExtraFourMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraFourMinuteVideo';
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 import gsChecklistItemExtraSixtyMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraSixtyMinuteVideo';
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
@@ -114,6 +115,7 @@ const labelMap = {
     gsChecklistItemCustomFieldsDesc,
     gsChecklistItemCustomFieldsLinkLabel,
     gsChecklistItemCustomFieldsTitle,
+    gsChecklistItemExtraFourMinuteVideo,
     gsChecklistItemExtraOneMinuteVideo,
     gsChecklistItemExtraSixtyMinuteVideo,
     gsChecklistItemFundraisingProcessDesc,
