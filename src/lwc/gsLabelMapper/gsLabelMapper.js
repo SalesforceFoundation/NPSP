@@ -73,6 +73,8 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
+import gseuPageTitle from '@salesforce/label/c.gseuPageTitle';
 import gseuChecklistItemCaptureDonorIntentDesc from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentDesc';
 import gseuChecklistItemCaptureDonorIntentLinkLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentLinkLabel';
 import gseuChecklistItemCaptureDonorIntentPriBtnLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentPriBtnLabel';
@@ -108,6 +110,8 @@ import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklis
 * @description Map of getLabelValue labels
 */
 const labelMap = {
+    gsAdminSetupTitle,
+    gseuPageTitle,
     gsChecklistExploreNPSPTitle,
     gsChecklistExploreNPSPDesc,
     gsChecklistItemAddUserDesc,
