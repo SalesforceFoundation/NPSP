@@ -6872,6 +6872,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>60 Minute Video</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemExtraTwoMinuteVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;1 Minutes Video&apos;</shortDescription>
+        <value>2 Minutes Video</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemGoFurtherDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>

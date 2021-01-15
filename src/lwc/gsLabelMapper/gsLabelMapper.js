@@ -15,6 +15,7 @@ import gsChecklistItemCustomFieldsLinkLabel from '@salesforce/label/c.gsChecklis
 import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistItemCustomFieldsTitle';
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 import gsChecklistItemExtraSixtyMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraSixtyMinuteVideo';
+import gsChecklistItemExtraTwoMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraTwoMinuteVideo';
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
 import gsChecklistItemFundraisingProcessTitle from '@salesforce/label/c.gsChecklistItemFundraisingProcessTitle';
 import gsChecklistItemFundraisingProcessLinkLabel from '@salesforce/label/c.gsChecklistItemFundraisingProcessLinkLabel';
@@ -108,6 +109,7 @@ const labelMap = {
     gsChecklistItemCustomFieldsTitle,
     gsChecklistItemExtraOneMinuteVideo,
     gsChecklistItemExtraSixtyMinuteVideo,
+    gsChecklistItemExtraTwoMinuteVideo,
     gsChecklistItemFundraisingProcessDesc,
     gsChecklistItemFundraisingProcessTitle,
     gsChecklistItemFundraisingProcessLinkLabel,
