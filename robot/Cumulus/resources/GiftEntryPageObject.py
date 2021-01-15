@@ -212,10 +212,9 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.selenium.wait_until_page_contains_element(popup)
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
-                    elif placeholder=="Search...":
+                    elif placeholder in ("Search...","Search Payments..."):
                         self.salesforce._populate_field(field_loc,value)
-                        qa_id="Select "+value
-                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                         self.selenium.wait_until_page_contains_element(option)
                         try:
                             self.selenium.click_element(option)
@@ -279,6 +278,30 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
+
+    @capture_screenshot_on_error
+    def verify_errors_on_template_builder(self,object_group,field,type,message):
+        """validate error messages are thrown at top of form, under object group and at the field"""
+        locator=npsp_lex_locators['gift_entry']['form_error'].format(type,message)
+        self.selenium.wait_until_page_contains_element(locator,error=f'page does not contain {type} with message {message}')
+        field_checkbox=npsp_lex_locators["gift_entry"]["object_field_checkbox"].format(object_group,"Field not found")
+        self.selenium.page_should_contain_element(field_checkbox,message=f'{object_group} object does not contain Field not found checkbox')
+        field_msg=npsp_lex_locators["gift_entry"]["field_error"].format(field,"Field not found")
+        self.selenium.page_should_contain_element(field_msg,message=f'{field} field does not contain Field not found error')
+
+    def return_template_builder_titles(self,page=None):
+        """Gets the values of either the template builder form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        template_builder_fields: Returns the titles of the template builder form fields
+        template_builder_sections: Returns the titles of the template builder form sections"""
+        if page == 'template_builder_fields' :
+            form_field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
+            return form_field_titles
+        elif page == 'template_builder_sections' :
+            form_section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_sections'])
+            return form_section_titles
+        else :
+            raise Exception ("Invalid argument passed!")
 
 
 @pageobject("Form", "Gift Entry")
@@ -531,7 +554,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 value_locator=npsp_lex_locators["gift_entry"]["remove_lookup"].format(value)
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.scroll_element_into_view(value_locator)
-                self.selenium.click_element(value_locator)
+                try:
+                    self.selenium.click_element(value_locator)
+                except ElementNotInteractableException:
+                    self.salesforce._jsclick(value_locator)
             elif type.startswith("autocomplete"):
                 self.salesforce._populate_field(field_locator,value)
                 option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
@@ -566,3 +592,16 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
 
+    def return_gift_form_titles(self,page=None):
+        """Gets the values of either the form field titles or the form section titles and stores them for recalling.
+        Arguments for 'page':
+        gift_entry_form_fields: Returns the titles of the gift entry form fields
+        gift_entry_form_sections: Returns the titles of the gift entry form sections"""
+        if page == 'gift_entry_form_fields' :
+            field_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
+            return field_titles
+        elif page == 'gift_entry_form_sections' :
+            section_titles=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_sections'].format("FormSection"))
+            return section_titles
+        else :
+            raise Exception ("Invalid argument passed!")

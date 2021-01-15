@@ -47,6 +47,20 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         set;
     }
+
+    /**
+    * @description Manage Allocation additional fields to be edited 
+    */
+    public List<Schema.FieldSetMember> additionalAllocationFields {
+        get {
+            if (additionalAllocationFields == null) {
+                additionalAllocationFields = getAdditionalAllocationFields();
+            }
+            return additionalAllocationFields;
+        }
+        set;
+    }
+    
     /** @description The set of allowed object types this page should be used with */
     private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
         Opportunity.sObjectType,
@@ -58,10 +72,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     private sObjectType sObjType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
-    /** @description after successful save set to true to redirect page */
-    public Boolean redirect {get; set;}
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
-    public id parentId {get;set;}
+    public Id parentId {get;set;}
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
     public Opportunity opp {get;set;}
     /** @description The parent payment, if we're dealing with payment allocations.*/
@@ -82,6 +94,23 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         set;
     }
+
+    /**
+    * @description Determine if the page is loading
+    */
+    public Boolean isLoading {
+        get {
+            if (isLoading == null) {
+                isLoading = true;
+            }
+            return isLoading;
+        }set;
+    }
+
+    /**
+    * description After successful save set to true to redirect page 
+    */
+    public Boolean redirect {get;set;}
 
     /** @description The page title based on which type of allocation we're using. */
     public string pageTitle {get;set;}
@@ -110,9 +139,19 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     @TestVisible
     private String parentCurrencyCode;
 
+    /**
+    * @description Default Allocation__c fields to be queried 
+    */
+    private Set<String> defaultAllocationFields = new Set<String> {
+        'Id',
+        'Name',
+        'Amount__c',
+        'Percent__c',
+        'General_Accounting_Unit__c'
+    };
+
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
-
         parentId = ApexPages.currentPage().getParameters().get('id');
         sObjType = parentId.getSObjectType();
         parentAmount = 0;
@@ -185,14 +224,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         defaultAllo = new Allocation__c();
-        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c 
-            FROM Allocation__c 
-            WHERE Opportunity__c = :parentId 
-            OR Campaign__c = :parentId 
-            OR Recurring_Donation__c = :parentId
-            OR Payment__c = :parentId];
 
-        //find default allocation if enabled, remove from list
+        listAllo = getAllocations(parentId);
+
         if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
             for (integer i=0; i<listAllo.size(); i++) {
                 if (listAllo[i].General_Accounting_Unit__c == settings.Default__c) {
@@ -203,8 +237,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             }
         }
 
-        if (listAllo.isEmpty())
+        if (listAllo.isEmpty()) {
             addRow();
+        }
+
+        isLoading = false;
     }
 
     /**
@@ -256,7 +293,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
     
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
-    public pageReference addRow() {
+    public PageReference addRow() {
         Allocation__c allo = new Allocation__c();
 
         if (opp!=null)
@@ -275,7 +312,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
-    public pageReference delRow() {
+    public PageReference delRow() {
         Boolean hasId = listAllo[rowNumber].id != null;
 
         //add to deletion list if the allocation has an id
@@ -291,15 +328,24 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return null;
     }
 
-    /** @description Saves changes and returns user to parent object detail page.*/
-    public pageReference saveClose() {
+    /** 
+    * @description Saves changes and returns user to parent object detail page.
+    * @return PageReference
+    */
+    public PageReference saveClose() {
+        isLoading = true;
+
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         //split into insert and update cases so we can reset recursion flags for each operation
         for (Allocation__c allo : listAllo) {
-            if (allo.id!=null) listAlloForUpdate.add(allo);
-            else listAlloForInsert.add(allo);
+            if (allo.Id != null) {
+                listAlloForUpdate.add(allo);
+            }
+            else {
+                listAlloForInsert.add(allo);
+            }
         }
 
         Savepoint sp = Database.setSavepoint(); 
@@ -309,30 +355,39 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 delete listAlloForDelete;
 
                 //allow user to delete all GAUs and save with one empty GAU
-                if (listAllo.size()==1 && listAllo[0].General_Accounting_Unit__c==null && listAllo[0].Amount__c==null && listAllo[0].Percent__c==null)
+                if (listAllo.size() == 1
+                    && listAllo[0].General_Accounting_Unit__c == null
+                    && listAllo[0].Amount__c == null
+                    && listAllo[0].Percent__c == null
+                ) {
                     redirect = true;
+                }
             }
+
             if (!listAlloForUpdate.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 update listAlloForUpdate;
             }
+
             if (!listAlloForInsert.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
-            
             redirect = true;
+
         } catch (Exception e) {
             Database.rollback(sp);
-
             ApexPages.addMessages(e);
+            isLoading = false;
         }
+
         return null;
+        
     }
 
     /** @description Discards all changes and returns user to parent object detail page.*/
-    public pageReference cancel() {
-        pageReference source = new pageReference('/'+parentId);
+    public PageReference cancel() {
+        PageReference source = new PageReference('/' + parentId);
         return source;
     }
 
@@ -357,6 +412,56 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                     String.format(
                         System.Label.exceptionDeletePermission,
                         new String[]{UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'))})));
+    
     }
 
+    /**
+    * @description Contrcut and query Recurring Donation's children Allocations
+    * @param parentId Recurring Donation Id
+    * @return List<Allocation__c> 
+    */
+    @TestVisible
+    private List<Allocation__c> getAllocations(Id parentId) {
+        Set<String> queryFields = new Set<String>();
+        queryFields.addAll(defaultAllocationFields);
+
+        for(Schema.FieldSetMember additionalField : additionalAllocationFields) {
+            queryFields.add(additionalField.getFieldPath());
+        }
+
+        String soql = new UTIL_Query()
+            .withFrom(Allocation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere(
+                'Opportunity__c = :parentId ' +
+                'OR Campaign__c = :parentId ' +
+                'OR Recurring_Donation__c = :parentId ' +
+                'OR Payment__c = :parentId '
+            )
+            .build();
+
+        return Database.query(soql);
+    }
+
+    /**
+    * @description Retrieve Manage Allocations Table Fields Field Set and exclude any parent record field and rich text area
+    * @return List<Schema.FieldSetMember>
+    */
+    @TestVisible
+    private List<Schema.FieldSetMember> getAdditionalAllocationFields() {
+        List<Schema.FieldSetMember> qualifiedFields = new List<Schema.FieldSetMember>();
+
+        List<Schema.FieldSetMember> fieldSetFields = 
+            Schema.SObjectType.Allocation__c.fieldSets.ManageAllocationsAdditionalFields.getFields();
+
+        for (Schema.FieldSetMember field : fieldSetFields) {
+            if (field.getFieldPath().contains('__r.')
+                || (field.getType() == Schema.DisplayType.TEXTAREA && field.getSObjectField().getDescribe().isHtmlFormatted())) {
+                continue;
+            }
+            qualifiedFields.add(field);
+        }
+
+        return qualifiedFields;
+    }
 }

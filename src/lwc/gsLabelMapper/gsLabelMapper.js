@@ -97,7 +97,6 @@ import gseuChecklistItemConnectContactOrganizationBlueButton from '@salesforce/l
 import gsChecklistItemExtraTwoMinutesVideo from '@salesforce/label/c.gsChecklistItemExtraTwoMinutesVideo';
 
 
-
 /**
 * @description Map of getLabelValue labels
 */
