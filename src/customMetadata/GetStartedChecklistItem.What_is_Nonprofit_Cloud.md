@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>Go Further</label>
+    <label>What is Nonprofit Cloud</label>
     <protected>true</protected>
     <values>
         <field>Description_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherDesc</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudTitleDesc</value>
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>GS_Checklist_Section__c</field>
-        <value xsi:type="xsd:string">Bring_Users_Onboard</value>
+        <value xsi:type="xsd:string">Welcome_NPSP</value>
     </values>
     <values>
         <field>Has_Link__c</field>
@@ -20,19 +20,19 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">nature_run_illustration.svg</value>
+        <value xsi:type="xsd:string">What_is_Nonprofit_Cloud_modified_undraw_going_up_ttm5.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherLinkLabel</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudLink</value>
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/trails/nonprofit_fundraising</value>
+        <value xsi:type="xsd:string">https://sforce.co/3gnaoi8</value>
     </values>
     <values>
         <field>Position__c</field>
-        <value xsi:type="xsd:double">5.0</value>
+        <value xsi:type="xsd:double">1.0</value>
     </values>
     <values>
         <field>Primary_Button_Label__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Title_Label__c</field>
-        <value xsi:type="xsd:string">gsChecklistItemGoFurtherTitle</value>
+        <value xsi:type="xsd:string">gseuChecklistItemWhatIsNPCloudTitle</value>
     </values>
 </CustomMetadata>
