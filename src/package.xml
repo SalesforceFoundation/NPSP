@@ -2565,10 +2565,18 @@
         <members>gsChecklistItemTrainUsersDesc</members>
         <members>gsChecklistItemTrainUsersLinkLabel</members>
         <members>gsChecklistItemTrainUsersTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudLink</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitleDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPLink</members>
+        <members>gseuChecklistItemWhatIsNPSPTitle</members>
         <members>gsChecklistMakeItYourDesc</members>
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
         <members>gsChecklistOnboardUsersTitle</members>
+        <members>gseuChecklistWelcomeNPSPDesc</members>
+        <members>gseuChecklistWelcomeNPSPTitle</members>
         <members>gsDaysAdded</members>
         <members>gsDaysRemainingInFreeTrial</members>
         <members>gsFollowUpApplicationStatus</members>
@@ -3405,9 +3413,12 @@
         <members>GetStartedChecklistItem.Setup_Contact</members>
         <members>GetStartedChecklistItem.Stay_Track</members>
         <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Cloud</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Success_Pack</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Welcome_NPSP</members>
         <name>CustomMetadata</name>
     </types>
     <types>

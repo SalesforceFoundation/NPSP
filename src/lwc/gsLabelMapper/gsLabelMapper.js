@@ -72,6 +72,14 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
+import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
+import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
+import gseuChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPDesc';
+import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPLink';
+import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
+import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
+import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
 
 /**
 * @description Map of getLabelValue labels
@@ -151,6 +159,15 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistWelcomeNPSPTitle,
+    gseuChecklistWelcomeNPSPDesc,
+    gseuChecklistItemWhatIsNPSPTitle,
+    gseuChecklistItemWhatIsNPSPDesc,
+    gseuChecklistItemWhatIsNPSPLink,
+    gseuChecklistItemWhatIsNPCloudTitle,
+    gseuChecklistItemWhatIsNPCloudTitleDesc,
+    gseuChecklistItemWhatIsNPCloudLink
+
 }
 
 /**
