@@ -212,10 +212,9 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.selenium.wait_until_page_contains_element(popup)
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
-                    elif placeholder=="Search...":
+                    elif placeholder in ("Search...","Search Payments..."):
                         self.salesforce._populate_field(field_loc,value)
-                        qa_id="Select "+value
-                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                         self.selenium.wait_until_page_contains_element(option)
                         try:
                             self.selenium.click_element(option)
