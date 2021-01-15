@@ -215,7 +215,9 @@ npsp_lex_locators={
         'checkbox':'//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]',
 		'erd_status_mapping_header':"//div/h1[contains(text(),'{}')]",
 		'erd_state_status_mapping':"//tr[@data-row-key-value='{}']//lightning-primitive-cell-factory[@data-label='State']//lightning-base-formatted-text",
-        'table_dropdown':"//tbody/tr[./th//*[text()='{}']]/td//button"
+        'table_dropdown':"//tbody/tr[./th//*[text()='{}']]/td//button",
+        'page_error':'//div[.//span[text()="{}"]]/slot//li[text()="{}"]',
+        'field_error':'//tr[./td[@data-label="Field API Name"]//*[text()="{}"]]/td//button[contains(@class,"error")]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
@@ -270,7 +272,8 @@ npsp_lex_locators={
         'object_result': '//th/a[text()="{}"]',
 		'field_result': '//td/a/span[text()="{}"]',
         'new_picklist_btn': '//td[@class="pbButton"]/input[@title="{}"]',
-        'picklist_txtarea': '//textarea[@title = "{}"]'
+        'picklist_txtarea': '//textarea[@title = "{}"]',
+        'field_dropdown':'//tr[./td/a/span[text()="{}"]]/td//div[contains(@class,"slds-dropdown-trigger")]/a',
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
@@ -318,7 +321,7 @@ npsp_lex_locators={
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
         'alert':'//div[@role="alert" and contains(@class,"slds-theme_{}")][./span[text()="{}"]]/h2[text()="{}"]',
         'element_text':'//*[contains(@data-qa-locator,"{}") and text()="{}"]',
-        'page_error':'//div[@class="pageLevelErrors"]',
+        'page_error':'//div[contains(@class,"pageLevelErrors")]',
         'picklist_values':'//*[contains(@data-qa-locator,"{}")]//child::lightning-base-combobox-item[@data-value="{}"]',
         'modal_field':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"{}")]//child::{}',
         'modal_button':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"{}")]/button',
@@ -327,8 +330,8 @@ npsp_lex_locators={
         'remove_lookup':'//div[@class="modal-body scrollable slds-modal__content slds-p-around--medium"]//*[contains(@data-qa-locator,"button Remove selected option Opportunity: Record Type")]',
         'click-dropkown-value':"//div[@class='modal-body scrollable slds-modal__content slds-p-around--medium']//*[contains(@class,'slds-combobox')]//span[text()='{}'']",
         'modal_lookup_button':'//div[contains(@class,"modal-body")]//*[contains(@data-qa-locator,"{}")]//child::button',
-        'payment_imported_lookup':'//*[contains(@data-qa-locator,"Payment Imported")]//input[@placeholder="Search Payments..."]',
-        'payment_imported_value':'//div[contains(@class,"slds-listbox")]//ul[@aria-label="Recent Payments"]//span[text()="{}"]',
+        'form_error':'//div[.//span[text()="{}"]]/div[text()="{}"]',
+        'field_error':'//*[contains(@data-qa-locator,"{}")]/div[text()="{}"]',
         'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
