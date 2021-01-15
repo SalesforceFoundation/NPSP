@@ -2641,6 +2641,7 @@
         <members>gseuChecklistWorkRecordsDesc</members>
         <members>gseuChecklistWorkRecordsTitle</members>
         <members>gseuExploreTrailheadButton</members>
+        <members>gseuPageTitle</members>
         <members>gseuResourcesItemAboutNPSPLabel</members>
         <members>gseuResourcesItemAboutNPSPLinkLabel</members>
         <members>gseuResourcesItemCommunityGroupLabel</members>
