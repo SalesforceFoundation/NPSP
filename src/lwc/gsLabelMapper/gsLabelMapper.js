@@ -16,6 +16,7 @@ import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistIte
 import gsChecklistItemExtraFourMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraFourMinuteVideo';
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 import gsChecklistItemExtraSixtyMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraSixtyMinuteVideo';
+import gsChecklistItemExtraTwoMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraTwoMinuteVideo';
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
 import gsChecklistItemFundraisingProcessTitle from '@salesforce/label/c.gsChecklistItemFundraisingProcessTitle';
 import gsChecklistItemFundraisingProcessLinkLabel from '@salesforce/label/c.gsChecklistItemFundraisingProcessLinkLabel';
@@ -73,6 +74,20 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gseuChecklistWorkRecordsDesc from '@salesforce/label/c.gseuChecklistWorkRecordsDesc';
+import gseuChecklistWorkRecordsTitle from '@salesforce/label/c.gseuChecklistWorkRecordsTitle';
+import gseuChecklistItemGlobalSearchDesc from '@salesforce/label/c.gseuChecklistItemGlobalSearchDesc';
+import gseuChecklistItemGlobalSearchLinkLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchLinkLabel';
+import gseuChecklistItemGlobalSearchPriBtnLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchPriBtnLabel';
+import gseuChecklistItemGlobalSearchTitle from '@salesforce/label/c.gseuChecklistItemGlobalSearchTitle';
+import gseuChecklistItemStayTrackDesc from '@salesforce/label/c.gseuChecklistItemStayTrackDesc';
+import gseuChecklistItemStayTrackLinkLabel from '@salesforce/label/c.gseuChecklistItemStayTrackLinkLabel';
+import gseuChecklistItemStayTrackPriBtnLabel from '@salesforce/label/c.gseuChecklistItemStayTrackPriBtnLabel';
+import gseuChecklistItemStayTrackTitle from '@salesforce/label/c.gseuChecklistItemStayTrackTitle';
+import gseuChecklistItemWorkMultipleRecordsDesc from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsDesc';
+import gseuChecklistItemWorkMultipleRecordsLinkLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsLinkLabel';
+import gseuChecklistItemWorkMultipleRecordsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsPriBtnLabel';
+import gseuChecklistItemWorkMultipleRecordsTitle from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsTitle';
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
 import gseuPageTitle from '@salesforce/label/c.gseuPageTitle';
 import gseuChecklistItemCaptureDonorIntentDesc from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentDesc';
@@ -146,6 +161,7 @@ const labelMap = {
     gsChecklistItemExtraFourMinuteVideo,
     gsChecklistItemExtraOneMinuteVideo,
     gsChecklistItemExtraSixtyMinuteVideo,
+    gsChecklistItemExtraTwoMinuteVideo,
     gsChecklistItemFundraisingProcessDesc,
     gsChecklistItemFundraisingProcessTitle,
     gsChecklistItemFundraisingProcessLinkLabel,
@@ -203,6 +219,20 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistWorkRecordsDesc,
+    gseuChecklistWorkRecordsTitle,
+    gseuChecklistItemGlobalSearchDesc,
+    gseuChecklistItemGlobalSearchLinkLabel,
+    gseuChecklistItemGlobalSearchPriBtnLabel,
+    gseuChecklistItemGlobalSearchTitle,
+    gseuChecklistItemStayTrackDesc,
+    gseuChecklistItemStayTrackLinkLabel,
+    gseuChecklistItemStayTrackPriBtnLabel,
+    gseuChecklistItemStayTrackTitle,
+    gseuChecklistItemWorkMultipleRecordsDesc,
+    gseuChecklistItemWorkMultipleRecordsLinkLabel,
+    gseuChecklistItemWorkMultipleRecordsPriBtnLabel,
+    gseuChecklistItemWorkMultipleRecordsTitle,
     gseuChecklistItemCaptureDonorIntentDesc,
     gseuChecklistItemCaptureDonorIntentLinkLabel,
     gseuChecklistItemCaptureDonorIntentPriBtnLabel,
