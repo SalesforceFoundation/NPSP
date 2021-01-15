@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Extra_Info_Label__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">2 Minutes Video</value>
     </values>
     <values>
         <field>GS_Checklist_Section__c</field>
