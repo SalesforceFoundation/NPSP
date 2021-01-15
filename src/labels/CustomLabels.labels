@@ -7528,6 +7528,118 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
         <value>Visualize Your Fundraising Processes</value>
     </labels>
+      <labels>
+        <fullName>gseuChecklistWorkRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Work with Records checklist in Get Started for End Users</shortDescription>
+        <value>After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistWorkRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Work with Records checklist in Get Started for End Users</shortDescription>
+        <value>Work with Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>When you&apos;re just getting started with NPSP, finding records can be tricky. Use global search to search across your entire Salesforce org and find what you need fast.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Search Results in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Find Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Find Records with Global Search</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organization, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you&apos;re working on.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Activities in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Track Activities</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Stay on Track with Activities</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>List views help you easily find what you need by providing filtered groups of Contacts, Accounts, Opportunities, and other objects.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about List Views in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Visualize Processes</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Work with Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Work with Multiple Records Using List Views</value>
+    </labels>
     <labels>
         <fullName>gseuChecklistItemPrebuiltNPSPReportDesc</fullName>
         <categories>Get Started Page</categories>
