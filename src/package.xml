@@ -2603,10 +2603,18 @@
         <members>gseuChecklistItemStayTrackLinkLabel</members>
         <members>gseuChecklistItemStayTrackPriBtnLabel</members>
         <members>gseuChecklistItemStayTrackTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudLink</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitleDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPLink</members>
+        <members>gseuChecklistItemWhatIsNPSPTitle</members>
         <members>gseuChecklistItemWorkMultipleRecordsDesc</members>
         <members>gseuChecklistItemWorkMultipleRecordsLinkLabel</members>
         <members>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</members>
         <members>gseuChecklistItemWorkMultipleRecordsTitle</members>
+        <members>gseuChecklistWelcomeNPSPDesc</members>
+        <members>gseuChecklistWelcomeNPSPTitle</members>
         <members>gseuChecklistWorkRecordsDesc</members>
         <members>gseuChecklistWorkRecordsTitle</members>
         <members>gseuExploreTrailheadButton</members>
@@ -3422,10 +3430,13 @@
         <members>GetStartedChecklistItem.Stay_Track</members>
         <members>GetStartedChecklistItem.Stay_Track_End_User</members>
         <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Cloud</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Success_Pack</members>
         <members>GetStartedChecklistItem.Work_Multiple_Records</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Welcome_NPSP</members>
         <members>GetStartedChecklistSection.Work_with_Records</members>
         <name>CustomMetadata</name>
     </types>

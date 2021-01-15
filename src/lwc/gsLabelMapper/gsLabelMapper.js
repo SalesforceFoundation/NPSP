@@ -87,6 +87,14 @@ import gseuChecklistItemWorkMultipleRecordsDesc from '@salesforce/label/c.gseuCh
 import gseuChecklistItemWorkMultipleRecordsLinkLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsLinkLabel';
 import gseuChecklistItemWorkMultipleRecordsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsPriBtnLabel';
 import gseuChecklistItemWorkMultipleRecordsTitle from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsTitle';
+import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
+import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
+import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
+import gseuChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPDesc';
+import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPLink';
+import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
+import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
+import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
 
 /**
 * @description Map of getLabelValue labels
@@ -181,6 +189,14 @@ const labelMap = {
     gseuChecklistItemWorkMultipleRecordsLinkLabel,
     gseuChecklistItemWorkMultipleRecordsPriBtnLabel,
     gseuChecklistItemWorkMultipleRecordsTitle,
+    gseuChecklistWelcomeNPSPTitle,
+    gseuChecklistWelcomeNPSPDesc,
+    gseuChecklistItemWhatIsNPSPTitle,
+    gseuChecklistItemWhatIsNPSPDesc,
+    gseuChecklistItemWhatIsNPSPLink,
+    gseuChecklistItemWhatIsNPCloudTitle,
+    gseuChecklistItemWhatIsNPCloudTitleDesc,
+    gseuChecklistItemWhatIsNPCloudLink,
 }
 
 /**
