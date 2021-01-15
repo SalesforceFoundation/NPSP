@@ -13,6 +13,7 @@ import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChec
 import gsChecklistItemCustomFieldsDesc from '@salesforce/label/c.gsChecklistItemCustomFieldsDesc';
 import gsChecklistItemCustomFieldsLinkLabel from '@salesforce/label/c.gsChecklistItemCustomFieldsLinkLabel';
 import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistItemCustomFieldsTitle';
+import gsChecklistItemExtraFourMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraFourMinuteVideo';
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 import gsChecklistItemExtraSixtyMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraSixtyMinuteVideo';
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
@@ -72,6 +73,28 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gseuChecklistItemCaptureDonorIntentDesc from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentDesc';
+import gseuChecklistItemCaptureDonorIntentLinkLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentLinkLabel';
+import gseuChecklistItemCaptureDonorIntentPriBtnLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentPriBtnLabel';
+import gseuChecklistItemCaptureDonorIntentTitle from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentTitle';
+import gseuChecklistItemCollectGiftsDesc from '@salesforce/label/c.gseuChecklistItemCollectGiftsDesc';
+import gseuChecklistItemCollectGiftsLinkLabel from '@salesforce/label/c.gseuChecklistItemCollectGiftsLinkLabel';
+import gseuChecklistItemCollectGiftsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemCollectGiftsPriBtnLabel';
+import gseuChecklistItemCollectGiftsTitle from '@salesforce/label/c.gseuChecklistItemCollectGiftsTitle';
+import gseuChecklistItemDonationIndividualDesc from '@salesforce/label/c.gseuChecklistItemDonationIndividualDesc';
+import gseuChecklistItemDonationIndividualLinkLabel from '@salesforce/label/c.gseuChecklistItemDonationIndividualLinkLabel';
+import gseuChecklistItemDonationIndividualPriBtnLabel from '@salesforce/label/c.gseuChecklistItemDonationIndividualPriBtnLabel';
+import gseuChecklistItemDonationIndividualTitle from '@salesforce/label/c.gseuChecklistItemDonationIndividualTitle';
+import gseuChecklistItemDonationOrganizationDesc from '@salesforce/label/c.gseuChecklistItemDonationOrganizationDesc';
+import gseuChecklistItemDonationOrganizationLinkLabel from '@salesforce/label/c.gseuChecklistItemDonationOrganizationLinkLabel';
+import gseuChecklistItemDonationOrganizationPriBtnLabel from '@salesforce/label/c.gseuChecklistItemDonationOrganizationPriBtnLabel';
+import gseuChecklistItemDonationOrganizationTitle from '@salesforce/label/c.gseuChecklistItemDonationOrganizationTitle';
+import gseuChecklistItemTrackDonationDesc from '@salesforce/label/c.gseuChecklistItemTrackDonationDesc';
+import gseuChecklistItemTrackDonationLinkLabel from '@salesforce/label/c.gseuChecklistItemTrackDonationLinkLabel';
+import gseuChecklistItemTrackDonationPriBtnLabel from '@salesforce/label/c.gseuChecklistItemTrackDonationPriBtnLabel';
+import gseuChecklistItemTrackDonationTitle from '@salesforce/label/c.gseuChecklistItemTrackDonationTitle';
+import gseuChecklistTrackDonationDesc from '@salesforce/label/c.gseuChecklistTrackDonationDesc';
+import gseuChecklistTrackDonationTitle from '@salesforce/label/c.gseuChecklistTrackDonationTitle';
 import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
 import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
 import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
@@ -100,6 +123,7 @@ const labelMap = {
     gsChecklistItemCustomFieldsDesc,
     gsChecklistItemCustomFieldsLinkLabel,
     gsChecklistItemCustomFieldsTitle,
+    gsChecklistItemExtraFourMinuteVideo,
     gsChecklistItemExtraOneMinuteVideo,
     gsChecklistItemExtraSixtyMinuteVideo,
     gsChecklistItemFundraisingProcessDesc,
@@ -159,6 +183,28 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistItemCaptureDonorIntentDesc,
+    gseuChecklistItemCaptureDonorIntentLinkLabel,
+    gseuChecklistItemCaptureDonorIntentPriBtnLabel,
+    gseuChecklistItemCaptureDonorIntentTitle,
+    gseuChecklistItemCollectGiftsDesc,
+    gseuChecklistItemCollectGiftsLinkLabel,
+    gseuChecklistItemCollectGiftsPriBtnLabel,
+    gseuChecklistItemCollectGiftsTitle,
+    gseuChecklistItemDonationIndividualDesc,
+    gseuChecklistItemDonationIndividualLinkLabel,
+    gseuChecklistItemDonationIndividualPriBtnLabel,
+    gseuChecklistItemDonationIndividualTitle,
+    gseuChecklistItemDonationOrganizationDesc,
+    gseuChecklistItemDonationOrganizationLinkLabel,
+    gseuChecklistItemDonationOrganizationPriBtnLabel,
+    gseuChecklistItemDonationOrganizationTitle,
+    gseuChecklistItemTrackDonationDesc,
+    gseuChecklistItemTrackDonationLinkLabel,
+    gseuChecklistItemTrackDonationPriBtnLabel,
+    gseuChecklistItemTrackDonationTitle,
+    gseuChecklistTrackDonationDesc,
+    gseuChecklistTrackDonationTitle,
     gseuChecklistWelcomeNPSPTitle,
     gseuChecklistWelcomeNPSPDesc,
     gseuChecklistItemWhatIsNPSPTitle,
@@ -166,8 +212,7 @@ const labelMap = {
     gseuChecklistItemWhatIsNPSPLink,
     gseuChecklistItemWhatIsNPCloudTitle,
     gseuChecklistItemWhatIsNPCloudTitleDesc,
-    gseuChecklistItemWhatIsNPCloudLink
-
+    gseuChecklistItemWhatIsNPCloudLink,
 }
 
 /**
