@@ -945,6 +945,12 @@ private class BDI_AdditionalObjectService_TEST {
 
     @isTest
     static void givenAdditionalObjectsFailWhenProcessedThenAssertFailureInformation() {
+
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+
         General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'testGAU');
         insert testGAU;
 
@@ -966,49 +972,40 @@ private class BDI_AdditionalObjectService_TEST {
                 GAU_Allocation_1_Percent__c = 110,
                 Opportunity_Contact_Role_1_Role__c = 'testOCRole'
         );
-        insert new List<DataImport__c>{
-                singleErrorDataImport, doubleErrorDataImport
-        };
+
+        List<DataImport__c> testDIs = new List<DataImport__c>{singleErrorDataImport, doubleErrorDataImport};
+
+        insert testDIs;
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImportService dataImportService =
-                new BDI_DataImportService(
-                        false,
-                        BDI_MappingServiceAdvanced.getInstance());
+        BDI_DataImport_API.processDataImportRecords(dis,testDIs,false);
 
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
-
-        Database.executeBatch(bdi, 10);
         Test.stopTest();
 
         List<DataImport__c> dataImports = [
                 SELECT
                         Status__c,
                         FailureInformation__c,
+                        GAU_Allocation_1_Imported__c,
                         GAU_Allocation_1_Import_Status__c,
+                        DonationImported__c,
                         Opportunity_Contact_Role_1_ImportStatus__c
                 FROM DataImport__c
                 WHERE Id = :singleErrorDataImport.Id
                 OR Id = :doubleErrorDataImport.Id
         ];
 
+        System.assertEquals(2,dataImports.size());
+
         for (DataImport__c dataImport : dataImports) {
             System.assertEquals(BDI_DataImport_API.bdiFailed, dataImport.Status__c);
             System.assertNotEquals(null, dataImport.GAU_Allocation_1_Import_Status__c);
             System.assertNotEquals(null, dataImport.FailureInformation__c);
-            System.assert(dataImport.FailureInformation__c.contains(dataImport
-                    .GAU_Allocation_1_Import_Status__c),
-                    'The Data Import Failure Information field should contain ' +
-                            'the GAU Allocation error message.');
 
             if (dataImport.Id == doubleErrorDataImport.Id) {
                 System.assertNotEquals(null,
                         dataImport.Opportunity_Contact_Role_1_ImportStatus__c);
-                System.assert(dataImport.FailureInformation__c.contains(
-                        dataImport.Opportunity_Contact_Role_1_ImportStatus__c),
-                        'The Data Import Failure Information field should contain both the ' +
-                                'GAU Allocation and Opportunity Contact Role error messages.');
             }
         }
     }

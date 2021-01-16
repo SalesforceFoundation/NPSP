@@ -576,6 +576,11 @@ global with sharing class BDI_DataImportService {
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
 
+            // Disabling Allocation triggers since we will be manually calling allocation processing
+            if (!isDryRun) {
+                ALLO_AllocationsUtil.disableAllocationTriggers();
+            }
+
             pl = perfLogger.newPerfLog('importContactsAndHouseholds');
             contactService.importContactsAndHouseholds();
             pl.stop();
@@ -614,6 +619,12 @@ global with sharing class BDI_DataImportService {
                 pl = perfLogger.newPerfLog('importAdditionalObjects');
                 additionalObjectService.importAdditionalObjects();
                 pl.stop();
+            }
+
+            // Re-enabling allocation triggers after BDI processing is complete.
+            if (!isDryRun) {
+                processAllocations(listDI);
+                ALLO_AllocationsUtil.enableAllocationTriggers();
             }
 
             pl = perfLogger.newPerfLog('updateDIStatuses');
@@ -659,6 +670,90 @@ global with sharing class BDI_DataImportService {
         } finally {
             perfLogger.stop();
             perfLogger.save();
+        }
+    }
+
+    private void processAllocations(List<DataImport__c> dataImports) {
+        Set<Id> opptIdsForAllocProcessing = new Set<Id>();
+        DataImport__c[] diForAlloProcessing = new DataImport__c[]{};
+        for (DataImport__c di : dataImports) {
+
+            // If the DI doesn't have a failure and it isn't in dry run mode and there is
+            // a donation imported id and a donation or a payment was created then run allocation processing for all
+            // donation ids.
+            if (di.Status__c != System.label.bdiFailed &&
+                !isDryRun  &&
+                di.DonationImported__c != null && (
+                    di.PaymentImportStatus__c == System.label.bdiCreated
+                    || di.PaymentImportStatus__c == System.label.bdiUpdated
+                    || di.DonationImportStatus__c == System.label.bdiCreated)) {
+
+                opptIdsForAllocProcessing.add(di.DonationImported__c);
+                diForAlloProcessing.add(di);
+            }
+        }
+        System.debug('OpptIdsForProcessing: ' + opptIdsForAllocProcessing);
+        // If there were any opportunities that met the criteria for allocation processing then call the
+        // Allocations service.
+        if(opptIdsForAllocProcessing.size() > 0) {
+            // Instantiating a custom error class so that we can review the error messages without inserting them as
+            // error records.
+            ERR_RecordError errors = new ERR_RecordError('GAU Allocations');
+            // Calling the allocations service with a custom error class and setting a flag not to commit the errors
+            // since we will be adding them to the
+            ALLO_AllocationsService allocationsSvc = new ALLO_AllocationsService()
+                                                        .withAlternateRecordErrorsLogger(errors)
+                                                        .withCommitAndClearRecordsEnabled(false);
+            Set<Id> failedOpptIds = allocationsSvc.processRecords(opptIdsForAllocProcessing);
+            System.debug('Failed Oppt Ids are: ' + failedOpptIds);
+            Allocation__c[] allocForDelete = new Allocation__c[]{};
+
+            for (DataImport__c di : diForAlloProcessing) {
+                Error__c errorObj;
+
+                // Retrieve the error object out of either the insert or update errors
+                if (errors.insRecordErrors.containsKey(di.DonationImported__c)) {
+
+                    errorObj = errors.insRecordErrors.get(di.DonationImported__c);
+                    System.debug('Found Insert Error: ' + errorObj);
+                } else if (errors.updRecordErrors.containsKey(di.DonationImported__c)) {
+                    errorObj = errors.updRecordErrors.get(di.DonationImported__c);
+                    System.debug('Found Update Error: ' + errorObj);
+                }
+
+                if (errorObj != null) {
+                    String statusFieldName;
+
+                    // If there was a GAU allocation imported then add it to the list for delete and overwrite status
+                    // with error message.  Otherwise add it to the status message for the Donation or Payment.
+                    if (di.GAU_Allocation_1_Imported__c != null || di.GAU_Allocation_2_Imported__c != null) {
+                        if (di.GAU_Allocation_1_Imported__c != null) {
+                            allocForDelete.add(new Allocation__c(Id = di.GAU_Allocation_1_Imported__c));
+                            statusFieldName = SObjectType.DataImport__c.fields.GAU_Allocation_1_Import_Status__c.Name;
+                            di.GAU_Allocation_1_Imported__c = null;
+                        }
+                        if (di.GAU_Allocation_2_Imported__c != null) {
+                            allocForDelete.add(new Allocation__c(Id = di.GAU_Allocation_2_Imported__c));
+                            statusFieldName = SObjectType.DataImport__c.fields.GAU_Allocation_2_Import_Status__c.Name;
+                            di.GAU_Allocation_2_Imported__c = null;
+                        }
+                    } else if (di.PaymentImported__c != null) {
+                        statusFieldName = SObjectType.DataImport__c.fields.PaymentImportStatus__c.Name;
+                    } else if (di.DonationImported__c != null) {
+                        statusFieldName = SObjectType.DataImport__c.fields.DonationImportStatus__c.Name;
+                    }
+                    // TODO: strip formatting out of error message
+                    LogBDIError(di, errorObj.Full_Message__c, statusFieldName);
+
+                }
+            }
+            // Delete any allocations that were created for an oppt that had related allocation errors.
+            // TODO: add error handling for the DML Oppt here
+            if (allocForDelete.size() > 0) {
+                delete allocForDelete;
+            }
+
+            System.debug('DIs after processing allo: ' + diForAlloProcessing);
         }
     }
 
@@ -844,7 +939,14 @@ global with sharing class BDI_DataImportService {
     */
     public void LogBDIError(DataImport__c dataImport, String errorMessage, String statusField) {
         dataImport.Status__c = BDI_DataImport_API.bdiFailed;
-        dataImport.FailureInformation__c = errorMessage;
+
+        // Set the failure information to the error or append it if there already is one.
+        if (dataImport.FailureInformation__c != null) {
+            dataImport.FailureInformation__c += '\n\n' + errorMessage;
+        } else {
+            dataImport.FailureInformation__c = errorMessage;
+        }
+
         if (statusField != null) {
             dataImport.put(statusField, errorMessage.left(255));
         }

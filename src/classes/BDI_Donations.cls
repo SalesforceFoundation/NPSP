@@ -318,11 +318,12 @@ public class BDI_Donations {
                continue;
             }
 
-            //If there are no Donation Fields populated and no donation amount populated then
+            //If there are no Donation Fields or Payment Fields populated and no donation amount populated then
             //do not continue with donation processing.
-            if (dataImport.Donation_Amount__c == null &&
+            if ((dataImport.Donation_Amount__c == null &&
                 !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
-                                                                        dataImportFieldToOpportunityField)) {
+                                                                        dataImportFieldToOpportunityField)) &&
+                !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToPaymentField)) {
                 continue;
             }
 
