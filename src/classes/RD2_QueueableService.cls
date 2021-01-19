@@ -212,4 +212,68 @@ public class RD2_QueueableService {
                 .cancelCommitments(commitmentRDs);
         }
     }
+
+    /**
+     * @description Queues up Opp name update service to recalculate Opportunity name.
+     * @param updatedOpps Updated opportunities
+     */
+    public static void enqueueOppNameUpdateService(List<Opportunity> updatedOpps) {
+        OppNameUpdateService service = new OppNameUpdateService(updatedOpps);
+
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && !Test.isRunningTest()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.executeOppNamesUpdate();
+        }
+    }
+
+    /**
+     * @description Queueable service to recalculate Opportunity names
+     */
+    public class OppNameUpdateService implements Queueable {
+        List<Opportunity> updatedOpps;
+
+        /**
+        * @description Constructor
+        * @param updatedOpps Updated opportunities
+        */
+        public OppNameUpdateService(List<Opportunity> updatedOpps) {
+            this.updatedOpps = updatedOpps;
+        }
+
+        /**
+         * @description Update opportunity names
+         * @param context queueableContext
+         */
+        public void execute(QueueableContext context) {
+            executeOppNamesUpdate();
+        }
+
+        /**
+         * @description Update opportunity names
+         */
+        public void executeOppNamesUpdate() {
+            if (updatedOpps == null || updatedOpps.isEmpty()) {
+                return;
+            }
+
+            Map<Id, String> oppNameById = new Map<Id, String>();
+            for (Opportunity opp: updatedOpps) {
+                oppNameById.put(opp.Id, opp.Name);
+            }
+
+            OPP_OpportunityNaming.refreshOppNames(updatedOpps);
+
+            List<Opportunity> renamedOpps = new List<Opportunity>();
+            for (Opportunity opp: updatedOpps) {
+                if (!opp.Name.equalsIgnoreCase(oppNameById.get(opp.Id))) {
+                    renamedOpps.add(opp);
+                }
+            }
+
+            TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RD2_RecurringDonationsOpp_TDTM', false);
+            update renamedOpps;
+        }
+    }
 }
