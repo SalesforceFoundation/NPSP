@@ -1172,8 +1172,6 @@ flows:
                     ## It's necessary to redeploy the RD2 config after deploying the "packaged" unmanaged code to
                     ## ensure that the RecurringDonation.DayOfMonth picklist field has the proper active values.
             3:
-                task: test_rd_batch_performance
-            4:
                 task: test_rollup_performance
 
     test_performance_LDV:
