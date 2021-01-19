@@ -61,7 +61,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
 
         try {
             data = new Map<String, Object> {
-                'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
+                'isElevateCustomer' => RD2_ElevateIntegrationService.isElevateCreateEnabled()
             };
 
             Boolean hasPermissions = hasFieldPermissions();
