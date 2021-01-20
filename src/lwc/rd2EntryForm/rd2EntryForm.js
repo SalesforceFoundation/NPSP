@@ -44,7 +44,6 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
-import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 
@@ -435,11 +434,6 @@ export default class rd2EntryForm extends LightningElement {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
-
-                if (!this.isEdit) {
-                    const tempId = await getTempCommitmentId();
-                    allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
-                }
 
             } catch (error) {
                 this.setSaveButtonDisabled(false);

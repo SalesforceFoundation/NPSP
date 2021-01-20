@@ -92,15 +92,6 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
-    * @description Get a GUID to store as a temp Commitment Id
-    * @return String
-    */
-    @AuraEnabled(cacheable=false)
-    public static String getTempCommitmentId() {
-        return RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
-    }
-
-    /**
     * @description Retrieve the donor type for an existing RD record
     * @param recordId RecurringDonation.RecordId
     * @return Map<String, Object> of specific type of RD data
