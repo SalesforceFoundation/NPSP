@@ -122,6 +122,19 @@ public inherited sharing class PS_CommitmentRequest {
         set;
     }
 
+    /**
+    * @description Recurring Donation schedule service user to build schedules used in a commitment request
+    */
+    private RD2_ScheduleService scheduleService {
+        get {
+            if (scheduleService == null) {
+                scheduleService = new RD2_ScheduleService();
+            }
+            return scheduleService;
+        }
+        set;
+    }
+
     /***
     * @description Creates an HttpRequest for a new commitment creation
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
@@ -138,12 +151,11 @@ public inherited sharing class PS_CommitmentRequest {
 
     /***
     * @description Constructs the Commitment request body for the specified Recurring Donation
-    * @param recordId Recurring Donation Id
+    * @param rd Recurring Donation record
     * @param token Payment Method Token
     * @return RequestBody
     */
-    public RequestBody getRequestBody(Id recordId, String token) {
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+    public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
 
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
@@ -165,7 +177,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withProductMetaData(productMetaData);
 
         setDonorInfo(reqBody, rd);
-        setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);
+        setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
 
         return reqBody;
     }
@@ -178,16 +190,22 @@ public inherited sharing class PS_CommitmentRequest {
     */
     @TestVisible
     private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
-        Boolean isContactDonor = rd.npe03__Contact__c != null
+        Contact contactDonor = rd.npe03__Contact__c != null
+            ? getContact(rd.npe03__Contact__c)
+            : null;
+
+        Boolean isContactDonor = contactDonor != null
             && (
                 rd.npe03__Organization__c == null
-                || rd.npe03__Organization__c == rd.npe03__Contact__r.AccountId
+                || rd.npe03__Organization__c == contactDonor.AccountId
             );
 
         if (isContactDonor) {
-            reqBody.withDonor(rd.npe03__Contact__r);
+            reqBody.withDonor(contactDonor);
+
         } else {
-            reqBody.withDonor(rd.npe03__Organization__r);
+            Account organization = getAccount(rd.npe03__Organization__c);
+            reqBody.withDonor(organization);
         }
     }
 
@@ -223,50 +241,6 @@ public inherited sharing class PS_CommitmentRequest {
             : currencyMultiplier;
     }
 
-    /**
-    * @description Queries Recurring Donation fields and related schedules
-    * @param recordId RecurringDonation.RecordId
-    * @return Recurring Donation object
-    */
-    @TestVisible
-    private npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
-        Set<String> fields = new Set<String>{
-            'Id',
-            'RecurringType__c',
-            'npe03__Organization__c',
-            'npe03__Organization__r.Name',
-            'npe03__Contact__c',
-            'npe03__Contact__r.AccountId',
-            'npe03__Contact__r.FirstName',
-            'npe03__Contact__r.LastName',
-            'npe03__Recurring_Donation_Campaign__c'
-        };
-
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            fields.add('CurrencyIsoCode');
-        }
-
-        fields.add(getScheduleSubQuery());
-
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(fields)
-            .withWhere('Id = :recordId')
-            .withLimit(1)
-            .build();
-
-        return Database.query(soql);
-    }
-
-    /**
-     * @description Returns query on Recurring Donation Schedule
-     * @return String RD Schedule subquery used in the Recurring Donation SOQL
-     */
-    private String getScheduleSubQuery() {
-        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
-
-        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
-    }
 
     /**
      * @description Parses the response and returns the commitment data contained in the response body
@@ -284,6 +258,45 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         return commitment;
+    }
+
+    /***
+    * @description Retrieves Contact data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param contactId Contact Id
+    * @return Contact
+    */
+    private Contact getContact(Id contactId) {
+        List<Contact> contacts = new List<Contact>([
+            SELECT
+                AccountId, FirstName, LastName
+            FROM Contact
+            WHERE Id = :contactId
+            LIMIT 1
+        ]);
+        
+        return contacts == null || contacts.isEmpty()
+            ? null
+            : contacts[0];
+    }
+
+    /***
+    * @description Retrieves Account data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param accountId Account Id
+    * @return Account
+    */
+    private Account getAccount(Id accountId) {
+        List<Account> accounts = new List<Account>([
+            SELECT Name
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ]);
+        
+        return accounts == null || accounts.isEmpty()
+            ? null
+            : accounts[0];
     }
 
 

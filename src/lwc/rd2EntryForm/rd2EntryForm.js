@@ -532,9 +532,8 @@ export default class rd2EntryForm extends LightningElement {
 
         this.isLoading = disableBtn;
         this.isSaveButtonDisabled = disableBtn;
-        
-        
     }
+
     /**
     * @description Scroll to error if the error is rendered 
     */
@@ -735,7 +734,7 @@ export default class rd2EntryForm extends LightningElement {
         this.resetAllValues();
 
         const closeModalEvent = new CustomEvent('closemodal', {
-            detail :{recordId: recordId},
+            detail: { recordId: recordId },
         });
         this.dispatchEvent(closeModalEvent);
     }

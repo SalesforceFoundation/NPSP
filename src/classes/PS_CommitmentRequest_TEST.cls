@@ -83,7 +83,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         Contact contact = getContact();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd.Id, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -169,9 +169,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         update rd;
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        rd = request.getRecurringDonation(rd.Id);
-
         PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest.RequestBody();
+        
         request.setDonorInfo(requestBody, rd);
 
         System.assertEquals(organization.Name, requestBody.firstName, 'Request First Name should match Organization Name');
