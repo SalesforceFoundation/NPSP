@@ -208,7 +208,7 @@ private with sharing class RD2_OpportunityService_TEST {
         String formattedAmount = getFormattedAmount(opps[0]);
 
         System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
-        System.assertNotEquals(rd.npe03__Donor_Name__c + ' ' + formattedAmount + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
+        System.assertNotEquals(rd.npe03__Donor_Name__c + ' ' + formattedAmount + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should not match');
 
         TDTM_TriggerHandler.disableTDTM = false;
 
