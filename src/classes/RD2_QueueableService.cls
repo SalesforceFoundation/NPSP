@@ -217,28 +217,28 @@ public class RD2_QueueableService {
      * @description Queues up Opp name update service to recalculate Opportunity name.
      * @param updatedOpps Updated opportunities
      */
-    public static void enqueueOppNameUpdateService(List<Opportunity> updatedOpps) {
-        OppNameUpdateService service = new OppNameUpdateService(updatedOpps);
+    public static void enqueueOppNamingService(List<Opportunity> updatedOpps) {
+        OpportunityNamingService service = new OpportunityNamingService(updatedOpps);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && !Test.isRunningTest()) {
             System.enqueueJob(service);
 
         } else {
-            service.executeOppNamesUpdate();
+            service.refreshOppNames();
         }
     }
 
     /**
      * @description Queueable service to recalculate Opportunity names
      */
-    public class OppNameUpdateService implements Queueable {
+    public class OpportunityNamingService implements Queueable {
         List<Opportunity> updatedOpps;
 
         /**
         * @description Constructor
         * @param updatedOpps Updated opportunities
         */
-        public OppNameUpdateService(List<Opportunity> updatedOpps) {
+        public OpportunityNamingService(List<Opportunity> updatedOpps) {
             this.updatedOpps = updatedOpps;
         }
 
@@ -247,13 +247,13 @@ public class RD2_QueueableService {
          * @param context queueableContext
          */
         public void execute(QueueableContext context) {
-            executeOppNamesUpdate();
+            refreshOppNames();
         }
 
         /**
          * @description Update opportunity names
          */
-        public void executeOppNamesUpdate() {
+        public void refreshOppNames() {
             if (updatedOpps == null || updatedOpps.isEmpty()) {
                 return;
             }

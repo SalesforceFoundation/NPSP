@@ -201,18 +201,19 @@ private with sharing class RD2_OpportunityService_TEST {
         //due to async call to opp service
         insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
+            .withCurrencyIsoCode(CURRENCY_USD)
             .withOpenStage()
             .build();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
-        System.assertNotEquals(rd.npe03__Donor_Name__c + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should not match');
+        System.assertNotEquals(rd.npe03__Donor_Name__c + ' ' + '$' + opps[0].Amount.intValue() + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         insert new Opportunity_Naming_Settings__c(
             Name = 'Test Opp Naming Settings',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate}',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate}',
             Attribution__c = System.Label.oppNamingBoth
         );
 
@@ -228,7 +229,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One Installment Opp should be present after RD update: ' + opps);
-        System.assertEquals(rd.npe03__Donor_Name__c + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
+        System.assertEquals(rd.npe03__Donor_Name__c + ' ' + '$' + opps[0].Amount.intValue() + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
     }
 
     /***

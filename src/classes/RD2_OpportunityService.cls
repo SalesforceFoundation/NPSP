@@ -296,7 +296,7 @@ public with sharing class RD2_OpportunityService {
 
         dbService.updateRecords(updatedOppById.values());
 
-        RD2_QueueableService.enqueueOppNameUpdateService(updatedOppById.values());
+        RD2_QueueableService.enqueueOppNamingService(updatedOppById.values());
 
         updatePaymentRecords(installmentByOppId);
         return this;
