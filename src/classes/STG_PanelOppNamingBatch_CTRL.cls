@@ -47,7 +47,9 @@ public with sharing class STG_PanelOppNamingBatch_CTRL extends STG_Panel {
     */
     public String getNamespace() {
         String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) return 'c';
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
         return namespace;
     }
 
@@ -87,6 +89,4 @@ public with sharing class STG_PanelOppNamingBatch_CTRL extends STG_Panel {
                 UTIL_Permissions.canRead(acctObject, false) &&
                 UTIL_Permissions.canRead(contactObject, false);
     }
-
-
 }
