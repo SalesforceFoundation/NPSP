@@ -797,6 +797,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)
         self.selenium.wait_until_element_is_not_visible(main_loc, timeout=60)
 
+    def page_should_not_contain_locator(self, path, *args, **kwargs):
+        """Waits for the locator specified to be not present on the page"""
+        main_loc = self.get_npsp_locator(path,*args, **kwargs)
+        self.selenium.wait_until_page_does_not_contain_element(main_loc, timeout=60)
+
     @capture_screenshot_on_error
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
         """Checks every 15 secs for upto 3.5mins for batch with given status
@@ -1198,7 +1203,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        if self.latest_api_version == 51.0:
+        if self.latest_api_version == 51.0 and dropdown not in ("Installment Period","Role"):
             self.click_flexipage_dropdown(dropdown,value)
         else:
             if dropdown in ("Open Ended Status","Payment Method"):
@@ -1211,7 +1216,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            else:
+            if self.latest_api_version == 51.0 and dropdown in ("Installment Period","Role"):
+                locator =  npsp_lex_locators['record']['select_dropdown']
+                selection_value = npsp_lex_locators["record"]["select_value"].format(value)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.selenium.wait_until_element_is_visible(locator)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
+                    self.selenium.wait_until_element_is_visible(selection_value)
+                    self.selenium.click_element(selection_value)
+            elif dropdown not in ("Payment Method"):
                 locator = npsp_lex_locators['record']['list'].format(dropdown)
                 self.selenium.scroll_element_into_view(locator)
                 self.selenium.get_webelement(locator).click()
@@ -1626,7 +1641,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        locator=npsp_lex_locators['button-with-text'].format(title)
+        if title=="Schedule Payments" and self.latest_api_version == 50.0:
+            locator=npsp_lex_locators['schedule_payments'].format(title)
+        else:
+            locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.set_focus_to_element(locator)
