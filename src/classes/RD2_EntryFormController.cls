@@ -362,7 +362,7 @@ public with sharing class RD2_EntryFormController {
         * @description Logs an error record on an error response
         */
         private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {  
-            if (isRequestSuccess(response)) {
+            if (isCommitmentSuccess(response)) {
                 return;
             } 
 
@@ -374,9 +374,9 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
-        * @description Determines if the commitment request was success
+        * @description Determines if the commitment has been created successfully
         */
-        private Boolean isRequestSuccess(UTIL_Http.Response response) {
+        private Boolean isCommitmentSuccess(UTIL_Http.Response response) {
             return response.statusCode == UTIL_Http.STATUS_CODE_CREATED;
         }
 
