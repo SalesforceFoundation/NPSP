@@ -302,7 +302,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /***
     * @description Checks if the credit card widget should be displayed.
-    * The Elevate widget is applicable to new RDs only.
+    * The Elevate widget is applicable to new RDs only for now.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
@@ -406,7 +406,7 @@ export default class rd2EntryForm extends LightningElement {
 
 
     /***
-    * @description Overrides the standard submit when an 
+    * @description Overrides the standard submit when an
     * Elevate recurring commitment record is to be created or updated.
     */
     async processCommitmentSubmit(allFields) {
@@ -433,8 +433,10 @@ export default class rd2EntryForm extends LightningElement {
                 paymentMethodToken: this.paymentMethodToken
             })
                 .then(jsonResponse => {
-                    let response = JSON.parse(jsonResponse);
-                    let isSuccess = response.statusCode === HTTP_CODES.Created;
+                    let response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+                    let isSuccess = isNull(response)
+                        || response.statusCode === HTTP_CODES.Created
+                        || response.statusCode === HTTP_CODES.OK;
 
                     if (isSuccess) {
                         this.populateCommitmentFields(response, allFields);
@@ -463,14 +465,13 @@ export default class rd2EntryForm extends LightningElement {
             return false;
         }
 
-        if (this.isEdit) {
-            return false;//Edit commitment is not enabled yet
-
-        } else {
+        if (!this.isEdit) {
             // A new Recurring Donation will be a new Elevate recurring commitment
             // when the Elevate widget is displayed on the entry form.
             return this.isElevateWidgetDisplayed();
         }
+
+        return false;
     }
 
     /***
@@ -492,6 +493,11 @@ export default class rd2EntryForm extends LightningElement {
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.getCommitmentId();
         }
 
+        // Specify the Id since it is relevant for commitment create/update logic!
+        if (!isNull(this.recordId)) {
+            allFields['Id'] = this.recordId;
+        }
+
         // Construct the Recurring Donation object
         let rd = { ...allFields };
 
@@ -505,7 +511,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Populates Recurring Donation fields upon receiving successful 
+    * @description Populates Recurring Donation fields upon receiving successful
     * Payments API commitment create/edit response
     */
     populateCommitmentFields(response, allFields) {
@@ -520,7 +526,7 @@ export default class rd2EntryForm extends LightningElement {
 
         if (response.statusCode === HTTP_CODES.Created) {
             // Track the commitment Id to log an error if the RD insert fails as well as
-            // to use it if user submits the form again so no new commitment is created but 
+            // to use it if user submits the form again so no new commitment is created but
             // the current one is updated.
             this.commitmentId = responseBody.id;
 
@@ -562,21 +568,22 @@ export default class rd2EntryForm extends LightningElement {
      * Keep Save button enabled so user can correct a value and save again.
      */
     handleSaveError(error) {
-        this.error = constructErrorMessage(error);
+        try {
+            this.error = constructErrorMessage(error);
 
-        if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
-            const message = 'A recurring commitment has been created in Elevate with tracking "Elevate Recurring Id" {0}. ' //TODO custom label
-                + 'However, a matching Recurring Donation failed due to the following error: '
-                + '\n{1}. '
-                + '\nYou might want to keep this form open, fix the error, and save this Recurring donation again. Alternatively, wait for the integration process to attempt Recurring Donation creation asynchronously. '
-                + this.customLabels.contactAdminMessage;
+            if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
+                const message = 'A recurring commitment has been created in Elevate with tracking "Elevate Recurring Id" {0}. ' //TODO custom label
+                    + 'However, a matching Recurring Donation failed due to the following error: '
+                    + '\n{1}. '
+                    + '\nYou might want to keep this form open, fix the error, and save this Recurring donation again. Alternatively, wait for the integration process to attempt Recurring Donation creation asynchronously. '
+                    + this.customLabels.contactAdminMessage;
 
-            this.error.detail = format(message, [this.getCommitmentId(), this.error.detail]);
+                this.error.detail = format(message, [this.getCommitmentId(), this.error.detail]);
 
-            logError({ recordId: this.recordId, errorMessage: this.error.detail })
-                .catch((error) => {
-                });
-        }
+                logError({ recordId: this.recordId, errorMessage: this.error.detail })
+                    .catch((error) => { });
+            }
+        } catch (error) { }
 
         this.setSaveButtonDisabled(false);
     }
@@ -604,7 +611,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-    * @description Scroll to error if the error is rendered 
+    * @description Scroll to error if the error is rendered
     */
     renderedCallback() {
         if (this.error.detail && this.isLoading === false) {
