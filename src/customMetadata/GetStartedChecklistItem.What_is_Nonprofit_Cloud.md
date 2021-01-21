@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">What_is_Nonprofit_Cloud_modified_undraw_going_up_ttm5.svg</value>
+        <value xsi:type="xsd:string">What_is_Nonprofit_Cloud_modified_undraw_going_up.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>

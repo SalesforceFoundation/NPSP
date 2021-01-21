@@ -3998,6 +3998,7 @@
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
         <members>GetStarted</members>
+        <members>GetStartedEndUser</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -4077,6 +4078,7 @@
     <types>
         <members>Data_Import_Batch_Record_Home</members>
         <members>GetStarted</members>
+        <members>GetStartedEndUser</members>
         <name>FlexiPage</name>
     </types>
     <types>

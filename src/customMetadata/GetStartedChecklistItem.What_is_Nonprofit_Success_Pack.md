@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Image__c</field>
-        <value xsi:type="xsd:string">What_is_Nonprofit_Success_Pack_undraw_personal_finance_tqcd.svg</value>
+        <value xsi:type="xsd:string">What_is_Nonprofit_Success_Pack_undraw_personal_finance.svg</value>
     </values>
     <values>
         <field>Link_Label__c</field>

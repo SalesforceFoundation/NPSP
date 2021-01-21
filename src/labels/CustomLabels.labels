@@ -6856,14 +6856,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Customize Objects</value>
     </labels>
     <labels>
-        <fullName>gsChecklistItemExtraTwoMinutesVideo</fullName>
-        <categories>Get Started Page</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Extra Info in the Item &apos;2 Minutes Video&apos;</shortDescription>
-        <value>2 Minutes Video</value>
-    </labels>
-    <labels>
         <fullName>gsChecklistItemExtraFourMinuteVideo</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -7935,6 +7927,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of Track Donation checklist in Get Started for End Users</shortDescription>
         <value>Track Donations and Other Income Types with NPSP</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemExtraTwoMinutesVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;2 Minutes Video&apos;</shortDescription>
+        <value>2 Minutes Video</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>

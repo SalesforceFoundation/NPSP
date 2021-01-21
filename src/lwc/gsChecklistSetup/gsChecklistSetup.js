@@ -76,7 +76,7 @@ export default class gsChecklistSetup extends LightningElement {
     * @see         labels
     */
     get title() {
-        if (this.pageTitle !== undefined && this.pageTitle != null && this.pageTitle !== '') {
+        if (this.pageTitle !== undefined && this.pageTitle !== null && this.pageTitle !== '') {
             return getLabelValue(this.pageTitle);
         }
         return '';
