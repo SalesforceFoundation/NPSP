@@ -149,7 +149,7 @@ import gseuChecklistItemConnectContactOrganizationTitle from '@salesforce/label/
 import gseuChecklistItemConnectContactOrganizationDesc from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationDesc';
 import gseuChecklistItemConnectContactOrganizationLink from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationLink';
 import gseuChecklistItemConnectContactOrganizationBlueButton from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationBlueButton';
-import gsChecklistItemExtraTwoMinutesVideo from '@salesforce/label/c.gsChecklistItemExtraTwoMinutesVideo';
+import gseuChecklistItemExtraTwoMinutesVideo from '@salesforce/label/c.gseuChecklistItemExtraTwoMinutesVideo';
 
 
 /**
@@ -307,7 +307,7 @@ const labelMap = {
     gseuChecklistItemConnectContactOrganizationDesc,
     gseuChecklistItemConnectContactOrganizationLink,
     gseuChecklistItemConnectContactOrganizationBlueButton,
-    gsChecklistItemExtraTwoMinutesVideo
+    gseuChecklistItemExtraTwoMinutesVideo
 
 }
 
