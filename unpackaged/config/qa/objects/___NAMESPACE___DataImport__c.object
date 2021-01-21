@@ -278,6 +278,26 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>CO1_RecordType__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 RecordType</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO1_rt_picklist__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 RT Picklist</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>CO1_text2__c</fullName>
         <externalId>false</externalId>
         <label>CO1 text2</label>

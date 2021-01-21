@@ -169,6 +169,16 @@
     <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.CO1_RecordType__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.CO1_rt_picklist__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Text__c</field>
     </fieldPermissions>
     <fieldPermissions>
@@ -376,5 +386,17 @@
         <readable>true</readable>
         <field>Lead.Account_Lookup__c</field>
     </fieldPermissions>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Flower</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Fruit</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Vegetable</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
     <label>QA</label>
 </PermissionSet>

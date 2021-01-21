@@ -11,6 +11,7 @@
         <members>Contact.Previous_Level__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Contact.Work_Order__c</members>
+        <members>CustomObject1__c.C1_rt_picklist__c</members>
         <members>Opportunity.UniqueId__c</members>
         <members>Opportunity.A_User_Defined_Rollup_Field__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImported__c</members>
@@ -33,6 +34,8 @@
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Number__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Phone__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_RecordType__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_rt_picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Text__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_currency__c</members>
