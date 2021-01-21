@@ -52,7 +52,17 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String PRODUCTID = 'productId';
 
-    @TestVisible 
+    // Elevate record view types
+    public enum VIEW_TYPE {
+        COMMITMENT,
+        PAYMENT
+    }
+
+    // Elevate record view type suffixes
+    public static final String VIEW_TYPE_COMMITMENT_SUFFIX = 'admin/recurring';
+    public static final String VIEW_TYPE_PAYMENT_SUFFIX = 'admin/transaction';
+
+    @TestVisible
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
         PRODUCTID,
@@ -243,6 +253,31 @@ public with sharing class PS_IntegrationServiceConfig {
         public String getAPIKey() {
             return config.get(API_KEY);
         }
-    }
 
+        public String getCommitmentViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+            return getRecordViewURL(elevateId, recordType);
+        }
+
+        private String getRecordViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+            return getRecordViewBaseURL() + '/' + getRecordViewTypeSuffix(recordType) + '/' + elevateId;
+        }
+
+        private String getRecordViewBaseURL() {
+            return getEndpointRoot().remove('payments-api.');
+        }
+
+        private String getRecordViewTypeSuffix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+            String typeSuffix;
+
+            if (recordType == PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT) {
+                typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX;
+            }
+
+            else if (recordType == PS_IntegrationServiceConfig.VIEW_TYPE.PAYMENT) {
+                typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_PAYMENT_SUFFIX;
+            }
+
+            return typeSuffix;
+        }
+    }
 }
