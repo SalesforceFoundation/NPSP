@@ -4189,6 +4189,7 @@
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
+        <members>gseuHeader</members>
         <members>gseuTrailhead</members>
         <members>libsMoment</members>
         <members>modal</members>
