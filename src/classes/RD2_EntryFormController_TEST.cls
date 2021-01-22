@@ -113,6 +113,25 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @isTest
+    private static void shouldNotDisplayElevateWidgetWhenElevateEnabledAndPilotEnabledIsFalse() {
+        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(false);
+
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        Test.stopTest();
+
+        System.assertEquals(false, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+            'The org should not be Elevate customer');
+    }
+
+    /***
     * @description Verifies that Entry Form Controller returns the expected results for Account for Donor Type
     */
     @isTest
