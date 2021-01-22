@@ -269,12 +269,13 @@ public with sharing class PS_IntegrationServiceConfig {
         private String getRecordViewTypeSuffix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             String typeSuffix;
 
-            if (recordType == PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT) {
-                typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX;
-            }
-
-            else if (recordType == PS_IntegrationServiceConfig.VIEW_TYPE.PAYMENT) {
-                typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_PAYMENT_SUFFIX;
+            switch on recordType {
+                when COMMITMENT {
+                    typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX;
+                 }
+                when PAYMENT {
+                    typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_PAYMENT_SUFFIX;
+                }
             }
 
             return typeSuffix;
