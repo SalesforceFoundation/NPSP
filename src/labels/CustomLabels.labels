@@ -6860,8 +6860,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Extra Info in the Item &apos;4 Minutes Video&apos;</shortDescription>
-        <value>4 Minutes Video</value>
+        <shortDescription>Extra Info in the Item &apos;4 Minute Video&apos;</shortDescription>
+        <value>4 Minute Video</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
@@ -6885,7 +6885,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Extra Info in the Item &apos;2 Minutes Video&apos;</shortDescription>
-        <value>2 Minutes Video</value>
+        <value>2 Minute Video</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemGoFurtherDesc</fullName>
@@ -7478,7 +7478,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of Welcome to Nonprofit checklist section in Get Started</shortDescription>
-        <value>Use these essentials resources to help you get started with your NPSP journey.</value>
+        <value>Use these essential resources to help you get started with your NPSP journey.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistWelcomeNPSPTitle</fullName>
@@ -7933,7 +7933,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Extra Info in the Item &apos;2 Minutes Video&apos;</shortDescription>
+        <shortDescription>Extra Info in the Item &apos;2 Minute Video&apos;</shortDescription>
         <value>2 Minutes Video</value>
     </labels>
     <labels>
