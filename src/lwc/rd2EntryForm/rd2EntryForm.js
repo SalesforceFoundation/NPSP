@@ -141,7 +141,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Get settings required to enable or disable fields and populate their values
     */
     connectedCallback() {
-        getRecurringSettings({ parentId: this.parentId, recordId: this.recordId })
+        getRecurringSettings({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
@@ -572,13 +572,11 @@ export default class rd2EntryForm extends LightningElement {
             this.error = constructErrorMessage(error);
 
             if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
-                const message = 'A recurring commitment has been created in Elevate with tracking "Elevate Recurring Id" {0}. ' //TODO custom label
-                    + 'However, a matching Recurring Donation failed due to the following error: '
-                    + '\n{1}. '
-                    + '\nYou might want to keep this form open, fix the error, and save this Recurring donation again. Alternatively, wait for the integration process to attempt Recurring Donation creation asynchronously. '
-                    + this.customLabels.contactAdminMessage;
 
-                this.error.detail = format(message, [this.getCommitmentId(), this.error.detail]);
+                this.error.detail = format(
+                    this.customLabels.commitmentFailedMessage, 
+                    [this.getCommitmentId(), this.error.detail]
+                );
 
                 logError({ recordId: this.recordId, errorMessage: this.error.detail })
                     .catch((error) => { });
@@ -614,7 +612,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Scroll to error if the error is rendered
     */
     renderedCallback() {
-        if (this.error.detail && this.isLoading === false) {
+        if (this.error && this.error.detail && this.isLoading === false) {
             this.template.querySelector(".error-container").scrollIntoView(true);
         }
     }
@@ -718,7 +716,7 @@ export default class rd2EntryForm extends LightningElement {
         this.isLoading = false;
         this.isSaveButtonDisabled = false;
         this.isElevateWidgetEnabled = false;
-        this.error = {}
+        this.clearError();
 
         const inputFields = this.template.querySelectorAll('lightning-input-field');
         inputFields.forEach(field => {
