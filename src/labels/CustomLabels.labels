@@ -2232,7 +2232,7 @@
         <value>A recurring payment has been created in Elevate. Elevate Recurring Id: {0}.
         
         However, a matching Recurring Donation wasn&apos;t created in NPSP due to the following error:
-        ● {1}.
+        ● {1}
         
         You can keep this form open, fix the error, and save the Recurring donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
