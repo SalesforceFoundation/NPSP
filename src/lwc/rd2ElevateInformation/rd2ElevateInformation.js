@@ -84,8 +84,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         alert: ''
     };
     @track error = {};
-    @track elevateCommitmentURL;
-    elevateCommitmentURLPrefix;
+    @track commitmentURL;
+    commitmentURLPrefix;
 
     get commitmentId() {
         return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
@@ -100,7 +100,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                 .then(response => {
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
-                    this.elevateCommitmentURLPrefix = response.elevateCommitmentURLPrefix;
+                    this.commitmentURLPrefix = response.commitmentURLPrefix;
 
                     this.permissions.hasAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
@@ -223,8 +223,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             }
         }
 
-        if (this.elevateCommitmentURLPrefix && commitmentId) {
-            this.elevateCommitmentURL = this.elevateCommitmentURLPrefix + commitmentId;
+        if (this.commitmentURLPrefix && commitmentId) {
+            this.commitmentURL = this.commitmentURLPrefix + commitmentId;
         }
     }
 

@@ -148,20 +148,22 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     @IsTest
     private static void shouldReturnViewCommitmentURL() {
-        String commitmentId = '11fe3d30-2191-4db7-bcd7-d069fa9f2add';
-        String suffix = '/admin/recurring/' + commitmentId;
-
         PS_IntegrationService.setConfiguration(testConfig);
 
         Test.startTest();
         PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
         Test.stopTest();
 
-        String commitmentViewURL = service.getCommitmentViewURL(commitmentId, PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT);
-        String testCommitmentViewURL = testBaseUrl.replace('https://', 'https://admin.') + suffix;
+        String expectedURL = service.getRecordViewURL(
+            RD2_ElevateIntegrationService_TEST.COMMITMENT_ID,
+            PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT
+        );
+        String testCommitmentViewURL =
+            testBaseUrl.replace('https://', 'https://admin.') + '/' +
+            PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX + '/' +
+            RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
 
-        System.debug(commitmentViewURL);
-        System.assertEquals(testCommitmentViewURL, commitmentViewURL,
+        System.assertEquals(testCommitmentViewURL, expectedURL,
             'Commitment View URL should be ' + testCommitmentViewURL);
     }
 

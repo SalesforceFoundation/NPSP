@@ -72,9 +72,9 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 data.put('errorMessage', getLatestErrorMessage(recordId));
             }
 
-            if (RD2_ElevateIntegrationService.isElevateCreateEnabled()) {
+            if (RD2_ElevateIntegrationService.isIntegrationEnabled()) {
                 PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
-                data.put('elevateCommitmentURLPrefix', service.getCommitmentViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT));
+                data.put('commitmentURLPrefix', service.getViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT));
             }
 
         } catch (Exception e) {

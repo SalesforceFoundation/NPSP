@@ -254,15 +254,11 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(API_KEY);
         }
 
-        public String getCommitmentViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
-            return getRecordViewURL(elevateId, recordType);
-        }
-
-        public String getCommitmentViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+        public String getViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             return getRecordViewURL('', recordType);
         }
 
-        private String getRecordViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+        public String getRecordViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             return getRecordViewBaseURL() + '/' + getRecordViewTypeSuffix(recordType) + '/' + elevateId;
         }
 
