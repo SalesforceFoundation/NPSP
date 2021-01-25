@@ -194,6 +194,9 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutAddressCreatePerm() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         getRecordData();
         mockPerms.hasCreate = false;
         createCopyAddressBtnCtrl(householdRecord.Id);
@@ -240,6 +243,9 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     @isTest
     private static void shouldCopyAddressFromHouseholdWhenUserHasCreateAddressPerms() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         getRecordData();
         createCopyAddressBtnCtrl(householdRecord.Id);
 
