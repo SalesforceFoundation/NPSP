@@ -163,7 +163,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         System.debug(commitmentViewURL);
         System.assertEquals(testCommitmentViewURL, commitmentViewURL,
-            'Commitment View URL should be ' + testCommitmentViewURL)
+            'Commitment View URL should be ' + testCommitmentViewURL);
     }
 
 
