@@ -571,10 +571,12 @@ export default class rd2EntryForm extends LightningElement {
         try {
             this.error = constructErrorMessage(error);
 
+            // Transform the error to a user-friendly error and log it when
+            // the RD insert failed but the Elevate commitment has been created
             if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
 
                 this.error.detail = format(
-                    this.customLabels.commitmentFailedMessage, 
+                    this.customLabels.commitmentFailedMessage,
                     [this.getCommitmentId(), this.error.detail]
                 );
 

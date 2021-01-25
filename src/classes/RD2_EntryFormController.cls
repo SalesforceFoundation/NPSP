@@ -336,7 +336,6 @@ public with sharing class RD2_EntryFormController {
             );
 
             // Populate defaults otherwise applied by the DML operation and available in the trigger context
-            // Should currency be defaulted in a multi-currency org? Probably not.//TODO
             if (String.isBlank(rd.Status__c)) {
                 rd.Status__c = UTIL_Describe.getDefaultSelectOption(
                     'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.Status__c)
@@ -371,12 +370,15 @@ public with sharing class RD2_EntryFormController {
 
             // Data should be sent to Elevate on Recurring Donation update when:
             // a credit card has been changed, or
-            // the default to true on edit regardless if the the amount or the schedule has been changed//TODO
+            // the default to true on edit regardless if the the amount or the schedule has been changed
+            //TODO when implementing the Edit commitment functionality
             return String.isNotBlank(paymentMethodToken);
         }
 
         /**
         * @description Sends commitment request to Elevate
+        * @param jsonRequestBody Payment API request in JSON format
+        * @return response Payments API response
         */
         private UTIL_Http.Response sendRequest(String jsonRequestBody) {
             UTIL_Http.Response response;
@@ -395,7 +397,10 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
-        * @description Logs an error record on an error response
+        * @description Logs an error record on an commitment error response
+        * @param rd Recurring Donation record
+        * @param response Payments API response
+        * @return void
         */
         private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
             if (isCommitmentSuccess(response)) {
@@ -411,6 +416,8 @@ public with sharing class RD2_EntryFormController {
 
         /**
         * @description Determines if the commitment has been created or updated successfully
+        * @param response Payments API response
+        * @return Boolean
         */
         private Boolean isCommitmentSuccess(UTIL_Http.Response response) {
             return response.statusCode == UTIL_Http.STATUS_CODE_CREATED
