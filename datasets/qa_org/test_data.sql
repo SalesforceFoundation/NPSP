@@ -2182,6 +2182,7 @@ INSERT INTO "CustomObject1__c" VALUES(3, 'Vegetable 1', 'Vegetable', '', 'Potato
 INSERT INTO "CustomObject1__c" VALUES(4, 'Vegetable 2', 'Vegetable', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO "CustomObject1__c" VALUES(5, 'Fruit 1', 'Fruit', '', 'Apple', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO "CustomObject1__c" VALUES(6, 'Fruit 2', 'Fruit', '', '', '', '', '', '', '', '', '', '', '', '');
+
 CREATE TABLE "CustomObject1__c_rt_mapping" (
     record_type_id VARCHAR(255) NOT NULL,
     developer_name VARCHAR(255),
@@ -2190,4 +2191,14 @@ CREATE TABLE "CustomObject1__c_rt_mapping" (
 INSERT INTO "CustomObject1__c_rt_mapping" VALUES('Flower', 'Flower');
 INSERT INTO "CustomObject1__c_rt_mapping" VALUES('Vegetable', 'Vegetable');
 INSERT INTO "CustomObject1__c_rt_mapping" VALUES('Fruit', 'Fruit');
+
+-- fix for allowing namespaced scratch orgs to deploy these record types
+CREATE TABLE "npsp__CustomObject1__c_rt_mapping" (
+    record_type_id VARCHAR(255) NOT NULL,
+    developer_name VARCHAR(255),
+    PRIMARY KEY (record_type_id)
+);
+INSERT INTO "npsp__CustomObject1__c_rt_mapping" VALUES('Flower', 'Flower');
+INSERT INTO "npsp__CustomObject1__c_rt_mapping" VALUES('Vegetable', 'Vegetable');
+INSERT INTO "npsp__CustomObject1__c_rt_mapping" VALUES('Fruit', 'Fruit');
 COMMIT;
