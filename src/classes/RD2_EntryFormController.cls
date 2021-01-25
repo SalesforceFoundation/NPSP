@@ -342,8 +342,8 @@ public with sharing class RD2_EntryFormController {
                 );
             }
 
-            RD2_RecurringDonations_TDTM.DataRegulator dataRegulator = new RD2_RecurringDonations_TDTM.DataRegulator();
-            dataRegulator.adjust(new List<npe03__Recurring_Donation__c>{ rd }, null);
+            RD2_DataRegulationService dataService = new RD2_DataRegulationService();
+            dataService.adjust(new List<npe03__Recurring_Donation__c>{ rd }, null);
 
             return rd;
         }

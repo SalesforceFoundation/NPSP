@@ -2234,7 +2234,7 @@
         However, a matching Recurring Donation wasn&apos;t created in NPSP due to the following error:
         ● {1}
         
-        You can keep this form open, fix the error, and save the Recurring donation again. Alternatively, cancel and contact your System Administrator for help.</value>
+        You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>

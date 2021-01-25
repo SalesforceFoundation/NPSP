@@ -194,13 +194,13 @@ public inherited sharing class PS_CommitmentRequest {
             ? getContact(rd.npe03__Contact__c)
             : null;
 
-        Boolean isContactDonor = contactDonor != null
+        Boolean isHouseholdDonor = contactDonor != null
             && (
                 rd.npe03__Organization__c == null
                 || rd.npe03__Organization__c == contactDonor.AccountId
             );
 
-        if (isContactDonor) {
+        if (isHouseholdDonor) {
             reqBody.withDonor(contactDonor);
 
         } else {
@@ -267,17 +267,15 @@ public inherited sharing class PS_CommitmentRequest {
     * @return Contact
     */
     private Contact getContact(Id contactId) {
-        List<Contact> contacts = new List<Contact>([
+        List<Contact> contacts = [
             SELECT
                 AccountId, FirstName, LastName
             FROM Contact
             WHERE Id = :contactId
             LIMIT 1
-        ]);
+        ];
         
-        return contacts == null || contacts.isEmpty()
-            ? null
-            : contacts[0];
+        return contacts.isEmpty() ? null : contacts[0];
     }
 
     /***
@@ -287,16 +285,14 @@ public inherited sharing class PS_CommitmentRequest {
     * @return Account
     */
     private Account getAccount(Id accountId) {
-        List<Account> accounts = new List<Account>([
+        List<Account> accounts = [
             SELECT Name
             FROM Account
             WHERE Id = :accountId
             LIMIT 1
-        ]);
+        ];
         
-        return accounts == null || accounts.isEmpty()
-            ? null
-            : accounts[0];
+        return accounts.isEmpty() ? null : accounts[0];
     }
 
 
