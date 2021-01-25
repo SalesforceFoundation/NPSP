@@ -13,6 +13,18 @@
         <label>Recurring Donations Entry Form Custom Fields</label>
     </fieldSets>
     <fields>
+        <fullName>ACH_Last_4__c</fullName>
+        <description>The last four digits of the bank account used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last four digits of the bank account used for this transaction.</inlineHelpText>
+        <label>ACH Last 4</label>
+        <length>4</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Always_Use_Last_Day_Of_Month__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
