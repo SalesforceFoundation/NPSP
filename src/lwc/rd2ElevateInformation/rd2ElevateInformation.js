@@ -84,6 +84,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         alert: ''
     };
     @track error = {};
+    @track elevateCommitmentURL;
+    elevateCommitmentURLPrefix;
 
     get commitmentId() {
         return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
@@ -98,6 +100,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                 .then(response => {
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
+                    this.elevateCommitmentURLPrefix = response.elevateCommitmentURLPrefix;
 
                     this.permissions.hasAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
@@ -218,6 +221,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             if (this.status.value === STATUS_SUCCESS) {
                 this.setErrorStatus(this.labels.commonUnknownError);
             }
+        }
+
+        if (this.elevateCommitmentURLPrefix && commitmentId) {
+            this.elevateCommitmentURL = this.elevateCommitmentURLPrefix + commitmentId;
         }
     }
 

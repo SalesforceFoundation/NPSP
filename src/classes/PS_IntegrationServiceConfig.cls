@@ -258,6 +258,10 @@ public with sharing class PS_IntegrationServiceConfig {
             return getRecordViewURL(elevateId, recordType);
         }
 
+        public String getCommitmentViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
+            return getRecordViewURL('', recordType);
+        }
+
         private String getRecordViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             return getRecordViewBaseURL() + '/' + getRecordViewTypeSuffix(recordType) + '/' + elevateId;
         }
@@ -272,7 +276,8 @@ public with sharing class PS_IntegrationServiceConfig {
             switch on recordType {
                 when COMMITMENT {
                     typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX;
-                 }
+                }
+
                 when PAYMENT {
                     typeSuffix = PS_IntegrationServiceConfig.VIEW_TYPE_PAYMENT_SUFFIX;
                 }
