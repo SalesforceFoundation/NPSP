@@ -267,7 +267,7 @@ public with sharing class PS_IntegrationServiceConfig {
         }
 
         private String getRecordViewBaseURL() {
-            return getEndpointRoot().remove('payments-api.');
+            return getEndpointRoot().remove('payments-api.').replace('https://', 'https://admin.');
         }
 
         private String getRecordViewTypeSuffix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {

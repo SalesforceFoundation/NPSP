@@ -146,6 +146,26 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         System.assertEquals(testMerchantId, service.getMerchantIds());
     }
 
+    @IsTest
+    private static void shouldReturnViewCommitmentURL() {
+        String commitmentId = '11fe3d30-2191-4db7-bcd7-d069fa9f2add';
+        String suffix = '/admin/recurring/' + commitmentId;
+        String prefix = 'https://admin.';
+
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        Test.startTest();
+        PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
+        Test.stopTest();
+
+        String commitmentViewURL = service.getCommitmentViewURL(commitmentId, PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT);
+        String testCommitmentViewURL = prefix + testBaseUrl + suffix;
+
+        System.debug(commitmentViewURL);
+        System.assertEquals(testCommitmentViewURL, commitmentViewURL,
+            'Commitment View URL should be ' + testCommitmentViewURL)
+    }
+
 
     /***
     * @description Stub for the integration service config instance
