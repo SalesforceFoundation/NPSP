@@ -354,7 +354,6 @@ tasks:
                 - Level__c
                 - npe01__OppPayment__c
                 - OpportunityContactRole
-                - npe4__Relationship__c
                 - CustomObject1__c
                 - CustomObject2__c
                 - CustomObject3__c
