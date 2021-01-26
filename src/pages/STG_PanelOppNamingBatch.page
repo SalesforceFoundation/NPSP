@@ -1,19 +1,50 @@
 <apex:page controller="STG_PanelOppNamingBatch_CTRL" docType="html-5.0" standardStylesheets="false" >
+    <apex:includeLightning />
+
+    <script>
+        if ({!NOT(hasAccess)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {   title : "{!$Label.commonAdminPermissionErrorTitle}",
+                        message : "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelOppNamingBatchIllustration",
+                    function () { }
+                );
+            });
+        }
+    </script>
+
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppNamingRefreshTitle}" />
-        <div class="slds-text-body_small slds-m-around_medium"><c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnOppNaming}" /></div>
-        <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-            <apex:commandButton id="runOppNamingBatch" value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-        </div>
-        <apex:outputPanel rendered="{!isRunningBatch}">
-            <c:UTIL_JobProgressLightning id="jobProgress"
-                eventTargetId="{!$Component.jobProgress}"
-                strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}"
-                cNumberOfJobs="1"
-                startPolling="True"
-                stopPollingOnComplete="True"
-                pollingDelay="1000"/>
+
+        <apex:outputPanel rendered="{!NOT(hasAccess)}">
+            <div id="stgPanelOppNamingBatchIllustration" />
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!hasAccess}">
+            <div class="slds-text-body_small slds-m-around_medium">
+                <c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnOppNaming}" />
+            </div>
+            <c:UTIL_PageMessages />
+
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+                <apex:commandButton id="runOppNamingBatch" value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+            </div>
+
+            <apex:outputPanel rendered="{!isRunningBatch}">
+                <c:UTIL_JobProgressLightning id="jobProgress"
+                    eventTargetId="{!$Component.jobProgress}"
+                    strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}"
+                    cNumberOfJobs="1"
+                    startPolling="True"
+                    stopPollingOnComplete="True"
+                    pollingDelay="1000"/>
+            </apex:outputPanel>
         </apex:outputPanel>
     </apex:form>
+
 </apex:page>
