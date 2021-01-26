@@ -797,6 +797,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)
         self.selenium.wait_until_element_is_not_visible(main_loc, timeout=60)
 
+    def page_should_not_contain_locator(self, path, *args, **kwargs):
+        """Waits for the locator specified to be not present on the page"""
+        main_loc = self.get_npsp_locator(path,*args, **kwargs)
+        self.selenium.wait_until_page_does_not_contain_element(main_loc, timeout=60)
+
     @capture_screenshot_on_error
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
         """Checks every 15 secs for upto 3.5mins for batch with given status
@@ -1221,7 +1226,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            else:
+            elif dropdown not in ("Payment Method"):
                 locator = npsp_lex_locators['record']['list'].format(dropdown)
                 self.selenium.scroll_element_into_view(locator)
                 self.selenium.get_webelement(locator).click()

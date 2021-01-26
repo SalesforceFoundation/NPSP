@@ -212,10 +212,9 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.selenium.wait_until_page_contains_element(popup)
                         option=npsp_lex_locators["span_button"].format(value)
                         self.selenium.click_element(option)
-                    elif placeholder=="Search...":
+                    elif placeholder in ("Search...","Search Payments..."):
                         self.salesforce._populate_field(field_loc,value)
-                        qa_id="Select "+value
-                        option=npsp_lex_locators["gift_entry"]["id"].format(qa_id)
+                        option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                         self.selenium.wait_until_page_contains_element(option)
                         try:
                             self.selenium.click_element(option)
@@ -279,6 +278,16 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
+
+    @capture_screenshot_on_error
+    def verify_errors_on_template_builder(self,object_group,field,type,message):
+        """validate error messages are thrown at top of form, under object group and at the field"""
+        locator=npsp_lex_locators['gift_entry']['form_error'].format(type,message)
+        self.selenium.wait_until_page_contains_element(locator,error=f'page does not contain {type} with message {message}')
+        field_checkbox=npsp_lex_locators["gift_entry"]["object_field_checkbox"].format(object_group,"Field not found")
+        self.selenium.page_should_contain_element(field_checkbox,message=f'{object_group} object does not contain Field not found checkbox')
+        field_msg=npsp_lex_locators["gift_entry"]["field_error"].format(field,"Field not found")
+        self.selenium.page_should_contain_element(field_msg,message=f'{field} field does not contain Field not found error')
 
     def return_template_builder_titles(self,page=None):
         """Gets the values of either the template builder form field titles or the form section titles and stores them for recalling.
