@@ -1485,6 +1485,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.Type__c</members>
+        <members>npe03__Recurring_Donation__c.ACH_Last_4__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.CardExpirationMonth__c</members>
         <members>npe03__Recurring_Donation__c.CardExpirationYear__c</members>
