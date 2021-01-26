@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -36,30 +36,57 @@
 public with sharing class STG_PanelOppNamingBatch_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
-    * @description The panel's constructor 
+    * @description The panel's constructor
     */
     public STG_PanelOppNamingBatch_CTRL() {
         isRunningBatch = false;
     }
 
     /*********************************************************************************************************
-    * @description Returns the string Id of the Households panel. 
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
     */
-    public override string idPanel() { return 'idPanelOppNamingBatch'; }
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
+    }
 
     /*********************************************************************************************************
-    * @description Whether we are running the batch opportunity naming process 
+    * @description Returns the string Id of the Households panel.
     */
-    public boolean isRunningBatch { get; set; }
+    public override String idPanel() { return 'idPanelOppNamingBatch'; }
+
+    /*********************************************************************************************************
+    * @description Whether we are running the batch opportunity naming process
+    */
+    public Boolean isRunningBatch { get; set; }
 
     /*********************************************************************************************************
     * @description Action Method to run batch opportunity renaming.
-    * @return null 
+    * @return null
     */
     public PageReference runBatch() {
         isRunningBatch = true;
         OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        id batchProcessId = database.executeBatch(batch, 200);
+        Id batchProcessId = Database.executeBatch(batch, 200);
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has update access to the Opportunity sObject and Read access to the
+    * Account and Contact objects
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String oppObject = Schema.SObjectType.Opportunity.getName();
+        String acctObject = Schema.SObjectType.Account.getName();
+        String contactObject = Schema.SObjectType.Contact.getName();
+
+        return UTIL_Permissions.canRead(oppObject, false) &&
+                UTIL_Permissions.canUpdate(oppObject, false) &&
+                UTIL_Permissions.canRead(acctObject, false) &&
+                UTIL_Permissions.canRead(contactObject, false);
     }
 }
