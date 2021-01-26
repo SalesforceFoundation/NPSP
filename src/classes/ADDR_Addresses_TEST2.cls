@@ -1676,6 +1676,9 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     @isTest
     private static void shouldCreateNamedHHWhenCustomTDTMTriggerUpdatesAccountOnAddressChange() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         final String firstName = 'Test_First_Name';
         final String lastName = 'Test_Last_Name';
 
