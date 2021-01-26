@@ -445,6 +445,9 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldQueryForDonorInformation() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         insert accOrg = new Account(Name = 'RD2 Query Account');
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
