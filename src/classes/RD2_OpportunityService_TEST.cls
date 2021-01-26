@@ -186,6 +186,56 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
+     * @description Verifies an Opportunity name is updated as configured in NPSP Settings Opportunity naming
+     */
+    @isTest
+    private static void shouldUpdateOppNameWithOppNamingSpecifiedInSettings() {
+        final Datetime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        TDTM_TriggerHandler.disableTDTM = true;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        //create an installment Opp since installment Opps are not created
+        //due to async call to opp service
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        String formattedAmount = getFormattedAmount(opps[0]);
+
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
+        System.assertNotEquals(rd.npe03__Donor_Name__c + ' ' + formattedAmount + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should not match');
+
+        TDTM_TriggerHandler.disableTDTM = false;
+
+        insert new Opportunity_Naming_Settings__c(
+            Name = 'Test Opp Naming Settings',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate}',
+            Attribution__c = System.Label.oppNamingBoth
+        );
+
+        //blank out cached version so the newly created setting takes effect
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        setUpConfiguration();
+
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        opps = oppGateway.getRecords(rd);
+        formattedAmount = getFormattedAmount(opps[0]);
+
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be present after RD update: ' + opps);
+        System.assertEquals(rd.npe03__Donor_Name__c + ' ' + formattedAmount + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
+    }
+
+    /***
     * @description Verifies the installment opportunities are created with the record types set in the NPSP setting
     */
     @isTest
@@ -1430,5 +1480,24 @@ private with sharing class RD2_OpportunityService_TEST {
                     'Payment currency should match Opportunity currency');
             }
         }
+    }
+
+    private static String getFormattedAmount(Opportunity opp) {
+        String currCode = null;
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            currCode = (String) opp.get('CurrencyIsoCode');
+        }
+
+        String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currCode);
+        if (!String.isBlank(currencySymbol) && currencySymbol.length() > 1) {
+            currencySymbol += ' ';
+        }
+
+        String formattedAmount = String.isBlank(currencySymbol) ? String.valueOf(opp.Amount) : currencySymbol + String.valueOf(opp.Amount);
+        if (formattedAmount.endsWith('.00')) {
+            formattedAmount = formattedAmount.subString(0, formattedAmount.length()-3);
+        }
+
+        return formattedAmount;
     }
 }
