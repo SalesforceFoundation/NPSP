@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020 Salesforce.org
+    Copyright (c) 2021 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 * in triggers, or data adjusted and validated outside of the trigger context.
 *
 */
-public with sharing class RD2_DataRegulationService {
+public inherited sharing class RD2_DataRegulationService {
     
     private Date currentDate {
         get {
