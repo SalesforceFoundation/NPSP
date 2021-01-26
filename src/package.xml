@@ -520,6 +520,7 @@
         <members>STG_PanelOppBatch_CTRL</members>
         <members>STG_PanelOppCampaignMembers_CTRL</members>
         <members>STG_PanelOppNamingBatch_CTRL</members>
+        <members>STG_PanelOppNamingBatch_CTRL_TEST</members>
         <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
