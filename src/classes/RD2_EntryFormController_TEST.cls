@@ -165,6 +165,9 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @isTest
     private static void shouldReturnContactDonorType() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
