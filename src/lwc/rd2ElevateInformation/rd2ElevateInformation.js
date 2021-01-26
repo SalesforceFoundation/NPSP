@@ -84,11 +84,14 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         alert: ''
     };
     @track error = {};
-    @track commitmentURL;
     commitmentURLPrefix;
 
     get commitmentId() {
         return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
+    }
+
+    get commitmentURL() {
+        return this.commitmentURLPrefix + this.commitmentId;
     }
 
     /***
@@ -221,10 +224,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             if (this.status.value === STATUS_SUCCESS) {
                 this.setErrorStatus(this.labels.commonUnknownError);
             }
-        }
-
-        if (this.commitmentURLPrefix && commitmentId) {
-            this.commitmentURL = this.commitmentURLPrefix + commitmentId;
         }
     }
 
