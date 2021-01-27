@@ -27,6 +27,8 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     def click_rd2_modal_button(self, name):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
+        self.builtin.sleep(1,"Wait for the elevate message to appear on the modal")
+        self.selenium.wait_until_element_is_visible(btnlocator,60)
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
 
@@ -54,7 +56,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
             # Recurring Donation Name field only appears on a regression org hence this check
-            if key == "Recurring Donation Name" and ns=="npsp__":
+            if key == "Recurring Donation Name":
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
