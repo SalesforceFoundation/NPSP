@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/content/learn/modules/donation-management-basics-with-nonprofit-success-pack/create-or-edit-donations</value>
+        <value xsi:type="xsd:string">https://sforce.co/3lTp5dS</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://sfdc.co/b1NzTv</value>
+        <value xsi:type="xsd:string">https://bit.ly/3mTtQpj</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
