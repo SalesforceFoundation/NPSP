@@ -187,6 +187,18 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             && this.isTrue(this.permissions.hasAccess);
     }
 
+    navigateToCommitment() {
+        // Navigate to a URL
+        this[NavigationMixin.Navigate]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: this.commitmentURL
+                }
+            },
+            false
+        );
+    }
+
     /**
      * @description Checks if the form still has outstanding data to load
      */
