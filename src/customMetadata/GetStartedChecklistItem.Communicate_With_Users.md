@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/content/learn/modules/lex_implementation_chatter</value>
+        <value xsi:type="xsd:string">https://sforce.co/2VPpxPP</value>
     </values>
     <values>
         <field>Position__c</field>

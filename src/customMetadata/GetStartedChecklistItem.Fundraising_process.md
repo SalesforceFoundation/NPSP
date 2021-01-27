@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/moves-management-with-nonprofit-success-pack/visualize-the-solicitation-process-with-path-and-kanban</value>
+        <value xsi:type="xsd:string">https://sforce.co/3goOnzw</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://www.sfdc.co/9KWDK</value>
+        <value xsi:type="xsd:string">https://bit.ly/2JNauUh</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
