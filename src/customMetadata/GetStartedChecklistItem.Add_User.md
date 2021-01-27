@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/content/learn/modules/lex_implementation_user_setup_mgmt/lex_implementation_user_setup_mgmt_adding_users</value>
+        <value xsi:type="xsd:string">https://sforce.co/3mY3l1K</value>
     </values>
     <values>
         <field>Position__c</field>
