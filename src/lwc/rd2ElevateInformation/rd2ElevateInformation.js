@@ -187,6 +187,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             && this.isTrue(this.permissions.hasAccess);
     }
 
+    /***
+     * @description Generates URL for Elevate commitment
+     */
     navigateToCommitment() {
         // Navigate to a URL
         this[NavigationMixin.Navigate]({
