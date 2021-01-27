@@ -336,7 +336,6 @@ npsp_lex_locators={
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
         'ge_form_sections':'//span[contains(@title,"{}")]',
-        'batch_checkbox':'//*[contains(@data-qa-locator, "Require")]//child::input',
         'progress_bar':'//lightning-layout-item[.//span[text()="{}"]]//child::lightning-layout-item//*[text()="{}"]',
         'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
         'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',

@@ -372,7 +372,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
             elif 'checkbox' in type :
                 if value=="check":
-                    field_checkbox=npsp_lex_locators["gift_entry"]["batch_checkbox"].format("checkbox")
+                    field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                     check=self.selenium.get_webelement(field_checkbox)
                     if not check.is_selected():
                         try:
@@ -381,7 +381,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                             self.selenium.execute_javascript("window.scrollBy(0,0)")
                             self.salesforce._jsclick(field_checkbox)
                 if value=="uncheck":
-                    field_checkbox=npsp_lex_locators["gift_entry"]["batch_checkbox"].format("checkbox")
+                    field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                     check=self.selenium.get_webelement(field_checkbox)
                     if  check.is_selected():
                         try:
@@ -635,8 +635,8 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
     def verify_batch_error(self,error,message):
         """Verify batch error alert present in the page"""
         locator=npsp_lex_locators["gift_entry"]["batch_error"].format(error,message)
-        self.selenium.scroll_element_into_view(locator)
         self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.scroll_element_into_view(locator)
         loc=npsp_lex_locators["gift_entry"]["close_error"]
         self.selenium.wait_until_page_contains_element(loc)
         self.selenium.scroll_element_into_view(loc)
