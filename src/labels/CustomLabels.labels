@@ -7934,7 +7934,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Extra Info in the Item &apos;2 Minute Video&apos;</shortDescription>
-        <value>2 Minutes Video</value>
+        <value>2 Minute Video</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>
