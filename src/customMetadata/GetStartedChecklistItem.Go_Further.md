@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-         <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/trails/nonprofit_fundraising</value>
+         <value xsi:type="xsd:string">https://sforce.co/3lTewrn</value>
     </values>
     <values>
         <field>Position__c</field>
