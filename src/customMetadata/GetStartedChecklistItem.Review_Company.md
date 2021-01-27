@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/company_wide_org_settings</value>
+        <value xsi:type="xsd:string">https://sforce.co/2VPmt6h</value>
     </values>
     <values>
         <field>Position__c</field>
