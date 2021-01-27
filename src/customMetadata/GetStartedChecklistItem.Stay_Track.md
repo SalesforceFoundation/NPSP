@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/sales_admin_maximize_productivity</value>
+        <value xsi:type="xsd:string">https://sforce.co/3oAdP7Q</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://sfdc.co/cpINK6</value>
+        <value xsi:type="xsd:string">https://bit.ly/39Q66yp</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
