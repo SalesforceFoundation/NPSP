@@ -1,15 +1,10 @@
-## Performance Testing:
-## - Object: Contact
-## - Org Configuration: Org with NPSP
-## - Sizes: 1K, 10K, 100K, and 500K
-
 Resource        cumulusci/robotframework/Salesforce.robot
 
 *** Variables ***
 ${COUNTER} =      ${0}
 
 *** Settings ***
-Documentation   Test Inserting Contact records in an org with NPSP - which will create the parent Household and related Address
+Documentation   Tests of Inserting records
 Library         DateTime
 Resource        cumulusci/robotframework/Salesforce.robot
 
@@ -43,7 +38,7 @@ Insert 200 Contacts
 
 Insert Contact Perf Test 10000
     [Setup]     Disable Duplicate Matching
-    [Tags]    10k      insertions
+    [Tags]    long     insertions
     FOR    ${index}    IN RANGE     50
         Insert 200 Contacts
         Log To Console   Inserted batch ${index}

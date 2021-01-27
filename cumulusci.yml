@@ -223,12 +223,12 @@ tasks:
             options:
                 outputdir: robot/Cumulus/results
 
-    test_contact_insert_performance:
-        description: Runs Robot Framework performance tests for inserting 10K Contact Records with an Address. This tests the performance of creating the household account and address record along with the contact itself.
+    test_insert_performance:
+        description: Runs Robot Framework performance tests for BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
-            suites: robot/Cumulus/perftests/Insert_Contact_Tests.robot
+            suites: robot/Cumulus/perftests/Insert_Tests.robot
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
