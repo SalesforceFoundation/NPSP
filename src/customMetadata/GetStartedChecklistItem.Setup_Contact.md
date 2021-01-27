@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/contact-and-account-settings-in-nonprofit-success-pack</value>
+        <value xsi:type="xsd:string">https://sforce.co/33NnQqz</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://sfdc.co/bkLd2s</value>
+        <value xsi:type="xsd:string">https://bit.ly/39PcLJp</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
