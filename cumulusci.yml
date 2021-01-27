@@ -931,6 +931,7 @@ flows:
                     managed: true
             5:
                 task: test_data_relationships
+                ignore_failure: True  # This task is not idempotent.
             6:
                 task: deploy_reports
                 options:
