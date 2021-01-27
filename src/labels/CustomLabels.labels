@@ -7342,7 +7342,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for Connect Two Contacts with Relationships checklist item</shortDescription>
-        <value>Relationships in NPSP let you to capture important connections between your constituents. Connect Contacts using the Relationships related list on the Contact records.</value>
+        <value>Relationships in NPSP let you capture important connections between your constituents. Connect Contacts using the Relationships related list on the Contact records.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemConnectContactsRelationshipsLink</fullName>
@@ -7710,7 +7710,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of View Dashboard checklist item in Get Started for End Users</shortDescription>
-        <value>Dashboards pull data from one of more reports and display it side by side in the same window. NPSP includes three dashboards that you can use as is or customize.</value>
+        <value>Dashboards pull data from one or more reports and display it side by side in the same window. NPSP includes three dashboards that you can use as is or customize.</value>
     </labels>
     <labels>
         <fullName>gseuChecklistItemViewDashboardLinkLabel</fullName>
@@ -14596,7 +14596,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Webinars label in Get Started Resources section for End Users</shortDescription>
-        <value>Find Events and Webinar</value>
+        <value>Find Events and Webinars</value>
     </labels>
     <labels>
         <fullName>gseuResourcesItemWebinarsLinkLabel</fullName>
