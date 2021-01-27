@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://power-of-us-hub-doc.s3-us-west-2.amazonaws.com/NPSP_Planning_Guide.pdf</value>
+        <value xsi:type="xsd:string">https://bit.ly/2VMRFTG</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>

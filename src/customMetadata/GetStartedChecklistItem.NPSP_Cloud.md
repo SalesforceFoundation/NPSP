@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/trails/explore-nonprofit-success-pack</value>
+        <value xsi:type="xsd:string">https://sforce.co/3apvhbt</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://powerofus.force.com/s/article/NPSP-Feature-Configuration-Overview</value>
+        <value xsi:type="xsd:string">https://sforce.co/3lUVK2S</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
