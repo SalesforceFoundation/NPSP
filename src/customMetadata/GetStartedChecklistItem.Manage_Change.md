@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Link_URL__c</field>
-        <value xsi:type="xsd:string">https://trailhead.salesforce.com/en/content/learn/modules/sf_releases?trail_id=sf_release_prep</value>
+        <value xsi:type="xsd:string">https://sforce.co/2LbpsDT</value>
     </values>
     <values>
         <field>Position__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Primary_Button_Value__c</field>
-        <value xsi:type="xsd:string">https://powerofus.force.com/s/group/0F980000000D9QrCAK/npsp-release-announcements</value>
+        <value xsi:type="xsd:string">https://sforce.co/2LgXtTv</value>
     </values>
     <values>
         <field>Secondary_Button_Label__c</field>
