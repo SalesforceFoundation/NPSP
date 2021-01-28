@@ -2512,8 +2512,10 @@
         <members>gsChecklistItemCustomFieldsDesc</members>
         <members>gsChecklistItemCustomFieldsLinkLabel</members>
         <members>gsChecklistItemCustomFieldsTitle</members>
+        <members>gsChecklistItemExtraFourMinuteVideo</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemExtraSixtyMinuteVideo</members>
+        <members>gsChecklistItemExtraTwoMinuteVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
         <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
@@ -2596,6 +2598,93 @@
         <members>gsSubmitted</members>
         <members>gsVideoHeaderLength</members>
         <members>gsVideoHeaderTitle</members>
+        <members>gseuChecklistCreateConstituentRecordsDesc</members>
+        <members>gseuChecklistCreateConstituentRecordsTitle</members>
+        <members>gseuChecklistItemCaptureDonorIntentDesc</members>
+        <members>gseuChecklistItemCaptureDonorIntentLinkLabel</members>
+        <members>gseuChecklistItemCaptureDonorIntentPriBtnLabel</members>
+        <members>gseuChecklistItemCaptureDonorIntentTitle</members>
+        <members>gseuChecklistItemCollectGiftsDesc</members>
+        <members>gseuChecklistItemCollectGiftsLinkLabel</members>
+        <members>gseuChecklistItemCollectGiftsPriBtnLabel</members>
+        <members>gseuChecklistItemCollectGiftsTitle</members>
+        <members>gseuChecklistItemConnectContactOrganizationBlueButton</members>
+        <members>gseuChecklistItemConnectContactOrganizationDesc</members>
+        <members>gseuChecklistItemConnectContactOrganizationLink</members>
+        <members>gseuChecklistItemConnectContactOrganizationTitle</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsBlueButton</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsDesc</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsLink</members>
+        <members>gseuChecklistItemConnectContactsRelationshipsTitle</members>
+        <members>gseuChecklistItemCreateContactAndAccountBlueButton</members>
+        <members>gseuChecklistItemCreateContactAndAccountDesc</members>
+        <members>gseuChecklistItemCreateContactAndAccountLink</members>
+        <members>gseuChecklistItemCreateContactAndAccountTitle</members>
+        <members>gseuChecklistItemDonationIndividualDesc</members>
+        <members>gseuChecklistItemDonationIndividualLinkLabel</members>
+        <members>gseuChecklistItemDonationIndividualPriBtnLabel</members>
+        <members>gseuChecklistItemDonationIndividualTitle</members>
+        <members>gseuChecklistItemDonationOrganizationDesc</members>
+        <members>gseuChecklistItemDonationOrganizationLinkLabel</members>
+        <members>gseuChecklistItemDonationOrganizationPriBtnLabel</members>
+        <members>gseuChecklistItemDonationOrganizationTitle</members>
+        <members>gseuChecklistItemExtraTwoMinutesVideo</members>
+        <members>gseuChecklistItemGlobalSearchDesc</members>
+        <members>gseuChecklistItemGlobalSearchLinkLabel</members>
+        <members>gseuChecklistItemGlobalSearchPriBtnLabel</members>
+        <members>gseuChecklistItemGlobalSearchTitle</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportDesc</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportLinkLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</members>
+        <members>gseuChecklistItemPrebuiltNPSPReportTitle</members>
+        <members>gseuChecklistItemStandardReportTypeDesc</members>
+        <members>gseuChecklistItemStandardReportTypeLinkLabel</members>
+        <members>gseuChecklistItemStandardReportTypePriBtnLabel</members>
+        <members>gseuChecklistItemStandardReportTypeTitle</members>
+        <members>gseuChecklistItemStayTrackDesc</members>
+        <members>gseuChecklistItemStayTrackLinkLabel</members>
+        <members>gseuChecklistItemStayTrackPriBtnLabel</members>
+        <members>gseuChecklistItemStayTrackTitle</members>
+        <members>gseuChecklistItemTrackDonationDesc</members>
+        <members>gseuChecklistItemTrackDonationLinkLabel</members>
+        <members>gseuChecklistItemTrackDonationPriBtnLabel</members>
+        <members>gseuChecklistItemTrackDonationTitle</members>
+        <members>gseuChecklistItemViewDashboardDesc</members>
+        <members>gseuChecklistItemViewDashboardLinkLabel</members>
+        <members>gseuChecklistItemViewDashboardPriBtnLabel</members>
+        <members>gseuChecklistItemViewDashboardTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudLink</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitle</members>
+        <members>gseuChecklistItemWhatIsNPCloudTitleDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPDesc</members>
+        <members>gseuChecklistItemWhatIsNPSPLink</members>
+        <members>gseuChecklistItemWhatIsNPSPTitle</members>
+        <members>gseuChecklistItemWorkMultipleRecordsDesc</members>
+        <members>gseuChecklistItemWorkMultipleRecordsLinkLabel</members>
+        <members>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</members>
+        <members>gseuChecklistItemWorkMultipleRecordsTitle</members>
+        <members>gseuChecklistTrackDonationDesc</members>
+        <members>gseuChecklistTrackDonationTitle</members>
+        <members>gseuChecklistWelcomeNPSPDesc</members>
+        <members>gseuChecklistWelcomeNPSPTitle</members>
+        <members>gseuChecklistWorkRecordsDesc</members>
+        <members>gseuChecklistWorkRecordsTitle</members>
+        <members>gseuChecklistYourDataDesc</members>
+        <members>gseuChecklistYourDataTitle</members>
+        <members>gseuExploreTrailheadButton</members>
+        <members>gseuPageTitle</members>
+        <members>gseuResourcesItemAboutNPSPLabel</members>
+        <members>gseuResourcesItemAboutNPSPLinkLabel</members>
+        <members>gseuResourcesItemCommunityGroupLabel</members>
+        <members>gseuResourcesItemCommunityGroupLinkLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLabel</members>
+        <members>gseuResourcesItemQuestionsAnsweredLinkLabel</members>
+        <members>gseuResourcesItemWatchVideosLabel</members>
+        <members>gseuResourcesItemWatchVideosLinkLabel</members>
+        <members>gseuResourcesItemWebinarsLabel</members>
+        <members>gseuResourcesItemWebinarsLinkLabel</members>
+        <members>gseuTrailheadText</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3378,10 +3467,18 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GetStartedChecklistItem.Add_User</members>
+        <members>GetStartedChecklistItem.Capture_Donor_Intent</members>
+        <members>GetStartedChecklistItem.Collect_Gifts</members>
         <members>GetStartedChecklistItem.Communicate_With_Users</members>
+        <members>GetStartedChecklistItem.Connect_Two_Contacts_with_Relationships</members>
+        <members>GetStartedChecklistItem.Connect_a_Contact_to_an_Organization</members>
+        <members>GetStartedChecklistItem.Create_Contacts_and_Household_Accounts</members>
         <members>GetStartedChecklistItem.Create_a_Donation</members>
         <members>GetStartedChecklistItem.Custom_Fields</members>
+        <members>GetStartedChecklistItem.Donation_Individual</members>
+        <members>GetStartedChecklistItem.Donation_Organization</members>
         <members>GetStartedChecklistItem.Fundraising_process</members>
+        <members>GetStartedChecklistItem.Global_Search</members>
         <members>GetStartedChecklistItem.Go_Further</members>
         <members>GetStartedChecklistItem.Import_Data</members>
         <members>GetStartedChecklistItem.Manage_Change</members>
@@ -3389,15 +3486,28 @@
         <members>GetStartedChecklistItem.NPSP_Guide</members>
         <members>GetStartedChecklistItem.NPSP_Settings</members>
         <members>GetStartedChecklistItem.Page_Layouts</members>
+        <members>GetStartedChecklistItem.Prebuilt_NPSP_Report</members>
         <members>GetStartedChecklistItem.Prepare_NPSP_Cloud</members>
         <members>GetStartedChecklistItem.Review_Company</members>
         <members>GetStartedChecklistItem.Running_Reports</members>
         <members>GetStartedChecklistItem.Setup_Contact</members>
+        <members>GetStartedChecklistItem.Standard_Repor_Type</members>
         <members>GetStartedChecklistItem.Stay_Track</members>
+        <members>GetStartedChecklistItem.Stay_Track_End_User</members>
+        <members>GetStartedChecklistItem.Track_Donation</members>
         <members>GetStartedChecklistItem.Train_Users</members>
+        <members>GetStartedChecklistItem.View_Dashboard</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Cloud</members>
+        <members>GetStartedChecklistItem.What_is_Nonprofit_Success_Pack</members>
+        <members>GetStartedChecklistItem.Work_Multiple_Records</members>
         <members>GetStartedChecklistSection.Bring_Users_Onboard</members>
+        <members>GetStartedChecklistSection.CreateConstituentRecords_NPSP</members>
         <members>GetStartedChecklistSection.Explore_NPSP</members>
         <members>GetStartedChecklistSection.Make_it_your_own</members>
+        <members>GetStartedChecklistSection.Track_Donations</members>
+        <members>GetStartedChecklistSection.Welcome_NPSP</members>
+        <members>GetStartedChecklistSection.Work_with_Records</members>
+        <members>GetStartedChecklistSection.Your_Data</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -3890,6 +4000,7 @@
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
         <members>GetStarted</members>
+        <members>GetStartedEndUser</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
@@ -3969,6 +4080,7 @@
     <types>
         <members>Data_Import_Batch_Record_Home</members>
         <members>GetStarted</members>
+        <members>GetStartedEndUser</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -4079,6 +4191,8 @@
         <members>gsLabelMapper</members>
         <members>gsResources</members>
         <members>gsVideoHeader</members>
+        <members>gseuHeader</members>
+        <members>gseuTrailhead</members>
         <members>libsMoment</members>
         <members>modal</members>
         <members>progressRing</members>
