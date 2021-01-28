@@ -133,6 +133,65 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>C1_rt_picklist__c</fullName>
+        <externalId>false</externalId>
+        <label>C1_rt_picklist</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Apple</fullName>
+                    <default>false</default>
+                    <label>Apple</label>
+                </value>
+                <value>
+                    <fullName>Orange</fullName>
+                    <default>false</default>
+                    <label>Orange</label>
+                </value>
+                <value>
+                    <fullName>Pear</fullName>
+                    <default>false</default>
+                    <label>Pear</label>
+                </value>
+                <value>
+                    <fullName>Potato</fullName>
+                    <default>false</default>
+                    <label>Potato</label>
+                </value>
+                <value>
+                    <fullName>Broccoli</fullName>
+                    <default>false</default>
+                    <label>Broccoli</label>
+                </value>
+                <value>
+                    <fullName>Carrot</fullName>
+                    <default>false</default>
+                    <label>Carrot</label>
+                </value>
+                <value>
+                    <fullName>Rose</fullName>
+                    <default>false</default>
+                    <label>Rose</label>
+                </value>
+                <value>
+                    <fullName>Lotus</fullName>
+                    <default>false</default>
+                    <label>Lotus</label>
+                </value>
+                <value>
+                    <fullName>Marigold</fullName>
+                    <default>false</default>
+                    <label>Marigold</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
         <fullName>C1_text2__c</fullName>
         <externalId>false</externalId>
         <label>C1_text2</label>
@@ -186,6 +245,66 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>CustomObject1s</pluralLabel>
+    <recordTypes>
+        <fullName>Flower</fullName>
+        <active>true</active>
+        <label>Flower</label>
+        <picklistValues>
+            <picklist>C1_rt_picklist__c</picklist>
+            <values>
+                <default>false</default>
+                <fullName>Lotus</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Marigold</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Rose</fullName>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Fruit</fullName>
+        <active>true</active>
+        <label>Fruit</label>
+        <picklistValues>
+            <picklist>C1_rt_picklist__c</picklist>
+            <values>
+                <default>false</default>
+                <fullName>Apple</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Orange</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Pear</fullName>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Vegetable</fullName>
+        <active>true</active>
+        <label>Vegetable</label>
+        <picklistValues>
+            <picklist>C1_rt_picklist__c</picklist>
+            <values>
+                <default>false</default>
+                <fullName>Broccoli</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Carrot</fullName>
+            </values>
+            <values>
+                <default>false</default>
+                <fullName>Potato</fullName>
+            </values>
+        </picklistValues>
+    </recordTypes>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
