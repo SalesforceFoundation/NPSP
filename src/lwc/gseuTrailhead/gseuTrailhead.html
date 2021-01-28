@@ -1,0 +1,18 @@
+<template>
+    <lightning-card>
+        <lightning-layout horizontal-align="space" multiple-rows="true">
+            <lightning-layout-item size="12" class="slds-text-align_center">
+                <img class="" src={imgUrl} alt=""/>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12" class="slds-text-align_center slds-size_full slds-p-around_small slds-text-body_regular">
+                <p>{labels.gseuTrailheadText}</p>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="12" class="slds-text-align_center slds-size_full slds-p-around_small">
+                <button class="slds-size_full slds-button button slds-button_brand" title={labels.gseuExploreTrailheadButton} onclick={handleClick}>{labels.gseuExploreTrailheadButton}</button>
+            </lightning-layout-item>
+        </lightning-layout>
+
+    </lightning-card>
+</template>
