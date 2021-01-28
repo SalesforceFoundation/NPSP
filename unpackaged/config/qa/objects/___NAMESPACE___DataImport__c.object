@@ -3,7 +3,7 @@
     <fields>
         <fullName>Custom_add_date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Address.Custom_add_date__c</inlineHelpText>
+        <inlineHelpText>Address.%%%NAMESPACED_ORG%%%Custom_add_date__c</inlineHelpText>
         <label>Custom_add_date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -12,7 +12,7 @@
     <fields>
         <fullName>custom_acc_text__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Account1.custom_acc_text__c</inlineHelpText>
+        <inlineHelpText>Account1.%%%NAMESPACED_ORG%%%custom_acc_text__c</inlineHelpText>
         <label>custom_acc_text</label>
         <length>255</length>
         <required>false</required>
@@ -23,7 +23,7 @@
     <fields>
         <fullName>custom_cont_num__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Contact2.custom_cont_num__c</inlineHelpText>
+        <inlineHelpText>Contact2.%%%NAMESPACED_ORG%%%custom_cont_num__c</inlineHelpText>
         <label>custom_cont_num</label>
         <precision>18</precision>
         <required>false</required>
@@ -36,7 +36,7 @@
         <fullName>new_lookup_campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_lookup__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_lookup__c</inlineHelpText>
         <label>new_lookup_campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>NPSP Data Imports (custom_campaign)</relationshipLabel>
@@ -48,7 +48,7 @@
     <fields>
         <fullName>custom_currency__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_currency__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_currency__c</inlineHelpText>
         <label>custom_currency</label>
         <precision>18</precision>
         <required>false</required>
@@ -59,7 +59,7 @@
     <fields>
         <fullName>custom_date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_date__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_date__c</inlineHelpText>
         <label>custom_date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -68,7 +68,7 @@
     <fields>
         <fullName>custom_email__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_email__c</inlineHelpText>
+        <inlineHelpText>Payment.%%%NAMESPACED_ORG%%%custom_email__c</inlineHelpText>
         <label>custom_email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -78,7 +78,7 @@
     <fields>
         <fullName>custom_multipick__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_multipick__c</inlineHelpText>
+        <inlineHelpText>Payment.%%%NAMESPACED_ORG%%%custom_multipick__c</inlineHelpText>
         <label>custom_multipick</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -114,7 +114,7 @@
     <fields>
         <fullName>custom_number__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_number__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_number__c</inlineHelpText>
         <label>custom_number</label>
         <precision>18</precision>
         <required>false</required>
@@ -126,7 +126,7 @@
     <fields>
         <fullName>custom_phone__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_phone__c</inlineHelpText>
+        <inlineHelpText>Payment.%%%NAMESPACED_ORG%%%custom_phone__c</inlineHelpText>
         <label>custom_phone</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -135,7 +135,7 @@
     <fields>
         <fullName>custom_picklist__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_picklist__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_picklist__c</inlineHelpText>
         <label>custom_picklist</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -170,7 +170,7 @@
     <fields>
         <fullName>custom_text__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_text__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_text__c</inlineHelpText>
         <label>custom_text</label>
         <length>255</length>
         <required>false</required>
@@ -181,7 +181,7 @@
     <fields>
         <fullName>custom_textarea__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_textarea__c</inlineHelpText>
+        <inlineHelpText>Opportunity.%%%NAMESPACED_ORG%%%custom_textarea__c</inlineHelpText>
         <label>custom_textarea</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -190,7 +190,7 @@
     <fields>
         <fullName>custom_url__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_url__c</inlineHelpText>
+        <inlineHelpText>Payment.%%%NAMESPACED_ORG%%%custom_url__c</inlineHelpText>
         <label>custom_url</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -276,6 +276,26 @@
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>CO1_RecordType__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 RecordType</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO1_rt_picklist__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 RT Picklist</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>CO1_text2__c</fullName>
