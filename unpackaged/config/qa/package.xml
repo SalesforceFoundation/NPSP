@@ -11,6 +11,28 @@
         <members>Contact.Previous_Level__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Contact.Work_Order__c</members>
+        <members>CustomObject1__c.C1_currency2__c</members>
+        <members>CustomObject1__c.C1_currency__c</members>
+        <members>CustomObject1__c.C1_date__c</members>
+        <members>CustomObject1__c.C1_number__c</members>
+        <members>CustomObject1__c.C1_phone__c</members>
+        <members>CustomObject1__c.C1_picklist__c</members>
+        <members>CustomObject1__c.C1_rt_picklist__c</members>
+        <members>CustomObject1__c.C1_text2__c</members>
+        <members>CustomObject1__c.C1_text__c</members>
+        <members>CustomObject1__c.C1_textarea__c</members>
+        <members>CustomObject1__c.C1_url__c</members>
+        <members>CustomObject1__c.Opportunity__c</members>
+        <members>CustomObject2__c.C2_currency_2__c</members>
+        <members>CustomObject2__c.C2_currency__c</members>
+        <members>CustomObject2__c.Account__c</members>
+        <members>CustomObject3__c.C3_currency__c</members>
+        <members>CustomObject3__c.C3_date__c</members>
+        <members>CustomObject3__c.C3_number__c</members>
+        <members>CustomObject3__c.C3_phone__c</members>
+        <members>CustomObject3__c.C3_picklist__c</members>
+        <members>CustomObject3__c.C3_text__c</members>
+        <members>CustomObject3__c.Payment__c</members>
         <members>Opportunity.UniqueId__c</members>
         <members>Opportunity.A_User_Defined_Rollup_Field__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImported__c</members>
@@ -33,6 +55,8 @@
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Number__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Phone__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_RecordType__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_rt_picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_Text__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_currency__c</members>
