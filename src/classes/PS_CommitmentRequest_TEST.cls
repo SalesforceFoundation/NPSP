@@ -59,14 +59,6 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
-
-        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
-        insert rdCampaign;
-
-        insert getRecurringDonationBuilder(contact.Id)
-            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
-            .withCampaign(rdCampaign.Id)
-            .build();
     }
 
     /****
@@ -79,8 +71,14 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
         Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .withCampaign(rdCampaign.Id)
+            .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
         PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
@@ -164,9 +162,10 @@ private with sharing class PS_CommitmentRequest_TEST {
         Account organization = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert organization;
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        rd.npe03__Organization__c = organization.Id;
-        update rd;
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withAccount(organization.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
         PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest.RequestBody();
@@ -242,6 +241,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withDefaultValues()
             .withContact(contactId)
             .withAmount(AMOUNT)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .withPaymentMethod(PAYMENT_CHECK)
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
