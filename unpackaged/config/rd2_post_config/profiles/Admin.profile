@@ -54,6 +54,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CommitmentId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CurrentYearValue__c</field>
         <readable>true</readable>
     </fieldPermissions>
