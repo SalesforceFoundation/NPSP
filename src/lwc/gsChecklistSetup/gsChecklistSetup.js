@@ -18,6 +18,11 @@ export default class gsChecklistSetup extends LightningElement {
     */
     @api pageType = 'Admin';
 
+    /**
+     * @description Page title custom label
+     */
+    @api pageTitle ='';
+
     connectedCallback() {
         getChecklists({'pageType': this.pageType})
         .then(data => {
@@ -71,6 +76,9 @@ export default class gsChecklistSetup extends LightningElement {
     * @see         labels
     */
     get title() {
-        return gsAdminSetupTitle;
+        if (this.pageTitle !== undefined && this.pageTitle !== null && this.pageTitle !== '') {
+            return getLabelValue(this.pageTitle);
+        }
+        return '';
     }
 }

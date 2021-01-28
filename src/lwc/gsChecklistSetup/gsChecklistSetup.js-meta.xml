@@ -9,6 +9,7 @@
     <targetConfigs>
         <targetConfig targets="lightning__AppPage">
             <property name="pageType" label="Page Type" type="String" datasource="Admin,End User" />
+            <property name="pageTitle" label="Custom Label of Page Title" type="String"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
