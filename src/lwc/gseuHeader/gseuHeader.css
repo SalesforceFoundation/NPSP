@@ -1,0 +1,26 @@
+.img {
+    box-shadow: 1px -5px 3px -3px #b0adab7a;
+    border-radius: 5px;
+    width: 100%;
+    max-height: 430px;
+}
+
+.title {
+    font-size: 32pt;
+    color: var(--lwc-colorTextLabel);
+    font-weight: lighter;
+}
+
+.length {
+    margin-top: 5px;
+    font-size: 20pt;
+    font-weight: lighter;
+    color: var(--lwc-colorTextLabel);
+}
+
+.labelContainer {
+    position:absolute; 
+    top:25px; 
+    width:100%; 
+    text-align:center
+}
