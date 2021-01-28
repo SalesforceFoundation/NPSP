@@ -44,8 +44,9 @@
                                 variant="error"
                                 icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
                                 data-qa-locator="error">
-                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error" >
-                                    {error.detail}    
+
+                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                    <lightning-formatted-text value={error.detail}></lightning-formatted-text>
                                 </p>
                             </c-util-page-level-message>
                         </template>
@@ -129,7 +130,7 @@
                                         if:true={fields.paymentMethod}>
                                         <lightning-input-field field-name={fields.paymentMethod.apiName}
                                             onchange={handlePaymentChange}
-                                            data-id='{fields.paymentMethod.apiName}'>
+                                            data-id="paymentMethod">
                                         </lightning-input-field>
                                     </lightning-layout-item>
 

@@ -2221,7 +2221,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
-        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+        <value>Saving Elevate recurring payment...This may take a few minutes.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
@@ -2229,7 +2229,12 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
-        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+        <value>A recurring payment has been created in Elevate. Elevate Recurring Id: {0}.
+        
+        However, a matching Recurring Donation wasn&apos;t created in NPSP due to the following error:
+        ● {1}
+        
+        You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -6275,7 +6280,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
         <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
-        <!-- Related custom labels are geDonorColumnLabel annd geDonationColumnLabel -->
+        <!-- Related custom labels are geDonorColumnLabel and geDonationColumnLabel -->
         <value>
         We recommend including the following fields:
         &lt;/br&gt;
