@@ -13,8 +13,10 @@ import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChec
 import gsChecklistItemCustomFieldsDesc from '@salesforce/label/c.gsChecklistItemCustomFieldsDesc';
 import gsChecklistItemCustomFieldsLinkLabel from '@salesforce/label/c.gsChecklistItemCustomFieldsLinkLabel';
 import gsChecklistItemCustomFieldsTitle from '@salesforce/label/c.gsChecklistItemCustomFieldsTitle';
+import gsChecklistItemExtraFourMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraFourMinuteVideo';
 import gsChecklistItemExtraOneMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraOneMinuteVideo';
 import gsChecklistItemExtraSixtyMinuteVideo from '@salesforce/label/c.gsChecklistItemExtraSixtyMinuteVideo';
+import gsChecklistItemExtraTwoMinutesVideo from '@salesforce/label/c.gsChecklistItemExtraTwoMinutesVideo';
 import gsChecklistItemFundraisingProcessDesc from '@salesforce/label/c.gsChecklistItemFundraisingProcessDesc';
 import gsChecklistItemFundraisingProcessTitle from '@salesforce/label/c.gsChecklistItemFundraisingProcessTitle';
 import gsChecklistItemFundraisingProcessLinkLabel from '@salesforce/label/c.gsChecklistItemFundraisingProcessLinkLabel';
@@ -72,12 +74,90 @@ import gsChecklistMakeItYourDesc from '@salesforce/label/c.gsChecklistMakeItYour
 import gsChecklistMakeItYourTitle from '@salesforce/label/c.gsChecklistMakeItYourTitle';
 import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboardUsersTitle';
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
+import gseuChecklistItemPrebuiltNPSPReportDesc from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportDesc';
+import gseuChecklistItemPrebuiltNPSPReportLinkLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportLinkLabel';
+import gseuChecklistItemPrebuiltNPSPReportPriBtnLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportPriBtnLabel';
+import gseuChecklistItemPrebuiltNPSPReportSecBtnLabel from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportSecBtnLabel';
+import gseuChecklistItemPrebuiltNPSPReportTitle from '@salesforce/label/c.gseuChecklistItemPrebuiltNPSPReportTitle';
+import gseuChecklistItemStandardReportTypeDesc from '@salesforce/label/c.gseuChecklistItemStandardReportTypeDesc';
+import gseuChecklistItemStandardReportTypeLinkLabel from '@salesforce/label/c.gseuChecklistItemStandardReportTypeLinkLabel';
+import gseuChecklistItemStandardReportTypePriBtnLabel from '@salesforce/label/c.gseuChecklistItemStandardReportTypePriBtnLabel';
+import gseuChecklistItemStandardReportTypeTitle from '@salesforce/label/c.gseuChecklistItemStandardReportTypeTitle';
+import gseuChecklistItemViewDashboardDesc from '@salesforce/label/c.gseuChecklistItemViewDashboardDesc';
+import gseuChecklistItemViewDashboardLinkLabel from '@salesforce/label/c.gseuChecklistItemViewDashboardLinkLabel';
+import gseuChecklistItemViewDashboardPriBtnLabel from '@salesforce/label/c.gseuChecklistItemViewDashboardPriBtnLabel';
+import gseuChecklistItemViewDashboardTitle from '@salesforce/label/c.gseuChecklistItemViewDashboardTitle';
+import gseuChecklistYourDataDesc from '@salesforce/label/c.gseuChecklistYourDataDesc';
+import gseuChecklistYourDataTitle from '@salesforce/label/c.gseuChecklistYourDataTitle';
+import gseuChecklistWorkRecordsDesc from '@salesforce/label/c.gseuChecklistWorkRecordsDesc';
+import gseuChecklistWorkRecordsTitle from '@salesforce/label/c.gseuChecklistWorkRecordsTitle';
+import gseuChecklistItemGlobalSearchDesc from '@salesforce/label/c.gseuChecklistItemGlobalSearchDesc';
+import gseuChecklistItemGlobalSearchLinkLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchLinkLabel';
+import gseuChecklistItemGlobalSearchPriBtnLabel from '@salesforce/label/c.gseuChecklistItemGlobalSearchPriBtnLabel';
+import gseuChecklistItemGlobalSearchTitle from '@salesforce/label/c.gseuChecklistItemGlobalSearchTitle';
+import gseuChecklistItemStayTrackDesc from '@salesforce/label/c.gseuChecklistItemStayTrackDesc';
+import gseuChecklistItemStayTrackLinkLabel from '@salesforce/label/c.gseuChecklistItemStayTrackLinkLabel';
+import gseuChecklistItemStayTrackPriBtnLabel from '@salesforce/label/c.gseuChecklistItemStayTrackPriBtnLabel';
+import gseuChecklistItemStayTrackTitle from '@salesforce/label/c.gseuChecklistItemStayTrackTitle';
+import gseuChecklistItemWorkMultipleRecordsDesc from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsDesc';
+import gseuChecklistItemWorkMultipleRecordsLinkLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsLinkLabel';
+import gseuChecklistItemWorkMultipleRecordsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsPriBtnLabel';
+import gseuChecklistItemWorkMultipleRecordsTitle from '@salesforce/label/c.gseuChecklistItemWorkMultipleRecordsTitle';
+import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
+import gseuPageTitle from '@salesforce/label/c.gseuPageTitle';
+import gseuChecklistItemCaptureDonorIntentDesc from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentDesc';
+import gseuChecklistItemCaptureDonorIntentLinkLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentLinkLabel';
+import gseuChecklistItemCaptureDonorIntentPriBtnLabel from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentPriBtnLabel';
+import gseuChecklistItemCaptureDonorIntentTitle from '@salesforce/label/c.gseuChecklistItemCaptureDonorIntentTitle';
+import gseuChecklistItemCollectGiftsDesc from '@salesforce/label/c.gseuChecklistItemCollectGiftsDesc';
+import gseuChecklistItemCollectGiftsLinkLabel from '@salesforce/label/c.gseuChecklistItemCollectGiftsLinkLabel';
+import gseuChecklistItemCollectGiftsPriBtnLabel from '@salesforce/label/c.gseuChecklistItemCollectGiftsPriBtnLabel';
+import gseuChecklistItemCollectGiftsTitle from '@salesforce/label/c.gseuChecklistItemCollectGiftsTitle';
+import gseuChecklistItemDonationIndividualDesc from '@salesforce/label/c.gseuChecklistItemDonationIndividualDesc';
+import gseuChecklistItemDonationIndividualLinkLabel from '@salesforce/label/c.gseuChecklistItemDonationIndividualLinkLabel';
+import gseuChecklistItemDonationIndividualPriBtnLabel from '@salesforce/label/c.gseuChecklistItemDonationIndividualPriBtnLabel';
+import gseuChecklistItemDonationIndividualTitle from '@salesforce/label/c.gseuChecklistItemDonationIndividualTitle';
+import gseuChecklistItemDonationOrganizationDesc from '@salesforce/label/c.gseuChecklistItemDonationOrganizationDesc';
+import gseuChecklistItemDonationOrganizationLinkLabel from '@salesforce/label/c.gseuChecklistItemDonationOrganizationLinkLabel';
+import gseuChecklistItemDonationOrganizationPriBtnLabel from '@salesforce/label/c.gseuChecklistItemDonationOrganizationPriBtnLabel';
+import gseuChecklistItemDonationOrganizationTitle from '@salesforce/label/c.gseuChecklistItemDonationOrganizationTitle';
+import gseuChecklistItemTrackDonationDesc from '@salesforce/label/c.gseuChecklistItemTrackDonationDesc';
+import gseuChecklistItemTrackDonationLinkLabel from '@salesforce/label/c.gseuChecklistItemTrackDonationLinkLabel';
+import gseuChecklistItemTrackDonationPriBtnLabel from '@salesforce/label/c.gseuChecklistItemTrackDonationPriBtnLabel';
+import gseuChecklistItemTrackDonationTitle from '@salesforce/label/c.gseuChecklistItemTrackDonationTitle';
+import gseuChecklistTrackDonationDesc from '@salesforce/label/c.gseuChecklistTrackDonationDesc';
+import gseuChecklistTrackDonationTitle from '@salesforce/label/c.gseuChecklistTrackDonationTitle';
+import gseuChecklistWelcomeNPSPTitle from '@salesforce/label/c.gseuChecklistWelcomeNPSPTitle';
+import gseuChecklistWelcomeNPSPDesc from '@salesforce/label/c.gseuChecklistWelcomeNPSPDesc';
+import gseuChecklistItemWhatIsNPSPTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPTitle';
+import gseuChecklistItemWhatIsNPSPDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPDesc';
+import gseuChecklistItemWhatIsNPSPLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPSPLink';
+import gseuChecklistItemWhatIsNPCloudTitle from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitle';
+import gseuChecklistItemWhatIsNPCloudTitleDesc from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudTitleDesc';
+import gseuChecklistItemWhatIsNPCloudLink from '@salesforce/label/c.gseuChecklistItemWhatIsNPCloudLink';
+import gseuChecklistCreateConstituentRecordsTitle from '@salesforce/label/c.gseuChecklistCreateConstituentRecordsTitle';
+import gseuChecklistCreateConstituentRecordsDesc from '@salesforce/label/c.gseuChecklistCreateConstituentRecordsDesc';
+import gseuChecklistItemCreateContactAndAccountTitle from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountTitle';
+import gseuChecklistItemCreateContactAndAccountDesc from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountDesc';
+import gseuChecklistItemCreateContactAndAccountLink from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountLink';
+import gseuChecklistItemCreateContactAndAccountBlueButton from '@salesforce/label/c.gseuChecklistItemCreateContactAndAccountBlueButton';
+import gseuChecklistItemConnectContactsRelationshipsTitle from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsTitle';
+import gseuChecklistItemConnectContactsRelationshipsDesc from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsDesc';
+import gseuChecklistItemConnectContactsRelationshipsLink from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsLink';
+import gseuChecklistItemConnectContactsRelationshipsBlueButton from '@salesforce/label/c.gseuChecklistItemConnectContactsRelationshipsBlueButton';
+import gseuChecklistItemConnectContactOrganizationTitle from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationTitle';
+import gseuChecklistItemConnectContactOrganizationDesc from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationDesc';
+import gseuChecklistItemConnectContactOrganizationLink from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationLink';
+import gseuChecklistItemConnectContactOrganizationBlueButton from '@salesforce/label/c.gseuChecklistItemConnectContactOrganizationBlueButton';
+import gseuChecklistItemExtraTwoMinutesVideo from '@salesforce/label/c.gseuChecklistItemExtraTwoMinutesVideo';
 
 
 /**
 * @description Map of getLabelValue labels
 */
 const labelMap = {
+    gsAdminSetupTitle,
+    gseuPageTitle,
     gsChecklistExploreNPSPTitle,
     gsChecklistExploreNPSPDesc,
     gsChecklistItemAddUserDesc,
@@ -93,8 +173,10 @@ const labelMap = {
     gsChecklistItemCustomFieldsDesc,
     gsChecklistItemCustomFieldsLinkLabel,
     gsChecklistItemCustomFieldsTitle,
+    gsChecklistItemExtraFourMinuteVideo,
     gsChecklistItemExtraOneMinuteVideo,
     gsChecklistItemExtraSixtyMinuteVideo,
+    gsChecklistItemExtraTwoMinutesVideo,
     gsChecklistItemFundraisingProcessDesc,
     gsChecklistItemFundraisingProcessTitle,
     gsChecklistItemFundraisingProcessLinkLabel,
@@ -152,6 +234,81 @@ const labelMap = {
     gsChecklistMakeItYourTitle,
     gsChecklistOnboardUsersTitle,
     gsChecklistOnboardUsersDesc,
+    gseuChecklistItemPrebuiltNPSPReportDesc,
+    gseuChecklistItemPrebuiltNPSPReportLinkLabel,
+    gseuChecklistItemPrebuiltNPSPReportPriBtnLabel,
+    gseuChecklistItemPrebuiltNPSPReportSecBtnLabel,
+    gseuChecklistItemPrebuiltNPSPReportTitle,
+    gseuChecklistItemStandardReportTypeDesc,
+    gseuChecklistItemStandardReportTypeLinkLabel,
+    gseuChecklistItemStandardReportTypePriBtnLabel,
+    gseuChecklistItemStandardReportTypeTitle,
+    gseuChecklistItemViewDashboardDesc,
+    gseuChecklistItemViewDashboardLinkLabel,
+    gseuChecklistItemViewDashboardPriBtnLabel,
+    gseuChecklistItemViewDashboardTitle,
+    gseuChecklistYourDataTitle,
+    gseuChecklistYourDataDesc,
+    gseuChecklistWorkRecordsDesc,
+    gseuChecklistWorkRecordsTitle,
+    gseuChecklistItemGlobalSearchDesc,
+    gseuChecklistItemGlobalSearchLinkLabel,
+    gseuChecklistItemGlobalSearchPriBtnLabel,
+    gseuChecklistItemGlobalSearchTitle,
+    gseuChecklistItemStayTrackDesc,
+    gseuChecklistItemStayTrackLinkLabel,
+    gseuChecklistItemStayTrackPriBtnLabel,
+    gseuChecklistItemStayTrackTitle,
+    gseuChecklistItemWorkMultipleRecordsDesc,
+    gseuChecklistItemWorkMultipleRecordsLinkLabel,
+    gseuChecklistItemWorkMultipleRecordsPriBtnLabel,
+    gseuChecklistItemWorkMultipleRecordsTitle,
+    gseuChecklistItemCaptureDonorIntentDesc,
+    gseuChecklistItemCaptureDonorIntentLinkLabel,
+    gseuChecklistItemCaptureDonorIntentPriBtnLabel,
+    gseuChecklistItemCaptureDonorIntentTitle,
+    gseuChecklistItemCollectGiftsDesc,
+    gseuChecklistItemCollectGiftsLinkLabel,
+    gseuChecklistItemCollectGiftsPriBtnLabel,
+    gseuChecklistItemCollectGiftsTitle,
+    gseuChecklistItemDonationIndividualDesc,
+    gseuChecklistItemDonationIndividualLinkLabel,
+    gseuChecklistItemDonationIndividualPriBtnLabel,
+    gseuChecklistItemDonationIndividualTitle,
+    gseuChecklistItemDonationOrganizationDesc,
+    gseuChecklistItemDonationOrganizationLinkLabel,
+    gseuChecklistItemDonationOrganizationPriBtnLabel,
+    gseuChecklistItemDonationOrganizationTitle,
+    gseuChecklistItemTrackDonationDesc,
+    gseuChecklistItemTrackDonationLinkLabel,
+    gseuChecklistItemTrackDonationPriBtnLabel,
+    gseuChecklistItemTrackDonationTitle,
+    gseuChecklistTrackDonationDesc,
+    gseuChecklistTrackDonationTitle,
+    gseuChecklistWelcomeNPSPTitle,
+    gseuChecklistWelcomeNPSPDesc,
+    gseuChecklistItemWhatIsNPSPTitle,
+    gseuChecklistItemWhatIsNPSPDesc,
+    gseuChecklistItemWhatIsNPSPLink,
+    gseuChecklistItemWhatIsNPCloudTitle,
+    gseuChecklistItemWhatIsNPCloudTitleDesc,
+    gseuChecklistItemWhatIsNPCloudLink,
+    gseuChecklistCreateConstituentRecordsTitle,
+    gseuChecklistCreateConstituentRecordsDesc,
+    gseuChecklistItemCreateContactAndAccountTitle,
+    gseuChecklistItemCreateContactAndAccountDesc,
+    gseuChecklistItemCreateContactAndAccountLink,
+    gseuChecklistItemCreateContactAndAccountBlueButton,
+    gseuChecklistItemConnectContactsRelationshipsTitle,
+    gseuChecklistItemConnectContactsRelationshipsDesc,
+    gseuChecklistItemConnectContactsRelationshipsLink,
+    gseuChecklistItemConnectContactsRelationshipsBlueButton,
+    gseuChecklistItemConnectContactOrganizationTitle,
+    gseuChecklistItemConnectContactOrganizationDesc,
+    gseuChecklistItemConnectContactOrganizationLink,
+    gseuChecklistItemConnectContactOrganizationBlueButton,
+    gseuChecklistItemExtraTwoMinutesVideo
+
 }
 
 /**
