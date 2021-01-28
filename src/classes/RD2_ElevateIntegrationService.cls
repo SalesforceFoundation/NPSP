@@ -35,14 +35,6 @@
 */
 public inherited sharing class RD2_ElevateIntegrationService {
 
-    /***
-     * @description Contains a prefix appended to a GUID to indicate the RD is in draft
-     * and has a temp commitment Id so future installment Opportunities are not
-     * created for this Recurring Donation and any user can change it
-     * from a temp value to the actual value.
-     */
-    public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
-
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
@@ -145,11 +137,9 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         if (!isChanged) {
             String oldCommitmentId = oldRd.CommitmentId__c;
-            Boolean isTempIdOverwrite = String.isNotBlank(oldCommitmentId)
-                && oldCommitmentId.startsWith(TEMP_COMMITMENT_ID_PREFIX);
 
-            isChanged = rd.CommitmentId__c != oldCommitmentId
-                && !isTempIdOverwrite;
+            isChanged = String.isNotBlank(oldCommitmentId)
+                && rd.CommitmentId__c != oldCommitmentId;
         }
 
         if (!isChanged && !(new RD2_RecurringDonation(rd)).isClosed()) {
