@@ -29,7 +29,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>pageType</name>
-                <value>Admin</value>
+                <value>End User</value>
             </componentInstanceProperties>
             <componentName>gsResources</componentName>
         </componentInstances>
