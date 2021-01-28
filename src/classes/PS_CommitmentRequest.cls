@@ -136,13 +136,19 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-    * @description Creates an HttpRequest for a new commitment creation
+    * @description Creates an HttpRequest for a new commitment creation or
+    * existing commitment update depending on the prodived commitment Id
+    * @param commitmentId Elevate recurring commitment Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public HttpRequest buildCreateRequest(String jsonRequestBody) {
+    public HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
+        UTIL_Http.Method method = String.isBlank(commitmentId)
+            ? UTIL_Http.Method.POST
+            : UTIL_Http.Method.PATCH;
+
         return new PS_Request.Builder()
-            .withMethod(UTIL_Http.Method.POST)
+            .withMethod(method)
             .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
@@ -150,12 +156,27 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-    * @description Constructs the Commitment request body for the specified Recurring Donation
+    * @description Constructs the commitment request body for the specified Recurring Donation.
+    * The commitment Id is used to differentiate between the create and edit commitment request content.
     * @param rd Recurring Donation record
     * @param token Payment Method Token
     * @return RequestBody
     */
     public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
+        Boolean isCreateCommitment = String.isBlank(rd.CommitmentId__c);
+
+        return isCreateCommitment
+            ? getCreateRequestBody(rd, token)
+            : getUpdateRequestBody(rd, token);
+    }
+
+    /***
+    * @description Constructs the create commitment request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
+    public RequestBody getCreateRequestBody(npe03__Recurring_Donation__c rd, String token) {
 
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
@@ -178,6 +199,20 @@ public inherited sharing class PS_CommitmentRequest {
 
         setDonorInfo(reqBody, rd);
         setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
+
+        return reqBody;
+    }
+
+    /***
+    * @description Constructs the edit commitment request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
+    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, String token) {
+        RequestBody reqBody = new RequestBody()
+            .withCommitmentId(rd.CommitmentId__c)
+            .withPaymentMethodToken(token);
 
         return reqBody;
     }
@@ -304,6 +339,7 @@ public inherited sharing class PS_CommitmentRequest {
         /***
          * Required properties
          */
+        public String id;
         public String firstName;
         public String lastName;
         public String merchantId;
@@ -328,6 +364,16 @@ public inherited sharing class PS_CommitmentRequest {
             currencyCode = UserInfo.getDefaultCurrency();
             type = CommitmentType.SUSTAINER.name();
             paymentMethodType = PaymentMethod.CARD.name();
+        }
+
+        /**
+         * @description Sets merchant Id
+         * @param commitmentId Recurring commitment Id
+         * @return RequestBody This request body instance
+         */
+        public RequestBody withCommitmentId(String commitmentId) {
+            this.id = commitmentId;
+            return this;
         }
 
         /**

@@ -186,7 +186,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         final String jsonRequestBody = 'commitment request body';
 
         Test.startTest();
-        HttpRequest request = new PS_CommitmentRequest().buildCreateRequest(jsonRequestBody);
+        String commitmentId = null;
+        HttpRequest request = new PS_CommitmentRequest().buildRequest(commitmentId, jsonRequestBody);
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
@@ -194,6 +195,27 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
 
         System.assertEquals(UTIL_Http.Method.POST.name(), request.getMethod(), 'The HttpRequest method should match');
+        System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
+    }
+
+    /**
+    * @description Verifies a valid edit commitment HttpRequest is returned
+    */
+    @isTest
+    private static void shouldBuildEditCommitmentRequest() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        final String jsonRequestBody = 'commitment request body';
+
+        Test.startTest();
+        String commitmentId = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        HttpRequest request = new PS_CommitmentRequest().buildRequest(commitmentId, jsonRequestBody);
+        Test.stopTest();
+
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + PS_Request.ENDPOINT_COMMITMENT;
+        System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
+
+        System.assertEquals(UTIL_Http.Method.PATCH.name(), request.getMethod(), 'The HttpRequest method should match');
         System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
     }
 

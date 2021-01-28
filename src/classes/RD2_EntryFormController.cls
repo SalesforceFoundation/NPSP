@@ -317,7 +317,7 @@ public with sharing class RD2_EntryFormController {
             if (shouldSendToElevate(rd, paymentMethodToken)) {
                 PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, paymentMethodToken);
 
-                response = sendRequest(JSON.serialize(requestBody));
+                response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody));
 
                 processResponse(rd, response);
             }
@@ -356,9 +356,10 @@ public with sharing class RD2_EntryFormController {
         * @return Boolean
         */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            // Data should be sent to Elevate if it is a new commitment
+            // Data should be sent to Elevate to either create or edit commitment depending if commitment Id is provided
+            // when a new Recurring Donation is being created
             if (rd.Id == null) {
-                return String.isBlank(rd.CommitmentId__c);
+                return true;
             }
 
             // If a Recurring Donation is just being closed or has been closed,
@@ -377,15 +378,16 @@ public with sharing class RD2_EntryFormController {
 
         /**
         * @description Sends commitment request to Elevate
+        * @param commitmentId Elevate recurring commitment Id
         * @param jsonRequestBody Payment API request in JSON format
         * @return response Payments API response
         */
-        private UTIL_Http.Response sendRequest(String jsonRequestBody) {
+        private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
             UTIL_Http.Response response;
 
             try {
                 HttpRequest request = new PS_CommitmentRequest()
-                    .buildCreateRequest(jsonRequestBody);
+                    .buildRequest(commitmentId, jsonRequestBody);
 
                 response = requestService.sendRequest(request);
 
