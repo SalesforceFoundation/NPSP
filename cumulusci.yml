@@ -293,6 +293,14 @@ tasks:
             sql_path: 'datasets/dev_org/test_data.sql'
             mapping: 'datasets/mapping.yml'
 
+    test_data_qa_org:
+        description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        group: Test Data
+        options:
+            sql_path: 'datasets/qa_org/test_data.sql'
+            mapping: 'datasets/qa_org/mapping.yml'
+
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
         class_path: cumulusci.tasks.bulkdata.LoadData
@@ -325,6 +333,30 @@ tasks:
                 - Campaign
                 - DataImport__c
                 - Level__c
+
+    test_data_qa_delete:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        group: Test Data
+        options:
+            objects:
+                - Opportunity
+                - npe03__Recurring_Donation__c
+                - Case
+                - Contact
+                - Account
+                - Address__c
+                - Partial_Soft_Credit__c
+                - Allocation__c
+                - General_Accounting_Unit__c
+                - Campaign
+                - DataImport__c
+                - Level__c
+                - npe01__OppPayment__c
+                - OpportunityContactRole
+                - CustomObject1__c
+                - CustomObject2__c
+                - CustomObject3__c
 
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
@@ -1073,6 +1105,18 @@ flows:
                 task: test_data_dev_org
                 options:
                     mapping: datasets/mapping_managed.yml
+
+    test_data_qa_org:
+        description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
+        group: Test Data
+        steps:
+            1:
+                task: test_data_qa_delete
+            2:
+                task: test_data_qa_org
+                options:
+                    mapping: datasets/qa_org/mapping.yml
+
 
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'

@@ -6,375 +6,477 @@
         <readable>true</readable>
         <field>Account.A_User_Defined_Rollup_Field__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Account.custom_acc_text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Account.UniqueId__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%Address__c.Custom_add_date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.A_User_Defined_Rollup_Field__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.Current_Level__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.custom_cont_num__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.Previous_Level__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.UniqueId__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Contact.Work_Order__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.UniqueId__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.A_User_Defined_Rollup_Field__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImported__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImportStatus__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.ASC_Amount__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.ASC_Role__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Custom_add_date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_acc_text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_cont_num__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_currency__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_email__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_multipick__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_number__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_phone__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_textarea__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_url__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.new_lookup_campaign__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Number__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Phone__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Picklist__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.CO1_RecordType__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.CO1_rt_picklist__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_currency__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_text2__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_textarea__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_url__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO1_Currency2__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Currency__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Number__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Phone__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Picklist__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO3_Text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO2_currency__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CO2_currency_2__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject1ImportStatus__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject1Imported__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject2ImportStatus__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject2Imported__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject3ImportStatus__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.CustomObject3Imported__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.custom_picklist__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Opp_Do_Not_Automatically_Create_Payment__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Opportunity_Test__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Lead_Company__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Lead_Imported_Status__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Lead_Last_Name__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Lead_Lookup__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_currency__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_date__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_lookup__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_number__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_picklist__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_text__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.custom_textarea__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Opportunity.Test_Mapping__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>npe01__OppPayment__c.custom_email__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>npe01__OppPayment__c.custom_multipick__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>npe01__OppPayment__c.custom_phone__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>npe01__OppPayment__c.custom_url__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>npe01__OppPayment__c.CustomObject3__c</field>
     </fieldPermissions>
-        <fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
         <field>Lead.Account_Lookup__c</field>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_currency2__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_currency__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_date__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_number__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_phone__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_picklist__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_rt_picklist__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_text2__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_text__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_textarea__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.C1_url__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject1__c.Opportunity__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject2__c.C2_currency_2__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject2__c.C2_currency__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject2__c.Account__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>CustomObject3__c.C3_currency__c</field>
+    </fieldPermissions>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Flower</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Fruit</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <recordType>CustomObject1__c.Vegetable</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
     <label>QA</label>
 </PermissionSet>
