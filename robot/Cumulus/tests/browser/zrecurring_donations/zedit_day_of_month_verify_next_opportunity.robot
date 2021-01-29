@@ -95,12 +95,16 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Current Page Should Be             Details                      npe03__Recurring_Donation__c
     Wait Until Loading Is Complete
     ${next_payment_date}               Get Next Payment Date Number                    1
+    Run Recurring Donations Batch      RD2
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
+    Current Page Should Be             Details                        npe03__Recurring_Donation__c
 
     #Validate that the number of opportunities now show as 2 .
     Validate Related Record Count      Opportunities                                   2
     @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
     #Verify the details on the respective opportunities
-
     Validate Opportunity Details       ${opportunities}[0][Id]        Closed Won                       ${CURRENT_DATE}
     Go To Page                         Details
         ...                            npe03__Recurring_Donation__c
@@ -108,7 +112,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
 
 
     Current Page Should Be             Details                      npe03__Recurring_Donation__c
-    Run Keyword if      '${opportunity}[1][Id]' != '${opportunities}[0][Id]'
+    Run Keyword if                    '${opportunity}[1][Id]' != '${opportunities}[0][Id]'
         ...            Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
         ...  ELSE   Run Keywords
         ...            Validate Opportunity Details       ${opportunity}[0][Id]        Pledged                          ${next_payment_date}
