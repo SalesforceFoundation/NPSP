@@ -174,12 +174,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @description Broadcasts the schedule form field values that 
      * might impact the parent component display
      */
-    dispatchScheduleChange() {
+    dispatchTypeChange() {
         this.dispatchEvent(new CustomEvent(
-            'schedulechange', 
-            { detail: { 
-                recurringType: this.getRecurringType() 
-            } }
+            'typechange',
+            {
+                detail: {
+                    recurringType: this.getRecurringType()
+                }
+            }
         ));
     }
 
@@ -331,7 +333,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         this.updatePlannedInstallmentsVisibility(recurringType);
 
         // Notify the main entry form about the Recurring Type value change
-        this.dispatchScheduleChange();
+        this.dispatchTypeChange();
     }
 
     /**

@@ -106,8 +106,7 @@
                                     </lightning-layout-item>
 
                                     <template if:true={isMultiCurrencyEnabled}>
-                                        <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
-                                            if:true={fields.amount}>
+                                        <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
                                             <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                                 <label for="currencyField"
                                                     class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
@@ -126,7 +125,7 @@
                                         record-id={recordId} 
                                         data-id="scheduleComponent"
                                         onerrorevent={handleChildComponentError} 
-                                        onschedulechange={handleScheduleChange}>
+                                        ontypechange={handleRecurringTypeChange}>
                                     </c-rd2-entry-form-schedule-section>
                                 </template>
 

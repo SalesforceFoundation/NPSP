@@ -406,8 +406,8 @@
         <members>RD2_DataMigrationMapper</members>
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
-        <members>RD2_DatabaseService</members>
         <members>RD2_DataRegulationService</members>
+        <members>RD2_DatabaseService</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_ElevateInformation_CTRL</members>
@@ -2520,7 +2520,7 @@
         <members>gsChecklistItemExtraFourMinuteVideo</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemExtraSixtyMinuteVideo</members>
-        <members>gsChecklistItemExtraTwoMinuteVideo</members>
+        <members>gsChecklistItemExtraTwoMinutesVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
         <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>

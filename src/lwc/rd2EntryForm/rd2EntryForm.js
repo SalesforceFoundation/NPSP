@@ -57,6 +57,7 @@ const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
+const CURRENCY_FIELD_API_NAME = 'CurrencyIsoCode';
 
 /***
 * @description Event name fired when the Elevate credit card widget
@@ -225,7 +226,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.paymentMethod = extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
         this.fields.status = extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
         this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
-        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
+        this.fields.currency = { label: currencyFieldLabel, apiName: CURRENCY_FIELD_API_NAME };
     }
 
     /***
@@ -289,7 +290,7 @@ export default class rd2EntryForm extends LightningElement {
     * - Recurring Type change might hide or display the credit card widget.
     * @param event
     */
-    handleScheduleChange(event) {
+    handleRecurringTypeChange(event) {
         this.handleElevateWidgetDisplay();
     }
 
@@ -306,7 +307,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     handleElevateWidgetDisplay() {
         if (this.isElevateCustomer) {
-            this.evaluateElevateWidget(this.getPaymentMethod());
+            this.evaluateElevateWidget(this.paymentMethod);
         }
     }
 
@@ -316,14 +317,18 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && (!this.isEdit
-                || (this.isEdit && !isEmpty(this.getCommitmentId()) && this.isElevateEditEnabled)
-            )
-            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
-            && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
-            && this.isCurrencySupported()
-            && this.isCountrySupported();
+        if (!this.isEdit) {
+            this.isElevateWidgetEnabled = this.isElevateCustomer === true
+                && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+                && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
+                && this.isCurrencySupported()
+                && this.isCountrySupported();
+
+        } else {
+            this.isElevateWidgetEnabled = this.isElevateCustomer === true
+                && this.isElevateEditEnabled//TODO to remove when edit is GA and above isElevateCustomer is being used for all commitment features
+                && !isEmpty(this.getCommitmentId());
+        }
 
         this.populateCardHolderName();
     }
@@ -366,12 +371,21 @@ export default class rd2EntryForm extends LightningElement {
     isCurrencySupported() {
         let currencyCode;
 
-        if (this.isMultiCurrencyEnabled) {
-            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
+        try {
+            if (this.isMultiCurrencyEnabled) {
+                currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
 
-        } else {
-            currencyCode = CURRENCY;
-        }
+                // Sometimes when Edit is clicked in a sequence, the "currencyField" field is not visible,
+                // but the value does exist. In such case, get the record "CurrencyIsoCode" field on the SObject.
+                // This might be due to resetting values on the form [Cancel].
+                if (isNull(currencyCode)) {
+                    currencyCode = this.record.fields[CURRENCY_FIELD_API_NAME].value;
+                }
+
+            } else {
+                currencyCode = CURRENCY;
+            }
+        } catch (error) { }
 
         return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
     }
@@ -793,7 +807,7 @@ export default class rd2EntryForm extends LightningElement {
     /***
      * @description Returns value of the Payment Method field
      */
-    getPaymentMethod() {
+    get paymentMethod() {
         const paymentMethod = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
 
         return paymentMethod ? paymentMethod.value : null;
