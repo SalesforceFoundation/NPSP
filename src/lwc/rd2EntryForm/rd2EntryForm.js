@@ -377,7 +377,7 @@ export default class rd2EntryForm extends LightningElement {
 
                 // Sometimes when Edit is clicked in a sequence, the "currencyField" field is not visible,
                 // but the value does exist. In such case, get the record "CurrencyIsoCode" field on the SObject.
-                // This might be due to resetting values on the form [Cancel].
+                // This inconsistency in rendering might be due to resetting values on the form when user clicks [Cancel].
                 if (isNull(currencyCode)) {
                     currencyCode = this.record.fields[CURRENCY_FIELD_API_NAME].value;
                 }

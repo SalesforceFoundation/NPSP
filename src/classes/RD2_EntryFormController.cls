@@ -376,9 +376,10 @@ public with sharing class RD2_EntryFormController {
 
 
         /**
-        * @description Constructs Recurring Donation record from received fields specified in the JSON string
+        * @description Constructs Recurring Donation record from received fields specified in the JSON string,
+        * updates defaults that are otherwise updated in the trigger context, and
+        * validates user entered values for a new or existing RD record.
         * @param rd Modified Recurring Donation record that is not created/updated in DB yet
-        * @param oldRd Recurring Donation as it is currently in DB, ie before the form submit
         * @return void
         */
         private void adjustDataAndValidate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
@@ -434,8 +435,8 @@ public with sharing class RD2_EntryFormController {
         * @return Boolean
         */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            // Data should be sent to Elevate to either create or edit commitment depending if commitment Id is provided
-            // when a new Recurring Donation is being created
+            // Data should be sent to Elevate to either create or edit commitment 
+            // (determined in the send request based if the commitment Id is provided or not)
             if (rd.Id == null) {
                 return true;
             }
