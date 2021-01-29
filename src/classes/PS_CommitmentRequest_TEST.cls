@@ -59,14 +59,6 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
-
-        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
-        insert rdCampaign;
-
-        insert getRecurringDonationBuilder(contact.Id)
-            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
-            .withCampaign(rdCampaign.Id)
-            .build();
     }
 
     /****
@@ -79,11 +71,17 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
         Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .withCampaign(rdCampaign.Id)
+            .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd.Id, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -164,14 +162,14 @@ private with sharing class PS_CommitmentRequest_TEST {
         Account organization = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert organization;
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        rd.npe03__Organization__c = organization.Id;
-        update rd;
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withAccount(organization.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        rd = request.getRecurringDonation(rd.Id);
-
         PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest.RequestBody();
+        
         request.setDonorInfo(requestBody, rd);
 
         System.assertEquals(organization.Name, requestBody.firstName, 'Request First Name should match Organization Name');
@@ -187,7 +185,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         final String jsonRequestBody = 'commitment request body';
 
         Test.startTest();
-        HttpRequest request = new PS_CommitmentRequest().buildCreateRequest(jsonRequestBody);
+        String commitmentId = null;
+        HttpRequest request = new PS_CommitmentRequest().buildRequest(commitmentId, jsonRequestBody);
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
@@ -195,6 +194,27 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
 
         System.assertEquals(UTIL_Http.Method.POST.name(), request.getMethod(), 'The HttpRequest method should match');
+        System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
+    }
+
+    /**
+    * @description Verifies a valid edit commitment HttpRequest is returned
+    */
+    @isTest
+    private static void shouldBuildEditCommitmentRequest() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        final String jsonRequestBody = 'commitment request body';
+
+        Test.startTest();
+        String commitmentId = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        HttpRequest request = new PS_CommitmentRequest().buildRequest(commitmentId, jsonRequestBody);
+        Test.stopTest();
+
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + PS_Request.ENDPOINT_COMMITMENT;
+        System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
+
+        System.assertEquals(UTIL_Http.Method.PATCH.name(), request.getMethod(), 'The HttpRequest method should match');
         System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
     }
 
@@ -221,6 +241,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withDefaultValues()
             .withContact(contactId)
             .withAmount(AMOUNT)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .withPaymentMethod(PAYMENT_CHECK)
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)

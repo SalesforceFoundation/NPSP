@@ -6,6 +6,10 @@
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
+                <name>pageTitle</name>
+                <value>gsAdminSetupTitle</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>pageType</name>
                 <value>Admin</value>
             </componentInstanceProperties>
