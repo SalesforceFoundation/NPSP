@@ -315,7 +315,7 @@ npsp_lex_locators={
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
-        'datatable_options_icon':"//th/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
+        'datatable_options_icon':"//*/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
         'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
         'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']",
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
@@ -335,7 +335,10 @@ npsp_lex_locators={
         'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
-        'ge_form_sections':'//span[contains(@title,"{}")]'
+        'ge_form_sections':'//span[contains(@title,"{}")]',
+        'progress_bar':'//lightning-layout-item[.//span[text()="{}"]]//child::lightning-layout-item//*[text()="{}"]',
+        'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
+        'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',
 
         },
     # Enhanced Recurring Donation (erd) related element locators
