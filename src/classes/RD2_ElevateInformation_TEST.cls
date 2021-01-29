@@ -106,7 +106,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     */
     @isTest
     private static void shouldReturnAlertWhenIdIsNotRecurringDonationId() { 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();       
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevate();
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(Account.getSObjectType());
@@ -159,6 +159,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     private static void enableElevate() {
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(true);
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
     }
 
 }
