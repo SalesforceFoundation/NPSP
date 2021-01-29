@@ -88,15 +88,14 @@
                                     for="commitmentId" id="commitmentIdLabel">{fields.commitmentId.label}</label>
                                 <div class="slds-form-element__control slds-p-around_none" data-id="commitmentId">
                                     <div class="slds-col slds-no-flex slds-truncate">
-                                        <a href="javascript:void(0);" aria-labelledby="commitmentIdLabel"
-                                            target="_blank">
+                                        <a onclick={navigateToCommitment} aria-labelledby="commitmentIdLabel">
                                             <lightning-formatted-text value={commitmentId}
-                                                data-qa-locator={qaLocatorCommitmentId}>
+                                                                      data-qa-locator={qaLocatorCommitmentId}>
                                             </lightning-formatted-text>
                                             <lightning-icon icon-name="utility:new_window" data-id="newWindowIcon"
-                                                size="xx-small" class="slds-button__icon_right slds-current-color"
-                                                alternative-text={labels.textNewWindow}
-                                                data-qa-locator={qaLocatorNewWindow}>
+                                                            size="xx-small" class="slds-button__icon_right slds-current-color"
+                                                            alternative-text={labels.textNewWindow}
+                                                            data-qa-locator={qaLocatorNewWindow}>
                                             </lightning-icon>
                                         </a>
                                     </div>
