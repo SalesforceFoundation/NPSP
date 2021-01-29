@@ -258,173 +258,17 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         ) {
             return;
         }
+        
+        RD2_DataRegulationService dataService = new RD2_DataRegulationService(currentDate);        
+        dataService.adjust(rds, oldRds); 
 
-        DataRegulator dataRegulator = new DataRegulator(currentDate);        
-        dataRegulator.adjust(rds, oldRds);
-
-        List<RD2_ValidationService.Notification> notifications = dataRegulator.validate(rds, oldRds);
+        List<RD2_ValidationService.Notification> notifications = dataService.validate(rds, oldRds);
         
         for (RD2_ValidationService.Notification notification : notifications) {
             notification.getRecord().addError(notification.getErrors()[0]);
         }
     }
-
-    /***
-    * @description Ensures data integrity on Recurring Donation records
-    */
-    public class DataRegulator {
-        private Date currentDate {
-            get {
-                if (currentDate == null) {
-                    currentDate = RD2_ScheduleService.currentDate;
-                }
-                return currentDate;
-            } set;
-        }
-
-        public DataRegulator() {
-        }
-
-        public DataRegulator(Date currentDate) {
-            this.currentDate = currentDate;
-        }
-
-        /***
-        * @description Sets fields on Recurring Donation records based on business logic
-        * @param rds Recurring Donation records
-        * @param oldRds Old version of the Recurring Donation records
-        * @return void
-        */
-        public void adjust(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
-
-            Map<Id, npe03__Recurring_Donation__c> oldRdsById = oldRds == null
-                ? new Map<Id, npe03__Recurring_Donation__c>()
-                : new Map<Id, npe03__Recurring_Donation__c>(oldRds);
-
-            autoPopulateAccounts(rds);
-
-            for (npe03__Recurring_Donation__c rd : rds) {
-                adjustScheduleFields(rd);   
-                adjustEndDateAndStatus(rd, oldRdsById.get(rd.Id));          
-            }
-        }
-
-        /***
-        * @description Auto-populates empty Account field on a Recurring Donation having Contact specified
-        * @param rds Recurring Donation records
-        * @return void
-        */
-        private void autoPopulateAccounts(List<npe03__Recurring_Donation__c> rds) {
-            if (rds == null || rds.isEmpty()) {
-                return;
-            }
-
-            Set<Id> contactIds = new Set<Id>();
-            for (npe03__Recurring_Donation__c rd : rds) {
-                if (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null) {
-                    contactIds.add(rd.npe03__Contact__c);
-                }
-            }
-            if (contactIds.isEmpty()) {
-                return;
-            }
-
-            Map<Id, Contact> contactById = new Map<Id, Contact>([
-                SELECT Name, AccountId
-                FROM Contact
-                WHERE Id IN :contactIds
-            ]);
-
-            for (npe03__Recurring_Donation__c rd : rds) {
-                if (rd.npe03__Organization__c == null
-                    && rd.npe03__Contact__c != null
-                    && contactById.containsKey(rd.npe03__Contact__c)
-                ) {
-                    rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
-                }
-            }
-        }
-
-        /***
-        * @description Sets schedule fields
-        * @param rd Recurring Donation record
-        * @return void
-        */
-        private void adjustScheduleFields(npe03__Recurring_Donation__c rd) {
-            if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && rd.Day_of_Month__c != null) {
-                rd.Day_of_Month__c = null;
-            }
-
-            //map the Day of Month value of "31" to the Last_Day value
-            if (rd.Day_of_Month__c == '31') {
-                rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
-            }
-
-            //set the default installment frequency when value is not provided on the RD insert
-            if (rd.InstallmentFrequency__c == null && rd.Id == null) {// Record Id is not available in the "before insert" context
-                rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
-            }
-        }
-        
-        /***
-        * @description Evaluate End Date on a Recurring Donation record
-        * If the RD is just Closed and the End Date is not provided, auto-populate the End Date to yesterday.
-        * If the RD is just Closed but the End Date is in the future, revert the status to the value as it was before the update.
-        * If the RD is reopened, clear out the End Date.
-        * @param rd Recurring Donation record
-        * @param oldRd Old version of the Recurring Donation record
-        */
-        private void adjustEndDateAndStatus(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
-
-            if (rdRecord.isClosed() && rd.EndDate__c == null) {
-                rd.EndDate__c = currentDate.addDays(-1);
-            }
-
-            if (oldRd != null) {
-                if (!rdRecord.isClosed() && (new RD2_RecurringDonation(oldRd).isClosed())) {
-                    rd.EndDate__c = null;
-                }
-
-                if (
-                    rdRecord.isOpenEnded()
-                    && !rdRecord.isElevateRecord()
-                    && rdRecord.isClosed()
-                    && rd.EndDate__c != null
-                    && rd.EndDate__c > currentDate
-                ) {
-                    rd.Status__c = oldRd.Status__c;
-                }
-            }
-        }
-
-        /***
-        * @description Validates Recurring Donation records
-        * @param rds Recurring Donation records
-        * @param oldRds Old version of the Recurring Donation records
-        * @return List<RD2_ValidationService.Notification>
-        */
-        public List<RD2_ValidationService.Notification> validate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
-
-            List<RD2_ValidationService.Notification> notifications = new List<RD2_ValidationService.Notification>();
-            RD2_ValidationService validationService = new RD2_ValidationService(rds);
-
-            Boolean isNew = oldRds == null || oldRds.isEmpty();
-
-            if (isNew) {
-                notifications = validationService.validate();
-
-            } else {
-                notifications = validationService
-                    .withOldRecurringDonations(oldRds)
-                    .validateOnChange();
-            }
-
-            return notifications;
-        }
-    }
-
-
+    
     /**
     * @description When new recurring donations are inserted that have a value in the CommitmentId field
     * launch up a queueable process to look for matching existing Opportunities with that same CommmitmentId.

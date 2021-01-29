@@ -240,34 +240,20 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies Commitment Request Body is built as expected
-    */
-    @isTest
-    private static void shouldReturnCommitmentRequestBody() {
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-
-        RD2_EntryFormController.CommitmentService commitmentService = new RD2_EntryFormController.CommitmentService();
-        PS_CommitmentRequest.RequestBody requestBody = commitmentService.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
-
-        System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
-        System.assertEquals(PAYMENT_METHOD_TOKEN, requestBody.paymentMethodToken, 'The payment token should match');
-    }
-
-    /***
     * @description Verifies Commitment record created response is returned upon successful creation
     */
     @isTest
-    private static void shouldReturnResponseWhenCommitmentIsCreated() {
+    private static void shouldReturnCreatedResponseWhenCreateCommitmentSucceeds() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
 
         Test.startTest();
         mockRecordCreatedCalloutResponse();
 
-        RD2_EntryFormController.CommitmentService commitmentService = new RD2_EntryFormController.CommitmentService();
-        PS_CommitmentRequest.RequestBody requestBody = commitmentService.getRequestBody(rd, PAYMENT_METHOD_TOKEN);
-        UTIL_Http.Response response = commitmentService.sendRequest(rd.Id, JSON.serialize(requestBody));
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+
+        UTIL_Http.Response response = service.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
@@ -283,19 +269,19 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
 
         Test.startTest();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();
 
-        String jsonResponse = RD2_EntryFormController.handleCommitment(rd.Id, JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        String jsonResponse = RD2_EntryFormController.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(),
             'An error record should be created for an error response.');
-        System.assertEquals(rd.Id, errors[0].Related_Record_Id__c,
-            'The error record should contain RD record Id.');
+        System.assertEquals(rd.npe03__Contact__c, errors[0].Related_Record_Id__c,
+            'The error record should contain donor Contact Id.');
         System.assertEquals(ERR_Handler_API.Context.Elevate.name(),errors[0].Context_Type__c,
             'The error record context type should match with Elevate context.');
         System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
@@ -338,6 +324,21 @@ private with sharing class RD2_EntryFormController_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    /****
+    * @description Returns a new Recurring Donation record
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c buildRecurringDonation() {
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .build();
     }
 
 }

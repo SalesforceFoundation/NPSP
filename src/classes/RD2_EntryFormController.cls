@@ -288,39 +288,44 @@ public with sharing class RD2_EntryFormController {
 
 
     /***
-    * @description Constructs the Recurring Donation based on the entry form fields.
-    * Validates the Recurring Donation and creates or updates the commitment depending
-    * if it is a new or existing recurring commitment in Elevate.
-    * @param recordId Recurring Donation Id
+    * @description Constructs a Recurring Donation record based on the entry form fields, and
+    * submits the create or edit commitment request to the Elevate Payments API.
     * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
     * @param paymentMethodToken Payment Method Token
-    * @return String Commitment create/update response
+    * @return String Commitment API response
     */
     @AuraEnabled
-    public static String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {        
-        return commitmentService.handleCommitment(recordId, jsonRecord, paymentMethodToken);
+    public static String handleCommitment(String jsonRecord, String paymentMethodToken) {
+        try {
+            UTIL_Http.Response response = commitmentService.handleCommitment(jsonRecord, paymentMethodToken);
+
+            return JSON.serialize(response);
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
     }
 
     /***
-    * @description Logs an error when Recurring Donation cannot be created/updated after
-    * related commitment is created/updated
-    * @param recordId Recurring Donation Id
-    * @param errorMessage Error message
+    * @description Logs an error when a Recurring Donation cannot be created/updated
+    * @param recordId A Recurring Donation, or a donor (Contact/Account) Id
+    * @param errorMessage An error message
     */
     @AuraEnabled
-    public static void logError(Id recordId, String errorMessage) {        
+    public static void logError(Id recordId, String errorMessage) {
         commitmentService.logError(recordId, errorMessage);
     }
-    
-    
+
 
     /**
-    * @description Handles sending commitment create and edit requests 
+    * @description Handles sending commitment create and edit requests
     */
     public without sharing class CommitmentService {
 
         /**
-        * @description Sends requests and constructs the response
+        * @description Sends commitment create/update requests, and constructs a response
         */
         private UTIL_Http.RequestService requestService {
             get {
@@ -331,38 +336,76 @@ public with sharing class RD2_EntryFormController {
             }
             set;
         }
-
         /**
         * @description Used to adjust and validate Recurring Donation data
         */
-        private RD2_RecurringDonations_TDTM.DataRegulator dataRegulator {
+        private RD2_DataRegulationService dataService {
             get {
-                if (dataRegulator == null) {
-                    dataRegulator = new RD2_RecurringDonations_TDTM.DataRegulator();
+                if (dataService == null) {
+                    dataService = new RD2_DataRegulationService();
                 }
-                return dataRegulator;
+                return dataService;
             }
             set;
         }   
 
         /**
-        * @description Handles validation and Elevate commitment creation/edit
+        * @description Handles validation and Elevate recurring commitment creation
+        * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
+        * @param paymentMethodToken Payment Method Token
+        * @return UTIL_Http.Response Payments API response
         */
-        public String handleCommitment(Id recordId, String jsonRecord, String paymentMethodToken) {
+        public UTIL_Http.Response handleCommitment(String jsonRecord, String paymentMethodToken) {
+            UTIL_Http.Response response;
 
-            npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(recordId);
-            npe03__Recurring_Donation__c rd = constructRecurringDonation(recordId, jsonRecord, oldRd);
-            
-            validate(rd, oldRd, paymentMethodToken);
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+            adjustDataAndValidate(rd, paymentMethodToken);
 
             if (shouldSendToElevate(rd, paymentMethodToken)) {
-                PS_CommitmentRequest.RequestBody requestBody = getRequestBody(rd, paymentMethodToken);
-                
-                return processCommitment(rd.Id, rd.CommitmentId__c, JSON.serialize(requestBody));
+                PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, paymentMethodToken);
 
-            } else {
-                return buildOkResponse();
+                response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody));
+
+                processResponse(rd, response);
             }
+
+            return response;
+        }
+
+
+        /**
+        * @description Constructs Recurring Donation record from received fields specified in the JSON string
+        * @param rd Modified Recurring Donation record that is not created/updated in DB yet
+        * @param oldRd Recurring Donation as it is currently in DB, ie before the form submit
+        * @return void
+        */
+        private void adjustDataAndValidate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+
+            // Populate defaults otherwise applied by the DML operation and available in the trigger context
+            if (String.isBlank(rd.Status__c)) {
+                rd.Status__c = UTIL_Describe.getDefaultSelectOption(
+                    'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.Status__c)
+                );
+            }
+
+            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
+            if (rd.Id != null) {
+                oldRds.add(getOldRecurringDonation(rd.Id));
+            }
+
+            dataService.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
+
+            List<RD2_ValidationService.Notification> notifications = dataService.validate(
+                new List<npe03__Recurring_Donation__c>{ rd }, oldRds
+            );
+
+            if (!notifications.isEmpty()) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(
+                    notifications[0].getErrors()[0]
+                );
+            }        
         }
 
         /**
@@ -383,59 +426,16 @@ public with sharing class RD2_EntryFormController {
             return oldRd;
         }
 
-        /**
-        * @description Constructs Recurring Donation record from received fields specified in the JSON string
-        */
-        private npe03__Recurring_Donation__c constructRecurringDonation(Id recordId, String jsonRecord, npe03__Recurring_Donation__c oldRd) {
-            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
-                jsonRecord, npe03__Recurring_Donation__c.class
-            );
-
-            if (recordId != null) {
-                rd.Id = recordId;
-            }
-
-            if (rd.Id == null && String.isBlank(rd.Status__c)) {
-                // Populate defaults otherwise applied by the DML operation and available in the trigger context//TODO
-                // Should currency be defaulted in a multi-currency org? Probably not.
-                rd.Status__c = 'Active';// use the Status__c default picklist value //TODO
-            }
-
-            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
-            if (oldRd != null) {
-                oldRds.add(oldRd);
-            }
-            
-            dataRegulator.adjust(new List<npe03__Recurring_Donation__c>{ rd }, oldRds);
-
-            return rd;
-        }
-
-        /**
-        * @description Validates Recurring Donation record before sending commitment create/edit request
-        */
-        private void validate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
-            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
-            if (oldRd != null) {
-                oldRds.add(oldRd);
-            }
-
-            List<RD2_ValidationService.Notification> notifications = dataRegulator.validate(
-                new List<npe03__Recurring_Donation__c>{ rd }, oldRds
-            );
-
-            if (!notifications.isEmpty()) {
-                UTIL_AuraEnabledCommon.throwAuraHandledException(
-                    notifications[0].getErrors()[0]
-                );
-            }        
-        }
 
         /**
         * @description Checks if the commitment record should be sent to Elevate
+        * @param rd Recurring Donation record
+        * @param paymentMethodToken Payment Method Token
+        * @return Boolean
         */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            // Data should be sent to Elevate if it is a new commitment 
+            // Data should be sent to Elevate to either create or edit commitment depending if commitment Id is provided
+            // when a new Recurring Donation is being created
             if (rd.Id == null) {
                 return true;
             }
@@ -447,70 +447,19 @@ public with sharing class RD2_EntryFormController {
                 return false;
             }
 
-            // Data should be sent to Elevate when:
-            // the RD has a credit card changed for existing commitment or added for a new commitment
-            // or the amount has been changed for existing commitment //TODO
-            // or the schedule has been changed for an existing commitment//TODO
+            // Data should be sent to Elevate on Recurring Donation update when:
+            // a credit card has been changed, or
+            // the default to true on edit regardless if the the amount or the schedule has been changed
+            //TODO when implementing the Edit commitment functionality
             return String.isNotBlank(paymentMethodToken);
         }
 
         /**
-        * @description If the commitment record should not be sent to Elevate,
-        * send OK response to entry form so it can submit the RD to database.
-        */
-        private String buildOkResponse() {
-            UTIL_Http.Response response = new UTIL_Http.Response();
-            response.statusCode = UTIL_Http.STATUS_CODE_OK;
-            response.status = UTIL_Http.STATUS_OK;
-
-            return JSON.serialize(response);
-        }
-
-        /**
-        * @description Constructs commitment request body. 
-        * Commitment Id is used to differentiate between create and edit commitment request content.
-        */
-        @TestVisible
-        private PS_CommitmentRequest.RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            try {
-                PS_CommitmentRequest request = new PS_CommitmentRequest();
-
-                return request.getRequestBody(rd, paymentMethodToken);
-
-            } catch (Exception ex) {
-                UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
-            }
-
-            return null;
-        }
-        
-        /**
-        * @description Creates or edits commitment record
-        */
-        @TestVisible
-        private String processCommitment(Id recordId, String commitmentId, String jsonRequestBody) {
-            UTIL_Http.Response response;
-
-            try {
-                response = sendRequest(commitmentId, jsonRequestBody);
-
-                if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED
-                    && response.statusCode != UTIL_Http.STATUS_CODE_OK
-                ) {
-                    logError(recordId, response.getErrorMessages());
-                }
-
-            } catch (Exception e) {
-                UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
-            }
-
-            return JSON.serialize(response);
-        }
-
-        /**
         * @description Sends commitment request to Elevate
+        * @param commitmentId Elevate recurring commitment Id
+        * @param jsonRequestBody Payment API request in JSON format
+        * @return response Payments API response
         */
-        @TestVisible
         private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody) {
             UTIL_Http.Response response;
 
@@ -527,56 +476,49 @@ public with sharing class RD2_EntryFormController {
             return response;
         }
 
-        /***
-        * @description Saves commitment Id and the credit card data onto the Recurring Donation record
-        * when commitment is created or updated from the Elevate Information widget.
-        * @param recordId Recurring Donation Id
-        * @param response Response from Elevate on the commitment create request
+        /**
+        * @description Logs an error record on an commitment error response
+        * @param rd Recurring Donation record
+        * @param response Payments API response
         * @return void
         */
-        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
-            if (response == null
-                || (response.statusCode != UTIL_Http.STATUS_CODE_CREATED 
-                    && response.statusCode != UTIL_Http.STATUS_CODE_OK
-                )
-            ) {
+        private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
+            if (isCommitmentSuccess(response)) {
                 return;
             }
 
-            try {
-                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+            Id recordId = rd.npe03__Contact__c != null
+                ? rd.npe03__Contact__c
+                : rd.npe03__Organization__c;
 
-                if (commitment.hasId()) {
-                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                        Id = recordId,
-                        CommitmentId__c = commitment.id,
-                        CardLast4__c = commitment.getCardLast4(),
-                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
-                        CardExpirationYear__c = commitment.getCardExpirationYear()
-                    );
+            logError(recordId, response.getErrorMessages());
+        }
 
-                    UTIL_DMLService.updateRecordBatchAndLogErrors(
-                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
-                    );
-                }
-            } catch (Exception e) {
-                throw e;
-            }           
+        /**
+        * @description Determines if the commitment has been created or updated successfully
+        * @param response Payments API response
+        * @return Boolean
+        */
+        private Boolean isCommitmentSuccess(UTIL_Http.Response response) {
+            return response.statusCode == UTIL_Http.STATUS_CODE_CREATED
+                || response.statusCode == UTIL_Http.STATUS_CODE_OK;
         }
 
         /**
         * @description Creates an error record for the specified record Id and error message
-        * @param recordId Recurring Donation Id
+        * @param recordId A Recurring Donation or a donor (Contact/Account) Id
         * @param errorMessage Error message
         * @return void
         */
         public void logError(Id recordId, String errorMessage) {
+            SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
+
             ERR_LogService.Logger logger = new ERR_LogService.Logger(
                 ERR_Handler_API.Context.Elevate,
-                npe03__Recurring_Donation__c.SObjectType
+                rdSObjectType
             );
-
-            String errorType = recordId == null
+            
+            String errorType = (recordId == null || recordId.getSObjectType() != rdSObjectType)
                 ? RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE
                 : RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_UPDATE;
 

@@ -123,7 +123,7 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /**
-    * @description Sends requests and constructs the response
+    * @description Recurring Donation schedule service user to build schedules used in a commitment request
     */
     private RD2_ScheduleService scheduleService {
         get {
@@ -136,14 +136,12 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-    * @description Creates an HttpRequest for a new commitment creation
+    * @description Creates an HttpRequest for a new commitment creation or
+    * existing commitment update depending on the prodived commitment Id
+    * @param commitmentId Elevate recurring commitment Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public HttpRequest buildCreateRequest(String jsonRequestBody) {
-        return buildRequest(null, jsonRequestBody);
-    }
-
     public HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
         UTIL_Http.Method method = String.isBlank(commitmentId)
             ? UTIL_Http.Method.POST
@@ -230,13 +228,13 @@ public inherited sharing class PS_CommitmentRequest {
             ? getContact(rd.npe03__Contact__c)
             : null;
 
-        Boolean isContactDonor = contactDonor != null
+        Boolean isHouseholdDonor = contactDonor != null
             && (
                 rd.npe03__Organization__c == null
                 || rd.npe03__Organization__c == contactDonor.AccountId
             );
 
-        if (isContactDonor) {
+        if (isHouseholdDonor) {
             reqBody.withDonor(contactDonor);
 
         } else {
@@ -277,44 +275,6 @@ public inherited sharing class PS_CommitmentRequest {
             : currencyMultiplier;
     }
 
-    /***
-    * @description Retrieves Contact data specified as the donor on the Recurring Donation record
-    * that is not yet saved into database
-    * @param contactId Contact Id
-    * @return Contact
-    */
-    private Contact getContact(Id contactId) {
-        List<Contact> contacts = new List<Contact>([
-            SELECT
-                AccountId, FirstName, LastName
-            FROM Contact
-            WHERE Id = :contactId
-            LIMIT 1
-        ]);
-        
-        return contacts == null || contacts.isEmpty()
-            ? null
-            : contacts[0];
-    }
-
-    /***
-    * @description Retrieves Account data specified as the donor on the Recurring Donation record
-    * that is not yet saved into database
-    * @param accountId Account Id
-    * @return Account
-    */
-    private Account getAccount(Id accountId) {
-        List<Account> accounts = new List<Account>([
-            SELECT Name
-            FROM Account
-            WHERE Id = :accountId
-            LIMIT 1
-        ]);
-        
-        return accounts == null || accounts.isEmpty()
-            ? null
-            : accounts[0];
-    }
 
     /**
      * @description Parses the response and returns the commitment data contained in the response body
@@ -334,6 +294,41 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         return commitment;
+    }
+
+    /***
+    * @description Retrieves Contact data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param contactId Contact Id
+    * @return Contact
+    */
+    private Contact getContact(Id contactId) {
+        List<Contact> contacts = [
+            SELECT
+                AccountId, FirstName, LastName
+            FROM Contact
+            WHERE Id = :contactId
+            LIMIT 1
+        ];
+        
+        return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    /***
+    * @description Retrieves Account data specified as the donor on the Recurring Donation record
+    * that is not yet saved into database
+    * @param accountId Account Id
+    * @return Account
+    */
+    private Account getAccount(Id accountId) {
+        List<Account> accounts = [
+            SELECT Name
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ];
+        
+        return accounts.isEmpty() ? null : accounts[0];
     }
 
 
