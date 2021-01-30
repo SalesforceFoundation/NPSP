@@ -24,18 +24,18 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.navigate_to_and_validate_field_value("Opportunity Name", "contains", value)
 
     def navigate_to_matching_gifts_page(self):
-        if self.npsp.latest_api_version == 50.0:
-            locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
-            self.selenium.wait_until_element_is_visible(locator)
-            self.salesforce._jsclick(locator)
-            time.sleep(2)
-            self.selenium.click_link('Find Matched Gifts')
-            self.npsp.choose_frame("vfFrameId")
-        else:
-            self.npsp.click_more_actions_button()
-            time.sleep(2)
-            self.selenium.click_link('Find Matched Gifts')
-            self.npsp.choose_frame("vfFrameId")
+        # if self.npsp.latest_api_version == 50.0:
+        locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
+        self.selenium.wait_until_element_is_visible(locator)
+        self.salesforce._jsclick(locator)
+        time.sleep(2)
+        self.selenium.click_link('Find Matched Gifts')
+        self.npsp.choose_frame("vfFrameId")
+        # else:
+        #     self.npsp.click_more_actions_button()
+        #     time.sleep(2)
+        #     self.selenium.click_link('Find Matched Gifts')
+        #     self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
         if self.npsp.latest_api_version==51.0:
