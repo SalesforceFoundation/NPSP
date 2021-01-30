@@ -111,9 +111,3 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
 
 
     Current Page Should Be             Details                      npe03__Recurring_Donation__c
-    Run Keyword if                    '${opportunity}[1][Id]' != '${opportunities}[0][Id]'
-        ...            Validate Opportunity Details       ${opportunity}[1][Id]        Pledged
-        ...  ELSE   Run Keywords
-        ...            Validate Opportunity Details       ${opportunity}[0][Id]        Pledged
-
-
