@@ -46,7 +46,7 @@ npsp_lex_locators={
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div/h2//a[./span[text()="{}"]]',
             'viewall':'//article[contains(@class, "slds-card slds-card_boundary")][.//span[@title="{}"]]//a[.//span[@class="view-all-label"]]',
-            'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
+            'item':"//article[contains(@class, 'slds-card_boundary')][.//img][.//span[@title='{}']]//h3//a",
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
             'link':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//table/tbody/tr[.//td//*[text()='{}']]/th//a",
             # 'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//*[text()='{}']]/th//a",
@@ -119,7 +119,7 @@ npsp_lex_locators={
     'check_field_spl':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//a',
     'account_list':'//tbody/tr/th[.//span[contains(@class, "slds-grid")]]/descendant::a[text()="{}"]',
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
-    'related_list_items':'//div[@class = "container forceRelatedListSingleContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-grid")]/following-sibling::div[.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
+    'related_list_items':'//article[contains(@class,"slds-card_boundary")][.//a[contains(@class, "slds-card")]/span[text() = "{}"]]//div[contains(@class, "listDisplays")]//*[text()="{}"]',
     'span_button':'//span[text()="{}"]',
     'modalspan_button':'//div[contains(@class,"modal-body")]//span[text()="{}"]',
     'related_drop_down':'//div/a[contains(@class,"slds-button")]/ancestor::li/div/a',
@@ -315,7 +315,7 @@ npsp_lex_locators={
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
-        'datatable_options_icon':"//th/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
+        'datatable_options_icon':"//*/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
         'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
         'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']",
         'new-section-field-bundle':"//article[@data-qa-locator='form section New Section'][.//label[text()='{}']]",
@@ -335,7 +335,10 @@ npsp_lex_locators={
         'temp_builder_labels':'//lightning-input[@class="slds-truncate slds-form-element"]//label',
         'ge_form_labels':'//label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]',
         'temp_builder_sections':'//h2[@class="slds-card__header-title"]',
-        'ge_form_sections':'//span[contains(@title,"{}")]'
+        'ge_form_sections':'//span[contains(@title,"{}")]',
+        'progress_bar':'//lightning-layout-item[.//span[text()="{}"]]//child::lightning-layout-item//*[text()="{}"]',
+        'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
+        'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',
 
         },
     # Enhanced Recurring Donation (erd) related element locators

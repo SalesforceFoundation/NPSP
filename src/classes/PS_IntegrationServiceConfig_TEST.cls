@@ -146,6 +146,27 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         System.assertEquals(testMerchantId, service.getMerchantIds());
     }
 
+    @IsTest
+    private static void shouldReturnViewCommitmentURL() {
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        Test.startTest();
+        PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
+        Test.stopTest();
+
+        String expectedURL = service.getRecordViewURL(
+            RD2_ElevateIntegrationService_TEST.COMMITMENT_ID,
+            PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT
+        );
+        String testCommitmentViewURL =
+            testBaseUrl.replace('https://', 'https://admin.') + '/' +
+            PS_IntegrationServiceConfig.VIEW_TYPE_COMMITMENT_SUFFIX + '/' +
+            RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+
+        System.assertEquals(testCommitmentViewURL, expectedURL,
+            'Commitment View URL should be ' + testCommitmentViewURL);
+    }
+
 
     /***
     * @description Stub for the integration service config instance

@@ -11,6 +11,8 @@
 }
 
 .item-card .card-image {
+    display: flex;
+    align-items: center;
     width: 185px;
     grid-column: 1/ 2;
     padding-left: 6px;
@@ -20,6 +22,7 @@
 
 .item-card .card-image img {
     width: 100%;
+    height: 150px;
 }
 
 .item-card .card-content {

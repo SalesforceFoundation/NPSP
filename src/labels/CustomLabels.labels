@@ -2221,7 +2221,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
-        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+        <value>Saving Elevate recurring payment...This may take a few minutes.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
@@ -2229,7 +2229,12 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
-        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+        <value>A recurring payment has been created in Elevate. Elevate Recurring Id: {0}.
+        
+        However, a matching Recurring Donation wasn&apos;t created in NPSP due to the following error:
+        ● {1}
+        
+        You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -6275,7 +6280,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
         <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
-        <!-- Related custom labels are geDonorColumnLabel annd geDonationColumnLabel -->
+        <!-- Related custom labels are geDonorColumnLabel and geDonationColumnLabel -->
         <value>
         We recommend including the following fields:
         &lt;/br&gt;
@@ -6856,6 +6861,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Customize Objects</value>
     </labels>
     <labels>
+        <fullName>gsChecklistItemExtraFourMinuteVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;4 Minute Video&apos;</shortDescription>
+        <value>4 Minute Video</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemExtraOneMinuteVideo</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -6870,6 +6883,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Extra Info in the Item &apos;60 Minute Video&apos;</shortDescription>
         <value>60 Minute Video</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemExtraTwoMinutesVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;2 Minutes Video&apos;</shortDescription>
+        <value>2 Minute Video</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemGoFurtherDesc</fullName>
@@ -7265,6 +7286,166 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Train Your users</value>
     </labels>
     <labels>
+        <fullName>gseuChecklistCreateConstituentRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Create Constituent Records section in Get Started</shortDescription>
+        <value>People are the heart of any nonprofit. Explore Nonprofit Success Pack features to learn how to manage your constituents and their household, personal, and professional connections.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistCreateConstituentRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Create Constituent Records section in Get Started</shortDescription>
+        <value>Create Constituent Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for Connect Contacts to Organization checklist item</shortDescription>
+        <value>Create Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Connect Contact to Organization checklist item in Get Started</shortDescription>
+        <value>Affiliations in NPSP let you capture important connections between your constituents and related organizations such as work, school, or business. Connect a Contact to an Organization using Organization Affiliations.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Connect Contacts to Organization checklist item in Get Started</shortDescription>
+        <value>Learn more about Affiliations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactOrganizationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Connect Contact to Organization checklist item in Get Started</shortDescription>
+        <value>Connect a Contact to an Organization with Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Create Relationships</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Relationships in NPSP let you capture important connections between your constituents. Connect Contacts using the Relationships related list on the Contact records.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Connect Two Contacts with Relationships checklist item</shortDescription>
+        <value>Learn more about Relationships in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemConnectContactsRelationshipsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Connect Two Contacts with Relationships checklist item in Get Started</shortDescription>
+        <value>Connect Two Contacts with Relationships</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountBlueButton</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for Create Contacts and Account checklist item in Get Started</shortDescription>
+        <value>Create Contacts</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Contacts and Account checklist item in Get Started</shortDescription>
+        <value>People are the most important resource for a nonprofit, so understanding how we use the Contact object to track them in NPSP is key. The Contact object stores constituent data such as name, address, and employer.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for Contacts and Accounts checklist item in Get Started</shortDescription>
+        <value>Learn more about Contacts and Accounts in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCreateContactAndAccountTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for Contacts and Accounts checklist item in Get Started</shortDescription>
+        <value>Create Contacts and Household Accounts</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPCloudLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for What is Nonprofit Cloud checklist item in Welcome section</shortDescription>
+        <value>Learn more about the Nonprofit Cloud in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPCloudTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for What is Nonprofit Cloud checklist item in Welcome section</shortDescription>
+        <value>What is Nonprofit Cloud?</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPCloudTitleDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for What is Nonprofit Cloud checklist item in Welcome section</shortDescription>
+        <value>Nonprofit Cloud includes apps, tools, features, services, and technology designed to meet the unique needs of nonprofits.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for What is NPSP checklist item in Welcome section</shortDescription>
+        <value>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they&apos;re using the &quot;nonprofit version&quot; of Salesforce, they&apos;re usually talking about NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPSPLink</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text for What is NPSP checklist item in Welcome section</shortDescription>
+        <value>Learn more about Nonprofit Success Pack in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWhatIsNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for What is NPSP checklist item in Welcome section</shortDescription>
+        <value>What is Nonprofit Success Pack?</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>
@@ -7297,6 +7478,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Onboard Your Users</value>
     </labels>
     <labels>
+        <fullName>gseuChecklistWelcomeNPSPDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Welcome to Nonprofit checklist section in Get Started</shortDescription>
+        <value>Use these essential resources to help you get started with your NPSP journey.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistWelcomeNPSPTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Welcome to Nonprofit checklist section in Get Started</shortDescription>
+        <value>Welcome to Nonprofit Success Pack and Nonprofit Cloud</value>
+    </labels>
+    <labels>
         <fullName>gsChecklistItemFundraisingProcessDesc</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -7327,6 +7524,422 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Title of checklist item FundraisingProcess in Get Started</shortDescription>
         <value>Visualize Your Fundraising Processes</value>
+    </labels>
+      <labels>
+        <fullName>gseuChecklistWorkRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Work with Records checklist in Get Started for End Users</shortDescription>
+        <value>After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistWorkRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Work with Records checklist in Get Started for End Users</shortDescription>
+        <value>Work with Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>When you&apos;re just getting started with NPSP, finding records can be tricky. Use global search to search across your entire Salesforce org and find what you need fast.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Search Results in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Find Records</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemGlobalSearchTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Global Search checklist item in Get Started for End Users</shortDescription>
+        <value>Find Records with Global Search</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organization, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you&apos;re working on.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Activities in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Track Activities</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStayTrackTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Stay on Track checklist item in Get Started for End Users</shortDescription>
+        <value>Stay on Track with Activities</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>List views help you easily find what you need by providing filtered groups of Contacts, Accounts, Opportunities, and other objects.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about List Views in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Visualize Processes</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemWorkMultipleRecordsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Work with Multiple Records checklist item in Get Started for End Users</shortDescription>
+        <value>Work with Multiple Records Using List Views</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
+        <value>NPSP includes 87 of the most commonly-used constituent and fundraising reports. Use these reports as is, or customize them.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about NPSP Reports in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
+        <value>Run Reports</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
+        <value>Reports Workbook</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemPrebuiltNPSPReportTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Prebuilt NPSP Report checklist item in Get Started for End Users</shortDescription>
+        <value>Run a Prebuilt NPSP Report</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Standard Report Type checklist item in Get Started for End Users</shortDescription>
+        <value>The Lightning Report Builder gives you the ability to create your own custom reports using standard report types. The report type you choose determines the objects and fields available in your report.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Standard Report Type checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Standard Report Types in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypePriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Standard Report Type checklist item in Get Started for End Users</shortDescription>
+        <value>Create Reports</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemStandardReportTypeTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Standard Report Type checklist item in Get Started for End Users</shortDescription>
+        <value>Create a Report from a Standard Report Type</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of View Dashboard checklist item in Get Started for End Users</shortDescription>
+        <value>Dashboards pull data from one or more reports and display it side by side in the same window. NPSP includes three dashboards that you can use as is or customize.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of View Dashboard checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Dashboards in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of View Dashboard checklist item in Get Started for End Users</shortDescription>
+        <value>View Dashboards</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemViewDashboardTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of View Dashboard checklist item in Get Started for End Users</shortDescription>
+        <value>View a Dashboard</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistYourDataDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Understand Your Data checklist item in Get Started for End Users</shortDescription>
+        <value>Reports and Dashboards help organize your data so that you can tell the story of your organization&apos;s impact. NPSP includes out-of-the-box reports, or you can create your own.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistYourDataTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Understand Your Data checklist item in Get Started for End Users</shortDescription>
+        <value>Understand Your Data</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
+        <value>When you raise funds for a specific purpose, you want to be sure you are honoring the donor intent. Ensure donations are allocated correctly with General Allocation Units.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Donation Allocations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
+        <value>Create Allocations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCaptureDonorIntentTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Capture Donor Intent checklist item in Get Started for End Users</shortDescription>
+        <value>Capture Donor Intent with Donation Allocations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Collect Gifts checklist item in Get Started for End Users</shortDescription>
+        <value>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit&apos;s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Collect Gifts checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Recurring Donations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Collect Gifts checklist item in Get Started for End Users</shortDescription>
+        <value>Create Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemCollectGiftsTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Collect Gifts checklist item in Get Started for End Users</shortDescription>
+        <value>Collect Sustaining Gifts with Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Individual Donation checklist item in Get Started for End Users</shortDescription>
+        <value>For most nonprofits, donations come from individual contributions. Track individual donations by creating an Opportunity from a Contact record.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Individual Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Individual Donations in Trailhead</value>
+    </labels>
+     <labels>
+    <fullName>gseuChecklistItemDonationIndividualPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Individual Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Enter Individual Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationIndividualTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Individual Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Enter a Donation from an Individual</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Organization Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Institutional and corporate giving are an important source of nonprofit support. Track organizational giving by creating an Opportunity from an Account record.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Organization Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Organization Donations in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Org Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Enter Organization Donations</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemDonationOrganizationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Organization Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Enter a Donation from an Organization</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Track Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Campaigns let you to track your constituent outreach in Salesforce. Use the Primary Campaign field on Opportunities to better evaluate your fundraising efforts.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link label of Track Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Learn more about Campaigns in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of Track Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Track Constituent Outreach</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemTrackDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Track Donation checklist item in Get Started for End Users</shortDescription>
+        <value>Track Donation Sources with Campaigns</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistTrackDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of Track Donation checklist in Get Started for End Users</shortDescription>
+        <value>In NPSP, you track donations, grants, pledges, and other types of revenue using the Opportunity object. You can create donations from an individual or from an organization such as a foundation, business, or government entity.</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistTrackDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of Track Donation checklist in Get Started for End Users</shortDescription>
+        <value>Track Donations and Other Income Types with NPSP</value>
+    </labels>
+    <labels>
+        <fullName>gseuChecklistItemExtraTwoMinutesVideo</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Extra Info in the Item &apos;2 Minute Video&apos;</shortDescription>
+        <value>2 Minute Video</value>
     </labels>
     <labels>
         <fullName>commonFieldsNotFound</fullName>
@@ -8329,6 +8942,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Days Remaining in Free Trial</value>
     </labels>
     <labels>
+        <fullName>gseuExploreTrailheadButton</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the button on the Trailhead component.</shortDescription>
+        <value>Explore Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gseuTrailheadText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component</shortDescription>
+        <value>Learn even more about Nonprofit Cloud and Salesforce.</value>
+    </labels>
+    <labels>
         <fullName>gsFollowUpApplicationStatus</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -8360,7 +8989,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Submitted Status label for the application status component</shortDescription>
         <value>Submitted</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>gsVideoHeaderLength</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -13828,7 +14457,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
-        <value>Marketing/Engagement Learning Path</value>
+        <value>Engagement Learning Path</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
@@ -13909,5 +14538,93 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Video header title in Get Started</shortDescription>
         <value>Get Started on NPSP</value>
+    </labels>
+    <labels>
+        <fullName>gseuPageTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the End User Get Started Page</shortDescription>
+        <value>SETUP CHECKLIST</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemQuestionsAnsweredLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Questions Answered label in Get Started Resources section for End Users</shortDescription>
+        <value>Get Your Questions Answered</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemQuestionsAnsweredLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Questions Answered link label in Get Started Resources section for End Users</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemAboutNPSPLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>About NPSP label in Get Started Resources section for End Users</shortDescription>
+        <value>Learn More About NPSP</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemAboutNPSPLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>About NPSP link label in Get Started Resources section for End Users</shortDescription>
+        <value>NPSP Documentation</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWatchVideosLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Watch Videos label in Get Started Resources section for End Users</shortDescription>
+        <value>Watch How-To Videos</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWatchVideosLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Watch Videos link label in Get Started Resources section for End Users</shortDescription>
+        <value>NPSP Videography Channel</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWebinarsLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Webinars label in Get Started Resources section for End Users</shortDescription>
+        <value>Find Events and Webinars</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemWebinarsLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Webinars link label in Get Started Resources section for End Users</shortDescription>
+        <value>Salesforce Calendar</value>
+    </labels>
+    <labels>
+        <fullName>gseuResourcesItemCommunityGroupLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Community Group label in Get Started Resources section for End Users</shortDescription>
+        <value>Find a Community Group</value>
+    </labels>
+     <labels>
+        <fullName>gseuResourcesItemCommunityGroupLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Community Group link label in Get Started Resources section for End Users</shortDescription>
+        <value>Trailhead Community</value>
     </labels>
 </CustomLabels>
