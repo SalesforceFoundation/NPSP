@@ -8,4 +8,5 @@ npsp_lex_locators["record"]["related"]["dd-link"]='//div[contains(@class,"action
 npsp_lex_locators["record"]["related"]["button"]="//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//a[@title='{}']"
 npsp_lex_locators['schedule_payments']="//a[@title ='{}']"
 npsp_lex_locators['payments']['no_payments']="//tbody/tr[./th//a[contains(@title,'PMT')]]/td[3]"
+npsp_lex_locators['related_list_items']='//article[contains(@class,"slds-card_boundary")][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-grid")]/following-sibling::div[.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]'
 
