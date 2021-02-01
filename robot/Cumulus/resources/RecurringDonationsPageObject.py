@@ -27,7 +27,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     def click_rd2_modal_button(self, name):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
-        self.builtin.sleep(1,"Wait for the elevate message to appear on the modal")
+        self.builtin.sleep(2,"Wait for the elevate message to appear on the modal")
         self.selenium.wait_until_element_is_visible(btnlocator,60)
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
