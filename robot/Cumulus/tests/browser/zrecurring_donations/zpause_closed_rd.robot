@@ -45,7 +45,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          The warning message that user cannot pause a closed recurring donation is displayed.
 
 
-    [tags]                                  unstable               W-8116628            feature:RD2
+    [tags]                                                W-8116628            feature:RD2
 
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
