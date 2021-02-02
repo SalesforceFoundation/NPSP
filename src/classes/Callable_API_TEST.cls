@@ -156,66 +156,64 @@ private with sharing class Callable_API_TEST {
     }
 
     /**
-     * @description Verifies if Scheduled Jobs are scheduled
+     * @description Verifies that job is scheduled
      */
     @IsTest
     private static void shouldScheduleJob() {
         Id scheduledJobId;
+        String jobName = 'JOB.SCHEDULE TEST';
 
         Integer nextYear = Date.today().year() + 1;
         String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
 
         Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
-        Map<String, Object> args = new Map<String, Object>{ 
-            'ScheduledJobName' => 'JOB.SCHEDULE TEST', // Name needs to be unique
+        Map<String, Object> args = new Map<String, Object>{
+            'ScheduledJobName' => jobName,
             'ScheduledJobCronExpression' => cronExpression, 
-            'ScheduledJobClass' => 'CRLP_Account_BATCH' // Any Schedulable Apex Class can be used
+            'ScheduledJobClass' => 'CRLP_Account_BATCH'
         };
-        
+
         Test.startTest();
-
-        Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
-        scheduledJobId = (Id) scheduledJobIdObject;
-
+        scheduledJobId = (Id) callableApi.call(JOB_SCHEDULE_ACTION, args);
         Test.stopTest();
 
         CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :scheduledJobId];
         
-        // Verify that Scheduled Job is scheduled to run at the right time
-        System.assertEquals(cronExpression, cronTrigger.CronExpression);
-
-        // Verify that Scheduled Job Name is set correctly
-        System.assertEquals('JOB.SCHEDULE TEST', cronTrigger.CronJobDetail.Name);
-
-        // Scheduled Job Class cannot be verified as not available on CronTrigger or CronJobDetail
+        System.assertEquals(cronExpression, cronTrigger.CronExpression,
+            'CronExpression retrieved from CronTrigger should equal input ScheduledJobCronExpression');
+        System.assertEquals(jobName, cronTrigger.CronJobDetail.Name,
+            'Job name retrieved from CronTrigger should equal input ScheduledJobName');
     }
 
     /**
-     * @description Verifies error is thrown if non-existant Apex Class is used for Job.Schedule
+     * @description Verifies meaningful error is thrown if nonexistent Apex Class is used for Job.Schedule
      */
     @IsTest
-    private static void shouldThrowErrorForNonExistantApexClass() {
-        Test.startTest();
+    private static void shouldThrowErrorForNonExistentApexClass() {
+        String errorMessage = '';
+        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
 
         Integer nextYear = Date.today().year() + 1;
         String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
 
         Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
-        Map<String, Object> args = new Map<String, Object>{ 
-            'ScheduledJobName' => 'JOB.SCHEDULE TEST', // Name needs to be unique
-            'ScheduledJobCronExpression' => cronExpression, 
-            'ScheduledJobClass' => 'DOES_NOT_EXIST'
+        Map<String, Object> args = new Map<String, Object>{
+                'ScheduledJobName' => 'JOB.SCHEDULE TEST',
+                'ScheduledJobCronExpression' => cronExpression,
+                'ScheduledJobClass' => 'DOES_NOT_EXIST'
         };
-        
-        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
+
+        Test.startTest();
 
         try {
-            Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
-            System.assert(false, 'The exception was not thrown');
+            callableApi.call(JOB_SCHEDULE_ACTION, args);
+
         } catch(Callable_API.MalformedMethodInvocationException apiException){
-            System.assert(apiException.getMessage().contains(expectedMessagePortion), apiException.getMessage());
+            errorMessage = apiException.getMessage();
         }
 
         Test.stopTest();
+
+        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for nonexistent apex class');
     }
 }
