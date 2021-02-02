@@ -27,6 +27,8 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     def click_rd2_modal_button(self, name):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
+        self.builtin.sleep(2,"Wait for the elevate message to appear on the modal")
+        self.selenium.wait_until_element_is_visible(btnlocator,60)
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
 
@@ -54,7 +56,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         for key, value in kwargs.items():
             locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
             # Recurring Donation Name field only appears on a regression org hence this check
-            if key == "Recurring Donation Name" and ns=="npsp__":
+            if key == "Recurring Donation Name":
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
@@ -157,7 +159,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     self.selenium.wait_until_element_is_visible(locator)
                     self.selenium.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
-                    self.selenium.wait_until_element_is_visible(selection_value,30)
+                    self.selenium.wait_until_element_is_visible(selection_value,60)
                     self.selenium.scroll_element_into_view(selection_value)
                     self.selenium.click_element(selection_value)
                 else:
@@ -169,7 +171,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         view page, clicks the button and waits for the modal to appear"""
         locator = npsp_lex_locators["bge"]["button"].format("Pause")
         pause_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_element_is_visible(pause_button)
+        self.selenium.wait_until_element_is_visible(pause_button,60)
         self.selenium.click_element(locator)
         if type != "Closed":
             btnlocator = npsp_lex_locators["button-with-text"].format("Save")
