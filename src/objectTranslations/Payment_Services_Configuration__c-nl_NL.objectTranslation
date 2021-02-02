@@ -1,40 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuratie betaalservices</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraties betaalservices</value>
-    </caseValues>
-    <fields>
-        <label>Is geheim</label>
-        <name>Is_Secret__c</name>
-    </fields>
-    <fields>
-        <label>Sleutel</label>
-        <name>Key__c</name>
-    </fields>
-    <fields>
-        <label>Servicesleutel</label>
-        <name>Service_Key__c</name>
-    </fields>
-    <fields>
-        <label>Service</label>
-        <name>Service__c</name>
-    </fields>
-    <fields>
-        <label>Waarde</label>
-        <name>Value__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Payment Configuration Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Naam configuratie betaalservices</nameFieldLabel>
+  <fields>
+    <name>Is_Secret__c</name>
+    <label>Is geheim</label>
+  </fields>
+  <fields>
+    <name>Key__c</name>
+    <label>Sleutel</label>
+  </fields>
+  <fields>
+    <name>Service_Key__c</name>
+    <label>Servicesleutel</label>
+  </fields>
+  <fields>
+    <name>Service__c</name>
+    <label>Service</label>
+  </fields>
+  <fields>
+    <name>Value__c</name>
+    <label>Waarde</label>
+  </fields>
+  <layouts>
+    <layout>Payment Configuration Layout</layout>
+    <sections>
+      <label>Aangepaste koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam configuratie betaalservices</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam configuratie betaalservices</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuratie betaalservices</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraties betaalservices</value>
+  </caseValues>
 </CustomObjectTranslation>

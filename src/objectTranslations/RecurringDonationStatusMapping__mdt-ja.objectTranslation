@@ -1,29 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>継続支援状況の対応付け</value>
-    </caseValues>
-    <fields>
-        <help>有効なエントリは、[有効]、[失効]、[クローズ] です。</help>
-        <label>継続支援の状態</label>
-        <name>State__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>有効</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>クローズ</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>失効</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>状態に対応付けられている継続支援の状況の API 参照名。</help>
-        <label>継続支援の状況</label>
-        <name>Status__c</name>
-    </fields>
+  <fields>
+    <name>State__c</name>
+    <help>有効なエントリは、[有効]、[失効]、[クローズ] です。</help>
+    <label>継続支援の状態</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>有効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>失効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>クローズ</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>状態に対応付けられている継続支援の状況の API 参照名。</help>
+    <label>継続支援の状況</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>継続支援状況の対応付け</value>
+  </caseValues>
 </CustomObjectTranslation>

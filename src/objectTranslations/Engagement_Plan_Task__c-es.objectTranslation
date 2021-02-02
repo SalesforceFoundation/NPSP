@@ -1,126 +1,129 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Tarea de plan de acción</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Tareas de planes de acción</value>
-    </caseValues>
-    <fields>
-        <help>Búsqueda del usuario al que desea asignar la tarea. Si deja este campo en blanco, NPSP asignará la tarea basada en la persona asignada predeterminada de la plantilla del plan de acción.</help>
-        <label>Asignado a</label>
-        <name>Assigned_To__c</name>
-        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
-    </fields>
-    <fields>
-        <help>Introduzca información adicional sobre la tarea.</help>
-        <label>Comentarios</label>
-        <name>Comments__c</name>
-    </fields>
-    <fields>
-        <help>La cantidad de días después de la creación del plan de acción, o de la fecha de vencimiento de la tarea principal, cuando vence esta tarea.</help>
-        <label>Días después</label>
-        <name>Days_After__c</name>
-    </fields>
-    <fields>
-        <help>La plantilla para esta tarea del plan de acción.</help>
-        <label>Plantilla del plan de acción</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Tareas del plan de acción</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indica que esta tarea del plan de acción es dependiente de una tarea principal.</help>
-        <label>Tarea principal</label>
-        <name>Parent_Task__c</name>
-        <relationshipLabel>Tareas del plan de acción</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La prioridad de esta tarea</help>
-        <label>Prioridad</label>
-        <name>Priority__c</name>
-        <picklistValues>
-            <masterLabel>High</masterLabel>
-            <translation>Alta</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Low</masterLabel>
-            <translation>Baja</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Medium</masterLabel>
-            <translation>Media</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La hora en el día de vencimiento donde el recordatorio aparece.</help>
-        <label>Hora del recordatorio</label>
-        <name>Reminder_Time__c</name>
-    </fields>
-    <fields>
-        <help>Establece un recordatorio para la tarea.</help>
-        <label>Recordatorio</label>
-        <name>Reminder__c</name>
-    </fields>
-    <fields>
-        <help>Determina si un correo electrónico es enviado al usuario en el campo Asignado a en la Tarea cuando la tarea se vuelve activa. Tareas dependientes son activadas cuando su Tarea principal se completa.</help>
-        <label>Enviar correo electrónico</label>
-        <name>Send_Email__c</name>
-    </fields>
-    <fields>
-        <help>El estado de la tarea. Tareas dependientes se establecen con estado &quot;Esperando a tarea principal&quot; hasta que la tarea principal se completa.</help>
-        <label>Estado</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Completado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deferred</masterLabel>
-            <translation>Diferido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>En curso</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Started</masterLabel>
-            <translation>No iniciado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Waiting on someone else</masterLabel>
-            <translation>Esperando a alguien más</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>El tipo de tarea</help>
-        <label>Tipo</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Call</masterLabel>
-            <translation>Llamada</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>Correo electrónico</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Meeting</masterLabel>
-            <translation>Reunión</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>Otro</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Engagement Plan Task Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Asunto</nameFieldLabel>
+  <fields>
+    <name>Assigned_To__c</name>
+    <help>Búsqueda del usuario al que desea asignar la tarea. Si deja este campo en blanco, NPSP asignará la tarea basada en la persona asignada predeterminada de la plantilla del plan de acción.</help>
+    <label>Asignado a</label>
+  </fields>
+  <fields>
+    <name>Comments__c</name>
+    <help>Introduzca información adicional sobre la tarea.</help>
+    <label>Comentarios</label>
+  </fields>
+  <fields>
+    <name>Days_After__c</name>
+    <help>La cantidad de días después de la creación del plan de acción, o de la fecha de vencimiento de la tarea principal, cuando vence esta tarea.</help>
+    <label>Días después</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>La plantilla para esta tarea del plan de acción.</help>
+    <relationshipLabel>Tareas del plan de acción</relationshipLabel>
+    <label>Plantilla del plan de acción</label>
+  </fields>
+  <fields>
+    <name>Parent_Task__c</name>
+    <help>Indica que esta tarea del plan de acción es dependiente de una tarea principal.</help>
+    <relationshipLabel>Tareas del plan de acción</relationshipLabel>
+    <label>Tarea principal</label>
+  </fields>
+  <fields>
+    <name>Priority__c</name>
+    <help>La prioridad de esta tarea</help>
+    <label>Prioridad</label>
+    <picklistValues>
+      <masterLabel>High</masterLabel>
+      <translation>Alta</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Medium</masterLabel>
+      <translation>Media</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Low</masterLabel>
+      <translation>Baja</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Reminder_Time__c</name>
+    <help>La hora en el día de vencimiento donde el recordatorio aparece.</help>
+    <label>Hora del recordatorio</label>
+  </fields>
+  <fields>
+    <name>Reminder__c</name>
+    <help>Establece un recordatorio para la tarea.</help>
+    <label>Recordatorio</label>
+  </fields>
+  <fields>
+    <name>Send_Email__c</name>
+    <help>Determina si un correo electrónico es enviado al usuario en el campo Asignado a en la Tarea cuando la tarea se vuelve activa. Tareas dependientes son activadas cuando su Tarea principal se completa.</help>
+    <label>Enviar correo electrónico</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>El estado de la tarea. Tareas dependientes se establecen con estado "Esperando a tarea principal" hasta que la tarea principal se completa.</help>
+    <label>Estado</label>
+    <picklistValues>
+      <masterLabel>Not Started</masterLabel>
+      <translation>No iniciado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>En curso</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>Completado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Waiting on someone else</masterLabel>
+      <translation>Esperando a alguien más</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deferred</masterLabel>
+      <translation>Diferido</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>El tipo de tarea</help>
+    <label>Tipo</label>
+    <picklistValues>
+      <masterLabel>Call</masterLabel>
+      <translation>Llamada</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Meeting</masterLabel>
+      <translation>Reunión</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>Otro</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>Correo electrónico</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Task Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Asunto</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Asunto</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Tarea de plan de acción</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Tareas de planes de acción</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,71 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plan de acción</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Planes de acción</value>
-    </caseValues>
-    <fields>
-        <label>Cuenta</label>
-        <name>Account__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Campaña</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Caso</label>
-        <name>Case__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Tareas completas</label>
-        <name>Completed_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Contacto</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Plantilla del plan de acción</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Oportunidad</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Donación recurrente</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Planes de participación</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Estado</label>
-        <name>Status__c</name>
-    </fields>
-    <fields>
-        <label>Cantidad de tareas en el plan</label>
-        <name>Total_EP_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Cantidad de tareas</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Engagement Plan Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Número del plan de acción</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Cuenta</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Campaña</label>
+  </fields>
+  <fields>
+    <name>Case__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Caso</label>
+  </fields>
+  <fields>
+    <name>Completed_Tasks__c</name>
+    <label>Tareas completas</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Contacto</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>Planes de acción</relationshipLabel>
+    <label>Plantilla del plan de acción</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Oportunidad</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>Planes de participación</relationshipLabel>
+    <label>Donación recurrente</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>Estado</label>
+  </fields>
+  <fields>
+    <name>Total_EP_Tasks__c</name>
+    <label>Cantidad de tareas en el plan</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>Cantidad de tareas</label>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Número del plan de acción</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Número del plan de acción</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Plan de acción</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Planes de acción</value>
+  </caseValues>
 </CustomObjectTranslation>
