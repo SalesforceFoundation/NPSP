@@ -1696,6 +1696,7 @@
         <members>CRLP_SaveSuccess</members>
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
+        <members>CallableApiJobScheduleInvalidClass</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
         <members>CallableApiProcessingError</members>
