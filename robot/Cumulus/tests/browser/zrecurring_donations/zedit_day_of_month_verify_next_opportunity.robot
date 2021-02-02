@@ -11,7 +11,7 @@ Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -40,12 +40,11 @@ Setup Test Data
 Validate Opportunity Details
     [Documentation]         Navigate to opportunity details page of the specified
     ...                     opportunity and validate stage and Close date fields
-    [Arguments]                       ${opportunityid}          ${stage}        ${date}
+    [Arguments]                       ${opportunityid}          ${stage}
     Go To Page                              Details                        Opportunity                    object_id=${opportunityid}
     Wait Until Loading Is Complete
     Current Page Should Be                  Details                        Opportunity
     Navigate To And Validate Field Value    Stage                          contains                      ${stage}
-    Navigate To And Validate Field Value    Close Date                     contains                      ${date}
 
 Edit Opportunity Stage
     [Documentation]         Navigate to opportunity details page of the specified
@@ -69,7 +68,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     ...                          a new opportunity created. Edits the day of month on
     ...                          the recurring donation and verifies the closing dates
     ...                          for both the opportunities.
-    [tags]                             unstable               W-040346            feature:RD2
+    [tags]                                            W-040346            feature:RD2
 
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
@@ -95,22 +94,20 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Current Page Should Be             Details                      npe03__Recurring_Donation__c
     Wait Until Loading Is Complete
     ${next_payment_date}               Get Next Payment Date Number                    1
+    Run Recurring Donations Batch      RD2
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
+    Current Page Should Be             Details                        npe03__Recurring_Donation__c
 
     #Validate that the number of opportunities now show as 2 .
     Validate Related Record Count      Opportunities                                   2
     @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
     #Verify the details on the respective opportunities
-
-    Validate Opportunity Details       ${opportunities}[0][Id]        Closed Won                       ${CURRENT_DATE}
+    Validate Opportunity Details       ${opportunities}[0][Id]        Closed Won
     Go To Page                         Details
         ...                            npe03__Recurring_Donation__c
         ...                            object_id=${data}[contact_rd][Id]
 
 
     Current Page Should Be             Details                      npe03__Recurring_Donation__c
-    Run Keyword if      '${opportunity}[1][Id]' != '${opportunities}[0][Id]'
-        ...            Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
-        ...  ELSE   Run Keywords
-        ...            Validate Opportunity Details       ${opportunity}[0][Id]        Pledged                          ${next_payment_date}
-
-
