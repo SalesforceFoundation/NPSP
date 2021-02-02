@@ -34,13 +34,15 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description Tests specific to Callable API.
 */
-@IsTest(isParallel=true)
+// isParallel is FALSE as shouldScheduleJob method touches CronJobDetail which cannot be accessed when testing in parallel
+@IsTest(isParallel=false)
 private with sharing class Callable_API_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
     private static final String CRLP_IS_ENABLED_ACTION = 'CRLP.iscrlpenabled';
     private static final String RD2_EXECUTE_MIGRATION_ACTION = 'RD2.ExecuteDataMigration';
     private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
+    private static final String JOB_SCHEDULE_ACTION = 'Job.Schedule';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -151,5 +153,69 @@ private with sharing class Callable_API_TEST {
         AsyncApexJob job = new TEST_SObjectGateway.AsyncApexJobGateway()
             .getRecord('RD2_DataMigration_BATCH');
         System.assertNotEquals(null, job, 'The batch should be executed');
+    }
+
+    /**
+     * @description Verifies if Scheduled Jobs are scheduled
+     */
+    @IsTest
+    private static void shouldScheduleJob() {
+        Id scheduledJobId;
+
+        Integer nextYear = Date.today().year() + 1;
+        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
+
+        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>{ 
+            'ScheduledJobName' => 'JOB.SCHEDULE TEST', // Name needs to be unique
+            'ScheduledJobCronExpression' => cronExpression, 
+            'ScheduledJobClass' => 'CRLP_Account_BATCH' // Any Schedulable Apex Class can be used
+        };
+        
+        Test.startTest();
+
+        Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
+        scheduledJobId = (Id) scheduledJobIdObject;
+
+        Test.stopTest();
+
+        CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :scheduledJobId];
+        
+        // Verify that Scheduled Job is scheduled to run at the right time
+        System.assertEquals(cronExpression, cronTrigger.CronExpression);
+
+        // Verify that Scheduled Job Name is set correctly
+        System.assertEquals('JOB.SCHEDULE TEST', cronTrigger.CronJobDetail.Name);
+
+        // Scheduled Job Class cannot be verified as not available on CronTrigger or CronJobDetail
+    }
+
+    /**
+     * @description Verifies error is thrown if non-existant Apex Class is used for Job.Schedule
+     */
+    @IsTest
+    private static void shouldThrowErrorForNonExistantApexClass() {
+        Test.startTest();
+
+        Integer nextYear = Date.today().year() + 1;
+        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
+
+        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>{ 
+            'ScheduledJobName' => 'JOB.SCHEDULE TEST', // Name needs to be unique
+            'ScheduledJobCronExpression' => cronExpression, 
+            'ScheduledJobClass' => 'DOES_NOT_EXIST'
+        };
+        
+        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
+
+        try {
+            Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
+            System.assert(false, 'The exception was not thrown');
+        } catch(Callable_API.MalformedMethodInvocationException apiException){
+            System.assert(apiException.getMessage().contains(expectedMessagePortion), apiException.getMessage());
+        }
+
+        Test.stopTest();
     }
 }
