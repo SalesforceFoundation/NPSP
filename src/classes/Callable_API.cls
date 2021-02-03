@@ -146,7 +146,7 @@ global with sharing class Callable_API implements System.Callable {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
-            } when 'job.schedule' { 
+            } when 'apex.schedulejob' { 
                 // This method schedules the specified Schedulable class using the specified job name & cron expression.
                 // It should only be used for Schedulable classes that are in the NPSP Managed Package.
                 // It returns the Job ID of the Scheduled Job.
