@@ -49,9 +49,9 @@ public class CallableApiParameters {
     public static final String PARAM_PROCESSING_BOUNDARY = 'ProcessingBoundary';
     public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
     public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
-    public static final String PARAM_SCHEDULED_JOB_NAME = 'ScheduledJobName';
-    public static final String PARAM_SCHEDULED_JOB_CRON_EXPRESSION = 'ScheduledJobCronExpression';
-    public static final String PARAM_SCHEDULED_JOB_CLASS = 'ScheduledJobClass';
+    public static final String PARAM_SCHEDULED_JOB_NAME = 'JobName';
+    public static final String PARAM_SCHEDULED_JOB_CRON_EXPRESSION = 'CronExpression';
+    public static final String PARAM_SCHEDULED_JOB_CLASS = 'ApexClass';
     public static final String PARAM_RECORD_IDS = 'RecordIds';
     public static final String PARAM_START_DATE = 'StartDate';
     public static final String PARAM_END_DATE = 'EndDate';
