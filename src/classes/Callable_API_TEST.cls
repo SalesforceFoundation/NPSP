@@ -34,8 +34,7 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description Tests specific to Callable API.
 */
-// isParallel is FALSE as shouldScheduleJob method touches CronJobDetail which cannot be accessed when testing in parallel
-@IsTest(isParallel=false)
+@IsTest(isParallel=true)
 private with sharing class Callable_API_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
@@ -153,67 +152,5 @@ private with sharing class Callable_API_TEST {
         AsyncApexJob job = new TEST_SObjectGateway.AsyncApexJobGateway()
             .getRecord('RD2_DataMigration_BATCH');
         System.assertNotEquals(null, job, 'The batch should be executed');
-    }
-
-    /**
-     * @description Verifies that job is scheduled
-     */
-    @IsTest
-    private static void shouldScheduleJob() {
-        Id scheduledJobId;
-        String jobName = 'JOB.SCHEDULE TEST';
-
-        Integer nextYear = Date.today().year() + 1;
-        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
-
-        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
-        Map<String, Object> args = new Map<String, Object>{
-            'ScheduledJobName' => jobName,
-            'ScheduledJobCronExpression' => cronExpression, 
-            'ScheduledJobClass' => 'CRLP_Account_BATCH'
-        };
-
-        Test.startTest();
-        scheduledJobId = (Id) callableApi.call(JOB_SCHEDULE_ACTION, args);
-        Test.stopTest();
-
-        CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :scheduledJobId];
-        
-        System.assertEquals(cronExpression, cronTrigger.CronExpression,
-            'CronExpression retrieved from CronTrigger should equal input ScheduledJobCronExpression');
-        System.assertEquals(jobName, cronTrigger.CronJobDetail.Name,
-            'Job name retrieved from CronTrigger should equal input ScheduledJobName');
-    }
-
-    /**
-     * @description Verifies meaningful error is thrown if nonexistent Apex Class is used for Job.Schedule
-     */
-    @IsTest
-    private static void shouldThrowErrorForNonExistentApexClass() {
-        String errorMessage = '';
-        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
-
-        Integer nextYear = Date.today().year() + 1;
-        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
-
-        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
-        Map<String, Object> args = new Map<String, Object>{
-                'ScheduledJobName' => 'JOB.SCHEDULE TEST',
-                'ScheduledJobCronExpression' => cronExpression,
-                'ScheduledJobClass' => 'DOES_NOT_EXIST'
-        };
-
-        Test.startTest();
-
-        try {
-            callableApi.call(JOB_SCHEDULE_ACTION, args);
-
-        } catch(Callable_API.MalformedMethodInvocationException apiException){
-            errorMessage = apiException.getMessage();
-        }
-
-        Test.stopTest();
-
-        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for nonexistent apex class');
     }
 }
