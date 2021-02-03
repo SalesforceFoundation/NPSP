@@ -35,7 +35,7 @@
 * @description API class that handles apex jobs
 */
 
-public with sharing class CallableApiApexDelegationService {
+public inherited sharing class CallableApiApexDelegationService {
 
     /*******************************************************************************************************
     * @description Handles scheduling apex jobs specified in params
