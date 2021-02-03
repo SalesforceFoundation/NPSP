@@ -14,7 +14,8 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         when running NPSP tests in a different repo"""
         url_template = "{root}/lightning/o/{object}/list"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
+        # object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
+        object_name = "{}{}".format(self.npsp.get_npsp_namespace_prefix(), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
@@ -47,7 +48,7 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         time.sleep(2)
         self.npsp.click_link_with_text(di_name)
         self.pageobjects.current_page_should_be("Details","DataImport__c")
-        
+
 
 @pageobject("Details", "DataImport__c")
 class DataImportDetailPage(BaseNPSPPage, DetailPage):
