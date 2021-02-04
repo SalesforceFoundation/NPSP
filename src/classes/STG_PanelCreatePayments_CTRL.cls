@@ -43,11 +43,11 @@ public with sharing class STG_PanelCreatePayments_CTRL extends STG_Panel {
     * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
     */
     public String getNamespace() {
-      String namespace = UTIL_Namespace.getNamespace();
-      if (String.isBlank(namespace)) {
-        return 'c';
-      }
-      return namespace;
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
     }
 
     /**
