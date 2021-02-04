@@ -21,7 +21,7 @@
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
             <div id="stgPanelRenameHouseholdsIllustration" />
         </apex:outputPanel>
-        <apex:outputPanel rendered="={!hasAccess}">
+        <apex:outputPanel rendered="{!hasAccess}">
             <div class="slds-text-body_small slds-m-around_medium">
                 <c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnHHNaming}" />
             </div>

@@ -22,7 +22,7 @@
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
             <div id="stgPanelUpdatePrimartContactIllustration" />
         </apex:outputPanel>
-        <apex:outputPanel rendered="={!hasAccess}">
+        <apex:outputPanel rendered="{!hasAccess}">
             <div class="slds-text-body_small slds-m-around_medium"><c:UTIL_HtmlOutput html="{!$Label.stgHelpPrimaryContactBatch}" /></div>
             <c:UTIL_PageMessages />
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">

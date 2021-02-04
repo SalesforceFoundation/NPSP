@@ -23,7 +23,7 @@
             <div id="stgPanelRecurringDonationBatchIllustration" />
         </apex:outputPanel>
 
-        <apex:outputPanel rendered="={!hasAccess}">
+        <apex:outputPanel rendered="{!hasAccess}">
             <div class="slds-text-body_small slds-m-around_medium">
                 <apex:outputText value="{!pageDescription}" escape="false" />
             </div>
