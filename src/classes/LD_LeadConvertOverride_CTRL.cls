@@ -466,7 +466,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
                     if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
                        hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
-                        HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
+//                        HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
+                        Contacts contacts = new Contacts(new list<Contact>{con});
+                        contacts.insertHouseholdsAfterInsert(new list<Contact>{con});
                         UTIL_DMLService.updateRecord(con);
                     }
                 }
