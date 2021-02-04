@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Erreur</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Erreurs</value>
     </caseValues>
     <fields>
         <help>Contexte ayant généré l’erreur, s’il est connu.</help>
@@ -49,18 +49,28 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
+        <help>L&apos;ID Salesforce de l&apos;enregistrement associé à cette erreur.</help>
+        <label>ID d&apos;enregistrement associé</label>
+        <name>Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque cette option est sélectionnée, l&apos;enregistrement spécifié dans ID d&apos;enregistrement associé est retraité dans le processus suivant. Si le nouveau traitement réussit, ce champ est désélectionné. S&apos;applique aux types d&apos;erreur des processus planifiés.</help>
+        <label>Nouvelle tentative en attente ?</label>
+        <name>Retry_Pending__c</name>
+    </fields>
+    <fields>
         <help>Trace de pile pour l’erreur déclenchée, si disponible dynamiquement.</help>
         <label>Trace de pile</label>
         <name>Stack_Trace__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Error Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <nameFieldLabel>Numéro d&apos;erreur</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
 </CustomObjectTranslation>

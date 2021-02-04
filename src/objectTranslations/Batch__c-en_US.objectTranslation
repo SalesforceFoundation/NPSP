@@ -8,6 +8,10 @@
         <plural>true</plural>
         <value>Batches</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- BatchDetailView --></label>
+        <name>BatchDetailView</name>
+    </fieldSets>
     <fields>
         <label><!-- Batch Status --></label>
         <name>Batch_Status__c</name>

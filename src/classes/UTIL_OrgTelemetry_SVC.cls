@@ -56,10 +56,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_MaxNumRelatedOpps,
         Data_CountRdOpps,
         Data_CountRecurringDonations,
-        Data_CountRds,
+        Data_CountPaymentOpps,
         Data_CountErrorLog,
         Data_CountBDIRows,
-        Data_CountBGERows
+        Data_CountBGERows,
+        Data_CountGERowsBatch,
+        Data_CountGERowsLast30DaysBatch
     }
 
     /**
@@ -69,16 +71,26 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_HouseholdAcctModel,
         IsEnabled_AddressVerification,
         IsEnabled_AutomaticPayments,
+        IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
+        IsEnabled_GiftEntry,
+        IsEnabled_PaymentAllocations,
+        IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
+        Data_CountOppsWithMultiplePayments,
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //Data_OppPaymentsWithoutPaymentsEnabled,
         Data_CountRdOppsAll,
         Data_CountRdOppsOpenEnded,
         Data_CountRdsWithDiffAmount,
         Data_CountRecurringDonationsAll,
         Data_CountBDIRowsLast30Days,
         Data_CountBGERowsLast30Days,
+        Data_CountGERowsLast30DaysBatch,
         Data_MaxNumRelatedOpps,
+        DataCount_ONETIME_Use,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
         Org_IsEnabled_AdvancedMultiCurrency,
@@ -88,6 +100,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
     private Set<String> completedBatchStatuses = new Set<String>{ 'Aborted', 'Completed', 'Failed' };
     private Set<String> npspNamespaces = new Set<String> {'npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5'};
+
+    /**
+     * @description Field mapping method value in Data Import custom settings when Advanced Mapping is enabled
+     */
+    private final String DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
@@ -113,6 +130,28 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
+     * @description Determines if we should execute the telemetry code based on if the created custom metdata types
+     * are NPSP metadata type objects. 
+     * @param customMetadataTypeSet
+     */
+    @Future
+    public static void asyncProcessCMTChange(Set<String> customMetadataTypeSet) {
+
+        // We need to parse and check so that only NPSP specific actions will have telemetry execution.
+        // We don't want the telemetry logic to run for Abacus. 
+        // Currently, we will only call NPSP if it is an NPSP/Custom Rollup action. 
+        for (String customMetadataTypeName : customMetadataTypeSet) {
+            if (customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Group.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Rule.name().toLowerCase())) {
+                    
+                asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
+                break;
+            }
+        }
+    }
+
+    /**
      * @description Called by the NPSP Settings Page to subject the current state of NPSP Settings related telemetry
      * data if it has been changed in the NPSP Settings page.
      * @param telemetryType
@@ -124,7 +163,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
     /**
      * @description Called by the batch job to process an individual telemetry type
-     * Submits specific feature teletry statistics back to the License Management Org to assist
+     * Submits specific feature telemetry statistics back to the License Management Org to assist
      * with understanding how our customers are using NPSP functionality.
      * Each feature below must be matched to a SubscriberToLmo feature of the same name.
      * @param telemetryCategory
@@ -132,11 +171,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
         switch on (telemetryCategory) {
-
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
+                handleRD2EnablementState();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -175,6 +214,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Data_CountErrorLog {
                 handleErrorLogCount();
             }
+
+            when Data_CountPaymentOpps {
+                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), -1);
+
+                /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                         you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+                //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
+            }
         }
     }
 
@@ -197,11 +245,99 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (addrVerifSettings.Enable_Automatic_Verification__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
+                (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_GiftEntry.name(),
+                (stgSvc.stgGiftEntry.Enable_Gift_Entry__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
+                (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
+                (stgSvc.stgAllo.Payment_Allocations_Enabled__c == true));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
     }
 
+    /**
+    * @description Evaluate the state of the RD2 enablement
+    *   - 0 => RD2 Not enabled
+    *   - 1 => RD2 enabled, but MetaDeploy step was skipped
+    *   - 2 => RD2 enabled, metaDeploy is completed, NextPaymentDate rollup still enabled
+    *   - 10 => RD2 fully Enabled
+    */
+    private void handleRD2EnablementState() {
+        Integer rd2EnablementStateIndicator;
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            rd2EnablementStateIndicator = 0;
+
+        } else if (isMetaDeployNotCompleted()) {
+            rd2EnablementStateIndicator = 1;
+
+        } else if (!isNextPaymentDateRollupDisabled()) {
+            rd2EnablementStateIndicator = 2;
+
+        } else {
+            rd2EnablementStateIndicator = 10;
+        }
+
+        featureManager.setPackageIntegerValue(
+                TelemetryParameterName.DataCount_ONETIME_Use.name(),
+                rd2EnablementStateIndicator
+        );
+    }
+
+    /**
+    * @description Validate if RD2 MetaDeploy is not executed in the org by checking RD2 Enablement State and Day of Month value
+    * @return Boolean  
+    */
+    private Boolean isMetaDeployNotCompleted() {
+        RD2_EnablementDelegate_CTRL.EnablementState state = new RD2_EnablementDelegate_CTRL.EnablementState();
+
+        String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+
+        if (String.isNotBlank(jsonState)) {
+            state = (RD2_EnablementDelegate_CTRL.EnablementState) 
+                JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
+        }
+
+        List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
+            String.valueOf(npe03__Recurring_Donation__c.SObjectType),
+            SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
+        );
+
+        Boolean hasLastDay = false;
+        Boolean is31stRemoved = true;
+
+        for (SelectOption option : lastDayOfMonthOptions) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                hasLastDay = true;
+            } else if (option.getValue() == '31') {
+                is31stRemoved = false;
+            }
+        }
+
+        return !(state.isMetaLaunched && hasLastDay && is31stRemoved);
+    }
+
+    /**
+    * @description Validate if Next Payment Date Rollup is disabled
+    * @return Boolean  
+    */
+    private Boolean isNextPaymentDateRollupDisabled() {
+        List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
+        if (rdRollups == null) {
+            return true;
+        }
+
+        for (Rollup__mdt rlp : rdRollups) {
+            if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                return false;
+            }
+        }
+
+        return true;
+    }
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
      * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization. This accounts for
@@ -344,7 +480,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleBGECount() {
         try {
-            Integer bgeCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true');
+            Integer bgeCount = Database.countQuery(
+                'SELECT count() FROM DataImport__c '+
+                'WHERE CreatedDate = Last_n_days:30 '+
+                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                'AND (NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c = null OR '+
+                    'NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c <= 1)');
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
         } catch (Exception ex) {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);

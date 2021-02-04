@@ -4,13 +4,19 @@
   "features": [
     "StateAndCountryPicklist"
   ],
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
-    "orgPreferenceSettings": {
-      "chatterEnabled": true,
-      "disableParallelApexTesting": true,
-      "notesReservedPref01": true,
-      "s1DesktopEnabled": true
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
     }
   }
 }

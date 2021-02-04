@@ -1,0 +1,71 @@
+<template>
+    <template if:true={isLightningInput}>
+        <lightning-input data-id='inputComponent'
+                         value={value}
+                         checked={booleanValue}
+                         type={inputType}
+                         formatter={formatter}
+                         step={granularity}
+                         required={required}
+                         onchange={handleValueChange}
+                         label={fieldLabel}
+                         disabled={disabled}
+                         data-qa-locator={qaLocatorInput}>
+        </lightning-input>
+    </template>
+    <template if:true={isLookup}>
+        <lightning-record-edit-form object-api-name={lookupObjectApiName}>
+            <label class="slds-form-element__label">
+                <abbr class="slds-required" title="required" if:true={required}>* </abbr>
+                {fieldLabel}
+            </label>
+            <lightning-input-field data-id='inputComponent'
+                                   field-name={lookupFieldApiName}
+                                   onchange={handleValueChange}
+                                   required={required}
+                                   variant="label-hidden"
+                                   class="help-text-hidden"
+                                   value={value}
+                                   data-qa-locator={qaLocatorLookup}>
+            </lightning-input-field>
+        </lightning-record-edit-form>
+    </template>
+    <template if:true={isRichText}>
+        <label class="slds-form-element__label">
+            <abbr class="slds-required"
+                  title="required"
+                  if:true={required}>
+                *
+            </abbr>
+            {fieldLabel}
+        </label>
+        <lightning-input-rich-text data-id='inputComponent'
+                                   formats={richTextFormats}
+                                   value={value}
+                                   onblur={handleValueChangeSync}
+                                   label={fieldLabel}
+                                   valid={isRichTextValid}
+                                   message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
+                                   data-qa-locator={qaLocatorRichText}>
+        </lightning-input-rich-text>
+    </template>
+    <template if:true={isPicklist}>
+        <lightning-combobox data-id='inputComponent'
+                            value={value}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            options={picklistValues}
+                            data-qa-locator={qaLocatorPicklist}
+                            required={required}>
+        </lightning-combobox>
+    </template>
+    <template if:true={isTextArea}>
+        <lightning-textarea data-id='inputComponent'
+                            value={value}
+                            required={required}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            data-qa-locator={qaLocatorTextArea}>
+        </lightning-textarea>
+    </template>
+</template>

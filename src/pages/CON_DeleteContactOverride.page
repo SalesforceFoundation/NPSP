@@ -19,23 +19,23 @@
                 <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}"
                     id="delContactOnlyBtn"
                     action="{!deleteContactOnly}" 
-                    rendered="{!NOT(shouldDeleteContactAlone)}" 
+                    rendered="{!NOT(shouldDeleteContactAlone)}"
                     rerender="delForm"
                     styleClass="slds-button slds-button_neutral"
                 />
 
                 <apex:outputLink target="_self"
                     id="viewContactLink"
-                    title="{!$Label.REL_View_Contact_Record}" 
-                    value="/{!$CurrentPage.parameters.id}" 
+                    title="{!$Label.REL_View_Contact_Record}"
+                    value="/{!$CurrentPage.parameters.id}"
                     styleClass="slds-button slds-button_neutral {!IF(shouldDeleteContactAlone, 'slds-m-right_x-small', '')}">
                     {!$Label.REL_View_Contact_Record}
                 </apex:outputLink>
 
                 <apex:commandButton value="{!$Label.DeleteAccount}"
                     id="delAccountBtn"
-                    action="{!deleteAccount}" 
-                    rendered="{!NOT(shouldDeleteContactAlone)}" 
+                    action="{!deleteAccount}"
+                    rendered="{!canDeleteAccount}"
                     rerender="delForm"
                     styleClass="slds-button slds-button_brand"
                 />

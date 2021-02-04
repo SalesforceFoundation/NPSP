@@ -3,60 +3,60 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppe</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppe</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppe</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppe</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Group --></value>
+        <value>Filtergruppen</value>
     </caseValues>
     <fields>
-        <label><!-- Description --></label>
+        <label>Beschreibung</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Deleted --></label>
+        <label>Gelöscht</label>
         <name>Is_Deleted__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Filter Group Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Benutzerdefinierte Links</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label>Neuer Abschnitt</label>
             <section>New Section</section>
         </sections>
     </layouts>

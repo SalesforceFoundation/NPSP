@@ -425,7 +425,9 @@ public abstract class CRLP_Batch_Base {
                     // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
                 }
                 when RecurringDonations {
-                    whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
+                    // There is little value to restricting the query locator with an inner select based upon Opportunities, since almost all RDs will
+                    // be associated with an Opportunity.  A previous version of this code used an inner select that caused issues with timeouts in one large org.
+                    // Cost vs benefit analysis suggests that the value of the additional restriction is not worth the cost.
                 }
             }
             return whereClause;

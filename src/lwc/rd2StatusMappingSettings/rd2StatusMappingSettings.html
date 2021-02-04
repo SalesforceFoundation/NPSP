@@ -1,0 +1,91 @@
+<template>
+
+    <template if:true={hasMessage}>
+        <div class="slds-p-left_large slds-p-right_large" tabindex="-1">
+            <div class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small">
+                <div class={notificationClass} role="alert">
+                    <span class="slds-icon_container slds-m-right_small slds-no-flex slds-align-top">
+                        <lightning-icon icon-name={iconName} class="slds-p-right_small" variant="inverse" size="small">
+                        </lightning-icon>
+                    </span>
+
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">
+                            <lightning-formatted-rich-text value={message.body}></lightning-formatted-rich-text>
+                        </h2>
+                    </div>
+
+                    <lightning-button-icon icon-name="utility:close" variant="bare-inverse" class="slds-notify__close"
+                        size="large" onclick={handleCloseNotification}>
+                    </lightning-button-icon>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <lightning-layout multiple-rows="true" vertical-align="start">
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="12">
+            <lightning-formatted-rich-text value={labels.mappingIntro}></lightning-formatted-rich-text>
+        </lightning-layout-item>
+
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="12">
+            <lightning-formatted-rich-text value={labels.mappingDefinitions}>
+            </lightning-formatted-rich-text>
+        </lightning-layout-item>
+
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium " size="8">
+            <template if:true={isLoading}>
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text={labels.loadingMessage}></lightning-spinner>
+                        <c-util-stencil row-count="5" column-count="3"></c-util-stencil>
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={isLoading}>
+                <template if:true={isViewMode}>
+                    <lightning-datatable key-field="status" data={records} columns={viewColumns} hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+
+                <template if:false={isViewMode}>
+                    <c-custom-datatable key-field="status" data={records} columns={editColumns} hide-checkbox-column
+                        keyboard-mode="ACTION" data-navigation="enable" class="datatable-container"
+                        onpicklistchange={handleStateChange}>
+                    </c-custom-datatable>
+                </template>
+            </template>
+        </lightning-layout-item>
+
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="4">
+        </lightning-layout-item>
+
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium slds-p-bottom_large" size="8">
+            <div class="slds-grid slds-grid_align-end slds-p-vertical_small">
+                <div if:true={isViewMode}>
+                    <template if:false={isLoading}>
+                        <lightning-button label={labels.editButtonLabel} onclick={handleEdit} disabled={isEditDisabled}
+                            data-qa-locator="edit-button">
+                        </lightning-button>
+                    </template>
+                </div>
+
+                <div if:false={isViewMode}>
+                    <template if:false={isLoading}>
+                        <lightning-button label={labels.saveButtonLabel} onclick={handleSave} variant="brand"
+                            disabled={isSaveDisabled} data-qa-locator="save-button">
+                        </lightning-button>
+                        <lightning-button label={labels.cancelButtonLabel} onclick={handleCancel}
+                            class="slds-m-left_x-small" data-qa-locator="cancel-edit-button">
+                        </lightning-button>
+                    </template>
+                </div>
+            </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium slds-p-bottom_large" size="4">
+        </lightning-layout-item>
+
+    </lightning-layout>
+</template>

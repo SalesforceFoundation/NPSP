@@ -67,7 +67,7 @@ private class CMT_MetadataAPI_TEST {
         // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
 
-        List<Account> accounts = [SELECT Id, Name, Description FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        List<Account> accounts = getAccounts(SUCCESS_HANDLER_EXECUTED);
         System.assertEquals(0, accounts.size(), 'No accounts should be created.');
 
         Metadata.DeployResult result = new Metadata.DeployResult();
@@ -75,7 +75,7 @@ private class CMT_MetadataAPI_TEST {
 
         callback.handleResult(result, context);
 
-        accounts = [SELECT Id, Name, Description FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        accounts = getAccounts(SUCCESS_HANDLER_EXECUTED);
         System.assertEquals(1, accounts.size(), 'A single account should be created.');
         System.assertNotEquals(null, accounts[0].Description, 'Account Description Should have description');
  
@@ -123,8 +123,38 @@ private class CMT_MetadataAPI_TEST {
 
         callback.handleResult(result, context);
 
-        List<Contact> contacts = [SELECT Id, Lastname FROM Contact WHERE Lastname = :ERROR_HANDLER_EXECUTED];
+        List<Contact> contacts = getContacts(ERROR_HANDLER_EXECUTED);
         System.assertEquals(1, contacts.size(), 'A single contact should be created.'); 
+    }
+
+    /*************************************************************************************************************
+     * @description Returns accounts matching the provided name
+     **/
+    private static List<Account> getAccounts(String searchName) {
+        List<Account> accounts = new List<Account>();
+
+        for (Account acc : [SELECT Name, Description FROM Account]) {
+            if (acc.Name == searchName) {
+                accounts.add(acc);
+            }
+        }
+
+        return accounts;
+    }
+
+    /*************************************************************************************************************
+     * @description Returns contacts matching the provided last name
+     **/
+    private static List<Contact> getContacts(String searchName) {
+        List<Contact> contacts = new List<Contact>();
+
+        for (Contact c : [SELECT LastName FROM Contact]) {
+            if (c.LastName == searchName) {
+                contacts.add(c);
+            }
+        }
+
+        return contacts;
     }
 
     /*************************************************************************************************************
@@ -137,9 +167,11 @@ private class CMT_MetadataAPI_TEST {
         }
 
         public void performErrorHandler(Map<String, Object> params, String status) {
-            Contact c = new Contact(Lastname = ERROR_HANDLER_EXECUTED);
+            Contact c = new Contact(LastName = ERROR_HANDLER_EXECUTED);
             insert c;
         }
     }
+
+
 
 }

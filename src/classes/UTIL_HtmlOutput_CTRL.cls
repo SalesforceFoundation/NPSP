@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Utilities
-* @description The UTIL_HtmlOutput_CTRL is used to safely unescape any whitelisted tags and urls
+* @description The UTIL_HtmlOutput_CTRL is used to safely unescape any allowed tags and urls
 */
 public with sharing class UTIL_HtmlOutput_CTRL {
 
@@ -54,6 +54,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     /** @description The map of allowed urls and their temporary substitution values */
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_URL = new Map<String, String> {
         '<a href="https://powerofus.force.com/' => '|hubURL|',
+        '<a href="/lightning/setup/' => '|lightningSetupURL|',
         '<a href="/setup/' => '|setupURL|',
         '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;"' => '|showPanelHealthCheck|',
         '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;"' => '|showPanelErrorLog|',
@@ -86,24 +87,39 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
-    * @description Returns the escaped html with the unescaped whitelisted tags and url
+    * @description Returns the escaped html with the unescaped allowed tags and url
     */
     public String getSafeHtml() {
         if (String.isBlank(unsafeHtml)) {
             return '';
         }
 
-        String safeHtml = replaceWhitelist(unsafeHtml);
+        String safeHtml = replaceAllowedList(unsafeHtml);
         safeHtml = safeHtml.escapeHtml4();
-        safeHtml = resetWhitelist(safeHtml);
+        safeHtml = resetAllowedList(safeHtml);
 
         return safeHtml;
     }
 
     /*******************************************************************************************************************
-    * @description Returns the unescaped html with the whitelisted tags and url replaced with temporary values
+    * @description Strips un-allowed javascript from string
     */
-    private String replaceWhitelist(String unescapedHtml) {
+    public String sanitizeInlineJavaScript(String unsanitaryLink) {
+        if (String.isBlank(unsanitaryLink)) {
+            return '';
+        }
+
+        String quoteString = '(\'|\\Q' + SUBSTITUTION_BY_ALLOWED_URL.get('"') + '\\E)';
+        Pattern stripJavaScript = Pattern.compile('on[a-z]*\\s*=\\s*' + quoteString + '.*\\(.*\\)\\s*\\1');
+        Matcher matchStrip = stripJavaScript.matcher(unsanitaryLink);
+
+        return matchStrip.replaceAll('');
+    }
+
+    /*******************************************************************************************************************
+    * @description Returns the unescaped html with the allowed tags and url replaced with temporary values
+    */
+    private String replaceAllowedList(String unescapedHtml) {
         String replacedHtml = unescapedHtml.normalizeSpace();
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
@@ -116,13 +132,15 @@ public with sharing class UTIL_HtmlOutput_CTRL {
             }
         }
 
+        replacedHtml = sanitizeInlineJavaScript(replacedHtml);
+
         return replacedHtml;
     }
 
     /*******************************************************************************************************************
-    * @description Returns the escaped html with the temporary tags and url to their original whitelisted values
+    * @description Returns the escaped html with the temporary tags and url to their original allowed values
     */
-    private String resetWhitelist(String escapedHtml) {
+    private String resetAllowedList(String escapedHtml) {
         String html = escapedHtml;
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {

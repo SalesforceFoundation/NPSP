@@ -26,6 +26,11 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
+        <help><!-- If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing. --></help>
+        <label><!-- Disable Record Data Health Checks --></label>
+        <name>DisableRecordDataHealthChecks__c</name>
+    </fields>
+    <fields>
         <help>אם אפשרות זו מסומנת, מסגרת הטיפול בשגיאות של NPSP מושבתת.</help>
         <label>השבת טיפול בשגיאות</label>
         <name>Disable_Error_Handling__c</name>
@@ -49,6 +54,11 @@
         <help>בחר את סוג המשתמש שאליו יישלחו הודעות.</help>
         <label>נמעני הודעות שגיאה</label>
         <name>Error_Notifications_To__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO. --></help>
+        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <name>OverrideFeature_PilotEnabled__c</name>
     </fields>
     <fields>
         <help><!-- Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved. --></help>

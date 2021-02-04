@@ -1,0 +1,22 @@
+{
+  "orgName": "NPSP - Beta Org - Platform Encryption",
+  "edition": "Developer",
+  "features": [
+    "PlatformEncryption"
+  ],
+  "hasSampleData": "false",
+  "settings": {
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    }
+  }
+}

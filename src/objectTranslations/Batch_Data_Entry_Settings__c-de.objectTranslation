@@ -41,7 +41,7 @@
         <value><!-- Batch Data Entry Settings --></value>
     </caseValues>
     <fields>
-        <help>Wenn diese Option festgelegt ist, werden bei der Batch-Dateneingabe niemals Opportunity-Namen vergeben, auch wenn die Felder leer sind (nicht auf der BDE-Seite enthalten).</help>
+        <help>Wenn diese Option ausgewählt ist, werden bei der Batch-Dateneingabe niemals Opportunity-Namen vergeben, auch wenn die Felder leer sind (nicht auf der BDE-Seite enthalten).</help>
         <label>Leere Felder für Opport.-Namen zulassen</label>
         <name>Allow_Blank_Opportunity_Names__c</name>
     </fields>
@@ -49,6 +49,10 @@
         <help>Durch diese Einstellung wird basierend auf dem Wert in den aufgefüllten Feldern automatisch der Datensatzname für Opportunity-Datensätze generiert, die als Batch eingegeben wurden.</help>
         <label>Opportunity-Benennung</label>
         <name>Opportunity_Naming__c</name>
+    </fields>
+    <fields>
+        <label>Einstellungsbenachrichtigung angesehen</label>
+        <name>Viewed_Retirement_Alert__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

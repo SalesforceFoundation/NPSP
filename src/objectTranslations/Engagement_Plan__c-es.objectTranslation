@@ -2,26 +2,26 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Plan de acción</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Planes de acción</value>
     </caseValues>
     <fields>
         <label>Cuenta</label>
         <name>Account__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
         <label>Campaña</label>
         <name>Campaign__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
         <label>Caso</label>
         <name>Case__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
         <label>Tareas completas</label>
@@ -30,22 +30,22 @@
     <fields>
         <label>Contacto</label>
         <name>Contact__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
-        <label>Plantilla de plan de acción</label>
+        <label>Plantilla del plan de acción</label>
         <name>Engagement_Plan_Template__c</name>
         <relationshipLabel>Planes de acción</relationshipLabel>
     </fields>
     <fields>
         <label>Oportunidad</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
         <label>Donación recurrente</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel>Planes de acción</relationshipLabel>
+        <relationshipLabel>Planes de participación</relationshipLabel>
     </fields>
     <fields>
         <label>Estado</label>
@@ -59,7 +59,7 @@
         <label>Cantidad de tareas</label>
         <name>Total_Tasks__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Engagement Plan Layout</layout>
         <sections>
@@ -67,5 +67,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
+    <nameFieldLabel>Número del plan de acción</nameFieldLabel>
 </CustomObjectTranslation>

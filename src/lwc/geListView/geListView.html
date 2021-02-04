@@ -1,0 +1,93 @@
+<template>
+    <div class="slds-page-header slds-page-header_extension">
+        <div class="slds-page-header__row slds-p-bottom_x-small">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name={iconName}>
+                        </lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <template if:true={hasCustomTitle}>
+                                    <h1 class="slds-lightning-button-menu_extension slds-p-top_xx-small">
+                                        {title}
+                                    </h1>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <slot name="actions"
+                          class="slds-no-flex">
+                    </slot>
+                    <lightning-button-menu variant="border-filled"
+                                           icon-name="utility:settings"
+                                           menu-alignment="auto"
+                                           data-qa-locator={qaLocatorSettings}>
+                        <lightning-menu-item value="selectFieldsToDisplay"
+                                             label={CUSTOM_LABELS.geHeaderCustomTableHeaders}
+                                             onclick={toggleModal}
+                                             data-qa-locator={qaLocatorSettingsSelectFields}>
+                        </lightning-menu-item>
+                    </lightning-button-menu>
+                </div>
+            </div>
+        </div>
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-meta">
+                <p class="slds-page-header__meta-text slds-p-bottom_medium">
+                    {recordCount} {sortedByLabel} {lastUpdatedOn}
+                </p>
+                <p class="slds-page-header__meta-text">
+                    {description}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+        </lightning-spinner>
+        <c-util-stencil column-count="5"
+                        row-count="5">
+        </c-util-stencil>
+    </template>
+    <template if:false={isLoading}>
+        <lightning-datatable key-field="id"
+                             data={recordsToDisplay}
+                             columns={columns}
+                             hide-checkbox-column
+                             onrowaction={handleRowAction}
+                             sorted-by={sortedBy}
+                             sorted-direction={sortedDirection}
+                             onsort={handleColumnSorting}
+                             data-qa-locator={qaLocatorDatatable}>
+        </lightning-datatable>
+    </template>
+
+    <slot></slot>
+
+    <template if:false={isLoading}>
+        <template if:false={hasRecords}>
+            <div class="slds-align_absolute-center"
+                 style="height:5rem">
+                {CUSTOM_LABELS.commonNoItems}
+            </div>
+        </template>
+    </template>
+
+    <template if:true={showStandardFooter}>
+        <footer class="slds-card__footer slds-m-top_none">
+            <template if:true={showViewMore}>
+                <a class="slds-card__footer-action"
+                   onclick={handleViewMore}
+                   data-qa-locator={qaLocatorViewMore}>
+                    {CUSTOM_LABELS.commonViewMore}
+                </a>
+            </template>
+        </footer>
+    </template>
+
+    <slot name="footer"></slot>
+</template>

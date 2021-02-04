@@ -1,0 +1,136 @@
+<template>
+    <c-util-card title={opportunityComputedName}
+                 icon-name="standard:opportunity"
+                 icon-size="small"
+                 css-class={computedCardCssClass}>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+        </template>
+
+        <template if:false={isLoading}>
+            <!-- START OPPORTUNITY RECORD CONTENT -->
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="5"
+                                       padding="horizontal-small">
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="2"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="5">
+                            {opportunityNameDetails.label}:
+                        </lightning-layout-item>
+                        <lightning-layout-item size="10"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="7">
+                            {opportunityNameDetails.value}
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="2"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="5">
+                            {opportunityAmountDetails.label}:
+                        </lightning-layout-item>
+                        <lightning-layout-item size="10"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="7">
+                            {opportunityAmountDetails.value}
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="5"
+                                       padding="horizontal-small">
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="2"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="5">
+                            {opportunityCloseDateDetails.label}:
+                        </lightning-layout-item>
+                        <lightning-layout-item size="10"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="7">
+                            {opportunityCloseDateDetails.value}
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="2"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="5">
+                            {opportunityStageNameDetails.label}:
+                        </lightning-layout-item>
+                        <lightning-layout-item size="10"
+                                               small-device-size="6"
+                                               medium-device-size="6"
+                                               large-device-size="7">
+                            {opportunityStageNameDetails.value}
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="2"
+                                       padding="horizontal-small">
+                    <!-- EMPTY LAYOUT ITEM SOLELY FOR POSITIONING THE ABOVE ITEMS -->
+                </lightning-layout-item>
+            </lightning-layout>
+            <!-- END OPPORTUNITY RECORD CONTENT -->
+
+            <!-- START PAYMENT CARDS CONTENT -->
+            <template if:true={hasPayments}>
+                <lightning-layout multiple-rows="true">
+                    <template iterator:it={opportunityPayments}>
+                        <lightning-layout-item key={it.value.Id}
+                                               padding="around-small"
+                                               size="12"
+                                               small-device-size="12"
+                                               medium-device-size="6"
+                                               large-device-size="3">
+                            <c-ge-donation-matching-payment-card payment={it.value}
+                                                                 selected-donation-id={selectedDonationId}
+                                                                 onupdatepayment={handleUpdatePayment}>
+                            </c-ge-donation-matching-payment-card>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout>
+            </template>
+
+            <template if:false={hasPayments}>
+                <p class="slds-text-body_regular slds-text-align_center slds-p-vertical_large">
+                    {CUSTOM_LABELS.geBodyMatchingNoPayments}
+                </p>
+            </template>
+            <!-- END PAYMENT CARDS CONTENT -->
+
+            <!-- START FOOTER CONTENT -->
+            <button slot="footer"
+                    class="slds-button slds-button_neutral slds-button_extension slds-border_extension-bottom"
+                    onclick={handleNewPayment}
+                    data-id={opportunity.Name}
+                    data-qa-locator={qaLocatorAddNewPayment}>
+                {CUSTOM_LABELS.geButtonMatchingNewPayment}
+            </button>
+            <button slot="footer"
+                    class="slds-button slds-button_neutral slds-button_extension"
+                    onclick={handleUpdateOpportunity}
+                    data-id={opportunity.Name}
+                    data-qa-locator={qaLocatorUpdateOpportunity}
+                    disabled={isUpdateOpportunityDisabled}>
+                {CUSTOM_LABELS.geButtonMatchingUpdateOpportunity}
+            </button>
+            <!-- END FOOTER CONTENT -->
+        </template>
+    </c-util-card>
+</template>

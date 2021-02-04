@@ -241,7 +241,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         updatePrimaryContactOnAccount(primaryContactByAccountId);
-        renameHHAccounts(householdIdsToRename);
+        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
     }
 
     /**
@@ -280,7 +280,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         updateOneToOneAccounts(oneToOneContactsToUpdate);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         updateHouseholds(householdIdsToUpdate);
-        renameHHAccounts(householdIdsToRename);
+        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
         updateOwners(newOwnerContactById);
     }
 
@@ -346,7 +346,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         resetPrimaryContactForAccount(accountIds);
-        renameHHAccounts(accountIds);
+        HH_HouseholdNaming.renameHHAccounts(accountIds);
         rollupAccounts(accountIds);
     }
 
@@ -918,24 +918,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             UTIL_DMLService.updateRecords(opportunities);
         }
 
-    }
-
-    /*******************************************************************************************************
-    * @description for the list of HH AccountId's, update their Household Names
-    * @param accountIds the list of Account (Id's) that need updating.
-    * @return void
-    */
-    public static void renameHHAccounts(List<Id> accountIds) {
-        if (accountIds.isEmpty()) {
-            return;
-        }
-
-        if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
-            HH_HouseholdNaming hhName = new HH_HouseholdNaming();
-            hhName.UpdateNames(accountIds);
-        } else {
-            HH_HouseholdNaming.FutureUpdateNames(accountIds);
-        }
     }
 
     /*******************************************************************************************************

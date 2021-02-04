@@ -138,26 +138,28 @@ public with sharing class HH_Container_LCTRL {
     * @return list<Contact> The Contacts in the Household
     */
     @AuraEnabled
-    public static list<Contact> getContacts(ID hhId) {
+    public static List<Contact> getContacts(Id hhId) {
         try {
-            if (hhId == null)
+            if (hhId == null) {
                 return null;
-
+            }
             // conSelect does the FLS check
-            string strSoql = getContactSelectQueryWithFls();
+            String strSoql = getContactSelectQueryWithFls();
 
             // don't use contact.HHId in one soql since it can't use an index
             // and won't work in LDV orgs.
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account'))
+            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
                 strSoql += ' where AccountId = :hhId ';
-            else
-                strSoql += ' where npo02__Household__c = :hhId ';
+            } else {
+                strSoql += ' where npo02__Household__c = :hhId WITH SECURITY_ENFORCED ';
+            }
 
-            strSoql += ' order by npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
+            strSoql += ' order by npo02__Household_Naming_Order__c ASC NULLS LAST, ' +
+                'Primary_Contact__c DESC, CreatedDate ';
 
-            list<Contact> listCon = database.query(strSoql);
+            List<Contact> listCon = Database.query(strSoql);
             // let's update household naming order so the client doesn't have to worry about nulls.
-            for (integer i = 0; i < listCon.size(); i++) {
+            for (Integer i = 0; i < listCon.size(); i++) {
                 listCon[i].npo02__Household_Naming_Order__c = i;
             }
             return listCon;
@@ -171,18 +173,20 @@ public with sharing class HH_Container_LCTRL {
     * field level security that the user has permissions to read and modify those fields.
     * @return String The soql select string to use for Contacts
     */
-    public static string getContactSelectQueryWithFls() {
+    public static String getContactSelectQueryWithFls() {
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
         Set<String> selectFields = getContactFields();
         Set<String> setCheckUpdate = setUpdateableContactFields();
         
-        for (string strF : selectFields) {
+        for (String strF : selectFields) {
 
             if (!strF.contains('.')) {
                 // check field level security (but not on compound lookup fields)
                 DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('Contact', strF);
-                if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable())))
-                    throw (new permsException(string.format(label.flsError, new string[]{'Contact' + '.' + strF})));
+                if (dfr == null || !dfr.isAccessible() || ((setCheckUpdate.contains(strF) && !dfr.isUpdateable()))) {
+                    throw (new permsException(String.format(Label.flsError, new String[]{'Contact' + '.' + strF})));
+                }
+
             }
         }
         // add a few fields we need for contact merge and standard code that

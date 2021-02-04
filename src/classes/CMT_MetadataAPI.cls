@@ -33,6 +33,8 @@
 */
 public class CMT_MetadataAPI {
 
+    public static final String DEPLOYMENT_SUCCESS_TEXT = 'Succeeded';
+
     /**
      * @description Static list of queued metadata updates to submit in a single process rather than
      * one update at a time.
@@ -98,7 +100,7 @@ public class CMT_MetadataAPI {
      * @param mtToDeploy List of CustomMetadata objects to deploy
      * @param callback a MetadataCallBack to handle the deployment result
      *****************************************************************************************************************/
-    public static void deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
+    public static Id deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, Metadata.DeployCallback callback) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -108,8 +110,10 @@ public class CMT_MetadataAPI {
 
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
-            Metadata.Operations.enqueueDeployment(mdContainer, callback);
+            return Metadata.Operations.enqueueDeployment(mdContainer, callback);
         }
+
+        return null;
     }
 
     /******************************************************************************************************************
@@ -119,6 +123,41 @@ public class CMT_MetadataAPI {
      *****************************************************************************************************************/
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
         deployMetadata(mtToDeploy, new MetadataCallBack(jobId));
+    }
+
+    /******************************************************************************************************************
+     * @description Check the status of metadata deployment
+     * @return Metadata.DeployResult JSON
+     */
+    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
+        Http h = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
+            '/services/data/v44.0/metadata/deployRequest/' +
+            deploymentId +
+            '?includeDetails=true');
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse response = h.send(request);
+        DeploymentResponse deploymentResponse =
+            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+
+        return deploymentResponse.deployResult;
+    }
+
+    /******************************************************************************************************************
+     * @description Wrapper used to deserialize the deployment request response
+     */
+    private class DeploymentResponse {
+        Metadata.DeployResult deployResult;
+    }
+
+    /**
+     * @return A 10 character unique 'jobId' to use for deploying metadata
+     */
+    public static String getUniqueJobId() {
+        return UserInfo.getUserId().left(15).right(4).toUpperCase() +
+                String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
     }
 
 
@@ -146,7 +185,7 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallbackHandler callbackHandler { get; set; }
         public Map<String, Object> callbackParams {get; set;}
-        
+
         /**
          * @description Constructor for Callback Class
          * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
@@ -177,7 +216,7 @@ public class CMT_MetadataAPI {
 
             if (isSuccess) {
                 if (!Test.isRunningTest()) {
-                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                    UTIL_OrgTelemetry_SVC.asyncProcessCMTChange(buildChangedMetadata(result));
                 }
 
                 if (callbackHandler != null) {
@@ -188,6 +227,30 @@ public class CMT_MetadataAPI {
                     callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
                 }
             }
+        }
+
+        /**
+         * @description This method iterates through the successful deployments and grabs the
+         * object name. It will then pass into the UTIL_OrgTelemetry_SVC class to determine
+         * whether or not to run the telemetry code.
+         * @param result - Deployment Result
+         * @return Set<String>
+         */
+        private Set<String> buildChangedMetadata(Metadata.DeployResult result) {
+            Set<String> metadataObjectTypeSet = new Set<String>();
+
+            for (Integer i = 0; i < result.details.componentSuccesses.size(); i++) {
+
+                // Metadata full name for a custom metadata is in this format:
+                // metadataObject.recordName
+                // Example:
+                // Opportunity_Stage_To_State_Mapping__mdt.FINALIZED
+                String metadataFullName = result.details.componentSuccesses[i].fullName.toLowerCase();
+
+                metadataObjectTypeSet.add(metadataFullName);
+            }
+
+            return metadataObjectTypeSet;
         }
     }
 }

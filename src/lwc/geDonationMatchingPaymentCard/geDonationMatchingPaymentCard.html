@@ -1,0 +1,58 @@
+<template>
+    <c-util-card title={paymentComputedName}
+                 icon-name="utility:currency"
+                 icon-size="small"
+                 css-class={computedCardCssClass}>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+        </template>
+
+        <template if:false={isLoading}>
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentAmountDetails.label}:
+                </lightning-layout-item>
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentAmountDetails.value}
+                </lightning-layout-item>
+
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentScheduledDateDetails.label}:
+                </lightning-layout-item>
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentScheduledDateDetails.value}
+                </lightning-layout-item>
+
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentPaidDetails.label}:
+                </lightning-layout-item>
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentPaidComputedValue}
+                </lightning-layout-item>
+
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentNameDetails.label}:
+                </lightning-layout-item>
+                <lightning-layout-item size="6"
+                                       padding="horizontal-small">
+                    {paymentNameDetails.value}
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <button slot="footer"
+                    class="slds-button slds-button_neutral slds-button_extension"
+                    onclick={handleUpdatePayment}
+                    data-id={payment.Name}
+                    data-qa-locator={qaLocatorUpdatePayment}>
+                {CUSTOM_LABELS.geButtonMatchingUpdatePayment}
+            </button>
+        </template>
+    </c-util-card>
+</template>

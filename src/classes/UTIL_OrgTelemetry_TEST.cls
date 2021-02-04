@@ -33,10 +33,16 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@IsTest(IsParallel=true)
+@IsTest
 private class UTIL_OrgTelemetry_TEST {
 
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
+
+    /**
+     * @description Number of new Gift-Entry BGE related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_NEWGE_BGE_ROWS_30_DAYS_AGO = 2;
+
 
     /**
      * @description Number of BGE related Data Import records created within the last 30 days
@@ -72,28 +78,32 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert opp;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'UTIL_OrgTelemetry_TEST',
-                npe03__Contact__c = c.Id,
-                npe03__Installments__c = 3,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = Date.newInstance(2018,6,15),
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(c.Id)
+            .withPlannedInstallments(3)
+            .withAmount(100)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(2018,6,15))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
         insert rd;
 
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
+        DataImportBatch__c newDIBatch = new DataImportBatch__c(GiftBatch__c = true, 
+            Batch_Gift_Entry_Version__c = 2);
 
-        insert diBatch;
+
+        insert new List<DataImportBatch__c> {diBatch, newDIBatch};
 
         List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
         List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
+        List<DataImport__c> newBGERows = buildDataImports(NUM_NEWGE_BGE_ROWS_30_DAYS_AGO, newDIBatch.Id);
         List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
 
         insert bdiRows;
         insert bgeRows;
+        insert newBGERows;
         insert bdiRows60DaysAgo;
 
         Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
@@ -104,10 +114,13 @@ private class UTIL_OrgTelemetry_TEST {
 
     /**
      * @description Test that the NPSP_Settings telemetry data is retrieved.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c()
+        );
+
         UTIL_FeatureManagement_TEST.Mock asyncFeatureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
         UTIL_OrgTelemetry_SVC.asyncTelemetrySvc.featureManager =
             (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, asyncFeatureManagementMock);
@@ -166,6 +179,78 @@ private class UTIL_OrgTelemetry_TEST {
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
 
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_BDICMT.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_BDICMT'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_GiftEntry.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_GiftEntry'
+        );        
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_RecurringDonations2.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_PaymentAllocations.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_PaymentAllocations'
+        );
+    }
+
+    /**
+     * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
+     */
+    @IsTest
+    private static void validateCountOfPaymentsOppsTelemetry() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Payments_Enabled__c = true
+            )
+        );
+
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and defaulted to -1'
+        );
+
+        /*
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and defaulted to -1'
+        );
+        */
     }
 
     /**
@@ -215,7 +300,6 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Org_CountTimedOutBatchJobsLast7Days'
         );
-
     }
 
     /**
@@ -374,7 +458,7 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO,
+            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO + NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
             ),
@@ -408,6 +492,110 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
+    * @description Verifies that DataCount_ONETIME_Use set to 0 when RD2 is not enabled in the org
+    */
+    @IsTest
+    private static void validateDataCount_ONETIME_UseSetTo0WhenRD2NotEnabled() {
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'DataCount_ONETIME_Use should have been set to 0 when RD2 is not enabled'
+        );
+    }
+
+    /**
+    * @description Verifies that DataCount_ONETIME_Use set to 1 when RD2 is enabled but metadeploy is not completed
+    */
+    @IsTest
+    private static void validateDataCount_ONETIME_UseSetTo1WhenMetadeployedNotCompleted() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'DataCount_ONETIME_Use should have been set to 1 when RD2 is enabled but Day of Month field does not contain necessary value'
+        );
+    }
+
+    /**
+    * @description Verifies that DataCount_ONETIME_Use set to 2 when RD2 is enabled, metadeploy is completed,
+    *   but Next Payment Date rollup is enabled
+    */
+    @IsTest
+    private static void validateDataCount_ONETIME_UseSetTo2WhenNextPaymentDateRollupEnabled() {
+        if(!isRD2MetadataDeployed()) {
+            return;
+        }
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        mockRD2EnablementState();
+        RD2_EnablementDelegate_TEST.mockCustomizableRollups();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            2,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'DataCount_ONETIME_Use should have been set to 2 when RD2 is but Next Payment Date Rollup is enabled'
+        );
+    }
+
+    /**
+    * @description Verifies that DataCount_ONETIME_Use set to 10 when RD2 is fully enabled
+    */
+    @IsTest
+    private static void validateDataCount_ONETIME_UseSetTo3WhenRD2FullyEnabled() {
+        if(!isRD2MetadataDeployed()) {
+            return;
+        }
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        mockRD2EnablementState();
+        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            10,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'DataCount_ONETIME_Use should have been set to 10 when RD2 is fully enabled'
+        );
+    }
+
+
+    /**
      * @description Builds test data import records
      */
     private static List<DataImport__c> buildDataImports(Integer numDataImports, Id diBatchId) {
@@ -424,5 +612,36 @@ private class UTIL_OrgTelemetry_TEST {
         }
 
         return dis;
+    }
+
+    /**
+    * @description Check if RD2 metadata is deployed by verifying if the "Day Of Month" field contains 'Last Day' value and remove '31'
+    * @return Boolean
+    */
+    private static Boolean isRD2MetadataDeployed() {
+        List<SelectOption> options = UTIL_Describe.getSelectOptions(
+            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.Day_Of_Month__c)
+        );
+        
+        Boolean hasLastDay = false;
+        Boolean is31stRemoved = true;
+
+        for (SelectOption option : options) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                hasLastDay = true;
+            } else if (option.getValue() == '31') {
+                is31stRemoved = false;
+            }
+        }
+        return hasLastDay && is31stRemoved;
+    }
+
+    /**
+    * @description Mock Recurring Donation Custom Setting Enablement State
+    */
+    private static void mockRD2EnablementState() {
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isMetaLaunched = true;
+        RD2_EnablementDelegate_TEST.setEnablementState(JSON.serialize(expectedState));
     }
 }

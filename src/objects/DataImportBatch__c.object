@@ -111,6 +111,42 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>Batch_Number__c</fullName>
+        <description>The unique, auto-numbered identifier for this batch.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The unique, auto-numbered identifier for this batch.</inlineHelpText>
+        <label>Batch Number</label>
+        <length>30</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Batch_Defaults__c</fullName>
+        <description>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</inlineHelpText>
+        <label>Batch Defaults</label>
+        <length>50000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Batch_Table_Columns__c</fullName>
+        <description>List of API names for fields included in the batch gift table. Stored as JSON.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>List of API names for fields included in the batch gift table. Stored as JSON.</inlineHelpText>
+        <label>Batch Table Columns</label>
+        <length>55000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
         <fullName>Batch_Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>An optional description about this batch.</inlineHelpText>
@@ -120,6 +156,20 @@
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Batch_Gift_Entry_Version__c</fullName>
+        <description>The version of the Batch Gift Entry feature used to create this Batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The version of the Batch Gift Entry feature used to create this Batch.</inlineHelpText>
+        <label>Batch Gift Entry Version</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Batch_Process_Size__c</fullName>
@@ -283,6 +333,21 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>Form_Template__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The Template to use for the gift entry form for this Batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Template to use for the gift entry form for this Batch.</inlineHelpText>
+        <label>Form Template</label>
+        <referenceTo>Form_Template__c</referenceTo>
+        <relationshipLabel>NPSP Data Import Batches</relationshipLabel>
+        <relationshipName>NPSP_Data_Import_Batches</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>GiftBatch__c</fullName>
         <defaultValue>false</defaultValue>
         <description>This flag is set during batch creation to use the gift entry batch feature.</description>
@@ -377,6 +442,36 @@
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Batch_Status__c</fullName>
+        <description>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</inlineHelpText>
+        <label>Batch Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Open</fullName>
+                    <default>false</default>
+                    <label>Open</label>
+                </value>
+                <value>
+                    <fullName>Completed</fullName>
+                    <default>false</default>
+                    <label>Completed</label>
+                </value>
+                <value>
+                    <fullName>Failed - Needs Review</fullName>
+                    <default>false</default>
+                    <label>Failed - Needs Review</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>

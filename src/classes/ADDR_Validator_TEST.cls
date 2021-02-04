@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,25 +13,25 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2013
 * @group Address Management
-* @description Tests for the ADDR_Validator class. 
+* @description Tests for the ADDR_Validator class.
 */
 @isTest
 public with sharing class ADDR_Validator_TEST {
@@ -41,8 +41,8 @@ public with sharing class ADDR_Validator_TEST {
     private static final String ZIP_CODE = '94105';
     private static final String STATUS_ERROR = STG_PanelHealthCheck_CTRL.statusError;
     private static final String STATUS_SUCCESS = STG_PanelHealthCheck_CTRL.statusSuccess;
-    private static final String SAVE_SETTINGS_SUCCESS_MESSAGE = 'Saved.\n';
-    
+    private static final String SAVE_SETTINGS_SUCCESS_MESSAGE = System.Label.Saved + '\n';
+
     @isTest
     private static void testContactAddress() {
         //skip the test if Advancement is installed
@@ -50,24 +50,24 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
-        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
+
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName());
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'California';
         contact.MailingPostalCode = '95014';
         contact.MailingCountry = 'United States';
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         //check household got created for contact
         contact = getContact(contact.Id);
-        
+
         Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals(1, av.size());
         System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
@@ -75,11 +75,11 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
-        
+
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {         
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             System.assertEquals('California', contact.MailingState);
         } else {
             System.assertEquals('CA', contact.MailingState);
@@ -96,19 +96,19 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('invalid-address');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         assertVerifiedAddressWithStatus(Label.Address_Not_Found, contact.Id);
     }
-    
+
     /*******************************************************************************************************
     * @description Verify bad input address verification
     */
@@ -119,19 +119,19 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('400 error');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         assertUnverifiedAddressWithStatus('Bad input. Required fields missing from input or are malformed.', contact.Id);
     }
-    
+
     /*******************************************************************************************************
     * @description Verify unauthorized access on address verification
     */
@@ -142,19 +142,19 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('401 error');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         assertUnverifiedAddressWithStatus('Unauthorized. Authentication failure; invalid credentials.', contact.Id);
     }
-    
+
     /*******************************************************************************************************
     * @description Verify inactive subscription on address verification
     */
@@ -165,19 +165,19 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('402 error');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         assertUnverifiedAddressWithStatus('Payment required. No active subscription found.', contact.Id);
     }
-    
+
     /*******************************************************************************************************
     * @description Verify iternal server error on address verification
     */
@@ -188,19 +188,19 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('500 error');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         assertUnverifiedAddressWithStatus('Internal server error. General service failure; retry request.', contact.Id);
     }
-    
+
     /*******************************************************************************************************
     * @description Verify ambiguous result on address verification
     */
@@ -211,16 +211,16 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
+
         Contact contact = buildContactOnStreet('ambiguous-address');
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         //check household got created for contact
         contact = getContact(contact.Id);
 
@@ -241,28 +241,28 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        
-        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
+
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName());
         contact.MailingPostalCode = '94105';
         contact.MailingCity = 'single-zip';
         contact.MailingCountry = 'United States';
-        
+
         Test.StartTest();
         insert contact;
         Test.StopTest();
-        
+
         //check household got created for contact
         contact = getContact(contact.Id);
-   
-        Address__c[] av = getAddressesForHousehold(contact.AccountId);  
+
+        Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
-            
+
         System.assertEquals(null, contact.MailingStreet);
         System.assertEquals('Clinton', contact.MailingCity);
         System.assertEquals('98236', contact.MailingPostalCode);
@@ -278,28 +278,28 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
+
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        
-        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
+
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName());
         contact.MailingCity = 'single-zip';
         contact.MailingState = 'Illinois';
         contact.MailingCountry = 'United States';
-        
+
         Test.startTest();
         insert contact;
         Test.StopTest();
-        
+
         //check household got created for contact
         contact = getContact(contact.Id);
 
-        Address__c[] av = getAddressesForHousehold(contact.AccountId);     
+        Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
-        
+
         System.assertEquals(null, contact.MailingStreet);
         System.assertEquals('Clinton', contact.MailingCity);
         System.assertEquals('98236', contact.MailingPostalCode);
@@ -312,7 +312,7 @@ public with sharing class ADDR_Validator_TEST {
     private static void testController() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
-        
+
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
         sc.addrVerifSettings.Address_Verification_Endpoint__c = SMARTY_STREETS_VERIFICATION_ENDPOINT;
@@ -327,7 +327,7 @@ public with sharing class ADDR_Validator_TEST {
         Test.startTest();
         sc.batchVerify();
         Test.stopTest();
-        
+
         //The batch has its own test. This basically tests that no exception was thrown
         //since it got to set the status variable.
         System.assertEquals(true, sc.isRunningBatch);
@@ -340,7 +340,7 @@ public with sharing class ADDR_Validator_TEST {
     private static void testBlankService() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
-        
+
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
         sc.addrVerifSettings.Address_Verification_Endpoint__c = SMARTY_STREETS_VERIFICATION_ENDPOINT;
@@ -356,16 +356,19 @@ public with sharing class ADDR_Validator_TEST {
     private static void testControllerMissingSetting() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
-        
+
         sc.addrVerifSettings.Class__c = SMARTY_STREETS_VALIDATOR_CLASS;
-        
+
         Test.startTest();
         sc.saveSettings();
         Test.stopTest();
-        
-        System.assertEquals(null, sc.apiSettingsSaveMessage, 'Save message should be empty: ' + sc.apiSettingsSaveMessage);
-        System.assert(sc.apiSettingsErrorMessage.contains('You must provide an Auth ID'), 'Error message should contain "You must provide an Auth ID": ' + sc.apiSettingsErrorMessage);
-        System.assert(sc.apiSettingsErrorMessage.contains('You must provide an Auth Token'), 'Error message should contain "You must provide an Auth Token": ' + sc.apiSettingsErrorMessage);
+
+        System.assertEquals(null, sc.apiSettingsSaveMessage,
+            'Save message should be empty: ' + sc.apiSettingsSaveMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains(System.Label.Addr_Id_Error),
+            'Error message should contain "' + System.Label.Addr_Id_Error + '": ' + sc.apiSettingsErrorMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains(System.Label.Addr_Token_Error),
+            'Error message should contain "' + System.Label.Addr_Token_Error + '": ' + sc.apiSettingsErrorMessage);
     }
 
     /*******************************************************************************************************
@@ -378,32 +381,32 @@ public with sharing class ADDR_Validator_TEST {
 
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
-        
-        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
+
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName());
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'California';
         contact.MailingPostalCode = '95014';
         contact.MailingCountry = 'United States';
-        
+
         insert contact;
-        
+
         //check household got created for contact
         contact = getContact(contact.Id);
-        
+
         Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
         System.assertEquals(null, av[0].Verification_Status__c);
-        
+
         createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());        
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         av[0].Verified__c = true;
-        
+
         Test.StartTest();
         update av[0];
         Test.StopTest();
-        
+
         Address__c updatedAddress = getAddress(av[0].Id);
         System.assertEquals(true, updatedAddress.Verified__c);
         System.assertEquals(null, updatedAddress.Verification_Status__c, 'Address should not have been verified');
@@ -430,9 +433,9 @@ public with sharing class ADDR_Validator_TEST {
     * when user has no permission to view the page
     */
     @isTest
-    private static void shouldNotRetrieveApiSettingsWhenUserHasNoAccess() {        
+    private static void shouldNotRetrieveApiSettingsWhenUserHasNoAccess() {
         createDefaultSettings();
-        
+
         Test.setCurrentPage(Page.STG_PanelAddrVerification);
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension().returnHasAccess(false);
         STG_PanelAddrVerification_CTRL.addrVerifier = addrVerifier;
@@ -454,7 +457,7 @@ public with sharing class ADDR_Validator_TEST {
     * when read only user verifies address
     */
     @isTest
-    private static void healthCheckShouldDisplayPermissionDeniedMessageWhenUserHasNoAccess() { 
+    private static void healthCheckShouldDisplayPermissionDeniedMessageWhenUserHasNoAccess() {
         createDefaultSettings();
 
         STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
@@ -475,7 +478,7 @@ public with sharing class ADDR_Validator_TEST {
     * @description Verify no message is displayed when address validator is not Smarty Streets validator
     */
     @isTest
-    private static void healthCheckShouldNotReturnAnyMessageWhenValidatorIsNotSmartyStreets() { 
+    private static void healthCheckShouldNotReturnAnyMessageWhenValidatorIsNotSmartyStreets() {
         Addr_Verification_Settings__c settings = createDefaultSettings();
         settings.Class__c = 'ADDR_Foo_Validator';
 
@@ -493,10 +496,10 @@ public with sharing class ADDR_Validator_TEST {
     * when system admin verifies address that is not valid.
     */
     @isTest
-    private static void healthCheckShouldDisplayMessageOnAddressVerificationError() { 
+    private static void healthCheckShouldDisplayMessageOnAddressVerificationError() {
         final String expectedMessage = 'Test Smarty Streets: Not valid';
         final String expectedSolution = String.format(
-            System.Label.healthSolutionEditSetting, 
+            System.Label.healthSolutionEditSetting,
             new String[]{ SETTINGS_NAME, System.Label.stgNavHouseholds, System.Label.stgNavAddressVerification }
         );
 
@@ -522,7 +525,7 @@ public with sharing class ADDR_Validator_TEST {
     * when system admin verifies address that is valid.
     */
     @isTest
-    private static void healthCheckShouldDisplaySuccessWhenAddressIsValidated() { 
+    private static void healthCheckShouldDisplaySuccessWhenAddressIsValidated() {
         final String expectedMessage = 'Test Smarty Streets: is valid';
 
         createDefaultSettings();
@@ -553,7 +556,7 @@ public with sharing class ADDR_Validator_TEST {
 
         System.assertEquals(SMARTY_STREETS_VALIDATOR_CLASS, settings.Class__c);
         System.assertNotEquals(null, settings.Auth_Token__c);
-        
+
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension();
         addrVerifier.encodeToken(settings);
 
@@ -569,7 +572,7 @@ public with sharing class ADDR_Validator_TEST {
         Addr_Verification_Settings__c settings = createDefaultSettings();
         String encodedToken = EncodingUtil.urlEncode(settings.Auth_Token__c, 'UTF-8');
         settings.Auth_Token__c = encodedToken;
-        
+
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension();
         addrVerifier.encodeToken(settings);
 
@@ -586,7 +589,7 @@ public with sharing class ADDR_Validator_TEST {
         String encodedToken = EncodingUtil.urlEncode(token, 'UTF-8');
 
         settings.Class__c = 'foo';
-        
+
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension();
         addrVerifier.encodeToken(settings);
 
@@ -674,12 +677,12 @@ public with sharing class ADDR_Validator_TEST {
     private static Boolean hasAsyncAddrTriggers() {
         return TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync ||
             TDTM_DefaultConfig.ADDR_Contact_TDTM_TestAsync ||
-            TDTM_DefaultConfig.ADDR_Account_TDTM_TestAsync; 
+            TDTM_DefaultConfig.ADDR_Account_TDTM_TestAsync;
     }
-    
+
     /*******************************************************************************************************
     * @description Creates Address Verification Settings
-    * @return Addr_Verification_Settings__c 
+    * @return Addr_Verification_Settings__c
     */
     public static Addr_Verification_Settings__c createDefaultSettings() {
         // use the household account model
@@ -693,7 +696,7 @@ public with sharing class ADDR_Validator_TEST {
         settings.Address_Verification_Endpoint__c = SMARTY_STREETS_VERIFICATION_ENDPOINT;
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        
+
         return settings;
     }
 
@@ -714,7 +717,7 @@ public with sharing class ADDR_Validator_TEST {
     * @return Contact
     */
     private static Contact buildContactOnStreet(String street) {
-        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName());
         contact.MailingStreet = street;
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
@@ -744,10 +747,10 @@ public with sharing class ADDR_Validator_TEST {
     private static Address__c getAddress(Id addressId) {
         Address__c addr = [
             SELECT MailingStreet__c, MailingCity__c,
-                MailingState__c, MailingPostalCode__c, 
-                Verified__c, Verification_Status__c, 
+                MailingState__c, MailingPostalCode__c,
+                Verified__c, Verification_Status__c,
                 Ambiguous__c
-            FROM Address__c 
+            FROM Address__c
             WHERE Id = :addressId
         ];
 
@@ -763,10 +766,10 @@ public with sharing class ADDR_Validator_TEST {
     private static List<Address__c> getAddressesForHousehold(Id hhId) {
         return [
             SELECT MailingStreet__c, MailingCity__c,
-                MailingState__c, MailingPostalCode__c, 
-                Verified__c, Verification_Status__c, 
+                MailingState__c, MailingPostalCode__c,
+                Verified__c, Verification_Status__c,
                 Ambiguous__c
-            FROM Address__c 
+            FROM Address__c
             WHERE Household_Account__c = :hhId
         ];
     }
@@ -788,7 +791,7 @@ public with sharing class ADDR_Validator_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Asserts verified address 
+    * @description Asserts verified address
     * @param verificationStatus Verification Status on address
     * @param contactId Contact Id
     * @return void
@@ -798,7 +801,7 @@ public with sharing class ADDR_Validator_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Asserts unverified address 
+    * @description Asserts unverified address
     * @param verificationStatus Verification Status on address
     * @param contactId Contact Id
     * @return void
@@ -819,7 +822,7 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = getContact(contactId);
         System.assertNotEquals(null, contact.AccountId);
 
-        Address__c[] av = getAddressesForHousehold(contact.AccountId);      
+        Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals(1, av.size());
         System.assertEquals(isVerified, av[0].Verified__c);
         System.assertEquals(verificationStatus, av[0].Verification_Status__c);
@@ -902,17 +905,17 @@ public with sharing class ADDR_Validator_TEST {
             this.status = status;
             return this;
         }
-        
+
         public HttpResponse respond(HttpRequest request) {
             HttpResponse response = new HttpResponse();
-            response.setHeader('Content-Type', 'application/json');		
+            response.setHeader('Content-Type', 'application/json');
             response.setStatusCode(statusCode);
 
             if (String.isNotBlank(status)) {
                 response.setStatus(status);
             }
 
-            return response;        
+            return response;
         }
     }
 }

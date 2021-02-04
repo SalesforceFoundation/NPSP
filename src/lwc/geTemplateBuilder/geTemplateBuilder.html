@@ -1,0 +1,179 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+    </template>
+    <div role="main" class="main-container">
+        <c-util-page-header>
+            <h1 slot="title">
+                    <span class="slds-page-header__title slds-truncate"
+                          title={templateBuilderHeader}>
+                        {templateBuilderHeader}
+                    </span>
+            </h1>
+            <div slot="actions"
+                 class="slds-button-group">
+                <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                  title={CUSTOM_LABELS.commonCancel}
+                                  variant="neutral"
+                                  class="slds-float_right slds-m-right_small"
+                                  onclick={navigateToLandingPage}
+                                  data-qa-locator={qaLocatorCancel}>
+                </lightning-button>
+                <lightning-button label={CUSTOM_LABELS.commonSaveAndClose}
+                                  title={CUSTOM_LABELS.commonSaveAndClose}
+                                  variant="brand"
+                                  class="slds-float_right"
+                                  onclick={handleFormTemplateSave}
+                                  data-qa-locator={qaLocatorSaveAndClose}>
+                </lightning-button>
+            </div>
+        </c-util-page-header>
+
+        <div class="slds-card slds-card_extension">
+            <lightning-tabset active-tab-value={activeTab}
+                              class="extension_test">
+                <lightning-tab value={tabs.INFO.id}
+                               label={tabs.INFO.label}
+                               class="slds-p-around_none"
+                               onactive={handleOnActiveTab}
+                               show-error-indicator={hasTemplateInfoTabError}>
+                    <c-ge-template-builder-template-info template-id={formTemplateRecordId}
+                                                         template-name={formTemplate.name}
+                                                         template-description={formTemplate.description}
+                                                         is-loading={isLoading}
+                                                         onupdatevalidity={handleUpdateValidity}
+                                                         onchangetemplateinfoname={handleChangeTemplateInfoName}
+                                                         onchangetemplateinfodescription={handleChangeTemplateInfoDescription}>
+                    </c-ge-template-builder-template-info>
+                </lightning-tab>
+
+                <lightning-tab value={tabs.FORM_FIELDS.id}
+                               label={tabs.FORM_FIELDS.label}
+                               class="slds-p-around_none"
+                               onactive={handleOnActiveTab}
+                               show-error-indicator={hasSelectFieldsTabError}>
+                    <c-ge-template-builder-form-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
+                                                       form-sections={formSections}
+                                                       active-form-section-id={activeFormSectionId}
+                                                       previous-save-attempted={previousSaveAttempted}
+                                                       section-ids-by-field-mapping-developer-names={sectionIdsByFieldMappingDeveloperNames}
+                                                       onupdatevalidity={handleUpdateValidity}
+                                                       ontogglemodal={toggleModal}
+                                                       ontogglefieldmapping={handleToggleFieldMapping}
+                                                       onchangeactivesection={handleChangeActiveSection}
+                                                       onaddformsection={handleAddFormSection}
+                                                       onformsectionup={handleFormSectionUp}
+                                                       onformsectiondown={handleFormSectionDown}
+                                                       onaddfieldtosection={handleAddFieldToSection}
+                                                       onremovefieldfromsection={handleRemoveFieldFromSection}
+                                                       onformelementup={handleFormElementUp}
+                                                       onformelementdown={handleFormElementDown}
+                                                       ondeleteformelement={handleDeleteFormElement}
+                                                       onupdateformelement={handleUpdateFormElement}
+                                                       onrefreshformsections={handleRefreshFormSections}>
+                    </c-ge-template-builder-form-fields>
+                </lightning-tab>
+
+                <lightning-tab value={tabs.BATCH_SETTINGS.id}
+                               label={tabs.BATCH_SETTINGS.label}
+                               class="slds-p-around_none"
+                               onactive={handleOnActiveTab}
+                               show-error-indicator={hasBatchSettingsTabError}>
+                    <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
+                                                        batch-fields={batchFieldFormElements}
+                                                        missing-required-fields={missingRequiredBatchFields}
+                                                        available-batch-table-column-options={availableBatchTableColumnOptions}
+                                                        selected-batch-table-column-options={selectedBatchTableColumnOptions}
+                                                        disable-batch-table-columns-subtab={disableBatchTableColumnsSubtab}
+                                                        batch-table-columns-access-error-message={batchTableColumnsAccessErrorMessage}
+                                                        onupdatevalidity={handleUpdateValidity}
+                                                        onaddbatchheaderfield={handleAddBatchHeaderField}
+                                                        onremovebatchheaderfield={handleRemoveBatchHeaderField}
+                                                        onbatchheaderfieldup={handleBatchHeaderFieldUp}
+                                                        onbatchheaderfielddown={handleBatchHeaderFieldDown}
+                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}
+                                                        onupdatetemplatedefaultbatchtablecolumns={handleUpdateSelectedBatchTableColumns}>
+                    </c-ge-template-builder-batch-header>
+                </lightning-tab>
+            </lightning-tabset>
+        </div>
+
+        <template if:false={isLoading}>
+            <div class="slds-docked-form-footer  slds-docked-form-footer_extension"
+                 aria-label="Utility Bar">
+                <div class="slds-grid slds-nowrap slds-p-around_small">
+                    <div class="slds-size_1-of-3">
+                        <template if:true={inSelectFieldsTab}>
+                            <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
+                                              title={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
+                                              onclick={handleGoToTab}
+                                              variant="outline-brand"
+                                              data-tab-value={tabs.INFO.id}
+                                              data-qa-locator={qaLocatorBackTemplateInfo}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inBatchHeaderTab}>
+                            <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
+                                              title={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
+                                              onclick={handleGoToTab}
+                                              variant="outline-brand"
+                                              class="slds-m-right_small"
+                                              data-tab-value={tabs.FORM_FIELDS.id}
+                                              data-qa-locator={qaLocatorBackFormFields}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                    <div class="slds-size_1-of-3">
+                        <lightning-progress-indicator current-step={activeTab}
+                                                      type="base"
+                                                      variant="base">
+                            <lightning-progress-step label={tabs.INFO.label}
+                                                     aria-label={tabs.INFO.label}
+                                                     value={tabs.INFO.id}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label={tabs.FORM_FIELDS.label}
+                                                     aria-label={tabs.FORM_FIELDS.label}
+                                                     value={tabs.FORM_FIELDS.id}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label={tabs.BATCH_SETTINGS.label}
+                                                     aria-label={tabs.BATCH_SETTINGS.label}
+                                                     value={tabs.BATCH_SETTINGS.id}>
+                            </lightning-progress-step>
+                        </lightning-progress-indicator>
+                    </div>
+                    <div class="slds-size_1-of-3">
+                        <template if:true={inTemplateInfoTab}>
+                            <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavFormFields}
+                                              title={CUSTOM_LABELS.geButtonBuilderNavFormFields}
+                                              variant="brand"
+                                              class="slds-float_right"
+                                              onclick={handleGoToTab}
+                                              data-tab-value={tabs.FORM_FIELDS.id}
+                                              data-qa-locator={qaLocatorNextFormFields}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inSelectFieldsTab}>
+                            <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
+                                              title={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
+                                              class="slds-float_right"
+                                              onclick={handleGoToTab}
+                                              variant="brand"
+                                              data-tab-value={tabs.BATCH_SETTINGS.id}
+                                              data-qa-locator={qaLocatorNextBatchHeaderFields}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inBatchHeaderTab}>
+                            <lightning-button label={CUSTOM_LABELS.commonSaveAndClose}
+                                              title={CUSTOM_LABELS.commonSaveAndClose}
+                                              class="slds-float_right"
+                                              onclick={handleFormTemplateSave}
+                                              variant="brand"
+                                              data-qa-locator={qaLocatorSaveAndClose}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

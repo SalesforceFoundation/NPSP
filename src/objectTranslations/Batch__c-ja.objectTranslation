@@ -2,8 +2,12 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Batch --></value>
+        <value>バッチ</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- BatchDetailView --></label>
+        <name>BatchDetailView</name>
+    </fieldSets>
     <fields>
         <label>バッチ状況</label>
         <name>Batch_Status__c</name>
@@ -25,7 +29,7 @@
         <name>Number_of_Items__c</name>
     </fields>
     <fields>
-        <help>バッチであるオブジェクトの API 参照名。</help>
+        <help>バッチであるオブジェクトの API 参照名</help>
         <label>オブジェクト名</label>
         <name>Object_Name__c</name>
     </fields>
@@ -36,5 +40,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel>バッチ名</nameFieldLabel>
 </CustomObjectTranslation>

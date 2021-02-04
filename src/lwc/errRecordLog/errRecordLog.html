@@ -1,0 +1,102 @@
+<template>
+    <div class="slds-card slds-card_extension">
+
+        <div class="slds-page-header slds-theme_shade slds-p-top_small slds-p-bottom_medium" role="banner">
+
+            <template if:false={isLoading}>
+                <template if:true={hasAccess}>
+                    <div class="slds-page-header__row">
+                        <lightning-breadcrumbs>
+                            <lightning-breadcrumb label={recordInfo.sObjectLabelPlural}
+                                onclick={navigateToRecordObjectPage} data-qa-locator={qaLocatorRecordSObjectPage}>
+                            </lightning-breadcrumb>
+
+                            <lightning-breadcrumb label={recordInfo.name} onclick={navigateToRecordViewPage}
+                                data-qa-locator={qaLocatorRecordViewPage}>
+                            </lightning-breadcrumb>
+                        </lightning-breadcrumbs>
+                    </div>
+                </template>
+            </template>
+
+            <div class="slds-page-header__row slds-p-bottom_medium">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-top_x-small">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="custom:custom82" size="small"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title">{labels.title}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <template if:false={isLoading}>
+                <template if:true={hasAccess}>
+                    <div class="slds-page-header__row">
+                        <div class="slds-page-header__col-meta" data-qa-locator={qaLocatorSummary}>
+                            <p class="slds-page-header__meta-text slds-text-body_small">
+                                {itemSummary} {sortedByLabel}
+                            </p>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="slds-grid slds-grid_align-center">
+                <div class="slds-is-relative slds-size_1-of-1">
+                    <lightning-spinner alternative-text={labels.loadingMessage} data-id="spinner"
+                        data-qa-locator={qaLocatorSpinner} size="small">
+                    </lightning-spinner>
+                    <c-util-stencil row-count="4" column-count="1"></c-util-stencil>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <template if:true={error.detail}>
+                <div class="slds-p-around_medium">
+                    <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
+                        icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
+                        subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
+                        data-qa-locator={qaLocatorError}>
+                    </c-util-page-level-message>
+                </div>
+            </template>
+
+            <template if:false={error.detail}>
+                <template if:false={hasAccess}>
+                    <div class='slds-p-around_medium'>
+                        <c-util-illustration heading={labels.insufficientPermissions}
+                            message={labels.accessDeniedMessage} size="small" variant="no-access"
+                            data-qa-locator={qaLocatorNoAccessIllustration}>
+                        </c-util-illustration>
+                    </div>
+                </template>
+
+                <template if:true={hasAccess}>
+                    <div class="slds-p-bottom_x-large">
+                        <lightning-datatable key-field="Id" data={data} columns={columns} sorted-by={sortedBy}
+                            sorted-direction={sortDirection} onsort={handleSort} data-qa-locator={qaLocatorDatatable}
+                            wrap-text-max-lines="3" show-row-number-column hide-checkbox-column>
+                        </lightning-datatable>
+                    </div>
+
+                    <template if:false={hasData}>
+                        <div class="slds-align_absolute-center slds-p-vertical_xx-large">
+                            <lightning-formatted-text value={labels.commonNoItems}
+                                data-qa-locator={qaLocatorNoItemsMessage}>
+                            </lightning-formatted-text>
+                        </div>
+                    </template>
+                </template>
+            </template>
+
+        </template>
+
+    </div>
+</template>

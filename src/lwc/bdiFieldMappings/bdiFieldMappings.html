@@ -1,0 +1,125 @@
+<template>
+
+    <template if:true={displayFieldMappings}>
+
+        <c-bdi-field-mapping-modal
+            object-mapping={objectMapping}
+            field-mapping-set-name={fieldMappingSetName}>
+        </c-bdi-field-mapping-modal>
+
+        <div class="slds-grid slds-wrap slds-m-bottom_small">
+            <div class="slds-size_1-of-2">
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label={customLabels.bdiFMUIBackToMapGroup}
+                        onclick={handleNavButton}>
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
+            </div>
+            <div class="slds-size_1-of-2">
+                <lightning-button
+                        class="slds-m-left_x-small slds-float_right"
+                        label={customLabels.bdiFMUINewFieldMapping}
+                        onclick={handleOpenModal}
+                        title={customLabels.bdiFMUINewFieldMapping}>
+                </lightning-button>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">
+                    <!-- Open question around whether to turn this into a custom label. Naming still in flux. -->
+                    {objectMapping.MasterLabel} Group
+                </h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">
+                    {customLabels.bdiFieldMappingsLabel}
+                </h2>
+
+                <template if:true={hasBrokenFieldReferences}>
+                    <div class="slds-size_1-of-1">
+                        <c-util-page-level-message title={customLabels.bdiOMUIFieldMappingProblemHeader}
+                                                   subtitle={brokenFieldReferencesWarningMessage}
+                                                   variant='warning'>
+                            <ul slot="body"
+                                class="slds-list_dotted">
+                                <template for:each={brokenFieldMappings}
+                                          for:item="fieldMapping">
+                                    <li key={fieldMapping}
+                                        aria-label={fieldMapping}
+                                        class="slds-text-color_default">
+                                        {fieldMapping}
+                                    </li>
+                                </template>
+                            </ul>
+                        </c-util-page-level-message>
+                    </div>
+                </template>
+
+                <p class="slds-text_extension slds-m-bottom_medium">
+                    {customLabels.bdiFMUIDescription1}
+                </p>
+
+                <p class="slds-text_extension slds-m-bottom_medium">
+                    {customLabels.bdiFMUIDescription2}
+                </p>
+
+                <p class="slds-text_extension">
+                    <lightning-formatted-rich-text
+                        value={customLabels.stgHelpAdvancedMapping3}>
+                    </lightning-formatted-rich-text>
+                </p>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-vertical_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_4-of-8">
+                        <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_source">
+                            {customLabels.bdiFMUISourceObject}
+                        </p>
+                    </div>
+                    <div class="slds-size_4-of-8">
+                        <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_target">
+                            {customLabels.bdiFMUITarget} ({objectMapping.MasterLabel} {customLabels.stgLabelObject})
+                        </p>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <template if:true={isLoading}>
+                            <lightning-spinner></lightning-spinner>
+                            <c-util-stencil row-count="10" column-count="7"></c-util-stencil>
+                        </template>
+                        <template if:false={isLoading}>
+                            <lightning-datatable
+                                key-field="DeveloperName"
+                                data={fieldMappings}
+                                columns={columns}
+                                hide-checkbox-column
+                                onrowaction={handleRowAction}
+                                sorted-by={sortedBy}
+                                show-row-number-column={showRowNumberColumns}
+                                errors={errors}
+                                sorted-direction={sortedDirection}
+                                onsort={handleColumnSorting}>
+                            </lightning-datatable>
+                            <template if:true={noFieldMappings}>
+                                <p class="slds-p-around_medium">
+                                    <i>{customLabels.bdiFMUINoFieldMappings}&nbsp;</i>
+                                    <a href="#" onclick={handleOpenModal}>
+                                        {customLabels.bdiFMUINewFieldMapping}.
+                                    </a>
+                                </p>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <template if:false={noFieldMappings}>
+                <div class="slds-size_1-of-1 slds-m-top_small">
+                    <lightning-button
+                            class="slds-m-left_x-small slds-float_right"
+                            label={customLabels.bdiFMUINewFieldMapping}
+                            onclick={handleOpenModal}
+                            title={customLabels.bdiFMUINewFieldMapping}>
+                    </lightning-button>
+                </div>
+            </template>
+        </div>
+    </template>
+
+</template>

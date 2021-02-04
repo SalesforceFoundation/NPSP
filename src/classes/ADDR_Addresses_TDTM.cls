@@ -1042,24 +1042,24 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return;
         }
     }
-    
+
     /*******************************************************************************************************
-    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @description utility to combine mailing street fields into a single string with embedded CR LF
     * @param addr the Address to look at
     * @return boolean
     */
     public static String getMultilineStreet(Address__c addr) {
-        String str = addr.MailingStreet__c;
-        if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0) {
-            str += '\r\n' + addr.MailingStreet2__c;
+        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        if (isOneLineStreetAddress) {
+            return addr.MailingStreet__c;
         }
-        return str;
+        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
-    
+
     /*******************************************************************************************************
-    * @description Utility to copy Address fields between to Address objects.
+    * @description Utility to copy Address fields between two Address objects.
     * @param addrSrc the source Address
-    * @param addrSrc the destination Address
+    * @param addrDst the destination Address
     * @return void
     */
     public static void copyAddressObj(Address__c addrSrc, Address__c addrDst) {

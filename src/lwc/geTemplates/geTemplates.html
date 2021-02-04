@@ -1,0 +1,112 @@
+<template>
+    <c-util-page-header>
+        <h1 slot="title">
+            <span class="slds-page-header__title"
+                  title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                {CUSTOM_LABELS.geHeaderGiftEntry}
+            </span>
+        </h1>
+        <div slot="actions"
+             class="slds-button-group"
+             role="group">
+            <lightning-button-group>
+                <lightning-button label={CUSTOM_LABELS.geButtonNewBatch}
+                                  title={CUSTOM_LABELS.geButtonNewBatch}
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  data-qa-locator={qaLocatorButtonNewBatch}
+                                  onclick={openNewBatchWizard}>
+                </lightning-button>
+                <lightning-button label={CUSTOM_LABELS.geButtonNewSingleGift}
+                                  title={CUSTOM_LABELS.geButtonNewSingleGift}
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  data-qa-locator={qaLocatorButtonNewSingleGift}
+                                  onclick={navigateToForm}>
+                </lightning-button>
+            </lightning-button-group>
+        </div>
+    </c-util-page-header>
+
+    <div class="slds-card slds-card_extension">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+            </lightning-spinner>
+        </template>
+
+
+            <lightning-tabset active-tab-value={CUSTOM_LABELS.commonBatches}>
+
+                <lightning-tab value={CUSTOM_LABELS.commonBatches}
+                               label={CUSTOM_LABELS.commonBatches}
+                               data-qa-locator={qaLocatorBatches}
+                               class="slds-p-around_none">
+                    <template if:true={isLoading}>
+                        <c-util-stencil row-count="5"
+                                        column-count="5">
+                        </c-util-stencil>
+                    </template>
+
+                    <template if:false={isLoading}>
+                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
+                            <div class="slds-size_1-of-1 slds-p-around_medium">
+                                <div class="slds-card slds-card_extension">
+                                    <c-ge-list-view data-id={batchesListViewName}
+                                                    list-name={batchesListViewName}
+                                                    object-api-name={dataImportBatchObjectApiName}
+                                                    title={CUSTOM_LABELS.commonBatches}
+                                                    custom-icon={batchesListViewIcon}
+                                                    filtered-by={batchListFilteredBy}
+                                                    onrowaction={handleBatchesTableRowAction}
+                                                    show-standard-footer
+                                                    ontogglemodal={toggleModal}>
+                                    </c-ge-list-view>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </lightning-tab>
+
+                <lightning-tab value={CUSTOM_LABELS.commonTemplates}
+                               label={CUSTOM_LABELS.commonTemplates}
+                               data-qa-locator={qaLocatorTemplates}
+                               class="slds-p-around_none">
+                    <template if:true={isLoading}>
+                        <c-util-stencil row-count="5"
+                                        column-count="5">
+                        </c-util-stencil>
+                    </template>
+
+                    <template if:false={isLoading}>
+                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
+                            <div class="slds-size_1-of-1 slds-p-around_medium">
+                                <div class="slds-card slds-card_extension">
+                                    <c-ge-list-view data-id={templatesListViewName}
+                                                    list-name={templatesListViewName}
+                                                    object-api-name={formTemplateObjectApiName}
+                                                    title={CUSTOM_LABELS.commonTemplates}
+                                                    custom-icon={templatesListViewIcon}
+                                                    description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
+                                                    sorted-by={sortTemplatesBy}
+                                                    sorted-direction={sortTemplatesDirection}
+                                                    limit={templatesListViewDefaultLimit}
+                                                    actions={templatesTableActions}
+                                                    onrowaction={handleTemplatesTableRowAction}
+                                                    ontogglemodal={toggleModal}
+                                                    show-standard-footer>
+                                        <lightning-button label={CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}
+                                                          class="slds-m-right_small"
+                                                          onclick={handleNewFormTemplate}
+                                                          slot="actions"
+                                                          data-qa-locator={qaLocatorCreateTemplate}>
+                                        </lightning-button>
+                                    </c-ge-list-view>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </lightning-tab>
+            </lightning-tabset>
+    </div>
+</template>

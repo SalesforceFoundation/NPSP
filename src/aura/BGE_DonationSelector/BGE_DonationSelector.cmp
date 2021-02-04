@@ -79,20 +79,20 @@
         </lightning:layoutItem>
 
         <!--START UNPAID PAYMENTS CARDS-->
-        <aura:iteration var="donation" items="{!v.unpaidPayments}">
+        <aura:iteration var="payment" items="{!v.unpaidPayments}">
             <lightning:layoutItem largeDeviceSize="4"
                                   mediumDeviceSize="6"
                                   size="12"
                                   padding="around-small">
-                <lightning:card class="{!'slds-card_boundary sameCardHeight' + if(equals(donation.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
+                <lightning:card class="{!'slds-card_boundary sameCardHeight' + if(equals(payment.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
 
                     <aura:set attribute="title">
                         <lightning:icon iconName="standard:currency" size="small" class="slds-m-right_small" />
-                        <lightning:formattedText value="{!donation.Name}"/>
+                        <lightning:formattedText value="{!payment.Name}"/>
                     </aura:set>
 
                     <aura:set attribute="footer">
-                        <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
+                        <aura:if isTrue="{!equals(payment.Id, v.selectedDonation.Id)}">
                             <div class="selectedDonationBody">
                                 <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small selectedCheckmark"
                                                 alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
@@ -100,7 +100,7 @@
                             </div>
                             <aura:set attribute="else">
                                 <lightning:button
-                                        value="{!donation}"
+                                        value="{!payment}"
                                         label="{!$Label.c.bgeFormUpdatePayment}"
                                         onclick="{!c.handleDonationSelection}"
                                         variant="base"/>
@@ -114,19 +114,19 @@
                             <lightning:formattedText value="{!v.labels.opportunityName + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <lightning:formattedText value="{!donation.npe01__Opportunity__r.Name}"/>
+                            <lightning:formattedText value="{!payment.npe01__Opportunity__r.Name}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" smallDeviceSize="6">
                             <lightning:formattedText value="{!v.labels.paymentAmount + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/>
+                            <ui:outputCurrency value="{!payment.npe01__Payment_Amount__c}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" smallDeviceSize="6">
                             <lightning:formattedText value="{!v.labels.paymentScheduledDate + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <lightning:formattedText value="{!donation.npe01__Scheduled_Date__c}"/>
+                            <lightning:formattedText value="{!payment.npe01__Scheduled_Date__c}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END CARD BODY-->
@@ -137,36 +137,38 @@
         <!--END UNPAID PAYMENTS CARDS-->
 
         <!--START OPEN OPPS CARDS-->
-        <aura:iteration var="donation" items="{!v.openOpportunities}">
+        <aura:iteration var="opportunityWrapper" items="{!v.openOpportunities}">
             <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6"
                                   size="12"
                                   padding="around-small">
-                <lightning:card title="{!donation.Name}" iconName="standard:opportunity"
-                                class="{!'slds-card_boundary sameCardHeight' + if(equals(donation.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
+                <lightning:card title="{!opportunityWrapper.opportunity.Name}" iconName="standard:opportunity"
+                                class="{!'slds-card_boundary sameCardHeight' + if(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
 
                     <aura:set attribute="footer">
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
+                                <aura:if isTrue="{!not(opportunityWrapper.hasNonWrittenOffPayments)}">
+                                    <lightning:layoutItem size="12" padding="around_xx-small"
+                                                          class="slds-border_bottom slds-p-bottom_x-small slds-m-bottom_x-small">
+                                        <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
+                                            <lightning:icon iconName="utility:check" size="small"
+                                                            class="slds-p-right_small selectedCheckmark"
+                                                            alternativeText="{!$Label.c.stgCheckboxTrue}"
+                                                            title="{!$Label.c.stgCheckboxTrue}"/>
+                                            <lightning:formattedText
+                                                    value="{!v.labelForOppSelectedForUpdate}"/>
+                                            <aura:set attribute="else">
+                                                <lightning:button
+                                                        value="{!opportunityWrapper.opportunity}"
+                                                        label="{!v.labelForSelectOppForUpdate}"
+                                                        onclick="{!c.handleDonationSelection}"
+                                                        variant="base"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                </aura:if>
                                 <lightning:layoutItem size="12" padding="around_xx-small">
-                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
-                                        <lightning:icon iconName="utility:check" size="small"
-                                                        class="slds-p-right_small selectedCheckmark"
-                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
-                                                        title="{!$Label.c.stgCheckboxTrue}"/>
-                                        <lightning:formattedText
-                                                value="{!v.labelForOppSelectedForUpdate}"/>
-                                        <aura:set attribute="else">
-                                            <lightning:button
-                                                    value="{!donation}"
-                                                    label="{!v.labelForSelectOppForUpdate}"
-                                                    onclick="{!c.handleDonationSelection}"
-                                                    variant="base"/>
-                                        </aura:set>
-                                    </aura:if>
-                                </lightning:layoutItem>
-                                <lightning:layoutItem size="12" padding="around_xx-small"
-                                                      class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
-                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
+                                    <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
                                         <lightning:icon iconName="utility:check" size="small"
                                                         class="slds-p-right_small selectedCheckmark"
                                                         alternativeText="{!$Label.c.stgCheckboxTrue}"
@@ -175,7 +177,7 @@
                                                 value="{!v.labelForOppSelectedForApplyNewPmt}"/>
                                         <aura:set attribute="else">
                                             <lightning:button
-                                                    value="{!donation}"
+                                                    value="{!opportunityWrapper.opportunity}"
                                                     label="{!v.labelForSelectOppForApplyNewPmt}"
                                                     onclick="{!c.handleApplyPaymentSelection}"
                                                     variant="base"/>
@@ -192,13 +194,13 @@
                             <lightning:formattedText value="{!v.labels.opportunityAmount + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8">
-                            <ui:outputCurrency value="{!donation.Amount}"/>
+                            <ui:outputCurrency value="{!opportunityWrapper.opportunity.Amount}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4">
                             <lightning:formattedText value="{!v.labels.opportunityStage + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8">
-                            <lightning:formattedText value="{!donation.StageName}"/>
+                            <lightning:formattedText value="{!opportunityWrapper.opportunity.StageName}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END CARD BODY-->

@@ -20,6 +20,10 @@
         <plural>true</plural>
         <value><!-- הBatch --></value>
     </caseValues>
+    <fieldSets>
+        <label><!-- BatchDetailView --></label>
+        <name>BatchDetailView</name>
+    </fieldSets>
     <fields>
         <label>מצב אצווה</label>
         <name>Batch_Status__c</name>

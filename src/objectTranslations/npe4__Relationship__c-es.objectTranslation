@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Relación</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Relaciones</value>
-    </caseValues>
     <fields>
-        <help><!-- When you create an Opportunity for the Contact in this Relationship, NPSP assigns this Opportunity Contact Role to the Related Contact. --></help>
-        <label><!-- Related Opportunity Contact Role --></label>
+        <help>Cuando crea una oportunidad para el contacto en esta relación, NPSP asigna esta función de contacto de oportunidad al contacto relacionado.</help>
+        <label>Función contacto oportunidad relacionada</label>
         <name>Related_Opportunity_Contact_Role__c</name>
         <picklistValues>
             <masterLabel>Soft Credit</masterLabel>
-            <translation><!-- Soft Credit --></translation>
+            <translation>Crédito blando</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Solicitor</masterLabel>
-            <translation><!-- Solicitor --></translation>
+            <translation>Abogado</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Tribute</masterLabel>
-            <translation><!-- Tribute --></translation>
+            <translation>Tributo</translation>
         </picklistValues>
     </fields>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Número Relación</nameFieldLabel>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

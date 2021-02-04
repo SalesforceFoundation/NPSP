@@ -56,49 +56,7 @@ private class CRLP_RollupRecurringDonation_TEST {
      * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
      */
     private static void mockRollupCMTValues() {
-
-        // Create a single Filter Group (no need for filter rules here)
-        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
-        String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
-
-        // Simple testing filters for IsWon, RecordType, and Paid/Written Off
-        String filterGroupsJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-Pledged') + ',' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-ClosedWon') +
-                ']';
-        String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'False') + ',' +
-
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') +
-                ']';
-
-        // Deserialize the filter group and filter rule to use for the tests
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
-
-        // Create a Rollup that uses the above Filter Group
-        String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('RD Last Payment Date', filterGroupId2,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Last_Payment_Date__c', CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('RD Total Paid Amount', filterGroupId2,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Paid_Amount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('RD Total Paid Installments', filterGroupId2,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'CloseDate') +
-
-                ']';
-
-        // Deserialize the rollups to use for testing
-        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+        CMT_UnitTestData_TEST.mockRecurringDonationRollupCMTValues();
     }
 
     static testMethod void test_Rollups_Queueable() {
@@ -138,7 +96,7 @@ private class CRLP_RollupRecurringDonation_TEST {
         ));
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
         ));
 
@@ -174,17 +132,15 @@ private class CRLP_RollupRecurringDonation_TEST {
         Date lastPaymentDate = startDate.addMonths(numClosedOpps-1);
         Date nextPaymentDate = lastPaymentDate.addMonths(1);
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'testRollupsServices',
-                npe03__Installments__c = numOpps,
-                npe03__Contact__c = con.Id,
-                npe03__Amount__c = instAmt,
-                npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
-                npe03__Date_Established__c = startDate,
-                npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = null
-        );
-
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+                .withPlannedInstallments(numOpps)
+                .withContact(con.Id)
+                .withAmount(instAmt)
+                .withInstallmentPeriodMonthly()
+                .withDateEstablished(startDate)
+                .withScheduleTypeMultiplyValue()
+                .withOpenEndedStatus(null)
+                .build();
         insert rd;
 
         rd = [SELECT npe03__Total_Paid_Installments__c

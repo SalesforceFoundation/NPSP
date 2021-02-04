@@ -1,0 +1,138 @@
+<template>
+    <template if:true={permissionEnabled}>
+        <lightning-layout class="slds-m-around_x-large"
+                          multiple-rows="true">
+
+            <lightning-layout-item size="12"
+                                   class="slds-m-vertical_small">
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
+                        <span class="slds-section-title_divider"
+                              title={labels.header}>
+                            {labels.header}
+                        </span>
+                    </h3>
+                    <div aria-hidden="false"
+                         class="slds-section__content">
+                        <template if:true={error}>
+                            <c-util-page-level-message variant="error"
+                                                       title="Error">
+                                <p slot="body"
+                                   class="slds-m-bottom_small slds-text-color_destructive">
+                                    {errorMessage}
+                                </p>
+                            </c-util-page-level-message>
+                        </template>
+                        <p class="slds-text-body_regular">{labels.description}</p>
+                    </div>
+                </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12">
+                <h3 class="slds-text-title slds-text-title_bold slds-text-color_default">
+                    {labels.headerConfigure}
+                </h3>
+                <p class="slds-text-body_regular slds-p-vertical_small">
+                    {labels.descriptionConfigure}
+                </p>
+                <lightning-accordion allow-multiple-sections-open>
+                    <lightning-accordion-section name={labels.headerDisplayFormat}
+                                                 label={labels.headerDisplayFormat}>
+                        <lightning-formatted-rich-text
+                                value={labels.descriptionDisplayFormat}></lightning-formatted-rich-text>
+                    </lightning-accordion-section>
+                </lightning-accordion>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12"
+                                   class="slds-m-bottom_small">
+                <lightning-layout multiple-rows="true" horizontal-align="left">
+
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
+                        <lightning-input type="text"
+                                         name={labelDisplayFormat}
+                                         label={labelDisplayFormat}
+                                         field-level-help={inlineHelpTextDisplayFormat}
+                                         value={displayFormat}
+                                         max-length={maxLengthDisplayFormat}
+                                         required
+                                         placeholder={displayNumberPlaceholder}
+                                         onchange={handleDisplayFormatChange}
+                                         onblur={handleDisplayFormatBlur}
+                                         data-qa-locator={qaLocatorDisplayFormat}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
+                        <lightning-input type="number"
+                                         name={labelStartingNumber}
+                                         label={labelStartingNumber}
+                                         field-level-help={inlineHelpTextStartingNumber}
+                                         value={startingNumber}
+                                         onchange={handleStartingNumberChange}
+                                         data-qa-locator={qaLocatorStartingNumber}
+                                         max-length={maxLengthStartingNumber}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
+                        <lightning-input type="text"
+                                         name={labelDescription}
+                                         label={labelDescription}
+                                         field-level-help={inlineHelpTextDescription}
+                                         value={description}
+                                         onchange={handleDescriptionChange}
+                                         data-qa-locator={qaLocatorDescription}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12"
+                                           class="slds-p-horizontal_x-small">
+                        <lightning-layout>
+                            <lightning-layout-item class="slds-p-around_xx-small">
+                                <lightning-button variant="brand"
+                                                  label={labels.buttonSave}
+                                                  title={labels.buttonSave}
+                                                  onclick={handleSave}
+                                                  data-qa-locator={qaLocatorSaveButton}
+                                                  disabled={isLoading}
+                                                  class="slds-slds-m-right_small">
+                                </lightning-button>
+                            </lightning-layout-item>
+                            <lightning-layout-item class="slds-p-around_xx-small">
+                                <lightning-button label={labels.buttonSaveActivate}
+                                                  title={labels.buttonSaveActivate}
+                                                  onclick={handleSaveAndActivate}
+                                                  data-qa-locator={qaLocatorSaveAndActivateButton}
+                                                  disabled={isLoading}>
+                                </lightning-button>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="12"
+                                   class="slds-m-vertical_small">
+                <h3 class="slds-text-title slds-text-title_bold slds-text-color_default">
+                    {labels.headerFormats}
+                </h3>
+                <p class="slds-text-body_regular slds-p-vertical_small">
+                    {labels.descriptionActivation}
+                </p>
+
+                <lightning-datatable key-field="id"
+                                     data={autoNumberRecords}
+                                     columns={columns}
+                                     onrowaction={handleRowAction}
+                                     hide-checkbox-column="true"
+                                     is-loading={isLoading}
+                                     data-qa-locator={qaLocatorBatchNumberDatatable}
+                                     class="slds-table_striped">
+                </lightning-datatable>
+            </lightning-layout-item>
+
+        </lightning-layout>
+    </template>
+</template>

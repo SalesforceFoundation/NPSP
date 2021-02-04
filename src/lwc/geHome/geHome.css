@@ -1,0 +1,3 @@
+.slds-card-body_extension {
+    min-height: var(--lwc-sizeSmall, 15rem);
+}

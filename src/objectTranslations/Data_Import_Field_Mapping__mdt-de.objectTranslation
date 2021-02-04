@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Datenimport-Feldzuordnung</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Datenimport-Feldzuordnungen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Datenimport-Feldzuordnung</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Datenimport-Feldzuordnungen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Datenimport-Feldzuordnung</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Datenimport-Feldzuordnungen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Datenimport-Feldzuordnung</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Datenimport-Feldzuordnungen</value>
+    </caseValues>
+    <fields>
+        <help>Der Datenimport-Feldzuordnungssatz, der diese Feldzuordnung enthält.</help>
+        <label>Datenimport-Feldzuordnungssatz</label>
+        <name>Data_Import_Field_Mapping_Set__c</name>
+        <relationshipLabel>Datenimport-Feldzuordnungen</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Wenn diese Option aktiviert ist, wurde dieser Datensatz aus der Benutzeroberfläche der Erweiterten Zuordnung des Datenimports gelöscht und bei der Verarbeitung des NPSP-Datenimports ignoriert.</help>
+        <label>Ist gelöscht</label>
+        <name>Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help>Zeigt an, ob das Feld des NPSP-Datenimportobjekts einen Wert enthalten muss. Wenn er erforderlich ist, schlägt die Testausführung fehl, wenn das Feld keinen Wert enthält.</help>
+        <label>Erforderlich?</label>
+        <name>Required__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation>Nein</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation>Ja</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Der API-Name des Felds auf dem NPSP-Datenimportobjekt.</help>
+        <label>API-Name des Quellfelds</label>
+        <name>Source_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>Der API-Name des Felds auf dem Zielobjekt.</help>
+        <label>API-Name des Zielfelds</label>
+        <name>Target_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>Die Ziel-Datenimport-Objektgruppe für diese Feldzuordnung.</help>
+        <label>Zielobjektzuordnung</label>
+        <name>Target_Object_Mapping__c</name>
+        <relationshipLabel>Datenimport-Feldzuordnungen</relationshipLabel>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Data Import Field Mapping Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

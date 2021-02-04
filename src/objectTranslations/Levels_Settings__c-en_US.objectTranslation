@@ -9,6 +9,14 @@
         <value>Levels Settings</value>
     </caseValues>
     <fields>
+        <label><!-- Last Job Start Time : Account --></label>
+        <name>LastJobStartTimeAccount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Job Start Time : Contact --></label>
+        <name>LastJobStartTimeContact__c</name>
+    </fields>
+    <fields>
         <help><!-- Number of records per batch to process when recalculating levels. --></help>
         <label><!-- Level Assignment Batch Size --></label>
         <name>Level_Assignment_Batch_Size__c</name>

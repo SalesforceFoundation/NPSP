@@ -63,6 +63,203 @@ public with sharing class BDI_Donations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description verifies that an opportunity target object record should be populated with a batch number if the
+     * data import record is not being processed in a dry run and the data import batch has a batch number
+     * populated
+    */
+    @isTest
+    static void opportunityShouldHaveBatchNumber() {
+        Opportunity opp = new Opportunity(
+            Name = 'Test opp',
+            StageName = 'Closed',
+            CloseDate = System.today()
+        );
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+            Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(opp, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldSetBatchNumber, 'The opportunity should be allowed to have a batch number set' +
+            ' on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that an opportunity that contains an Id should not be allowed to have a batch
+    * number set on it. To simulate an opportunity update, the opportunity is inserted so that an Id is present.
+    */
+    @isTest
+    static void opportunityShouldNotHaveBatchNumber_Updated() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+        DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                            FROM DataImport__c
+                                            LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(opp, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The opportunity should NOT be allowed to have a batch ' +
+            'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that a payment that is paid should not be allowed to have a batch
+    * number set on it. To simulate an payment update, the payment is inserted so that an Id is present.
+    */
+    @isTest
+    static void paymentShouldHaveBatchNumber_paid() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Paid__c = true
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+        DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                            FROM DataImport__c
+                                            LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+                'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that an payment that is unpaid should not be allowed to have a batch
+    * number set on it.
+    */
+    @isTest
+    static void paymentShouldNotHaveBatchNumber_unpaid() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.Id,
+            npe01__Paid__c = false
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+            Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+            'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that a target object should not have the batch number populated if the batch number
+    * is blank on the DI record
+    */
+    @isTest
+    static void paymentShouldNotHaveBatchNumber_NoBatchNumber() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Paid__c = true
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+                'number set on it.');
+    }
+
+   /*********************************************************************************************************
     * @description  operation
     *       map to checkbox field and manually match to exiting opp
     * verify: 
@@ -108,14 +305,20 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+
         // manually insert checkbox field mapping
-        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
-        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
+        fieldMapper.addMappedField('Opportunity', 
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
                 'IsPrivate');
+                
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
 
         //run batch data import
-        Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -194,14 +397,20 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+
         // manually insert checkbox field mapping
-        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
-        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
+        fieldMapper.addMappedField('Opportunity', 
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
                 'IsPrivate');
+                
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
 
         //run batch data import
-        Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
     
@@ -2367,12 +2576,16 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
-            Donation_Amount__c=1100,
-            Donation_Date__c=System.Today(),
-            Donation_Donor__c='contact1',
-            Payment_Method__c = 'Check'
-            );
+        insert new DataImport__c(
+                Contact1_Firstname__c = 'c0',
+                Contact1_Lastname__c = 'c0',
+                Contact1_Personal_Email__c = 'c0@c0.com',
+                Donation_Amount__c = 1100,
+                Donation_Date__c = System.Today(),
+                Donation_Donor__c = 'contact1',
+                Payment_Method__c = 'Check',
+                Donation_Description__c = 'Opp was updated.'
+        );
             
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
@@ -2690,7 +2903,12 @@ public with sharing class BDI_Donations_TEST {
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
+        // Since we have a hard time constraining the length of translated labels, truncate here
+        if(expectedStatus.length() > 255) {
+            expectedStatus = expectedStatus.substring(0,255);
+        }        
+
         list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
             Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c, Payment_Possible_Matches__c from DataImport__c];
         system.assertEquals(1, listDI.size());
@@ -2708,7 +2926,7 @@ public with sharing class BDI_Donations_TEST {
                     shouldAssertImportedPayment = false;
                 }
                 when 11 {
-                    shouldImportFail = true;
+                    shouldImportFail = false;
                     shouldAssertImportedPayment = false;
                 }
             }
@@ -2732,6 +2950,145 @@ public with sharing class BDI_Donations_TEST {
 	        // verify we matched an existing opp (no new opp created)
 	        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
 	        system.assertEquals(listOpp.size(), listOppX.size());
+
+            if (imatch == 11) {
+                Opportunity oppWithWrittenOffPmt = [
+                        SELECT Amount,
+                                CloseDate,
+                                IsClosed,
+                                IsWon,
+                                Description, (
+                                SELECT Id,
+                                        npe01__Payment_Amount__c,
+                                        npe01__Scheduled_Date__c,
+                                        npe01__Written_Off__c,
+                                        npe01__Paid__c
+                                FROM npe01__OppPayment__r
+                                WHERE Id = :listPmt[6].Id
+                        )
+                        FROM Opportunity
+                        WHERE Name = 'Opp11'
+                        LIMIT 1
+                ];
+
+                System.assertEquals('Opp was updated.', oppWithWrittenOffPmt.Description,
+                        'The Opportunity.Description field should have been updated.');
+                System.assert(oppWithWrittenOffPmt.IsClosed,
+                        'The Opportunity should now be Closed/Won.');
+                System.assert(oppWithWrittenOffPmt.IsWon,
+                        'The Opportunity should now be Closed/Won.');
+
+                System.assertEquals(listOpp[11].Amount, oppWithWrittenOffPmt.Amount,
+                        'The Opportunity.Amount field should not have been updated.');
+                System.assertEquals(listOpp[11].CloseDate, oppWithWrittenOffPmt.CloseDate,
+                        'The Opportunity.CloseDate field should not have been updated.');
+
+                System.assertEquals(listPmt[6].npe01__Payment_Amount__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Payment_Amount__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Scheduled_Date__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Scheduled_Date__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Written_Off__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Written_Off__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Paid__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Paid__c,
+                        'The written-off Payment should be unchanged.');
+            }
+        }
+    }
+
+    @isTest
+    static void givenUserSelectedOppHasWrittenOffPmtsWhenProcessedThenOppShouldBeUpdated() {
+        // Create an Opportunity with two written-off Payments
+        Account a = new Account(Name = 'testAcct');
+        insert a;
+
+        Opportunity o = new Opportunity(
+                Name = 'testOpp',
+                AccountId = a.Id,
+                Amount = 25,
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+                CloseDate = Date.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true);
+        insert o;
+
+        npe01__OppPayment__c p0 = new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 25,
+                npe01__Opportunity__c = o.Id,
+                npe01__Written_Off__c = true,
+                npe01__Scheduled_Date__c = Date.today()
+        );
+
+        npe01__OppPayment__c p1 = new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 25,
+                npe01__Opportunity__c = o.Id,
+                npe01__Written_Off__c = true,
+                npe01__Scheduled_Date__c = Date.today()
+        );
+        insert new List<npe01__OppPayment__c>{
+                p0, p1
+        };
+
+        // Create the Data Import record that mocks a User manually setting the
+        // DonationImported__c field via the BGE UI
+        DataImport__c d = new DataImport__c();
+        d.Account1Imported__c = a.Id;
+        d.Account1ImportStatus__c = Label.bdiDryRunMatched;
+        d.Donation_Amount__c = 333;
+        d.Donation_Date__c = o.CloseDate;
+        d.Donation_Donor__c = 'Account1';
+        d.DonationImported__c = o.Id;
+        d.DonationImportStatus__c = Label.bdiMatchedByUser;
+        d.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        insert d;
+
+        //Run the Data Import process
+        Data_Import_Settings__c diSettings =
+                UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c =
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                        UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Donation_Date_Range__c = 1;
+
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        List<Opportunity> opportunities = [
+                SELECT AccountId,
+                        Account.Name,
+                        Amount
+                FROM Opportunity
+                WHERE AccountId = :a.Id
+        ];
+
+        System.assertEquals(1, opportunities.size(),
+                'The Account should still only have one Opportunity ' +
+                        'since the selected Opportunity should have been updated.');
+        System.assertEquals(a.Id, opportunities[0].AccountId,
+                'The Opportunity AccountId should not have been changed.');
+        System.assertEquals(a.Name, opportunities[0].Account.Name,
+                'The Account Name should not have changed.');
+        System.assertEquals(d.Donation_Amount__c, opportunities[0].Amount,
+                'The selected Opportunity should have been updated with the information ' +
+                        'from the Data Import record.');
+
+        for (npe01__OppPayment__c oppPayment : [
+                SELECT npe01__Written_Off__c,
+                        npe01__Payment_Amount__c
+                FROM npe01__OppPayment__c
+                WHERE Id = :p0.Id
+                OR Id = :p1.Id
+        ]) {
+            System.assertEquals(true, oppPayment.npe01__Written_Off__c,
+                    'The existing written-off Payments should be unchanged.');
+            System.assertEquals(25, oppPayment.npe01__Payment_Amount__c,
+                    'The existing written-off Payments should be unchanged.');
         }
     }
 

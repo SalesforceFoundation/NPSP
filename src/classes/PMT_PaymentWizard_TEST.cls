@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -39,7 +39,7 @@ private class PMT_PaymentWizard_TEST {
     private static final String PARAM_WTYPE = 'wtype';
     private static final String PARAM_PAYMENT = 'payment';
     private static final String PARAM_WRITEOFF = 'writeoff';
-    
+
     /*********************************************************************************************************
     * @description Verifies payments write off
     */
@@ -48,14 +48,14 @@ private class PMT_PaymentWizard_TEST {
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
         );
-        
+
         Opportunity opp = createClosedWonOpportunity(150);
-        
+
         npe01__OppPayment__c[] opmtUpdate = getPayments(opp.Id);
         opmtUpdate[0].npe01__payment_amount__c = 50;
         System.assertEquals(true, opmtUpdate[0].npe01__paid__c);
         update opmtUpdate;
-        
+
         npe01__OppPayment__c newOpmt = new npe01__OppPayment__c(
             npe01__Opportunity__c = opp.id,
             npe01__Payment_Amount__c = 100,
@@ -63,49 +63,49 @@ private class PMT_PaymentWizard_TEST {
             npe01__Payment_Date__c = Date.newInstance(2001,12,12)
         );
         insert newOpmt;
-        
+
         Test.startTest();
-        
+
         npe01__OppPayment__c[] opmtAllStart = getPayments(opp.Id);
         System.assertEquals(2, opmtAllStart.size());
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         // set values
         controller.writeoffPayment.npe01__payment_date__c = Date.newInstance(2001,12,12);
-        
+
         PageReference ref = controller.writeoff();
 
         Test.stopTest();
-        
+
         // look for the data
-        //should be two, one paid, one written off for the balance 
+        //should be two, one paid, one written off for the balance
         npe01__OppPayment__c[] opmtAll = getPayments(opp.Id);
         System.assertEquals(2, opmtAll.size());
-        
+
         //the single payment should be written off
         npe01__OppPayment__c[] opmtOpen = [
-            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c 
-            FROM npe01__OppPayment__c 
+            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c
+            FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c = :opp.Id AND npe01__Paid__c = false AND npe01__Written_Off__c = false];
         System.assertEquals(0, opmtOpen.size());
-        
+
         npe01__OppPayment__c[] opmtPaid = [
-            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c 
-            FROM npe01__OppPayment__c 
+            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c
+            FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c = :opp.Id AND npe01__Paid__c = true AND npe01__Written_Off__c = false];
         System.assertEquals(1, opmtPaid.size());
         System.assertEquals(50, opmtPaid[0].npe01__payment_amount__c);
-        
+
         npe01__OppPayment__c[] opmtWrittenOff = [
-            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c 
-            FROM npe01__OppPayment__c 
+            SELECT Id, npe01__Payment_Method__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c
+            FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c = :opp.Id AND npe01__Paid__c = false AND npe01__Written_Off__c = true];
         System.assertEquals(1, opmtWrittenOff.size());
         System.assertEquals(100, opmtWrittenOff[0].npe01__payment_amount__c);
@@ -119,23 +119,23 @@ private class PMT_PaymentWizard_TEST {
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
         );
-        
+
         Opportunity opp = createClosedWonOpportunity(1200);
 
         // Create 11 additional payments (for a total of 12)
         // And mark 2 of them as paid and 3 of them as written off
         // The resulting payments should be (3 paid / 3 written off / 6 open)
         List<npe01__OppPayment__c> newPayments = new List<npe01__OppPayment__c>();
-        
+
         Boolean isPaid = true;
         Boolean isWrittenOff = false;
 
         for (Integer paymentNum=1; paymentNum<12; paymentNum++) {
-            
+
             if (paymentNum>2) {
                 isPaid = false;
                 isWrittenOff = true;
-            } 
+            }
 
             if (paymentNum>5) {
                 isWrittenOff = false;
@@ -155,30 +155,30 @@ private class PMT_PaymentWizard_TEST {
         // Add auto generated payment
         List<npe01__OppPayment__c> opmtUpdate = getPayments(opp.Id);
         opmtUpdate[0].npe01__payment_amount__c = 100;
-        newPayments.add(opmtUpdate[0]); 
+        newPayments.add(opmtUpdate[0]);
 
         upsert newPayments;
-        
+
         Test.startTest();
-        
+
         List<npe01__OppPayment__c> allPayments = getPayments(opp.Id);
         System.assertEquals(12, allPayments.size(), 'There should be 12 payments associated with the Oppportunity');
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         // set values
         controller.writeoffPayment.npe01__payment_date__c = Date.newInstance(2001,12,12);
         System.assertEquals(6, controller.writeoffPaymentCount, 'There should be 6 payments to writeoff');
         PageReference ref = controller.writeoff();
 
         Test.stopTest();
-        
+
         // should be seven payments - 3 paid, 3 written off (previously), 1 new combined written off
         allPayments = getPayments(opp.Id);
         System.assertEquals(7, allPayments.size(), 'There should be 7 total payments after write off');
@@ -204,14 +204,14 @@ private class PMT_PaymentWizard_TEST {
                 openCount--;
             }
         }
-        
+
         // there should be no open payments left
         System.assertEquals(0, openCount, 'There should be no open payments');
         System.assertEquals(3, paidCount, 'There should be 3 paid payments');
         System.assertEquals(300, paidAmount, 'There should be 300 in paid payments');
         System.assertEquals(4, writtenOffCount, 'There should be 4 written off payments');
         System.assertEquals(900, writtenOffAmount, 'There should be 900 in written off payments');
-        
+
     }
 
     /*********************************************************************************************************
@@ -235,30 +235,30 @@ private class PMT_PaymentWizard_TEST {
             npe01__Written_Off__c = true)
         );
         insert pmts;
-         
+
         Test.startTest();
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
-        Test.setCurrentPage(pageRef); 
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
         l = controller.getIntervalUnits();
-        
+
         // set values
         controller.samplePayment.npe01__payment_method__c = 'Stock';
         controller.intervalUnit = 'Month';
         controller.numberOfPayments = 8;
         controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
-        
+
         PageReference ref = controller.calculate();
         PageReference savePage = controller.createPayments();
-                
+
         // look for the data
         Decimal totalPaid = 0;
         Decimal totalWrittenOff = 0;
@@ -297,15 +297,15 @@ private class PMT_PaymentWizard_TEST {
         System.assertEquals(totalPaid, oppAfterPayments.npe01__Payments_Made__c);
         System.assertEquals(totalWrittenOff, oppAfterPayments.npe01__Amount_Written_Off__c);
         System.assertEquals(totalUnPaid, oppAfterPayments.npe01__Amount_Outstanding__c);
-        
+
 
     }
-    
+
     /*********************************************************************************************************
-    * @description Verifies creation of payments for monthly intervals 
+    * @description Verifies creation of payments for monthly intervals
     */
     @isTest
-    private static void testPageElementsMonthly() {  
+    private static void testPageElementsMonthly() {
         Opportunity opp = createPledgedOpportunity(1300);
 
         npe01__OppPayment__c[] pmts = new npe01__OppPayment__c[0];
@@ -320,28 +320,28 @@ private class PMT_PaymentWizard_TEST {
             npe01__Paid__c = false )
         );
         insert pmts;
-         
+
         Test.startTest();
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
-        Test.setCurrentPage(pageRef); 
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
         l = controller.getIntervalUnits();
-        
+
         // set values
         controller.samplePayment.npe01__payment_method__c = 'Stock';
-        
-        PageReference ref = controller.calculate();        
+
+        PageReference ref = controller.calculate();
         PageReference savePage = controller.createPayments();
         Boolean redirect = controller.redirect;
-        
+
         // look for the data
         npe01__OppPayment__c[] opmt = getUnpaidPayments(opp.Id);
         System.assertEquals(12, opmt.size());
@@ -352,72 +352,72 @@ private class PMT_PaymentWizard_TEST {
         System.assertEquals(null, savePage);
         System.assert(redirect);
     }
-    
+
     /*********************************************************************************************************
-    * @description Verifies creation of payments for weekly intervals 
+    * @description Verifies creation of payments for weekly intervals
     */
     @isTest
     private static void testPageElementsWeekly() {
         Opportunity opp = createPledgedOpportunity(400.01);
-         
+
         Test.startTest();
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
-        Test.setCurrentPage(pageRef); 
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
-        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);      
-        
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
         l = controller.getIntervalUnits();
-        
+
         // set values
         controller.samplePayment.npe01__payment_method__c = 'Stock';
         controller.intervalUnit = 'Week';
         controller.numberOfPayments = 4;
         controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
-        
-        PageReference ref = controller.calculate();        
+
+        PageReference ref = controller.calculate();
         PageReference savePage = controller.createPayments();
 
         // look for the data
         npe01__OppPayment__c[] opmt = getUnpaidPayments(opp.Id);
         System.assertEquals(4, opmt.size());
-        System.assertEquals('Stock', opmt[0].npe01__payment_method__c);        
+        System.assertEquals('Stock', opmt[0].npe01__payment_method__c);
         //System.assertEquals(100, opmt[0].npe01__payment_amount__c);
         System.assertEquals(opmt[1].npe01__scheduled_date__c, opmt[0].npe01__scheduled_date__c.addDays(7));
     }
-    
+
     /*********************************************************************************************************
-    * @description Verifies creation of payments for yearly intervals 
+    * @description Verifies creation of payments for yearly intervals
     */
     @isTest
-    private static void testPageElementsYearly() { 
-        Opportunity opp = createPledgedOpportunity(400); 
-         
+    private static void testPageElementsYearly() {
+        Opportunity opp = createPledgedOpportunity(400);
+
         Test.startTest();
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
-        Test.setCurrentPage(pageRef); 
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
 
-        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);      
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
         l = controller.getIntervalUnits();
-        
+
         // set values
         controller.samplePayment.npe01__payment_method__c = 'Stock';
         controller.intervalUnit = 'Year';
         controller.numberOfPayments = 4;
         controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
-        
+
         PageReference ref = controller.calculate();
         PageReference savePage = controller.createPayments();
 
@@ -428,21 +428,21 @@ private class PMT_PaymentWizard_TEST {
         System.assertEquals(100, opmt[0].npe01__payment_amount__c);
         System.assertEquals(opmt[1].npe01__scheduled_date__c, opmt[0].npe01__scheduled_date__c.addDays(365));
     }
-    
+
     /*********************************************************************************************************
     * @description Verifies opportunity not found message is displayed when "id" page param is invalid
     */
     @isTest
-    private static void testOppNotFoundMessageWhenOppIdDoesNotExist() {    
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+    private static void testOppNotFoundMessageWhenOppIdDoesNotExist() {
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, null);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
-        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();  
 
-        System.assertEquals(null, controller.currentOpp); 
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+        System.assertEquals(null, controller.currentOpp);
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
     }
 
@@ -450,18 +450,18 @@ private class PMT_PaymentWizard_TEST {
     * @description Verifies opportunity not found message is displayed when "wtype" page param is invalid
     */
     @isTest
-    private static void testOppNotFoundMessageWhenTypePageParamIsInvalid() { 
-        Opportunity opp = createPledgedOpportunity(400);  
+    private static void testOppNotFoundMessageWhenTypePageParamIsInvalid() {
+        Opportunity opp = createPledgedOpportunity(400);
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.Id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, 'invalidType');
-        
-        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();  
 
-        System.assertEquals(null, controller.currentOpp); 
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+        System.assertEquals(null, controller.currentOpp);
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
     }
 
@@ -470,81 +470,81 @@ private class PMT_PaymentWizard_TEST {
     * the user has no create/delete permissions on the payments SObject.
     */
     @isTest
-    private static void testOppNotFoundMessageWhenTypePageParamIsInvalidAndUserHasNoAccessOnPayments() { 
-        Opportunity opp = createPledgedOpportunity(400);  
+    private static void testOppNotFoundMessageWhenTypePageParamIsInvalidAndUserHasNoAccessOnPayments() {
+        Opportunity opp = createPledgedOpportunity(400);
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.Id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, 'invalidType');
-        
-        System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();  
 
-            System.assertEquals(null, controller.currentOpp); 
+        System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
+            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+            System.assertEquals(null, controller.currentOpp);
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
         }
     }
 
     /*********************************************************************************************************
-    * @description Verifies no access message is displayed when user tries the write off while 
+    * @description Verifies no access message is displayed when user tries the write off while
     * having no create/delete permissions on the payments SObject.
     */
     @isTest
-    private static void testNoAccessMessageIsDisplayedWhenWriteoffByUserWithoutAccessOnPayments() { 
-        Opportunity opp = createPledgedOpportunity(400);  
+    private static void testNoAccessMessageIsDisplayedWhenWriteoffByUserWithoutAccessOnPayments() {
+        Opportunity opp = createPledgedOpportunity(400);
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.Id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
-        
+
         System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL(); 
-            
-            System.assertNotEquals(null, controller.currentOpp); 
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardWriteoffNoAccessMessage); 
+            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+            System.assertNotEquals(null, controller.currentOpp);
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardWriteoffNoAccessMessage);
         }
     }
 
     /*********************************************************************************************************
-    * @description Verifies no access message is displayed when user tries the create payments while 
+    * @description Verifies no access message is displayed when user tries the create payments while
     * having no create/delete permissions on the payments SObject.
     */
     @isTest
-    private static void testNoAccessMessageIsDisplayedWhenCreatePaymentByUserWithoutAccessOnPayments() { 
-        Opportunity opp = createPledgedOpportunity(400);  
+    private static void testNoAccessMessageIsDisplayedWhenCreatePaymentByUserWithoutAccessOnPayments() {
+        Opportunity opp = createPledgedOpportunity(400);
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.Id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
+
         System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL(); 
-            
-            System.assertNotEquals(null, controller.currentOpp); 
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardPaymentsNoAccessMessage); 
+            PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+            System.assertNotEquals(null, controller.currentOpp);
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardPaymentsNoAccessMessage);
         }
     }
-    
+
     /*********************************************************************************************************
     * @description Ensures no error is raised when public methods are called
     */
     @isTest
-    private static void testPublicGetters() {   
+    private static void testPublicGetters() {
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         //test public method code
-        Test.startTest();      
+        Test.startTest();
         controller.getPaymentsSettings();
         List<PMT_PaymentWizard_CTRL.payment> oplist = controller.getPayments();
         ApexPages.PageReference pr = controller.removePaidPayments();
         Test.stopTest();
-    }    
+    }
 
 
     /*********************************************************************************************************
@@ -556,13 +556,13 @@ private class PMT_PaymentWizard_TEST {
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c= true)
         );
 
-        Opportunity opp = createClosedWonOpportunity(150);  
-        
+        Opportunity opp = createClosedWonOpportunity(150);
+
         npe01__OppPayment__c[] opmtUpdate = getPayments(opp.Id);
         opmtUpdate[0].npe01__payment_amount__c = 50;
         System.assertEquals(true, opmtUpdate[0].npe01__paid__c);
         update opmtUpdate;
-        
+
         npe01__OppPayment__c newOpmt = new npe01__OppPayment__c(
             npe01__Opportunity__c = opp.id,
             npe01__Payment_Amount__c = 100,
@@ -570,31 +570,31 @@ private class PMT_PaymentWizard_TEST {
             npe01__Payment_Date__c = Date.newInstance(2001,12,12)
         );
         insert newOpmt;
-        
+
         Test.startTest();
-        
+
         npe01__OppPayment__c[] opmtAllStart = getPayments(opp.Id);
         System.assertEquals(2, opmtAllStart.size());
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
+        PageReference pageRef = Page.PMT_PaymentWizard;
         Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         // set values
-        System.assertEquals(false, controller.haveAmount);        
+        System.assertEquals(false, controller.haveAmount);
         controller.removePaidPayments();
         System.assertEquals(true, controller.removePaidPayments);
         controller.intervalUnit = 'Monthly';
         controller.numberOfPayments = 4;
         controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
-        
+
         PageReference ref = controller.calculate();
         System.assertEquals(4, controller.getPayments().size());
-        
+
         PageReference savePage = controller.createPayments();
 
         npe01__OppPayment__c[] opmt = getPayments(opp.Id);
@@ -608,17 +608,17 @@ private class PMT_PaymentWizard_TEST {
     verify:
         payments created
         payment mappings correctly applied from Opportunity to each Payment
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     @isTest
-    private static void testPaymentMappingsApplied() {        
+    private static void testPaymentMappingsApplied() {
         // create our Payment Field Mapping
         npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
         pfmNew.npe01__Opportunity_Field__c = 'Name';
         pfmNew.npe01__Payment_Field__c = 'npe01__Custom_Payment_Field__c';
         pfmNew.Name = 'test field mapping';
-        insert pfmNew;        
+        insert pfmNew;
 
-        Opportunity opp = createPledgedOpportunity(1300);  
+        Opportunity opp = createPledgedOpportunity(1300);
 
         npe01__OppPayment__c[] pmts = new npe01__OppPayment__c[0];
         pmts.add( new npe01__OppPayment__c (
@@ -632,31 +632,31 @@ private class PMT_PaymentWizard_TEST {
             npe01__Paid__c = false )
         );
         insert pmts;
-         
+
         Test.startTest();
 
-        PageReference pageRef = Page.PMT_PaymentWizard; 
-        Test.setCurrentPage(pageRef); 
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
 
         ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
-        
+
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        
+
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
         l = controller.getIntervalUnits();
-        
+
         // set values
         controller.samplePayment.npe01__payment_method__c = 'Stock';
-        
+
         PageReference ref = controller.calculate();
         PageReference savePage = controller.createPayments();
 
         Boolean redirect = controller.redirect;
 
         Test.stopTest();
-        
+
         npe01__OppPayment__c[] opmt = getUnpaidPayments(opp.Id);
         System.assertEquals(12, opmt.size());
         for (npe01__OppPayment__c pmt : opmt) {
@@ -667,6 +667,62 @@ private class PMT_PaymentWizard_TEST {
 
         System.assertEquals(null, savePage, 'The page reference is null, the redirect will occur on the page');
         System.assert(redirect);
+    }
+
+    /*********************************************************************************************************
+    * @description Verify if Warning message is displayed in Schedule Payment when Automatic Payment is disabled
+    * in Payment custom settings
+    */
+    @isTest
+    private static void shouldDisplayWarningInSchedulePaymentWhenAutoPaymentDisabled() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
+
+        Opportunity opp = createPledgedOpportunity(100);
+
+        Test.startTest();
+
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
+
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+        Test.stopTest();
+
+        System.assertEquals(opp.id, controller.currentOpp.id);
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle, ApexPages.Severity.WARNING);
+
+    }
+
+    /*********************************************************************************************************
+    * @description Verify if Warning message is displayed in WriteOff Payment when Automatic Payment is disabled
+    * in Payment custom settings
+    */
+    @isTest
+    private static void shouldDisplayWarningInWriteOffPaymentWhenAutoPaymentDisabled() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
+
+        Opportunity opp = createPledgedOpportunity(100);
+
+        Test.startTest();
+
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
+
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+        Test.stopTest();
+
+        System.assertEquals(opp.id, controller.currentOpp.id);
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle, ApexPages.Severity.WARNING);
+
     }
 
     // Helpers
@@ -692,7 +748,7 @@ private class PMT_PaymentWizard_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates an Opportunity 
+    * @description Creates an Opportunity
     * @param amount Opportunity Amount
     * @param stageName Opportunity StageName
     * @return Opportunity
@@ -720,15 +776,15 @@ private class PMT_PaymentWizard_TEST {
     */
     private static List<npe01__OppPayment__c> getPayments(Id oppId) {
         return [
-            SELECT Id, 
-                npe01__Payment_Method__c, 
-                npe01__Payment_Amount__c, 
+            SELECT Id,
+                npe01__Payment_Method__c,
+                npe01__Payment_Amount__c,
                 npe01__Scheduled_Date__c,
                 npe01__Custom_Payment_Field__c,
-                npe01__Paid__c, 
+                npe01__Paid__c,
                 npe01__Written_Off__c,
                 npe01__Payment_Date__c
-            FROM npe01__OppPayment__c 
+            FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c = :oppId
         ];
     }
@@ -740,14 +796,14 @@ private class PMT_PaymentWizard_TEST {
     */
     private static List<npe01__OppPayment__c> getUnpaidPayments(Id oppId) {
         return [
-            SELECT Id, 
-                npe01__Payment_Method__c, 
-                npe01__Payment_Amount__c, 
+            SELECT Id,
+                npe01__Payment_Method__c,
+                npe01__Payment_Amount__c,
                 npe01__Scheduled_Date__c,
                 npe01__Custom_Payment_Field__c,
-                npe01__Paid__c, 
+                npe01__Paid__c,
                 npe01__Written_Off__c
-            FROM npe01__OppPayment__c 
+            FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c = :oppId
             AND npe01__Paid__c = false
             ORDER BY npe01__scheduled_date__c ASC

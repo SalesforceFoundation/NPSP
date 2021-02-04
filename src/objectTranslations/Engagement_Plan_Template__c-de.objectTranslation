@@ -3,51 +3,55 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Engagementplan-Vorlagen</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
     <fields>
         <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
         <label>Fälligk. d. unterg. Aufg. autom. aktual.</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Person, der eine Aufgabe standardmäßig zugewiesen wird, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird.</help>
-        <label>Standardzuweisung</label>
+        <help>Wem soll die Aufgabe zugewiesen werden, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird?</help>
+        <label>Standard-Empfänger</label>
         <name>Default_Assignee__c</name>
         <picklistValues>
             <masterLabel>Owner of Object for Engagement Plan</masterLabel>
@@ -88,7 +92,7 @@
         <label>Aufgaben insgesamt</label>
         <name>Total_Tasks__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
@@ -96,7 +100,7 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+    <nameFieldLabel>Engagementplan-Vorlagenname</nameFieldLabel>
     <webLinks>
         <label>Vorlage verwalten</label>
         <name>Manage_Template</name>

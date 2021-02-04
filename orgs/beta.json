@@ -1,13 +1,28 @@
 {
   "orgName": "NPSP - Beta Test Org",
   "edition": "Developer",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
-    "orgPreferenceSettings": {
-      "chatterEnabled": true,
-      "disableParallelApexTesting": true,
-      "notesReservedPref01": true,
-      "s1DesktopEnabled": true
+    "userManagementSettings": {
+      "enableNewProfileUI": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
+    },
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
     }
   }
 }

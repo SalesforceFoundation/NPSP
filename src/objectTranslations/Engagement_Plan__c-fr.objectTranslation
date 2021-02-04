@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Plan d&apos;engagement</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Engagement Plan --></value>
+        <value>Plans d&apos;engagement</value>
     </caseValues>
     <fields>
         <label>Compte</label>
@@ -28,7 +28,7 @@
         <name>Completed_Tasks__c</name>
     </fields>
     <fields>
-        <label><!-- Contact --></label>
+        <label>Contact</label>
         <name>Contact__c</name>
         <relationshipLabel>Plans d’engagement</relationshipLabel>
     </fields>
@@ -59,14 +59,14 @@
         <label>Tâches totales</label>
         <name>Total_Tasks__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Engagement Plan Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Engagement Plan Number --></nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <nameFieldLabel>Numéro du plan d’engagement</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

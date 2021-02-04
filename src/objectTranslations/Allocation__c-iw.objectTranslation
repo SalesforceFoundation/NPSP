@@ -48,6 +48,12 @@
         <relationshipLabel>הקצאות GAU</relationshipLabel>
     </fields>
     <fields>
+        <help><!-- Attributes allocations to a Payment. --></help>
+        <label><!-- Payment --></label>
+        <name>Payment__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
         <help>אחוז ההזדמנות שיש להקצות ליחידה חשבונאית כללית זו. שינוי סכום ההזדמנות של הקצאה המבוססת על אחוזים יביא לשינוי סכום ההקצאה.</help>
         <label>אחוז</label>
         <name>Percent__c</name>

@@ -1,0 +1,27 @@
+<template>
+    <div class={containerClass}>
+        <h3 class="slds-section__title">
+            <button aria-controls={id}
+                    aria-expanded={ariaExpanded}
+                    class="slds-button slds-section__title-action"
+                    data-qa-locator={qaLocatorToggleSection}
+                    onclick={toggleSection}>
+                <div class={iconClass}>
+                    <lightning-icon alternative-text={alternativeText}
+                                    icon-name="utility:chevronright"
+                                    size="x-small">
+                    </lightning-icon>
+                </div>
+                <span class="slds-truncate"
+                      title={label}>
+                    {label}
+                </span>
+            </button>
+        </h3>
+        <div aria-hidden={ariaHidden}
+             class={sectionClass}
+             id={id}>
+            <slot></slot>
+        </div>
+    </div>
+</template>

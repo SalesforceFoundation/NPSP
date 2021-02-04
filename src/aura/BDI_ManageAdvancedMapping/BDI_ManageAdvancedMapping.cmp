@@ -1,0 +1,29 @@
+<aura:component implements="lightning:isUrlAddressable" controller="BDI_ManageAdvancedMappingCtrl">
+
+    <aura:attribute name="hasPermission" type="Boolean"
+                    description="used for conditionally rendering the component based on permissions" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div aura:id="wrapper" class="slds-grid slds-wrap slds-grid_extension slds-hide">
+        <div class="slds-size_1-of-1 slds-card slds-p-vertical_large slds-p-horizontal_large slds-size_1-of-1_outer-container">
+            <c:bdiObjectMappings ondeployment="{!c.handleDeploymentNotification}" shouldRender="{!v.hasPermission}"/>
+            <aura:if isTrue="{!v.hasPermission}">
+                <c:bdiFieldMappings ondeployment="{!c.handleDeploymentNotification}" />
+
+                <c:utilPlatformEventListener
+                        channelName="DeploymentEvent__e"
+                        isShowToastEnabled="true"
+                        isConsoleLogEnabled="false"
+                        aura:id="platformEventListener"/>
+                <aura:set attribute="else">
+                    <c:utilIllustration title="{!$Label.c.commonAdminPermissionErrorTitle}"
+                                         message="{!$Label.c.commonAdminPermissionErrorMessage}"
+                                         size='large'
+                                         variant='no-access'>
+                    </c:utilIllustration>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

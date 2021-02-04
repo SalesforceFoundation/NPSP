@@ -1,0 +1,129 @@
+<template>
+    <template if:true={isWidget}>
+        <c-ge-template-builder-widget title={uiLabel}
+                                      body={CUSTOM_LABELS.geBodyBatchFieldBundleInfo}
+                                      developer-name={widgetName}>
+        </c-ge-template-builder-widget>
+    </template>
+
+    <template if:false={isWidget}>
+        <template if:true={isLightningRichText}>
+            <lightning-input-rich-text aria-label="default value"
+                                       class="slds-p-horizontal_xx-small"
+                                       data-id='inputComponent'
+                                       data-name="defaultValue"
+                                       formats={richTextFormats}
+                                       label-visible={showRichTextLabel}
+                                       label={uiLabel}
+                                       message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
+                                       onfocusout={handleValueChange}
+                                       onclick={stopPropagation}
+                                       tab-index={tabIndex}
+                                       valid={isRichTextValid}
+                                       value={fieldValue}
+                                       data-qa-locator={qaLocatorRichText}>
+            </lightning-input-rich-text>
+        </template>
+
+        <template if:true={isLightningTextarea}>
+            <lightning-textarea aria-label="default value"
+                                data-id='inputComponent'
+                                label={uiLabel}
+                                required={isRequired}
+                                class="slds-m-around_none"
+                                data-name="defaultValue"
+                                onfocusout={handleValueChange}
+                                onclick={stopPropagation}
+                                value={fieldValue}
+                                variant={variant}
+                                tab-index={tabIndex}
+                                data-qa-locator={qaLocatorTextArea}>
+            </lightning-textarea>
+        </template>
+
+        <template if:true={isLightningCombobox}>
+            <lightning-combobox data-id='inputComponent'
+                                value={fieldValue}
+                                onchange={handleChangeCombobox}
+                                label={uiLabel}
+                                options={picklistValues}
+                                data-qa-locator={qaLocatorPicklist}
+                                required={isRequired}
+                                variant={variant}>
+            </lightning-combobox>
+        </template>
+
+        <template if:true={isLightningCheckbox}>
+            <lightning-input aria-label="default value"
+                             data-id='inputComponent'
+                             label={uiLabel}
+                             required={isRequired}
+                             checked={fieldValue}
+                             class="slds-m-top_small"
+                             data-name="defaultValue"
+                             onchange={handleValueChange}
+                             onclick={stopPropagation}
+                             variant={variant}
+                             type="checkbox"
+                             data-qa-locator={qaLocatorCheckbox}>
+            </lightning-input>
+        </template>
+
+        <template if:true={isLightningSearch}>
+            <lightning-record-edit-form object-api-name={objectApiName}>
+                <div class={lookupFormElementClass}>
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required" if:true={isRequired}>* </abbr>
+                        {uiLabel}</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field data-id='inputComponent'
+                                               field-name={fieldApiName}
+                                               onchange={handleValueChange}
+                                               required={isRequired}
+                                               variant='label-hidden'
+                                               class="help-text-hidden"
+                                               value={fieldValue}
+                                               data-qa-locator={qaLocatorLookup}>
+                        </lightning-input-field>
+                    </div>
+                </div>
+            </lightning-record-edit-form>
+        </template>
+
+        <template if:true={isLightningDateOrDatetime}>
+            <lightning-input aria-label="default value"
+                             data-id='inputComponent'
+                             label={uiLabel}
+                             required={isRequired}
+                             class="slds-m-around_none"
+                             data-name="defaultValue"
+                             onchange={handleValueChange}
+                             onclick={stopPropagation}
+                             type={lightningInputType}
+                             value={fieldValue}
+                             variant={variant}
+                             tab-index={tabIndex}
+                             data-qa-locator={qaLocatorDateTime}>
+            </lightning-input>
+        </template>
+
+        <template if:true={isBaseLightningInput}>
+            <lightning-input aria-label="default value"
+                             data-id='inputComponent'
+                             label={uiLabel}
+                             required={isRequired}
+                             class="slds-m-around_none"
+                             data-name="defaultValue"
+                             onfocusout={handleValueChange}
+                             onclick={stopPropagation}
+                             type={lightningInputType}
+                             formatter={formatter}
+                             step={granularity}
+                             value={fieldValue}
+                             variant={variant}
+                             tab-index={tabIndex}
+                             data-qa-locator={qaLocatorBaseInput}>
+            </lightning-input>
+        </template>
+    </template>
+</template>

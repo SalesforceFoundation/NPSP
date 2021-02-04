@@ -1,0 +1,37 @@
+<aura:component implements="force:appHostable">
+    <aura:dependency resource="c:geBatchWizard" />
+    <aura:dependency resource="c:geTemplateBuilderSectionModalBody" />
+    <aura:dependency resource="c:utilDualListbox" />
+
+    <lightning:overlayLibrary aura:id="overlayLib" />
+
+    <!-- isLoading attribute is used for the lightning:spinner when a modal is toggled. -->
+    <aura:attribute name="isLoading"
+                    type="Boolean" />
+    <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
+    <aura:attribute name="modal"
+                    type="Object" />
+    <aura:attribute name="isGiftEntryMode" type="Boolean" default="false"/>
+
+    <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
+                             onreceiveevent="{!c.handleModalEvent}" />
+    <c:utilDedicatedListener eventName="geTemplateBuilderSectionModalBodyEvent"
+                             onreceiveevent="{!c.handleModalEvent}" />
+    <c:utilDedicatedListener eventName="geBatchWizardEvent"
+                             onreceiveevent="{!c.handleBatchWizardEvent}" />
+
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner alternativeText="Loading"
+                           size="medium" />
+    </aura:if>
+
+    <aura:if isTrue="{!v.isGiftEntryMode}">
+        <c:GE_GiftEntryForm aura:id="giftEntryForm"/>
+
+        <aura:set attribute="else">
+            <c:geHome aura:id="giftEntryHome"
+                    ontogglemodal="{!c.handleShowModal}"
+                    onnewsinglegift="{!c.handleNewSingleGift}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

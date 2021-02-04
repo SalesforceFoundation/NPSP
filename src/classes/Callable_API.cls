@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2019, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -46,7 +46,7 @@ global with sharing class Callable_API implements System.Callable {
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
     * @param action string of the target action
-    * @param args name value map of arguments
+    * @param params name value map of arguments
     * @return Object returned will depend on the results of the target function otherwise it returns true
     ********************************************************************************************************/
     global Object call(String action, Map<String, Object> params) {
@@ -85,6 +85,66 @@ global with sharing class Callable_API implements System.Callable {
             } when 'crlp.iscrlpenabled' {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 return crlpApiSvc.isCrlpEnabled();
+
+            } when 'err.dispatchaction' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+
+                // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
+                // parameter service depending on which action was invoked
+                return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
+
+            } when 'rd2.executedatamigration' {
+                return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+
+            } when 'rd2.queryschedules' {
+                Set<Id> rdIds = paramService
+                    .withRequiredParamCheck()
+                    .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
+                    
+                return new RD2_ApiService().querySchedules(rdIds);
+
+            } when 'rd2.queryinstallments' {
+                Date startDate = paramService
+                    .getDate(CallableApiParameters.PARAM_START_DATE);
+                Date endDate = paramService
+                    .getDate(CallableApiParameters.PARAM_END_DATE);
+                Set<Id> rdIds = paramService
+                    .withRequiredParamCheck()
+                    .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
+
+                return new RD2_ApiService().queryInstallments(startDate, endDate, rdIds);
+
+            } when 'settings.enableenhancedrecurringdonations' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
+                return null;
+
+            } when 'allo.processoppsandpmts' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
+                String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
+
+                return new ALLO_AllocationsService()
+                                .withAllocationTriggersDisabled(disableOppAndPmtAlloTriggers)
+                                .withAlternateContextType(contextType)
+                                .withCommitAndClearRecordsEnabled(true)
+                                .processRecords(opportunityIds);
+
+            } when 'allo.validatepmtallocationconfig' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
+
+            } when 'settings.enablecustomizablerollups' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
             } when else {
                 throw new MalformedMethodInvocationException(

@@ -1,0 +1,172 @@
+<template>
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+            </lightning-spinner>
+        </template>
+
+        <header class="slds-card__header slds-p-around_none slds-grid slds-border_bottom">
+            <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-around_medium">
+                <div class="slds-media__body slds-truncate slds-text-align_center">
+                    <h2 class="slds-modal__title">
+                        {header}
+                    </h2>
+                </div>
+            </div>
+        </header>
+
+        <div class="slds-card__body slds-p-horizontal_large slds-card__body_extension">
+            <template if:true={isLoading}>
+                <c-util-stencil row-count="6"
+                                column-count="1">
+                </c-util-stencil>
+            </template>
+            <template if:false={isLoading}>
+                <div class="slds-grid slds-wrap">
+                    <div class={cssClassStep0}>
+                        <lightning-combobox name={CUSTOM_LABELS.commonTemplate}
+                                            label={CUSTOM_LABELS.commonTemplate}
+                                            value={selectedTemplateId}
+                                            placeholder={CUSTOM_LABELS.geSelectPlaceholder}
+                                            options={templateOptions}
+                                            onchange={handleTemplateChange}
+                                            data-qa-locator={qaLocatorSelectTemplate}
+                                            required>
+                        </lightning-combobox>
+                    </div>
+                    <div class={cssClassStep1}>
+                        <template if:true={hasInvalidBatchFields}>
+                            <c-util-page-level-message title={CUSTOM_LABELS.commonError}
+                                                        subtitle={missingRequiredFieldsMessage}
+                                                        variant='error'>
+                            </c-util-page-level-message>
+                        </template>
+                        <template for:each={selectedBatchHeaderFields}
+                                  for:item='batchField'>
+                            <c-util-input key={batchField.key}
+                                          data-id='batchHeaderField'
+                                          type={batchField.dataType}
+                                          field-api-name={batchField.apiName}
+                                          object-api-name={dataImportBatchName}
+                                          label={batchField.customLabel}
+                                          default-value={batchField.defaultValue}
+                                          value={batchField.value}
+                                          required={batchField.required}>
+                            </c-util-input>
+                        </template>
+                    </div>
+                    <div class={cssClassStep2}>
+                        <lightning-layout vertical-align="stretch"
+                                          multiple-rows="true"
+                                          class="x-large">
+                            <p class="slds-text-body_regular slds-p-vertical_small">
+                                {CUSTOM_LABELS.geBodyBatchDefaultValues}
+                            </p>
+                            <template for:each={formSections}
+                                      for:item="section">
+                                <lightning-layout-item key={section.id}
+                                                       size="12">
+                                    <c-util-expandable-section id={section.id}
+                                                               label={section.label}>
+                                        <template iterator:it={section.elements}>
+
+                                            <div key={it.value.id}
+                                                 if:true={it.value.showDefaultValueInput}
+                                                 class="slds-grid slds-wrap slds-p-top_x-small" >
+                                                <template if:true={it.first}>
+                                                    <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3 default-value">
+                                                        <span class="bold">
+                                                            {CUSTOM_LABELS.commonDefaultValue}
+                                                        </span>
+                                                    </div>
+                                                    <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3"></div>
+                                                </template>
+                                                <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3">
+                                                    <c-util-input type={it.value.dataType}
+                                                                  form-field-type={it.value.elementType}
+                                                                  field-api-name={it.value.fieldApiName}
+                                                                  object-api-name={it.value.objectApiName}
+                                                                  picklist-options-override={it.value.picklistOptionsOverride}
+                                                                  label={it.value.customLabel}
+                                                                  default-value={it.value.defaultValue}
+                                                                  value={it.value.value}
+                                                                  variant="label-inline">
+                                                    </c-util-input>
+                                                </div>
+                                                <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3"></div>
+                                            </div>
+                                        </template>
+                                    </c-util-expandable-section>
+                                </lightning-layout-item>
+                            </template>
+                        </lightning-layout>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-p-vertical_x-small">
+                <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_3-of-12">
+                    <template if:true={showBackButton}>
+                        <div class="slds-float_left">
+                            <lightning-button label={CUSTOM_LABELS.commonBack}
+                                              title={CUSTOM_LABELS.commonBack}
+                                              variant="neutral"
+                                              data-qa-locator={qaLocatorBack}
+                                              onclick={handleBack}>
+                            </lightning-button>
+                        </div>
+                    </template>
+                </div>
+                <div
+                     class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_6-of-12 slds-p-around_x-small">
+                    <lightning-progress-indicator current-step={step}
+                                                  type="base"
+                                                  variant="base"
+                                                  tabindex="-1">
+                        <lightning-progress-step if:false={isEditMode}
+                                                 label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
+                                                 value={steps.first}>
+                        </lightning-progress-step>
+                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchEnterInfo}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchEnterInfo}
+                                                 value={steps.second}>
+                        </lightning-progress-step>
+                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchSetDefaultValues}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchSetDefaultValues}
+                                                 value={steps.third}>
+                        </lightning-progress-step>
+                    </lightning-progress-indicator>
+                </div>
+                <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_3-of-12">
+                    <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                      title={CUSTOM_LABELS.commonCancel}
+                                      variant="neutral"
+                                      class="slds-m-right_small"
+                                      data-qa-locator={qaLocatorCancel}
+                                      onclick={handleCancel}>
+                    </lightning-button>
+                    <template if:false={showSaveButton}>
+                        <lightning-button label={CUSTOM_LABELS.commonNext}
+                                          title={CUSTOM_LABELS.commonNext}
+                                          variant="brand"
+                                          disabled={isNextButtonDisabled}
+                                          data-qa-locator={qaLocatorNext}
+                                          onclick={handleNext}>
+                        </lightning-button>
+                    </template>
+                    <template if:true={showSaveButton}>
+                        <lightning-button label={CUSTOM_LABELS.commonSave}
+                                          title={CUSTOM_LABELS.commonSave}
+                                          variant="brand"
+                                          data-qa-locator={qaLocatorSave}
+                                          onclick={handleSave}>
+                        </lightning-button>
+                    </template>
+                </div>
+            </div>
+        </footer>
+    </article>
+</template>

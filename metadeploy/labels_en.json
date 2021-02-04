@@ -1,0 +1,208 @@
+{
+    "product": {
+        "title": {
+            "message": "Nonprofit Success Pack (NPSP)",
+            "description": "name of product"
+        },
+        "short_description": {
+            "message": "The Foundation for the Connected Nonprofit",
+            "description": "tagline of product"
+        },
+        "description": {
+            "message": "## Welcome to the Nonprofit Success Pack installer!\r\n\r\n**IMPORTANT**: Salesforce does not recommend installing upgrades directly in production organizations. Instead, install your NPSP upgrade in one of your free sandbox environments, or a developer organization first.\r\n\r\n**If you are upgrading from NPSP 2, you will need to do a step *before* running this installer. First, upgrade only the Recurring Donations package to version 3.10 by running the installer:**\r\n\r\n* [Install Recurring Donations 3.10 in Production or Developer Edition orgs](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000tpCB)\r\n* [Install Recurring Donations 3.10 in Sandbox orgs](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t80000000tpCB)\r\n\r\nBe sure to Install for All Users and follow the prompts. Once the Recurring Donations package has been updated, you can proceed with the complete installation of Nonprofit Success Pack here. If you do not upgrade the Recurring Donations package first, you will get an error in the installer that can only be resolved by installing the Recurring Donations 3.10 package. You do not need to do this step if you already have a prior version of the Nonprofit Success Pack package (version 3.0 or later).",
+            "description": "shown on product detail page (markdown)"
+        },
+        "click_through_agreement": {
+            "message": "The Nonprofit Success Pack (\u201cNPSP\u201d) is an open-source package licensed by Salesforce.org (\u201cSFDO\u201d) under the BSD-3 Clause License, found at [https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause). ANY MASTER SUBSCRIPTION AGREEMENT YOU OR YOUR ENTITY MAY HAVE WITH SFDO DOES NOT APPLY TO YOUR USE OF NPSP. NPSP is provided \u201cAS IS\u201d AND AS AVAILABLE, AND SFDO MAKES NO WARRANTY OF ANY KIND REGARDING NPSP, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, FREEDOM FROM DEFECTS OR NON-INFRINGEMENT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.\r\n\r\nSFDO WILL HAVE NO LIABILITY ARISING OUT OF OR RELATED TO YOUR USE OF NPSP FOR ANY DIRECT DAMAGES OR FOR ANY LOST PROFITS, REVENUES, GOODWILL OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, COVER, BUSINESS INTERRUPTION OR PUNITIVE DAMAGES, WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES OR IF A REMEDY OTHERWISE FAILS OF ITS ESSENTIAL PURPOSE. THE FOREGOING DISCLAIMER WILL NOT APPLY TO THE EXTENT PROHIBITED BY LAW. SFDO DISCLAIMS ALL LIABILITY AND INDEMNIFICATION OBLIGATIONS FOR ANY HARM OR DAMAGES CAUSED BY ANY THIRD-PARTY HOSTING PROVIDERS.",
+            "description": "legal text shown in modal dialog"
+        },
+        "error_message": {
+            "message": "If you experience an issue with the installation, please post in the [Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "description": "shown after failed installation (markdown)"
+        }
+    },
+    "plan:existing_org": {
+        "title": {
+            "message": "Install NPSP",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "# Welcome to the Nonprofit Success Pack installer!\n\n**IMPORTANT**: Salesforce does not recommend installing directly in production organizations. Instead, install NPSP in one of your free sandbox environments or a developer organization first.\n",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) group on the Power of Us Hub for any questions about NPSP.\n",
+            "description": "shown after successful installation (markdown)"
+        }
+    },
+    "steps": {
+        "Install {product} {version}": {
+            "message": "Install {product} {version}",
+            "description": "title of installation step"
+        },
+        "Account Record Types": {
+            "message": "Account Record Types",
+            "description": "title of installation step"
+        },
+        "Opportunity Record Types": {
+            "message": "Opportunity Record Types",
+            "description": "title of installation step"
+        },
+        "NPSP Config for Salesforce Mobile App": {
+            "message": "NPSP Config for Salesforce Mobile App",
+            "description": "title of installation step"
+        },
+        "Delete Developer Edition Sample Profiles": {
+            "message": "Delete Developer Edition Sample Profiles",
+            "description": "title of installation step"
+        },
+        "This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.": {
+            "message": "This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.",
+            "description": "description of installation step"
+        },
+        "NPSP Trial Experience": {
+            "message": "NPSP Trial Experience",
+            "description": "title of installation step"
+        },
+        "Update Admin Profile": {
+            "message": "Update Admin Profile",
+            "description": "title of installation step"
+        },
+        "Set Default Relationship Settings": {
+            "message": "Set Default Relationship Settings",
+            "description": "title of installation step"
+        },
+        "NPSP Reports & Dashboards": {
+            "message": "NPSP Reports & Dashboards",
+            "description": "title of installation step"
+        },
+        "Enhanced Recurring Donations Metadata Updates": {
+            "message": "Enhanced Recurring Donations Metadata Updates",
+            "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Add Relationships for Trailhead",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "Ensure Opportunity Record Types",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Trailhead Playground Configuration",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "Remove Default Metadata",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "Update Administrator Profile",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "Prepare for Data Load",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Load Trailhead Data Set",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "Finalize Data Load",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "Create User",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "Assign Task Ownership",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "Configure Users",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "Assign Event Ownership",
+            "description": "title of installation step"
+        }
+    },
+    "plan:new_org": {
+        "title": {
+            "message": "Install NPSP for Trailhead Playgrounds",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "# Welcome to the Nonprofit Success Pack installer!\n\n**IMPORTANT**: Salesforce does not recommend installing directly in production organizations. Instead, install NPSP in one of your free sandbox environments or a developer organization first.\n\nWarning: This installer will override unmanaged metadata including page layouts and permissions. It is intended for use with Trailhead Playground orgs, not production orgs.\n",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) group on the Power of Us Hub for any questions about NPSP.\n",
+            "description": "shown after successful installation (markdown)"
+        },
+        "error_message": {
+            "message": "To get help with this error, go to [help.salesforce.com](https://help.salesforce.com/), find the Support & Services area and log a technical support ticket with Salesforce. Include \u201cNPSP\u201d in the subject line and include in your comment the installation link shown here.\n",
+            "description": "shown after failed installation (markdown)"
+        }
+    },
+    "plan:rd2": {
+        "title": {
+            "message": "Enhanced Recurring Donations Metadata Updates",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. Once you've installed the metadata, return to your Salesforce org to continue the upgrade to Enhanced Recurring Donations.\n",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "The Enhanced Recurring Donations metadata has been successfully deployed. However, there are still tasks to complete to finish upgrading to Enhanced Recurring Donations. Log back into your org to complete the upgrade process.\n",
+            "description": "shown after successful installation (markdown)"
+        }
+    },
+    "checks": {
+        "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
+            "message": "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.",
+            "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "Please enable My Domain in your org prior to installing.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.": {
+            "message": "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+            "message": "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.": {
+            "message": "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.": {
+            "message": "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.": {
+            "message": "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.",
+            "description": "shown if validation fails"
+        },
+        "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
+            "message": "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.",
+            "description": "shown if validation fails"
+        }
+    },
+    "plan:reports": {
+        "title": {
+            "message": "Install Reports & Dashboards",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "The NPSP Reports & Dashboards come with new Trials and installations of NPSP starting at version 3.90 (February 2017). If you started a Trial or installed NPSP before this version, use this installer to add the Reports and Dashboards. For complete information on the NPSP Reports & Dashboards, see the [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nThis installer requires the 5 Opportunity record types included in the standard Nonprofit Starter Pack trial template, and will create them if they don't exist in your org. The installer searches for the record types by Developer Name (not label), so if you changed the Developer Names of the original record types, the installer will add them again. The record type Developer Names are as follows:\n\n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership\n",
+            "description": "shown before user starts installation (markdown)"
+        }
+    }
+}

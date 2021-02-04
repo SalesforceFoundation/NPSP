@@ -1,4 +1,9 @@
-<apex:page standardController="DataImportBatch__c" extensions="BDI_BatchOverride_CTRL" showHeader="true" docType="html-5.0" standardStylesheets="true">
+<apex:page standardController="DataImportBatch__c"
+    extensions="BDI_BatchOverride_CTRL"
+    showHeader="true"
+    docType="html-5.0"
+    standardStylesheets="false"
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -27,4 +32,5 @@
 
         </apex:form>
     </div>
+
 </apex:page>

@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this List of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -36,13 +36,13 @@
 */
 
 @isTest
-public class UTIL_UnitTestData_TEST { 
+public class UTIL_UnitTestData_TEST {
 
     /** @description A mock Account Id .*/
     public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-    
-    public static final String PROFILE_STANDARD_USER = 'Standard User';
-    public static final String PROFILE_READONLY_USER = 'Read Only';
+
+    public static final String PROFILE_STANDARD_USER = UTIL_Profile.PROFILE_STANDARD_USER;
+    public static final String PROFILE_READONLY_USER = UTIL_Profile.PROFILE_READ_ONLY;
 
     // =====================================================================================================
     // Methods to retrieve configured Stage/Status labels for the Opportunity and Task objects
@@ -65,14 +65,14 @@ public class UTIL_UnitTestData_TEST {
                 WHERE IsActive = TRUE
                 AND IsWon = TRUE
             ];
-            
+
             if (closedWonStages.size()>0) {
                 closedWonStage = closedWonStages[0].MasterLabel;
             } else {
                 closedWonStage = '';
             }
         }
-        
+
         return closedWonStage;
     }
 
@@ -95,7 +95,7 @@ public class UTIL_UnitTestData_TEST {
                 closedLostStage = '';
             }
         }
-        
+
         return closedLostStage;
     }
 
@@ -117,7 +117,7 @@ public class UTIL_UnitTestData_TEST {
                 openStage = '';
             }
         }
-        
+
         return openStage;
     }
 
@@ -127,14 +127,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getClosedTaskStatus() {
         if (closedTaskStatus == null) {
             List<TaskStatus> closedTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = true];
-            
+
             if (closedTaskStatuses.size()>0) {
                 closedTaskStatus = closedTaskStatuses[0].MasterLabel;
             } else {
                 closedTaskStatus = '';
             }
         }
-        
+
         return closedTaskStatus;
     }
 
@@ -144,14 +144,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getOpenTaskStatus() {
         if (openTaskStatus == null) {
             List<TaskStatus> openTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = false];
-            
+
             if (openTaskStatuses.size()>0) {
                 openTaskStatus = openTaskStatuses[0].MasterLabel;
             } else {
                 openTaskStatus = '';
             }
         }
-        
+
         return openTaskStatus;
     }
 
@@ -182,7 +182,7 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Contact>
      */
     public static List<Contact> createMultipleTestContacts(Integer n) {
-        
+
         List<Contact> contactsToAdd = new List<Contact> ();
 
         for (Integer i=0; i<n; i++) {
@@ -231,7 +231,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactListByRecTypeId(List<Contact> contacts, Id campaignId,
         String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for ( Contact thisCon : contacts ) {
@@ -284,7 +284,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactWithAccountListByRecTypeId (List<Contact> contacts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Contact thisCon : contacts) {
@@ -337,7 +337,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForAccountListByRecTypeId (List<Account> accounts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Account acc : accounts) {
@@ -365,9 +365,9 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Account>
      */
     public static List<Account> createMultipleTestAccounts (Integer n, String strType) {
-        
+
         List<Account> accountsToAdd = new List<Account> ();
-        
+
         for (Integer i=0; i<n; i++) {
             Account newAcct = new Account (
                 Name = 'Test Account ' + getUniqueString(),
@@ -381,9 +381,44 @@ public class UTIL_UnitTestData_TEST {
             }
             accountsToAdd.add (newAcct);
         }
-        
+
         return accountsToAdd;
     }
+
+    /**
+    * @description Build multiple Organization Accounts
+    * @param size size of organization accounts being created
+    * @return List<Account>
+    */
+    public static List<Account> buildOrganizationAccounts(Integer size) {
+        List<Account> organizations = new List<Account>();
+
+        for (Integer i = 0; i < size; i++) {
+            organizations.add(buildOrganizationAccount());
+        }
+
+        return organizations;
+    }
+
+    /**
+     * @description Builds an Organization Account
+     * @return Account
+     */
+    public static Account buildOrganizationAccount() {
+        return new Account(
+            Name = getUniqueString(),
+            npe01__SYSTEMIsIndividual__c = false
+        );
+    }
+
+    /***
+    * @description Builds a Household Account
+    * @return Account
+    */
+    public static Account buildHouseholdAccount() {
+        return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+    }
+
 
     public static List<Account> listAccT;
     public static List<Contact> listConT;
@@ -399,8 +434,8 @@ public class UTIL_UnitTestData_TEST {
     **********************************************************************************************************/
     public static void createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
 
-        listConT = UTIL_UnitTestData_TEST.createMultipleTestContacts(cAcc * cCon);
-        listAccT = UTIL_UnitTestData_TEST.createMultipleTestAccounts(cAcc, accType);
+        listConT = createMultipleTestContacts(cAcc * cCon);
+        listAccT = createMultipleTestAccounts(cAcc, accType);
         insert listAccT;
 
         for (Integer i = 0; i < cAcc; i++) {
@@ -420,17 +455,147 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Create General Accounting Units (GAUs) for unit testing.
+     * @param n The number of General Accounting Units to be created
+     * @return List of General Accounting Units
+     */
+    public static List<General_Accounting_Unit__c> createGAUs (Integer n) {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        for (Integer i=0; i < n; i++) {
+            gaus.add(
+                new General_Accounting_Unit__c(
+                    Name = 'Test ' + getUniqueString()
+                )
+            );
+        }
+        return gaus;
+    }
+
+    //Utility method for creating a sample template.
+    public static GE_Template.Template createSampleTemplate () {
+
+        GE_Template.Element field = new GE_Template.Element('field',
+                                              'True',
+                                               null,
+                                               'CustomLabel',
+                                               new List<String>{'Account_1_Name','Account_1_Country'});
+
+        GE_Template.Element widget = new GE_Template.Element('widget',
+                                               'DisplayRule',
+                                               'ComponentName',
+                                                new List<String>{'Contact_1_First_Name','Contact_1_Last_Name'});
+
+        GE_Template.Element[] elements = new GE_Template.Element[]{field,widget};
+
+        GE_Template.Section section = new GE_Template.Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+
+        GE_Template.Layout layout = new GE_Template.Layout('DefaultMappingSet',
+                                            new GE_Template.Section[]{section});
+
+        GE_Template.Template template = new GE_Template.Template('Sample Template',
+                                                   'This is the description.',
+                                                   '1.0',
+                                                   layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static List<Custom_Column_Header__c> createSampleColumnHeaders () {
+
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Templates';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Name';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Batches';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Name';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Templates1';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Name';
+
+        return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
+    }
+
+    // Method to create instance of field mappings to use in test data
+    public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+
+        return mappingService;
+    }
+
+    /**
+     * @description Utility method to create Data Import Records in a Gift Batch
+     * @return {dataImports} List of Data Import records
+    */
+    public static List<DataImport__c> createDIRecordsInANewGEBatch (Integer numberOfRecords) {
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        DataImportBatch__c batch = createGiftBatches(200, 2, 1)[0];
+        insert batch;
+
+        for (Integer i = 0; i < numberOfRecords; i++) {
+            DataImport__c dataImport = BDI_DataImport_TEST.newDI('John'+i,'Doe'+i, 200);
+            dataImport.NPSP_Data_Import_Batch__c = batch.Id;
+            dataImports.add(dataImport);
+        }
+
+        return dataImports;
+    }
+
+    /**
+     * @description Utility Method to create gift batches
+     * @return {dataImportBatches} List of Data Import Batch records
+    */
+    public static List<DataImportBatch__c> createGiftBatches (Integer batchProcessSize, Integer batchGEVersion, Integer numberOfRecords) {
+
+        List<DataImportBatch__c> dataImportBatches = new List<DataImportBatch__c>();
+        for (Integer i = 0 ;i < numberOfRecords; i++) {
+            DataImportBatch__c batch = new DataImportBatch__c();
+            batch.Name = 'Test Batch'+i;
+            batch.Batch_Process_Size__c = batchProcessSize;
+            batch.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+            batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                    UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+            batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+            batch.Process_Using_Scheduled_Job__c = true;
+            batch.GiftBatch__c = true;
+            batch.Batch_Gift_Entry_Version__c = batchGEVersion;
+            dataImportBatches.add(batch);
+        }
+
+        return dataImportBatches;
+
+    }
+
+    /**
      * @description Create Engagement Plan Templates for unit testing.
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates
      */
     public static List<Engagement_Plan_Template__c> createEPTemplates (Integer n) {
         List<Engagement_Plan_Template__c> EPTemplatesToAdd = new List<Engagement_Plan_Template__c>();
-        
+
         for (Integer i=0 ;i<n; i++) {
             EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + getUniqueString()));
         }
-        
+
         return EPTemplatesToAdd;
     }
 
@@ -442,7 +607,7 @@ public class UTIL_UnitTestData_TEST {
      */
     public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (Integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
         List<Engagement_Plan_Task__c> EPTasksToAdd = new List<Engagement_Plan_Task__c>();
-        
+
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
             for (Integer i=0 ;i<n; i++) {
                 EPTasksToAdd.add(
@@ -453,7 +618,7 @@ public class UTIL_UnitTestData_TEST {
                 );
             }
         }
-        
+
         return EPTasksToAdd;
     }
 
@@ -464,66 +629,21 @@ public class UTIL_UnitTestData_TEST {
     /**
      * @description Create a new user for unit testing.
      * @param strUsername The username for the user to be created
-     * @param strRolename The name of the UserRole to associate with the user (will be created if does not exist)
      * @return User
      */
-    public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
-        Profile p = [
-            SELECT Id
-            FROM Profile
-            WHERE Name = :PROFILE_STANDARD_USER
-        ];
-
-        UserRole r;
+    public static User createNewUserForTests(String strUsername) {
         User u;
 
         // to work around mixed DML errors during tests, you must
         // create user roles and accounts in their own transactions.
         // got this hack from the web.
-        System.runAs(new User(Id = UserInfo.getUserId())) {
-            Integer existingRoleCount = [
-                SELECT COUNT()
-                FROM UserRole
-                WHERE Name = :strRolename
-            ];
-
-            if (existingRoleCount >= 1) {
-                r = [
-                    SELECT Id
-                    FROM UserRole
-                    WHERE Name = :strRolename
-                    LIMIT 1
-                ];
-            } else {
-                r = new UserRole(Name=strRolename);
-                insert r;
-            }
-
-            u = new User(
-                Alias = 'jsmith',
-                Email = 'jsmith@acme.com',
-                EmailEncodingKey = 'UTF-8',
-                LanguageLocaleKey = 'en_US',
-                LastName = 'Smith',
-                LocaleSidKey = 'en_US',
-                ProfileId = p.Id,
-                TimeZoneSidKey = 'America/Los_Angeles',
-                UserRoleId = r.Id,
-                Username = strUsername
-            );
+        System.runAs(getCurrentUserForRunAs()) {
+            u = buildUser('Smith', PROFILE_STANDARD_USER);
+            u.Username = strUsername;
 
             insert u;
         }
         return u;
-    }
-
-    /**
-     * @description Create a new user for unit testing.
-     * @param strUsername The username for the user to be created
-     * @return User
-     */
-    public static User createNewUserForTests(String strUsername) {
-        return createNewUserWithRoleForTests(strUsername, 'COO');
     }
 
     /**
@@ -534,7 +654,7 @@ public class UTIL_UnitTestData_TEST {
     public static User createNewInactiveUserForTests(String strUsername) {
         User u = createNewUserForTests(strUsername);
 
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(UTIL_UnitTestData_TEST.getCurrentUserForRunAs())  {
             u.IsActive = false;
             update u;
         }
@@ -561,8 +681,8 @@ public class UTIL_UnitTestData_TEST {
         //create the user
         System.runAs(u) {}
 
-        return u;      
-    } 
+        return u;
+    }
 
     /**
      * @description Build a User having specified profile assigned, but do not insert
@@ -574,10 +694,35 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Build a non-English User having specified profile, but do not insert
+     * @param profileName Profile Name
+     * @return User
+     */
+    public static User createNonEnglishUserWithoutInsert(String profileName) {
+        return buildUser(buildUniqueLastName(), profileName, 'es');
+    }
+
+    /**
       * @description Generate a unique string to append to indexed fields to make them unique
+      * @return A unique string that uses the crypto class to generate a unique long value
       */
     public static String getUniqueString() {
-        return String.valueOf(Math.abs(Crypto.getRandomLong()));
+        return String.valueOf(Math.abs(getRandomLong));
+    }
+
+    /**
+     * @description Rather than call the Crypto class multiple times, call it only once and then
+     * increment the random long value to keep it unique without incurring the extra CPU cycles.
+     */
+    private static Long getRandomLong {
+        get {
+            if (getRandomLong == null) {
+                getRandomLong = Crypto.getRandomLong();
+            } else {
+                getRandomLong += 1;
+            }
+            return getRandomLong;
+        } set;
     }
 
     /**
@@ -591,33 +736,51 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description Set new User fields
+     * @description Build a new User using the Locale and Language settings from the Current User
      * @param lastName Last Name
      * @param profileName Profile Name
      * @return User
      */
     private static User buildUser(String lastName, String profileName) {
-        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
+        return buildUser(lastName, profileName, UserInfo.getLocale());
+    }
+
+    /**
+     * @description Build a new User using the specified Locale.
+     * @param lastName Last Name
+     * @param profileName Profile Name
+     * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl)
+     * @return User
+     */
+    private static User buildUser(String lastName, String profileName, String localSidKey) {
+        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
+
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
 
         return new User(
-            LastName = lastName, 
-            Email = email, 
+            LastName = lastName,
+            Email = email,
             ProfileId = p.Id,
             Username = email,
-            Alias = alias, 
-            TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US', 
-            LanguageLocaleKey = 'en_US',
+            Alias = alias,
+            TimeZoneSidKey = UserInfo.getTimeZone().toString(),
+            LocaleSidKey = (localSidKey != null ? localSidKey : UserInfo.getLocale()),
+            LanguageLocaleKey = UserInfo.getLanguage(),
             EmailEncodingKey = 'ISO-8859-1'
         );
+    }
+
+    /**
+     * @description Retrieve the current User record
+     */
+    public static User getCurrentUserForRunAs() {
+        return new User(Id = UserInfo.getUserId());
     }
 
     // =====================================================================================================
     // Methods to configure Household Naming Settings
     // =====================================================================================================
-
 
     /*********************************************************************************************************
     * @description Turns on Automatic Household Naming
@@ -666,7 +829,7 @@ public class UTIL_UnitTestData_TEST {
     * @return Household_Naming_Settings__c
     **********************************************************************************************************/
     public static Household_Naming_Settings__c setupHHNamingSettings() {
-        return setupHHNamingSettings(            
+        return setupHHNamingSettings(
             '{!{!FirstName} {!LastName}} Household',
             '{!{!Title} {!FirstName}} {!LastName}',
             '{!{!FirstName}}'
@@ -674,7 +837,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
+    * @description Configures Household Naming Settings
     * @param hhNameFormat Household Naming Format
     * @param formalGreetingFormat Formal Greeting Format
     * @param informalGreetingFormat Informal Greeting Format
@@ -748,16 +911,16 @@ public class UTIL_UnitTestData_TEST {
     public static void disableHHNamingTriggers() {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        turnOffAutomaticHHNaming();
     }
     /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
     public static void disableAddressTriggers() {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Validator_TDTM', false);
+        turnOffAutomaticHHNaming();
     }
 
     /**
@@ -776,21 +939,12 @@ public class UTIL_UnitTestData_TEST {
     // Miscellaneous Utility Methods specifically for ue in Unit Tests
     // =====================================================================================================
 
-    /*********************************************************************************************************
-    * @description Extracts Ids of sObjects
-    * @param sObjects List of sObjects
-    * @return Set<Id> Set of sObjects' Ids
-    **********************************************************************************************************/
-    public static Set<Id> extractIds(List<sObject> sObjects) {
-        return (new Map<Id, sObject>(sObjects)).keySet();
-    }
-
-    /*********************************************************************************************************
+    /***
     * @description Sets the Fixed Search Results to the Ids of the sObjects
     * @param sObjects List of sObjects
-    **********************************************************************************************************/
+    */
     public static void setFixedSearchResults(List<sObject> sObjects) {
-        Test.setFixedSearchResults(new List<Id>(extractIds(sObjects)));
+        Test.setFixedSearchResults(new List<Id>(UTIL_SObject.extractIds(sObjects)));
     }
 
     /**
@@ -822,7 +976,7 @@ public class UTIL_UnitTestData_TEST {
         set;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Ensures that mockIds() does not produce the same ID twice
     */
     private static Integer dummyIdCounter {
@@ -836,14 +990,14 @@ public class UTIL_UnitTestData_TEST {
         set;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Generates a mock Id for an sObject
     */
     public static Id mockId(SObjectType sObjectType) {
         return mockIds(sObjectType, 1)[0];
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Generates mock Ids for an sObject
     */
     public static List<Id> mockIds(SObjectType sObjectType, Integer size) {
@@ -858,7 +1012,7 @@ public class UTIL_UnitTestData_TEST {
         return ids;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets mock Ids for a list of sObjects
     */
     public static void setMockIds(List<SObject> records) {
@@ -912,45 +1066,18 @@ public class UTIL_UnitTestData_TEST {
      * @description Verify that a new User is inserted with the specified Username
      */
     @IsTest
-    private static void shouldCreateNewUserWithDefaultRole() {
+    private static void shouldCreateNewUser() {
         String randomUsername = 'test@test.com.' + getUniqueString();
 
         User returnedUser = createNewUserForTests(randomUsername);
         User queriedUser = [
             SELECT
-                Username,
-                UserRole.Name
+                Username
             FROM User
             WHERE Id = :returnedUser.Id
         ];
 
         System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assertEquals('COO', queriedUser.UserRole.Name);
-    }
-
-    /**
-     * @description Verify that a new User is inserted with the specified Username and a random Role Name
-     */
-    @IsTest
-    private static void shouldCreateNewUserWithRandomRole() {
-        String randomUsername = 'test@test.com.' + getUniqueString();
-        String randomRolename = 'RoleName' + getUniqueString();
-
-        User returnedUser = createNewUserWithRoleForTests(
-            randomUsername,
-            randomRolename
-        );
-
-        User queriedUser = [
-            SELECT
-                Username,
-                UserRole.Name
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
     }
 
     /**

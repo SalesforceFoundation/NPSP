@@ -1,0 +1,58 @@
+.slds-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    background-clip: border-box;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    line-height: 1.875rem;
+    text-decoration: none;
+    color: var(--lwc-brandAccessible, rgb(0, 112, 210));
+    -webkit-appearance: none;
+    white-space: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.slds-button:hover {
+    background-color: rgb(244, 246, 249);
+    color: var(--lwc-brandAccessibleActive, rgb(0, 95, 178));
+}
+
+.slds-button_neutral {
+    padding-left: var(--lwc-spacingMedium, 1rem);
+    padding-right: var(--lwc-spacingMedium, 1rem);
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    border: 1px solid var(--lwc-colorBorder, rgb(221, 219, 218));
+    transition: border .15s linear;
+    border-color: var(--lwc-colorBorder, rgb(221, 219, 218));
+    background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
+}
+
+.slds-button_extension {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border: none;
+    border-radius: 0.25rem;
+}
+
+.slds-border_extension-bottom {
+    border-bottom: 1px solid var(--lwc-colorBorder, rgb(221, 219, 218));
+    border-radius: 0;
+}
+
+.slds-button:disabled {
+    background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
+    color:  rgb(221, 219, 218);
+    cursor: default;
+}

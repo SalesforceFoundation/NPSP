@@ -197,8 +197,6 @@ public inherited sharing class CRLP_Query_SEL {
      * @return part of a SOQL string
      */
     private static String appendParentQuery(SObjectType parentObject, String parentKeyField) {
-        String addlQuery = '';
-
         Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
         allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(parentObject));
         allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(parentObject));
@@ -210,19 +208,26 @@ public inherited sharing class CRLP_Query_SEL {
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
         }
 
+        Set<String> queryFields = new Set<String>();
         for (Schema.DescribeFieldResult fld : allFieldsToQuery) {
-            addlQuery += ',' + parentKeyField + '.' + fld.getName();
+            queryFields.add(parentKeyField + '.' + fld.getName());
             // Special conditions - these are foreign key fields that are supported in filters for record type and user
             if (fld.getName() == 'RecordTypeId') {
-                addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
+                queryFields.add(parentKeyField + '.' + 'RecordType.DeveloperName');
             } else if (fld.getName() == 'OwnerId') {
-                addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
+                queryFields.add(parentKeyField + '.' + 'Owner.Alias');
             } else if (fld.getName() == 'CreatedById') {
-                addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
+                queryFields.add(parentKeyField + '.' + 'CreatedBy.Alias');
             } else if (fld.getName() == 'LastModifiedById') {
-                addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
+                queryFields.add(parentKeyField + '.' + 'LastModifiedBy.Alias');
             }
         }
+
+        // Convert the Set to the List to support String.Join()
+        List<String> fieldsList = new List<String>(queryFields);
+
+        // Build the final SOQL string with the full list of fields
+        String addlQuery = (!fieldsList.isEmpty() ? ',' + String.join(fieldsList, ',') : '');
 
         return addlQuery;
     }

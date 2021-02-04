@@ -49,12 +49,12 @@
     onDonorChange: function (component, event, helper) {
         helper.clearDonationSelectionOptions(component);
         const lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
-        const lookupValue = component.find(lookupField).get('v.value');
-        const lookupValueIsValidId = lookupValue.length === 18;
+        const recordId = component.find(lookupField).get('v.value');
+        const lookupValueIsValidId = recordId.length === 18;
 
         if (lookupValueIsValidId) {
             helper.sendMessage(component, 'showFormSpinner', '');
-            helper.queryOpenDonations(component, lookupValue);
+            helper.getOpportunitiesWithOppPayments(component, recordId);
         }
     },
 

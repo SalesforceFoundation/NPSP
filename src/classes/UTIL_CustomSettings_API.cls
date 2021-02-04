@@ -150,4 +150,14 @@ global class UTIL_CustomSettings_API {
     global static Data_Import_Settings__c getDataImportSettings() {
     	return UTIL_CustomSettingsFacade.getDataImportSettings();
     }
+
+    /*******************************************************************************************************
+    * @description Returns the default Gift Entry Setting settings.
+    * @return Gift_Entry_Settings__c Custom settings record for Gift Entry configuration. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
+    * in the database.
+    */
+    global static Gift_Entry_Settings__c getGiftEntrySettings() {
+        return UTIL_CustomSettingsFacade.getGiftEntrySettings();
+    }
 }

@@ -1,0 +1,15 @@
+.slds-card__body_extension {
+    min-height: var(--lwc-sizeXSmall, 12rem);
+}
+
+.step-0 {
+    min-height: var(--lwc-sizeXSmall, 12rem);
+}
+
+.default-value {
+    padding-left: 22.25%;
+}
+
+.bold {
+    font-weight: bold;
+}

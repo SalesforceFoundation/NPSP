@@ -2,141 +2,149 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Rollup --></value>
+        <value>積み上げ集計</value>
     </caseValues>
     <fields>
-        <label><!-- Active --></label>
+        <label>有効</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <label><!-- Amount Field --></label>
+        <label>金額項目</label>
         <name>Amount_Field__c</name>
+        <relationshipLabel>RollupsAmount</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Amount Object --></label>
+        <label>金額オブジェクト</label>
         <name>Amount_Object__c</name>
+        <relationshipLabel>RollupAmount</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Date Field --></label>
+        <label>日付項目</label>
         <name>Date_Field__c</name>
+        <relationshipLabel>RollupsDate</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Date Object --></label>
+        <label>日付オブジェクト</label>
         <name>Date_Object__c</name>
+        <relationshipLabel>RollupsDate</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Description --></label>
+        <label>説明</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Field to Roll Up --></label>
+        <label>積み上げ集計項目</label>
         <name>Detail_Field__c</name>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Detail Object --></label>
+        <label>詳細オブジェクト</label>
         <name>Detail_Object__c</name>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Filter Group --></label>
+        <label>絞り込みグループ</label>
         <name>Filter_Group__c</name>
-        <relationshipLabel><!-- Rollups --></relationshipLabel>
+        <relationshipLabel>積み上げ集計</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Integer --></label>
+        <label>整数</label>
         <name>Integer__c</name>
     </fields>
     <fields>
-        <label><!-- IsDeleted --></label>
+        <label>IsDeleted</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <label><!-- Operation --></label>
+        <label>演算</label>
         <name>Operation__c</name>
         <picklistValues>
             <masterLabel>Average</masterLabel>
-            <translation><!-- Average --></translation>
+            <translation>平均</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Best Year</masterLabel>
-            <translation><!-- Best Year --></translation>
+            <translation>年間トップ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Best Year Total</masterLabel>
-            <translation><!-- Best Year Total --></translation>
+            <translation>年間総額トップ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Count</masterLabel>
-            <translation><!-- Count --></translation>
+            <translation>数</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Donor Streak</masterLabel>
-            <translation><!-- Donor Streak --></translation>
+            <translation>支援継続</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>First</masterLabel>
-            <translation><!-- First --></translation>
+            <translation>名</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Largest</masterLabel>
-            <translation><!-- Largest --></translation>
+            <translation>最大</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Last</masterLabel>
-            <translation><!-- Last --></translation>
+            <translation>姓</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Smallest</masterLabel>
-            <translation><!-- Smallest --></translation>
+            <translation>最小</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Sum</masterLabel>
-            <translation><!-- Sum --></translation>
+            <translation>合計</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Years Donated</masterLabel>
-            <translation><!-- Years Donated --></translation>
+            <translation>支援年数</translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Target Field --></label>
+        <label>対象項目</label>
         <name>Summary_Field__c</name>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Target Object --></label>
+        <label>対象オブジェクト</label>
         <name>Summary_Object__c</name>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Time Frame --></label>
+        <label>時間枠</label>
         <name>Time_Bound_Operation_Type__c</name>
         <picklistValues>
             <masterLabel>All Time</masterLabel>
-            <translation><!-- All Time --></translation>
+            <translation>全期間</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Days Back</masterLabel>
-            <translation><!-- Days Back --></translation>
+            <translation>日前</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Years Ago</masterLabel>
-            <translation><!-- Years Ago --></translation>
+            <translation>年前</translation>
         </picklistValues>
     </fields>
     <fields>
-        <label><!-- Use Fiscal Year --></label>
+        <label>会計年度の使用</label>
         <name>Use_Fiscal_Year__c</name>
     </fields>
     <layouts>
         <layout>Rollup Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label>新規セクション</label>
             <section>New Section</section>
         </sections>
         <sections>
-            <label><!-- Rollup Details --></label>
+            <label>積み上げ集計詳細</label>
             <section>Rollup Details</section>
         </sections>
     </layouts>

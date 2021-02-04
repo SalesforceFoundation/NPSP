@@ -1,0 +1,66 @@
+<template>
+
+    <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c">
+
+        <div class="slds-section slds-is-open">
+
+            <template if:false={isLoading}>
+
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                        <lightning-combobox
+                                name="DonorTypeSelect"
+                                label={customLabels.donorTypeLabel}
+                                value={donorType}
+                                placeholder=""
+                                field-level-help={customLabels.donorTypeHelpText}
+                                class="rd2-entry-custom-field-padding"
+                                options={donorTypeOptions}
+                                onchange={handleDonorTypeChange}
+                                required
+                        >
+                        </lightning-combobox>
+                    </lightning-layout-item>
+
+                    <template if:true={isContactDonor}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.contact} >
+                            <lightning-input-field 
+                                field-name={fields.contact.apiName} 
+                                value={contactId} 
+                                required
+                                onchange={handleContactChange}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <template if:true={isAccountDonor}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.account}>
+                            <lightning-input-field field-name={fields.account.apiName} value={accountId} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.dateEstablished}>
+                        <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <template if:true={isAccountDonor}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.contact}>
+                            <lightning-input-field 
+                                field-name={fields.contact.apiName} 
+                                value={contactId} 
+                                onchange={handleContactChange}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                </lightning-layout>
+
+            </template>
+
+        </div>
+
+    </lightning-record-edit-form>
+</template>

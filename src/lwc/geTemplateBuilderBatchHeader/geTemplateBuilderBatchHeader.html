@@ -1,0 +1,193 @@
+<template>
+    <lightning-layout>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+        </template>
+        <lightning-layout-item size='12'
+                               padding='around-medium'>
+            <lightning-tabset variant='scoped'>
+                <lightning-tab label={CUSTOM_LABELS.geTabBatchTableColumns}
+                               class='slds-p-around_none'
+                               show-error-indicator={hasMissingBatchTableColumns}>
+                    <lightning-layout multiple-rows='true'>
+                        <template if:true={disableBatchTableColumnsSubtab}>
+                            <lightning-layout-item size='12'
+                                                   class='slds-align_absolute-center slds-p-horizontal_large'
+                                                   padding='around-large'>
+                                <c-util-illustration size='small'
+                                                     variant='lake-mountain'>
+                                    <div slot='body'>
+                                        <h3 class='slds-text-heading_medium'>
+                                            {CUSTOM_LABELS.geErrorFLSHeader}
+                                        </h3>
+                                        <p class='slds-text-body_regular slds-m-bottom_none'>
+                                            {CUSTOM_LABELS.geErrorFLSBatchTableColumns}
+                                        </p>
+                                        <p class='slds-text-body_regular fls-message-body-padding'>
+                                           {batchTableColumnsAccessErrorMessage}
+                                        </p>
+                                    </div>
+                                </c-util-illustration>
+                            </lightning-layout-item>
+                        </template>
+                        <template if:false={disableBatchTableColumnsSubtab}>
+                            <lightning-layout-item size='12'
+                                                   small-device-size='12'
+                                                   medium-device-size='4'
+                                                   large-device-size='3'
+                                                   class='left-panel'
+                                                   padding='around-large'>
+                                <p class='slds-text-body_regular slds-p-bottom_large'>
+                                    {CUSTOM_LABELS.geBodyBatchTableColumnsPart1}
+                                </p>
+                                <p class='slds-text-body_regular'>
+                                    <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyBatchTableColumnsPart2}>
+                                    </lightning-formatted-rich-text>
+                                </p>
+                            </lightning-layout-item>
+                            <lightning-layout-item size='12'
+                                                   small-device-size='12'
+                                                   medium-device-size='8'
+                                                   large-device-size='9'
+                                                   class='right-panel'
+                                                   padding='horizontal-large'>
+                                <lightning-dual-listbox name={CUSTOM_LABELS.geTabBatchTableColumns}
+                                                        source-label={CUSTOM_LABELS.geLabelCustomTableSourceFields}
+                                                        selected-label={CUSTOM_LABELS.geLabelCustomTableSelectedFields}
+                                                        options={availableBatchTableColumnOptions}
+                                                        value={selectedBatchTableColumnOptions}
+                                                        onchange={handleChangeBatchTableColumnSelection}
+                                                        min='1'
+                                                        class='slds-p-top_small slds-p-bottom_large'
+                                                        data-qa-locator={qaLocatorBatchTableColumns}>
+                                </lightning-dual-listbox>
+                            </lightning-layout-item>
+                        </template>
+                    </lightning-layout>
+                </lightning-tab>
+                <lightning-tab label={CUSTOM_LABELS.geTabBatchHeader}
+                               class='slds-p-around_none'>
+                    <lightning-layout multiple-rows='true'>
+                        <lightning-layout-item size='12'
+                                               small-device-size='12'
+                                               medium-device-size='4'
+                                               large-device-size='3'
+                                               class='left-panel'
+                                               padding='around-large'>
+                            <h2 class='slds-text-heading_small slds-p-bottom_small'>
+                                {CUSTOM_LABELS.geHeaderBatchHeaderLeftCol}
+                            </h2>
+                            <p class='slds-text-body_small slds-p-bottom_small'>
+                                {CUSTOM_LABELS.geBodyBatchHeaderLeftCol}
+                            </p>
+
+                            <template for:each={batchFields}
+                                      for:item='field'>
+                                <lightning-input checked={field.checked}
+                                                 class='slds-truncate'
+                                                 data-type={field.dataType}
+                                                 disabled={field.isRequiredFieldDisabled}
+                                                 key={field.apiName}
+                                                 label={field.label}
+                                                 onchange={handleToggleBatchField}
+                                                 required={field.required}
+                                                 title={field.label}
+                                                 type='checkbox'
+                                                 value={field.apiName}
+                                                 data-qa-locator={field.label}>
+                                </lightning-input>
+                            </template>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size='12'
+                                               small-device-size='12'
+                                               medium-device-size='8'
+                                               large-device-size='9'
+                                               class='right-panel'
+                                               padding='around-large'>
+
+                            <lightning-layout multiple-rows='true'
+                                              vertical-align='end'>
+
+                                <template if:true={hasErrors}>
+                                    <lightning-layout-item size='12'
+                                                           class='slds-p-bottom_small'>
+                                        <c-util-page-level-message title={CUSTOM_LABELS.commonWarning}
+                                                                   subtitle={CUSTOM_LABELS.geBodyBatchHeaderWarning}
+                                                                   variant='warning'>
+                                            <ul slot='body'
+                                                class='slds-list_dotted'>
+                                                <template for:each={missingRequiredFields}
+                                                          for:item='missingRequiredField'>
+                                                    <li key={missingRequiredField.apiName}>
+                                                        {missingRequiredField.label}
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </c-util-page-level-message>
+                                    </lightning-layout-item>
+                                </template>
+
+                                <lightning-layout-item size='12'
+                                                       class='slds-p-bottom_small'>
+                                    <h2 class='slds-text-heading_small slds-p-bottom_small'>
+                                        {CUSTOM_LABELS.geHeaderBatchHeaderRightCol}
+                                    </h2>
+                                    <p class='slds-text-body_small'>
+                                        {CUSTOM_LABELS.geBodyBatchHeaderRightCol}
+                                    </p>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size='12'
+                                                       class='slds-p-bottom_small'>
+
+                                    <lightning-layout vertical-align='center'>
+
+                                        <lightning-layout-item size='5'>
+                                            <p class='slds-form-element__label'>
+                                                {CUSTOM_LABELS.commonFieldLabel}
+                                            </p>
+                                            <lightning-helptext content={CUSTOM_LABELS.geHelpTextBatchHeaderFieldLabelLabel}></lightning-helptext>
+                                        </lightning-layout-item>
+
+                                        <lightning-layout-item size='5'>
+                                            <p class='slds-form-element__label'>
+                                                {CUSTOM_LABELS.commonDefaultValue}
+                                            </p>
+                                        </lightning-layout-item>
+
+                                        <lightning-layout-item size='1'>
+                                            <p class='slds-form-element__label'>
+                                                {CUSTOM_LABELS.commonRequired}
+                                            </p>
+                                        </lightning-layout-item>
+
+                                        <lightning-layout-item size='1'></lightning-layout-item>
+
+                                    </lightning-layout>
+
+                                </lightning-layout-item>
+
+                            </lightning-layout>
+
+                            <template iterator:it={selectedBatchFields}>
+                                <c-ge-template-builder-form-field key={it.value.apiName}
+                                                                  field={it.value}
+                                                                  object-api-name={dataImportBatchName}
+                                                                  is-first={it.first}
+                                                                  is-last={it.last}
+                                                                  onupdatepicklistoptions={handleUpdateBatchHeaderField}
+                                                                  onformelementup={handleFormElementUp}
+                                                                  onformelementdown={handleFormElementDown}
+                                                                  onupdateformelement={handleUpdateBatchHeaderField}
+                                                                  ondeleteformelement={handleDeleteBatchHeaderField}>
+                                </c-ge-template-builder-form-field>
+                            </template>
+
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-tab>
+            </lightning-tabset>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

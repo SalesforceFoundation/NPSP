@@ -110,6 +110,124 @@ public with sharing class BDI_DataImport_TEST {
         );
     }
 
+    /*
+    * @description checks if the batch status gets set to Open
+    * when dis are not all Imported
+    * and when we don't have Failed dis
+    * and the remaining dis are in an open state
+    */
+    @IsTest
+    static void shouldSetBatchStatusToOpen() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
+                            'The batch status should be Open when all ' +
+                            'data import records are Open.');
+
+        Test.startTest();
+        // set the statuses to a mix of dry run validated, and dry run error
+        di1.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        di2.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        di3.Status__c = BDI_DataImport_API.bdiDryRunError;
+        update dis;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
+                            'The batch status should be Open when all ' +
+                            'data import records are Open.');
+    }
+
+    /*
+    * @description checks if the batch status gets set to failed
+    * when at least one di record has failed
+    */
+    @IsTest
+    static void shouldSetBatchStatusToFailed() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        Test.startTest();
+        // make one di record fail
+        di2.Status__c = BDI_DataImport_API.bdiFailed;
+        update di2;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_FAILED, bdi.Batch_Status__c,
+                            'The batch status should be Failed when at least one ' +
+                            'data import record has failed.');
+        
+    }
+
+    /*
+    * @description checks if the batch status gets set to imported
+    * when all the di records are imported
+    */
+    @IsTest
+    static void shouldSetBatchStatusToCompleted() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        Test.startTest();
+        // make all dis imported
+        di1.Status__c = BDI_DataImport_API.bdiImported;
+        di2.Status__c = BDI_DataImport_API.bdiImported;
+        di3.Status__c = BDI_DataImport_API.bdiImported;
+        update dis;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
+                            'The batch status should be Completed when all ' +
+                            'data import records have been imported.');
+        
+        // set one di to Open
+        di3.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        update di3;
+
+        // check the batch is no longer in the completed stage
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertNotEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
+                            'The batch status should be Completed when all ' +
+                            'data import records have been imported.');
+    }
 
     /*********************************************************************************************************
     * @description operation
@@ -1349,8 +1467,10 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -1456,8 +1576,10 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -1500,19 +1622,36 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+
+        // create import service for dry run
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
-        bdi.isDryRun = false;
+        
+        // create import service without dry run
+        dataImportService = new BDI_DataImportService(false, BDI_MappingServiceHelpText.getInstance());
+        bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId2 = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
         //verify dry run statuses and import fields
         dataImports = getDataImports();
-        System.assertEquals(System.Label.bdiMatchedId, dataImports[0].DonationCampaignImportStatus__c);
-        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
-        System.assertEquals(System.Label.bdiMatched, dataImports[1].DonationCampaignImportStatus__c);
-        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
+
+        Map<Id, DataImport__c> dataImportsByCampaignId = new Map<Id, DataImport__c>();
+        dataImportsByCampaignId.put(dataImports[0].DonationCampaignImported__c, dataImports[0]);
+        dataImportsByCampaignId.put(dataImports[1].DonationCampaignImported__c, dataImports[1]);
+
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[0].Id), 
+            'A data import should have matched '+campaigns[0].Name);
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[1].Id), 
+            'A data import should have matched '+campaigns[1].Name);
+
+        System.assertEquals(System.Label.bdiMatchedId, 
+            dataImportsByCampaignId.get(campaigns[0].Id).DonationCampaignImportStatus__c);
+        System.assertEquals(System.Label.bdiMatched, 
+            dataImportsByCampaignId.get(campaigns[1].Id).DonationCampaignImportStatus__c);
     }
 
     /*********************************************************************************************************

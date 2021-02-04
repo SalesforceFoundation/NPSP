@@ -55,7 +55,7 @@ private class OPP_CurrencySync_TEST {
                     String curr2 = currencies[1].value;
 
                     // Insert Account, Contact, Opp
-                    Account acc1 = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+                    Account acc1 = UTIL_UnitTestData_TEST.buildHouseholdAccount();
                     insert acc1;
                     Contact con1 = UTIL_UnitTestData_TEST.getContact();
                     insert con1;

@@ -42,8 +42,9 @@ public class UTIL_PageMessages_CTRL {
     public List<Message> getPageMessages() {
         List<Message> pageMessages = new List<Message>();
 
+        Integer rowCount = 0;
         for (ApexPages.Message m : ApexPages.getMessages()) {
-            pageMessages.add(new Message(m));
+            pageMessages.add(new Message(m, rowCount++));
         }
 
         return pageMessages;
@@ -60,19 +61,22 @@ public class UTIL_PageMessages_CTRL {
         public String summary {get; set;}
         public String detail {get; set;}
         public String componentLabel {get; set;}
+        public String a11yDescribedById {get; set;}
 
         /**
          * @description Construct a Message data container object from a given
          * ApexPages.Message object.  This will extract out the data from the
          * ApexPages.Message object and store it in the new Message object
-         * isntance.
+         * instance.
          *
          * @param m The ApexPages.Message object to extract data from
+         * @param rowCount The message count
          */
-        public Message(ApexPages.Message m) {
+        public Message(ApexPages.Message m, Integer rowCount) {
             this.summary = m.getSummary();
             this.detail = m.getDetail();
             this.componentLabel = m.getComponentLabel();
+            this.a11yDescribedById = 'a11y-' + this.summary.replaceAll('[^A-Za-z0-9]+', '-') + String.valueOf(rowCount);
 
             ApexPages.Severity s = m.getSeverity();
 

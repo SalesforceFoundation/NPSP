@@ -1,0 +1,29 @@
+.slds-text-heading_medium_extension, .slds-text-heading_small_extension {
+    font-weight: 400;
+    font-family: "Salesforce Sans";
+}
+
+.slds-text_extension {
+    color: #080707;
+    font-family: "Salesforce Sans";
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.table-header {
+    color: #080707;
+    font-family: "Salesforce Sans";
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.table-header_source {
+    border-bottom: 2px solid black;
+    margin-right: 4rem;
+}
+
+.table-header_target {
+    border-bottom: 2px solid black;
+    margin-left: 1.75rem;
+    margin-right: 3rem;
+}

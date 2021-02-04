@@ -464,11 +464,13 @@ public with sharing class ADDR_Addresses_TEST2 {
         // this way we can test the scheduled job!
         insert listAddrT;
 
+        setSeasonalAddressBatchSize(10);
+
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        new ADDR_Seasonal_SCHED().execute(null);
         Test.stopTest();
-        
+
         // verify that the HH and Contacts share the same address and it's new!
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
         list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
@@ -543,9 +545,11 @@ public with sharing class ADDR_Addresses_TEST2 {
         // this way we can test the scheduled job!
         update listAddrT;
 
+        setSeasonalAddressBatchSize(10);
+
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        new ADDR_Seasonal_SCHED().execute(null);
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's the old default!
@@ -1630,6 +1634,129 @@ public with sharing class ADDR_Addresses_TEST2 {
             System.assert(mapAddrIdAddr.containsKey(updatedCon.Current_Address__c), 'A new address should have been created.');
             System.assertEquals(true, ADDR_Addresses_TEST.isMatchAddressAccCon(updatedAcc, updatedCon), 'The new account address should match the contact.');
             System.assertEquals(false, updatedCon.is_Address_Override__c, 'The contact\'s override should not be set.');
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is negative
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsNegative() {
+        setSeasonalAddressBatchSize(-1);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is zero
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsZero() {
+        setSeasonalAddressBatchSize(0);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is null
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsNull() {
+        setSeasonalAddressBatchSize(null);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Test Household naming executes properly when a custom TDTM trigger updates Account properly
+    * on Address change.
+    **********************************************************************************************************/
+    @isTest
+    private static void shouldCreateNamedHHWhenCustomTDTMTriggerUpdatesAccountOnAddressChange() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        final String firstName = 'Test_First_Name';
+        final String lastName = 'Test_Last_Name';
+
+        List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getDefaultRecords();
+        triggerHandlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+            Class__c = 'ADDR_Addresses_TEST2.TEST_Account_TDTM', Load_Order__c = 2, Object__c = 'Address__c',
+            Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+        insert triggerHandlers;
+
+        Contact testContact = new Contact(
+            FirstName = firstName,
+            LastName = lastName,
+            Salutation = 'Mr.',
+            Email = 'test@email.com',
+            MailingStreet = '123 Main Street',
+            MailingCity = 'San Francisco',
+            MailingState = 'California',
+            MailingPostalCode = '94105',
+            MailingCountry = 'United States'
+        );
+
+        Test.starttest();
+        insert testContact;
+        Test.stopTest();
+
+        testContact = [
+            SELECT
+                Account.Name,
+                Account.npo02__Informal_Greeting__c,
+                Account.npo02__Formal_Greeting__c,
+                Account.AccountNumber
+            FROM Contact
+            WHERE Id = :testContact.Id];
+
+        System.assertEquals(lastName + ' ' +  System.Label.npo02.DefaultHouseholdName, testContact.Account.Name,
+            'Account Name should equal Last Name + Default Household Name');
+        System.assertEquals(firstName, testContact.Account.npo02__Informal_Greeting__c,
+            'Informal Greeting should equal First Name');
+        System.assert(testContact.Account.npo02__Formal_Greeting__c.endsWith(firstName + ' ' + lastName),
+            'Formal Greeting should end with First Name + Last Name');
+        System.assert(String.isNotBlank(testContact.Account.AccountNumber),
+            'Account Number should be populated');
+    }
+
+    /*********************************************************************************************************
+    * @description sets Seasonal_Addresses_Batch_Size__c on npo02__Households_Settings__c
+    * @param batchSize: value for Seasonal_Addresses_Batch_Size__c
+    **********************************************************************************************************/
+    private static void setSeasonalAddressBatchSize(Integer batchSize) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                Seasonal_Addresses_Batch_Size__c = batchSize
+            ));
+    }
+
+    /*********************************************************************************************************
+    * @description TDTM Class that updates Account on update of Address. The point of this class is to
+    * simulate customer processing that fires on update of Address
+    **********************************************************************************************************/
+    public class TEST_Account_TDTM extends TDTM_Runnable {
+
+        public override DmlWrapper run(
+            List<SObject> newlist,
+            List<SObject> oldlist,
+            Action triggerAction,
+            Schema.DescribeSObjectResult objResult
+        ) {
+            List<Account> accounts = new List<Account>();
+            for (SObject sObj : newlist) {
+                Account acc = new Account(
+                    Id = (Id) sObj.get('Household_Account__c'),
+                    AccountNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9))
+                );
+                accounts.add(acc);
+            }
+            update accounts;
+
+            return null;
         }
     }
 }

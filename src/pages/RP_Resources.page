@@ -19,7 +19,7 @@
             </div>
 
             <div class="slds-grid">
-                <h1 class="slds-text-heading_large" >{!$Label.RP_Title} {!$Label.RP_ProductNameLabel}!</h1>
+                <h1 class="slds-text-heading_large" >{!$Label.RP_Title}</h1>
             </div>
 
             <div class="slds-grid">

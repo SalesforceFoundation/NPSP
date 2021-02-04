@@ -1,0 +1,8 @@
+.slds-notify_extension {
+    margin: 0;
+    padding: var(--lwc-spacing-medium, 1rem);
+    width: 100%;
+}
+.slds-notify_container_extension {
+    z-index: unset;
+}

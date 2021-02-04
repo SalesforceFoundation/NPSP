@@ -1,0 +1,15 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1">
+            <table>
+                <template iterator:it={rows}>
+                    <tr key={it.value.id}>
+                        <template iterator:it={columns}>
+                            <td key={it.value.id} class="stencil"><div></div></td>
+                        </template>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </div>
+</template>

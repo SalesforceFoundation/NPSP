@@ -1,0 +1,91 @@
+<template>
+    <div class="slds-grid slds-wrap slds-p-around_small">
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalRenameSection}>
+                        {CUSTOM_LABELS.geHeaderFormFieldsModalRenameSection}
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <lightning-input type="text"
+                                     value={sectionBeingEdited.label}
+                                     label={CUSTOM_LABELS.geLabelSectionName}
+                                     data-name="customLabel"
+                                     data-qa-locator={qaLocatorSectionName}>
+                    </lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalDisplayOptionsSection}>
+                       {CUSTOM_LABELS.geHeaderFormFieldsModalDisplayOptionsSection}
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <lightning-radio-group name={CUSTOM_LABELS.geLabelDisplaySections}
+                                           label={CUSTOM_LABELS.geLabelDisplaySections}
+                                           options={displayOptions}
+                                           value={_selectedDisplayMode}
+                                           onchange={handleDisplayOptionChange}>
+                    </lightning-radio-group>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}>
+                        {CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <template if:true={hasRequiredFields}>
+                        <c-util-page-level-message title={CUSTOM_LABELS.geWarningFormFieldsModalDeleteSection}
+                                                   variant="warning">
+                        </c-util-page-level-message>
+                    </template>
+                    <template if:false={hasRequiredFields}>
+                        <p class="slds-text-body_regular slds-p-bottom_small">
+                            {CUSTOM_LABELS.geBodyFormFieldsModalDeleteSection}
+                        </p>
+                    </template>
+                    <lightning-button label={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
+                                      title={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
+                                      variant="neutral"
+                                      onclick={handleDelete}
+                                      data-qa-locator={qaLocatorDelete}>
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="slds-modal__footer slds-clearfix">
+        <div class="slds-float_right">
+            <lightning-button label={CUSTOM_LABELS.commonCancel}
+                              title={CUSTOM_LABELS.geAssistiveModalCancelAndDiscard}
+                              aria-label={CUSTOM_LABELS.geAssistiveModalCancelAndDiscard}
+                              variant="neutral"
+                              class="slds-m-right_small"
+                              onclick={handleCancel}
+                              data-qa-locator={qaLocatorCancel}>
+            </lightning-button>
+            <lightning-button label={CUSTOM_LABELS.commonSave}
+                              title={CUSTOM_LABELS.commonSave}
+                              variant="brand"
+                              onclick={handleSave}
+                              data-qa-locator={qaLocatorSave}>
+            </lightning-button>
+        </div>
+    </footer>
+</template>

@@ -1,0 +1,33 @@
+<template>
+    <template if:false={isLoading}>
+        <lightning-layout multiple-rows="true"
+                          class="slds-p-around_small">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+            </template>
+
+            <lightning-layout-item class="slds-p-horizontal_small"
+                                   size="12">
+                <p class="slds-text-body_regular">
+                    {CUSTOM_LABELS.geBodyMatchingSelectRecord}
+                    <button class="slds-button slds-p-left_xx-small"
+                            onclick={handleNewOpportunity}
+                            data-qa-locator={qaLocatorNewOpportunity}>
+                        {CUSTOM_LABELS.geButtonMatchingNewOpportunity}
+                    </button>
+                </p>
+            </lightning-layout-item>
+
+            <template iterator:it={opportunities}>
+                <lightning-layout-item key={it.value.Id}
+                                       padding="around-small"
+                                       size="12">
+                    <c-ge-donation-matching-opportunity-card opportunity-wrapper={it.value}
+                                                             selected-donation-id={selectedDonationId}
+                                                             onupdateselecteddonation={handleUpdateSelectedDonation}>
+                    </c-ge-donation-matching-opportunity-card>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </template>
+</template>

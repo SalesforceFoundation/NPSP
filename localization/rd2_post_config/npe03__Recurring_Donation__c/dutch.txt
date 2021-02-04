@@ -1,0 +1,23 @@
+
+  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
+  <fields>
+    <label>Verouderd:Altijd laatste dag van maand gebruiken</label>
+    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+  </fields>
+  <fields>
+    <label>Verouderd:Status voor onbepaalde duur</label>
+    <name>npe03__Open_Ended_Status__c</name>
+  </fields>
+  <fields>
+    <label>Verouderd:Planningstype</label>
+    <name>npe03__Schedule_Type__c</name>
+  </fields>
+  <fields>
+    <label>Verouderd:Termijnbedrag</label>
+    <name>npe03__Installment_Amount__c</name>
+  </fields>
+  <fields>
+    <label>Verouderd:Totaal</label>
+    <name>npe03__Total__c</name>
+  </fields>
+  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->

@@ -5,14 +5,14 @@
     sidebar="false"
     action="{!buttonClick}"
     docType="html-5.0"
-    standardStylesheets="true">
+    standardStylesheets="false"
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <div class="slds-scope slds-p-bottom_x-large">
         <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
-
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImport__c.Label}"
                 header="NPSP Data Import Delete"
                 icon="custom67" iconCategory="custom"
@@ -33,5 +33,4 @@
 
         </apex:form>
     </div>
-
 </apex:page>

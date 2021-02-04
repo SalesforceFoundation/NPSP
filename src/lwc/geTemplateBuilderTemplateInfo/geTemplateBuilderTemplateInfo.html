@@ -1,0 +1,48 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_3-of-12 slds-p-around_large slds-border_right">
+            <template if:true={isLoading}>
+                <c-util-stencil row-count="5"
+                                column-count="1">
+                </c-util-stencil>
+            </template>
+            <template if:false={isLoading}>
+                <h2 class="slds-text-heading_small slds-p-bottom_small">
+                    {CUSTOM_LABELS.geHeaderTemplateInfoLeftCol}
+                </h2>
+                <p class="slds-text-body_small">
+                    {CUSTOM_LABELS.geBodyTemplateInfoLeftCol}
+                </p>
+            </template>
+        </div>
+        <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+            <template if:true={isLoading}>
+                <c-util-stencil row-count="5"
+                                column-count="5">
+                </c-util-stencil>
+            </template>
+            <template if:false={isLoading}>
+                <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                    <div class="slds-size_1-of-1">
+                        <lightning-input type="text"
+                                         name={CUSTOM_LABELS.geLabelTemplateInfoNameField}
+                                         label={CUSTOM_LABELS.geLabelTemplateInfoNameField}
+                                         value={templateName}
+                                         required
+                                         maxlength="80"
+                                         onblur={handleChangeTemplateInfoName}
+                                         data-qa-locator={qaLocatorTemplateName}>
+                        </lightning-input>
+                        <lightning-textarea name={CUSTOM_LABELS.geLabelTemplateInfoDescriptionField}
+                                            label={CUSTOM_LABELS.geLabelTemplateInfoDescriptionField}
+                                            value={templateDescription}
+                                            onblur={handleChangeTemplateInfoDescription}
+                                            maxlength="255"
+                                            data-qa-locator={qaLocatorTemplateDescription}>
+                        </lightning-textarea>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

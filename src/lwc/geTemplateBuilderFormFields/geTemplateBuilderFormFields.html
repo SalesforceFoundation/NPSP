@@ -1,0 +1,289 @@
+<template>
+    <div class="slds-grid slds-wrap">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+        </template>
+
+        <div class="slds-size_3-of-12 slds-p-around_large slds-border_right">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-1">
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">
+                        {CUSTOM_LABELS.geHeaderFormFieldsLeftCol}
+                    </h2>
+                    <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
+                        {CUSTOM_LABELS.geBodyFormFieldsLeftCol}
+                        <template if:false={isReadMoreActive}>
+                            <div>
+                                <a class="slds-p-left_xxx-small"
+                                        data-id={CUSTOM_LABELS.commonReadMore}
+                                        title={CUSTOM_LABELS.commonReadMore}
+                                        aria-label={CUSTOM_LABELS.commonReadMore}
+                                        onclick={handleBodyReadMore}>
+                                    {CUSTOM_LABELS.commonReadMore}
+                                </a>
+                            </div>
+                        </template>
+                    </p>
+                    <template if:true={isReadMoreActive}>
+                        <div class="slds-text-body_small slds-p-horizontal--small slds-p-top--small">
+                            <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyFormFieldsLeftColAdditional}>
+                            </lightning-formatted-rich-text>
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <template if:true={bundlesSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorExpandFieldBundles}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={bundlesSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorCollapseFieldBundles}>
+                        </lightning-button>
+                    </template>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderFieldBundles}
+                                               data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFieldBundles}>
+                        <template for:each={fieldBundleMappings}
+                                  for:item="objectMapping">
+                            <template for:each={objectMapping.Field_Mappings}
+                                      for:item="fieldMapping">
+                                <div key={fieldMapping.DeveloperName}
+                                     class="slds-p-left_small">
+                                    <lightning-input type="checkbox"
+                                                     key={fieldMapping.DeveloperName}
+                                                     label={fieldMapping.Target_Field_Label}
+                                                     value={fieldMapping.DeveloperName}
+                                                     checked={fieldMapping.checked}
+                                                     onchange={handleToggleFieldMapping}
+                                                     class="slds-truncate slds-p-bottom_xxx-small"
+                                                     title={fieldMapping.Target_Field_Label}
+                                                     required={fieldMapping.Is_Required}
+                                                     field-level-help={fieldMapping.helpText}
+                                                     data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                     data-object-mapping-label={objectMapping.MasterLabel}
+                                                     data-field-mapping={fieldMapping.DeveloperName}
+                                                     data-object-mapping={objectMapping.DeveloperName}
+                                                     data-qa-locator={fieldMapping.Target_Field_Label}>
+                                    </lightning-input>
+                                </div>
+                            </template>
+                        </template>
+                    </c-util-expandable-section>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <template if:true={basicSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorExpandFormFields}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={basicSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorCollapseFormFields}>
+                        </lightning-button>
+                    </template>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section label={CUSTOM_LABELS.geTabFormFields}
+                                               data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFormFields}>
+                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
+                            {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
+                        </p>
+                        <lightning-accordion allow-multiple-sections-open
+                                             onsectiontoggle={handleSectionToggle}
+                                             active-section-name={activeSections}>
+                            <template for:each={basicObjectMappings}
+                                      for:item="objectMapping">
+                                <lightning-accordion-section key={objectMapping.DeveloperName}
+                                                             name={objectMapping.DeveloperName}
+                                                             label={objectMapping.MasterLabel}
+                                                             class="slds-truncate slds-accordion__section_extension"
+                                                             data-qa-locator={objectMapping.MasterLabel}>
+                                    <lightning-helptext if:true={objectMapping.helpText}
+                                                        slot="actions"
+                                                        content={objectMapping.helpText}>
+                                    </lightning-helptext>
+                                    <template for:each={objectMapping.Field_Mappings}
+                                              for:item="fieldMapping">
+                                        <div key={fieldMapping.DeveloperName}>
+                                            <lightning-input type="checkbox"
+                                                             key={fieldMapping.DeveloperName}
+                                                             label={fieldMapping.Target_Field_Label}
+                                                             value={fieldMapping.DeveloperName}
+                                                             checked={fieldMapping.checked}
+                                                             onchange={handleToggleFieldMapping}
+                                                             class="slds-truncate slds-p-bottom_xxx-small"
+                                                             title={fieldMapping.Target_Field_Label}
+                                                             required={fieldMapping.Is_Required}
+                                                             data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                             data-object-mapping-label={objectMapping.MasterLabel}
+                                                             data-field-mapping={fieldMapping.DeveloperName}
+                                                             data-object-mapping={objectMapping.DeveloperName}
+                                                             data-qa-locator={fieldMapping.Target_Field_Label}>
+                                            </lightning-input>
+                                        </div>
+                                    </template>
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-accordion>
+                    </c-util-expandable-section>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <template if:true={advancedSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorExpandAdvancedFormFields}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={advancedSectionCollapsed}>
+                        <lightning-button class="slds-float_right slds-button__extension"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorCollapseAdvancedFormFields}>
+                        </lightning-button>
+                    </template>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
+                                               is-collapsed="true"
+                                               data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionAdvancedFormFields}>
+                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
+                            {CUSTOM_LABELS.geBodyAdvancedFieldMapping}
+                        </p>
+                        <lightning-accordion allow-multiple-sections-open
+                                             onsectiontoggle={handleSectionToggle}
+                                             active-section-name={activeSections}>
+
+                            <template for:each={advancedObjectMappings}
+                                      for:item="objectMapping">
+                                <lightning-accordion-section key={objectMapping.DeveloperName}
+                                                             name={objectMapping.DeveloperName}
+                                                             label={objectMapping.MasterLabel}
+                                                             class="slds-truncate"
+                                                             data-qa-locator={objectMapping.MasterLabel}>
+                                        <lightning-helptext if:true={objectMapping.helpText}
+                                                            slot="actions"
+                                                            content={objectMapping.helpText}>
+                                        </lightning-helptext>
+                                        <template for:each={objectMapping.Field_Mappings}
+                                                  for:item="fieldMapping">
+                                            <lightning-input type="checkbox"
+                                                             key={fieldMapping.DeveloperName}
+                                                             label={fieldMapping.Target_Field_Label}
+                                                             value={fieldMapping.DeveloperName}
+                                                             checked={fieldMapping.checked}
+                                                             onchange={handleToggleFieldMapping}
+                                                             class="slds-truncate slds-p-bottom_xxx-small"
+                                                             title={fieldMapping.Target_Field_Label}
+                                                             required={fieldMapping.Is_Required}
+                                                             data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                             data-object-mapping-label={objectMapping.MasterLabel}
+                                                             data-field-mapping={fieldMapping.DeveloperName}
+                                                             data-object-mapping={objectMapping.DeveloperName}
+                                                             data-qa-locator={fieldMapping.Target_Field_Label}>
+                                            </lightning-input>
+                                        </template>
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-accordion>
+                    </c-util-expandable-section>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+            <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                <template if:true={pageLevelError.hasErrors}>
+                    <div class="slds-size_1-of-1">
+                        <c-util-page-level-message title={pageLevelError.title}
+                                                   subtitle={pageLevelError.message}
+                                                   variant={pageLevelError.variant}>
+                            <ul slot="body"
+                                class="slds-list_dotted">
+                                <template for:each={pageLevelError.errors}
+                                          for:item="error">
+                                    <li key={error}
+                                        aria-label={error}
+                                        class="slds-text-color_error">
+                                        {error}
+                                    </li>
+                                </template>
+                            </ul>
+                        </c-util-page-level-message>
+                    </div>
+                </template>
+                <div class="slds-size_1-of-1">
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">
+                        {CUSTOM_LABELS.geHeaderFormFieldsRightCol}
+                    </h2>
+                    <p class="slds-text-body_small">
+                        {CUSTOM_LABELS.geBodyFormFieldsRightCol}
+                    </p>
+                </div>
+                <div class="slds-size_1-of-1 slds-p-top_large">
+
+                    <template iterator:it={formSections}>
+                        <c-ge-template-builder-form-section key={it.value.id}
+                                                            form-section={it.value}
+                                                            active-form-section-id={activeFormSectionId}
+                                                            is-first={it.first}
+                                                            is-last={it.last}
+                                                            source-object-fields-describe={sourceObjectFieldsDescribe}
+                                                            onchangeactivesection={handleChangeActiveSection}
+                                                            onformsectionup={handleFormSectionUp}
+                                                            onformsectiondown={handleFormSectionDown}
+                                                            ondeleteformsection={handleDeleteFormSection}
+                                                            onformelementup={handleFormElementUp}
+                                                            onformelementdown={handleFormElementDown}
+                                                            ondeleteformelement={handleDeleteFormElement}
+                                                            onupdateformelement={handleUpdateFormElement}
+                                                            ontogglemodal={toggleModal}
+                                                            onfieldmetadatavalidation= {handleFieldMetadataValidation}>
+                        </c-ge-template-builder-form-section>
+                    </template>
+
+                </div>
+                <div class="slds-size_1-of-1">
+                    <button class="slds-button slds-button_neutral slds-button_stretch"
+                            title={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                            aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                            onclick={addSection}
+                            data-qa-locator={qaLocatorAddSection}>
+                        {CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

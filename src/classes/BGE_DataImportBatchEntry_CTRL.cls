@@ -59,11 +59,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
+        Boolean canDelete = UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
+        if(!canDelete) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
+        }
+        
         try {
             delete new DataImport__c(Id = dataImportId);
-
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
             return JSON.serialize(dataImportModel);
+        } catch (DmlException ex) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -86,7 +92,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         dataImportModel.id = batchId;
         dataImportModel.dataImportRows = getDataImportRows(batchId, rowOffset);
-        dataImportModel.columns = getColumns(batchId);
+        dataImportModel.setColumns();
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
@@ -94,11 +100,44 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
-        // check permissions on hard coded fields
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-            UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-            BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
-        );
+        DataImportBatch__c batch;
+        Boolean isQueryException = false;
+        try {
+            batch = [
+                    SELECT Batch_Gift_Entry_Version__c
+                    FROM DataImportBatch__c
+                    WHERE Id = :batchId
+                    WITH SECURITY_ENFORCED
+            ];
+        } catch (QueryException qe) {
+            // If User doesn't have access to Version field, treat as 1.0.
+            isQueryException = true;
+        }
+
+        if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+            );
+        } else {
+            List<String> fields =
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+            List<String> nonNameFields = new List<String>();
+            for (String str : fields) {
+                Boolean isNameField = str.contains('.');
+                if (isNameField) {
+                    continue;
+                } else if (!nonNameFields.contains(str)) {
+                    nonNameFields.add(str);
+                }
+            }
+
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    nonNameFields
+            );
+        }
 
         return JSON.serialize(dataImportModel);
     }
@@ -127,62 +166,112 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
-    * @return JSON stringified Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
+    * @description Retrieves all open Opportunities and related Payments for the selected Donor (Account or Contact)
+    * @return JSON string of all open Opportunities and related Payments for the given donor
     */
     @AuraEnabled
-    public static String getOpenDonations(Id donorId, String donorType) {
+    public static String getOpportunitiesWithOppPayments(Id donorId) {
+        Schema.SObjectType token = donorId.getSobjectType();
+
         String relationshipField;
-        if (donorType == 'Account1') {
+        if (token == Account.SObjectType) {
             relationshipField = 'AccountId';
-        } else if (donorType == 'Contact1') {
+        } else if (token == Contact.SObjectType) {
             relationshipField = 'Primary_Contact__c';
+        } else {
+            throw new AuraHandledException('SObjectType ' + token + ' is not supported.');
         }
 
-        String opportunitySOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'StageName, ' +
-                                'Amount ' +
-                                'FROM Opportunity ' +
-                                'WHERE ' + relationshipField + ' = :donorId ' +
-                                'AND IsClosed = false';
-
-        String paymentSOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'npe01__Scheduled_Date__c, ' +
-                                'npe01__Opportunity__r.Name, ' +
-                                'npe01__Opportunity__c, ' +
-                                'npe01__Payment_Amount__c ' +
-                                'FROM npe01__OppPayment__c ' +
-                                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
-                                'AND npe01__Opportunity__r.IsClosed = false ' +
-                                'AND npe01__Written_Off__c = false ' +
-                                'AND npe01__Paid__c = false';
+        String query = 'SELECT Id, ' +
+                'Name, ' +
+                'StageName, ' +
+                'Amount, ' +
+                    '(SELECT Id, ' +
+                    'Name, ' +
+                    'npe01__Scheduled_Date__c, ' +
+                    'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__c, ' +
+                    'npe01__Payment_Amount__c,' +
+                    'npe01__Paid__c, ' +
+                    'npe01__Written_Off__c ' +
+                    'FROM npe01__OppPayment__r ' +
+                    'WHERE npe01__Written_Off__c = false) ' +
+                'FROM Opportunity ' +
+                'WHERE ' + relationshipField + ' = :donorId ' +
+                'AND IsClosed = false ' +
+                'WITH SECURITY_ENFORCED';
 
         try {
-            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
-            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
-
-            Map<Id, Opportunity> openOpportunitiesById = new Map<Id, Opportunity>(openOpportunities);
-
-            // openOpportunities should only include opps with NO UNPAID PAYMENTS for BDI to process donations correctly
-            for (npe01__OppPayment__c payment : unpaidPayments) {
-                Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
-                if (openOpportunitiesById.containsKey(idOfCurrentOpportunity)) {
-                    openOpportunitiesById.remove(idOfCurrentOpportunity);
-                }
+            List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
+            for (Opportunity opportunity : Database.query(query)) {
+                opportunityWrappers.add(new OpportunityWrapper(opportunity));
             }
-
-            Map<String, List<SObject>> response = new Map<String, List<SObject>>{
-                'openOpportunities' => openOpportunitiesById.values(),
-                'unpaidPayments' => unpaidPayments
-            };
-            return JSON.serialize(response);
-        } catch (Exception ex){
+            return JSON.serialize(opportunityWrappers);
+        } catch (QueryException ex) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
+        } catch (Exception ex) {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
     }
 
+    /**
+    * @description Wrapper class used to hold only the information needed in the
+    * component for each Opportunity.  The component does not need to store any of
+    * the paid or written-off Payments for a donor, but it does need to know if the Donation
+    * has related Payments that have not been written-off. In that case the User should not
+    * be able to update the Opportunity in the BGE Donation Selector.
+    */
+    @TestVisible
+    private class OpportunityWrapper {
+        @TestVisible Opportunity opportunity {get; private set;}
+        @TestVisible List<npe01__OppPayment__c> unpaidPayments {get; private set;}
+        @TestVisible Boolean hasNonWrittenOffPayments {get; private set;}
+
+        private OpportunityWrapper(Opportunity opportunity) {
+            this.opportunity = opportunity;
+            initialize();
+        }
+
+        private void initialize() {
+            if (unpaidPayments == null) {
+                unpaidPayments = new List<npe01__OppPayment__c>();
+            }
+
+            if (opportunity.npe01__OppPayment__r.isEmpty()) {
+                hasNonWrittenOffPayments = false;
+                return;
+            }
+
+            for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
+                if (hasNonWrittenOffPayments == null
+                        && oppPayment.npe01__Written_Off__c == false) {
+                    hasNonWrittenOffPayments = true;
+                }
+
+                if (isAvailableForUpdate(oppPayment)) {
+                    unpaidPayments.add(oppPayment);
+                } else {
+                    continue;
+                }
+            }
+
+            //If hasNonWrittenOffPayments is null after looping all of the Payments,
+            //then all of the Opp's Payments are written-off, and hasNonWrittenOffPayments can
+            //be set to false, as this Opp should be treated in the BGE Donation Selector UI
+            //as if it has 0 Payments.
+            if (hasNonWrittenOffPayments == null) {
+                hasNonWrittenOffPayments = false;
+            }
+        }
+
+        private Boolean isAvailableForUpdate(npe01__OppPayment__c oppPayment) {
+            if (oppPayment.npe01__Paid__c || oppPayment.npe01__Written_Off__c) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
     /*******************************************************************************************************
     * @description runs BDI Dry Run against a given Id based on the processing settings of a given batch
@@ -194,7 +283,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String runSingleDryRun(Id dataImportId, Id batchId) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
+            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(
+                getDataImportRecordsForDryRunByIds(new List<Id> { dataImportId }));
+                
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
@@ -211,7 +302,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a given batch
+    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a 
+    *  given batch
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
@@ -220,7 +312,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
 
-            List<DataImport__c> allRawDataImports = getAllDataImportRecordsByBatchId(batchId);
+            List<DataImport__c> allRawDataImports = getAllDataImportRecordsForDryRunByBatchId(batchId);
             List<DataImport__c> rawDataImportsToPrepareForDryRun = new List<DataImport__c>();
             for (DataImport__c di : allRawDataImports) {
                 if (di.Status__c != BDI_DataImport_API.bdiImported) {
@@ -229,14 +321,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             }
 
             if (rawDataImportsToPrepareForDryRun.size() > 0) {
-                List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
+                List<DataImport__c> dataImportListToRun = 
+                    prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
                 BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
             }
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
             List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> dataImportsToReturn = getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
+            List<DataImport__c> dataImportsToReturn = 
+                getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
             for (DataImport__c di : dataImportsToReturn) {
                 DataImportRow processedDataImportRow = new DataImportRow(di);
                 rows.add(processedDataImportRow);
@@ -262,7 +356,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             Database.update(dataImport);
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
-            String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
+            String saveErrorMessage = String.format(Label.CRLP_SaveError, 
+                new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
         }
     }
@@ -320,41 +415,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the related list of columns for the BGE interface
-    * @return list of Columns to use in BGE_DataImportBatchEntry table
-    */
-    private static List<Column> getColumns(Id batchId) {
-        List<Column> columns = new List<Column>();
-
-        columns.addAll(getUserDefinedColumns(batchId));
-
-        //add derived matched record column
-        Column linkCol = new Column();
-        linkCol.label = Label.bdiDonation;
-        linkCol.fieldName = 'matchedRecordUrl';
-        linkCol.readOnly = true;
-        linkCol.type = 'url';
-        linkCol.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
-        columns.add(linkCol);
-
-        //status of the DI record
-        Column statusCol = new Column();
-        statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
-        statusCol.fieldName = Schema.SObjectType.DataImport__c.fields.Status__c.getName();
-        statusCol.readOnly = true;
-        statusCol.type = 'text';
-        columns.add(statusCol);
-
-        return columns;
-    }
-
-    /*******************************************************************************************************
     * @description Gets the sum of the amount totals of all rows for that batch
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
     */
     private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
-        return [SELECT Sum(Donation_Amount__c)amount FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+        return [
+            SELECT Sum(Donation_Amount__c)amount 
+            FROM DataImport__c 
+            WHERE NPSP_Data_Import_Batch__c =: recordId
+        ];
     }
 
     /*******************************************************************************************************
@@ -364,87 +434,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static Integer getDataImportBatchTotalCount(Id recordId) {
         return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
-    * @return list of Columns to use in BGE_DataImportBatchEntry table
-    */
-    private static List<Column> getUserDefinedColumns(Id batchId) {
-        List<Column> columns = new List<Column>();
-
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
-                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
-                    activeFieldsJSON,
-                    List<BGE_ConfigurationWizard_CTRL.BGEField>.class
-                );
-
-            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
-                    UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
-            );
-
-            List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
-
-            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
-                if (dataImportDFR != null) {
-
-                    if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
-                        String targetObject = BDI_DataImportService.getTargetObject(dataImportDFR.name);
-                        String targetField = BDI_DataImportService.getTargetField(dataImportDFR.name);
-                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
-
-                        Column col = new Column();
-
-                        col.label = dataImportDFR.label;
-                        col.fieldName = dataImportDFR.name;
-                        col.defaultValue = field.defaultValue;
-                        col.required = field.requiredInEntryForm;
-                        col.hide = field.hide;
-                        col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.type);
-                        // lookups aren't editable in the grid since we don't have lookup support there
-                        col.readOnly = col.type == 'reference' ? true : false;
-                        col.typeAttributes = '{}';
-                        col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
-                        
-                        if (dataImportDFR.type == Schema.DisplayType.Reference) {
-                            if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
-                                // manually construct EXTRA column for lookup link
-                                Column linkCol = new Column();
-                                linkCol.label = dataImportDFR.getLabel();
-                                String fieldLabel = dataImportDFR.name + '_label';
-                                String fieldName = dataImportDFR.name + '_link';
-                                linkCol.fieldName = fieldName;
-                                linkCol.readOnly = true;
-                                linkCol.required = field.requiredInEntryForm;
-                                linkCol.type = 'url';
-                                linkCol.typeAttributes = '{"label":{"fieldName":"' + fieldLabel + '"},"target":"_blank"}';
-
-                                columns.add(linkCol);
-                                columns.add(col);
-                            }
-                        } else {
-                            columns.add(col);
-                        }
-
-                        if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
-                            unpermittedFields.add(targetDFR);
-                        }
-                    } else {
-                        unpermittedFields.add(dataImportDFR);
-                    }
-
-                }
-            }
-
-            BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
-
-        }
-
-        return columns;
     }
 
     /*******************************************************************************************************
@@ -462,14 +451,28 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 // User defined match, so we do nothing and retain the values
             } else {
                 // Clear Dry Run fields before running Dry Run so new field values are accounted for
-                dataImportRecord.Status__c = null;
-                dataImportRecord.FailureInformation__c = null;
-                dataImportRecord.DonationImported__c = null;
-                dataImportRecord.DonationImportStatus__c = null;
-                dataImportRecord.PaymentImported__c = null;
-                dataImportRecord.PaymentImportStatus__c = null;
+                if (dataImportRecord.Status__c != null) {
+                    dataImportRecord.Status__c = null;
+                }
+                if (dataImportRecord.FailureInformation__c != null) {
+                    dataImportRecord.FailureInformation__c = null;
+                }
+                if (dataImportRecord.DonationImported__c != null) {
+                    dataImportRecord.DonationImported__c = null;
+                }
+                if (dataImportRecord.DonationImportStatus__c != null) {
+                    dataImportRecord.DonationImportStatus__c = null;
+                }
+                if (dataImportRecord.PaymentImported__c != null) {
+                    dataImportRecord.PaymentImported__c = null;
+                }
+                if (dataImportRecord.PaymentImportStatus__c != null) {
+                    dataImportRecord.PaymentImportStatus__c = null;
+                }
+
             }
         }
+
         update dataImportRecords;
 
         return dataImportRecords;
@@ -517,6 +520,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String query = getDataImportQuery(batchId, dataImportIds, null, null);
         return Database.query(query);
     }
+
+    /*******************************************************************************************************
+    * @description Returns a list of DataImport__c records by their ids, with fields needed for dry run
+    * @param dataImportIds List of Data Import Ids
+    * @return DataImport__c
+    */
+    private static List<DataImport__c> getDataImportRecordsForDryRunByIds(List<Id> dataImportIds) {
+        String query =  BDI_DataImportService.strSoqlForDataImportProcess(dataImportIds);
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of all DataImport__c records for a batch Id, with fields needed for dry run
+    * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
+    */
+    public static List<DataImport__c> getAllDataImportRecordsForDryRunByBatchId(Id batchId) {
+        String query = BDI_DataImportService.strSoqlForBatchProcess(batchId);
+        return Database.query(query);
+    }    
 
     /*******************************************************************************************************
     * @description Builds DataImport__c query based on provided parameters
@@ -576,6 +599,193 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer totalCountOfRows;
         @AuraEnabled public Decimal totalRowAmount;
+        @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
+                new List<UTIL_LightningComponentSupport.Notice>();
+
+        /*******************************************************************************************************
+        * @description Retrieves the related list of columns for the BGE interface
+        * @return list of Columns to use in BGE_DataImportBatchEntry table
+        */
+        public void setColumns() {
+            List<Column> columns = new List<Column>();
+
+            columns.addAll(getUserDefinedColumns());
+
+            //add derived matched record column
+            Column linkCol = new Column();
+            linkCol.label = Label.bdiDonation;
+            linkCol.fieldName = 'matchedRecordUrl';
+            linkCol.readOnly = true;
+            linkCol.type = 'url';
+            linkCol.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
+            columns.add(linkCol);
+
+            //status of the DI record
+            Column statusCol = new Column();
+            statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
+            statusCol.fieldName = Schema.SObjectType.DataImport__c.fields.Status__c.getName();
+            statusCol.readOnly = true;
+            statusCol.type = 'text';
+            columns.add(statusCol);
+
+            this.columns = columns;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
+        * @return list of Columns to use in BGE_DataImportBatchEntry table
+        */
+        private List<Column> getUserDefinedColumns() {
+            List<Column> columns = new List<Column>();
+
+            DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c
+            WHERE Id = :id];
+            String activeFieldsJSON = batch.Active_Fields__c;
+            if (activeFieldsJSON != null) {
+                List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                        (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
+                                activeFieldsJSON,
+                                List<BGE_ConfigurationWizard_CTRL.BGEField>.class
+                        );
+
+                Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
+                );
+
+                List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
+                Set<String> unmappedFields = new Set<String>();
+
+                for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                    Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
+                    if (dataImportDFR != null) {
+
+                        if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+
+                            String targetObject = '';
+                            String targetField = '';
+                            BDI_TargetFields targetFields =
+                                    BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(
+                                            dataImportDFR.getSObjectField());
+
+                            if (targetFields == null) {
+                                if (unmappedFields == null) {
+                                    unmappedFields = new Set<String>();
+                                }
+                                unmappedFields.add(field.name);
+                                continue;
+                            }
+
+                            Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject =
+                                    targetFields.getTargetFieldsByTargetObject();
+
+                            // One DI field can be mapped to multiple target fields although it will be rare
+                            // and presents some issues with picklists; here we will return info for the first
+                            // match
+                            for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                                String aTargetObjectName = targetSObjType.getDescribe().getName();
+                                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                                        aTargetObjectName)) {
+
+                                    targetObject = aTargetObjectName;
+                                    List<SObjectField> mappedTargetFields =
+                                            new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                                    if(mappedTargetFields.size() > 0) {
+                                        targetField = mappedTargetFields[0].getDescribe().getName();
+                                    }
+                                }
+                            }
+                            DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
+
+                            Column col = new Column();
+
+                            col.label = dataImportDFR.label;
+                            col.fieldName = dataImportDFR.name;
+                            col.defaultValue = field.defaultValue;
+                            col.required = field.requiredInEntryForm;
+                            col.hide = field.hide;
+                            col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.type);
+                            // lookups aren't editable in the grid since we don't have lookup support there
+                            col.readOnly = col.type == 'reference' ? true : false;
+                            col.typeAttributes = '{}';
+                            col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
+
+                            if (dataImportDFR.type == Schema.DisplayType.Reference) {
+                                if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
+                                    // manually construct EXTRA column for lookup link
+                                    Column linkCol = new Column();
+                                    linkCol.label = dataImportDFR.getLabel();
+                                    String fieldLabel = dataImportDFR.name + '_label';
+                                    String fieldName = dataImportDFR.name + '_link';
+                                    linkCol.fieldName = fieldName;
+                                    linkCol.readOnly = true;
+                                    linkCol.required = field.requiredInEntryForm;
+                                    linkCol.type = 'url';
+                                    linkCol.typeAttributes = '{"label":{"fieldName":"' + fieldLabel + '"},"target":"_blank"}';
+
+                                    columns.add(linkCol);
+                                    columns.add(col);
+                                }
+                            } else {
+                                columns.add(col);
+                            }
+
+                            if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
+                                unpermittedFields.add(targetDFR);
+                            }
+                        } else {
+                            unpermittedFields.add(dataImportDFR);
+                        }
+
+                    }
+                }
+
+                BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
+
+                if (!unmappedFields.isEmpty()) {
+                    notices.add(new UnmappedFieldsNotice(unmappedFields));
+                }
+            }
+
+            return columns;
+        }
+    }
+
+    /**
+    * @description The Notice displayed to the User when fields that are selected for
+    * display on the Batch do not have field mappings configured in the Advanced Mapping
+    * settings.
+    */
+    @TestVisible
+    private class UnmappedFieldsNotice extends UTIL_LightningComponentSupport.Notice {
+        private Set<String> unmappedFieldNames = new Set<String>();
+
+        public UnmappedFieldsNotice(Set<String> unmappedFieldNames) {
+            this.unmappedFieldNames = unmappedFieldNames;
+            this.header = Label.bgeUnmappedFieldsNoticeHeader;
+            this.title = Label.bgeUnmappedFieldsNoticeTitle;
+            this.message = getMessage();
+            setVariant(UTIL_LightningComponentSupport.Variant.WARNING);
+        }
+
+        private String getMessage() {
+            String fieldNames = String.join(new List<String>(unmappedFieldNames), ', ');
+            String unmappedFieldsTemplate = '';
+            String fieldMappingMethod =
+                    UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
+
+            if (fieldMappingMethod == BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageAdvancedMapping;
+            } else if (fieldMappingMethod == BDI_DataImportService.FM_HELP_TEXT) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageHelpTextMapping;
+            }
+
+            return String.format(
+                    unmappedFieldsTemplate, new List<String>{
+                            fieldNames
+                    });
+        }
     }
 
     /*******************************************************************************************************

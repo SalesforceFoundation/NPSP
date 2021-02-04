@@ -9,32 +9,32 @@
         <value>Trigger Handlers</value>
     </caseValues>
     <fields>
-        <help><!-- Indicates that this module is active --></help>
+        <help><!-- Indicates whether this Trigger Handler is in use. --></help>
         <label><!-- Active --></label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates that this module should be run asynchronously in this transaction, for any of its After events. --></help>
+        <help><!-- Indicates whether this class should run asynchronously in this transaction, for any of its After events. --></help>
         <label><!-- Asynchronous After Events --></label>
         <name>Asynchronous__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the class to be run --></help>
+        <help><!-- The name of the class to run. --></help>
         <label><!-- Class --></label>
         <name>Class__c</name>
     </fields>
     <fields>
-        <help><!-- Order in which this module should be run, helps maintain dependencies in the modules and data. --></help>
+        <help><!-- The order in which this class should run. The order is in relation to other triggers on the same object with the same Trigger Actions, for example, all “before insert” triggers on Account. --></help>
         <label><!-- Load Order --></label>
         <name>Load_Order__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the object this handler should be run for --></help>
+        <help><!-- The name of the object the class should act on, for example, Account, Contact, or Opportunity. --></help>
         <label><!-- Object --></label>
         <name>Object__c</name>
     </fields>
     <fields>
-        <help><!-- Trigger Action in which this module should fire --></help>
+        <help><!-- The context in which this class should run, for example, before a record is inserted, after a record is deleted, etc. --></help>
         <label><!-- Trigger Action --></label>
         <name>Trigger_Action__c</name>
         <picklistValues>
@@ -67,12 +67,12 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Check it if you intent to manage the record yourself. Be aware that updates to the package won&apos;t update the record. --></help>
+        <help><!-- When selected, NPSP will no longer push updates to this Trigger Handler. Select this option if you have made changes that you do not want NPSP to overwrite. --></help>
         <label><!-- User Managed --></label>
         <name>User_Managed__c</name>
     </fields>
     <fields>
-        <help><!-- Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users. --></help>
+        <help><!-- A semicolon-separated list of Usernames that this Trigger Handler will not run for. Leave blank to run for all Users. --></help>
         <label><!-- Usernames to Exclude --></label>
         <name>Usernames_to_Exclude__c</name>
     </fields>

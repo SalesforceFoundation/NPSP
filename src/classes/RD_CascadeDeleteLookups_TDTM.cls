@@ -83,6 +83,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                 FROM Allocation__c
                 WHERE Recurring_Donation__c IN :recurringDonationIds
                 OR Opportunity__c IN :relatedOpportunities
+                OR Payment__r.npe01__Opportunity__r.npe03__Recurring_Donation__c IN: recurringDonationIds
             ];
             result.addAll((List<SObject>) relatedAllocations);
 

@@ -451,5 +451,39 @@ public with sharing class BDE_BatchEntry_CTRL {
         pageRef.getParameters().put('obj', objName);
         pageRef.setRedirect(true);
         return pageRef;         
-    }             
+    }
+
+   /*********************************************************************************************************
+    * @description Retrieves the namespace string for the visualforce page
+     * @return {String}
+     */
+    public String getNamespace() {
+        return UTIL_Namespace.getComponentNamespace();
+    }
+
+   /*********************************************************************************************************
+   * @description Method that retrieves the batch data entry custom setting based on the currently logged in
+    * user
+   * @return Batch_Data_Entry_Settings__c
+   */
+   @AuraEnabled
+   public static Batch_Data_Entry_Settings__c getBatchDataEntrySettings () {
+      Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getInstance(UserInfo.getUserId());
+      return settings;
+   }
+
+   /*********************************************************************************************************
+    * @description Method that upserts the retirement alert custom setting if the alert
+    * gets dismissed
+    * @param hasViewedAlert Flag that indicates the alert dismissal
+    */
+   @AuraEnabled
+   public static void upsertRetirementAlert (Boolean hasViewedAlert) {
+      Batch_Data_Entry_Settings__c settings = getBatchDataEntrySettings();
+      if (!settings.Viewed_Retirement_Alert__c) {
+         settings.Viewed_Retirement_Alert__c = hasViewedAlert;
+         upsert settings;
+      }
+   }
+
 }

@@ -157,7 +157,8 @@ private class CallableApiParameters_TEST {
             'BooleanFalse' => false,
             'ListString' => new List<String>{ 'Value1' },
             'SetString' => new Set<String>{ 'Value1' },
-            'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') }
+            'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') },
+            'ListObject' => new List<Object>{'Value', true}
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -185,6 +186,11 @@ private class CallableApiParameters_TEST {
         System.assertEquals(1, rtnListSObject.size());
         System.assertEquals(Opportunity.SObjectType, rtnListSObject[0].getSObjectType());
         System.assertEquals('Opportunity', rtnListSObject[0].get('Name'));
+
+        List<Object> rtnListObject = service.getObjects('ListObject');
+        System.assertEquals(2, rtnListObject.size());
+        System.assertEquals('Value', (String)rtnListObject.get(0));
+        System.assertEquals(true, (Boolean)rtnListObject.get(1));
     }
 
     /**
@@ -196,9 +202,9 @@ private class CallableApiParameters_TEST {
         Map<String, Object> badParams = new Map<String, Object>{
             'String' => True,
             'Boolean' => 'XYZ',
-            'ListString' => new Set<SObject>{ new Opportunity() },
-            'SetString' => 23,
-            'ListSObject' => new Map<String, String>{ 'X' => 'Y' },
+            'List<String>' => new Set<SObject>{ new Opportunity() },
+            'Set<String>' => 23,
+            'List<SObject>' => new Map<String, String>{ 'X' => 'Y' },
             'RollupData' => new Account()
         };
 
@@ -213,13 +219,13 @@ private class CallableApiParameters_TEST {
                     when 'Boolean' {
                         service.getBoolean(dataType);
                     }
-                    when 'ListString' {
+                    when 'List<String>' {
                         service.getListString(dataType);
                     }
-                    when 'SetString' {
+                    when 'Set<String>' {
                         service.getSetString(dataType);
                     }
-                    when 'ListSObject' {
+                    when 'List<SObject>' {
                         service.getSObjects(dataType);
                     }
                     when 'RollupData' {
@@ -229,9 +235,60 @@ private class CallableApiParameters_TEST {
                 System.assert(false, 'An exception should have been thrown for an invalid data type');
             } catch (Exception ex) {
                 System.assert(ex.getMessage().containsIgnoreCase(dataType),
-                    'Message should contain "' + dataType + '" term' + ex.getMessage());
+                    'Message should contain "' + dataType + '" term\n' + ex.getMessage());
             }
         }
     }
 
+    /**
+     * @description Test the throwExceptionIfMissingParameter option for each getter method
+     */
+    @IsTest
+    private static void shouldThrowExceptionOnMissingParameters() {
+        Map<String, Object> params = new Map<String, Object>{
+            'String' => 'Test',
+            'Boolean' => True,
+            'Datetime' => System.now(),
+            'Map<Id, String>' => new Map<Id,String>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => 'Test' },
+            'List<String>' => new List<String>{ 'Test' },
+            'Set<String>' => new Set<String>{ 'Test' },
+            'Set<Id>' => new Set<Id>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID }
+        };
+
+        CallableApiParameters service = new CallableApiParameters(params)
+            .withRequiredParamCheck();
+
+        for (String dataType : params.keySet()) {
+            String dummyParamName = 'TESTING';
+            try {
+                switch on dataType {
+                    when 'String' {
+                        service.getString(dummyParamName);
+                    }
+                    when 'Boolean' {
+                        service.getBoolean(dummyParamName);
+                    }
+                    when 'Datetime' {
+                        service.getDatetime(dummyParamName);
+                    }
+                    when 'Map<Id, String>' {
+                        service.getStringsById(dummyParamName);
+                    }
+                    when 'List<String>' {
+                        service.getListString(dummyParamName);
+                    }
+                    when 'Set<String>' {
+                        service.getSetString(dummyParamName);
+                    }
+                    when 'Set<Id>' {
+                        service.getSetId(dummyParamName);
+                    }
+                }
+                System.assert(false, 'An exception should have been thrown for a missing data type');
+            } catch (Exception ex) {
+                System.assert(ex.getMessage().containsIgnoreCase(dataType),
+                    'Message should contain "' + dataType + '" term\n' + ex.getMessage());
+            }
+        }
+    }
 }

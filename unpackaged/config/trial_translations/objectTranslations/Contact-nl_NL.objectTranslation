@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Gender__c</name>
+    <label>Geslacht/gender</label>
+    <picklistValues>
+      <masterLabel>Male</masterLabel>
+      <translation>Man</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Female</masterLabel>
+      <translation>Vrouw</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Non-Binary</masterLabel>
+      <translation>Non-binair</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Prefer Not To Say</masterLabel>
+      <translation>Houd dit liever privé</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Relationships_Viewer</name>
+    <label>Relatiekijker</label>
+  </webLinks>
+  <webLinks>
+    <name>Copy_Address_to_Household</name>
+    <label>Adres kopiëren naar huishouden</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Lightning Layout</layout>
+    <sections>
+      <label>Contactpersoonsdetails</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>Adres van huishouden</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totalen van donatie</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Totaal aan &quot;soft credits&quot;</label>
+      <section>Soft Credit Total</section>
+    </sections>
+    <sections>
+      <label>Info over donatie van huishouden</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>Lidmaatschapsgegevens</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Div.</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

@@ -119,18 +119,15 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<Opportunity> oldlist,
         TDTM_Runnable.Action triggerAction) {
 
-        Map<Id, Opportunity> mapIdOppNew = (newlist != null ? new Map<Id, Opportunity>(newlist) : new Map<Id, Opportunity>());
         Map<Id, Opportunity> mapIdOppOld = (oldlist != null ? new Map<Id, Opportunity>(oldlist) : new Map<Id, Opportunity>());
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
-        // Create new Payments as necessary. Also (when Advanced Curr Mgt is not enabled), auto close the
-        // Opportunity if that is enabled in settings and the total Payments == Opp.Amount.
-        // If ACM is enabled, changes to payment records will not cause the Opportunity trigger to execute, so
-        // the decision to close the Opportunity is handled in the runForPayments() method.
-        // However, even if ACM is enabled, if the Opportunity.Amount is updated to match the total Payments
-        // the Opportunity should still be marked as closed.
-        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
+        //Evaluate and create new paymnets as necessary. Auto close opportunity when toatl payments == Opp.Amount.
+        //If ACM is enabled, changes to payment records will not cause the Opportunity trigger to execute, therefore,
+        //decision to close the Opportunity is also handled in Payment Trigger handleMultiCurrencyPayments() method.
+        new PMT_PaymentCreator()
+            .run(triggerAction, newList, mapIdOppOld, dmlWrapper);
 
         //if currency has changed, reset payment currencies
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isCurrencyFieldAvailable) {
@@ -150,13 +147,18 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Updates an opportunity's payment record when currency on the Opportunity is changed.
-    * @param listOpps A list of opportunities whose currency has changed.
+    * @param opps A list of opportunities whose currency has changed.
     * @return void This method modifies the dmlWrapper var and does not return anything
     ********************************************************************************************************/
-    private static void setPaymentCurrencyFromOpportunity(list<Opportunity> listOpps, DmlWrapper dmlWrapper){
+    private static void setPaymentCurrencyFromOpportunity(List<Opportunity> opps, DmlWrapper dmlWrapper){
+        final String currencyIsoCodeField = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+        final String paymentAmountField = 'npe01__Payment_Amount__c';
 
-        // Get a list of the Opportunity Id's
-        Set<Id> oppIds = (new Map<Id, Opportunity>(listOpps)).keySet();
+        Set<Id> oppIds = (new Map<Id, Opportunity>(opps)).keySet();
+
+        Map<Id, SObject> dmlWrapperSObjectById = dmlWrapper.objectsToUpdate == null || dmlWrapper.objectsToUpdate.isEmpty()
+            ? new Map<Id, SObject>()
+            : new Map<Id, SObject>(dmlWrapper.objectsToUpdate);
 
         // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
         String soql =
@@ -164,11 +166,20 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             'FROM npe01__OppPayment__c ' +
             'WHERE npe01__Opportunity__c IN :oppIds ' +
             'ORDER BY npe01__Opportunity__c';
+
         for (npe01__OppPayment__c pmt : database.query(soql)) {
             Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
-            pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
-            pmt.put('npe01__Payment_Amount__c', pmt.npe01__Payment_Amount__c);
-            dmlWrapper.objectsToUpdate.add(pmt);
+
+            if (dmlWrapperSObjectById.containsKey(pmt.Id)) {
+                SObject existingPayment = dmlWrapperSObjectById.get(pmt.Id);
+                existingPayment.put(currencyIsoCodeField, opp.get(currencyIsoCodeField));
+                //do not update payment Amount if the SObject is in DmlWrapper already
+
+            } else {
+                pmt.put(currencyIsoCodeField, opp.get(currencyIsoCodeField));
+                pmt.put(paymentAmountField, pmt.npe01__Payment_Amount__c);
+                dmlWrapper.objectsToUpdate.add(pmt);
+            }
         }
     }
 

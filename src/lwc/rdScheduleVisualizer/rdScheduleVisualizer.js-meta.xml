@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>Displays a list of the next 12 installments when Enhanced Recurring Donations is enabled</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Recurring Donation Installments</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="displayNum" type="Integer" default="12" label="Number of installments to display"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,99 @@
+<template>
+    <article key={formSection.id}
+             class={sectionClass}
+             onclick={handleSelectActiveSection}
+             data-section-id={formSection.id}
+             data-qa-locator={qaLocatorSection}>
+
+
+        <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    {formSection.label}
+                </h2>
+            </div>
+
+            <div class="slds-no-flex">
+                <lightning-button-icon icon-name="utility:settings"
+                                       alternative-text={labelGeAssistiveFormFieldsSectionEdit}
+                                       onclick={handleEditFormSection}
+                                       class="slds-m-left_xxx-small"
+                                       data-qa-locator={qaLocatorSectionSettings}>
+                </lightning-button-icon>
+                <lightning-button-icon icon-name="utility:chevronup"
+                                       alternative-text={labelGeBuilderAssistiveSectionUp}
+                                       onclick={handleFormSectionUp}
+                                       data-section-id={formSection.id}
+                                       class="slds-m-left_xxx-small"
+                                       disabled={isFirst}
+                                       data-qa-locator={qaLocatorSectionUp}>
+                </lightning-button-icon>
+                <lightning-button-icon icon-name="utility:chevrondown"
+                                       alternative-text={labelGeBuilderAssistiveSectionDown}
+                                       onclick={handleFormSectionDown}
+                                       data-section-id={formSection.id}
+                                       class="slds-m-left_xxx-small"
+                                       disabled={isLast}
+                                       data-qa-locator={qaLocatorSectionDown}>
+                </lightning-button-icon>
+            </div>
+
+            <template if:true={isActive}>
+                <span class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
+                    <lightning-icon alternative-text={CUSTOM_LABELS.geAssistiveActiveSection}
+                                    icon-name="utility:check"
+                                    variant="inverse"
+                                    size="x-small">
+                    </lightning-icon>
+                </span>
+            </template>
+
+        </header>
+
+        <div class="slds-card__body slds-card__body_inner slds-p-around_small">
+
+            <template if:true={isEmptySection}>
+                <c-util-illustration title={CUSTOM_LABELS.geHeaderEmptyFormSection}
+                                     message={CUSTOM_LABELS.geBodyEmptyFormSection}
+                                     size="small"
+                                     variant="lake-mountain">
+                </c-util-illustration>
+            </template>
+            <template if:false={isEmptySection}>
+                <div class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-size_5-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.commonFieldLabel}
+                        </p>
+                        <lightning-helptext content={CUSTOM_LABELS.geHelpTextFormFieldsFieldLabelLabel}>
+                        </lightning-helptext>
+                    </div>
+                    <div class="slds-size_5-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.commonDefaultValue}
+                        </p>
+                    </div>
+                    <div class="slds-size_2-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.commonRequired}
+                        </p>
+                    </div>
+                </div>
+                <template iterator:it={formSection.elements}>
+                    <c-ge-template-builder-form-field key={it.value.id}
+                                                      field={it.value}
+                                                      is-first={it.first}
+                                                      is-last={it.last}
+                                                      source-object-fields-describe={sourceObjectFieldsDescribe}
+                                                      onformelementup={handleFormElementUp}
+                                                      onformelementdown={handleFormElementDown}
+                                                      onupdateformelement={handleUpdateFormElement}
+                                                      ondeleteformelement={handleDeleteFormElement}
+                                                      onfieldmetadatavalidation={handleFieldMetadataValidation}>
+                    </c-ge-template-builder-form-field>
+                </template>
+
+            </template>
+        </div>
+    </article>
+</template>

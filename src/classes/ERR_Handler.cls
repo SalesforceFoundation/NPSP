@@ -96,6 +96,31 @@ public class ERR_Handler {
         return errors;
     }
 
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, true);
+    }
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are not displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrorsOnly(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, false);
+    }
+
     /*******************************************************************************************************
     * @description Processes the results of a single DML operation performed using the Database class to determine
     *              if errors occurred. It does not store errors or send error email notifications. These operations
@@ -103,9 +128,10 @@ public class ERR_Handler {
     *
     * @param dmlResults The results of a single DML operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
+    * @param displayErrors Indicates if errors should be displayed on a page
     * @return Errors The errors that occurred during the DML operation performed using the Database class.
     */
-    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+    private static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects, Boolean displayErrors) {
         Errors errors = new Errors();
 
         if (dmlResults == null || dmlResults.isEmpty()) {
@@ -137,7 +163,7 @@ public class ERR_Handler {
                 //no error record will be saved, or error notification sent.
 
                 //Displaying an error message to the user
-                if (ApexPages.currentPage() != null) {
+                if (displayErrors && ApexPages.currentPage() != null) {
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
                 }
             }
@@ -255,7 +281,6 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
-
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -268,11 +293,23 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-    
-    
+
+    /*******************************************************************************************************
+    * @description Creates an error record from a String, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param msg
+    * @param context The context the exception was raised on.
+    */
+    public static void processError(String msg, String context) {
+        if (msg != null) {
+            Error__c error = createError(msg, context);
+            processErrors(new Error__c[]{error}, context);
+        }
+    }
+
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
-    *   If the Error Settings is enabled, errors are stored in the database. 
+    *   If the Error Settings is enabled, errors are stored in the database.
     *   If the Error Settings has notification enabled, an email notificiation is sent.
     * @param exceptions List of exceptions.
     * @param context The context the exception was raised on.
@@ -283,12 +320,14 @@ public class ERR_Handler {
         for (Exception e : exceptions) {
             errors.add(createError(e, context.name()));
         }
-        
+
         processErrors(errors, context.name());
     }
 
     /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * Display message on the current Visualforce page (if any).
+    *
     * @param errorRecords The errors to store.
     * @param context The context the errors were raised on.
     * @return void
@@ -311,11 +350,97 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorResult The error result
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(Errors errorResult, String context) {
+        if (errorResult == null || errorResult.errorsExist != true) {
+            return;
+        }
+
+        for (Error__c error : errorResult.errorRecords) {
+            if (String.isBlank(error.Context_Type__c)) {
+                error.Context_Type__c = context;
+            }
+        }
+
+        processErrorsOnly(errorResult.errorRecords, context);
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(List<Error__c> errorRecords, String context) {
+        if (errorRecords == null || errorRecords.isEmpty()) {
+            return;
+        }
+
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isRD2MigrationContext(context)) {
+            Database.insert(errorRecords, false);
+        }
+
+        ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), do not generate apex page messages and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void sendErrorNotification(Exception e, String context) {
+        if (e == null) {
+            return;
+        }
+
+        Error__c error = createError(e, context);
+        processErrorsOnly(new List<Error__c>{ error }, context);
+    }
+
+    /***
+    * @description returns true if this method is calling from data migration
+    * or validate migration context
+    * @param The context the errors were raised on.
+    * @returns Boolean
+    */
+    public static Boolean isRD2MigrationContext(String context) {
+        return String.isNotBlank(context)
+            && (
+                context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
+                || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION)
+            );
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an error record from a String message
+    * @param msg The message to record.
+    * @param context The context the exception was raised on.
+    * @return Error__c Error record.
+    */
+    @TestVisible
+    private static Error__c createError(String msg, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Error_Type__c = System.Label.errErrorTypeOther;
+        error.Full_Message__c = msg;
+        error.Context_Type__c = context;
+
+
+        return error;
+    }
+
+    /*******************************************************************************************************
     * @description Creates an error record from an exception.
     * @param e Exception to create error record from.
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
@@ -335,7 +460,7 @@ public class ERR_Handler {
             message = 'Stacktrace available at the time of saving the record - ';
         }
         error.Stack_Trace__c = message + stackTrace;
-        
+
         return error;
     }
 
@@ -354,22 +479,28 @@ public class ERR_Handler {
         error.Object_Type__c = objectType;
         error.Context_Type__c = context;
 
+        Id recordId = null;
+
         if (result instanceof Database.SaveResult) {
             Database.SaveResult saveResult = (Database.SaveResult) result;
-            error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
+            recordId = (saveResult.getId() != null) ? saveResult.getId() : objId;
             error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = saveResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.DeleteResult) {
             Database.DeleteResult deleteResult = (Database.DeleteResult) result;
-            error.Record_URL__c = getRecordURL(deleteResult.getId(), objId);
+            recordId = (deleteResult.getId() != null) ? deleteResult.getId() : objId;
             error.Error_Type__c = getStatusCode(deleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = deleteResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.UndeleteResult) {
             Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
-            error.Record_URL__c = getRecordURL(undeleteResult.getId(), objId);
+            recordId = (undeleteResult.getId() != null) ? undeleteResult.getId() : objId;
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
         }
+
+        error.Related_Record_ID__c = recordId;
+        error.Record_URL__c = getRecordURL(recordId);
+
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
     }
@@ -409,26 +540,31 @@ public class ERR_Handler {
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
     * @param saveResultId The id resulting from a DML operation of the Database class.
     * @param objId The id of the record the DML operation was performed on.
     * @return The URL of the record. Warning: it may not necessarily be valid.
     */
-    private static String getRecordURL(Id saveResultId, Id objId) {
-        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
-        if (saveResultId != null)
-            recordURL += saveResultId;
-        else            
-            recordURL += objId;
-                     
-        if (recordURL.startsWith('http:'))
-            recordURL = recordURL.replaceFirst('http:', 'https:');
-            
-        return recordURL;
+    public static String getRecordURL(Id saveResultId, Id objId) {
+        Id recordId = (saveResultId != null) ? saveResultId : objId;
+
+        return getRecordURL(recordId);
     }
-    
+
+    /*******************************************************************************************************
+    * @description Returns the URL of a record, if available.
+    * @param recordId The id of the record the DML operation was performed on.
+    * @return The URL of the record. Warning: it may not necessarily be valid.
+    */
+    public static String getRecordURL(String recordId) {
+
+        return (recordId != null) ? URL.getSalesforceBaseUrl().toExternalForm().replaceFirst('http:', 'https:') + '/' + recordId : null;
+
+    }
+
+
     /*******************************************************************************************************
     * @description Returns the ID of the object the error is about if available.
     * @param error. The Error object.
@@ -440,19 +576,20 @@ public class ERR_Handler {
         }
         return null;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.
     * @param status The status code.
     * @return The error status as a string.
     */
-    private static String getStatusCode(system.StatusCode status) {
-        if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
-            return 'Required Field Missing';   
-        else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            return 'Custom Validation Rule Failed';
-        else
-            return 'Other';
+    public static String getStatusCode(system.StatusCode status) {
+        if (status == system.Statuscode.REQUIRED_FIELD_MISSING) {
+            return System.Label.errErrorTypeRequiredFieldMissing;
+        } else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION) {
+            return System.Label.errErrorTypeValidationFailed;
+        } else {
+            return System.Label.errErrorTypeOther;
+        }
     }
 }

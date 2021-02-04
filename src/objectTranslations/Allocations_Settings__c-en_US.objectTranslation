@@ -29,6 +29,11 @@
         <name>Excluded_Opp_Types__c</name>
     </fields>
     <fields>
+        <help><!-- Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting. --></help>
+        <label><!-- Payment Allocations Enabled --></label>
+        <name>Payment_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
         <help><!-- This value affects the number of days to count for N Days Allocations rollup fields. --></help>
         <label><!-- Rollup N Day Value --></label>
         <name>Rollup_N_Day_Value__c</name>

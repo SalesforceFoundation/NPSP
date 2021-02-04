@@ -37,8 +37,8 @@
 private class ACCT_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Tests cascade delete: deletes accounts, which deletes recurring donations allocations 
-    * and relationships. 
+    * @description Tests cascade delete: deletes accounts, which deletes recurring donations allocations
+    * and relationships.
     * Verifies results. Then undeletes accounts, which undeletes recurring donations allocations and relationships.
     */
     static testMethod void testAccountCascadeGrandchildren() {
@@ -49,14 +49,13 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         //Retrieve auto created HH Accounts
         List<Account> accounts = [
-            SELECT Name 
-            FROM Account 
+            SELECT Name
+            FROM Account
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -113,14 +112,13 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         //Retrieve auto created HH Accounts
         List<Account> accounts = [
-            SELECT Name 
-            FROM Account 
+            SELECT Name
+            FROM Account
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -151,5 +149,20 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
+    }
+
+    // Helpers
+    /////////////////
+    /***
+    * @description Recurring Donation record builder having default values applied
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        return new TEST_RecurringDonationBuilder()
+            .withAmount(2)
+            .withPlannedInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished()
+            .withScheduleTypeMultiplyValue();
     }
 }

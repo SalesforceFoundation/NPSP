@@ -1,0 +1,47 @@
+<template>
+    <template if:false={isActiveInstance}>
+        <div class="container">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading}></lightning-spinner>
+            
+            <lightning-layout horizontal-align="space">
+                <lightning-layout-item>
+                    <img class="image" src={img} alt=""/>
+                </lightning-layout-item>
+            </lightning-layout>
+            <lightning-layout horizontal-align="space">
+                <template  if:false={isApplicationSubmitted}>
+                    <lightning-layout-item size="12" class="slds-text-align_center slds-size_full slds-p-around_small slds-text-heading_small">
+                        <p class="slds-m-bottom_medium">{labels.gsNoApplicationSubmitted} | <a href="https://sforce.co/2IZygfz" target="_blank" onkeypress={handleKeypress}>{labels.gsLearnMore}</a></p>
+                        <p class="slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
+                        <a role="button" class="slds-button slds-button_brand slds-p-around_medium button-padding" href="https://sforce.co/37MPp4e" target="_blank" onkeypress={handleKeypress}>{labels.gsApplyForFreeLicenses}</a>
+                    </lightning-layout-item>
+                </template>
+            
+                <template if:true={isApplicationSubmitted}>
+                    <lightning-layout-item class="slds-text-align_center slds-size_full slds-p-around_small slds-text-heading_small" size="12"> 
+                        <p class="slds-m-bottom_medium">{labels.gsApplicationStatus}&nbsp;<span class="slds-text-color_success">{labels.gsSubmitted}</span></p>
+                        <p class="slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
+                        <button onclick={onCheckStatusClick}
+                        class="slds-button slds-button_outline-brand slds-text-heading_small slds-p-around_medium button-padding close-button">
+                        {labels.gsCheckStatus}
+                        </button>
+                    </lightning-layout-item>
+            
+                </template>
+            </lightning-layout>
+        </div>
+       <c-modal header={labels.gsApplicationStatusModalHeader} ondialogclose={handleModalClose}>
+            <lightning-layout horizontal-align="center">
+                <lightning-layout-item size="12" class="slds-text-align_center">
+                    <p class="modal-text" data-id="modalText">{labels.gsFollowUpApplicationStatus}&nbsp;<a href="mailto:powerofus@salesforce.com">powerofus@salesforce.com</a></p>
+                </lightning-layout-item>
+            </lightning-layout>
+            
+            <div slot="footer">
+                <lightning-button class="close-button" variant="brand" label={labels.gsClose} onclick={onClickCloseModal} onkeypress={handleKeypress}>
+                </lightning-button>
+            </div>
+        </c-modal>
+    </template>
+   
+</template>

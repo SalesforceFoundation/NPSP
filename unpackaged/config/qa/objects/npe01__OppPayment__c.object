@@ -60,4 +60,16 @@
         <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
+    <fields>
+        <fullName>CustomObject3__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Custom Object 3</label>
+        <referenceTo>CustomObject3__c</referenceTo>
+        <relationshipLabel>Custom Object 3</relationshipLabel>
+        <relationshipName>CustomObject3s</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>        
 </CustomObject>

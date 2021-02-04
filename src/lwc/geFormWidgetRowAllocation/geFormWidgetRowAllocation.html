@@ -1,0 +1,51 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="9">
+                <lightning-record-edit-form object-api-name={allocationObjectApiName}>
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input-field field-name={gauFieldApiName}
+                                                   data-fieldname={gauFieldApiName}
+                                                   required='true'
+                                                   onchange={handleFieldValueChange}
+                                                   value={gauValue}
+                                                   class="help-text-hidden"
+                                                   data-qa-locator={qaLocatorGAU}>
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input-field field-name={allocationAmountFieldApiName}
+                                                   data-fieldname={allocationAmountFieldApiName}
+                                                   onchange={handleFieldValueChange}
+                                                   value={amountValue}
+                                                   class="help-text-hidden"
+                                                   data-qa-locator={qaLocatorAllocationAmount}
+                                                   disabled={shouldDisableAmount}>
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input label={percentCustomLabel}
+                                             data-fieldname={allocationPercentageFieldApiName}
+                                             type='number'
+                                             formatter='percent-fixed'
+                                             step='0.01'
+                                             onchange={handleFieldValueChange}
+                                             value={percentValue}
+                                             disabled={shouldDisablePercent}
+                                             data-qa-locator={qaLocatorAllocationPercent}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+        </lightning-layout-item>
+        <lightning-layout-item size="3" class="slds-p-vertical_large slds-p-left_xx-small">
+            <span if:true={isRemovable}>
+                <lightning-button variant='destructive'
+                                  onclick={remove}
+                                  label={CUSTOM_LABELS.commonDelete}
+                                  data-qa-locator={qaLocatorDeleteRow}>
+                </lightning-button>
+            </span>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

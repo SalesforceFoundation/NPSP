@@ -1,0 +1,28 @@
+<template>
+    <section role="alertdialog"
+             tabindex="0"
+             aria-labelledby="prompt-heading-id"
+             aria-describedby="prompt-message-wrapper"
+             class={sectionClass} aria-modal="true">
+        <div class={modalClass}>
+            <header class={promptTheme}>
+                <h2 class="slds-text-heading_medium" id="prompt-heading-id">{headerTitle}</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="prompt-message-wrapper">
+                <lightning-formatted-rich-text value={promptMessage}>
+                </lightning-formatted-rich-text>
+            </div>
+            <footer class="slds-modal__footer slds-theme_default">
+                <lightning-button label={confirmButtonTitle}
+                                  title={confirmButtonTitle}
+                                  variant={confirmButtonVariant}
+                                  class="slds-align_absolute-center"
+                                  onclick={handleConfirmButtonClick}>
+                </lightning-button>
+            </footer>
+        </div>
+    </section>
+    <template if:true={hasBackDrop}>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

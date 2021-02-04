@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <layouts>
+    <layout>___NAMESPACE___General Accounting Unit Layout</layout>
+    <sections>
+      <label>割り当て情報</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>割り当て総額</label>
+      <section>Allocation Totals</section>
+    </sections>
+  </layouts>
+  </CustomObjectTranslation>

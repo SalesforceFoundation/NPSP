@@ -48,62 +48,76 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         DmlWrapper dmlWrapper = new DmlWrapper();
-        list<Account> listAccCreateAddr = new list<Account>();      
-       
-        integer i = -1;        
-        for (SObject so : listNew) {
-            Account acc = (Account)so;
-            i++;
 
-            // BEFORE INSERT
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            }
-            
-            // BEFORE UPDATE
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            }
-            
-            // AFTER INSERT
-            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                // for new accounts that are using address management, create the address object.
-                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
-                        !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
-                    (!acc.npe01__SYSTEMIsIndividual__c && 
-                        UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
-                    if (isAccountAddressSpecified(acc))
-                        listAccCreateAddr.add(acc);
+        // note that we detect whether the address change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate
+            && TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)
+        ) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return dmlWrapper;
+        }
+
+        list<Account> listAccCreateAddr = new list<Account>();
+       
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+
+            if (isAddressManagementEnabled(newRecord)) {
+                // BEFORE INSERT
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+
+                // BEFORE UPDATE
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate
+                        && isAccountAddressChanged(newRecord, oldRecord)) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+
+                // AFTER INSERT
+                if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+                    if (isAccountAddressSpecified(newRecord)) {
+                        listAccCreateAddr.add(newRecord);
+                    }
+                }
+
+                // AFTER UPDATE
+                if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                    // if the address changed, remember the account we want to add a new address for
+                    if (isAccountAddressChanged(newRecord, oldRecord)) {
+                        listAccCreateAddr.add(newRecord);
+                    }
                 }
             }
-    
-            // AFTER UPDATE
-            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                Account accOld = (Account)listOld[i];
-                // note that we detect whether the address change is coming from the address trigger,
-                // in which case we don't want to create a new address.
-                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
-                    continue;
-                    
-                }
-                // we only support address management with HH Accounts and Organizational Accounts (if enabled)
-                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
-                		!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
-                    (!acc.npe01__SYSTEMIsIndividual__c && 
-                    	UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
-	                // if the address changed, remember the account we want to add a new address for    
-	                if (isAccountAddressChanged(acc, accOld)) 
-	                    listAccCreateAddr.add(acc);
-                }
-            }                
         }
 
         // create any new Address objects
-        if (listAccCreateAddr.size() > 0)
+        if (listAccCreateAddr.size() > 0) {
             createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        }
                     
         return dmlWrapper;    
     }
-    
+
+    /*******************************************************************************************************
+    * @description utility to see if an address management is enabled
+    * @param newRecord an Account
+    * @return Boolean.  true if address management is enabled
+    ********************************************************************************************************/
+    private Boolean isAddressManagementEnabled(Account newRecord) {
+        if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE
+                && !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return true;
+        }
+        if (!newRecord.npe01__SYSTEMIsIndividual__c
+                && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+            return true;
+        }
+        return false;
+    }
+
     /*******************************************************************************************************
     * @description utility to see if an address is specified
     * @param acc1 an Account
@@ -172,5 +186,4 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.
         ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
-
 }

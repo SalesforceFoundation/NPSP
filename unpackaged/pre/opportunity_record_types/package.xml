@@ -4,5 +4,13 @@
     <members>*</members>
     <name>CustomObject</name>
   </types>
-  <version>29.0</version>
+    <types>
+      <members>Opportunity-de</members>
+      <members>Opportunity-es</members>
+      <members>Opportunity-fr</members>
+      <members>Opportunity-ja</members>
+      <members>Opportunity-nl_NL</members>
+      <name>CustomObjectTranslation</name>
+  </types>
+  <version>48.0</version>
 </Package>

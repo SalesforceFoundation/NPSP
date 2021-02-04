@@ -50,4 +50,32 @@ public with sharing class UTIL_FeatureManagement {
     public void setPackageIntegerValue(String apiName, Integer value) {
         System.FeatureManagement.setPackageIntegerValue(apiName, value);
     }
+
+    /**
+     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
+     */
+    public Boolean checkPackageBooleanValue(String apiName) {
+        return System.FeatureManagement.checkPackageBooleanValue(apiName);
+    }
+
+    /**
+     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
+     */
+    public Integer checkPackageIntegerValue(String apiName) {
+        return System.FeatureManagement.checkPackageIntegerValue(apiName);
+    }
+
+    /**
+     * @description Wrapper for System.FeatureManagement.checkPackageDateValue
+     */
+    public Date checkPackageDateValue(String apiName) {
+        return System.FeatureManagement.checkPackageDateValue(apiName);
+    }
+
+    /**
+     * @description Wrapper for System.FeatureManagement.setPackageDateValue
+     */
+    public void setPackageDateValue(String apiName, Date value) {
+        System.FeatureManagement.setPackageDateValue(apiName, value);
+    }
 }

@@ -1,0 +1,18 @@
+<template>
+    <div class="slds-media">
+        <c-gs-checklist-icon label={number} 
+                             total-item={totalElements}
+                             checked-item={checkedElements}>
+        </c-gs-checklist-icon>
+        <div class="slds-media__body slds-m-top_xx-small">
+            <div class="slds-media">
+                <div class="slds-setup-assistant__step-summary-content slds-media__body">
+                    <h2 tabindex="0" class="slds-setup-assistant__step-summary-title slds-text-heading_small"
+                        onclick={onClickTitle}>
+                        {title}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

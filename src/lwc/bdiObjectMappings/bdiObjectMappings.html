@@ -1,0 +1,99 @@
+<template>
+    <template if:true={displayObjectMappings}>
+        <c-bdi-object-mapping-modal
+            is-modal-open={isModalOpen}
+            object-options={objectOptions}
+            object-mappings={objectMappings}
+            di-object-mapping-set-dev-name={diObjectMappingSetDevName}
+            namespace-wrapper={namespaceWrapper}>
+        </c-bdi-object-mapping-modal>
+
+        <div class="slds-grid slds-wrap slds-m-bottom_small">
+            <div class="slds-size_1-of-2">
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label="Back to NPSP Settings"
+                        href={npspSettingsURL}>
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
+            </div>
+            <template if:true={shouldRender}>
+                <div class="slds-size_1-of-2 slds-m-bottom_small">
+                    <lightning-button
+                            class="slds-m-left_x-small slds-float_right"
+                            label={customLabels.bdiOMUICreateNewObjectGroup}
+                            onclick={handleOpenModal}
+                            title={customLabels.bdiOMUICreateNewObjectGroup}>
+                    </lightning-button>
+                </div>
+            </template>
+            <div class="slds-size_1-of-1 slds-m-bottom_large">
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{customLabels.bdiAdvancedMapping}</h1>
+                <template if:true={shouldRender}>
+                    <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">{customLabels.bdiOMUIObjectGroupsTitle}</h2>
+
+                    <template if:true={hasBrokenMetadataReferences}>
+                        <div class="slds-size_1-of-1">
+                            <c-util-page-level-message title={customLabels.bdiOMUIFieldMappingProblemHeader}
+                                                       subtitle={brokenFieldReferencesWarningMessage}
+                                                       variant='warning'>
+                                <ul slot="body"
+                                    class="slds-list_dotted">
+                                    <template for:each={brokenMappings}
+                                              for:item="mapping">
+                                        <li key={mapping}
+                                            aria-label={mapping}
+                                            class="slds-text-color_default">
+                                            {mapping}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </c-util-page-level-message>
+                        </div>
+                    </template>
+
+                        <p class="slds-text_extension slds-m-bottom_small">
+                            {customLabels.bdiOMUIPageDescriptionPt1}
+                        </p>
+                        <p class="slds-text_extension slds-m-bottom_small">
+                            {customLabels.bdiOMUIPageDescriptionPt2}
+                        </p>
+                        <p class="slds-text_extension slds-m-bottom_small">
+                            {customLabels.bdiOMUIPageDescriptionPt3}
+                        </p>
+                        <p class="slds-text_extension">
+                            <lightning-formatted-rich-text
+                                value={customLabels.stgHelpAdvancedMapping3}>
+                            </lightning-formatted-rich-text>
+                        </p>
+                </template>
+            </div>
+            <template if:true={shouldRender}>
+                <div class="slds-size_1-of-1 slds-m-bottom_small">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1 slds-m-top_x-small">
+                            <tempate if:true={isLoading}>
+                                <lightning-spinner></lightning-spinner>
+                            </tempate>
+                            <lightning-datatable
+                                key-field="id"
+                                data={objectMappings}
+                                columns={columns}
+                                hide-checkbox-column
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-2">
+                    <lightning-button
+                            class="slds-m-left_x-small slds-float_right"
+                            label={customLabels.bdiOMUICreateNewObjectGroup}
+                            onclick={handleOpenModal}
+                            title={customLabels.bdiOMUICreateNewObjectGroup}>
+                    </lightning-button>
+                </div>
+            </template>
+        </div>
+    </template>   
+</template>

@@ -60,8 +60,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Map<Id,Account> mapAccountIdAccount = null;
         boolean acctHasAddress = false;
         boolean acctChanged = false;
+        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
 
-		// bail out if address mgmt turned off.
+        // bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
 
@@ -71,17 +72,32 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
         
-        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
-        if (isBefore) { 
-            // need to query account fields we need to look at
+        if (isBefore) {
             Set<Id> setAccountId = new Set<Id>();
-            for (SObject so : listNew) {
-                Contact con = (Contact)so;
-                if (con.AccountId != null)
-                    setAccountId.add(con.AccountId);
+            for (Integer i = 0; i < listNew.size(); i++) {
+                Contact newRecord = (Contact) listNew[i];
+                Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
+
+                // need to query account fields we need to look at
+                if (newRecord.AccountId != null) {
+                    setAccountId.add(newRecord.AccountId);
+                }
+
+                // BEFORE INSERT
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+
+                // BEFORE UPDATE
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isContactAddressChanged(newRecord, oldRecord)) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
             }
-            mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__SYSTEM_AccountType__c,
-                (select Id from Addresses__r) from Account where Id IN :setAccountId]);
+            mapAccountIdAccount = new Map<Id,Account>([
+                SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
+                FROM Account
+                WHERE Id IN :setAccountId
+            ]);
         }
        
         integer i = -1;        

@@ -46,7 +46,10 @@ private class OPP_StageMappingUtil_TEST {
             'CLOSED WON  ',
             ' CLOSED WON',
             '  CLOSED WON  ',
-            'Finalized'
+            'Pledged',
+            '  PLEDGED',
+            'PLEDGED  ',
+            '  PLEDGED  '
     };
 
 
@@ -55,12 +58,15 @@ private class OPP_StageMappingUtil_TEST {
     */
     private static final List<String> RESULTS = new List<String> {
         OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.COMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
         OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL
+        OPP_StageMappingUtil.COMMITTED_STATE_VAL
     };
 
     /*********************************************************************************************************
@@ -102,5 +108,4 @@ private class OPP_StageMappingUtil_TEST {
             System.assertEquals (resultVal, callResultVal, 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
-
 }

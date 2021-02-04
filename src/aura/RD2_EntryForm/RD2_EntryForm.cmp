@@ -1,0 +1,22 @@
+<aura:component implements="lightning:actionOverride,force:hasRecordId">
+
+    <aura:html tag="style">
+        /**
+        * Display showToastMessage content on multiple lines
+        */
+        .toastMessage.forceActionsText {
+            white-space : pre-line !important;
+        }
+    </aura:html>
+
+    <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if opened from related list" />
+    <aura:attribute name="recordId" type="Id" description="Reference to the record Id" />
+    <aura:attribute name="renderModal" type="Boolean" default="false" description="Boolean to render Modal" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!v.renderModal}">
+        <c:rd2EntryForm parentId="{!v.parentId}" recordId="{!v.recordId}" onclosemodal="{!c.handleModalEvent}"/>
+    </aura:if>
+
+</aura:component>

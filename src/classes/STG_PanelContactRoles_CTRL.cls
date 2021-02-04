@@ -194,4 +194,94 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
         }
         return results;
     }
+
+    /**
+    * @description The current setting being stored on the Opportunity Contact Role Default Role
+    */
+    public String selectedOptionDefaultContactRole {
+        get {
+            selectedOptionDefaultContactRole =
+                STG_Panel.getPicklistLabelFromValue(
+                    'OpportunityContactRole',
+                    'Role',
+                    STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c
+                );
+            return selectedOptionDefaultContactRole;
+        }set;
+    }
+
+    /**
+    * @description The current setting being stored on the Contact Role for Organizational Opps
+    */
+    public String selectedOptionOrgDefaultContactRole {
+        get {
+            selectedOptionOrgDefaultContactRole =
+                STG_Panel.getPicklistLabelFromValue(
+                    'OpportunityContactRole',
+                    'Role',
+                    STG_Panel.stgService.stgCon.Contact_Role_for_Organizational_Opps__c
+                );
+            return selectedOptionOrgDefaultContactRole;
+        }set;
+    }
+
+    /**
+    * @description The current setting being stored on the Household Matched Donor Role
+    */
+    public String selectedOptionMatchedDonorRole {
+        get{
+            selectedOptionMatchedDonorRole =
+                STG_Panel.getPicklistLabelFromValue(
+                    'OpportunityContactRole',
+                    'Role',
+                    STG_Panel.stgService.stgHH.Matched_Donor_Role__c
+                );
+            return selectedOptionMatchedDonorRole;
+        }set;
+    }
+
+    /**
+    * @description The current setting being stored on the Household Member Contact Role
+    */
+    public String selectedOptionHHMemberContactRole {
+        get {
+            selectedOptionHHMemberContactRole =
+                STG_Panel.getPicklistLabelFromValue(
+                    'OpportunityContactRole',
+                    'Role',
+                    STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c
+                );
+            return selectedOptionHHMemberContactRole;
+        }set;
+    }
+
+    /**
+    * @description The current setting being stored on the Honoree Opportunity Contact Role
+    */
+    public String selectedOptionHonoreeContactRole {
+        get {
+            selectedOptionHonoreeContactRole =
+                STG_Panel.getPicklistLabelFromValue(
+                    'OpportunityContactRole',
+                    'Role',
+                    STG_Panel.stgService.stgCon.Honoree_Opportunity_Contact_Role__c
+                );
+            return selectedOptionHonoreeContactRole;
+        }set;
+    }  
+
+    /**
+    * @description The current setting being stored on the Notification Recipient Opportunity Contact Role
+    */
+    public String selectedOptionNotficationRecipientRole {
+        get{
+        selectedOptionNotficationRecipientRole =
+            STG_Panel.getPicklistLabelFromValue(
+                'OpportunityContactRole',
+                'Role',
+                STG_Panel.stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c
+            );
+            return selectedOptionNotficationRecipientRole;
+        }set;
+    }
 }

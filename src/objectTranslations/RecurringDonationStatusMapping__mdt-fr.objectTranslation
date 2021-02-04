@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Mappage du statut de dons récurrents</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Mappages du statut de dons récurrents</value>
+    </caseValues>
+    <fields>
+        <help>Les entrées valides sont Actif, Écoulé et Fermé.</help>
+        <label>État du don récurrent</label>
+        <name>State__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation>Actif</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation>Fermé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lapsed</masterLabel>
+            <translation>Écoulé</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Le nom d’API du Statut du don récurrent qui est mappé à un État.</help>
+        <label>Statut du don récurrent</label>
+        <name>Status__c</name>
+    </fields>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

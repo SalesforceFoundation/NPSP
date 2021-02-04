@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,33 +13,33 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
-* @date 2014 
+* @date 2014
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups.htm
-* @description test Class which holds test methods for common utilities, 
+* @description test Class which holds test methods for common utilities,
 * such as detecting whether we are in a managed package, and some string helpers.
 */
 @isTest
 public with sharing class RLLP_OppRollup_TEST2 {
-    
+
     static String giftRecordTypeIdForTests = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
-    
+
     /*********************************************************************************************************
     * @description Runs testOpportunityUtilityErrorHandling test method for the One to One account processor.
     */
@@ -58,7 +58,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @param strProcessor The account processor type.
     */
     static void testOpportunityUtilityErrorHandling(string strProcessor) {
-    	
+
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	errorSettings.Error_Notifications_On__c = false;
 		if(!Test.isRunningTest())
@@ -68,7 +68,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+            npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
 
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -92,20 +92,20 @@ public with sharing class RLLP_OppRollup_TEST2 {
         system.assert(TestCons[0].id != null);
 
         //create new opp with a missing required field (close date)
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId (TestCons, null, 
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId (TestCons, null,
             UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeIdForTests ,null);
 
         Test.startTest();
         List<Database.Saveresult> sr = Database.insert(newOpps, false);
         Test.stopTest();
-        
+
         //Verify no opps were inserted
         Integer oppsInserted = [select Count() from Opportunity];
         System.assertEquals(0, oppsInserted);
 
         /*Error records don't get created because the first time Database.insert runs all records fail to insert,
-        and thus everything gets rolled back. We cannot control the validation failure, as this is controlled by the 
-        platform. 
+        and thus everything gets rolled back. We cannot control the validation failure, as this is controlled by the
+        platform.
         List<Error__c> errors = [select Error_Type__c, Record_URL__c, Object_Type__c from Error__c];
         system.assertEquals(1, errors.size());
         Error__c ore = errors[0];
@@ -127,7 +127,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testGivingRollupTooManyOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
-    * @description Creates a contact, inserts hundreds of opportunities, and verifies rollup field from opportunity 
+    * @description Creates a contact, inserts hundreds of opportunities, and verifies rollup field from opportunity
     * trigger for a given contact matches total Opportunity Amount.
     * @param strProcessor The account processor type.
     */
@@ -136,7 +136,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -162,7 +162,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             Opportunity[] newOpps1 = new Opportunity[0];
             for (integer n = 0; n < 450; n++) {
                 Opportunity newOpp1 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
-                    name = 'test opp ' + n, 
+                    name = 'test opp ' + n,
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-n), amount = 100);
                 if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
                     newOpp1.put('RecordTypeId', giftRecordTypeIdForTests);
@@ -174,12 +174,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
             Test.StartTest();
             insert newOpps1;
             Test.StopTest();
-            
+
             id FirstConId = TestCons[0].id;
             Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :FirstConId];
 
             System.AssertEquals ( 45000 , UpdatedCon.npo02__TotalOppAmount__c );
-    } 
+    }
     /*********************************************************************************************************
     * @description Runs testHouseholdStats test method for the One to One account processor.
     */
@@ -193,7 +193,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testHouseholdStats(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
-    * @description Creates contacts, inserts a few opportunities, and verifies rollup fields from opportunity 
+    * @description Creates contacts, inserts a few opportunities, and verifies rollup fields from opportunity
     * trigger for a given contact.
     * @param strProcessor The account processor type.
     */
@@ -202,7 +202,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -224,7 +224,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                 LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
                 npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
@@ -238,7 +238,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second',
                 LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
                 npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
@@ -247,7 +247,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             );
             insert Con2;
 
-            Contact[] TestCons = new Contact[] {Con1}; 
+            Contact[] TestCons = new Contact[] {Con1};
 
             // create new opps
             Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactListByRecTypeId ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeIdForTests ,null);
@@ -276,7 +276,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             System.assertEquals (0,c.npo02__OppAmountLastYearHH__c);
             System.assertEquals (datClose,c.npo02__LastCloseDateHH__c );
             System.assertEquals (375,c.npo02__Total_Household_Gifts__c);
-            System.assertEquals (null, c.npo02__Best_Gift_Year_Total__c); 
+            System.assertEquals (null, c.npo02__Best_Gift_Year_Total__c);
             System.assertEquals (null, c.npo02__Best_Gift_Year__c);
             System.assertEquals (string.valueof(datClose.addYears(-2).year()), c.npo02__household__r.npo02__Best_Gift_Year__c);
             System.assertEquals (200, c.npo02__household__r.npo02__Best_Gift_Year_Total__c);
@@ -303,7 +303,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
 
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -324,25 +324,25 @@ public with sharing class RLLP_OppRollup_TEST2 {
         list<npo02__User_Rollup_Field_Settings__c> testURFS = new list<npo02__User_Rollup_Field_Settings__c>();
 
         npo02__User_Rollup_Field_Settings__c testUserRollup1 = new npo02__User_Rollup_Field_Settings__c();
-        testUserRollup1.npo02__Target_Field__c = 'Birthdate'; 
+        testUserRollup1.npo02__Target_Field__c = 'Birthdate';
         testUserRollup1.npo02__Source_Field__c = 'CloseDate';
-        testUserRollup1.npo02__Object_Name__c = 'Contact'; 
+        testUserRollup1.npo02__Object_Name__c = 'Contact';
         testUserRollup1.npo02__Field_Action__c = 'MAX';
         testUserRollup1.Name = 'TestRollup8675309';
         testURFS.add(TestUserRollup1);
 
         npo02__User_Rollup_Field_Settings__c testUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
-        testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees'; 
+        testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees';
         testUserRollup2.npo02__Source_Field__c = 'FiscalYear';
-        testUserRollup2.npo02__Object_Name__c = 'Account'; 
+        testUserRollup2.npo02__Object_Name__c = 'Account';
         testUserRollup2.npo02__Field_Action__c = 'MAX';
         testUserRollup2.Name = 'TestRollup2';
         testURFS.add(testUserRollup2);
 
         npo02__User_Rollup_Field_Settings__c testUserRollup3 = new npo02__User_Rollup_Field_Settings__c();
-        testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
+        testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c';
         testUserRollup3.npo02__Source_Field__c = 'CloseDate';
-        testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c'; 
+        testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c';
         testUserRollup3.npo02__Field_Action__c = 'MAX';
         testUserRollup3.Name = 'TestRollup3';
         testURFS.add(testUserRollup3);
@@ -354,7 +354,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testUserRollup4.npo02__Field_Action__c = 'SUM';
         testUserRollup4.Name = 'TestRollup4';
         testURFS.add(testUserRollup4);
-        insert testURFS; 
+        insert testURFS;
 
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
         insert c;
@@ -365,8 +365,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 Amount = 100,
                 CloseDate = system.today().adddays(-2),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                npe01__Contact_Id_for_Role__c = c.Id                                
-            );  
+                npe01__Contact_Id_for_Role__c = c.Id
+            );
             if(rtid != null){
                 newOpp.put('RecordTypeId',rtid);
             }
@@ -403,7 +403,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
         //exercise internal multicurrency helper methods, check currency conversion
         decimal d = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 55.00);
@@ -414,21 +414,21 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                 LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
                 npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
                 npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS                
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             );
             insert Con;
 
-        Contact[] TestCons = new Contact[] {Con}; 
-        
+        Contact[] TestCons = new Contact[] {Con};
+
         // create new opps
         Opportunity o = new Opportunity(
             Name = 'MyContactOpportunity',
             StageName = 'Closed Won',
             CloseDate = system.today(),
-            npe01__Contact_Id_for_Role__c = con.Id  
+            npe01__Contact_Id_for_Role__c = con.Id
         );
         insert o;
 
@@ -460,7 +460,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
         RLLP_OppRollup og = new RLLP_OppRollup();
 
@@ -496,7 +496,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -508,8 +508,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
                     npo02__Excluded_Account_Opp_Types__c = null,
                     npo02__Excluded_Contact_Opp_Rectypes__c = null,
                     npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = null,                      
-                    npo02__Use_Fiscal_Year_for_Rollups__c = true, 
+                    npo02__Membership_Record_Types__c = null,
+                    npo02__Use_Fiscal_Year_for_Rollups__c = true,
                     npo02__rollup_N_Day_Value__c = 10,
                     npo02__Batch_Size__c = 200
                 ));
@@ -525,14 +525,14 @@ public with sharing class RLLP_OppRollup_TEST2 {
             Opportunity[] newOpps1 = new Opportunity[0];
 
             Opportunity newOpp1 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
-                    name = 'test opp ', 
+                    name = 'test opp ',
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today(), amount = 100);
                if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
                     newOpp1.put('RecordTypeId', giftRecordTypeIdForTests);
             newOpps1.add( newOpp1);
 
             Opportunity newOpp2 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
-                    name = 'test opp 2', 
+                    name = 'test opp 2',
                     stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-40), amount = 100);
                if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
                     newOpp2.put('RecordTypeId', giftRecordTypeIdForTests);
@@ -567,7 +567,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -619,11 +619,11 @@ public with sharing class RLLP_OppRollup_TEST2 {
             rg.rollupAll();
             Test.StopTest();
 
-            Contact c1 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
+            Contact c1 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c,
                                 npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact where id = :TCid1];
 
-            Contact c2 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
-                                npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact where id = :TCid2];                
+            Contact c2 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c,
+                                npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact where id = :TCid2];
 
             system.assertEquals(1150, c1.npo02__Soft_Credit_Total__c);
             system.assertEquals(1000, c1.npo02__Soft_Credit_This_Year__c);
@@ -637,10 +637,10 @@ public with sharing class RLLP_OppRollup_TEST2 {
         create Organizational Opportunities, with Soft Credit OCR's
     verify:
         soft credits correctly rollup to their appropriate contacts
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     /*********************************************************************************************************
     * @description Runs testOrgSoftCredits test method for the One to One account processor.
-    */           
+    */
     static testMethod void testOrgSoftCreditsOne2One(){
         testOrgSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -660,7 +660,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -679,7 +679,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 ));
 
             Date datClose = System.Today();
-            
+
             integer cTest = 5;
 
             // create & insert contact(s)
@@ -695,18 +695,18 @@ public with sharing class RLLP_OppRollup_TEST2 {
             listAcc = [SELECT Id, Name, npe01__SYSTEMIsIndividual__c FROM Account WHERE Id IN : listAcc];
             system.assertEquals(cTest, listAcc.size());
             system.assertEquals(false, listAcc[0].npe01__SYSTEMIsIndividual__c);
-            
+
             // create new opps
             list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountListByRecTypeId(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeIdForTests ,null);
             insert listOpp;
 
             // create our soft credit ocr's
-            list<OpportunityContactRole> listOCR = new list<OpportunityContactRole>();            
+            list<OpportunityContactRole> listOCR = new list<OpportunityContactRole>();
             for (integer i = 0; i < cTest; i++) {
                 listOCR.add(new OpportunityContactRole(ContactId=listCon[i].Id, OpportunityId=listOpp[i].Id, Role='TestOCR', IsPrimary=false));
             }
             insert listOCR;
-            
+
 
             // test the batch rollup method
             Test.StartTest();
@@ -715,7 +715,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             Test.StopTest();
 
             // verify expected results
-            listCon = [select Id, Name, npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
+            listCon = [select Id, Name, npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c,
                                 npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact];
 
             for (Contact con : listCon) {
@@ -747,7 +747,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -896,7 +896,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
 
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -918,14 +918,14 @@ public with sharing class RLLP_OppRollup_TEST2 {
         list<npo02__User_Rollup_Field_Settings__c> testURFS = new list<npo02__User_Rollup_Field_Settings__c>();
 
         npo02__User_Rollup_Field_Settings__c testUserRollup1 = new npo02__User_Rollup_Field_Settings__c();
-        testUserRollup1.npo02__Target_Field__c = 'npo02__Household_ID__c'; 
+        testUserRollup1.npo02__Target_Field__c = 'npo02__Household_ID__c';
         testUserRollup1.npo02__Source_Field__c = 'TotalOpportunityQuantity';
-        testUserRollup1.npo02__Object_Name__c = 'npo02__Household__c'; 
+        testUserRollup1.npo02__Object_Name__c = 'npo02__Household__c';
         testUserRollup1.npo02__Field_Action__c = 'MAX';
         testUserRollup1.Name = 'TestRollup8675309';
         testURFS.add(TestUserRollup1);
 
-        insert testURFS; 
+        insert testURFS;
 
         Contact c = new Contact(LastName = 'TestCon');
         insert c;
@@ -958,7 +958,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
         Map<Id, npo02__Household__c> hmap = new Map<Id, npo02__Household__c>();
         q = oppRollupUtil.buildHouseholdQuery() + ' where id = \'' + c.npo02__Household__c + '\'';
 
-        npo02__Household__c h =database.query(q); 
+        npo02__Household__c h =database.query(q);
         cmap.put(c.id, c);
         hmap.put(h.id, h);
         og.rollupContacts(cmap);

@@ -9,58 +9,58 @@
         <value><!-- Address Verification Settings-DEPRECATED --></value>
     </caseValues>
     <fields>
-        <help>URL usado para la verificación de la dirección.</help>
-        <label><!-- Address Verification Endpoint-DEPRECATED --></label>
+        <help>URL utilizada para la verificación de la dirección.</help>
+        <label>Extremo de verif. de dirección-DESUSADO</label>
         <name>Address_Verification_Endpoint__c</name>
     </fields>
     <fields>
-        <help>El Auth ID de su Secret Pair Key</help>
-        <label><!-- Auth ID-DEPRECATED --></label>
+        <help>El Id. de autenticación de su clave de par secreto.</help>
+        <label>Id. de autenticación-DESUSADO</label>
         <name>Auth_ID__c</name>
     </fields>
     <fields>
-        <help>El Auth Token e su Secret Pair Key</help>
-        <label><!-- Auth Token-DEPRECATED --></label>
+        <help>Token de autenticación de su clave de par secreto.</help>
+        <label>Token de autenticación-DESUSADO</label>
         <name>Auth_Token__c</name>
     </fields>
     <fields>
-        <help>Si seleccionado, direcciones actualizadas son automáticamente actualizadas con la respuesta del servicio (cuando hay un resultado verificado).</help>
-        <label><!-- Auto-Update Addresses-DEPRECATED --></label>
+        <help>Si se selecciona, las direcciones cambiadas se actualizan automáticamente con la respuesta del servicio (cuando hay un resultado verificado).</help>
+        <label>Actualizar direcciones autom.-DESUSADO</label>
         <name>Auto_Update_Addresses__c</name>
     </fields>
     <fields>
-        <help>Clase de Salesforce responsable de contactar la API de SmartyStreets y de verificar direcciones</help>
-        <label><!-- Class-DEPRECATED --></label>
+        <help>Clase de Salesforce responsable de contactar la API de SmartyStreets y verificar las direcciones.</help>
+        <label>Clase-DESUSADO</label>
         <name>Class__c</name>
     </fields>
     <fields>
-        <help>Si seleccionado, cualquier dirección de US que el servicio señale como imposible de entregar será automáticamente borrado. (Usted podrá revisar la entrada invalida en el registro Direcciones).</help>
-        <label><!-- Clear Invalid Addresses-DEPRECATED --></label>
+        <help>Si se selecciona, cualquier dirección de EE.UU. que el servicio marque como imposible de entregar se borra automáticamente. (Podrá revisar la entrada no válida en el registro Dirección).</help>
+        <label>Borrar direcciones no válidas-DESUSADO</label>
         <name>Clear_Invalid_Addresses__c</name>
     </fields>
     <fields>
-        <help>Habilita la verificación automática para nuevas direcciones.</help>
-        <label><!-- Enable Automatic Verification-DEPRECATED --></label>
+        <help>Habilita la verificación automática de direcciones para nuevas direcciones.</help>
+        <label>Habilitar verificación autom.-DESUSADO</label>
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
-        <help>Marca direcciones ambiguas como invalidas, cuando el API devuelve más de una dirección. Si se deja sin seleccionar, Salesforce aceptará la primera dirección sugerida como dirección valida.</help>
-        <label><!-- Reject Ambiguous Addresses-DEPRECATED --></label>
+        <help>Marca direcciones ambiguas como no válidas cuando la API devuelve más de una dirección. Si se deja sin seleccionar, Salesforce aceptará la primera dirección sugerida como dirección válida.</help>
+        <label>Rechazar direcciones ambiguas-DESUSADO</label>
         <name>Reject_Ambiguous_Addresses__c</name>
     </fields>
     <fields>
         <help>Tiempo de espera de llamada en segundos</help>
-        <label><!-- Timeout-DEPRECATED --></label>
+        <label>Tiempo de espera-DESUSADO</label>
         <name>Timeout__c</name>
     </fields>
     <fields>
-        <help>Especifica si usted esta usando el servicio de verificación de SmartyStreet</help>
-        <label><!-- Using SmartyStreets-DEPRECATED --></label>
+        <help>Especifica si se esta utilizando o no el servicio de verificación de direcciones de SmartyStreets.</help>
+        <label>Uso de SmartyStreets-DESUSADO</label>
         <name>Using_SmartyStreets__c</name>
     </fields>
     <fields>
-        <help>URL usado para la verificación del código postal.</help>
-        <label><!-- Zipcode Verification Endpoint-DEPRECATED --></label>
+        <help>URL utilizada para la verificación del código postal.</help>
+        <label>Extremo de verif. de cód. post.-DESUSADO</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
     <gender><!-- Feminine --></gender>

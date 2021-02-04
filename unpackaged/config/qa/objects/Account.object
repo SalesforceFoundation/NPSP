@@ -16,7 +16,7 @@
         <fullName>custom_acc_text__c</fullName>
         <externalId>false</externalId>
         <label>custom_acc_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>

@@ -41,8 +41,8 @@
         <value><!-- NPSP Package Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- The active package namespace prefix for NPSP. Do not edit manually. --></help>
-        <label><!-- Namespace Prefix --></label>
+        <help>Das aktive Paket-Namespace-Präfix für NPSP. Nicht manuell bearbeiten.</help>
+        <label>Namespace-Präfix</label>
         <name>Namespace_Prefix__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

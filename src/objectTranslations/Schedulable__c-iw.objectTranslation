@@ -34,27 +34,7 @@
         <help>תדירות הפעלת המשימה.</help>
         <label>תדירות</label>
         <name>Frequency__c</name>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation><!-- Daily --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Hourly</masterLabel>
-            <translation><!-- Hourly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation><!-- Monthly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Quarterly</masterLabel>
-            <translation><!-- Quarterly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation><!-- Weekly --></translation>
-        </picklistValues>
-    </fields>
+        </fields>
     <fields>
         <help>המועד האחרון שבו הופעלה המשימה.</help>
         <label>זמן הפעלה אחרונה</label>

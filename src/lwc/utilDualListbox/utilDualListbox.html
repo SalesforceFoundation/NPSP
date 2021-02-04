@@ -1,0 +1,40 @@
+<template>
+    <template if:true={hasHeaderString}>
+        <h2 class="slds-text-heading_medium slds-hyphenate">
+            {header}
+        </h2>
+    </template>
+    <div class="slds-grid slds-grid_align-center">
+        <div class="slds-size_1-of-1 slds-align_absolute-center">
+            <lightning-dual-listbox class={cssClass}
+                                    name={name}
+                                    label={label}
+                                    source-label={sourceLabel}
+                                    selected-label={selectedLabel}
+                                    options={options}
+                                    min={min}
+                                    max={max}
+                                    value={values}
+                                    onchange={handleChange}>
+            </lightning-dual-listbox>
+        </div>
+    </div>
+    <template if:true={showModalFooter}>
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-float_right">
+                <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                  variant="neutral"
+                                  class="slds-m-right_small"
+                                  data-qa-locator={qaLocatorCancel}
+                                  onclick={handleCancel}>
+                </lightning-button>
+                <lightning-button label={CUSTOM_LABELS.commonSave}
+                                  title={CUSTOM_LABELS.commonSave}
+                                  variant="brand"
+                                  data-qa-locator={qaLocatorSave}
+                                  onclick={handleSave}>
+                </lightning-button>
+            </div>
+        </footer>
+    </template>
+</template>

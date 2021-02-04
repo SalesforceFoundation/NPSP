@@ -1,4 +1,6 @@
 <apex:page controller="STG_SettingsManager_CTRL" docType="html-5.0" standardStylesheets="false" >
+        <c:UTIL_PageMessages />
+        <c:UTIL_SingleToastMessage severity="error" isRendered = "{!NOT(ISBLANK(errorMsg))}"  message="{!errorMsg}" />
     <div class="slds-m-around_x-large slds-p-bottom_large slds-col-rule_bottom">
         <div class="slds-media slds-media_center slds-media_responsive">
             <div class="slds-media__body">
@@ -40,4 +42,5 @@
             <p><c:UTIL_HtmlOutput html="{!$Label.stgHelpPowerOfUsHub}" hasLink="true" /></p>
         </div>
     </div>
+
 </apex:page>

@@ -24,8 +24,8 @@
         <name>Opportunity_Name_Format__c</name>
     </fields>
     <fields>
-        <help>Especifica el tipo de registro de oportunidad para el que este nombre se establece</help>
-        <label>Tipo de registro de oportunidad</label>
+        <help>Especifica el tipo de registro de oportunidades para el que este esquema de nombres se establece.</help>
+        <label>Tipos de registro de oportunidades</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
     <gender><!-- Feminine --></gender>

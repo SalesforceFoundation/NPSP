@@ -4,7 +4,8 @@
     showHeader="true"
     sidebar="false"
     docType="html-5.0"
-    standardStylesheets="true">
+    standardStylesheets="false"
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -50,7 +51,7 @@
         }
     </script>
 
-    <div class="slds-scope slds-p-bottom_x-large">
+    <div class="slds-scope">
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
             <!-- PAGE HEADER -->
@@ -65,12 +66,10 @@
                 <div class="slds-col slds-m-horizontal_large">
                     <apex:outputText rendered="{!NOT(batchRunning)}">
                         <div class="slds-container_large slds-container_center">
-        
                             <div  class="slds-m-bottom_large">
                                 <div class="slds-text-heading_small slds-m-bottom_medium">
                                     {!$Label.bdiDataImporterInfoTitle}
                                 </div>
-        
                                 <div class="slds-text-longform">
                                     <ul>
                                         <li>{!$Label.bdiDataImporterInfoLine1}</li>
@@ -86,7 +85,6 @@
                             </div>
                         </div>
                     </apex:outputText>
-                
                     <apex:outputText rendered="{!NOT(batchRunning) && NOT(isEditMode)}">
                         <div class="slds-container_large">
                             <div class="slds-grid slds-grid_align-center">

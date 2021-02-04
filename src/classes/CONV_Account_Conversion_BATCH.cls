@@ -589,7 +589,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         ContactsSettings.npe01__Account_Processor__c = 'Household Account';
 
-        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(CAO_Constants.HH_ACCOUNT_RT_DEVELOPER_NAME);
         if(householdAccount != null)
             ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
         if(!Test.isRunningTest())

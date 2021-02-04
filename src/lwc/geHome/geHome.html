@@ -1,0 +1,70 @@
+<template>
+    <template if:true={isLoading}>
+        <c-util-page-header>
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                    {CUSTOM_LABELS.geHeaderGiftEntry}
+                </span>
+            </h1>
+        </c-util-page-header>
+
+        <lightning-card>
+            <div class="slds-card-body_extension">
+                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+                </lightning-spinner>
+            </div>
+        </lightning-card>
+    </template>
+
+    <template if:false={isAppAccessible}>
+        <c-util-page-header>
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                    {CUSTOM_LABELS.geHeaderGiftEntry}
+                </span>
+            </h1>
+        </c-util-page-header>
+
+        <div class="slds-card slds-card_extension slds-p-around_large">
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
+                                 size="large">
+            </c-util-illustration>
+        </div>
+    </template>
+
+    <template if:false={isListViewAccessible}>
+        <div class="slds-card slds-card_extension slds-p-around_large">
+            <c-util-illustration title={_listViewPermissionErrorHeader}
+                                 message={_listViewPermissionErrorBody}
+                                 size="large">
+            </c-util-illustration>
+        </div>
+    </template>
+
+    <template if:true={isAppAccessible}>
+        <template if:false={isLoading}>
+            <template if:true={isLandingPage}>
+                <template if:true={isListViewAccessible}>
+                    <c-ge-templates ontogglemodal={toggleModal}
+                                    onchangeview={handleChangeView}>
+                    </c-ge-templates>
+                </template>
+            </template>
+
+            <template if:true={isTemplateBuilder}>
+                <c-ge-template-builder ontogglemodal={toggleModal}
+                                       onchangeview={handleChangeView}
+                                       form-template-record-id={formTemplateId}
+                                       is-clone={cloneFormTemplate}>
+                </c-ge-template-builder>
+            </template>
+
+            <template if:true={isSingleGiftEntry}>
+                <c-ge-form-renderer></c-ge-form-renderer>
+            </template>
+        </template>
+    </template>
+</template>

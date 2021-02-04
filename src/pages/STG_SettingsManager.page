@@ -1,8 +1,13 @@
-<apex:page showHeader="true" sidebar="false" title="{!$Label.stgNPSPSettingsTitle}" controller="STG_SettingsManager_CTRL"
-           action="{!onNpspSettingsLoad}" docType="html-5.0" standardStylesheets="false">
+<apex:page  controller="STG_SettingsManager_CTRL"
+    showHeader="true"
+    sidebar="false"
+    title="{!$Label.stgNPSPSettingsTitle}"
+    action="{!onNpspSettingsLoad}"
+    docType="html-5.0"
+    standardStylesheets="false"
+    lightningStylesheets="true">
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -36,11 +41,14 @@
         margin-left: -16px;
         margin-right: -16px;
     }
+    .hide {
+        display: none;
+    }
 </style>
 
 <script>
     var j$ = jQuery.noConflict();
-    var idPanelCurrent = '{!idPanelCurrent}';
+    var idPanelCurrent = '{!JSINHTMLENCODE(idPanelCurrent)}';
     if (idPanelCurrent == '') idPanelCurrent = 'idPanelHome';
 
     // page init function
@@ -55,15 +63,25 @@
     function ShowPanel(idPanel) {
         var node;
         node = document.getElementById(idPanelCurrent);
-        if (node != null) node.style.display =  'none';
+        if (node != null) {
+            node.style.display =  'none';
+        }
+
         node = document.getElementById(idPanelCurrent + 'Nav');
-        if (node != null) node.classList.remove('slds-is-selected');
+        if (node != null) {
+            node.classList.remove('slds-is-selected');
+        }
 
         node = document.getElementById(idPanel);
-        if (node != null) node.style.display =  'block';
+        if (node != null) {
+            node.style.display =  'block';
+        }
+
         idPanelCurrent = idPanel;
         node = document.getElementById(idPanelCurrent + 'Nav');
-        if (node != null) node.classList.add('slds-is-selected');
+        if (node != null) {
+            node.classList.add('slds-is-selected');
+        }
 
         if (node != null) {
             var headerNode = node.parentElement.previousElementSibling;
@@ -85,8 +103,9 @@
         // the correct tab when a validation error was hit on Save,
         // but for some reason the page reloads with {idPanelCurrent} empty,
         // even though it has been set by this actionFunction before editing the panel.
-        if (idPanelCurrent != '{!idPanelCurrent}')
+        if (idPanelCurrent != '{!JSINHTMLENCODE(idPanelCurrent)}') {
             setPanelCurrent(idPanelCurrent);
+        }
     }
 
 </script>
@@ -157,12 +176,12 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><apex:outputLink id="donorStatsTreeItem" value="#" onClick="ShowPanel('idPanelOppRollup');return false;" styleClass="slds-grow slds-m-left_large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavDonorStatistics}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavContactRoles}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppCampMembers}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavBDE}</a></li>
                                 <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><apex:outputLink id="UDRsTreeItem" value="#" onClick="ShowPanel('idPanelUserRollup');return false;" styleClass="slds-grow slds-m-left_large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavUserDefinedRollups}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left_large">{!$Label.CRLP_RollupSummary}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
+
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
                                     <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
@@ -173,10 +192,42 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDInstallmentPeriods}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDFieldMap}</a></li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav" class="slds-tree__item">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2Enablement'); fireRefreshViewEvent(); return false;"
+                                        class="slds-grow slds-m-left_large">
+                                        {!$Label.stgNavRD2Enablement}
+                                    </a>
+                                </li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav">
+                                    <a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a>
+                                </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2StatusMappingNav"
+                                    class="{!IF(isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2StatusMapping');return false;"
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRD2StatusMapping}</a>
+                                </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRDInstPdNav"
+                                    class="{!IF(!isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;"
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRDInstallmentPeriods}</a>
+                                </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRDFieldMapNav" class="slds-tree__item">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;"
+                                        class="slds-grow slds-m-left_large">
+                                        {!$Label.stgNavRDFieldMap}</a>
+                                </li>
                             </ul>
+
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
@@ -215,6 +266,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorLog}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorNotify}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavTriggerConfig}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportAdvancedMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportAdvancedMapping');return false;" class="slds-grow slds-m-left_large">{!$Label.bdiAdvancedMapping}</a></li>
                             </ul>
                         </ul>
                     </nav>
@@ -307,29 +359,33 @@
                     <apex:include pageName="STG_PanelOppCampaignMembers" />
                 </div>
 
-                <div class="panel noborder" id="idPanelBDE" style="display:none" >
-                    <apex:include pageName="STG_PanelBDE" />
-                </div>
-
                 <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
                     <apex:include pageName="STG_PanelUserRollup" />
                 </div>
 
                 <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
-                    <apex:include pageName="STG_PanelCustomizableRollup" />
+                    <apex:include pageName="STG_PanelCustomizableRollup" id="idPanelCustomizableRollup" />
                 </div>
 
                 <!-- Recurring Donations -->
+                <div class="panel noborder" id="idPanelRD2Enablement" style="display:none">
+                    <apex:include pageName="STG_PanelRD2Enablement" />
+                </div>
+
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
-                    <apex:include pageName="STG_PanelRD" />
+                    <apex:include pageName="STG_PanelRD" id="idPanelRD"/>
+                </div> 
+
+                <div class="panel noborder" id="idPanelRD2StatusMapping" style="display:none">
+                    <apex:include pageName="STG_PanelRD2StatusMapping" id="idPanelRD2StatusMapping"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
-                    <apex:include pageName="STG_PanelRDCustomInstallment" />
+                    <apex:include pageName="STG_PanelRDCustomInstallment" id="idPanelRDInstPd" />
                 </div>
 
                 <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
-                    <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+                    <apex:include pageName="STG_PanelRDCustomFieldMapping" id="idPanelRDFieldMap" />
                 </div>
 
                 <!-- Bulk Data Processes -->
@@ -368,7 +424,7 @@
                 <div class="panel noborder" id="idPanelPrimaryContactRoleMergeBatch" style="display:none" >
                     <apex:include pageName="STG_PanelPrimaryContactRoleMerge" />
                 </div>
-                
+
                 <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
                     <apex:include pageName="STG_PanelUpdatePrimaryContact" />
                 </div>
@@ -393,7 +449,19 @@
                 <div class="panel noborder" id="idPanelTDTM" style="display:none" >
                     <apex:include pageName="STG_PanelTDTM" />
                 </div>
+
+                <div class="panel noborder" id="idPanelDataImportAdvancedMapping" style="display:none" >
+                    <apex:include pageName="STG_PanelDataImportAdvancedMapping" />
+                </div>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        function fireRefreshViewEvent() {
+            var refresheEvent = $A.get("e.force:refreshView");
+            refresheEvent.fire();
+        }
+    </script>
+
 </apex:page>

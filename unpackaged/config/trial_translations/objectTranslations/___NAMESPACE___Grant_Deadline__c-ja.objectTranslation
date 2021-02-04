@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Opportunity__c</name>
+    <relationshipLabel>提出書類</relationshipLabel>
+    <label>商談</label>
+  </fields>
+  <layouts>
+    <layout>Deliverable</layout>
+    <sections>
+      <label>助成金の提出書類要件</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+  </layouts>
+  </CustomObjectTranslation>

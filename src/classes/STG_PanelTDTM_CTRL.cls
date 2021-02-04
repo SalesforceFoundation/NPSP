@@ -75,7 +75,9 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
                             from Trigger_Handler__c order by Object__c, Load_Order__c];
             }
             for (Trigger_Handler__c th : listTH) {
-                th.Trigger_Action__c = th.Trigger_Action__c.replaceAll('[;]','; ');
+                if (String.isNotBlank(th.Trigger_Action__c)) {
+                    th.Trigger_Action__c = th.Trigger_Action__c.replaceAll('[;]','; ');
+                }
             } 
             return listTH;           
         }

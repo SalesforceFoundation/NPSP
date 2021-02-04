@@ -1,15 +1,35 @@
 {
-  "orgName": "NPSP - Dev Workspace",
+  "orgName": "NPSP - Prerelease Workspace",
   "edition": "Developer",
   "instance": "CS46",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
-    "orgPreferenceSettings": {
-      "chatterEnabled": true,
-      "disableParallelApexTesting": true,
-      "notesReservedPref01": true,
-      "s1DesktopEnabled": true,
-      "translation": true
+    "userManagementSettings": {
+      "enableNewProfileUI": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
+    },
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
     }
   }
 }

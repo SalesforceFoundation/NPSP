@@ -1,0 +1,74 @@
+<!--
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2019
+  @group ProgressIndicator
+  @description Progress indicator marker displaying an active or complete node.
+-->
+<aura:component>
+    <aura:attribute name="isComplete" type="Boolean" default="false"
+        description="Indicates if the step in the progress indicator is complete" />
+
+    <aura:attribute name="isPreviousComplete" type="Boolean" default="false"
+        description="Indicates if the previous step is complete" />
+
+    <aura:attribute name="isNextComplete" type="Boolean" default="false"
+        description="Indicates if the next step is complete" />
+
+    <aura:attribute name="isError" type="Boolean" default="false"
+        description="Indicates if the step in the progress indicator has an error" />
+
+    <aura:attribute name="size" type="String" default="xx-small" description="Indicates icon size" />
+
+    <div class="{!'slds-progress__marker' + if(or(v.isComplete, v.isError), ' slds-progress__marker_icon', '')}">
+
+        <aura:if isTrue="{!v.isError}">
+            <lightning:icon iconName="utility:error" class="slds-icon-text-default" size="{!v.size}"
+                alternativeText="{!$Label.c.AssistiveTextError}" variant="error" />
+
+            <aura:set attribute="else">
+
+                <aura:if isTrue="{!v.isComplete}">
+                    <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="{!v.size}"
+                        alternativeText="{!$Label.c.AssistiveTextComplete}" />
+
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!and(v.isPreviousComplete, not(v.isNextComplete))}">
+                            <span class="slds-assistive-text">{!$Label.c.AssistiveTextActive}</span>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+
+            </aura:set>
+        </aura:if>
+
+    </div>
+</aura:component>

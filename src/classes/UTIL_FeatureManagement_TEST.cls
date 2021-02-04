@@ -38,20 +38,68 @@
 */
 @isTest
 public with sharing class UTIL_FeatureManagement_TEST {
+
+    /**
+     * @description  Validates feature management package Boolean value is set
+     */
     @isTest
-    private static void callsSetPackageBooleanValue() {
-        new UTIL_FeatureManagement().setPackageBooleanValue(
+    private static void shouldCallSetPackageBooleanValue() {
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
             false
         );
+
+        System.assertEquals(false, featureMgt.checkPackageBooleanValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name())
+        );
     }
 
+    /**
+     * @description  Validates feature management package Integer value is set
+     */
     @isTest
-    private static void callsSetPackageIntegerValue() {
-        new UTIL_FeatureManagement().setPackageIntegerValue(
+    private static void shouldCallSetPackageIntegerValue() {
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(),
             1
         );
+
+        System.assertEquals(1, featureMgt.checkPackageIntegerValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name())
+        );
+    }
+
+    /**
+     * @description Validates feature management Boolean value can be retrieved as it was set
+     */
+    @isTest
+    private static void shouldCallCheckPackageBooleanValue() {
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageBooleanValue( UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name(),
+            true
+        );
+
+        System.assertEquals(true,
+            new UTIL_FeatureEnablement().isEnabled(UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name()));
+    }
+
+    @isTest
+    private static void shouldCallCheckPackageDateValue() {
+        // Skipping the test if it's running in with a namespace
+        // This causes an error en 2gp tests returning the error CANNOT_MODIFY_MANAGED_OBJECT
+        if (!String.isBlank(UTIL_Namespace.getNamespace())) {
+            return;
+        }
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageDateValue('P10_Application_Date', Date.newInstance(2020, 01, 01));
+        
+        System.assertEquals(Date.newInstance(2020,01,01), featureMgt.checkPackageDateValue('P10_Application_Date'), 'P10_Application_Date stored different than expected');
     }
 
     /*******************************************************************************************************************
@@ -76,6 +124,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
 
                 when 'setPackageIntegerValue' {
                     packageIntegerValuesByName.put((String) listOfArgs[0], (Integer) listOfArgs[1]);
+                }
+
+                when 'checkPackageBooleanValue' {
+                    return packageBooleanValuesByName.get((String) listOfArgs[0]);
+                }
+
+                when 'checkPackageIntegerValue' {
+                    return packageIntegerValuesByName.get((String) listOfArgs[0]);
                 }
             }
             return null;

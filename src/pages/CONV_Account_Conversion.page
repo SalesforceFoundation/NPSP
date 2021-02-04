@@ -3,7 +3,8 @@
     tabStyle="npo02__Household__c"
     showHeader="true"
     sidebar="false"
-    standardStylesheets="true"
+    standardStylesheets="false"
+    lightningStylesheets="true"
     action="{!runCheck}">
 
     <apex:slds />
@@ -193,16 +194,18 @@
                 </div>
             </div>
 
-            <div class="slds-container_large slds-container_center slds-p-top_medium">
-                <c:UTIL_JobProgressLightning id="jobProgress"
-                    eventTargetId="{!$Component.jobProgress}"
-                    strBatchComponentLabel="{!$Label.CONV_Conversion_Process}"
-                    cNumberOfJobs="1"
-                    startPolling="False"
-                    stopPollingOnComplete="True"
-                    pollingDelay="1000"
-                    html-class="slds-hide"/>
-            </div>
+            <apex:outputPanel id="batchVerifyResult" rendered="{!isRunningUserIsAdmin}">
+                <div class="slds-container_large slds-container_center slds-p-top_medium">
+                    <c:UTIL_JobProgressLightning id="jobProgress"
+                        eventTargetId="{!$Component.jobProgress}"
+                        strBatchComponentLabel="{!$Label.CONV_Conversion_Process}"
+                        cNumberOfJobs="1"
+                        startPolling="False"
+                        stopPollingOnComplete="True"
+                        pollingDelay="1000"
+                        html-class="slds-hide"/>
+                </div>
+            </apex:outputPanel>
 
         </div>
 
@@ -263,8 +266,12 @@
             function afterConvert() {
                 var jobProgressComponent = document.getElementById('{!$Component.jobProgress}');
                 document.getElementById('warning_content').setAttribute('class', 'slds-hide');
-                jobProgressComponent.setAttribute('class', 'slds-show');
-                jobProgressComponent.dispatchEvent(new Event('start'));
+
+                var isRunningUserIsAdmin = {!isRunningUserIsAdmin};
+                if (isRunningUserIsAdmin) {
+                    jobProgressComponent.setAttribute('class', 'slds-show');
+                    jobProgressComponent.dispatchEvent(new Event('start'));
+                }
             }
 
             function verifyHHIdField(){

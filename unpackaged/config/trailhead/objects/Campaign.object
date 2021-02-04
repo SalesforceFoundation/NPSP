@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Location__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Location of an event.This is a custom field that does not come with NPSP.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a custom field that does not come with NPSP.</inlineHelpText>
+        <label>Location</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Campaigns</relationshipLabel>
+        <relationshipName>Campaigns</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>On_Site_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Contact at the location for on site logistics. This is a custom field that does not come with NPSP.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a custom field that does not come with NPSP.</inlineHelpText>
+        <label>On Site Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Campaigns</relationshipLabel>
+        <relationshipName>Campaigns</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+</CustomObject>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>Deprecated-מצב סיום פתוח</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <label>Deprecated-סוג לוח זמנים</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <label>Deprecated-סך הכול</label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>היום האחרון של החודש</translation>
+        </picklistValues>
+    </fields>
+</CustomObjectTranslation>

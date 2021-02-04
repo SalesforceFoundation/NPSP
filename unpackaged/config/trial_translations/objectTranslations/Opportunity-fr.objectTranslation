@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <recordTypes>
+    <name>Donation</name>
+    <label>Don</label>
+    <description>Don reçu</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Grant</name>
+    <label>Subvention</label>
+    <description>Subvention reçue</description>
+  </recordTypes>
+  <recordTypes>
+    <name>InKindGift</name>
+    <label>Don en nature</label>
+    <description>Biens ou services reçus en nature</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MajorGift</name>
+    <label>Don important</label>
+    <description>Don important d’un donateur important</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MatchingGift</name>
+    <label>Don jumelé</label>
+    <description>Don jumelé de l’employeur du donateur ou d&apos;une autre organisation</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Membership</name>
+    <label>Adhésion</label>
+    <description>Un type d’enregistrement d’adhésion</description>
+  </recordTypes>
+  <layouts>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
+    <sections>
+      <label>Informations sur le don</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le don important</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le paiement</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Donation Layout</layout>
+    <sections>
+      <label>Informations sur le don</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le paiement</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur l’hommage</label>
+      <section>Tribute Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le don jumelé</label>
+      <section>Matching Gift Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Membership Layout</layout>
+    <sections>
+      <label>Champs</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Informations sur le membre</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le paiement</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Grant Layout</layout>
+    <sections>
+      <label>Informations sur le don</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur la subvention</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le paiement</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
+    <sections>
+      <label>Informations sur le don</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le don en nature</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur l’hommage</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
+    <sections>
+      <label>Informations sur le don</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur le paiement</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

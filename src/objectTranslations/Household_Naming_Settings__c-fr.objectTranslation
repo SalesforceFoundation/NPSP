@@ -9,7 +9,7 @@
         <value><!-- Household Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>Indique le nombre de contacts à afficher explicitement dans un nom.  Après ce montant, le dépassement de nom sera utilisé.</help>
+        <help>Indique le nombre de contacts à afficher explicitement dans un nom. Après ce montant, le dépassement de nom sera utilisé.</help>
         <label>Compte de dépassement de contact</label>
         <name>Contact_Overrun_Count__c</name>
     </fields>
@@ -34,7 +34,7 @@
         <name>Informal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help>La chaîne de caractères à utiliser pour connecter des paires dans un nom.  Par exemple, Jean &amp; Jeanne, ou Jean et Jeanne.</help>
+        <help>La chaîne de caractères à utiliser pour connecter des paires dans un nom. Par exemple, Jean &amp; Jeanne, ou Jean et Jeanne.</help>
         <label>Connecteur de nom</label>
         <name>Name_Connector__c</name>
     </fields>

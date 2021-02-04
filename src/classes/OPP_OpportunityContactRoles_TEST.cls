@@ -159,10 +159,12 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Trigger_Handler__c triggerHandler = [SELECT Active__c FROM Trigger_Handler__c WHERE Class__c = 'OPP_OpportunityContactRoles_TDTM'];
-        triggerHandler.Active__c = false;
-        update triggerHandler;
-        TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+        // disable the OPP_OpportunityContactRoles_TDTM trigger
+        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
+            if (th.Class__c == 'OPP_OpportunityContactRoles_TDTM') {
+                th.Active__c = false;
+            }
+        }
         
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -1282,7 +1284,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return List<OpportunityContactRole> OCRs assigned to provided Opportunities
     */
     private static List<OpportunityContactRole> getOppContactRoles(List<Opportunity> opps) {
-        return getOppContactRoles(extractIds(opps));
+        return getOppContactRoles(UTIL_SObject.extractIds(opps));
     }
 
     /*******************************************************************************************************
@@ -1354,7 +1356,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return List<Opportunity> Opportunities
     */
     private static List<Opportunity> getOpportunities(List<Opportunity> opps) {
-        return getOpportunities(extractIds(opps));
+        return getOpportunities(UTIL_SObject.extractIds(opps));
     }
 
     /*******************************************************************************************************
@@ -1402,13 +1404,5 @@ private class OPP_OpportunityContactRoles_TEST {
         ];
     }
 
-    /*******************************************************************************************************
-    * @description Extracts Ids from sObject list
-    * @param sObjects SObject List
-    * @return Set<Id> SObject Ids
-    */
-    private static Set<Id> extractIds(List<SObject> sObjects) {
-        return new Map<Id, SObject>(sObjects).keySet();
-    }
 
 }

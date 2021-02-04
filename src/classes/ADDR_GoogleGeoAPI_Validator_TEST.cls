@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -33,9 +33,10 @@
 * @group Address Management
 * @description Validator to provide address geocoding/verification through the Google Geocoding API
  */
-@isTest
-public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
-    public static Addr_Verification_Settings__c getDefaultSettings() {
+@isTest(IsParallel=true)
+private class ADDR_GoogleGeoAPI_Validator_TEST {
+
+    private static Addr_Verification_Settings__c getDefaultSettings() {
         // use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -49,20 +50,30 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        
+
         return settings;
     }
 
-    static testMethod void testSingleAddress() {
+    /**
+    * @description Ensure that a US address is parsed properly so that the street number
+    * comes before the street name.
+    */
+    @IsTest
+    private static void shouldProperlyParseSingleUSAddress() {
 
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
-        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'single-address');
+        Address__c a = new Address__c(
+            MailingState__c = 'CA',
+            MailingCity__c = 'Cupertino',
+            MailingCountry__c = 'single-address',
+            MailingStreet__c = '1600 Amphitheatre pkwy'
+        );
 
         Test.StartTest();
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
-        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{ a }, settings);
         Test.StopTest();
 
         System.assertEquals(1, returnedAddress.size());
@@ -73,7 +84,37 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(true, returnedAddress[0].Verified__c);
     }
 
-    static testMethod void testSingleAddressSubPremise() {
+    /**
+    * @description Ensure that an international address is parsed properly so that the street name
+    * comes before the street number.
+    */
+    @IsTest
+    private static void shouldProperlyParseSingleInternationalAddress() {
+
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(
+            MailingState__c = '',
+            MailingCity__c = '',
+            MailingStreet__c = 'international-address'
+        );
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('Prälat-Zistl-Straße 8', returnedAddress[0].MailingStreet__c);
+        System.assertEquals('BY', returnedAddress[0].MailingState__c);
+        System.assertEquals('München', returnedAddress[0].MailingCity__c);
+        System.assertEquals('80331', returnedAddress[0].MailingPostalCode__c);
+        System.assertEquals(true, returnedAddress[0].Verified__c);
+    }
+
+    @IsTest
+    private static void shouldIncludeSubPremiseInSingleAddressResponse() {
 
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
@@ -92,13 +133,14 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals('94043', returnedAddress[0].MailingPostalCode__c);
         System.assertEquals(true, returnedAddress[0].Verified__c);
     }
-    
-    static testMethod void testSingleAddressLongZipcode() {
+
+    @IsTest
+    private static void shouldIncludeLongZipCodeInSingleAddressResponse() {
 
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
-        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'single-address', 
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'single-address',
                                     MailingPostalCode__c='94043-9475');
 
         Test.StartTest();
@@ -114,7 +156,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(true, returnedAddress[0].Verified__c);
     }
 
-    static testMethod void testAmbiguousAddress() {
+    @IsTest
+    private static void shouldHandleAmbigousAddress() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -130,7 +173,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(true, returnedAddress[0].Ambiguous__c);
     }
 
-    static testMethod void testOverQueryLimitAddress() {
+    @IsTest
+    private static void shouldHandleOverQueryLimitError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -140,13 +184,14 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
         List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
         Test.StopTest();
-        
+
         System.assertEquals(1, returnedAddress.size());
         System.assertEquals('OVER_QUERY_LIMIT: indicates that you are over your quota.', returnedAddress[0].API_Response__c);
         System.assertEquals(false, returnedAddress[0].Verified__c);
     }
-    
-        static testMethod void testRequestDeniedAddress() {
+
+    @IsTest
+    private static void shouldHandleRequestDeniedError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -161,7 +206,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals('REQUEST_DENIED: indicates that your request was denied.', returnedAddress[0].API_Response__c);
     }
 
-    static testMethod void testUnknownErrorAddress() {
+    @IsTest
+    private static void shouldHandleUnknownError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -176,7 +222,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals('UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.', returnedAddress[0].API_Response__c);
     }
 
-    static testMethod void testInvalidRequestAddress() {
+    @IsTest
+    private static void shouldHandleInvalidRequestError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -191,7 +238,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals('INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.', returnedAddress[0].API_Response__c);
     }
 
-    static testMethod void testZeroResultsAddress() {
+    @IsTest
+    private static void shouldHandleZeroResultsError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -205,7 +253,9 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(1, returnedAddress.size());
         System.assertEquals('ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.', returnedAddress[0].API_Response__c);
     }
-    static testMethod void testBadResponse() {
+
+    @IsTest
+    private static void shouldHandleBadResponseError() {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
@@ -219,13 +269,15 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(1, returnedAddress.size());
         System.assertEquals('401: Not authenticated.', returnedAddress[0].API_Response__c);
     }
-    static testMethod void testNullAuthToken() {
+
+    @IsTest
+    private static void shouldHandleNullAuthTokenError() {
         // create settings w/o a token
         Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
-        
+
 
         Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino');
 
@@ -237,9 +289,11 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(1, returnedAddress.size());
         System.assertEquals('MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information', returnedAddress[0].API_Response__c);
     }
-    static testMethod void testInterfaceStrings(){
+
+    @IsTest
+    private static void shouldEnsureServiceNameStringsArePopulated(){
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
-        system.assertEquals('The Google Geocoding API', testValidator.getServiceName());
-        system.assertEquals('https://maps.googleapis.com/maps/api/geocode/json?', testValidator.getDefaultURL());
+        System.assertEquals('The Google Geocoding API', testValidator.getServiceName());
+        System.assertEquals('https://maps.googleapis.com/maps/api/geocode/json?', testValidator.getDefaultURL());
     }
 }

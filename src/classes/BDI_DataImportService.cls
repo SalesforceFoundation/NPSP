@@ -38,14 +38,70 @@
 *
 */
 global with sharing class BDI_DataImportService {
+    private static DescribeFieldResult batchNumberDescribe = UTIL_Describe.getFieldDescribe(
+        String.valueOf(DataImport__c.SObjectType),
+        String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c)
+    );
+
+    public static final String DATAIMPORT_BATCH_NUMBER_FIELD = String.join(new List<String>{
+        batchNumberDescribe.getRelationshipName(),
+        String.valueOf(DataImportBatch__c.Batch_Number__c)
+    }, '.');
+    public static final String FM_HELP_TEXT = 'Help Text';
+    public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+    public static final String ACH_PAYMENT_METHOD = 'ACH';
+
+
+    public BDI_MappingService mappingService;
 
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService(Boolean isDryRun) {
-        contactService = new BDI_ContactService(this);
+    public BDI_DataImportService(Boolean isDryRun, BDI_MappingService mappingService) {
         this.isDryRun = isDryRun;
+        this.mappingService = mappingService;
+
+        contactService = new BDI_ContactService(this);
+        if (mappingService instanceof BDI_MappingServiceAdvanced){
+            additionalObjectService = new BDI_AdditionalObjectService(this);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description queries the Data Import Settings custom setting to determine what type of field mapping to
+    * use.
+    */
+    public static BDI_MappingService getDefaultMappingService() {
+        BDI_MappingService bdiMS;
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        if (dis.Field_Mapping_Method__c == FM_HELP_TEXT) {
+            bdiMS = BDI_MappingServiceHelpText.getInstance();
+        }else if (dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING) {
+            bdiMS = BDI_MappingServiceAdvanced.getInstance();
+        }
+        return bdiMS;
+    }
+
+    /*******************************************************************************************************
+    * @description constructs the soql String to run a Data Import process for list of DataImport ids.
+    * @param dataImportIds list of data import ids to include in query
+    * @return String the soql String
+    */
+    public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
+        List<String> whereClauses = new List<String>{
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
+            'Id =: dataImportIds'
+        };
+
+        return new UTIL_Query()
+            .withSelectFields(listStrDataImportFields)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+            // this ensures consistency for our test code, but also should
+            // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
     }
 
     /*******************************************************************************************************
@@ -54,22 +110,30 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForBatchProcess(Id batchId) {
-        String batchQuery;
-
-        // construct or SOQL for the batch
-        batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-        batchQuery += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
+        List<String> selectClause = new List<String>{
+            String.join(listStrDataImportFields, ','),
+                DATAIMPORT_BATCH_NUMBER_FIELD
+        };
+        String batchIdClause;
 
         if (batchId != null) {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
         } else {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = NULL';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = NULL';
         }
-        // this ensures consistency for our test code, but also should
-        // help users figure out import problems by importing in a consistent order.
-        batchQuery += ' ORDER BY Name ';
-        return batchQuery;
+        List<String> whereClauses = new List<String>{
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
+            batchIdClause
+        };
+
+        return new UTIL_Query()
+            .withSelectFields(selectClause)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+                // this ensures consistency for our test code, but also should
+                // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
     }
 
     /*******************************************************************************************************
@@ -83,7 +147,7 @@ global with sharing class BDI_DataImportService {
             DataImportBatch__c currentBatch = dataImportBatches[0];
             return currentBatch;
         } else {
-            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));   
         }
     }
 
@@ -318,6 +382,11 @@ global with sharing class BDI_DataImportService {
     private BDI_ContactService contactService { get; private set; }
 
     /*******************************************************************************************************
+    * @description holds the Additional Object Service class for use during processing
+    */
+    private BDI_AdditionalObjectService additionalObjectService { get; private set; }
+
+    /*******************************************************************************************************
     * @description whether the Account Custom Unique ID field is in our account matching rules
     */
     private Boolean isCustomIdInAccountMatchRules {
@@ -455,59 +524,54 @@ global with sharing class BDI_DataImportService {
         return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
-    /*******************************************************************************************************
-    * @description The real work gets done here! Given a list of di records, process them.
-    * @param apexJobId the apexJob that this is executing under
-    * @param diSettings the settings to control processing behavior
-    * @param listDI a list of Data Import records to import
-    * @param isDryRun whether to run in Dry Run mode or commit records.
-    * @return void
-    */
-    public static void execute(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports,
-        Boolean isDryRun) {
-
-        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun);
-        dataImportService.process(apexJobId, dataImportSettings, dataImports);
-    }
+    /**
+     * @description Instance of BDI_FieldLevelSecurityService used to perform
+     * Field Level Security validation and temporarily store results to be used in
+     * further processing (writing exceptions to DataImport records, etc.)
+     */
+    private BDI_DataImportFLSService flsService;
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
-    * @param diSettings the settings to control processing behavior
-    * @param listDI a list of Data Import records to import
-    * @return void
+    * @param dataImportSettings the settings to control processing behavior
+    * @param dataImports a list of Data Import records to import
     */
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
+        // All data imports not meeting custom criteria will be filtered out before processing.
+        List<DataImport__c> filteredDataImports = shouldProcess(dataImports);
+
+        if (filteredDataImports.isEmpty()) {
+            return;
+        }
 
         // initialize our performance logger
-        perfLogger = new BDI_PerfLogger(dataImports[0].NPSP_Data_Import_Batch__c, dataImports.size());
+        perfLogger = new BDI_PerfLogger(filteredDataImports[0].NPSP_Data_Import_Batch__c, filteredDataImports.size());
         BDI_PerfLogger.PerfLog pl;
 
         SavePoint sp = Database.setSavepoint();
 
         try {
-            this.listDI = dataImports;
             this.diSettings = dataImportSettings;
 
-            // list of populated data import fields
-            Set<String> populatedDataImportFieldSet = new Set<String>();
-
             // first set a clean state for each DI
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : filteredDataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
                 dataImport.FailureInformation__c = null;
-
-                // collect populated DI fields to use for later mapping
-                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
-                populatedDataImportFieldSet.addAll(new List<String>(populatedFieldsMap.keySet()));
             }
 
-            populatedDataImportFields = new List<String>(populatedDataImportFieldSet);
-            for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
-                populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
-            }
+            this.flsService = new BDI_DataImportFLSService(
+                    filteredDataImports,
+                    mappingService,
+                    getFieldAccessLevelsToValidate()
+            );
+
+            // From this point forward, only operate on the Data Import records that
+            // passed FLS validation.  Records that did not pass FLS validation will be
+            // updated with their respective FLS exceptions at the end of this block
+            this.listDI = flsService.getValidRecords();
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -541,6 +605,12 @@ global with sharing class BDI_DataImportService {
             importCampaignMembers();
             pl.stop();
 
+            if (additionalObjectService != null && isDryRun == false) {
+                pl = perfLogger.newPerfLog('importAdditionalObjects');
+                additionalObjectService.importAdditionalObjects();
+                pl.stop();
+            }
+
             pl = perfLogger.newPerfLog('updateDIStatuses');
             updateDIStatuses(apexJobId);
             pl.stop();
@@ -548,6 +618,8 @@ global with sharing class BDI_DataImportService {
             pl = perfLogger.newPerfLog('customPostProcess');
             customPostProcess();
             pl.stop();
+
+            logFlsExceptions(apexJobId);
 
         } catch (Exception e) {
             // we should only hit this exception if a truly unexpected runtime
@@ -564,11 +636,12 @@ global with sharing class BDI_DataImportService {
             // update all the di's with errors with the error state.
             // those di's without specific errors will get the exception's error
             List<DataImport__c> dataImportErrors = new List<DataImport__c>();
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : listDI) {
                 dataImportErrors.add(new DataImport__c(
                     Id = dataImport.Id,
                     Status__c = statusDIFailed(),
-                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ? dataImport.FailureInformation__c : e.getMessage(),
+                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ? 
+                        dataImport.FailureInformation__c : e.getMessage(),
                     ApexJobId__c = apexJobId
                 ));
             }
@@ -582,6 +655,92 @@ global with sharing class BDI_DataImportService {
             perfLogger.stop();
             perfLogger.save();
         }
+    }
+
+    /**
+     * @description Before processing data import records, this method filters out any data imports that do not meet
+     * custom criteria that applies to all data imports before allowing them to be processed.
+     * @param dataImports {List<DataImport__c>} List of data import records to be filtered
+     *
+     * @return List<DataImport__c>
+    */
+    private List<DataImport__c> shouldProcess(List<DataImport__c> dataImports) {
+        List<DataImport__c> dataImportsToProcess = new List<DataImport__c>();
+
+        for (DataImport__c dataImport : dataImports) {
+            /* Use a single boolean to determine if each data import should be processed. If new criteria is added
+            * it can be added to isSuccessfulPayment using conditional operators. */
+            Boolean shouldProcess = isSuccessfulPayment(dataImport);
+
+            if (shouldProcess) {
+                dataImportsToProcess.add(dataImport);
+            }
+        }
+
+        return dataImportsToProcess;
+    }
+
+    /**
+     * @description Checks a collection of data imports and returns a filtered list of only those data import records
+     * that have been successfully charged by payment services or those with a blank payment status which were not
+     * sent to payment services because a credit card charge was not required.  Also allow processing of all ACH
+     * Payment Types since we do need to process DI for Elevate ACH payments of several payment statuses.
+     *
+     * @param di DataImport__c record to be filtered
+     * @return Boolean
+     */
+    private Boolean isSuccessfulPayment(DataImport__c di) {
+        String paymentStatus = di.Payment_Status__c;
+
+        return String.isBlank(paymentStatus) || 
+            di.Payment_Status__c.equalsIgnoreCase(GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()) ||
+                (di.Payment_Method__c == ACH_PAYMENT_METHOD && di.Payment_Elevate_ID__c != null);
+    }
+
+    /**
+     * @description Provides the access levels that should be validated depending on whether
+     * dry run is enabled.
+     *
+     * @return Set<BDI_DataImportFLSService.AccessLevel>
+     */
+    private Set<BDI_DataImportFLSService.AccessLevel> getFieldAccessLevelsToValidate() {
+        Set<BDI_DataImportFLSService.AccessLevel> fieldAccessLevelsToValidate =
+                new Set<BDI_DataImportFLSService.AccessLevel>{
+                        BDI_DataImportFLSService.AccessLevel.VALIDATE_READ
+                };
+
+        if (!isDryRun) {
+            fieldAccessLevelsToValidate.add(
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE);
+            fieldAccessLevelsToValidate.add(
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE);
+        }
+        return fieldAccessLevelsToValidate;
+    }
+
+
+    /**
+     * @description Stamps Data Import records with their FLS exception details.
+     *
+     * @param dataImportsWithFlsExceptions
+     * @param apexJobId
+     */
+    private void logFlsExceptions(Id apexJobId) {
+        List<DataImport__c> dataImportsWithFlsExceptions = flsService.getInvalidRecords();
+        for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
+            dataImport.Status__c = statusDIFailed();
+            dataImport.ApexJobId__c = apexJobId;
+            List<String> invalidFields =
+                    flsService.getQualifiedInvalidFieldNamesById(dataImport.Id);
+            String errMsgLabel = isDryRun ?
+                    System.Label.flsReadAccessError : System.Label.flsError;
+            List<String> errorMsgObjects = new List<String>{
+                    String.join(invalidFields, ', ')
+            };
+            String errMessage = String.format(errMsgLabel, errorMsgObjects);
+            dataImport.FailureInformation__c = errMessage;
+        }
+        UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
     }
 
     /*******************************************************************************************************
@@ -675,7 +834,7 @@ global with sharing class BDI_DataImportService {
     * @description Copies the specific error into the provide dataImport.
     * @param di the DataImport record
     * @param strError the error message
-    * @param strStatusField the developer name of an additional status field to save the error message in
+    * @param dataImportServicetatusField the developer name of an additional status field to save the error message in
     * @return void
     */
     public void LogBDIError(DataImport__c dataImport, String errorMessage, String statusField) {
@@ -685,11 +844,6 @@ global with sharing class BDI_DataImportService {
             dataImport.put(statusField, errorMessage.left(255));
         }
     }
-
-    /*******************************************************************************************************
-    * @description holds list of populated Data Import fields for Data Import records in current Batch
-    */
-    public static List<String> populatedDataImportFields = new List<String>();
 
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
@@ -707,79 +861,9 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description our exception object for Field Level Security errors.
-    */
-    private class FLSException extends Exception {}
-
-    /*******************************************************************************************************
     * @description our exception object for Data Import errors.
     */
     private class BDIException extends Exception {}
-
-    /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    */
-    public static Boolean failFieldLevelSecurity = false;
-
-    /*******************************************************************************************************
-    * @description returns the target object (api name) for a given Data Import field
-    * @param sourceFieldName the api name of the Data Import field
-    * @return String the api name of the target object for that field, derived from the help text
-    */
-    public static String getTargetObject(String sourceFieldName) {
-
-        // record type is special-cased by BDI so in some orgs, it has no help text
-        // BGE needs this object for display purposes only
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            return 'Opportunity';
-        }
-
-        sourceFieldName = sourceFieldName.toLowerCase();
-        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
-        String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
-
-        switch on targetObject {
-            when 'Account', 'Contact', 'Opportunity' {
-                return targetObject;
-            }
-            when 'Payment' {
-                return 'npe01__OppPayment__c';
-            }
-            when 'Household' {
-                return 'npo02__Household__c';
-            }
-            when 'Address' {
-                return UTIL_Namespace.StrTokenNSPrefix('Address__c');
-            }
-            when else {
-                // any unhandled object names in help text will be ignored but shouldn't throw a blocking error
-                return targetObject;
-            }
-        }
-
-    }
-
-    /*******************************************************************************************************
-    * @description returns the target field api name for a given Data Import field
-    * @param sourceFieldName the api name of the Data Import field
-    * @return String the api name of the target field for that source field, derived from the help text
-    */
-    public static String getTargetField(String sourceFieldName) {
-
-        // record type is special-cased by BDI so in some orgs, it has no help text
-        // BGE needs this for display purposes only
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            return 'RecordTypeId';
-        }
-
-        sourceFieldName = sourceFieldName.toLowerCase();
-        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
-        String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
-
-        return targetField;
-    }
 
     /*******************************************************************************************************
     * @description returns a map of fields from the DataImport to fields for the given 'object',
@@ -788,92 +872,34 @@ global with sharing class BDI_DataImportService {
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    *
+    * TODO: Probably deprecate this method in favor of instance variant below
     */
-    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-
-        Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
-
-        for (String dataImportField : dataImportFields) {
-
-            DescribeFieldResult fieldDescribe =
-                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
-            String helpText = fieldDescribe.getInlineHelpText();
-
-            if (helpText != null && helpText != '') {
-                List<String> parts = helpText.split('\\.', 2);
-
-                if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
-                    String fieldName = parts[1];
-                    //if we aren't in the npsp namespace, remove those tokens from help text
-                    //also removes tokens from actual detected namespace, if we happen to be
-                    //in a non-npsp namespace
-                    if (UTIL_Namespace.getNamespace() != 'npsp') {
-                        String fieldNameOld = fieldName;
-                        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
-                        //if we have a detected namespace, and removed a namespace from the current field
-                        //add the current namespace back in, allowing this code to run in any namespace
-                        if (fieldName != fieldNameOld && UTIL_Namespace.getNamespace() != '') {
-                            fieldName = UTIL_Namespace.StrAllNSPrefix(fieldName);
-                        }
-                    }
-
-                    // make sure they have permissions to modify the target field
-                    // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                        fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
-                        Set<String> setAuditFields = new Set<String>{
-                            'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                        };
-                        Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
-                        Boolean isCreatable = fieldDescribe.isCreateable();
-                        Boolean isUpdateable = fieldDescribe.isUpdateable();
-                        Boolean isPopulated = populatedDataImportFields.contains(dataImportField);
-
-                        if (failFieldLevelSecurity ||
-                            fieldDescribe == null ||
-                            (!isCreatable && isPopulated) ||
-                            (!isAuditField && !isUpdateable && isPopulated)) {
-                                throw (new FLSException(
-                                    String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
-                                )));
-                        }
-                    }
-
-                    dataImportFieldToTargetField.put(dataImportField, fieldName);
-                }
-            }
-        }
-
-        if (isCurrencyMapped(targetObjectName)) {
-            addCurrencyIsoCode(dataImportFieldToTargetField);
-        }
-
-        return dataImportFieldToTargetField;
+    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, 
+                String targetObjectName, 
+                List<String> dataImportFields) {
+        
+        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultMappingService());
+        return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
     /*******************************************************************************************************
-    * @description Checks if this is one of the objects where we want to have a currency mapped.
-    * As of now, that object is Opportunity. Payment CurrencyISOCode is inherited from the Opportunity.
-    * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
-    * @return Boolean if the strBaseObj is an Opportunity.
+    * @description returns a map of fields from the DataImport to fields for the given 'object',
+    * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
+    *
+    * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
+    * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @param dataImportFields the DataImport fields to consider
+    * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
-    private static Boolean isCurrencyMapped(String objectName) {
-        return objectName.equalsIgnoreCase('Opportunity');
-    }
+    public Map<String, String> mapDataImportFields(String dataImportObjectName, 
+                String targetObjectName, 
+                List<String> dataImportFields) {
+        
+        Map<String, String> targetFieldByDIField = mappingService.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
-    /*******************************************************************************************************
-    * @description Adds the currencyisocode to the Map passed as parameter.
-    * @param Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
-    * @return void.
-    */
-    private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
-
-        // handle multicurrency if it's enabled
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            fieldMap.put('currencyisocode', 'CurrencyIsoCode');
-        }
-    }
+        return targetFieldByDIField;
+    }    
 
     /*******************************************************************************************************
     * @description Copies non-null DI field values to the destination object, given the provided mapping.
@@ -884,7 +910,9 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static Boolean isCopiedDIField(DataImport__c dataImport, String dataImportField, SObject destinationRecord,
+    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport,
+        String dataImportField, 
+        SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
 
         Object value = dataImport.get(dataImportField);
@@ -960,7 +988,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // get our mapping of household custom fields
-        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToHHField = mapDataImportFields('Household', 'Account', listStrDataImportFields);
 
         // bail out if no custom fields
         if (mapDIFieldToHHField.size() == 0) {
@@ -985,7 +1013,7 @@ global with sharing class BDI_DataImportService {
             Boolean isModified = false;
             Account household = new Account(Id = dataImport.HouseholdAccountImported__c);
             for (String dataImportField : mapDIFieldToHHField.keySet()) {
-                if (isCopiedDIField(dataImport, dataImportField, household, mapDIFieldToHHField)) {
+                if (copyDIFieldToDestinationRecord(dataImport, dataImportField, household, mapDIFieldToHHField)) {
                     isModified = true;
                 }
             }
@@ -1120,7 +1148,7 @@ global with sharing class BDI_DataImportService {
 
             Boolean isModified = false;
             for (String strDIField : mapDIFieldToA1Field.keySet()) {
-                if (isCopiedDIField(dataImport, strDIField, acc, mapDIFieldToA1Field)) {
+                if (copyDIFieldToDestinationRecord(dataImport, strDIField, acc, mapDIFieldToA1Field)) {
                     isModified = true;
                 }
             }
@@ -1191,7 +1219,7 @@ global with sharing class BDI_DataImportService {
 
             Boolean isModified = false;
             for (String strDIField : mapDIFieldToA2Field.keySet()) {
-                if (isCopiedDIField(dataImport, strDIField, acc, mapDIFieldToA2Field)) {
+                if (copyDIFieldToDestinationRecord(dataImport, strDIField, acc, mapDIFieldToA2Field)) {
                     isModified = true;
                 }
             }
@@ -1510,7 +1538,7 @@ global with sharing class BDI_DataImportService {
     private Map<String, String> mapDIFieldToA1Field {
         get {
             if (mapDIFieldToA1Field == null) {
-                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject(
+                mapDIFieldToA1Field = mapDataImportFields(
                     'Account1', 'Account', BDI_DataImportService.listStrDataImportFields
                 );
             }
@@ -1526,7 +1554,7 @@ global with sharing class BDI_DataImportService {
         get {
             if (mapDIFieldToA2Field == null) {
                 mapDIFieldToA2Field =
-                    BDI_DataImportService.mapFieldsForDIObject(
+                    mapDataImportFields(
                         'Account2', 'Account', BDI_DataImportService.listStrDataImportFields
                     );
             }
@@ -1583,8 +1611,7 @@ global with sharing class BDI_DataImportService {
         }
 
         Map<String, String> mapDIFieldToAddrField =
-            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
-
+            mapDataImportFields('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
         List<Address__c> addressesToInsert = new List<Address__c>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
@@ -1601,7 +1628,7 @@ global with sharing class BDI_DataImportService {
             address.Household_Account__c = (con != null ? con.AccountId : null);
             Boolean isEmpty = true;
             for (String dataImportField : mapDIFieldToAddrField.keySet()) {
-                if (isCopiedDIField(dataImport, dataImportField, address, mapDIFieldToAddrField)) {
+                if (copyDIFieldToDestinationRecord(dataImport, dataImportField, address, mapDIFieldToAddrField)) {
                     isEmpty = false;
                 }
             }
@@ -1990,5 +2017,30 @@ global with sharing class BDI_DataImportService {
         // process dmls for CMs
         TDTM_TriggerHandler.processDML(newCmWrapper);
     }
+
+    /*******************************************************************************************************
+    * @description loops through fields provided in Map and determines if any of them have a value.  If at least
+    * one field does, then it returns true.
+    * @param di the data import record to check
+    * @param diFieldToTargetFieldMap the mapping of DI field to target field that will be evaluated.
+    * @return Boolean whether any fields were populated
+    */
+    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di, 
+                                                            Map<String,String> diFieldToTargetFieldMap) {
+        Boolean isPopulated = false;
+        for (String diField : diFieldToTargetFieldMap.keySet()){
+            if (di.get(diField) != null) {
+                isPopulated = true;
+                break;
+            }
+        }
+        
+        return isPopulated;
+    }
+
+    /*******************************************************************************************************
+    * @description our exception object for Field Level Security errors.
+    */
+    public class FLSException extends Exception {}
 
 }
