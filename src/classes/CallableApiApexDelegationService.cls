@@ -43,15 +43,17 @@ public inherited sharing class CallableApiApexDelegationService {
     * @return Object returned is String with CronTrigger.Id
     ********************************************************************************************************/
     public static Object handleApexScheduleJob(Map<String, Object> params) {
-        // This method schedules the specified Schedulable class using the specified job name & cron expression.
-        // It should only be used for Schedulable classes that are in the NPSP Managed Package.
-        // It returns the Job ID of the Scheduled Job.
-
         CallableApiParameters paramService = new CallableApiParameters(params);
 
-        String jobName = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_NAME);
-        String cronExpression = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CRON_EXPRESSION);
-        String apexClass = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CLASS);
+        String jobName = paramService
+            .withRequiredParamCheck()
+            .getString(CallableApiParameters.PARAM_SCHEDULED_JOB_NAME);
+        String cronExpression = paramService
+            .withRequiredParamCheck()
+            .getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CRON_EXPRESSION);
+        String apexClass = paramService
+            .withRequiredParamCheck()
+            .getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CLASS);
 
         Type apexClassType = Type.forName(apexClass);
         if (apexClassType == null) {
