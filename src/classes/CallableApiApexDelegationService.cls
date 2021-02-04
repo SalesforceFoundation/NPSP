@@ -44,7 +44,8 @@ public inherited sharing class CallableApiApexDelegationService {
     ********************************************************************************************************/
     public static Object handleApexScheduleJob(Map<String, Object> params) {
         CallableApiParameters paramService = new CallableApiParameters(params)
-            .withRequiredParamCheck();
+            .withRequiredParamCheck()
+            .withEmptyStringParamCheck();
 
         String jobName = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_NAME);
         String cronExpression = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CRON_EXPRESSION);

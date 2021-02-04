@@ -75,30 +75,67 @@ private with sharing class CallableApiApexDelegationService_TEST {
      */
     @IsTest
     private static void shouldThrowErrorForNonExistentApexClass() {
-        String errorMessage = '';
         String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
+        String jobName = 'JOB.SCHEDULE TEST';
+        String className = 'DOES_NOT_EXIST';
 
         Integer nextYear = Date.today().year() + 1;
         String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
 
+        String errorMessage = getErrorMessageFromCallableAPI(jobName, cronExpression, className);
+        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for nonexistent apex class');
+    }
+
+    /**
+     * @description Verifies meaningful error is thrown if nonexistent Apex Class is used for Job.Schedule
+     */
+    @IsTest
+    private static void shouldThrowErrorForEmptyJobName() {
+        String expectedMessagePortion = (System.Label.CallableApiParameterError).split('\\{0\\}')[0].trim();
+        String jobName = '   ';
+        String className = 'CRLP_Account_BATCH';
+
+        Integer nextYear = Date.today().year() + 1;
+        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
+
+        String errorMessage = getErrorMessageFromCallableAPI(jobName, cronExpression, className);
+        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for blank job name');
+    }
+
+    /**
+     * @description Verifies meaningful error is thrown if nonexistent Apex Class is used for Job.Schedule
+     */
+    @IsTest
+    private static void shouldThrowErrorForBlankCronExpression() {
+        String expectedMessagePortion = (System.Label.CallableApiParameterError).split('\\{0\\}')[0].trim();
+        String jobName = 'JOB.SCHEDULE TEST';
+        String className = 'CRLP_Account_BATCH';
+        String cronExpression = '   ';
+
+        String errorMessage = getErrorMessageFromCallableAPI(jobName, cronExpression, className);
+        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for blank cron expression');
+    }
+
+    // helpers
+    private static String getErrorMessageFromCallableAPI(String jobName, String cronExpression, String apexClass) {
+        String errorMessage = '';
+
         Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
         Map<String, Object> args = new Map<String, Object>{
-                'JobName' => 'JOB.SCHEDULE TEST',
+                'JobName' => jobName,
                 'CronExpression' => cronExpression,
-                'ApexClass' => 'DOES_NOT_EXIST'
+                'ApexClass' => apexClass
         };
 
         Test.startTest();
-
         try {
             callableApi.call(JOB_SCHEDULE_ACTION, args);
 
-        } catch(Callable_API.MalformedMethodInvocationException apiException){
-            errorMessage = apiException.getMessage();
+        } catch(Exception e){
+            errorMessage = e.getMessage();
         }
-
         Test.stopTest();
 
-        System.assert(errorMessage.contains(expectedMessagePortion), 'No exception thrown for nonexistent apex class');
+        return errorMessage;
     }
 }
