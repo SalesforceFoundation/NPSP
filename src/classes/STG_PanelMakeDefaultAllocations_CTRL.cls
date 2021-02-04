@@ -83,7 +83,7 @@ public with sharing class STG_PanelMakeDefaultAllocations_CTRL extends STG_Panel
         String allocationObject = Schema.SObjectType.Allocation__c.getName();
         String gauObject = Schema.SObjectType.General_Accounting_Unit__c.getName();
 
-        return UTIL_Permissions.canRead(oppObject, false) &&
+        return UTIL_Permissions.canUpdate(oppObject, false) &&
             UTIL_Permissions.canCreate(allocationObject, false) &&
             UTIL_Permissions.canRead(gauObject, false);
     }
