@@ -61,6 +61,17 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     */
     public override String idPanel() { return 'idPanelRDBatch'; }
 
+    /**
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
+    }
+
     /***
     * @description Batch class name
     */
@@ -133,6 +144,19 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
+    }
+
+    /**
+    * @description Check if the running user has update access to the Opportunity sObject and Recurring Donation sObject
+    * Contact sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String oppObject = Schema.SObjectType.Opportunity.getName();
+        String rdObject = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
+
+        return UTIL_Permissions.canUpdate(oppObject, false) &&
+        UTIL_Permissions.canUpdate(rdObject, false);
     }
 
 }
