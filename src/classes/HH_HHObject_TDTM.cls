@@ -45,9 +45,18 @@ public class HH_HHObject_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
-        HH_HouseholdNaming.handleHHNameUpdates(newlist, oldlist, triggerAction, objResult);
-        return null;
 
+        List<npo02__Household__c> newHouseholds = (List<npo02__Household__c>) newlist;
+        List<npo02__Household__c> oldHouseholds = (List<npo02__Household__c>) oldlist;
+        Households households = new Households(newHouseholds, oldHouseholds);
+        switch on triggerAction {
+            when BeforeUpdate {
+                households.onBeforeUpdate();
+            }
+            when AfterUpdate {
+                households.onAfterUpdate();
+            }
+        }
+        return null;
     }
 }

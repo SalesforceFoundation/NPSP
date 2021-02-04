@@ -37,6 +37,8 @@
 */
 public without sharing class HH_HouseholdNaming {
 
+    private static final String defaultNamingService = 'HH_NameSpec';
+
     /*******************************************************************************************************
     * @description future method to update the household names for the specified households
     * @param hhids the list of household Id's (either Household__c or Account Id's)
@@ -86,17 +88,7 @@ public without sharing class HH_HouseholdNaming {
         hhupdatelist.addAll(listHHAcct);
 
         map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
-
-        //sort contacts by household
-        for (Contact c : contactlist){
-            if(!hhIDContactMap.containskey(c.hhId__c)){
-                hhIDContactMap.put(c.hhId__c, new list<Contact>{c});
-            }
-            else{
-                list<Contact> clist = hhIDContactMap.get(c.hhId__c);
-                clist.add(c);
-            }
-        }
+        buildHHIdtoContactsMap(contactlist, hhIDContactMap);
 
         //loop through the households needing name changes, if necessary, make them.
         for (SObject h : hhupdatelist){
@@ -104,31 +96,49 @@ public without sharing class HH_HouseholdNaming {
             list<Contact> listCon = hhIDContactMap.get(hhId);
 
             if (isAutomaticNaming()) {
-	            string customnameparam = '';
-	            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
-	                customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
-	            }
-
-	            if (!customnameparam.contains('Name'))
-	                h.put('Name', getHHName(listCon));
-
-	            if (!customnameparam.contains('Formal_Greeting__c'))
-	                h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
-
-	            if (!customnameparam.contains('Informal_Greeting__c'))
-	                h.put('npo02__Informal_Greeting__c', getInformalName(listCon));
+                setHouseholdNameFields(h, listCon);
             }
 
             // now we also store the number of members on the Household!
-            h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'), listCon != null ? listCon.size() : 0);
+            h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
+                    listCon != null ? listCon.size() : 0);
         }
 
         if (!hhupdatelist.isEmpty()) {
-        	// all or nothing, so errors not lost
+            // all or nothing, so errors not lost
             UTIL_DMLService.updateRecords(hhupdatelist);
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+    }
+
+    private void buildHHIdtoContactsMap(List<Contact> contactlist, Map<Id, List<Contact>> hhIDContactMap) {
+        for (Contact c : contactlist) {
+            if (!hhIDContactMap.containskey(c.hhId__c)) {
+                hhIDContactMap.put(c.hhId__c, new list<Contact>{
+                        c
+                });
+            } else {
+                list<Contact> clist = hhIDContactMap.get(c.hhId__c);
+                clist.add(c);
+            }
+        }
+    }
+
+    private void setHouseholdNameFields(SObject h, List<Contact> listCon) {
+        string customnameparam = '';
+	            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
+            customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
+        }
+
+        if (!customnameparam.contains('Name'))
+            h.put('Name', getHHName(listCon));
+
+        if (!customnameparam.contains('Formal_Greeting__c'))
+            h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
+
+        if (!customnameparam.contains('Informal_Greeting__c'))
+            h.put('npo02__Informal_Greeting__c', getInformalName(listCon));
     }
 
     /*******************************************************************************************************
@@ -151,10 +161,10 @@ public without sharing class HH_HouseholdNaming {
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
         string strSoql = strContactSelectStmtAllNamingFields;
         string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-        
+
         strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
-            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
-        
+                ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
+
         return Database.Query(strSoql);
     }
 
@@ -174,10 +184,13 @@ public without sharing class HH_HouseholdNaming {
     /*******************************************************************************************************
     * @description our cached copy of the Household Naming Settings
     */
-    private static Household_Naming_Settings__c hns {
+    private static Household_Naming_Settings__c namingSettings {
         get {
-            if (hns == null) hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
-            return hns;
+            if (namingSettings == null) {
+                namingSettings =
+                        UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            }
+            return namingSettings;
         }
         set;
     }
@@ -185,22 +198,30 @@ public without sharing class HH_HouseholdNaming {
     /*******************************************************************************************************
     * @description the class object that supports the HH_INaming interface
     */
-    public static HH_INaming iNaming {
-    	get {
-    		if (iNaming == null) {
-		        string strClass = hns.Implementing_Class__c;
-		        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';
-		        Type classType = Type.forName(strClass);
-		        if (classType != null) {
-		            Object classInstance = classType.newInstance();
-		            if (classInstance instanceof HH_INaming) {
-		                iNaming = (HH_INaming)classInstance;
-		            }
-		        }
-    		}
-    		return iNaming;
-    	}
-    	set;
+    static HH_INaming namingService {
+        get {
+            if (namingService == null) {
+                String implementingClass = getImplementingClass();
+
+                Type classType = Type.forName(implementingClass);
+                if (classType != null) {
+                    Object classInstance = classType.newInstance();
+                    if (classInstance instanceof HH_INaming) {
+                        namingService = (HH_INaming) classInstance;
+                    }
+                }
+            }
+            return namingService;
+        }
+        set;
+    }
+
+    private static String getImplementingClass() {
+        String implementingClass = namingSettings.Implementing_Class__c;
+        if (implementingClass == null || implementingClass == '') {
+            implementingClass = defaultNamingService;
+        }
+        return implementingClass;
     }
 
     /*******************************************************************************************************
@@ -229,7 +250,7 @@ public without sharing class HH_HouseholdNaming {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
                 listCon.add(con);
     	}
-        return iNaming.getHouseholdName(listCon);
+        return namingService.getHouseholdName(listCon);
     }
 
     /*******************************************************************************************************
@@ -245,7 +266,7 @@ public without sharing class HH_HouseholdNaming {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c'))
                 listCon.add(con);
         }
-        return iNaming.getHouseholdInformalGreeting(listCon);
+        return namingService.getHouseholdInformalGreeting(listCon);
     }
 
     /*******************************************************************************************************
@@ -261,7 +282,7 @@ public without sharing class HH_HouseholdNaming {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
                 listCon.add(con);
         }
-        return iNaming.getHouseholdFormalGreeting(listCon);
+        return namingService.getHouseholdFormalGreeting(listCon);
     }
 
     /*******************************************************************************************************
@@ -274,8 +295,8 @@ public without sharing class HH_HouseholdNaming {
         if (!isAutomaticNaming()) {
             return new Set<String>();
         }
-    
-        Set<String> fieldNames = iNaming.setHouseholdNameFieldsOnContact();
+
+        Set<String> fieldNames = namingService.setHouseholdNameFieldsOnContact();
         return fieldNames == null ? new Set<String>() : fieldNames;
     }
 
@@ -319,127 +340,153 @@ public without sharing class HH_HouseholdNaming {
     */
     public string strContactSelectStmtAllNamingFields {
         get {
-	        if (strContactSelectStmtAllNamingFields == null) {
-		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+            if (strContactSelectStmtAllNamingFields == null) {
+                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
                 String[] selectFields = new String[]{
-                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
+                        'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
                 };
                 selectFields.addAll(getHouseholdNamingContactFields());
 
                 strContactSelectStmtAllNamingFields = new UTIL_Query()
-                    .withSelectFields(selectFields)
-                    .withToLabelSalutation()
-                    .withFrom('Contact')
-                    .build();
-	        }
-	        return strContactSelectStmtAllNamingFields;
+                        .withSelectFields(selectFields)
+                        .withToLabelSalutation()
+                        .withFrom('Contact')
+                        .build();
+            }
+            return strContactSelectStmtAllNamingFields;
         }
         private set;
     }
 
-    /*******************************************************************************************************
-    * @description pseudo-trigger handler for dealing with changes to the system name fields on the Household
-    * in case they are changed and require recalculating the Household name and greetings.
-    * @param listNew the list of Households/Accounts from trigger new. 
-    * @param listOld the list of Households/Accounts from trigger old. 
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Households/Accounts 
-    * @return void
-    */
-    public static void handleHHNameUpdates(List<SObject> newlist, List<SObject> oldlist,
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    String nameReplacementText = System.Label.npo02.NameReplacementText;
+    public Boolean needsNamingFieldsUpdated(SObject h, SObject oldRecord) {
+        if (h.get('Name') == nameReplacementText) {
+            return true;
+        } else if (h.get('npo02__Informal_Greeting__c') == nameReplacementText) {
+            return true;
+        } else if (h.get('npo02__Formal_Greeting__c') == nameReplacementText) {
+            return true;
+        } else if (isSystemCustomNamingChanged(h, oldRecord)) {
+            return true;
+        } else if (h.getSObjectType() == Account.sObjectType &&
+                isOneToOneContactChanged(h, oldRecord)) {
+            return true;
+        }
+        return false;
+    }
 
-        list<SObject> listHHNew = newlist;
-        list<SObject> listHHOld = oldlist;
-        map<ID, SObject> mapIdHHOld = new map<ID, SObject>(listHHOld);
+    private Boolean isOneToOneContactChanged(SObject h, SObject oldRecord) {
+        return h.get('npe01__One2OneContact__c') != oldRecord.get('npe01__One2OneContact__c');
+    }
 
-        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+    private Boolean isSystemCustomNamingChanged(SObject h, SObject oldRecord) {
+        return h.get('npo02__SYSTEM_CUSTOM_NAMING__c') !=
+                oldRecord.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+    }
 
-        //updates household records to indicate where/if user changes to the household record are happening
-        //and marks them as such so they won't be updated
-        //need to use a process control class to avoid recursion when async updates occur
-        //in non async updates, this won't fire again, so we don't need to worry
-        if (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)  &&
-            (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
-
-            // no need to do any of this name checking if we aren't using auto household naming.
-            // even though UpdateNames() keeps Number of Household Members updated, there is no need
-            // to call it from here which is just trying to detect manual hh name changes.
-            
-            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
-                // AfterUpdate data
-                list<id> hhList = new list<id>();
-
-                for (SObject h : listHHNew) {
-                    string customname = '';
-
-                    if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') == null)
-                        customname = ';';
-                    else
-                        customname = h.get('npo02__SYSTEM_CUSTOM_NAMING__c') + ';';
-
-                    // BeforeUpdate data
-                    list<string> customnamelist = new list<string>();
-                    set<string> customnameset = new set<string>();
-                    customnamelist = customname.split(';');
-                    customnameset.addall(customnamelist);
-
-                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                    	string hName = (string)h.get('Name');
-                        if (hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText) {
-                            if (customnameset.contains('Name')) {
-                                customname = customname.replace('Name;', ';');
-                            }
-                            h.put('Name', system.Label.npo02.NameReplacementText);
-                        } else if (hName != mapIdHHOld.get(h.id).get('Name') && !customnameset.contains('Name')) {
-                            customname += 'Name' + ';';
-                        }
-
-                        string informalGreeting = (string)h.get('npo02__Informal_Greeting__c');
-                        if (informalGreeting == null || informalGreeting == '' || informalGreeting == system.Label.npo02.NameReplacementText) {
-                            if (customnameset.contains('Informal_Greeting__c')) {
-                                customname = customname.replace('Informal_Greeting__c;', ';');
-                            }
-                            h.put('npo02__Informal_Greeting__c', system.Label.npo02.NameReplacementText);
-                        } else if (informalGreeting != mapIdHHOld.get(h.id).get('npo02__Informal_Greeting__c') && 
-                            !customnameset.contains('Informal_Greeting__c')) {
-                            customname += 'Informal_Greeting__c' + ';';
-                        }
-
-                        string formalGreeting = (string)h.get('npo02__Formal_Greeting__c');
-                        if (formalGreeting == null || formalGreeting == '' || formalGreeting == system.Label.npo02.NameReplacementText) {
-                            if (customnameset.contains('Formal_Greeting__c')) {
-                                customname = customname.replace('Formal_Greeting__c;', ';');
-                            }
-                            h.put('npo02__Formal_Greeting__c', system.Label.npo02.NameReplacementText);
-                        } else if (formalGreeting != mapIdHHOld.get(h.id).get('npo02__Formal_Greeting__c') &&
-                            !customnameset.contains('Formal_Greeting__c')) {
-                            customname += 'Formal_Greeting__c' + ';';
-                        }
-                            
-                        h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customname);
-
-                    } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                        if (h.get('Name') == system.Label.npo02.NameReplacementText)
-                           hhList.add(h.id);
-                        else if (h.get('npo02__Informal_Greeting__c') == system.Label.npo02.NameReplacementText)
-                           hhList.add(h.id);
-                        else if (h.get('npo02__Formal_Greeting__c') == system.Label.npo02.NameReplacementText)
-                            hhList.add(h.id);
-                        else if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != mapIdHHOld.get(h.id).get('npo02__SYSTEM_CUSTOM_NAMING__c'))
-                            hhList.add(h.id);
-                        else if (h.getSObjectType() == Account.sObjectType && h.get('npe01__One2OneContact__c') != mapIdHHOld.get(h.id).get('npe01__One2OneContact__c'))
-                            hhList.add(h.id);
-                    }
-                }
-                renameHHAccounts(hhList);
+    public List<Id> getHouseholdsNeedingNameUpdates(List<SObject> records,
+            Map<Id, SObject> oldMap) {
+        List<Id> hhList = new List<Id>();
+        for (SObject h : records) {
+            if (needsNamingFieldsUpdated(h, oldMap.get(h.Id))) {
+                hhList.add(h.Id);
             }
+        }
+        return hhList;
+    }
+
+    public void setHouseholdNameFields(List<SObject> records, Map<Id, SObject> oldMap) {
+        for (SObject h : records) {
+            SObject oldRecord = oldMap.get(h.Id);
+
+            CustomFormat customName = new CustomFormat(h);
+
+            if (isReplaceable(h, 'Name')) {
+                customName.replace('Name;', ';');
+                h.put('Name', nameReplacementText);
+            } else if (isFieldValueChanged(h, 'Name', oldRecord)) {
+                customName.append('Name');
+            }
+
+            if (isReplaceable(h, 'npo02__Informal_Greeting__c')) {
+                customName.replace('Informal_Greeting__c;', ';');
+                h.put('npo02__Informal_Greeting__c', nameReplacementText);
+            } else if (isFieldValueChanged(h, 'npo02__Informal_Greeting__c', oldRecord)) {
+                customName.append('Informal_Greeting__c');
+            }
+
+            if (isReplaceable(h, 'npo02__Formal_Greeting__c')) {
+                customName.replace('Formal_Greeting__c;', ';');
+                h.put('npo02__Formal_Greeting__c', nameReplacementText);
+            } else if (isFieldValueChanged(h, 'npo02__Formal_Greeting__c', oldRecord)) {
+                customName.append('Formal_Greeting__c');
+            }
+
+            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customName.value);
         }
     }
 
+    private Boolean isFieldValueChanged(SObject h, String fieldApiName, SObject oldRecord) {
+        return (String) h.get(fieldApiName) != oldRecord.get(fieldApiName);
+    }
+
+    private Boolean isReplaceable(SObject household, String fieldApiName) {
+        String fieldValue = (String) household.get(fieldApiName);
+        return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText;
+    }
+
+    private class CustomFormat {
+        String value { get; private set; }
+        Set<String> customNameSet {
+            get {
+                return new Set<String>(
+                        new List<String>(
+                                value.split(';')));
+            }
+        }
+        public CustomFormat(SObject h) {
+            this.value = getCustomName(h);
+        }
+
+        private String getCustomName(SObject h) {
+            return h.get('npo02__SYSTEM_CUSTOM_NAMING__c') == null ? ';' :
+                    h.get('npo02__SYSTEM_CUSTOM_NAMING__c') + ';';
+        }
+
+        public void replace(String searchVal, String newVal) {
+            if (customNameSet.contains(searchVal)) {
+                value = value.replace(searchVal, newVal);
+            }
+        }
+
+        public void append(String val) {
+            if (!customNameSet.contains(val)) {
+                value += val + ';';
+            }
+        }
+
+        public Boolean contains(String val) {
+            return this.customNameSet.contains(val);
+        }
+    }
+
+    npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+    public Boolean isAdvancedHouseholdNaming() {
+        return hs != null && hs.npo02__Advanced_Household_Naming__c == true;
+    }
+
     /*******************************************************************************************************
-    * @description for the list of HH AccountId's, update their Household Names
-    * @param accountIds the list of Account (Id's) that need updating.
+    * @description for the list of Household or Account Ids, update their Household Names
+    * @param accountIds the list of Household or Account Ids that need updating.
+    * @return void
+    */
+    public void renameHouseholdAccounts(List<Id> accountIds) {
+        renameHHAccounts(accountIds);
+    }
+
+    /*******************************************************************************************************
+    * @description for the list of Household or Account Ids, update their Household Names
+    * @param accountIds the list of Household or Account Ids that need updating.
     * @return void
     */
     public static void renameHHAccounts(List<Id> accountIds) {
@@ -453,5 +500,5 @@ public without sharing class HH_HouseholdNaming {
         } else {
             HH_HouseholdNaming.FutureUpdateNames(accountIds);
         }
-    }    
+    }
 }

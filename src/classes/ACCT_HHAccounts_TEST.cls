@@ -522,7 +522,7 @@ private with sharing class ACCT_HHAccounts_TEST {
 
         insert listCon;
 
-        // refresh our contacts to get their accounts
+         // refresh our contacts to get their accounts
         listCon = [select Name, FirstName, LastName, AccountId from Contact];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);

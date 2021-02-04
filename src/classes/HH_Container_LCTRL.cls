@@ -518,9 +518,8 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            for (Contact con : listCon) {
-                HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
-            }
+            Contacts contacts = new Contacts(listCon);
+            contacts.copyNamingExclusionsFromCheckboxes();
 
             HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
 

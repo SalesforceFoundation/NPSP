@@ -35,6 +35,7 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
+    HH_HouseholdNaming service = new HH_HouseholdNaming();
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -241,7 +242,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         updatePrimaryContactOnAccount(primaryContactByAccountId);
-        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
+        service.renameHouseholdAccounts(householdIdsToRename);
     }
 
     /**
@@ -280,7 +281,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         updateOneToOneAccounts(oneToOneContactsToUpdate);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         updateHouseholds(householdIdsToUpdate);
-        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
+        service.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(newOwnerContactById);
     }
 
@@ -346,7 +347,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         resetPrimaryContactForAccount(accountIds);
-        HH_HouseholdNaming.renameHHAccounts(accountIds);
+        service.renameHouseholdAccounts(accountIds);
         rollupAccounts(accountIds);
     }
 

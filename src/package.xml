@@ -73,6 +73,7 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>Accounts</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -257,6 +258,7 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>Contacts</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -329,6 +331,7 @@
         <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
+        <members>Households</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -665,6 +668,9 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>fflib_Domain</members>
+        <members>fflib_Objects</members>
+        <members>fflib_SObjects</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -2516,7 +2522,7 @@
         <members>gsChecklistItemExtraFourMinuteVideo</members>
         <members>gsChecklistItemExtraOneMinuteVideo</members>
         <members>gsChecklistItemExtraSixtyMinuteVideo</members>
-        <members>gsChecklistItemExtraTwoMinuteVideo</members>
+        <members>gsChecklistItemExtraTwoMinutesVideo</members>
         <members>gsChecklistItemFundraisingProcessDesc</members>
         <members>gsChecklistItemFundraisingProcessLinkLabel</members>
         <members>gsChecklistItemFundraisingProcessPriBtnLabel</members>
