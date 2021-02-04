@@ -33,7 +33,7 @@
 * @group Settings
 * @description Controller for the Batch Rename Households panel.
 */
-public with sharing class s extends STG_Panel { 
+public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel { 
 
     /**
     * @description The panel's constructor.
