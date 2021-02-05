@@ -291,13 +291,17 @@ public without sharing class HH_HouseholdNaming {
     * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
+        Set<String> fieldNames = getFieldNames();
 
-        if (!isAutomaticNaming()) {
+        if (!isAutomaticNaming() || fieldNames == null) {
             return new Set<String>();
+        } else {
+            return fieldNames;
         }
+    }
 
-        Set<String> fieldNames = namingService.setHouseholdNameFieldsOnContact();
-        return fieldNames == null ? new Set<String>() : fieldNames;
+    private Set<String> getFieldNames() {
+        return namingService.setHouseholdNameFieldsOnContact();
     }
 
     /*******************************************************************************************************
@@ -312,26 +316,6 @@ public without sharing class HH_HouseholdNaming {
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(strSoql, isActivation);
         integer batchSize = 200;
         id batchProcessId = database.executeBatch(batch, batchSize);
-    }
-
-    /*******************************************************************************************************
-    * @description list of all Contact fields for using in soql's
-    */
-    private static list<string> listStrContactFields {
-        get {
-            if (listStrContactFields == null) {
-                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap().clone();
-                // due to a Salesforce bug, we get these new fields if our caller is api 30 or greater,
-                // but we will hit an error if we soql for them since we are api 28.
-                // this workaround will no longer be needed when we move up to version 30 or greater.
-                mapS.remove('mailingaddress');
-                mapS.remove('otheraddress');
-                listStrContactFields = new list<string>();
-                listStrContactFields.addAll(mapS.keySet());
-            }
-            return listStrContactFields;
-        }
-        set;
     }
 
     /*******************************************************************************************************
@@ -399,30 +383,30 @@ public without sharing class HH_HouseholdNaming {
         for (SObject h : records) {
             SObject oldRecord = oldMap.get(h.Id);
 
-            CustomFormat customName = new CustomFormat(h);
+            CustomFormat customFormat = new CustomFormat(h);
 
             if (isReplaceable(h, 'Name')) {
-                customName.replace('Name;', ';');
+                customFormat.replace('Name;', ';');
                 h.put('Name', nameReplacementText);
             } else if (isFieldValueChanged(h, 'Name', oldRecord)) {
-                customName.append('Name');
+                customFormat.append('Name');
             }
 
             if (isReplaceable(h, 'npo02__Informal_Greeting__c')) {
-                customName.replace('Informal_Greeting__c;', ';');
+                customFormat.replace('Informal_Greeting__c;', ';');
                 h.put('npo02__Informal_Greeting__c', nameReplacementText);
             } else if (isFieldValueChanged(h, 'npo02__Informal_Greeting__c', oldRecord)) {
-                customName.append('Informal_Greeting__c');
+                customFormat.append('Informal_Greeting__c');
             }
 
             if (isReplaceable(h, 'npo02__Formal_Greeting__c')) {
-                customName.replace('Formal_Greeting__c;', ';');
+                customFormat.replace('Formal_Greeting__c;', ';');
                 h.put('npo02__Formal_Greeting__c', nameReplacementText);
             } else if (isFieldValueChanged(h, 'npo02__Formal_Greeting__c', oldRecord)) {
-                customName.append('Formal_Greeting__c');
+                customFormat.append('Formal_Greeting__c');
             }
 
-            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customName.value);
+            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customFormat.value);
         }
     }
 
