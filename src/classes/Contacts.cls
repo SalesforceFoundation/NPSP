@@ -253,7 +253,7 @@ public with sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private static void copyNamingExclusionsFromCheckboxes(Contact con) {
+    private void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
 
         if (con.Exclude_from_Household_Name__c) {
