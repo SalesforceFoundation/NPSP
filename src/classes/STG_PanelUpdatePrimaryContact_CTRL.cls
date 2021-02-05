@@ -39,17 +39,8 @@ public with sharing class STG_PanelUpdatePrimaryContact_CTRL extends STG_Panel {
         isRunningBatch = false;
     }
     
-    public override string idPanel() { return 'idPanelUpdatePrimaryContact'; }
-    
-    /**
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
+    public override string idPanel() {
+        return 'idPanelUpdatePrimaryContact';
     }
 
     /**

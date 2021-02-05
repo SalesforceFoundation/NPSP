@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -37,24 +37,15 @@ public with sharing class STG_PanelCreatePayments_CTRL extends STG_Panel {
     /**
     * @description Returns the string Id of the Donor Statistics panel. 
     */
-    public override string idPanel() { return 'idPanelCreatePayments'; }
-    
-    /**
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
+    public override string idPanel() { 
+        return 'idPanelCreatePayments';
     }
 
     /**
     * @description The panel's constructor.
     */
     public STG_PanelCreatePayments_CTRL() {
-      isRunningBatch=false;
+      isRunningBatch = false;
     }
     
     /**

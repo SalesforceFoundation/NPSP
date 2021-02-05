@@ -43,17 +43,6 @@ public with sharing class STG_PanelOppNamingBatch_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
-    }
-
-    /*********************************************************************************************************
     * @description Returns the string Id of the Households panel.
     */
     public override String idPanel() { return 'idPanelOppNamingBatch'; }

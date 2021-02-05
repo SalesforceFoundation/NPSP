@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -46,17 +46,6 @@ public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
     * @description Returns the string Id of the panel. 
     */
     public override string idPanel() { return 'idPanelLvlAssignBatch'; }
-
-    /**
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
-    }
 
     /**
     * @description Whether we are running the LvlAssignBatch process 

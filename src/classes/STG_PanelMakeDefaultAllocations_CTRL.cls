@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -40,16 +40,6 @@ public with sharing class STG_PanelMakeDefaultAllocations_CTRL extends STG_Panel
     */
     public STG_PanelMakeDefaultAllocations_CTRL() {
         isRunningBatch = false;
-    }
-    /**
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
     }
 
     /**
