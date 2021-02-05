@@ -139,7 +139,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void buildOldHouseholdSizeMap() {
-        for (AggregateResult a : getMemberCountForHouseholds()) {
+        for (AggregateResult a : getMemberCountForOldHouseholds()) {
             oldHouseholdSizeById.put((id) a.get('oldhh'), (integer) a.get('membercount'));
         }
 
@@ -162,7 +162,7 @@ public with sharing class Contacts extends fflib_SObjects {
         return oldHouseholdIds;
     }
 
-    private List<AggregateResult> getMemberCountForHouseholds() {
+    private List<AggregateResult> getMemberCountForOldHouseholds() {
         return [
                 select npo02__Household__c oldhh, count(id) membercount
                 from Contact
@@ -173,13 +173,17 @@ public with sharing class Contacts extends fflib_SObjects {
 
 
     private void updateHouseholdNames(List<Id> contactsNeedingHouseholdNamesUpdated) {
-        if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true
-                && !system.isFuture() && !system.isBatch()) {
+        if (isFutureEligible()) {
             HH_HouseholdNaming.FutureUpdateNames(contactsNeedingHouseholdNamesUpdated);
         } else {
             HH_HouseholdNaming hn = new HH_HouseholdNaming();
             hn.UpdateNames(contactsNeedingHouseholdNamesUpdated);
         }
+    }
+
+    private Boolean isFutureEligible() {
+        return currentHouseholdsSettings.npo02__Async_Household_Naming__c == true
+                && !system.isFuture() && !system.isBatch();
     }
 
 
@@ -192,37 +196,49 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
-        for (Object obj : getRecords()) {
-            Contact con = (Contact) obj;
+        for (Contact con : contacts) {
             Contact oldCon = oldMap.get(con.Id);
 
             //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
             //then, copy from multiselect to checkboxes if multiselect has changed
             //if both have changed, prefers checkboxes
-            if (con.Exclude_from_Household_Name__c != oldCon.Exclude_from_Household_Name__c ||
-                    con.Exclude_from_Household_Informal_Greeting__c != oldCon.Exclude_from_Household_Informal_Greeting__c ||
-                    con.Exclude_from_Household_Formal_Greeting__c != oldCon.Exclude_from_Household_Formal_Greeting__c) {
-
+            if (shouldCopyNamingExclusionsFromCheckboxes(con, oldCon)) {
                 copyNamingExclusionsFromCheckboxes(con);
-            } else if (con.npo02__Naming_Exclusions__c != oldCon.npo02__Naming_Exclusions__c) {
+            } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con, oldCon)) {
                 copyNamingExclusionsFromMSP(con);
             }
         }
     }
 
-    private void synchronizeNamingExclusionsFieldsBeforeInsert() {
-        for (Object obj : getRecords()) {
-            Contact con = (Contact) obj;
+    private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con, Contact oldCon) {
+        return con.npo02__Naming_Exclusions__c != oldCon.npo02__Naming_Exclusions__c;
+    }
 
+    private Boolean shouldCopyNamingExclusionsFromCheckboxes(Contact con, Contact oldCon) {
+        return con.Exclude_from_Household_Name__c != oldCon.Exclude_from_Household_Name__c ||
+                con.Exclude_from_Household_Informal_Greeting__c != oldCon.Exclude_from_Household_Informal_Greeting__c ||
+                con.Exclude_from_Household_Formal_Greeting__c != oldCon.Exclude_from_Household_Formal_Greeting__c;
+    }
+
+    private void synchronizeNamingExclusionsFieldsBeforeInsert() {
+        for (Contact con : contacts) {
             //first, copy multiselect exclusions to checkboxes, then recreate multiselect values from checboxes
             //this ensures all values from either source are kept
-            if (con.npo02__Naming_Exclusions__c != null) {
+            if (hasNamingExclusions(con)) {
                 copyNamingExclusionsFromMSP(con);
             }
-            if (con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c) {
+            if (shouldCopyNamingExclusionsFromCheckboxesBeforeInsert(con)) {
                 copyNamingExclusionsFromCheckboxes(con);
             }
         }
+    }
+
+    private Boolean hasNamingExclusions(Contact con) {
+        return con.npo02__Naming_Exclusions__c != null;
+    }
+
+    private Boolean shouldCopyNamingExclusionsFromCheckboxesBeforeInsert(Contact con) {
+        return con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c;
     }
 
     /*******************************************************************************************************
@@ -483,10 +499,14 @@ public with sharing class Contacts extends fflib_SObjects {
             //if not, delete it.
             if (householdChanged(c)) {
                 handleHouseholdChanged(c);
-            } else if (isNamingExclusionsChanged(c) || isNamingFieldChanged(c)) {
+            } else if (isHouseholdNamingFieldsChanged(c)) {
                 householdsNeedingNamesUpdated.add(c.npo02__household__c);
             }
         }
+    }
+
+    private Boolean isHouseholdNamingFieldsChanged(Contact c) {
+        return isNamingExclusionsChanged(c) || isNamingFieldChanged(c);
     }
 
     Set<String> householdNamingFieldsInUse;

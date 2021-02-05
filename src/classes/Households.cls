@@ -43,21 +43,27 @@ public with sharing class Households extends fflib_SObjects {
     }
 
     public void onBeforeUpdate() {
-        if (service.isAdvancedHouseholdNaming() && !isHouseholdTriggerContext()) {
+        if (!isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming()) {
             service.setHouseholdNameFields(getRecords(), mapIdHHOld);
         }
     }
 
     public void onAfterUpdate() {
-        if (service.isAdvancedHouseholdNaming() && !isHouseholdTriggerContext()) {
-            List<Id> householdsNeedingNameUpdates =
-                    service.getHouseholdsNeedingNameUpdates(
-                            getRecords(), mapIdHHOld
-                    );
-            if (!householdsNeedingNameUpdates.isEmpty()) {
-                service.renameHouseholdAccounts(householdsNeedingNameUpdates);
-            }
+        if (!isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming()) {
+            renameHouseholdAccountsNeedingNameUpdates();
         }
+    }
+
+    private void renameHouseholdAccountsNeedingNameUpdates() {
+        service.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+    }
+
+    private List<Id> getHouseholdsNeedingNameUpdates() {
+        List<Id> householdsNeedingNameUpdates =
+                service.getHouseholdsNeedingNameUpdates(
+                        getRecords(), mapIdHHOld
+                );
+        return householdsNeedingNameUpdates;
     }
 
     private Boolean isHouseholdTriggerContext() {

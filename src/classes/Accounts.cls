@@ -36,18 +36,21 @@ public with sharing class Accounts extends fflib_SObjects {
 
     ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
     ID rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
-    list<Account> listHHNew = new list<Account>();
-    list<Account> listHHOld = new list<Account>();
+    List<Account> newHouseholdAccounts = new List<Account>();
+    List<Account> oldHouseholdAccounts = new List<Account>();
+    List<Account> newList;
     List<Account> listOld;
     Map<Id, Account> oldMap;
     HH_HouseholdNaming service = new HH_HouseholdNaming();
 
     public Accounts(List<Account> records) {
         super(records);
+        this.newList = records;
     }
 
     public Accounts(List<Account> records, List<Account> oldlist) {
         super(records);
+        this.newList = records;
         this.listOld = oldlist;
         this.oldMap = new Map<Id, Account>(oldlist);
     }
@@ -59,81 +62,115 @@ public with sharing class Accounts extends fflib_SObjects {
     public void onBeforeUpdate() {
         setAccountTypeAndIndividualFieldValues();
         setSystemFieldValues();
-        buildHHLists();
-        if (listHHNew.size() > 0 && service.isAdvancedHouseholdNaming()) {
-            if (!isHouseholdTriggerContext()) {
-                service.setHouseholdNameFields(listHHNew, oldMap);
-            }
+        if (shouldSetHouseholdNameFields()) {
+            setHouseholdNameFields();
         }
     }
 
     public void onAfterUpdate() {
-        buildHHLists();
-        if (listHHNew.size() > 0 && service.isAdvancedHouseholdNaming()) {
-            List<Id> householdsNeedingNameUpdates =
-                    service.getHouseholdsNeedingNameUpdates(
-                            listHHNew, oldMap
-                    );
-            if (!householdsNeedingNameUpdates.isEmpty()) {
-                service.renameHouseholdAccounts(householdsNeedingNameUpdates);
-            }
+        if (service.isAdvancedHouseholdNaming()) {
+            renameHouseholdsNeedingNameUpdates();
         }
+    }
+
+    private Boolean shouldSetHouseholdNameFields() {
+        return !isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming();
+    }
+
+    private void setHouseholdNameFields() {
+        buildHHLists();
+        service.setHouseholdNameFields(newHouseholdAccounts, oldMap);
+    }
+
+    private void renameHouseholdsNeedingNameUpdates() {
+        buildHHLists();
+        service.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+    }
+
+    private List<Id> getHouseholdsNeedingNameUpdates() {
+        return service.getHouseholdsNeedingNameUpdates(
+                newHouseholdAccounts, oldMap
+        );
     }
 
     public void setSystemFieldValues() {
-        Integer i = 0;
-        for (Object obj : getRecords()) {
-            Account acc = (Account) obj;
-
-            if (!isHouseholdAccount(acc)
-                    && !isOneToOneAccount(acc) && !isBucketAccount(acc)) {
-                if (isRecordTypeIdChanged(acc, i)) {
-                    acc.npe01__SYSTEMISINDIVIDUAL__c = false;
-                    acc.npe01__SYSTEM_AccountType__c = null;
-                }
+        for (Account acc : newList) {
+            if (shouldResetAccountTypeAndIndividualFields(acc)) {
+                resetAccountTypeAndIndividualFields(acc);
             }
-            i++;
         }
     }
 
-    private Boolean isRecordTypeIdChanged(Account acc, Integer i) {
-        return acc.RecordTypeId != listOld[i].get('RecordTypeId');
+    private void resetAccountTypeAndIndividualFields(Account acc) {
+        acc.npe01__SYSTEMISINDIVIDUAL__c = false;
+        acc.npe01__SYSTEM_AccountType__c = null;
+    }
+
+    private Boolean shouldResetAccountTypeAndIndividualFields(Account acc) {
+        return isRecordTypeIdChanged(acc, oldMap.get(acc.Id))
+                && !isHouseholdAccount(acc)
+                && !isOneToOneAccount(acc)
+                && !isBucketAccount(acc);
+    }
+
+    private Boolean isRecordTypeIdChanged(Account acc, Account oldAcc) {
+        return acc.RecordTypeId != oldAcc.get('RecordTypeId');
     }
 
     public void setAccountTypeAndIndividualFieldValues() {
-        integer i = 0;
         for (SObject so : getRecords()) {
             Account acc = (Account) so;
-
-            if (isHouseholdAccount(acc)) {
-                if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
-                    acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-                    acc.Type = CAO_Constants.HH_TYPE;
-                    acc.npe01__SYSTEMISINDIVIDUAL__c = true;
-                }
+            if (needsTypeAndIndividualFieldsSet(acc)) {
+                setTypeAndIndividualFields(acc);
             }
-
-            else if (isOneToOneAccount(acc)) {
-                if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
-                    acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                    acc.npe01__SYSTEMISINDIVIDUAL__c = true;
-                }
-            }
-
-            i++;
         }
+    }
+
+    private void setTypeAndIndividualFields(Account acc) {
+        if (isHouseholdAccount(acc)) {
+            setTypeAndIndividualFieldsForHouseholdAccount(acc);
+        } else if (isOneToOneAccount(acc)) {
+            setTypeAndIndividualFieldsForOneToOneAccount(acc);
+        }
+    }
+
+    private void setTypeAndIndividualFieldsForOneToOneAccount(Account acc) {
+        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
+    }
+
+    private void setTypeAndIndividualFieldsForHouseholdAccount(Account acc) {
+        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+        acc.Type = CAO_Constants.HH_TYPE;
+        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
+    }
+
+    private Boolean needsTypeAndIndividualFieldsSet(Account acc) {
+        return isMissingAccountType(acc) || isNotIndividualAccount(acc);
+    }
+
+    private Boolean isNotIndividualAccount(Account acc) {
+        return acc.npe01__SYSTEMISINDIVIDUAL__c != true;
+    }
+
+    private Boolean isMissingAccountType(Account acc) {
+        return acc.npe01__SYSTEM_AccountType__c == null;
     }
 
     private void buildHHLists() {
         integer i = 0;
         for (SObject so : getRecords()) {
             Account acc = (Account) so;
-            if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                listHHNew.add(acc);
-                listHHOld.add((Account) listOld[i]);
+            if (isHouseholdAccountType(acc)) {
+                newHouseholdAccounts.add(acc);
+                oldHouseholdAccounts.add((Account) listOld[i]);
             }
             i++;
         }
+    }
+
+    private Boolean isHouseholdAccountType(Account acc) {
+        return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private Boolean isOneToOneAccount(Account acc) {
