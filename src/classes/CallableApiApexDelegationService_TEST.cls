@@ -75,7 +75,7 @@ private with sharing class CallableApiApexDelegationService_TEST {
      */
     @IsTest
     private static void shouldThrowErrorForNonExistentApexClass() {
-        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
+        String expectedMessagePortion = (System.Label.CallableApiJobScheduleInvalidClass).split('\\{0\\}')[0].trim();
         String jobName = 'JOB.SCHEDULE TEST';
         String className = 'DOES_NOT_EXIST';
 
