@@ -43,13 +43,28 @@ public with sharing class Contacts extends fflib_SObjects {
     List<Contact> contactsNeedingHouseholds = new List<Contact>();
     List<Id> householdsNeedingNamesUpdated = new List<Id>();
     Set<Id> householdIdsNeedingRollup = new Set<Id>();
-    Boolean isRecordTypesOnCons;
-    Set<Id> conRecordTypesToExclude = getConRecordTypesToExclude();
+    Boolean isRecordTypesOnCons {
+        get {
+            if (isRecordTypesOnCons == null) {
+                isRecordTypesOnCons = getIsRecordTypesOnCons();
+            }
+            return isRecordTypesOnCons;
+        }
+        private set;
+    }
+    Set<Id> conRecordTypesToExclude {
+        get {
+            if (conRecordTypesToExclude == null) {
+                conRecordTypesToExclude = getConRecordTypesToExclude();
+            }
+            return conRecordTypesToExclude;
+        }
+        private set;
+    }
 
     public Contacts(List<Contact> records) {
         super(records);
         this.contacts = (List<Contact>) getRecords();
-        this.isRecordTypesOnCons = getIsRecordTypesOnCons();
     }
 
     public Contacts(List<Contact> records, List<Contact> oldList) {
@@ -57,25 +72,21 @@ public with sharing class Contacts extends fflib_SObjects {
         this.contacts = (List<Contact>) getRecords();
         this.oldMap = oldList != null ?
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
-        this.isRecordTypesOnCons = getIsRecordTypesOnCons();
     }
 
-    /* todo: to be used once there is a single trigger entry point in place.  Until then,
-             clients call public methods directly.
-    private void onBeforeInsert() {
+    public void onBeforeInsert() {
         synchronizeNamingExclusionsFieldsBeforeInsert();
     }
 
-    private void onBeforeUpdate() {
+    public void onBeforeUpdate() {
         synchronizeNamingExclusionsFieldsBeforeUpdate();
     }
 
-    private void onAfterInsert() {
+    public void onAfterInsert() {
         processHouseholdsAfterInsert();
     }
-     */
 
-    public void processHouseholdsAfterInsert() {
+    private void processHouseholdsAfterInsert() {
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         for (SObject obj : getRecords()) {
@@ -180,15 +191,11 @@ public with sharing class Contacts extends fflib_SObjects {
         return currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
     }
 
-
-//    todo: make private once NPSP trigger handling uses single entry point
-//    methods for handling trigger contexts
-    public void synchronizeNamingExclusionsFieldsBeforeUpdate() {
+    private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
         for (Object obj : getRecords()) {
             Contact con = (Contact) obj;
             Contact oldCon = oldMap.get(con.Id);
 
-            //before update case:
             //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
             //then, copy from multiselect to checkboxes if multiselect has changed
             //if both have changed, prefers checkboxes
@@ -203,11 +210,10 @@ public with sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public void synchronizeNamingExclusionsFieldsBeforeInsert() {
+    private void synchronizeNamingExclusionsFieldsBeforeInsert() {
         for (Object obj : getRecords()) {
             Contact con = (Contact) obj;
 
-            //before insert case:
             //first, copy multiselect exclusions to checkboxes, then recreate multiselect values from checboxes
             //this ensures all values from either source are kept
             if (con.npo02__Naming_Exclusions__c != null) {
@@ -225,7 +231,7 @@ public with sharing class Contacts extends fflib_SObjects {
     * @param con The Contact
     * @return void
     ********************************************************************************************************/
-    public static void copyNamingExclusionsFromMSP(Contact con) {
+    private static void copyNamingExclusionsFromMSP(Contact con) {
         string strExclusions = con.npo02__Naming_Exclusions__c;
         if (strExclusions == null) {
             strExclusions = '';
@@ -247,7 +253,7 @@ public with sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public static void copyNamingExclusionsFromCheckboxes(Contact con) {
+    private static void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
 
         if (con.Exclude_from_Household_Name__c) {
@@ -274,7 +280,7 @@ public with sharing class Contacts extends fflib_SObjects {
     * @return void
     ********************************************************************************************************/
     //todo: break up
-    public void insertHouseholdsForContacts(Contact[] contacts, Boolean isInsertTrigger) {
+    private void insertHouseholdsForContacts(Contact[] contacts, Boolean isInsertTrigger) {
         List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
         if (householdInserts.size() > 0) {
             List<Contact> contactUpdates = new List<Contact>();

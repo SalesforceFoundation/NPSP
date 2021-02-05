@@ -54,9 +54,6 @@ public with sharing class Accounts extends fflib_SObjects {
 
     public void onBeforeInsert() {
         setAccountTypeAndIndividualFieldValues();
-        if (listHHNew.size() > 0) {
-            service.setHouseholdNameFields(getRecords(), oldMap);
-        }
     }
 
     public void onBeforeUpdate() {
@@ -65,7 +62,7 @@ public with sharing class Accounts extends fflib_SObjects {
         buildHHLists();
         if (listHHNew.size() > 0 && service.isAdvancedHouseholdNaming()) {
             if (!isHouseholdTriggerContext()) {
-                service.setHouseholdNameFields(getRecords(), oldMap);
+                service.setHouseholdNameFields(listHHNew, oldMap);
             }
         }
     }
@@ -75,7 +72,7 @@ public with sharing class Accounts extends fflib_SObjects {
         if (listHHNew.size() > 0 && service.isAdvancedHouseholdNaming()) {
             List<Id> householdsNeedingNameUpdates =
                     service.getHouseholdsNeedingNameUpdates(
-                            getRecords(), oldMap
+                            listHHNew, oldMap
                     );
             if (!householdsNeedingNameUpdates.isEmpty()) {
                 service.renameHouseholdAccounts(householdsNeedingNameUpdates);

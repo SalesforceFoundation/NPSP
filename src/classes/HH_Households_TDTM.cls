@@ -37,9 +37,6 @@
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
-    static npo02__Households_Settings__c currentHouseholdsSettings =
-            UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
     List<Contact> contacts;
     List<Contact> oldContacts;
     DmlWrapper dmlWrapper = new DmlWrapper();
@@ -56,54 +53,37 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        contacts = newlist;
-        oldContacts = oldlist;
-
-        //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
-        }
-        else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
-        }
-
-        //runs in
-        // BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete
+        contacts = (List<Contact>) newlist;
+        oldContacts = (List<Contact>) oldlist;
 
         switch on triggerAction {
             when BeforeInsert {
+                //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
                 Contacts contacts = new Contacts(contacts);
-//                contacts.onBeforeInsert();
-//                Can't call onBeforeInsert() from TDTM classes until
-//                there is a single entry point into
-//                each domain class's appropriate trigger context method from
-//                NPSP's trigger handling mechanism (currently TDTM)
-                contacts.synchronizeNamingExclusionsFieldsBeforeInsert();
+                contacts.onBeforeInsert();
             }
             when BeforeUpdate {
                 Contacts contacts = new Contacts(contacts, oldContacts);
-//                contacts.onBeforeUpdate();
-                contacts.synchronizeNamingExclusionsFieldsBeforeUpdate();
+                contacts.onBeforeUpdate();
             }
             when AfterInsert {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
                 //since we don't have the contact's household ids until after the insert
                 //we'll check the trigger action again there to make sure it doesn't run twice
                 Contacts contacts = new Contacts(contacts);
-                contacts.processHouseholdsAfterInsert();
+                contacts.onAfterInsert();
             }
             when AfterDelete {
-                contacts = oldlist;
-                oldContacts = null;
-                Contacts contacts = new Contacts(contacts);
+                Contacts contacts = new Contacts(oldContacts);
                 contacts.rollupAndRenameHouseholdsAfterDelete(dmlWrapper);
             }
-            when AfterUpdate { // After Update, After Delete
+            when AfterUpdate {
                 Contacts contacts = new Contacts(contacts, oldContacts);
                 contacts.handleAfterUpdate(dmlWrapper);
             }
         }
         return dmlWrapper;
     }
-
 }
