@@ -197,8 +197,8 @@ import geTabBatchSettings from '@salesforce/label/c.geTabBatchSettings';
 import geTabBatchTableColumns from '@salesforce/label/c.geTabBatchTableColumns';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
-import geTextFieldBundlePaymentMethod from '@salesforce/label/c.geTextFieldBundlePaymentMethod';
 import geTextChargingCard from '@salesforce/label/c.geTextChargingCard';
+import geTextFieldBundlePaymentMethod from '@salesforce/label/c.geTextFieldBundlePaymentMethod';
 import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
@@ -216,9 +216,9 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
-import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
+import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
+import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
 
 class GeLabelService {
 
@@ -425,8 +425,8 @@ class GeLabelService {
         geTabBatchTableColumns,
         geTabFormFields,
         geTabTemplateInfo,
-        geTextFieldBundlePaymentMethod,
         geTextChargingCard,
+        geTextFieldBundlePaymentMethod,
         geTextListViewItemCount,
         geTextListViewItemsCount,
         geTextListViewSortedBy,
@@ -444,9 +444,9 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
-        psSelectValidPaymentMethod,
+        labelBooleanFalse,
         labelBooleanTrue,
-        labelBooleanFalse
+        psSelectValidPaymentMethod,
     });
 
     /*******************************************************************************
