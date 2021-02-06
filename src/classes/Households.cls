@@ -35,11 +35,19 @@
 public with sharing class Households extends fflib_SObjects {
 
     Map<Id, npo02__Household__c> mapIdHHOld;
-    HH_HouseholdNaming service = new HH_HouseholdNaming();
+    HH_HouseholdNaming service;
 
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
+        this(records, oldlist, null);
+    }
+
+    @TestVisible
+    private Households(List<npo02__Household__c> records, List<npo02__Household__c>
+            oldlist, HH_HouseholdNaming service) {
         super(records);
-        mapIdHHOld = new Map<Id, npo02__Household__c>(oldlist);
+        mapIdHHOld = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
+                npo02__Household__c>(oldlist);
+        this.service = service == null ? new HH_HouseholdNaming() : service;
     }
 
     public void onBeforeUpdate() {
