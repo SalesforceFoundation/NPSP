@@ -34,12 +34,9 @@
 */
 public with sharing class Contacts extends fflib_SObjects {
 
+    HouseholdSettings settings;
     List<Contact> contacts;
     Map<Id, Contact> oldMap;
-
-    npo02__Households_Settings__c settings =
-            UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
     List<Contact> contactsNeedingHouseholds = new List<Contact>();
     List<Id> householdsNeedingNamesUpdated = new List<Id>();
     Set<Id> householdIdsNeedingRollup = new Set<Id>();
@@ -55,7 +52,7 @@ public with sharing class Contacts extends fflib_SObjects {
     Set<Id> conRecordTypesToExclude {
         get {
             if (conRecordTypesToExclude == null) {
-                conRecordTypesToExclude = getConRecordTypesToExclude();
+                conRecordTypesToExclude = settings.contactRecordTypesToExclude();
             }
             return conRecordTypesToExclude;
         }
@@ -64,15 +61,21 @@ public with sharing class Contacts extends fflib_SObjects {
     private final String RECORDTYPEID = 'RecordTypeId';
 
     public Contacts(List<Contact> records) {
-        super(records);
-        this.contacts = (List<Contact>) getRecords();
+        this(records, null, null);
     }
 
     public Contacts(List<Contact> records, List<Contact> oldList) {
+        this(records, oldList, null);
+    }
+
+    @TestVisible
+    private Contacts(List<Contact> records, List<Contact> oldList, HouseholdSettings
+            settings) {
         super(records);
         this.contacts = (List<Contact>) getRecords();
         this.oldMap = oldList != null ?
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
+        this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 
     public void onBeforeInsert() {
@@ -125,11 +128,12 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private Boolean needsEvaluation(Contact c) {
         return c.npo02__household__c == null &&
-                isIndividualContactsGetHouseholds();
+                settings.isAllIndividualsProcessor();
     }
 
     private Boolean needsHousehold(Contact c) {
-        return c.npo02__household__c == null && isAllContactsGetHouseholds();
+        return c.npo02__household__c == null
+                && settings.isAllProcessor();
     }
 
     List<Id> oldHouseholds = new List<Id>();
@@ -183,17 +187,8 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isFutureEligible() {
-        return settings.npo02__Async_Household_Naming__c == true
+        return settings.isAsyncEnabled()
                 && !system.isFuture() && !system.isBatch();
-    }
-
-
-    private Boolean isIndividualContactsGetHouseholds() {
-        return settings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-    }
-
-    private Boolean isAllContactsGetHouseholds() {
-        return settings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
@@ -368,23 +363,6 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private Boolean getIsRecordTypesOnContacts() {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORDTYPEID) != null;
-    }
-
-    private Set<Id> getConRecordTypesToExclude() {
-        if (hasRecordTypeExclusions()) {
-            return new Set<Id>((List<Id>) settings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
-        } else {
-            return new Set<Id>();
-        }
-    }
-    private class Settings {
-        public Settings() {
-
-        }
-    }
-
-    private Boolean hasRecordTypeExclusions() {
-        return settings.npo02__Household_Creation_Excluded_Recordtypes__c != null;
     }
 
     private static npo02__Household__c getHouseholdForInsertFromContact(Contact c) {
@@ -578,14 +556,13 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void handleContactHasNoHousehold(Contact c) {
-        if (isAllContactsGetHouseholds()) {
+        if (settings.isAllProcessor()) {
             contactsNeedingHouseholds.add(c);
-        } else if (isIndividualContactsGetHouseholds()) {
+        } else if (settings.isAllIndividualsProcessor()) {
             contactEvaluations.add(c);
         }
     }
 
-    //todo: fix
     private void buildDeletedAndMergedContactCollections() {
         for (Contact c : contacts) {
             if (c.npo02__household__c != null) {
