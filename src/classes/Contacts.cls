@@ -37,18 +37,18 @@ public with sharing class Contacts extends fflib_SObjects {
     List<Contact> contacts;
     Map<Id, Contact> oldMap;
 
-    npo02__Households_Settings__c currentHouseholdsSettings =
+    npo02__Households_Settings__c settings =
             UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
     List<Contact> contactsNeedingHouseholds = new List<Contact>();
     List<Id> householdsNeedingNamesUpdated = new List<Id>();
     Set<Id> householdIdsNeedingRollup = new Set<Id>();
-    Boolean isRecordTypesOnCons {
+    Boolean isRecordTypeOnContacts {
         get {
-            if (isRecordTypesOnCons == null) {
-                isRecordTypesOnCons = getIsRecordTypesOnCons();
+            if (isRecordTypeOnContacts == null) {
+                isRecordTypeOnContacts = getIsRecordTypesOnContacts();
             }
-            return isRecordTypesOnCons;
+            return isRecordTypeOnContacts;
         }
         private set;
     }
@@ -61,6 +61,7 @@ public with sharing class Contacts extends fflib_SObjects {
         }
         private set;
     }
+    private final String RECORDTYPEID = 'RecordTypeId';
 
     public Contacts(List<Contact> records) {
         super(records);
@@ -182,17 +183,17 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isFutureEligible() {
-        return currentHouseholdsSettings.npo02__Async_Household_Naming__c == true
+        return settings.npo02__Async_Household_Naming__c == true
                 && !system.isFuture() && !system.isBatch();
     }
 
 
     private Boolean isIndividualContactsGetHouseholds() {
-        return currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR;
+        return settings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR;
     }
 
     private Boolean isAllContactsGetHouseholds() {
-        return currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
+        return settings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
@@ -295,62 +296,58 @@ public with sharing class Contacts extends fflib_SObjects {
     * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
     * @return void
     ********************************************************************************************************/
-    //todo: break up
     private void insertHouseholdsForContacts(Contact[] contacts, Boolean isInsertTrigger) {
         List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
         if (householdInserts.size() > 0) {
-            List<Contact> contactUpdates = new List<Contact>();
-            // ideally, we'd do this all with dmlWrapper.  But since we
-            // need to update the contact's hhId, we can't defer creating the HH's.
+            Database.SaveResult[] householdSaveResults =
+                    UTIL_DMLService.insertRecords(householdInserts, false);
 
-            Database.SaveResult[] lsr = UTIL_DMLService.insertRecords(householdInserts, false);
-
-            Integer i = 0;
-            for (Contact c : contacts) {
-                if (isExclusion(c)) {
-                    if (lsr[i].isSuccess() == true) {
-                        //write the new Household Ids to the Contacts
-                        Contact clone = c.Clone(true, false);
-                        clone.npo02__household__c = lsr[i].getId();
-                        contactUpdates.add(clone);
-                    } else {
-                        Database.Error err = lsr[i].getErrors()[0];
-                        c.addError(err.getMessage());
-                    }
-                    i += 1;
-                }
-            }
-
-            if (contactUpdates.size() > 0) {
-                // using dmlWrapper here caused too many errors with other
-                // trigger handlers on contact, so do the update directly.
-                //dmlWrapper.objectsToUpdate.addAll(contactUpdates);
-                //Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
-                // all or nothing so errors not lost.
-                update contactUpdates;
-            }
+            List<Contact> contactsToBeUpdatedWithHouseholdId =
+                    processHouseholdSaveResults(contacts, householdSaveResults);
+            update contactsToBeUpdatedWithHouseholdId;
 
             if (isInsertTrigger) {
-                list<id> hhidsfornaming = new list<id>();
-
-                for (Database.SaveResult sr : lsr) {
-                    if (sr.isSuccess())
-                        hhidsfornaming.add(sr.getID());
-                }
-
-                //send it all out for (re)naming
-                //secret setting for async processing... ooooooooh....
-
-                if (!system.isFuture() && !system.isBatch() &&
-                        currentHouseholdsSettings.npo02__Async_Household_Naming__c == true) {
-                    HH_HouseholdNaming.FutureUpdateNames(hhidsfornaming);
-                } else {
-                    HH_HouseholdNaming hn = new HH_HouseholdNaming();
-                    hn.UpdateNames(hhidsfornaming);
-                }
-
+                updateNamesAfterHouseholdInsert(householdSaveResults);
             }
         }
+    }
+
+    private List<Contact> processHouseholdSaveResults(Contact[] contacts,
+            Database.SaveResult[] householdSaveResults) {
+        List<Contact> contactsToBeUpdatedWithHouseholdId = new List<Contact>();
+        Integer i = 0;
+        for (Contact c : contacts) {
+            if (isExclusion(c)) {
+                Database.SaveResult saveResult = householdSaveResults[i];
+                if (saveResult.isSuccess() == true) {
+                    //write the new Household Ids to the Contacts
+                    Contact cloneContact = c.Clone(true, false);
+                    cloneContact.npo02__household__c = saveResult.getId();
+                    contactsToBeUpdatedWithHouseholdId.add(cloneContact);
+                } else {
+                    Database.Error err = saveResult.getErrors()[0];
+                    c.addError(err.getMessage());
+                }
+                i += 1;
+            }
+        }
+        return contactsToBeUpdatedWithHouseholdId;
+    }
+
+    private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
+        List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdated(lsr);
+        if (!householdIdsNeedingNamesUpdated.isEmpty()) {
+            updateHouseholdNames(householdIdsNeedingNamesUpdated);
+        }
+    }
+
+    private List<Id> getHouseholdIdsNeedingNamesUpdated(Database.SaveResult[] lsr) {
+        List<Id> householdIdsNeedingNamesUpdated = new List<Id>();
+        for (Database.SaveResult sr : lsr) {
+            if (sr.isSuccess())
+                householdIdsNeedingNamesUpdated.add(sr.getID());
+        }
+        return householdIdsNeedingNamesUpdated;
     }
 
     private List<npo02__Household__c> getHouseholdsForInsert(Contact[] contacts) {
@@ -365,19 +362,29 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isExclusion(Contact c) {
-        return !isRecordTypesOnCons || !conRecordTypesToExclude.contains((id) c.get('RecordTypeId'));
+        return !isRecordTypeOnContacts
+                || !conRecordTypesToExclude.contains((id) c.get(RECORDTYPEID));
     }
 
-    private Boolean getIsRecordTypesOnCons() {
-        return Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null;
+    private Boolean getIsRecordTypesOnContacts() {
+        return Schema.sObjectType.Contact.fields.getMap().get(RECORDTYPEID) != null;
     }
 
     private Set<Id> getConRecordTypesToExclude() {
-        set<id> conRecordTypesToExclude = new set<id>();
-        if (currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c != null) {
-            conRecordTypesToExclude = new Set<Id>((List<Id>) currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
+        if (hasRecordTypeExclusions()) {
+            return new Set<Id>((List<Id>) settings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
+        } else {
+            return new Set<Id>();
         }
-        return conRecordTypesToExclude;
+    }
+    private class Settings {
+        public Settings() {
+
+        }
+    }
+
+    private Boolean hasRecordTypeExclusions() {
+        return settings.npo02__Household_Creation_Excluded_Recordtypes__c != null;
     }
 
     private static npo02__Household__c getHouseholdForInsertFromContact(Contact c) {
@@ -637,7 +644,7 @@ public with sharing class Contacts extends fflib_SObjects {
 
         list<SObject> householdDeletes = new list<SObject>();
         map<Id, Integer> householdCountMap = new map<Id, Integer>();
-        list<id> householdrenames = new list<id>();
+        list<id> contactsNeedingHouseholdsRenamed = new list<id>();
 
         //Generate a list of Household Ids
         for (Contact c : contacts) {
@@ -659,7 +666,7 @@ public with sharing class Contacts extends fflib_SObjects {
                 householdDeletes.add(new npo02__Household__c(Id = c.npo02__household__c));
             } else {
                 //otherwise, we need to update the household
-                householdrenames.add(c.npo02__household__c);
+                contactsNeedingHouseholdsRenamed.add(c.npo02__household__c);
             }
         }
 
@@ -667,13 +674,8 @@ public with sharing class Contacts extends fflib_SObjects {
             dmlWrapper.objectsToDelete.addAll(householdDeletes);
         }
 
-        if (householdrenames.size() > 0) {
-            if (!system.isFuture() && !system.isBatch() && currentHouseholdsSettings.npo02__Async_Household_Naming__c == true) {
-                HH_HouseholdNaming.FutureUpdateNames(householdrenames);
-            } else {
-                HH_HouseholdNaming hn = new HH_HouseholdNaming();
-                hn.UpdateNames(householdrenames);
-            }
+        if (contactsNeedingHouseholdsRenamed.size() > 0) {
+            updateHouseholdNames(contactsNeedingHouseholdsRenamed);
         }
     }
 

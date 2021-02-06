@@ -34,24 +34,23 @@
 */
 public with sharing class Accounts extends fflib_SObjects {
 
-    ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
-    ID rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
+    List<Account> accounts = new List<Account>();
+    Map<Id, Account> oldMap = new Map<Id, Account>();
     List<Account> newHouseholdAccounts = new List<Account>();
     List<Account> oldHouseholdAccounts = new List<Account>();
-    List<Account> newList;
-    List<Account> listOld;
-    Map<Id, Account> oldMap;
+
     HH_HouseholdNaming service = new HH_HouseholdNaming();
+    ID recordTypeIdForHouseholdAccount = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+    ID recordTypeIdForOneToOneAccount = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
 
     public Accounts(List<Account> records) {
         super(records);
-        this.newList = records;
+        this.accounts = records;
     }
 
     public Accounts(List<Account> records, List<Account> oldlist) {
         super(records);
-        this.newList = records;
-        this.listOld = oldlist;
+        this.accounts = records;
         this.oldMap = new Map<Id, Account>(oldlist);
     }
 
@@ -68,22 +67,26 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (service.isAdvancedHouseholdNaming()) {
+        if (isEnabledAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdates();
         }
     }
 
+    private Boolean isEnabledAdvancedHouseholdNaming() {
+        return service.isAdvancedHouseholdNaming();
+    }
+
     private Boolean shouldSetHouseholdNameFields() {
-        return !isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming();
+        return !isHouseholdTriggerContext() && isEnabledAdvancedHouseholdNaming();
     }
 
     private void setHouseholdNameFields() {
-        buildHHLists();
+        buildHouseholdAccountLists();
         service.setHouseholdNameFields(newHouseholdAccounts, oldMap);
     }
 
     private void renameHouseholdsNeedingNameUpdates() {
-        buildHHLists();
+        buildHouseholdAccountLists();
         service.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
     }
 
@@ -94,7 +97,7 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     public void setSystemFieldValues() {
-        for (Account acc : newList) {
+        for (Account acc : accounts) {
             if (shouldResetAccountTypeAndIndividualFields(acc)) {
                 resetAccountTypeAndIndividualFields(acc);
             }
@@ -107,19 +110,18 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     private Boolean shouldResetAccountTypeAndIndividualFields(Account acc) {
-        return isRecordTypeIdChanged(acc, oldMap.get(acc.Id))
+        return isRecordTypeIdChanged(acc)
                 && !isHouseholdAccount(acc)
                 && !isOneToOneAccount(acc)
                 && !isBucketAccount(acc);
     }
 
-    private Boolean isRecordTypeIdChanged(Account acc, Account oldAcc) {
-        return acc.RecordTypeId != oldAcc.get('RecordTypeId');
+    private Boolean isRecordTypeIdChanged(Account acc) {
+        return acc.RecordTypeId != oldVersionOf(acc).RecordTypeId;
     }
 
     public void setAccountTypeAndIndividualFieldValues() {
-        for (SObject so : getRecords()) {
-            Account acc = (Account) so;
+        for (Account acc : accounts) {
             if (needsTypeAndIndividualFieldsSet(acc)) {
                 setTypeAndIndividualFields(acc);
             }
@@ -157,16 +159,17 @@ public with sharing class Accounts extends fflib_SObjects {
         return acc.npe01__SYSTEM_AccountType__c == null;
     }
 
-    private void buildHHLists() {
-        integer i = 0;
-        for (SObject so : getRecords()) {
-            Account acc = (Account) so;
-            if (isHouseholdAccountType(acc)) {
-                newHouseholdAccounts.add(acc);
-                oldHouseholdAccounts.add((Account) listOld[i]);
+    private void buildHouseholdAccountLists() {
+        for (Account account : accounts) {
+            if (isHouseholdAccountType(account)) {
+                newHouseholdAccounts.add(account);
+                oldHouseholdAccounts.add(oldVersionOf(account));
             }
-            i++;
         }
+    }
+
+    private Account oldVersionOf(Account a) {
+        return oldMap.get(a.Id);
     }
 
     private Boolean isHouseholdAccountType(Account acc) {
@@ -174,11 +177,11 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     private Boolean isOneToOneAccount(Account acc) {
-        return acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null;
+        return acc.RecordTypeId == recordTypeIdForOneToOneAccount && acc.RecordTypeId != null;
     }
 
     private Boolean isHouseholdAccount(Account acc) {
-        return acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null;
+        return acc.RecordTypeId == recordTypeIdForHouseholdAccount && acc.RecordTypeId != null;
     }
 
     private Boolean isBucketAccount(Account acc) {
