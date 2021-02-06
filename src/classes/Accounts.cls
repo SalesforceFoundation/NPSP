@@ -39,19 +39,24 @@ public with sharing class Accounts extends fflib_SObjects {
     List<Account> newHouseholdAccounts = new List<Account>();
     List<Account> oldHouseholdAccounts = new List<Account>();
 
-    HH_HouseholdNaming service = new HH_HouseholdNaming();
-    ID recordTypeIdForHouseholdAccount = rtIdForAccountModel(true);
-    ID recordTypeIdForOneToOneAccount = rtIdForAccountModel(false);
+    HH_HouseholdNaming service;
 
     public Accounts(List<Account> records) {
-        super(records);
-        this.accounts = records;
+        this(records, null, null);
     }
 
     public Accounts(List<Account> records, List<Account> oldlist) {
+        this(records, oldlist, null);
+    }
+
+    @TestVisible
+    private Accounts(List<Account> records, List<Account> oldlist, HH_HouseholdNaming
+            service) {
         super(records);
         this.accounts = records;
-        this.oldMap = new Map<Id, Account>(oldlist);
+        this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
+                (oldlist);
+        this.service = service == null ? new HH_HouseholdNaming() : service;
     }
 
     public void onBeforeInsert() {
@@ -177,11 +182,13 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     private Boolean isOneToOneAccount(Account acc) {
-        return acc.RecordTypeId == recordTypeIdForOneToOneAccount && acc.RecordTypeId != null;
+        return acc.RecordTypeId == rtIdForAccountModel(false)
+                && acc.RecordTypeId != null;
     }
 
     private Boolean isHouseholdAccount(Account acc) {
-        return acc.RecordTypeId == recordTypeIdForHouseholdAccount && acc.RecordTypeId != null;
+        return acc.RecordTypeId == rtIdForAccountModel(true)
+                && acc.RecordTypeId != null;
     }
 
     private Boolean isBucketAccount(Account acc) {
