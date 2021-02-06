@@ -453,7 +453,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
-                    ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
+                    ID rtIdAcccount = Accounts.rtIdForNewAccount();
                     if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
                     }
