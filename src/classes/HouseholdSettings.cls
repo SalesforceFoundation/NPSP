@@ -1,6 +1,7 @@
 public with sharing class HouseholdSettings {
 
     npo02__Households_Settings__c settings;
+    private static final String defaultNamingService = 'HH_NameSpec';
 
     public HouseholdSettings() {
         this(null);
@@ -42,6 +43,32 @@ public with sharing class HouseholdSettings {
 
     private Boolean hasRecordTypeExclusions() {
         return settings.npo02__Household_Creation_Excluded_Recordtypes__c != null;
+    }
+
+    public Boolean isAdvancedHouseholdNaming() {
+        return settings != null && settings.npo02__Advanced_Household_Naming__c == true;
+    }
+
+    public String getImplementingClass() {
+        String implementingClass = namingSettings.Implementing_Class__c;
+        if (implementingClass == null || implementingClass == '') {
+            implementingClass = defaultNamingService;
+        }
+        return implementingClass;
+    }
+
+    /*******************************************************************************************************
+    * @description our cached copy of the Household Naming Settings
+    */
+    private Household_Naming_Settings__c namingSettings {
+        get {
+            if (namingSettings == null) {
+                namingSettings =
+                        UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            }
+            return namingSettings;
+        }
+        set;
     }
 
 }

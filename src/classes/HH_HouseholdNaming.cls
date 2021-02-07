@@ -37,8 +37,6 @@
 */
 public without sharing class HH_HouseholdNaming {
 
-    private static final String defaultNamingService = 'HH_NameSpec';
-
     /*******************************************************************************************************
     * @description future method to update the household names for the specified households
     * @param hhids the list of household Id's (either Household__c or Account Id's)
@@ -77,26 +75,17 @@ public without sharing class HH_HouseholdNaming {
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
-        list<Contact> contactlist = getHouseholdContacts(hhids);
-
-        list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
-        list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];
-
         // handle two types of households by using an SObject
-        list<SObject> hhupdatelist = new list<SObject>();
-        hhupdatelist.addAll(listHHObj);
-        hhupdatelist.addAll(listHHAcct);
-
-        map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
-        buildHHIdtoContactsMap(contactlist, hhIDContactMap);
+        List<SObject> householdsNeedingUpdates = getHouseholdsNeedingUpdates(hhids);
+        Map<Id, List<Contact>> hhIdToContactsMap = getHhIDContactMap(hhids);
 
         //loop through the households needing name changes, if necessary, make them.
-        for (SObject h : hhupdatelist){
-            ID hhId = string.valueOf(h.get('Id'));
-            list<Contact> listCon = hhIDContactMap.get(hhId);
+        for (SObject h : householdsNeedingUpdates) {
+            List<Contact> listCon = getContactsForHousehold(h, hhIdToContactsMap);
 
             if (isAutomaticNaming()) {
-                setHouseholdNameFields(h, listCon);
+                new HouseholdName(h, listCon)
+                        .setNameFieldValuesOnHousehold();
             }
 
             // now we also store the number of members on the Household!
@@ -104,15 +93,46 @@ public without sharing class HH_HouseholdNaming {
                     listCon != null ? listCon.size() : 0);
         }
 
-        if (!hhupdatelist.isEmpty()) {
+        if (!householdsNeedingUpdates.isEmpty()) {
             // all or nothing, so errors not lost
-            UTIL_DMLService.updateRecords(hhupdatelist);
+            UTIL_DMLService.updateRecords(householdsNeedingUpdates);
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
-    private void buildHHIdtoContactsMap(List<Contact> contactlist, Map<Id, List<Contact>> hhIDContactMap) {
+    private Map<Id, List<Contact>> getHhIDContactMap(List<Id> hhids) {
+        return getHhIDContactMap(getHouseholdContacts(hhids));
+    }
+
+    private List<SObject> getHouseholdsNeedingUpdates(List<Id> hhids) {
+        list<SObject> hhupdatelist = new list<SObject>();
+        List<SObject> listHHObj = getListHHObj(hhids);
+        List<SObject> listHHAcct = getListHHAcct(hhids);
+
+        hhupdatelist.addAll(listHHObj);
+        hhupdatelist.addAll(listHHAcct);
+        return hhupdatelist;
+    }
+
+    private List<SObject> getListHHAcct(List<Id> hhids) {
+        list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN :hhids];
+        return listHHAcct;
+    }
+
+    private List<SObject> getListHHObj(List<Id> hhids) {
+        list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN :hhids];
+        return listHHObj;
+    }
+
+    private List<Contact> getContactsForHousehold(SObject h, Map<Id, List<Contact>> hhIDContactMap) {
+        ID hhId = string.valueOf(h.get('Id'));
+        List<Contact> listCon = hhIDContactMap.get(hhId);
+        return listCon;
+    }
+
+    private Map<Id, List<Contact>> getHhIDContactMap(List<Contact> contactlist) {
+        map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
         for (Contact c : contactlist) {
             if (!hhIDContactMap.containskey(c.hhId__c)) {
                 hhIDContactMap.put(c.hhId__c, new list<Contact>{
@@ -123,22 +143,7 @@ public without sharing class HH_HouseholdNaming {
                 clist.add(c);
             }
         }
-    }
-
-    private void setHouseholdNameFields(SObject h, List<Contact> listCon) {
-        string customnameparam = '';
-	            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
-            customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
-        }
-
-        if (!customnameparam.contains('Name'))
-            h.put('Name', getHHName(listCon));
-
-        if (!customnameparam.contains('Formal_Greeting__c'))
-            h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
-
-        if (!customnameparam.contains('Informal_Greeting__c'))
-            h.put('npo02__Informal_Greeting__c', getInformalName(listCon));
+        return hhIDContactMap;
     }
 
     /*******************************************************************************************************
@@ -182,49 +187,6 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
-    * @description our cached copy of the Household Naming Settings
-    */
-    private static Household_Naming_Settings__c namingSettings {
-        get {
-            if (namingSettings == null) {
-                namingSettings =
-                        UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
-            }
-            return namingSettings;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************
-    * @description the class object that supports the HH_INaming interface
-    */
-    static HH_INaming namingService {
-        get {
-            if (namingService == null) {
-                String implementingClass = getImplementingClass();
-
-                Type classType = Type.forName(implementingClass);
-                if (classType != null) {
-                    Object classInstance = classType.newInstance();
-                    if (classInstance instanceof HH_INaming) {
-                        namingService = (HH_INaming) classInstance;
-                    }
-                }
-            }
-            return namingService;
-        }
-        set;
-    }
-
-    private static String getImplementingClass() {
-        String implementingClass = namingSettings.Implementing_Class__c;
-        if (implementingClass == null || implementingClass == '') {
-            implementingClass = defaultNamingService;
-        }
-        return implementingClass;
-    }
-
-    /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
     * direct way to do that by disabling TDTM trigger handlers, or using existing static flags.
@@ -236,58 +198,9 @@ public without sharing class HH_HouseholdNaming {
     }
     private static boolean isHouseholdNamingDisabled = false;
 
-
-    /*******************************************************************************************************
-    * @description returns the Household Name for the list of Contacts
-    * @param ContactList the list of Contacts in the same Household
-    * @return string
-    */
-    public string getHHName(list<Contact> ContactList){
-        if (ContactList == null)
-            ContactList = new list<Contact>();
-    	list<Contact> listCon = new list<Contact>();
-    	for (Contact con : ContactList) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
-                listCon.add(con);
-    	}
-        return namingService.getHouseholdName(listCon);
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Informal Greeting for the list of Contacts
-    * @param ContactList the list of Contacts in the same Household
-    * @return string
-    */
-    public  string getInformalName(list<Contact> ContactList){
-        if (ContactList == null)
-            ContactList = new list<Contact>();
-        list<Contact> listCon = new list<Contact>();
-        for (Contact con : ContactList) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c'))
-                listCon.add(con);
-        }
-        return namingService.getHouseholdInformalGreeting(listCon);
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Formal Greeting for the list of Contacts
-    * @param ContactList the list of Contacts in the same Household
-    * @return string
-    */
-    public  string getFormalName(list<Contact> ContactList){
-        if (ContactList == null)
-            ContactList = new list<Contact>();
-        list<Contact> listCon = new list<Contact>();
-        for (Contact con : ContactList) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
-                listCon.add(con);
-        }
-        return namingService.getHouseholdFormalGreeting(listCon);
-    }
-
     /*******************************************************************************************************
     * @description Returns Contact fields specified in the Household Naming Settings format fields.
-    * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names; 
+    * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names;
     * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
@@ -305,6 +218,27 @@ public without sharing class HH_HouseholdNaming {
     }
 
     /*******************************************************************************************************
+    * @description the class object that supports the HH_INaming interface
+    */
+    HH_INaming namingService {
+        get {
+            if (namingService == null) {
+                String implementingClass = new HouseholdSettings().getImplementingClass();
+
+                Type classType = Type.forName(implementingClass);
+                if (classType != null) {
+                    Object classInstance = classType.newInstance();
+                    if (classInstance instanceof HH_INaming) {
+                        namingService = (HH_INaming) classInstance;
+                    }
+                }
+            }
+            return namingService;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description executes the batch job to update all household names
     * @param isActivation whether this is being called when npo02__Advanced_Household_Naming__c is being turned on
     * @return void
@@ -312,7 +246,7 @@ public without sharing class HH_HouseholdNaming {
     public static void refreshAllHouseholdNaming(boolean isActivation) {
         // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
         string strSoql = 'SELECT Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' FROM Contact WHERE ' +
-            UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' != NULL ';
+                UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' != NULL ';
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(strSoql, isActivation);
         integer batchSize = 200;
         id batchProcessId = database.executeBatch(batch, batchSize);
@@ -380,83 +314,20 @@ public without sharing class HH_HouseholdNaming {
     }
 
     public void setHouseholdNameFields(List<SObject> records, Map<Id, SObject> oldMap) {
+        List<Id> ids = new List<Id>();
+        for (SObject sobj : records) {
+            ids.add(sobj.Id);
+        }
+        Map<Id, List<Contact>> contactsByHouseholdId =
+                getHhIDContactMap(ids);
+
         for (SObject h : records) {
             SObject oldRecord = oldMap.get(h.Id);
-
-            CustomFormat customFormat = new CustomFormat(h);
-
-            if (isReplaceable(h, 'Name')) {
-                customFormat.replace('Name;', ';');
-                h.put('Name', nameReplacementText);
-            } else if (isFieldValueChanged(h, 'Name', oldRecord)) {
-                customFormat.append('Name');
-            }
-
-            if (isReplaceable(h, 'npo02__Informal_Greeting__c')) {
-                customFormat.replace('Informal_Greeting__c;', ';');
-                h.put('npo02__Informal_Greeting__c', nameReplacementText);
-            } else if (isFieldValueChanged(h, 'npo02__Informal_Greeting__c', oldRecord)) {
-                customFormat.append('Informal_Greeting__c');
-            }
-
-            if (isReplaceable(h, 'npo02__Formal_Greeting__c')) {
-                customFormat.replace('Formal_Greeting__c;', ';');
-                h.put('npo02__Formal_Greeting__c', nameReplacementText);
-            } else if (isFieldValueChanged(h, 'npo02__Formal_Greeting__c', oldRecord)) {
-                customFormat.append('Formal_Greeting__c');
-            }
-
-            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customFormat.value);
+            HouseholdName householdName = new HouseholdName(h, oldRecord,
+                    contactsByHouseholdId.get(h.Id), namingService, new HouseholdSettings());
+            householdName.processReplacementText();
+            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.getHHName());
         }
-    }
-
-    private Boolean isFieldValueChanged(SObject h, String fieldApiName, SObject oldRecord) {
-        return (String) h.get(fieldApiName) != oldRecord.get(fieldApiName);
-    }
-
-    private Boolean isReplaceable(SObject household, String fieldApiName) {
-        String fieldValue = (String) household.get(fieldApiName);
-        return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText;
-    }
-
-    private class CustomFormat {
-        String value { get; private set; }
-        Set<String> customNameSet {
-            get {
-                return new Set<String>(
-                        new List<String>(
-                                value.split(';')));
-            }
-        }
-        public CustomFormat(SObject h) {
-            this.value = getCustomName(h);
-        }
-
-        private String getCustomName(SObject h) {
-            return h.get('npo02__SYSTEM_CUSTOM_NAMING__c') == null ? ';' :
-                    h.get('npo02__SYSTEM_CUSTOM_NAMING__c') + ';';
-        }
-
-        public void replace(String searchVal, String newVal) {
-            if (customNameSet.contains(searchVal)) {
-                value = value.replace(searchVal, newVal);
-            }
-        }
-
-        public void append(String val) {
-            if (!customNameSet.contains(val)) {
-                value += val + ';';
-            }
-        }
-
-        public Boolean contains(String val) {
-            return this.customNameSet.contains(val);
-        }
-    }
-
-    npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-    public Boolean isAdvancedHouseholdNaming() {
-        return hs != null && hs.npo02__Advanced_Household_Naming__c == true;
     }
 
     /*******************************************************************************************************

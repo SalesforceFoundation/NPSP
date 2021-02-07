@@ -40,23 +40,25 @@ public with sharing class Accounts extends fflib_SObjects {
     List<Account> oldHouseholdAccounts = new List<Account>();
 
     HH_HouseholdNaming service;
+    HouseholdSettings settings;
 
     public Accounts(List<Account> records) {
-        this(records, null, null);
+        this(records, null, null, null);
     }
 
     public Accounts(List<Account> records, List<Account> oldlist) {
-        this(records, oldlist, null);
+        this(records, oldlist, null, null);
     }
 
     @TestVisible
     private Accounts(List<Account> records, List<Account> oldlist, HH_HouseholdNaming
-            service) {
+            service, HouseholdSettings settings) {
         super(records);
         this.accounts = records;
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
         this.service = service == null ? new HH_HouseholdNaming() : service;
+        this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 
     public void onBeforeInsert() {
@@ -78,7 +80,7 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     private Boolean isEnabledAdvancedHouseholdNaming() {
-        return service.isAdvancedHouseholdNaming();
+        return settings.isAdvancedHouseholdNaming();
     }
 
     private Boolean shouldSetHouseholdNameFields() {
