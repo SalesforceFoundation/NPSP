@@ -36,28 +36,30 @@ public with sharing class Households extends fflib_SObjects {
 
     Map<Id, npo02__Household__c> mapIdHHOld;
     HH_HouseholdNaming service;
+    HouseholdSettings settings;
 
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
-        this(records, oldlist, null);
+        this(records, oldlist, null, null);
     }
 
     @TestVisible
     private Households(List<npo02__Household__c> records, List<npo02__Household__c>
-            oldlist, HH_HouseholdNaming service) {
+            oldlist, HH_HouseholdNaming service, HouseholdSettings settings) {
         super(records);
         mapIdHHOld = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
         this.service = service == null ? new HH_HouseholdNaming() : service;
+        this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 
     public void onBeforeUpdate() {
-        if (!isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming()) {
+        if (!isHouseholdTriggerContext() && settings.isAdvancedHouseholdNaming()) {
             service.setHouseholdNameFields(getRecords(), mapIdHHOld);
         }
     }
 
     public void onAfterUpdate() {
-        if (!isHouseholdTriggerContext() && service.isAdvancedHouseholdNaming()) {
+        if (!isHouseholdTriggerContext() && settings.isAdvancedHouseholdNaming()) {
             renameHouseholdAccountsNeedingNameUpdates();
         }
     }

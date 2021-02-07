@@ -46,8 +46,9 @@ public with sharing class HouseholdName {
         this(h, null, contacts, null, null);
     }
 
-    public HouseholdName(SObject h, SObject oldRecord, List<Contact> contacts) {
-        this(h, oldRecord, contacts, null, null);
+    public HouseholdName(SObject h, SObject oldRecord, List<Contact> contacts, HH_INaming
+            service) {
+        this(h, oldRecord, contacts, service, null);
     }
 
     public HouseholdName(SObject h, SObject oldRecord, List<Contact> contacts,
@@ -56,13 +57,15 @@ public with sharing class HouseholdName {
         this.oldRecord = oldRecord;
         this.contacts = contacts == null ?
                 new Contacts(new List<Contact>()) : new Contacts(contacts);
-        if (service == null) {
-            this.service = (HH_INaming) new HH_HouseholdNaming();
-        } else {
-            this.service = service;
-        }
+        this.service = service == null ? new HH_NameSpec() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
         this.customFormat = new CustomFormat(h);
+    }
+
+    public String customNameString {
+        get {
+            return customFormat.value;
+        }
     }
 
     public void processReplacementText() {

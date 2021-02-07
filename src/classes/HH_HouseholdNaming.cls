@@ -178,6 +178,7 @@ public without sharing class HH_HouseholdNaming {
     * @description Returns Automatic Household Naming setting
     * @return Boolean True if the Automatic Household Naming is checked, false otherwise
     */
+    //todo:replace
     public Boolean isAutomaticNaming() {
         npo02__Households_Settings__c settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -324,9 +325,9 @@ public without sharing class HH_HouseholdNaming {
         for (SObject h : records) {
             SObject oldRecord = oldMap.get(h.Id);
             HouseholdName householdName = new HouseholdName(h, oldRecord,
-                    contactsByHouseholdId.get(h.Id), namingService, new HouseholdSettings());
+                    contactsByHouseholdId.get(h.Id), namingService);
             householdName.processReplacementText();
-            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.getHHName());
+            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.customNameString);
         }
     }
 

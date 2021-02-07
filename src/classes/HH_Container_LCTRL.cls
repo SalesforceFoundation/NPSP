@@ -521,22 +521,13 @@ public with sharing class HH_Container_LCTRL {
             Contacts contacts = new Contacts(listCon);
             contacts.copyNamingExclusionsFromCheckboxes();
 
-            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
-
-            if (!hhNaming.isAutomaticNaming()) {
+            HouseholdSettings settings = new HouseholdSettings();
+            if (!settings.isAdvancedHouseholdNaming()) {
                 return hh;
             }
 
-            String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
-            if (strExclusions == null)
-                strExclusions = '';
-                
-            if (!strExclusions.contains('Name'))
-                hh.put('Name', hhNaming.getHHName(listCon));
-            if (!strExclusions.contains('Formal_Greeting__c'))
-                hh.put('npo02__Formal_Greeting__c', hhNaming.getFormalName(listCon));
-            if (!strExclusions.contains('Informal_Greeting__c'))
-                hh.put('npo02__Informal_Greeting__c', hhNaming.getInformalName(listCon));
+            HouseholdName householdName = new HouseholdName(hh, listCon);
+            householdName.setNameFieldValuesOnHousehold();
 
             return hh;
         } catch (Exception ex) {
