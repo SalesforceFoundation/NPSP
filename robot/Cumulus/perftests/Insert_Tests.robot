@@ -21,7 +21,7 @@ Insert 200 Contacts
     Log to Console             ${COUNTER}
     ${random}=     Generate Random String     16
     ${timestamp} =	Get Current Date    result_format=epoch
-    @{objects}=  Generate Test Data  Contact  200  
+    @{objects}=  Generate Test Data  Contact  200
         ...  FirstName={{fake.first_name}}
         ...  LastName={{fake.last_name}}
         ...  MailingStreet={{fake.street_address}}

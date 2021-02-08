@@ -136,15 +136,6 @@ tasks:
             path: unpackaged/config/rd2_post_config
             namespace_inject: $project_config.project__package__namespace
 
-    deploy_rd2_config_managed:
-        description: Deploys updates to fully enable Enhanced Recurring Donations, specifically for an Org with a Managed Package
-        class_path: cumulusci.tasks.salesforce.Deploy
-        group: NPSP
-        options:
-            path: unpackaged/config/rd2_post_config
-            namespace_inject: $project_config.project__package__namespace
-            unmanaged: False
-
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -324,15 +315,28 @@ tasks:
         options:
             objects:
                 - Opportunity
-                - npe03__Recurring_Donation__c
                 - Case
+                - npe03__Recurring_Donation__c
+                - npe5__Affiliation__c
                 - Contact
                 - Account
                 - Allocation__c
                 - General_Accounting_Unit__c
                 - Campaign
                 - DataImport__c
+                - DataImportBatch__c
+                - Batch__c
                 - Level__c
+                - Engagement_Plan__c
+                - Error__c
+
+    purge_npsp_errors:
+        description: 'Deletes all NPSP Error__c records'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        group: Test Data
+        options:
+            objects:
+                - Error__c
 
     test_data_qa_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
@@ -487,24 +491,6 @@ tasks:
         group: "Salesforce DX"
         description: "Calls a sfdx task with the cci Org User specified.  Enter the sfdx task with the command option"
         class_path: cumulusci.tasks.sfdx.SFDXOrgTask
-
-    test_data_delete_managed:
-        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
-        class_path: cumulusci.tasks.bulkdata.DeleteData
-        group: Test Data
-        options:
-            objects:
-                - Opportunity
-                - npe03__Recurring_Donation__c
-                - Case
-                - Contact
-                - Account
-                - npsp__Allocation__c
-                - npsp__General_Accounting_Unit__c
-                - Campaign
-                - npe01__OppPayment__c
-                - npsp__DataImport__c
-                - npsp__Level__c
 
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
@@ -1207,6 +1193,112 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
+    ldv_test_data:
+        description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records
+        group: NPSP
+        steps:
+            5:
+                task: execute_anon
+                ## Configure RD2 to not create installments, disable household addresses and enable automatic naming
+                options:
+                    path: datasets/rd2/config_npsp_for_ldv_data_load.cls
+                    apex: before_data_load();
+            10:
+                task: disable_triggers
+                ## Disable Rollups for both the delete and the data load to avoid lock errors
+                ## Disable the RD2 Opp trigger to prevent it from attempting to create a new RD opp
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                    active: false
+                    restore: false
+            15:
+                task: unschedule_apex
+                ## Delete all scheduled NPSP jobs ... just in case.
+            16:
+                task: set_duplicate_rule_status
+                options:
+                    api_names: Account.Standard_Account_Duplicate_Rule, Contact.Standard_Contact_Duplicate_Rule
+                    active: false
+            20:
+                task: generate_and_load_from_yaml
+                ## The actual data-loading task.
+                ## Use command line parameters to override the num_records and batch_size parameters
+                options:
+                    generator_yaml: datasets/rd2/data_recipe_with_rd2.yml
+                    num_records: 1000
+                    num_records_tablename: Contact
+                    batch_size: 200000
+                    bulk_mode: parallel
+                    mapping: datasets/rd2/data_recipe_with_rd2_mapping.yml
+            25:
+                task: restore_triggers
+                ## Reactivate the Rollup and Merge triggers after data loading completes
+                options:
+                    handlers:
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                    active: true
+                    restore: false
+            30:
+                task: execute_anon
+                ## Turn on automatic installment opportunity creation
+                ## Re-enable Household Addresses
+                options:
+                    path: datasets/rd2/config_npsp_for_ldv_data_load.cls
+                    apex: after_data_load();
+
+    ldv_data_delete:
+        description: Hard Delete all NPSP related data in org, disabling and reenabling triggers to reduce errors and improve performance
+        steps:
+            5:
+                task: disable_triggers
+                ## Disable Rollups for both the delete to avoid lock errors and because they're not needed
+                ## Disable the RD2 Opp trigger to prevent it from attempting to recreate deleted opps
+                ## Disable the Merge triggers so they don't think the deletes are part of a merge
+                ## Disable the Relationship trigger so it doesn't attempt to delete the reciprocal record
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CON_ContactMerge_TDTM
+                        - ACCT_AccountMerge_TDTM
+                        - REL_Relationships_TDTM
+                        - CON_CascadeDeleteLookups_TDTM
+                        - ACCT_CascadeDeleteLookups_TDTM
+                    active: false
+                    restore: false
+            10:
+                task: test_data_delete
+                ## Clear out the relationship object by itself to avoid errors due to concurrent deletes later
+                options:
+                    hardDelete: true
+                    objects:
+                        - npe4__Relationship__c
+            15:
+                task: test_data_delete
+                ## Clear out all remaining data in the org
+                options:
+                    ignore_row_errors: true
+                    hardDelete: true
+            20:
+                task: restore_triggers
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CON_ContactMerge_TDTM
+                        - ACCT_AccountMerge_TDTM
+                        - REL_Relationships_TDTM
+                        - CON_CascadeDeleteLookups_TDTM
+                        - ACCT_CascadeDeleteLookups_TDTM
+                    active: true
+                    restore: false
     test_customizable_rollups:
         description: CRLP Full Regression Test -- Installs unpackaged metadata from crlp_testing, configures an org with CRLP enabled, and then executes the legacy and CRLP rollup regression test suite by creating data, running rollups, and validating the resulting rollup math.
         group: NPSP
@@ -1480,7 +1572,7 @@ plans:
               message: "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation."
         steps:
             1:
-                task: deploy_rd2_config_managed
+                task: deploy_rd2_config
                 ui_options:
                     name: "Enhanced Recurring Donations Metadata Updates"
     reports:
