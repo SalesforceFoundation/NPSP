@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <listViews>
+        <fullName>All_Recurring_Donations</fullName>
+        <columns>NAME</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Recurring Donations</label>
+    </listViews>
+    <listViews>
+        <fullName>Recently_Updated_RD_s</fullName>
+        <columns>NAME</columns>
+        <columns>npe03__Contact__c</columns>
+        <columns>npe03__Installment_Period__c</columns>
+        <columns>%%%NAMESPACE%%%RecurringType__c</columns>
+        <columns>%%%NAMESPACE%%%StartDate__c</columns>
+        <columns>%%%NAMESPACE%%%Status__c</columns>
+        <columns>npe03__Next_Payment_Date__c</columns>
+        <columns>npe03__Paid_Amount__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>LAST_UPDATE</field>
+            <operation>equals</operation>
+            <value>TODAY</value>
+        </filters>
+        <label>Recently Updated RD&apos;s</label>
+    </listViews>
+</CustomObject>
