@@ -24,9 +24,6 @@ public static void before_data_load() {
 
     if (rdSettings.%%%NAMESPACE%%%IsRecurringDonations2Enabled__c == false) {
         String taskName = 'enable_rd2';
-        if ('%%%NAMESPACE%%%' != '') {
-            taskName += '_managed';
-        }
         throw new InitException('Enhanced Recurring Donations must be enabled to continue. Execute the "' + taskName + '" first.');
     }
 

@@ -151,7 +151,6 @@ Cumulus's unpackaged configuration is used as follows:
 | Name                          | Type | Description                                                                         |
 | ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
 | `test_data_delete` | Task | Delete all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors |
-| `test_data_delete_managed` | Task | Version for Managed Orgs  |
 | `purge_npsp_errors` | Task | Deletes all records in the Error__c object  |
 | `ldv_data_delete` | Flow | Hard Deletes all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors. Disables Triggers and other logic first to opimize performance and prevent errors. Use this when deleting large amounts of data in an org. |
 
