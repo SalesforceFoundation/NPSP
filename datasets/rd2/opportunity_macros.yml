@@ -1,0 +1,38 @@
+## ===============================================================================
+## Define an Opportunity associated with a parent contact
+## - CloseDate: Random between 900 days in the past through 90 days in the future
+## - Stage: ClosedWon if in the past; Pledged if in the future
+## - Creates a single allocation record associated with the Opp
+## ===============================================================================
+- macro: ContactOpportunity
+  fields:
+    RecordType: Donation
+    CloseDate:
+      date_between:
+        start_date: -900d
+        end_date: +90d
+    Amount:
+      random_number:
+        min: 10
+        max: 1000
+    Primary_Contact__c:
+      reference: Contact
+    Name: ${{Contact.LastName}} ${{Contact.FirstName}} - $${{this.Amount}}
+    StageName:
+      if:
+        - choice:
+            when: ${{CloseDate <= today}}
+            pick: "Closed Won"
+        - choice:
+            when:
+            pick: "Pledged"
+  friends:
+    ## All Opps will have a single Allocation
+    - object: Allocation__c
+      fields:
+        General_Accounting_Unit__c:
+          reference: theOppGau
+        Opportunity__c:
+          reference: Opportunity
+        Amount__c: ${{Opportunity.Amount}}
+        Percent__c: 100
