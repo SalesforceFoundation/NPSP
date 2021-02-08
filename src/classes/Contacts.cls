@@ -40,24 +40,8 @@ public with sharing class Contacts extends fflib_SObjects {
     List<Contact> contactsNeedingHouseholds = new List<Contact>();
     List<Id> householdsNeedingNamesUpdated = new List<Id>();
     Set<Id> householdIdsNeedingRollup = new Set<Id>();
-    Boolean isRecordTypeOnContacts {
-        get {
-            if (isRecordTypeOnContacts == null) {
-                isRecordTypeOnContacts = getIsRecordTypesOnContacts();
-            }
-            return isRecordTypeOnContacts;
-        }
-        private set;
-    }
-    Set<Id> conRecordTypesToExclude {
-        get {
-            if (conRecordTypesToExclude == null) {
-                conRecordTypesToExclude = settings.contactRecordTypesToExclude();
-            }
-            return conRecordTypesToExclude;
-        }
-        private set;
-    }
+    List<Id> oldHouseholds = new List<Id>();
+    Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
     private final String RECORDTYPEID = 'RecordTypeId';
 
     public Contacts(List<Contact> records) {
@@ -136,8 +120,6 @@ public with sharing class Contacts extends fflib_SObjects {
                 && settings.isAllProcessor();
     }
 
-    List<Id> oldHouseholds = new List<Id>();
-    Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
     public void buildOldHouseholdCollections() {
         oldHouseholds.addAll(getOldHouseholdIds());
         buildOldHouseholdSizeMap();
@@ -244,7 +226,7 @@ public with sharing class Contacts extends fflib_SObjects {
     * @return void
     ********************************************************************************************************/
     private static void copyNamingExclusionsFromMSP(Contact con) {
-        string strExclusions = con.npo02__Naming_Exclusions__c;
+        String strExclusions = con.npo02__Naming_Exclusions__c;
         if (strExclusions == null) {
             strExclusions = '';
         }
@@ -266,7 +248,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void copyNamingExclusionsFromCheckboxes(Contact con) {
-        string mspValue = '';
+        String mspValue = '';
 
         if (con.Exclude_from_Household_Name__c) {
             mspValue += 'Household__c.Name;';
@@ -279,7 +261,7 @@ public with sharing class Contacts extends fflib_SObjects {
         }
 
         if (mspValue.endsWith(';')) {
-            mspValue = mspValue.substring(0, mspValue.length() - 1);
+            mspValue = mspValue.subString(0, mspValue.length() - 1);
         }
 
         con.npo02__Naming_Exclusions__c = mspValue;
@@ -357,11 +339,11 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isExclusion(Contact c) {
-        return !isRecordTypeOnContacts
-                || !conRecordTypesToExclude.contains((id) c.get(RECORDTYPEID));
+        return !isRecordTypesOnContacts()
+                || !settings.contactRecordTypesToExclude().contains((id) c.get(RECORDTYPEID));
     }
 
-    private Boolean getIsRecordTypesOnContacts() {
+    private Boolean isRecordTypesOnContacts() {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORDTYPEID) != null;
     }
 
@@ -394,6 +376,7 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Account> getContactAccountMap(Contact[] contacts) {
         List<Id> accountIds = getAccountIds(contacts);
+        //todo: accountSelector
         Map<Id, Account> contactAccountMap = new Map<Id, Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
         return contactAccountMap;
     }
@@ -454,7 +437,6 @@ public with sharing class Contacts extends fflib_SObjects {
         return dmlWrapper;
     }
 
-    //todo: fix dmlWrap sideeffect
     public void rollupAndRenameHouseholdsAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
         buildDeletedAndMergedContactCollections();
 
@@ -581,7 +563,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private String getOldFieldValue(Contact c, String fieldName) {
-        string strNameOld = String.valueOf(oldMap.get(c.id).get(fieldName));
+        String strNameOld = String.valueOf(oldMap.get(c.id).get(fieldName));
         if (strNameOld == null) {
             strNameOld = '';
         }
@@ -589,7 +571,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private String getNewFieldValue(Contact c, String fieldName) {
-        string strName = String.valueOf(c.get(fieldName));
+        String strName = String.valueOf(c.get(fieldName));
         if (strName == null) {
             strName = '';
         }
@@ -619,9 +601,9 @@ public with sharing class Contacts extends fflib_SObjects {
     ********************************************************************************************************/
     public void deleteOrRenameHouseholdsWhenContactDeleted(Contact[] contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
-        list<SObject> householdDeletes = new list<SObject>();
-        map<Id, Integer> householdCountMap = new map<Id, Integer>();
-        list<id> contactsNeedingHouseholdsRenamed = new list<id>();
+        List<SObject> householdDeletes = new List<SObject>();
+        Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
+        List<id> contactsNeedingHouseholdsRenamed = new List<id>();
 
         //Generate a list of Household Ids
         for (Contact c : contacts) {

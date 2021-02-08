@@ -110,7 +110,8 @@ public with sharing class HouseholdName {
     public String getHHName() {
         List<Contact> listCon = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+            if (con.npo02__Naming_Exclusions__c == null
+                    || !con.npo02__Naming_Exclusions__c.contains('Name'))
                 listCon.add(con);
         }
         return service.getHouseholdName(listCon);
@@ -134,7 +135,8 @@ public with sharing class HouseholdName {
     }
 
     private Boolean isIncludedInInformalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c');
+        return con.npo02__Naming_Exclusions__c == null
+                || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c');
     }
 
     /*******************************************************************************************************
@@ -155,7 +157,8 @@ public with sharing class HouseholdName {
     }
 
     private Boolean isIncludedInFormalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
+        return con.npo02__Naming_Exclusions__c == null
+                || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
     }
 
 
