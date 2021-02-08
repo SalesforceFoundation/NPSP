@@ -1207,6 +1207,94 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
+    test_customizable_rollups:
+        description: CRLP Full Regression Test -- Installs unpackaged metadata from crlp_testing, configures an org with CRLP enabled, and then executes the legacy and CRLP rollup regression test suite by creating data, running rollups, and validating the resulting rollup math.
+        group: NPSP
+        steps:
+            1:
+                task: enable_crlp
+            2:
+                task: custom_settings_value_wait
+                # Wait for CRLP to be fully enabled before continuing with data migration
+                options:
+                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
+                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
+                    value: true
+            3:
+                task: deploy
+                options:
+                    path: unpackaged/config/crlp_testing
+            4:
+                task: update_admin_profile
+            7:
+                task: execute_anon
+                ## Delete any existing test data in the org
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
+            8:
+                task: execute_anon
+                ## Create a new set of test data for these tests
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.createTestDataASync();
+            9:
+                task: batch_apex_wait
+                ## Wait for the test data job to complete
+                options:
+                    class_name: CRLP_TEST_VALIDATE_ROLLUPS
+            10:
+                task: execute_anon
+                ## Execute Legacy Rollups
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.executeLegacyRollups();
+            11:
+                task: execute_anon
+                ## Validate Legacy Rollups
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
+            20:
+                task: execute_anon
+                ## Execute Customizable Rollups
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.executeCustomizableRollups();
+            21:
+                task: batch_apex_wait
+                ## Wait for all CRLP jobs to complete (1/3)
+                options:
+                    class_name: CRLP_ContactSkew_SoftCredit_BATCH
+            22:
+                task: batch_apex_wait
+                ## Wait for all CRLP jobs to complete (2/3)
+                options:
+                    class_name: CRLP_AccountSkew_SoftCredit_BATCH
+            23:
+                task: batch_apex_wait
+                ## Wait for all CRLP jobs to complete (3/3)
+                options:
+                    class_name: CRLP_AccountSkew_BATCH
+            25:
+                task: execute_anon
+                ## Validate Customizable Rollups
+                options:
+                    apex: >
+                        CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
+
+    test_customizable_rollups_multicurrency:
+        description: CRLP Full Regression Test (Multicurrency Org) -- Installs unpackaged metadata from crlp_testing, configures an org with CRLP enabled, and then executes the legacy and CRLP rollup regression test suite by creating data, running rollups, and validating the resulting rollup math.
+        group: NPSP
+        steps:
+            1:
+                task: add_second_currency
+                options:
+                    object: CurrencyType
+                    values: IsoCode:CAD,IsCorporate:false,IsActive:true,DecimalPlaces:2,ConversionRate:2.0
+            2:
+                flow: test_customizable_rollups
+
     max_feature_parameter_limit_work_around:
         description: Deletes feature parameters from local repo to allow deployment to Sandbox and other orgs where max of 25 FP's still exists
         group: Salesforce Metadata
