@@ -37,6 +37,9 @@
 */
 public without sharing class HH_HouseholdNaming {
 
+    HouseholdSettings settings = new HouseholdSettings();
+    String nameReplacementText = System.Label.npo02.NameReplacementText;
+
     /*******************************************************************************************************
     * @description future method to update the household names for the specified households
     * @param hhids the list of household Id's (either Household__c or Account Id's)
@@ -83,7 +86,7 @@ public without sharing class HH_HouseholdNaming {
         for (SObject h : householdsNeedingUpdates) {
             List<Contact> listCon = getContactsForHousehold(h, hhIdToContactsMap);
 
-            if (isAutomaticNaming()) {
+            if (settings.isAdvancedHouseholdNaming()) {
                 new HouseholdName(h, listCon)
                         .setNameFieldValuesOnHousehold();
             }
@@ -175,19 +178,6 @@ public without sharing class HH_HouseholdNaming {
 
 
     /*******************************************************************************************************
-    * @description Returns Automatic Household Naming setting
-    * @return Boolean True if the Automatic Household Naming is checked, false otherwise
-    */
-    //todo:replace
-    public Boolean isAutomaticNaming() {
-        npo02__Households_Settings__c settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-        return settings == null
-            ? false
-            : settings.npo02__Advanced_Household_Naming__c == true;
-    }
-
-    /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
     * direct way to do that by disabling TDTM trigger handlers, or using existing static flags.
@@ -205,17 +195,12 @@ public without sharing class HH_HouseholdNaming {
     * otherwise, an empty set
     */
     public Set<String> getHouseholdNamingContactFields() {
-        Set<String> fieldNames = getFieldNames();
-
-        if (!isAutomaticNaming() || fieldNames == null) {
+        if (!settings.isAdvancedHouseholdNaming()
+                || namingService.setHouseholdNameFieldsOnContact() == null) {
             return new Set<String>();
         } else {
-            return fieldNames;
+            return namingService.setHouseholdNameFieldsOnContact();
         }
-    }
-
-    private Set<String> getFieldNames() {
-        return namingService.setHouseholdNameFieldsOnContact();
     }
 
     /*******************************************************************************************************
@@ -277,7 +262,6 @@ public without sharing class HH_HouseholdNaming {
         private set;
     }
 
-    String nameReplacementText = System.Label.npo02.NameReplacementText;
     public Boolean needsNamingFieldsUpdated(SObject h, SObject oldRecord) {
         if (h.get('Name') == nameReplacementText) {
             return true;

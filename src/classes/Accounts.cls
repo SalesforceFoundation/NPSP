@@ -36,8 +36,7 @@ public with sharing class Accounts extends fflib_SObjects {
 
     List<Account> accounts = new List<Account>();
     Map<Id, Account> oldMap = new Map<Id, Account>();
-    List<Account> newHouseholdAccounts = new List<Account>();
-    List<Account> oldHouseholdAccounts = new List<Account>();
+    List<Account> householdAccounts = new List<Account>();
 
     HH_HouseholdNaming service;
     HouseholdSettings settings;
@@ -74,22 +73,18 @@ public with sharing class Accounts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (isEnabledAdvancedHouseholdNaming()) {
+        if (settings.isAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdates();
         }
     }
 
-    private Boolean isEnabledAdvancedHouseholdNaming() {
-        return settings.isAdvancedHouseholdNaming();
-    }
-
     private Boolean shouldSetHouseholdNameFields() {
-        return !isHouseholdTriggerContext() && isEnabledAdvancedHouseholdNaming();
+        return !isHouseholdTriggerContext() && settings.isAdvancedHouseholdNaming();
     }
 
     private void setHouseholdNameFields() {
         buildHouseholdAccountLists();
-        service.setHouseholdNameFields(newHouseholdAccounts, oldMap);
+        service.setHouseholdNameFields(householdAccounts, oldMap);
     }
 
     private void renameHouseholdsNeedingNameUpdates() {
@@ -99,7 +94,7 @@ public with sharing class Accounts extends fflib_SObjects {
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
         return service.getHouseholdsNeedingNameUpdates(
-                newHouseholdAccounts, oldMap
+                householdAccounts, oldMap
         );
     }
 
@@ -169,8 +164,7 @@ public with sharing class Accounts extends fflib_SObjects {
     private void buildHouseholdAccountLists() {
         for (Account account : accounts) {
             if (isHouseholdAccountType(account)) {
-                newHouseholdAccounts.add(account);
-                oldHouseholdAccounts.add(oldVersionOf(account));
+                householdAccounts.add(account);
             }
         }
     }
