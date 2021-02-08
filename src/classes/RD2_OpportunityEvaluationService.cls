@@ -125,7 +125,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /***
     * @description Applies DML operations on records and keeps track of errors
     */
-    private DatabaseService dbService {
+    public DatabaseService dbService {
         get {
             if (dbService == null) {
                 dbService = new DatabaseService();
@@ -696,6 +696,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             List<Database.SaveResult> saveResults = Database.insert(records, false);
+            recordsInsertedCount += records.size();
+            dmlCount++;
             handleErrors(saveResults, records);
 
             return getSuccessIds(saveResults);
@@ -712,6 +714,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             List<Database.SaveResult> saveResults = Database.update(records, false);
+            recordsUpdatedCount += records.size();
+            dmlCount++;
             handleErrors(saveResults, records);
         }
 
@@ -746,6 +750,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             List<Database.DeleteResult> deleteResults = Database.delete(records, false);
+            dmlCount++;
             handleErrors(deleteResults, records);
         }
 
@@ -809,5 +814,18 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             return failedRDIds.size();
         }
+
+        private Integer recordsUpdatedCount = 0;
+        private Integer recordsInsertedCount = 0;
+        private Integer dmlCount = 0;
+        public Integer getDmlCount() {
+            return this.dmlCount;
+        }
+        public Integer getUpdatedCount() {
+            return this.recordsUpdatedCount;
+        }
+        public Integer getInsertedCount() {
+            return this.recordsInsertedCount;
+        }    
     }
 }
