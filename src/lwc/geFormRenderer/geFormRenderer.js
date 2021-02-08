@@ -2323,6 +2323,19 @@ export default class GeFormRenderer extends LightningElement{
 
     }
 
+    get elevateTransactionWarning() {
+        return format(this.CUSTOM_LABELS.gePaymentProcessedWarning, [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
+    get showElevateTransactionWarning() {
+        // true when data has already been sent to elevate as indicated by payment status
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
+        return paymentStatus &&
+            (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED);
+    }
+
     handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');

@@ -8547,6 +8547,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
     </labels>
     <labels>
+        <fullName>gePaymentProcessedWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
+        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
+    </labels>
+    <labels>
         <fullName>gePaymentProcessError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
