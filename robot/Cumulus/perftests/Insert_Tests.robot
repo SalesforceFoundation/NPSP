@@ -252,4 +252,3 @@ Insert Contact Perf Test 10000 Vanilla Org
         Log To Console   Inserted batch ${index}/${LOOP_COUNTER} for Contacts and Accounts with all NPSP Triggers Disabled
     END
     [Teardown]  Enable NPSP Triggers
-
