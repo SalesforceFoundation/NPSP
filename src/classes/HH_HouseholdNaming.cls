@@ -46,7 +46,7 @@ public without sharing class HH_HouseholdNaming {
     * @return void
     */
     @future
-    public static void FutureUpdateNames(list<id> hhids){
+    public static void FutureUpdateNames(List<Id> hhids){
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
@@ -68,7 +68,7 @@ public without sharing class HH_HouseholdNaming {
     * @param hhids the list of household Id's (either Household__c or Account Id's)
     * @return void
     */
-    public void UpdateNames(list<id> hhids){
+    public void UpdateNames(List<Id> hhids){
 
         // Skip automatic naming during Batch Data Import to improve performance
         if (isHouseholdNamingDisabled) {
@@ -109,40 +109,37 @@ public without sharing class HH_HouseholdNaming {
     }
 
     private List<SObject> getHouseholdsNeedingUpdates(List<Id> hhids) {
-        list<SObject> hhupdatelist = new list<SObject>();
-        List<SObject> listHHObj = getListHHObj(hhids);
-        List<SObject> listHHAcct = getListHHAcct(hhids);
-
-        hhupdatelist.addAll(listHHObj);
-        hhupdatelist.addAll(listHHAcct);
+        List<SObject> hhupdatelist = new List<SObject>();
+        hhupdatelist.addAll(getListHHObj(hhids));
+        hhupdatelist.addAll(getListHHAcct(hhids));
         return hhupdatelist;
     }
 
     private List<SObject> getListHHAcct(List<Id> hhids) {
-        list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN :hhids];
+        List<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN :hhids];
         return listHHAcct;
     }
 
     private List<SObject> getListHHObj(List<Id> hhids) {
-        list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN :hhids];
+        List<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN :hhids];
         return listHHObj;
     }
 
     private List<Contact> getContactsForHousehold(SObject h, Map<Id, List<Contact>> hhIDContactMap) {
-        ID hhId = string.valueOf(h.get('Id'));
+        Id hhId = String.valueOf(h.get('Id'));
         List<Contact> listCon = hhIDContactMap.get(hhId);
         return listCon;
     }
 
     private Map<Id, List<Contact>> getHhIDContactMap(List<Contact> contactlist) {
-        map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
+        Map<Id, List<Contact>> hhIDContactMap = new Map<Id, List<Contact>>();
         for (Contact c : contactlist) {
             if (!hhIDContactMap.containskey(c.hhId__c)) {
-                hhIDContactMap.put(c.hhId__c, new list<Contact>{
+                hhIDContactMap.put(c.hhId__c, new List<Contact>{
                         c
                 });
             } else {
-                list<Contact> clist = hhIDContactMap.get(c.hhId__c);
+                List<Contact> clist = hhIDContactMap.get(c.hhId__c);
                 clist.add(c);
             }
         }
@@ -167,8 +164,8 @@ public without sharing class HH_HouseholdNaming {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        string strSoql = strContactSelectStmtAllNamingFields;
-        string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
+        String strSoql = strContactSelectStmtAllNamingFields;
+        String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
 
         strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
                 ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
@@ -184,10 +181,10 @@ public without sharing class HH_HouseholdNaming {
     * @param disable True to disable, False to enable
     * @return void
     */
-    public static void disableHouseholdNaming(boolean disable) {
+    public static void disableHouseholdNaming(Boolean disable) {
         isHouseholdNamingDisabled = disable;
     }
-    private static boolean isHouseholdNamingDisabled = false;
+    private static Boolean isHouseholdNamingDisabled = false;
 
     /*******************************************************************************************************
     * @description Returns Contact fields specified in the Household Naming Settings format fields.
@@ -229,20 +226,20 @@ public without sharing class HH_HouseholdNaming {
     * @param isActivation whether this is being called when npo02__Advanced_Household_Naming__c is being turned on
     * @return void
     */
-    public static void refreshAllHouseholdNaming(boolean isActivation) {
+    public static void refreshAllHouseholdNaming(Boolean isActivation) {
         // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
-        string strSoql = 'SELECT Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' FROM Contact WHERE ' +
+        String strSoql = 'SELECT Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' FROM Contact WHERE ' +
                 UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' != NULL ';
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(strSoql, isActivation);
-        integer batchSize = 200;
-        id batchProcessId = database.executeBatch(batch, batchSize);
+        Integer batchSize = 200;
+        Id batchProcessId = database.executeBatch(batch, batchSize);
     }
 
     /*******************************************************************************************************
-    * @description the soql select string to use which includes any fields we use or are referred to in
+    * @description the soql select String to use which includes any fields we use or are referred to in
     * any of the naming specifications.
     */
-    public string strContactSelectStmtAllNamingFields {
+    public String strContactSelectStmtAllNamingFields {
         get {
             if (strContactSelectStmtAllNamingFields == null) {
                 //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
