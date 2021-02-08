@@ -74,7 +74,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     private static final Decimal OPPORTUNITY_AMOUNT_USD = BASE_AMOUNT_USD;
     private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? BASE_AMOUNT_USD*CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
-    
+
     private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT_USD = BASE_AMOUNT_USD / 2;
     private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_AMOUNT_USD);
 
@@ -314,7 +314,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
                 if (cs.Customizable_Rollups_Enabled__c == true && TEST_ACCOUNT_SOFT_CREDITS == true) {
-                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT_USD, 
+                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT_USD,
                         (Double) a.get('SC_Total__c'), a.Id + ' Acccount.SC_Total__c should be');
                     assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT_USD * 2, (Double) a.get('Largest_SC_Amount__c'), a.Id + ' Acccount.Largest_SC_Amount__c should be');
                 }
@@ -324,7 +324,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 assertValue(ROLLUP_TOTAL_WON_AMOUNT, a.npo02__TotalOppAmount__c, a.Id + ' Account.npo02__TotalOppAmount__c should be');
                 assertValue(ROLLUP_TOTAL_WON_COUNT, a.npo02__NumberOfClosedOpps__c, 'Account.npo02__NumberOfClosedOpps__c should be');
-                assertValue(ROLLUP_AVERAGE, a.npo02__AverageAmount__c.divide(1, 2, System.RoundingMode.HALF_UP), 'Account.npo02__AverageAmount__c should be');
+                assertValue(ROLLUP_AVERAGE, a.npo02__AverageAmount__c?.divide(1, 2, System.RoundingMode.HALF_UP), 'Account.npo02__AverageAmount__c should be');
                 assertValue(ROLLUP_LARGEST, a.npo02__LargestAmount__c, 'Account.npo02__LargestAmount__c should be');
                 assertValue(ROLLUP_SMALLEST, a.npo02__SmallestAmount__c, 'Account.npo02__SmallestAmount__c should be');
                 assertValue(ROLLUP_BEST_YEAR, a.npo02__Best_Gift_Year__c, 'Account.npo02__Best_Gift_Year__c should be');
@@ -408,7 +408,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 // Hard Credit
                 assertValue(ROLLUP_TOTAL_WON_AMOUNT, c.npo02__TotalOppAmount__c, 'Contact.npo02__TotalOppAmount__c should be');
                 assertValue(ROLLUP_TOTAL_WON_COUNT, c.npo02__NumberOfClosedOpps__c, 'Contact.npo02__NumberOfClosedOpps__c should be');
-                assertValue(ROLLUP_AVERAGE, c.npo02__AverageAmount__c.divide(1, 2, System.RoundingMode.HALF_UP), 'Contact.npo02__AverageAmount__c should be');
+                assertValue(ROLLUP_AVERAGE, c.npo02__AverageAmount__c?.divide(1, 2, System.RoundingMode.HALF_UP), 'Contact.npo02__AverageAmount__c should be');
                 assertValue(ROLLUP_LARGEST, c.npo02__LargestAmount__c, 'Contact.npo02__LargestAmount__c should be');
                 assertValue(ROLLUP_SMALLEST, c.npo02__SmallestAmount__c, 'Contact.npo02__SmallestAmount__c should be');
                 assertValue(ROLLUP_BEST_YEAR, c.npo02__Best_Gift_Year__c, 'Contact.npo02__Best_Gift_Year__c should be');
@@ -455,7 +455,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         gau = Database.query(gauSOQL);
         assertValue(ALLOC_TOTAL_AMOUNT, gau.Total_Allocations__c, 'Total_Allocations__c should be');
         assertValue(ALLOC_TOTAL_COUNT, gau.Total_Number_of_Allocations__c, 'Total_Number_of_Allocations__c should be');
-        assertValue(ALLOC_AVERAGE.intValue(), (gau.Average_Allocation__c != null ? gau.Average_Allocation__c.intValue() : null), 'Average_Allocation__c should be');
+        assertValue(ALLOC_AVERAGE.intValue(), (gau.Average_Allocation__c != null ? gau.Average_Allocation__c?.intValue() : null), 'Average_Allocation__c should be');
 
 
         String rdSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(npe03__Recurring_Donation__c.SObjectType) + ' WHERE Name = :RD_NAME LIMIT 1';
