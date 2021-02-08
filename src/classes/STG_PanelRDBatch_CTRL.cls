@@ -147,7 +147,7 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
         String rdObject = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
 
         return UTIL_Permissions.canUpdate(oppObject, false) &&
-        UTIL_Permissions.canUpdate(rdObject, false);
+            UTIL_Permissions.canUpdate(rdObject, false);
     }
 
 }
