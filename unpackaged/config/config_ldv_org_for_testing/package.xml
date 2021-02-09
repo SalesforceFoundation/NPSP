@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LDV_Export</fullName>
+    <types>
+        <members>TEMP_ClosePledgedDonations</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Nonprofit_Success_Pack</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>%%%NAMESPACE%%%Error__c</members>
+        <members>%%%NAMESPACE%%%Trigger_Handler__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>npe03__Recurring_Donation__c.All_Recurring_Donations</members>
+        <members>npe03__Recurring_Donation__c.Recently_Updated_RD_s</members>
+        <members>%%%NAMESPACE%%%Error__c.All</members>
+        <members>%%%NAMESPACE%%%Trigger_Handler__c.All_Triggers</members>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <version>48.0</version>
+</Package>
