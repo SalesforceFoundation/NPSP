@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Active__c</name>
@@ -7,7 +7,7 @@
   </fields>
   <fields>
     <name>Asynchronous__c</name>
-    <help>Indique que ce module doit être exécuté de manière asynchrone dans cette transaction pour l'un de ses événements postérieurs.</help>
+    <help>Indique que ce module doit être exécuté de manière asynchrone dans cette transaction pour l&apos;un de ses événements postérieurs.</help>
     <label>Événements postérieurs asynchrones</label>
   </fields>
   <fields>
@@ -17,7 +17,7 @@
   </fields>
   <fields>
     <name>Load_Order__c</name>
-    <help>Ordre dans lequel ce module doit être exécuté. L’ordre est en relation avec d'autres déclencheurs sur le même objet avec les mêmes actions de déclencheur, par exemple, tous les déclencheurs « avant insertion » sur le compte.</help>
+    <help>Ordre dans lequel ce module doit être exécuté. L’ordre est en relation avec d&apos;autres déclencheurs sur le même objet avec les mêmes actions de déclencheur, par exemple, tous les déclencheurs « avant insertion » sur le compte.</help>
     <label>Ordre de chargement</label>
   </fields>
   <fields>
@@ -27,7 +27,7 @@
   </fields>
   <fields>
     <name>Trigger_Action__c</name>
-    <help>Le contexte dans lequel cette classe doit être exécutée, par exemple, avant l'insertion d'un enregistrement, après la suppression d'un enregistrement, etc.</help>
+    <help>Le contexte dans lequel cette classe doit être exécutée, par exemple, avant l&apos;insertion d&apos;un enregistrement, après la suppression d&apos;un enregistrement, etc.</help>
     <label>Action de déclencheur</label>
     <picklistValues>
       <masterLabel>BeforeInsert</masterLabel>
@@ -65,8 +65,8 @@
   </fields>
   <fields>
     <name>Usernames_to_Exclude__c</name>
-    <help>Liste de noms d'utilisateurs, séparés par un point virgule, pour lesquels ce gestionnaire de déclencheur ne sera pas exécuté. Si vous souhaitez l'exécuter pour tous les utilisateurs, laissez cette zone vide.</help>
-    <label>Noms d'utilisateur à exclure</label>
+    <help>Liste de noms d&apos;utilisateurs, séparés par un point virgule, pour lesquels ce gestionnaire de déclencheur ne sera pas exécuté. Si vous souhaitez l&apos;exécuter pour tous les utilisateurs, laissez cette zone vide.</help>
+    <label>Noms d&apos;utilisateur à exclure</label>
   </fields>
   <layouts>
     <layout>Trigger Handler Layout</layout>

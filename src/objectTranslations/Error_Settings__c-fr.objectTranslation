@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Async_Error_Check_Last_Run__c</name>
@@ -7,12 +7,12 @@
   </fields>
   <fields>
     <name>Disable_Error_Handling__c</name>
-    <help>Si cette option est activée, l'infrastructure de gestion d’erreur de NPSP est désactivée.</help>
+    <help>Si cette option est activée, l&apos;infrastructure de gestion d’erreur de NPSP est désactivée.</help>
     <label>Désactiver la gestion d’erreur</label>
   </fields>
   <fields>
     <name>DisableRecordDataHealthChecks__c</name>
-    <help>Lorsque cette option est sélectionnée, le Contrôle d'intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d'exécution du Contrôle d'intégrité.</help>
+    <help>Lorsque cette option est sélectionnée, le Contrôle d&apos;intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d&apos;exécution du Contrôle d&apos;intégrité.</help>
     <label>Désactiver contrôles données enregistr.</label>
   </fields>
   <fields>
@@ -37,7 +37,7 @@
   </fields>
   <fields>
     <name>OverrideFeature_PilotEnabled__c</name>
-    <help>Ne pas mettre à jour. Réservé au test pilote Salesforce.org. Accorde un accès limité au paramètre PilotEnabled dans les organisations tests pour prendre en charge le test pilote dans les organisations qui n'ont pas de Licence produit associée dans la LMO.</help>
+    <help>Ne pas mettre à jour. Réservé au test pilote Salesforce.org. Accorde un accès limité au paramètre PilotEnabled dans les organisations tests pour prendre en charge le test pilote dans les organisations qui n&apos;ont pas de Licence produit associée dans la LMO.</help>
     <label>Remplacement org. test : pilote activé</label>
   </fields>
   <fields>
@@ -54,6 +54,6 @@
   <startsWith>Consonant</startsWith>
   <caseValues>
     <plural>false</plural>
-    <value>Paramètres d'erreur</value>
+    <value>Paramètres d&apos;erreur</value>
   </caseValues>
 </CustomObjectTranslation>

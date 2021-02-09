@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Account_Custom_Unique_ID__c</name>
@@ -131,12 +131,12 @@
   </fields>
   <fields>
     <name>Records_Failed__c</name>
-    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld "Zuletzt verarbeitet am" angegebenen Datum nicht erfolgreich verarbeitet wurden.</help>
+    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld &quot;Zuletzt verarbeitet am&quot; angegebenen Datum nicht erfolgreich verarbeitet wurden.</help>
     <label>Fehlerhafte Datensätze</label>
   </fields>
   <fields>
     <name>Records_Successfully_Processed__c</name>
-    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld "Zuletzt verarbeitet am" angegebenen Datum erfolgreich verarbeitet wurden.</help>
+    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld &quot;Zuletzt verarbeitet am&quot; angegebenen Datum erfolgreich verarbeitet wurden.</help>
     <label>Datensätze erfolgreich verarbeitet</label>
   </fields>
   <fields>
@@ -151,7 +151,7 @@
   </fields>
   <fields>
     <name>Batch_Status__c</name>
-    <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches "Fehler – Überprüfung erforderlich".</help>
+    <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches &quot;Fehler – Überprüfung erforderlich&quot;.</help>
     <label>Batch-Status</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>

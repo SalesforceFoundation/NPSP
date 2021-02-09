@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Description_Label__c</name>
@@ -67,7 +67,7 @@
     <name>Primary_Button_Value__c</name>
     <help>Actie die door primaire knop wordt uitgevoerd.
 Voor externe-paginaknop, externe URL.
-Voor Nieuw tabblad SFDC, is de notatie "{pageReference}:{objectOrPageApiName}:{action}". Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
+Voor Nieuw tabblad SFDC, is de notatie &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
     <label>Waarde primaire knop</label>
   </fields>
   <fields>
@@ -96,7 +96,7 @@ Voor Nieuw tabblad SFDC, is de notatie "{pageReference}:{objectOrPageApiName}:{a
     <name>Secondary_Button_Value__c</name>
     <help>Actie die door secundaire knop wordt uitgevoerd.
 Voor externe-paginaknop, externe URL.
-Voor Nieuw tabblad SFDC, is de notatie "{pageReference}:{objectOrPageApiName}:{action}". Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
+Voor Nieuw tabblad SFDC, is de notatie &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
     <label>Waarde secundaire knop</label>
   </fields>
   <fields>

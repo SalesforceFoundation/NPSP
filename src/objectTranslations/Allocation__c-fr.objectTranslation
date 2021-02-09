@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Amount__c</name>
@@ -19,7 +19,7 @@
   </fields>
   <fields>
     <name>Opportunity__c</name>
-    <help>L'opportunité à laquelle vous souhaitez attribuer cette allocation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette allocation.</help>
+    <help>L&apos;opportunité à laquelle vous souhaitez attribuer cette allocation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette allocation.</help>
     <relationshipLabel>Allocations UCG</relationshipLabel>
     <label>Opportunité</label>
   </fields>
@@ -31,7 +31,7 @@
   </fields>
   <fields>
     <name>Percent__c</name>
-    <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette allocation. Si vous modifiez ultérieurement le montant de l'opportunité, NPSP mettra à jour le montant de l'allocation dans l'unité comptable générale.</help>
+    <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette allocation. Si vous modifiez ultérieurement le montant de l&apos;opportunité, NPSP mettra à jour le montant de l&apos;allocation dans l&apos;unité comptable générale.</help>
     <label>Pourcentage</label>
   </fields>
   <fields>

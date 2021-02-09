@@ -1,8 +1,8 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Description_Label__c</name>
-    <help>Der API-Name für die Beschreibungsbezeichnung dieses Elements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Beschreibungsbezeichnung dieses Elements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Beschreibungsbezeichnung</label>
   </fields>
   <fields>
@@ -12,7 +12,7 @@
   </fields>
   <fields>
     <name>GS_Checklist_Section__c</name>
-    <help>Der Abschnitt der Seite "Erste Schritte", zu dem dieses Element gehört.</help>
+    <help>Der Abschnitt der Seite &quot;Erste Schritte&quot;, zu dem dieses Element gehört.</help>
     <relationshipLabel>GS-Checklistenelemente</relationshipLabel>
     <label>GS-Checklistenabschnitt</label>
   </fields>
@@ -23,27 +23,27 @@
   </fields>
   <fields>
     <name>Image__c</name>
-    <help>Der Dateiname des wiederzugebenden Bilds in der statischen Ressource "CumulusResources" (im Ordner "gsAssets/step").</help>
+    <help>Der Dateiname des wiederzugebenden Bilds in der statischen Ressource &quot;CumulusResources&quot; (im Ordner &quot;gsAssets/step&quot;).</help>
     <label>Bild</label>
   </fields>
   <fields>
     <name>Link_Label__c</name>
-    <help>Der API-Name für die Linkbezeichnung eines Links auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Linkbezeichnung eines Links auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Linkbezeichnung</label>
   </fields>
   <fields>
     <name>Link_URL__c</name>
-    <help>Die Ziel-URL für einen Link auf der Seite "Erste Schritte".</help>
+    <help>Die Ziel-URL für einen Link auf der Seite &quot;Erste Schritte&quot;.</help>
     <label>Link-URL</label>
   </fields>
   <fields>
     <name>Position__c</name>
-    <help>Die Position dieses Abschnittelements auf der Seite "Erste Schritte".</help>
+    <help>Die Position dieses Abschnittelements auf der Seite &quot;Erste Schritte&quot;.</help>
     <label>Position</label>
   </fields>
   <fields>
     <name>Primary_Button_Label__c</name>
-    <help>Der API-Name für die Bezeichnung der Hauptschaltfläche in einem Abschnittselement auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
+    <help>Der API-Name für die Bezeichnung der Hauptschaltfläche in einem Abschnittselement auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
     <label>Bezeichnungsname der Hauptschaltfläche</label>
   </fields>
   <fields>
@@ -67,12 +67,12 @@
     <name>Primary_Button_Value__c</name>
     <help>Aktion der Hauptschaltfläche.
 Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: "{pageReference}:{objectOrPageApiName}:{action}". Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
+Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
     <label>Wert für Hauptschaltfläche</label>
   </fields>
   <fields>
     <name>Secondary_Button_Label__c</name>
-    <help>Der API-Name für die Bezeichnung der sekundären Schaltfläche in einem Abschnittselement auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
+    <help>Der API-Name für die Bezeichnung der sekundären Schaltfläche in einem Abschnittselement auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
     <label>Bezeichnungsname sekundäre Schaltfläche</label>
   </fields>
   <fields>
@@ -96,12 +96,12 @@ Schaltflächen für neue SFDC-Registerkarte: "{pageReference}:{objectOrPageApiNa
     <name>Secondary_Button_Value__c</name>
     <help>Aktion der sekundären Schaltfläche.
 Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: "{pageReference}:{objectOrPageApiName}:{action}". Beispiele und Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
+Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
     <label>Wert der sekundären Schaltfläche</label>
   </fields>
   <fields>
     <name>Title_Label__c</name>
-    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Titelbezeichnung</label>
   </fields>
   <layouts>

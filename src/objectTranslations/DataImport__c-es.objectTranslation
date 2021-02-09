@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>ACH_Consent__c</name>
@@ -16,42 +16,34 @@
   </fields>
   <fields>
     <name>Account1_City__c</name>
-    <help>Cuenta1.Ciudad de facturación</help>
     <label>Cuenta1 Ciudad</label>
   </fields>
   <fields>
     <name>Account1_Country__c</name>
-    <help>Cuenta1.País de facturación</help>
     <label>Cuenta1 País</label>
   </fields>
   <fields>
     <name>Account1_Name__c</name>
-    <help>Cuenta1.Nombre</help>
     <label>Cuenta1 Nombre</label>
   </fields>
   <fields>
     <name>Account1_Phone__c</name>
-    <help>Cuenta1.Teléfono</help>
     <label>Cuenta1.Teléfono</label>
   </fields>
   <fields>
     <name>Account1_State_Province__c</name>
-    <help>Cuenta1.Estado/Provincia de facturación</help>
     <label>Cuenta1 Estado/Provincia</label>
   </fields>
   <fields>
     <name>Account1_Street__c</name>
-    <help>Cuenta1.Calle de facturación</help>
     <label>Cuenta1 Calle</label>
   </fields>
   <fields>
     <name>Account1_Website__c</name>
-    <help>Cuenta1.Sitio web</help>
     <label>Cuenta1 Sitio web</label>
   </fields>
   <fields>
     <name>Account1_Zip_Postal_Code__c</name>
-    <help>Cuenta1.Código postal de facturación</help>
     <label>Cuenta1 Código postal</label>
   </fields>
   <fields>
@@ -65,42 +57,34 @@
   </fields>
   <fields>
     <name>Account2_City__c</name>
-    <help>Cuenta2.Ciudad de facturación</help>
     <label>Cuenta2 Ciudad</label>
   </fields>
   <fields>
     <name>Account2_Country__c</name>
-    <help>Cuenta2.País de facturación</help>
     <label>Cuenta2 País</label>
   </fields>
   <fields>
     <name>Account2_Name__c</name>
-    <help>Cuenta2.Nombre</help>
     <label>Cuenta2 Nombre</label>
   </fields>
   <fields>
     <name>Account2_Phone__c</name>
-    <help>Cuenta2.Teléfono</help>
     <label>Cuenta2 Teléfono</label>
   </fields>
   <fields>
     <name>Account2_State_Province__c</name>
-    <help>Cuenta2.Estado/Provincia de facturación</help>
     <label>Cuenta2 Estado/Provincia</label>
   </fields>
   <fields>
     <name>Account2_Street__c</name>
-    <help>Cuenta2.Calle de facturación</help>
     <label>Cuenta2 Calle</label>
   </fields>
   <fields>
     <name>Account2_Website__c</name>
-    <help>Cuenta2.Sitio web</help>
     <label>Cuenta2 Sitio web</label>
   </fields>
   <fields>
     <name>Account2_Zip_Postal_Code__c</name>
-    <help>Cuenta2.Código postal de facturación</help>
     <label>Cuenta2 Código Postal</label>
   </fields>
   <fields>
@@ -128,12 +112,10 @@
   </fields>
   <fields>
     <name>Contact1_Alternate_Email__c</name>
-    <help>Contact1.npe01__AlternateEmail__c</help>
     <label>Contacto1 Correo e. alter.</label>
   </fields>
   <fields>
     <name>Contact1_Birthdate__c</name>
-    <help>Contacto1.Fecha de nacimiento</help>
     <label>Contacto1 Fecha de nacimiento</label>
   </fields>
   <fields>
@@ -148,37 +130,30 @@
   </fields>
   <fields>
     <name>Contact1_Firstname__c</name>
-    <help>Contacto1.Nombre</help>
     <label>Contacto1 Nombre</label>
   </fields>
   <fields>
     <name>Contact1_Home_Phone__c</name>
-    <help>Contacto1.Teléfono particular</help>
     <label>Contacto1 Teléfono particular</label>
   </fields>
   <fields>
     <name>Contact1_Lastname__c</name>
-    <help>Contacto1.Apellido</help>
     <label>Contacto1 Apellido</label>
   </fields>
   <fields>
     <name>Contact1_Mobile_Phone__c</name>
-    <help>Contacto1.Móvil</help>
     <label>Contacto1 Móvil</label>
   </fields>
   <fields>
     <name>Contact1_Other_Phone__c</name>
-    <help>Contacto1.Otro teléfono</help>
     <label>Contacto1 Otro teléfono</label>
   </fields>
   <fields>
     <name>Contact1_Personal_Email__c</name>
-    <help>Contact1.npe01__HomeEmail__c</help>
     <label>Contacto1 Correo e. particular</label>
   </fields>
   <fields>
     <name>Contact1_Preferred_Email__c</name>
-    <help>Contact1.npe01__Preferred_Email__c</help>
     <label>Contacto1 Correo e. elegido</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -195,7 +170,6 @@
   </fields>
   <fields>
     <name>Contact1_Preferred_Phone__c</name>
-    <help>Contact1.npe01__PreferredPhone__c</help>
     <label>Contacto1 Teléfono elegido</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -216,22 +190,18 @@
   </fields>
   <fields>
     <name>Contact1_Salutation__c</name>
-    <help>Contacto1.Saludo</help>
     <label>Contacto1 Saludo</label>
   </fields>
   <fields>
     <name>Contact1_Title__c</name>
-    <help>Contacto1.Título</help>
     <label>Contacto1 Título</label>
   </fields>
   <fields>
     <name>Contact1_Work_Email__c</name>
-    <help>Contact1.npe01__WorkEmail__c</help>
     <label>Contacto1 Correo electrónico laboral</label>
   </fields>
   <fields>
     <name>Contact1_Work_Phone__c</name>
-    <help>Contact1.npe01__WorkPhone__c</help>
     <label>Contacto1 Teléfono laboral</label>
   </fields>
   <fields>
@@ -245,47 +215,38 @@
   </fields>
   <fields>
     <name>Contact2_Alternate_Email__c</name>
-    <help>Contact2.npe01__AlternateEmail__c</help>
     <label>Contacto2 Correo e. alter.</label>
   </fields>
   <fields>
     <name>Contact2_Birthdate__c</name>
-    <help>Contact2.Birthdate</help>
     <label>Contacto2 Fecha de nacimiento</label>
   </fields>
   <fields>
     <name>Contact2_Firstname__c</name>
-    <help>Contact2.Firstname</help>
     <label>Contacto2 Nombre</label>
   </fields>
   <fields>
     <name>Contact2_Home_Phone__c</name>
-    <help>Contact2.HomePhone</help>
     <label>Contacto2 Teléfono particular</label>
   </fields>
   <fields>
     <name>Contact2_Lastname__c</name>
-    <help>Contact2.Lastname</help>
     <label>Contacto2 Apellido</label>
   </fields>
   <fields>
     <name>Contact2_Mobile_Phone__c</name>
-    <help>Contact2.MobilePhone</help>
     <label>Contacto2 Móvil</label>
   </fields>
   <fields>
     <name>Contact2_Other_Phone__c</name>
-    <help>Contact2.OtherPhone</help>
     <label>Contacto2 Otro teléfono</label>
   </fields>
   <fields>
     <name>Contact2_Personal_Email__c</name>
-    <help>Contact2.npe01__HomeEmail__c</help>
     <label>Contacto2 Correo electrónico particular</label>
   </fields>
   <fields>
     <name>Contact2_Preferred_Email__c</name>
-    <help>Contact2.npe01__Preferred_Email__c</help>
     <label>Contacto2 Correo electrónico elegido</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -302,7 +263,6 @@
   </fields>
   <fields>
     <name>Contact2_Preferred_Phone__c</name>
-    <help>Contact2.npe01__PreferredPhone__c</help>
     <label>Contacto2 Teléfono elegido</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -323,22 +283,18 @@
   </fields>
   <fields>
     <name>Contact2_Salutation__c</name>
-    <help>Contact2.Salutation</help>
     <label>Contacto2 Saludo</label>
   </fields>
   <fields>
     <name>Contact2_Title__c</name>
-    <help>Contact2.Title</help>
     <label>Contacto2 Título</label>
   </fields>
   <fields>
     <name>Contact2_Work_Email__c</name>
-    <help>Contact2.npe01__WorkEmail__c</help>
     <label>Contacto2 Correo electrónico laboral</label>
   </fields>
   <fields>
     <name>Contact2_Work_Phone__c</name>
-    <help>Contact2.npe01__WorkPhone__c</help>
     <label>Contacto2 Teléfono laboral</label>
   </fields>
   <fields>
@@ -347,7 +303,6 @@
   </fields>
   <fields>
     <name>DonationCampaignImported__c</name>
-    <help>Id. de campaña de oportunidad</help>
     <relationshipLabel>Importaciones de datos de NPSP</relationshipLabel>
     <label>Origen de la campaña de donación</label>
   </fields>
@@ -362,7 +317,6 @@
   </fields>
   <fields>
     <name>Donation_Amount__c</name>
-    <help>Importe.Oportunidad</help>
     <label>Importe de donación</label>
   </fields>
   <fields>
@@ -371,12 +325,10 @@
   </fields>
   <fields>
     <name>Donation_Date__c</name>
-    <help>Fecha de cierre de oportunidad</help>
     <label>Fecha de la donación</label>
   </fields>
   <fields>
     <name>Donation_Description__c</name>
-    <help>Descripción.Oportunidad</help>
     <label>Descripción de la donación</label>
   </fields>
   <fields>
@@ -399,27 +351,22 @@
   </fields>
   <fields>
     <name>Donation_Member_Level__c</name>
-    <help>Opportunity.npe01__Member_Level__c</help>
     <label>Donación Nivel de miembro</label>
   </fields>
   <fields>
     <name>Donation_Membership_End_Date__c</name>
-    <help>Opportunity.npe01__Membership_End_Date__c</help>
     <label>Fecha finalización afiliación donación</label>
   </fields>
   <fields>
     <name>Donation_Membership_Origin__c</name>
-    <help>Opportunity.npe01__Membership_Origin__c</help>
     <label>Origen de afiliación de donación</label>
   </fields>
   <fields>
     <name>Donation_Membership_Start_Date__c</name>
-    <help>Opportunity.npe01__Membership_Start_Date__c</help>
     <label>Fecha de inicio de afiliación donación</label>
   </fields>
   <fields>
     <name>Donation_Name__c</name>
-    <help>Nombre de oportunidad</help>
     <label>Nombre de donación</label>
   </fields>
   <fields>
@@ -429,17 +376,14 @@
   </fields>
   <fields>
     <name>Donation_Record_Type_Name__c</name>
-    <help>Id. del tipo de registro de la oportunidad.</help>
     <label>Nombre de tipo de registro de donación</label>
   </fields>
   <fields>
     <name>Donation_Stage__c</name>
-    <help>Nombre de la etapa de la oportunidad</help>
     <label>Etapa de la donación</label>
   </fields>
   <fields>
     <name>Donation_Type__c</name>
-    <help>Tipo de oportunidad</help>
     <label>Tipo de donación</label>
   </fields>
   <fields>
@@ -517,27 +461,22 @@
   </fields>
   <fields>
     <name>Home_City__c</name>
-    <help>Address.npsp__MailingCity__c</help>
     <label>Ciudad de hogar</label>
   </fields>
   <fields>
     <name>Home_Country__c</name>
-    <help>Address.npsp__MailingCountry__c</help>
     <label>País de hogar</label>
   </fields>
   <fields>
     <name>Home_State_Province__c</name>
-    <help>Address.npsp__MailingState__c</help>
     <label>Estado/Provincia de hogar</label>
   </fields>
   <fields>
     <name>Home_Street__c</name>
-    <help>Address.npsp__MailingStreet__c</help>
     <label>Calle de hogar</label>
   </fields>
   <fields>
     <name>Home_Zip_Postal_Code__c</name>
-    <help>Address.npsp__MailingPostalCode__c</help>
     <label>Código postal de hogar</label>
   </fields>
   <fields>
@@ -547,7 +486,6 @@
   </fields>
   <fields>
     <name>Household_Phone__c</name>
-    <help>Teléfono.Hogar</help>
     <label>Teléfono del hogar</label>
   </fields>
   <fields>
@@ -573,7 +511,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_Role__c</name>
-    <help>La función con la que debe crearse la función del contacto de oportunidad. Por ejemplo, introduzca "Crédito blando" para crear una función de contacto de oportunidad de crédito blando.</help>
+    <help>La función con la que debe crearse la función del contacto de oportunidad. Por ejemplo, introduzca &quot;Crédito blando&quot; para crear una función de contacto de oportunidad de crédito blando.</help>
     <label>Función contacto oportunidad 1: Función</label>
   </fields>
   <fields>
@@ -588,7 +526,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_Role__c</name>
-    <help>La función con la que debe crearse la función del contacto de oportunidad. Por ejemplo, introduzca "Crédito blando" para crear una función de contacto de oportunidad de crédito blando.</help>
+    <help>La función con la que debe crearse la función del contacto de oportunidad. Por ejemplo, introduzca &quot;Crédito blando&quot; para crear una función de contacto de oportunidad de crédito blando.</help>
     <label>Función contacto oportunidad 2: Función</label>
   </fields>
   <fields>
@@ -647,7 +585,6 @@
   </fields>
   <fields>
     <name>Payment_Check_Reference_Number__c</name>
-    <help>Payment.npe01__Check_Reference_Number__c</help>
     <label>Cheque de pago/Número de referencia</label>
   </fields>
   <fields>
@@ -692,7 +629,6 @@
   </fields>
   <fields>
     <name>Payment_Method__c</name>
-    <help>Payment.npe01__Payment_Method__c</help>
     <label>Método de pago</label>
   </fields>
   <fields>
