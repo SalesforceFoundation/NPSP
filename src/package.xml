@@ -252,6 +252,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApiApexDelegationService</members>
+        <members>CallableApiApexDelegationService_TEST</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
         <members>CallableDispatchService_ERR</members>
@@ -1699,6 +1701,7 @@
         <members>CRLP_SaveSuccess</members>
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
+        <members>CallableApiJobScheduleInvalidClass</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
         <members>CallableApiProcessingError</members>
