@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>API_Response__c</name>
@@ -111,7 +111,7 @@
   <fields>
     <name>NCOA_Evaluation_Date__c</name>
     <help>La date et l’heure les plus récentes auxquelles l’adresse a été évaluée par un fournisseur NCOA.</help>
-    <label>Date d&apos;évaluation du NCOA</label>
+    <label>Date d'évaluation du NCOA</label>
   </fields>
   <fields>
     <name>NCOA_Result_Code__c</name>
@@ -531,10 +531,10 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>ID d&apos;adresse</nameFieldLabel>
+  <nameFieldLabel>ID d'adresse</nameFieldLabel>
   <standardFields>
     <name>Name</name>
-    <label>ID d&apos;adresse</label>
+    <label>ID d'adresse</label>
   </standardFields>
   <gender>Feminine</gender>
   <startsWith>Vowel</startsWith>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Account_Custom_Unique_ID__c</name>
-    <help>Un champ facultatif d&apos;ID unique à utiliser pour la correspondance de comptes d&apos;organisation</help>
+    <help>Un champ facultatif d'ID unique à utiliser pour la correspondance de comptes d'organisation</help>
     <label>ID unique personnalisé de compte</label>
   </fields>
   <fields>
@@ -16,12 +16,12 @@
   </fields>
   <fields>
     <name>Batch_Defaults__c</name>
-    <help>Les valeurs de champ par défaut d&apos;un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l&apos;interface utilisateur à l&apos;emplacement où vous modifiez votre lot.</help>
+    <help>Les valeurs de champ par défaut d'un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l'interface utilisateur à l'emplacement où vous modifiez votre lot.</help>
     <label>Valeurs par défaut du lot</label>
   </fields>
   <fields>
     <name>Batch_Table_Columns__c</name>
-    <help>Liste des noms d&apos;API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
+    <help>Liste des noms d'API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
     <label>Colonnes de tableau par lots</label>
   </fields>
   <fields>
@@ -32,7 +32,7 @@
   <fields>
     <name>Batch_Gift_Entry_Version__c</name>
     <help>La version de la fonctionnalité Entrée de saisie de dons utilisée pour créer ce lot.</help>
-    <label>Version de l&apos;entrée de saisie de dons</label>
+    <label>Version de l'entrée de saisie de dons</label>
   </fields>
   <fields>
     <name>Batch_Process_Size__c</name>
@@ -51,7 +51,7 @@
   </fields>
   <fields>
     <name>Donation_Date_Range__c</name>
-    <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d&apos;un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
+    <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d'un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
     <label>Nbre de jours à partir de la date du don</label>
   </fields>
   <fields>
@@ -85,7 +85,7 @@
   </fields>
   <fields>
     <name>Donation_Matching_Implementing_Class__c</name>
-    <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
     <label>Classe d’implém. de corresp. de dons</label>
   </fields>
   <fields>
@@ -105,13 +105,13 @@
   </fields>
   <fields>
     <name>Form_Template__c</name>
-    <help>Le modèle à utiliser pour le formulaire d&apos;entrée de dons pour ce lot.</help>
+    <help>Le modèle à utiliser pour le formulaire d'entrée de dons pour ce lot.</help>
     <relationshipLabel>Lots d’importation de données NPSP</relationshipLabel>
     <label>Modèle de formulaire</label>
   </fields>
   <fields>
     <name>GiftBatch__c</name>
-    <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu&apos;ils sont configurés dans l&apos;onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>
+    <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu'ils sont configurés dans l'onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>
     <label>Lot de dons</label>
   </fields>
   <fields>
@@ -121,7 +121,7 @@
   </fields>
   <fields>
     <name>Post_Process_Implementing_Class__c</name>
-    <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements par lots NPSP.</help>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IPostProcess pour les enregistrements par lots NPSP.</help>
     <label>Classe d’implém. de traitement de publ.</label>
   </fields>
   <fields>
@@ -131,7 +131,7 @@
   </fields>
   <fields>
     <name>Records_Failed__c</name>
-    <help>Affiche le nombre d’enregistrements qui n&apos;ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
+    <help>Affiche le nombre d’enregistrements qui n'ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
     <label>Échec des enregistrements</label>
   </fields>
   <fields>
@@ -151,7 +151,7 @@
   </fields>
   <fields>
     <name>Batch_Status__c</name>
-    <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l&apos;importation d&apos;un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
+    <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l'importation d'un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
     <label>Statut du lot</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
@@ -198,10 +198,10 @@
   <startsWith>Consonant</startsWith>
   <caseValues>
     <plural>false</plural>
-    <value>Lot d&apos;importation de données NPSP</value>
+    <value>Lot d'importation de données NPSP</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
-    <value>Lots d&apos;importation de données NPSP</value>
+    <value>Lots d'importation de données NPSP</value>
   </caseValues>
 </CustomObjectTranslation>

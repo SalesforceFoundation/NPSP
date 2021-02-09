@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Account__c</name>
@@ -67,10 +67,10 @@
   <startsWith>Consonant</startsWith>
   <caseValues>
     <plural>false</plural>
-    <value>Plan d&apos;engagement</value>
+    <value>Plan d'engagement</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
-    <value>Plans d&apos;engagement</value>
+    <value>Plans d'engagement</value>
   </caseValues>
 </CustomObjectTranslation>

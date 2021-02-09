@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Description_Label__c</name>
-    <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Beschreibungsbezeichnung</label>
   </fields>
   <fields>
     <name>Page_Type__c</name>
-    <help>Der Typ der Seite &quot;Erste Schritte&quot; (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
+    <help>Der Typ der Seite "Erste Schritte" (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
     <label>Seitentyp</label>
     <picklistValues>
       <masterLabel>Admin</masterLabel>
@@ -20,12 +20,12 @@
   </fields>
   <fields>
     <name>Position__c</name>
-    <help>Die Position dieses Abschnitts auf der Seite &quot;Erste Schritte&quot;.</help>
+    <help>Die Position dieses Abschnitts auf der Seite "Erste Schritte".</help>
     <label>Position</label>
   </fields>
   <fields>
     <name>Title_Label__c</name>
-    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Titelbezeichnung</label>
   </fields>
   <layouts>
@@ -39,41 +39,41 @@
   <caseValues>
     <plural>false</plural>
     <caseType>Nominative</caseType>
-    <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>false</plural>
     <caseType>Accusative</caseType>
-    <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>false</plural>
     <caseType>Dative</caseType>
-    <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>false</plural>
     <caseType>Genitive</caseType>
-    <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitts der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
     <caseType>Nominative</caseType>
-    <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
     <caseType>Accusative</caseType>
-    <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
     <caseType>Dative</caseType>
-    <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitten der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
     <caseType>Genitive</caseType>
-    <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
   </caseValues>
 </CustomObjectTranslation>

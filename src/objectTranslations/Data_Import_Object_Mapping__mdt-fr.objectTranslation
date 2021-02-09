@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Custom_Mapping_Logic_Class__c</name>
@@ -7,18 +7,18 @@
   </fields>
   <fields>
     <name>Data_Import_Object_Mapping_Set__c</name>
-    <help>Le Groupe d&apos;objets Importation de données qui contient cet enregistrement.</help>
-    <relationshipLabel>Mappages d&apos;objets Importation de données</relationshipLabel>
+    <help>Le Groupe d'objets Importation de données qui contient cet enregistrement.</help>
+    <relationshipLabel>Mappages d'objets Importation de données</relationshipLabel>
     <label>Ensemble mappages objets import. données</label>
   </fields>
   <fields>
     <name>Imported_Record_Field_Name__c</name>
-    <help>Le Nom d&apos;API du champ dans l&apos;objet Importation de données NPSP dans lequel l&apos;ID de l&apos;enregistrement importé est placé lorsque l&apos;importation réussit. Permet également au code de vérifier si cet enregistrement a été importé ou mappé.</help>
-    <label>Nom de champ de l&apos;enregistrement importé</label>
+    <help>Le Nom d'API du champ dans l'objet Importation de données NPSP dans lequel l'ID de l'enregistrement importé est placé lorsque l'importation réussit. Permet également au code de vérifier si cet enregistrement a été importé ou mappé.</help>
+    <label>Nom de champ de l'enregistrement importé</label>
   </fields>
   <fields>
     <name>Imported_Record_Status_Field_Name__c</name>
-    <help>Le Nom d&apos;API du champ dans lequel la réussite ou l&apos;échec de l&apos;importation est enregistré pour un enregistrement Importation de données NPSP.</help>
+    <help>Le Nom d'API du champ dans lequel la réussite ou l'échec de l'importation est enregistré pour un enregistrement Importation de données NPSP.</help>
     <label>Nom champ statut enregistrement importé</label>
   </fields>
   <fields>
@@ -27,22 +27,22 @@
   </fields>
   <fields>
     <name>Object_API_Name__c</name>
-    <help>Le nom d&apos;API de l&apos;objet cible de ce Groupe d&apos;objets.</help>
-    <label>Nom d&apos;API de l&apos;objet</label>
+    <help>Le nom d'API de l'objet cible de ce Groupe d'objets.</help>
+    <label>Nom d'API de l'objet</label>
   </fields>
   <fields>
     <name>Legacy_Data_Import_Object_Name__c</name>
-    <help>Le nom de l&apos;objet Importation de données hérité de l&apos;objet sur lequel ce Groupe d&apos;objets Importation de données est basé.</help>
+    <help>Le nom de l'objet Importation de données hérité de l'objet sur lequel ce Groupe d'objets Importation de données est basé.</help>
     <label>Nom objet Importation de données hérité</label>
   </fields>
   <fields>
     <name>Predecessor__c</name>
-    <help>L&apos;enregistrement Groupe d&apos;objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
+    <help>L'enregistrement Groupe d'objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
     <label>Prédécesseur</label>
   </fields>
   <fields>
     <name>Relationship_Field__c</name>
-    <help>Si ce Groupe d&apos;objets est un enfant du prédécesseur, ce champ doit référencer le parent. S&apos;il est le parent du prédécesseur, doit être le champ de référence dans l&apos;enregistrement enfant.</help>
+    <help>Si ce Groupe d'objets est un enfant du prédécesseur, ce champ doit référencer le parent. S'il est le parent du prédécesseur, doit être le champ de référence dans l'enregistrement enfant.</help>
     <label>Champ de relation</label>
   </fields>
   <fields>
@@ -65,7 +65,7 @@
   <layouts>
     <layout>Data Import Object Mapping Layout</layout>
     <sections>
-      <label>Détails de la relation de l&apos;objet personnalisé</label>
+      <label>Détails de la relation de l'objet personnalisé</label>
       <section>Custom Object Relationship Details</section>
     </sections>
     <sections>
@@ -77,10 +77,10 @@
   <startsWith>Consonant</startsWith>
   <caseValues>
     <plural>false</plural>
-    <value>Mappage d&apos;objets d&apos;importation de données</value>
+    <value>Mappage d'objets d'importation de données</value>
   </caseValues>
   <caseValues>
     <plural>true</plural>
-    <value>Mappages d&apos;objets d&apos;importation de données</value>
+    <value>Mappages d'objets d'importation de données</value>
   </caseValues>
 </CustomObjectTranslation>

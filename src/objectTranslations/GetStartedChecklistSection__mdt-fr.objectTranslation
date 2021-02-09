@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Description_Label__c</name>
-    <help>Le nom d&apos;API de l&apos;étiquette Description d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-    <label>Nom de l&apos;étiquette de la description</label>
+    <help>Le nom d'API de l'étiquette Description d'un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette de la description</label>
   </fields>
   <fields>
     <name>Page_Type__c</name>
@@ -20,13 +20,13 @@
   </fields>
   <fields>
     <name>Position__c</name>
-    <help>L&apos;emplacement de cette section dans la page Premiers pas.</help>
+    <help>L'emplacement de cette section dans la page Premiers pas.</help>
     <label>Position</label>
   </fields>
   <fields>
     <name>Title_Label__c</name>
-    <help>Le nom d&apos;API de l&apos;étiquette Titre d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-    <label>Nom de l&apos;étiquette du titre</label>
+    <help>Le nom d'API de l'étiquette Titre d'un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette du titre</label>
   </fields>
   <layouts>
     <layout>GS Checklist Section Layout</layout>

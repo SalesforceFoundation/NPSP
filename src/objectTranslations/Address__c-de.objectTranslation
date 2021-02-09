@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>API_Response__c</name>
@@ -499,7 +499,7 @@
   </fields>
   <fields>
     <name>Verification_Status__c</name>
-    <help>Klicken Sie oben rechts auf der Seite auf den Dropdown-Pfeil &quot;Mehr anzeigen&quot; und dann auf &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
+    <help>Klicken Sie oben rechts auf der Seite auf den Dropdown-Pfeil "Mehr anzeigen" und dann auf "Adresse überprüfen", falls diese Adresse überprüft werden muss. Weitere Informationen finden Sie in der Hilfedokumentation im "Power of Us"-Hub.</help>
     <label>Überprüfungsstatus</label>
   </fields>
   <fields>

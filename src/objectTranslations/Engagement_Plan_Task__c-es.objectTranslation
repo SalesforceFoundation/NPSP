@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Assigned_To__c</name>
@@ -61,7 +61,7 @@
   </fields>
   <fields>
     <name>Status__c</name>
-    <help>El estado de la tarea. Tareas dependientes se establecen con estado &quot;Esperando a tarea principal&quot; hasta que la tarea principal se completa.</help>
+    <help>El estado de la tarea. Tareas dependientes se establecen con estado "Esperando a tarea principal" hasta que la tarea principal se completa.</help>
     <label>Estado</label>
     <picklistValues>
       <masterLabel>Not Started</masterLabel>

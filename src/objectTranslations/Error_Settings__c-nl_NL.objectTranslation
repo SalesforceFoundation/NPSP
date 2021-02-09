@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Async_Error_Check_Last_Run__c</name>
@@ -12,7 +12,7 @@
   </fields>
   <fields>
     <name>DisableRecordDataHealthChecks__c</name>
-    <help>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
+    <help>Als deze optie wordt geselecteerd, worden met 'Controle van de Toestand' alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
     <label>Statuscontroles recordgegevens uitsch.</label>
   </fields>
   <fields>
@@ -42,7 +42,7 @@
   </fields>
   <fields>
     <name>Respect_Duplicate_Rule_Settings__c</name>
-    <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op &apos;Toestaan&apos;, worden duplicaten bewaard.</help>
+    <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op 'Toestaan', worden duplicaten bewaard.</help>
     <label>Duplicaatregelinstellingen respecteren</label>
   </fields>
   <fields>

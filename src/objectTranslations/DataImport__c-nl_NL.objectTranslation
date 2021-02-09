@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>ACH_Consent__c</name>
@@ -16,34 +16,42 @@
   </fields>
   <fields>
     <name>Account1_City__c</name>
+    <help>Account1.BillingCity</help>
     <label>Account1 Stad</label>
   </fields>
   <fields>
     <name>Account1_Country__c</name>
+    <help>Account1.BillingCountry</help>
     <label>Account1 Land</label>
   </fields>
   <fields>
     <name>Account1_Name__c</name>
+    <help>Account1.Name</help>
     <label>Account1 Naam</label>
   </fields>
   <fields>
     <name>Account1_Phone__c</name>
+    <help>Account1.Phone</help>
     <label>Account1 Telefoon</label>
   </fields>
   <fields>
     <name>Account1_State_Province__c</name>
+    <help>Account1.BillingState</help>
     <label>Account1 Staat/Provincie</label>
   </fields>
   <fields>
     <name>Account1_Street__c</name>
+    <help>Account1.BillingStreet</help>
     <label>Account1 Straat</label>
   </fields>
   <fields>
     <name>Account1_Website__c</name>
+    <help>Account1.Website</help>
     <label>Account1 Website</label>
   </fields>
   <fields>
     <name>Account1_Zip_Postal_Code__c</name>
+    <help>Account1.BillingPostalCode</help>
     <label>Account1 Postcode</label>
   </fields>
   <fields>
@@ -57,34 +65,42 @@
   </fields>
   <fields>
     <name>Account2_City__c</name>
+    <help>Account2.BillingCity</help>
     <label>Account2 Stad</label>
   </fields>
   <fields>
     <name>Account2_Country__c</name>
+    <help>Account2.BillingCountry</help>
     <label>Account2 Land</label>
   </fields>
   <fields>
     <name>Account2_Name__c</name>
+    <help>Account2.Name</help>
     <label>Account2 Naam</label>
   </fields>
   <fields>
     <name>Account2_Phone__c</name>
+    <help>Account2.Phone</help>
     <label>Account2 Telefoon</label>
   </fields>
   <fields>
     <name>Account2_State_Province__c</name>
+    <help>Account2.BillingState</help>
     <label>Account2 Staat/Provincie</label>
   </fields>
   <fields>
     <name>Account2_Street__c</name>
+    <help>Account2.BillingStreet</help>
     <label>Account2 Straat</label>
   </fields>
   <fields>
     <name>Account2_Website__c</name>
+    <help>Account2.Website</help>
     <label>Account2 Website</label>
   </fields>
   <fields>
     <name>Account2_Zip_Postal_Code__c</name>
+    <help>Account2.BillingPostalCode</help>
     <label>Account2 Postcode</label>
   </fields>
   <fields>
@@ -112,10 +128,12 @@
   </fields>
   <fields>
     <name>Contact1_Alternate_Email__c</name>
+    <help>Contact1.npe01__AlternateEmail__c</help>
     <label>Contact1 Alternatieve E-mail</label>
   </fields>
   <fields>
     <name>Contact1_Birthdate__c</name>
+    <help>Contact1.Birthdate</help>
     <label>Contact1 Geboortedatum</label>
   </fields>
   <fields>
@@ -130,30 +148,37 @@
   </fields>
   <fields>
     <name>Contact1_Firstname__c</name>
+    <help>Contact1.Firstname</help>
     <label>Contact1 Voornaam</label>
   </fields>
   <fields>
     <name>Contact1_Home_Phone__c</name>
+    <help>Contact1.HomePhone</help>
     <label>Contact1 Thuistelefoon</label>
   </fields>
   <fields>
     <name>Contact1_Lastname__c</name>
+    <help>Contact1.Lastname</help>
     <label>Contact1 Familienaam</label>
   </fields>
   <fields>
     <name>Contact1_Mobile_Phone__c</name>
+    <help>Contact1.MobilePhone</help>
     <label>Contact1 Mobiele telefoon</label>
   </fields>
   <fields>
     <name>Contact1_Other_Phone__c</name>
+    <help>Contact1.OtherPhone</help>
     <label>Contact1 Andere Telefoon</label>
   </fields>
   <fields>
     <name>Contact1_Personal_Email__c</name>
+    <help>Contact1.npe01__HomeEmail__c</help>
     <label>Contact1 Persoonlijke E-mail</label>
   </fields>
   <fields>
     <name>Contact1_Preferred_Email__c</name>
+    <help>Contact1.npe01__Preferred_Email__c</help>
     <label>Contact1 Voorkeurs-e-mail</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -170,6 +195,7 @@
   </fields>
   <fields>
     <name>Contact1_Preferred_Phone__c</name>
+    <help>Contact1.npe01__PreferredPhone__c</help>
     <label>Contact1 Voorkeurstelefoon</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -190,18 +216,22 @@
   </fields>
   <fields>
     <name>Contact1_Salutation__c</name>
+    <help>Contact1.Salutation</help>
     <label>Contact1 Aanhef</label>
   </fields>
   <fields>
     <name>Contact1_Title__c</name>
+    <help>Contact1.Title</help>
     <label>Contact1 Titel</label>
   </fields>
   <fields>
     <name>Contact1_Work_Email__c</name>
+    <help>Contact1.npe01__WorkEmail__c</help>
     <label>Contact1 Werk-e-mail</label>
   </fields>
   <fields>
     <name>Contact1_Work_Phone__c</name>
+    <help>Contact1.npe01__WorkPhone__c</help>
     <label>Contact1 Werktelefoon</label>
   </fields>
   <fields>
@@ -215,38 +245,47 @@
   </fields>
   <fields>
     <name>Contact2_Alternate_Email__c</name>
+    <help>Contact2.npe01__AlternateEmail__c</help>
     <label>Contact2 Alternatieve E-mail</label>
   </fields>
   <fields>
     <name>Contact2_Birthdate__c</name>
+    <help>Contact2.Birthdate</help>
     <label>Contact2 Geboortedatum</label>
   </fields>
   <fields>
     <name>Contact2_Firstname__c</name>
+    <help>Contact2.Firstname</help>
     <label>Contact2 Voornaam</label>
   </fields>
   <fields>
     <name>Contact2_Home_Phone__c</name>
+    <help>Contact2.HomePhone</help>
     <label>Contact2 Thuistelefoon</label>
   </fields>
   <fields>
     <name>Contact2_Lastname__c</name>
+    <help>Contact2.Lastname</help>
     <label>Contact2 Familienaam</label>
   </fields>
   <fields>
     <name>Contact2_Mobile_Phone__c</name>
+    <help>Contact2.MobilePhone</help>
     <label>Contact2 Mobiele telefoon</label>
   </fields>
   <fields>
     <name>Contact2_Other_Phone__c</name>
+    <help>Contact2.OtherPhone</help>
     <label>Contact2 Andere Telefoon</label>
   </fields>
   <fields>
     <name>Contact2_Personal_Email__c</name>
+    <help>Contact2.npe01__HomeEmail__c</help>
     <label>Contact2 Persoonlijke e-mail</label>
   </fields>
   <fields>
     <name>Contact2_Preferred_Email__c</name>
+    <help>Contact2.npe01__Preferred_Email__c</help>
     <label>Contact2 Voorkeurs-e-mail</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -263,6 +302,7 @@
   </fields>
   <fields>
     <name>Contact2_Preferred_Phone__c</name>
+    <help>Contact2.npe01__PreferredPhone__c</help>
     <label>Contact2 Voorkeurstelefoon</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -283,18 +323,22 @@
   </fields>
   <fields>
     <name>Contact2_Salutation__c</name>
+    <help>Contact2.Salutation</help>
     <label>Contact2 Aanhef</label>
   </fields>
   <fields>
     <name>Contact2_Title__c</name>
+    <help>Contact2.Title</help>
     <label>Contact2 Titel</label>
   </fields>
   <fields>
     <name>Contact2_Work_Email__c</name>
+    <help>Contact2.npe01__WorkEmail__c</help>
     <label>Contact2 Werk-e-mail</label>
   </fields>
   <fields>
     <name>Contact2_Work_Phone__c</name>
+    <help>Contact2.npe01__WorkPhone__c</help>
     <label>Contact2 Werktelefoon</label>
   </fields>
   <fields>
@@ -303,6 +347,7 @@
   </fields>
   <fields>
     <name>DonationCampaignImported__c</name>
+    <help>Opportunity.CampaignId</help>
     <relationshipLabel>NPSP-gegevensimports</relationshipLabel>
     <label>Bron van Donatiecampagne</label>
   </fields>
@@ -317,6 +362,7 @@
   </fields>
   <fields>
     <name>Donation_Amount__c</name>
+    <help>Opportunity.Amount</help>
     <label>Donatiebedrag</label>
   </fields>
   <fields>
@@ -325,10 +371,12 @@
   </fields>
   <fields>
     <name>Donation_Date__c</name>
+    <help>Opportunity.CloseDate</help>
     <label>Donatiedatum</label>
   </fields>
   <fields>
     <name>Donation_Description__c</name>
+    <help>Opportunity.Description</help>
     <label>Donatiebeschrijving</label>
   </fields>
   <fields>
@@ -351,39 +399,47 @@
   </fields>
   <fields>
     <name>Donation_Member_Level__c</name>
+    <help>Opportunity.npe01__Member_Level__c</help>
     <label>Niveau van Donatielid</label>
   </fields>
   <fields>
     <name>Donation_Membership_End_Date__c</name>
+    <help>Opportunity.npe01__Membership_End_Date__c</help>
     <label>Einddatum van Donatielidmaatschap</label>
   </fields>
   <fields>
     <name>Donation_Membership_Origin__c</name>
+    <help>Opportunity.npe01__Membership_Origin__c</help>
     <label>Herkomst van Donatielidmaatschap</label>
   </fields>
   <fields>
     <name>Donation_Membership_Start_Date__c</name>
+    <help>Opportunity.npe01__Membership_Start_Date__c</help>
     <label>Begindatum van Donatielidmaatschap</label>
   </fields>
   <fields>
     <name>Donation_Name__c</name>
+    <help>Opportunity.Name</help>
     <label>Donatienaam</label>
   </fields>
   <fields>
     <name>Donation_Possible_Matches__c</name>
-    <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Opportunityovereenkomsten voor een Donatie.</help>
+    <help>Een kommagescheiden lijst met ID's voor de eerste 10 mogelijke Opportunityovereenkomsten voor een Donatie.</help>
     <label>Mogelijke Overeenkomsten van Donatie</label>
   </fields>
   <fields>
     <name>Donation_Record_Type_Name__c</name>
+    <help>Opportunity.RecordTypeId</help>
     <label>Naam van Recordtype van Donatie</label>
   </fields>
   <fields>
     <name>Donation_Stage__c</name>
+    <help>Opportunity.StageName</help>
     <label>Donatiefase</label>
   </fields>
   <fields>
     <name>Donation_Type__c</name>
+    <help>Opportunity.Type</help>
     <label>Donatietype</label>
   </fields>
   <fields>
@@ -461,22 +517,27 @@
   </fields>
   <fields>
     <name>Home_City__c</name>
+    <help>Address.npsp__MailingCity__c</help>
     <label>Thuisstad</label>
   </fields>
   <fields>
     <name>Home_Country__c</name>
+    <help>Address.npsp__MailingCountry__c</help>
     <label>Thuisland</label>
   </fields>
   <fields>
     <name>Home_State_Province__c</name>
+    <help>Address.npsp__MailingState__c</help>
     <label>Thuisstaat/-provincie</label>
   </fields>
   <fields>
     <name>Home_Street__c</name>
+    <help>Address.npsp__MailingStreet__c</help>
     <label>Thuisstraat</label>
   </fields>
   <fields>
     <name>Home_Zip_Postal_Code__c</name>
+    <help>Address.npsp__MailingPostalCode__c</help>
     <label>Thuispostcode</label>
   </fields>
   <fields>
@@ -486,6 +547,7 @@
   </fields>
   <fields>
     <name>Household_Phone__c</name>
+    <help>Household.Phone</help>
     <label>Telefoon van Huishouden</label>
   </fields>
   <fields>
@@ -511,7 +573,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_Role__c</name>
-    <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld &quot;soft credit&quot; om een Opportunitycontactpersoonsrol voor &quot;soft credit&quot; te maken.</help>
+    <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld "soft credit" om een Opportunitycontactpersoonsrol voor "soft credit" te maken.</help>
     <label>Opportunitycontactpersoonsrol 1: Rol</label>
   </fields>
   <fields>
@@ -526,7 +588,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_Role__c</name>
-    <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld &quot;soft credit&quot; om een Opportunitycontactpersoonsrol voor &quot;soft credit&quot; te maken.</help>
+    <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld "soft credit" om een Opportunitycontactpersoonsrol voor "soft credit" te maken.</help>
     <label>Opportunitycontactpersoonsrol 2: Rol</label>
   </fields>
   <fields>
@@ -585,6 +647,7 @@
   </fields>
   <fields>
     <name>Payment_Check_Reference_Number__c</name>
+    <help>Payment.npe01__Check_Reference_Number__c</help>
     <label>Betalingscheque/referentienummer</label>
   </fields>
   <fields>
@@ -629,6 +692,7 @@
   </fields>
   <fields>
     <name>Payment_Method__c</name>
+    <help>Payment.npe01__Payment_Method__c</help>
     <label>Betalingsmethode</label>
   </fields>
   <fields>
@@ -661,7 +725,7 @@
   </fields>
   <fields>
     <name>Payment_Possible_Matches__c</name>
-    <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betalingsovereenkomsten voor een Donatie.</help>
+    <help>Een kommagescheiden lijst met ID's voor de eerste 10 mogelijke Betalingsovereenkomsten voor een Donatie.</help>
     <label>Mogelijke Overeenkomsten Betaling</label>
   </fields>
   <fields>

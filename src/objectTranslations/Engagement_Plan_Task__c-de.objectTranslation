@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Assigned_To__c</name>
@@ -56,12 +56,12 @@
   </fields>
   <fields>
     <name>Send_Email__c</name>
-    <help>Legt fest, ob nach der Aktivierung der Aufgabe eine E-Mail an den Benutzer im Feld &quot;Zugewiesen zu&quot; gesendet wird. Abhängige Aufgaben werden aktiviert, sobald die übergeordnete Aufgabe abgeschlossen ist.</help>
+    <help>Legt fest, ob nach der Aktivierung der Aufgabe eine E-Mail an den Benutzer im Feld "Zugewiesen zu" gesendet wird. Abhängige Aufgaben werden aktiviert, sobald die übergeordnete Aufgabe abgeschlossen ist.</help>
     <label>E-Mail senden</label>
   </fields>
   <fields>
     <name>Status__c</name>
-    <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status &quot;Auf übergeordnete Aufgabe warten&quot;, bis die übergeordnete Aufgabe abgeschlossen ist.</help>
+    <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status "Auf übergeordnete Aufgabe warten", bis die übergeordnete Aufgabe abgeschlossen ist.</help>
     <label>Status</label>
     <picklistValues>
       <masterLabel>Not Started</masterLabel>

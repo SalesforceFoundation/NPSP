@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>ACH_Consent__c</name>
@@ -16,34 +16,42 @@
   </fields>
   <fields>
     <name>Account1_City__c</name>
+    <help>Ville de facturation du Compte1</help>
     <label>Ville du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Country__c</name>
+    <help>Pays de facturation du Compte1</help>
     <label>Pays du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Name__c</name>
+    <help>Nom du Compte1</help>
     <label>Nom du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Phone__c</name>
+    <help>Téléphone du Compte1</help>
     <label>Téléphone du Compte1</label>
   </fields>
   <fields>
     <name>Account1_State_Province__c</name>
+    <help>État de facturation du Compte1</help>
     <label>Région/Province du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Street__c</name>
+    <help>Rue de facturation du Compte1</help>
     <label>Adresse du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Website__c</name>
+    <help>Site Web du Compte1</help>
     <label>Site Web du Compte1</label>
   </fields>
   <fields>
     <name>Account1_Zip_Postal_Code__c</name>
+    <help>Code postal de facturation du Compte1</help>
     <label>Code postal du Compte1</label>
   </fields>
   <fields>
@@ -57,39 +65,47 @@
   </fields>
   <fields>
     <name>Account2_City__c</name>
+    <help>Ville de facturation du Compte2</help>
     <label>Ville du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Country__c</name>
+    <help>Pays de facturation du Compte2</help>
     <label>Pays du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Name__c</name>
+    <help>Nom du Compte2</help>
     <label>Nom du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Phone__c</name>
+    <help>Téléphone du Compte2</help>
     <label>Téléphone du Compte2</label>
   </fields>
   <fields>
     <name>Account2_State_Province__c</name>
+    <help>État de facturation du Compte2</help>
     <label>Région/Province du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Street__c</name>
+    <help>Rue de facturation du Compte2</help>
     <label>Adresse du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Website__c</name>
+    <help>Site Web du Compte2</help>
     <label>Site Web du Compte2</label>
   </fields>
   <fields>
     <name>Account2_Zip_Postal_Code__c</name>
+    <help>Code postal de facturation du Compte2</help>
     <label>Code postal du Compte2</label>
   </fields>
   <fields>
     <name>Additional_Object_JSON__c</name>
-    <help>Ce champ permet de créer un nombre d&apos;enregistrements dynamiques pour un nombre d&apos;objets dynamiques à partir d&apos;un seul enregistrement Importation de données. Des informations supplémentaires sur les objets sont stockées ici sous le format JSON.</help>
+    <help>Ce champ permet de créer un nombre d'enregistrements dynamiques pour un nombre d'objets dynamiques à partir d'un seul enregistrement Importation de données. Des informations supplémentaires sur les objets sont stockées ici sous le format JSON.</help>
     <label>JSON Objets supplémentaires</label>
   </fields>
   <fields>
@@ -112,10 +128,12 @@
   </fields>
   <fields>
     <name>Contact1_Alternate_Email__c</name>
+    <help>Contact1.npe01__AdresseE-mailSecondaire__c</help>
     <label>E-mail secondaire du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Birthdate__c</name>
+    <help>Date de naissance du Contact1</help>
     <label>Date de naissance du Contact1</label>
   </fields>
   <fields>
@@ -130,30 +148,37 @@
   </fields>
   <fields>
     <name>Contact1_Firstname__c</name>
+    <help>Prénom du Contact1</help>
     <label>Prénom du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Home_Phone__c</name>
+    <help>Téléphone domicile du Contact1</help>
     <label>Téléphone domicile du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Lastname__c</name>
+    <help>Nom du Contact1</help>
     <label>Nom du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Mobile_Phone__c</name>
+    <help>Téléphone mobile du Contact1</help>
     <label>Téléphone mobile du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Other_Phone__c</name>
+    <help>Autre téléphone du Contact1</help>
     <label>Autre téléphone du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Personal_Email__c</name>
+    <help>Contact1.npe01__E-mailPrivé__c</help>
     <label>E-mail personnel du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Preferred_Email__c</name>
+    <help>Contact1.npe01__AdresseE-mailPréférée__c</help>
     <label>E-mail préféré du Contact1</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -170,6 +195,7 @@
   </fields>
   <fields>
     <name>Contact1_Preferred_Phone__c</name>
+    <help>Contact1.npe01__TéléphonePréféré__c</help>
     <label>Téléphone préféré du Contact1</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -190,18 +216,22 @@
   </fields>
   <fields>
     <name>Contact1_Salutation__c</name>
+    <help>Formule de salutation du Contact1</help>
     <label>Formule de salutation du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Title__c</name>
+    <help>Titre du Contact1</help>
     <label>Titre du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Work_Email__c</name>
+    <help>Contact1.npe01__E-mailProfessionnel__c</help>
     <label>E-mail professionnel du Contact1</label>
   </fields>
   <fields>
     <name>Contact1_Work_Phone__c</name>
+    <help>Contact1.npe01__TéléphoneProfessionnel__c</help>
     <label>Téléphone professionnel du Contact1</label>
   </fields>
   <fields>
@@ -215,38 +245,47 @@
   </fields>
   <fields>
     <name>Contact2_Alternate_Email__c</name>
+    <help>Contact2.npe01__AdresseE-mailSecondaire__c</help>
     <label>E-mail secondaire du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Birthdate__c</name>
+    <help>Date de naissance du Contact2</help>
     <label>Date de naissance du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Firstname__c</name>
+    <help>Prénom du Contact2</help>
     <label>Prénom du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Home_Phone__c</name>
+    <help>Téléphone domicile du Contact2</help>
     <label>Téléphone domicile du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Lastname__c</name>
+    <help>Nom du Contact2</help>
     <label>Nom du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Mobile_Phone__c</name>
+    <help>Téléphone mobile du Contact2</help>
     <label>Téléphone mobile du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Other_Phone__c</name>
+    <help>Autre téléphone du Contact2</help>
     <label>Autre téléphone du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Personal_Email__c</name>
+    <help>Contact2.npe01__E-mailPrivé__c</help>
     <label>E-mail personnel du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Preferred_Email__c</name>
+    <help>Contact2.npe01__AdresseE-mailPréférée__c</help>
     <label>E-mail préféré du Contact2</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -263,6 +302,7 @@
   </fields>
   <fields>
     <name>Contact2_Preferred_Phone__c</name>
+    <help>Contact2.npe01__TéléphonePréféré__c</help>
     <label>Téléphone préféré du Contact2</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -283,18 +323,22 @@
   </fields>
   <fields>
     <name>Contact2_Salutation__c</name>
+    <help>Formule de salutation du Contact2</help>
     <label>Formule de salutation du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Title__c</name>
+    <help>Titre du Contact2</help>
     <label>Titre du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Work_Email__c</name>
+    <help>Contact2.npe01__E-mailProfessionnel__c</help>
     <label>E-mail professionnel du Contact2</label>
   </fields>
   <fields>
     <name>Contact2_Work_Phone__c</name>
+    <help>Contact2.npe01__TéléphoneProfessionnel__c</help>
     <label>Téléphone professionnel du Contact2</label>
   </fields>
   <fields>
@@ -303,6 +347,7 @@
   </fields>
   <fields>
     <name>DonationCampaignImported__c</name>
+    <help>ID de campagne de l’opportunité</help>
     <relationshipLabel>Importations de données NPSP</relationshipLabel>
     <label>Source de la campagne du don</label>
   </fields>
@@ -317,6 +362,7 @@
   </fields>
   <fields>
     <name>Donation_Amount__c</name>
+    <help>Montant de l'opportunité</help>
     <label>Montant du don</label>
   </fields>
   <fields>
@@ -325,10 +371,12 @@
   </fields>
   <fields>
     <name>Donation_Date__c</name>
+    <help>Date de clôture de l’opportunité</help>
     <label>Date du don</label>
   </fields>
   <fields>
     <name>Donation_Description__c</name>
+    <help>Description de l’opportunité</help>
     <label>Description du don</label>
   </fields>
   <fields>
@@ -351,22 +399,27 @@
   </fields>
   <fields>
     <name>Donation_Member_Level__c</name>
+    <help>Opportunité.npe01__Niveau_Membre__c</help>
     <label>Niveau de membre du don</label>
   </fields>
   <fields>
     <name>Donation_Membership_End_Date__c</name>
+    <help>Opportunité.npe01__Date_Fin_Adhésion__c</help>
     <label>Date de fin d’adhésion du don</label>
   </fields>
   <fields>
     <name>Donation_Membership_Origin__c</name>
+    <help>Opportunité.npe01__Origine_Adhésion__c</help>
     <label>Origine d’adhésion du don</label>
   </fields>
   <fields>
     <name>Donation_Membership_Start_Date__c</name>
+    <help>Opportunité.npe01__Date_Début_Adhésion__c</help>
     <label>Date de début d’adhésion du don</label>
   </fields>
   <fields>
     <name>Donation_Name__c</name>
+    <help>Nom de l’opportunité</help>
     <label>Nom du don</label>
   </fields>
   <fields>
@@ -376,14 +429,17 @@
   </fields>
   <fields>
     <name>Donation_Record_Type_Name__c</name>
+    <help>ID du type d’enregistrement d’opportunité</help>
     <label>Nom de type d’enregistrement du don</label>
   </fields>
   <fields>
     <name>Donation_Stage__c</name>
+    <help>Nom d’étape de l’opportunité</help>
     <label>Étape du don</label>
   </fields>
   <fields>
     <name>Donation_Type__c</name>
+    <help>Type d'opportunité</help>
     <label>Type de don</label>
   </fields>
   <fields>
@@ -398,19 +454,19 @@
   </fields>
   <fields>
     <name>GAU_Allocation_1_Amount__c</name>
-    <help>Le montant monétaire attribué à la première Allocation UCG de l&apos;opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
+    <help>Le montant monétaire attribué à la première Allocation UCG de l'opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
     <label>Allocation UCG 1 : Montant</label>
   </fields>
   <fields>
     <name>GAU_Allocation_1_GAU__c</name>
-    <help>L&apos;ID Salesforce de l&apos;UCG à utiliser pour la première allocation.</help>
+    <help>L'ID Salesforce de l'UCG à utiliser pour la première allocation.</help>
     <relationshipLabel>Importations de données NPSP (UCG 1)</relationshipLabel>
     <label>Allocation UCG 1 : UCG</label>
   </fields>
   <fields>
     <name>GAU_Allocation_1_Import_Status__c</name>
-    <help>Le statut de la tentative d&apos;insertion de la première Allocation UCG.</help>
-    <label>Allocation UCG 1 : Statut d&apos;importation</label>
+    <help>Le statut de la tentative d'insertion de la première Allocation UCG.</help>
+    <label>Allocation UCG 1 : Statut d'importation</label>
   </fields>
   <fields>
     <name>GAU_Allocation_1_Imported__c</name>
@@ -420,24 +476,24 @@
   </fields>
   <fields>
     <name>GAU_Allocation_1_Percent__c</name>
-    <help>Le pourcentage attribué à la première Allocation UCG de l&apos;opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
+    <help>Le pourcentage attribué à la première Allocation UCG de l'opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
     <label>Allocation UCG 1 : Pourcentage</label>
   </fields>
   <fields>
     <name>GAU_Allocation_2_Amount__c</name>
-    <help>Le montant monétaire attribué à la deuxième Allocation UCG de l&apos;opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
+    <help>Le montant monétaire attribué à la deuxième Allocation UCG de l'opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
     <label>Allocation UCG 2 : Montant</label>
   </fields>
   <fields>
     <name>GAU_Allocation_2_GAU__c</name>
-    <help>L&apos;ID Salesforce de l&apos;UCG à utiliser pour la deuxième Allocation UCG.</help>
+    <help>L'ID Salesforce de l'UCG à utiliser pour la deuxième Allocation UCG.</help>
     <relationshipLabel>Importations de données NPSP (UCG 2)</relationshipLabel>
     <label>Allocation UCG 2 : UCG</label>
   </fields>
   <fields>
     <name>GAU_Allocation_2_Import_Status__c</name>
-    <help>Le statut de la tentative d&apos;insertion de la deuxième Allocation UCG.</help>
-    <label>Allocation UCG 2 : Statut d&apos;importation</label>
+    <help>Le statut de la tentative d'insertion de la deuxième Allocation UCG.</help>
+    <label>Allocation UCG 2 : Statut d'importation</label>
   </fields>
   <fields>
     <name>GAU_Allocation_2_Imported__c</name>
@@ -447,7 +503,7 @@
   </fields>
   <fields>
     <name>GAU_Allocation_2_Percent__c</name>
-    <help>Le pourcentage attribué à la deuxième Allocation UCG de l&apos;opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
+    <help>Le pourcentage attribué à la deuxième Allocation UCG de l'opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
     <label>Allocation UCG 2 : Pourcentage</label>
   </fields>
   <fields>
@@ -461,22 +517,27 @@
   </fields>
   <fields>
     <name>Home_City__c</name>
+    <help>Address.npsp__MailingCity__c</help>
     <label>Ville (domicile)</label>
   </fields>
   <fields>
     <name>Home_Country__c</name>
+    <help>Address.npsp__MailingCountry__c</help>
     <label>Pays (domicile)</label>
   </fields>
   <fields>
     <name>Home_State_Province__c</name>
+    <help>Address.npsp__MailingState__c</help>
     <label>Région/Province (domicile)</label>
   </fields>
   <fields>
     <name>Home_Street__c</name>
+    <help>Address.npsp__MailingStreet__c</help>
     <label>Rue (domicile)</label>
   </fields>
   <fields>
     <name>Home_Zip_Postal_Code__c</name>
+    <help>Address.npsp__MailingPostalCode__c</help>
     <label>Code postal du domicile</label>
   </fields>
   <fields>
@@ -486,6 +547,7 @@
   </fields>
   <fields>
     <name>Household_Phone__c</name>
+    <help>Téléphone du Foyer</help>
     <label>Téléphone du Foyer</label>
   </fields>
   <fields>
@@ -501,33 +563,33 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
-    <help>Le statut de la tentative d&apos;insertion du premier rôle de contact de l&apos;opportunité.</help>
+    <help>Le statut de la tentative d'insertion du premier rôle de contact de l'opportunité.</help>
     <label>Rôle contact opportunité 1: ImportStatus</label>
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_Imported__c</name>
-    <help>L&apos;ID Salesforce du rôle de contact de l&apos;opportunité importé.</help>
+    <help>L'ID Salesforce du rôle de contact de l'opportunité importé.</help>
     <label>Rôle de contact opportunité 1 : Importé</label>
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_Role__c</name>
-    <help>Le rôle avec lequel le rôle de contact de l&apos;opportunité doit être créé. Par exemple saisissez « Crédit indirect » pour créer un rôle de contact d&apos;opportunité Crédit indirect.</help>
-    <label>Rôle de contact d&apos;opportunité 1 : Rôle</label>
+    <help>Le rôle avec lequel le rôle de contact de l'opportunité doit être créé. Par exemple saisissez « Crédit indirect » pour créer un rôle de contact d'opportunité Crédit indirect.</help>
+    <label>Rôle de contact d'opportunité 1 : Rôle</label>
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
-    <help>Le statut de la tentative d&apos;insertion du deuxième rôle de contact de l&apos;opportunité.</help>
+    <help>Le statut de la tentative d'insertion du deuxième rôle de contact de l'opportunité.</help>
     <label>Rôle contact opportunité 2: ImportStatus</label>
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_Imported__c</name>
-    <help>L&apos;ID Salesforce du rôle de contact de l&apos;opportunité importé.</help>
+    <help>L'ID Salesforce du rôle de contact de l'opportunité importé.</help>
     <label>Rôle de contact opportunité 2 : Importé</label>
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_Role__c</name>
-    <help>Le rôle avec lequel le rôle de contact de l&apos;opportunité doit être créé. Par exemple saisissez « Crédit indirect » pour créer un rôle de contact d&apos;opportunité Crédit indirect.</help>
-    <label>Rôle de contact d&apos;opportunité 2 : Rôle</label>
+    <help>Le rôle avec lequel le rôle de contact de l'opportunité doit être créé. Par exemple saisissez « Crédit indirect » pour créer un rôle de contact d'opportunité Crédit indirect.</help>
+    <label>Rôle de contact d'opportunité 2 : Rôle</label>
   </fields>
   <fields>
     <name>PaymentImportStatus__c</name>
@@ -540,7 +602,7 @@
   </fields>
   <fields>
     <name>Payment_ACH_Code__c</name>
-    <help>Le code de Classe d&apos;entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
+    <help>Le code de Classe d'entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
     <label>Code CCA de paiement</label>
   </fields>
   <fields>
@@ -551,7 +613,7 @@
   <fields>
     <name>Payment_Authorization_Token__c</name>
     <help>Jeton d’autorisation pour une transaction.</help>
-    <label>Jeton d&apos;autorisation de paiement</label>
+    <label>Jeton d'autorisation de paiement</label>
   </fields>
   <fields>
     <name>Payment_Authorized_Date__c</name>
@@ -571,7 +633,7 @@
   <fields>
     <name>Payment_Card_Expiration_Year__c</name>
     <help>L’année d’expiration de la carte utilisée pour cette transaction.</help>
-    <label>Année d&apos;expiration carte de paiement</label>
+    <label>Année d'expiration carte de paiement</label>
   </fields>
   <fields>
     <name>Payment_Card_Last_4__c</name>
@@ -585,12 +647,13 @@
   </fields>
   <fields>
     <name>Payment_Check_Reference_Number__c</name>
+    <help>Paiement.npe01__Numéro_Référence_Chèque__c</help>
     <label>Chèque de paiement/Numéro de référence</label>
   </fields>
   <fields>
     <name>Payment_Declined_Reason__c</name>
     <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
-    <label>Motif refus de l&apos;API de paiement Elevate</label>
+    <label>Motif refus de l'API de paiement Elevate</label>
   </fields>
   <fields>
     <name>Payment_Donor_Cover_Amount__c</name>
@@ -629,6 +692,7 @@
   </fields>
   <fields>
     <name>Payment_Method__c</name>
+    <help>Paiement.npe01__Méthode_Paiement__c</help>
     <label>Mode de paiement</label>
   </fields>
   <fields>
@@ -666,8 +730,8 @@
   </fields>
   <fields>
     <name>Payment_Status__c</name>
-    <help>Le statut de l&apos;API de la transaction Elevate.</help>
-    <label>Statut de l&apos;API Elevate de paiement</label>
+    <help>Le statut de l'API de la transaction Elevate.</help>
+    <label>Statut de l'API Elevate de paiement</label>
   </fields>
   <fields>
     <name>Payment_Type__c</name>
@@ -742,7 +806,7 @@
       <section>Campaign Information</section>
     </sections>
     <sections>
-      <label>Informations sur l&apos;opportunité</label>
+      <label>Informations sur l'opportunité</label>
       <section>Opportunity Information</section>
     </sections>
     <sections>
@@ -750,19 +814,19 @@
       <section>Payment Information</section>
     </sections>
     <sections>
-      <label>Information 1 sur l&apos;allocation UCG</label>
+      <label>Information 1 sur l'allocation UCG</label>
       <section>GAU Allocation 1 Information</section>
     </sections>
     <sections>
-      <label>Information 2 sur l&apos;allocation UCG</label>
+      <label>Information 2 sur l'allocation UCG</label>
       <section>GAU Allocation 2 Information</section>
     </sections>
     <sections>
-      <label>Information 1 sur le rôle de contact d&apos;opportunité</label>
+      <label>Information 1 sur le rôle de contact d'opportunité</label>
       <section>Opportunity Contact Role 1 Information</section>
     </sections>
     <sections>
-      <label>Information 2 sur le rôle de contact d&apos;opportunité</label>
+      <label>Information 2 sur le rôle de contact d'opportunité</label>
       <section>Opportunity Contact Role 2 Information</section>
     </sections>
     <sections>
