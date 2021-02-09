@@ -1,248 +1,252 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Calendrier de dons récurrents</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Calendriers de dons récurrents</value>
-    </caseValues>
-    <fields>
-        <help>Détermine si le Calendrier de dons récurrents est actif ou inactif en fonction de la Date de fin. En lecture seule.</help>
-        <label>Actif</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>La campagne associée au don récurrent lors de la création de l&apos;enregistrement de ce calendrier.</help>
-        <label>Campagne associée</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Définit le jour spécifique du mois des futures opportunités de versement lorsque la Période de versement est Mensuelle.</help>
-        <label>Jour du mois</label>
-        <name>DayOfMonth__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Dernier jour du mois</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La date de fin, si nécessaire, de l&apos;enregistrement de ce calendrier.</help>
-        <label>Date de fin du calendrier</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>Pour l&apos;intégration à des services externes ou des entrepôts de données.</help>
-        <label>ID de calendrier externe</label>
-        <name>ExternalId__c</name>
-    </fields>
-    <fields>
-        <help>Le montant de chaque opportunité de versement.</help>
-        <label>Montant</label>
-        <name>InstallmentAmount__c</name>
-    </fields>
-    <fields>
-        <help>Définit le calendrier de versement de ce don récurrent en fonction de la période de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
-        <label>Fréquence de versement</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Définit le calendrier de versement de ce don récurrent en fonction de la fréquence de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
-        <label>Période de versement</label>
-        <name>InstallmentPeriod__c</name>
-        <picklistValues>
-            <masterLabel>1st and 15th</masterLabel>
-            <translation>1er et 15e jours du mois</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>Quotidienne</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>Mensuelle</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>Hebdomadaire</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yearly</masterLabel>
-            <translation>Annuelle</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Définissez quand l&apos;enregistrement de la planification représente une plage de date d&apos;interruption du Don récurrent</help>
-        <label>Interrompu</label>
-        <name>IsPause__c</name>
-    </fields>
-    <fields>
-        <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
-        <label>Mode de paiement</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>CCA</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Chèque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Carte de crédit</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Le don récurrent auquel l&apos;enregistrement de ce calendrier est associé.</help>
-        <label>Don récurrent</label>
-        <name>RecurringDonation__c</name>
-        <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
-        <label>Date de début</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Contient des détails supplémentaires sur la planification, par exemple un motif d&apos;interruption pour une planification interrompue.</help>
-        <label>Motif du statut</label>
-        <name>StatusReason__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Recurring Schedule Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Détails de planification</label>
-            <section>Schedule Details</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Numéro de planification récurrente</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Active__c</name>
+    <help>Détermine si le Calendrier de dons récurrents est actif ou inactif en fonction de la Date de fin. En lecture seule.</help>
+    <label>Actif</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>La campagne associée au don récurrent lors de la création de l'enregistrement de ce calendrier.</help>
+    <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
+    <label>Campagne associée</label>
+  </fields>
+  <fields>
+    <name>DayOfMonth__c</name>
+    <help>Définit le jour spécifique du mois des futures opportunités de versement lorsque la Période de versement est Mensuelle.</help>
+    <label>Jour du mois</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Dernier jour du mois</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>La date de fin, si nécessaire, de l'enregistrement de ce calendrier.</help>
+    <label>Date de fin du calendrier</label>
+  </fields>
+  <fields>
+    <name>ExternalId__c</name>
+    <help>Pour l'intégration à des services externes ou des entrepôts de données.</help>
+    <label>ID de calendrier externe</label>
+  </fields>
+  <fields>
+    <name>InstallmentAmount__c</name>
+    <help>Le montant de chaque opportunité de versement.</help>
+    <label>Montant</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>Définit le calendrier de versement de ce don récurrent en fonction de la période de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+    <label>Fréquence de versement</label>
+  </fields>
+  <fields>
+    <name>InstallmentPeriod__c</name>
+    <help>Définit le calendrier de versement de ce don récurrent en fonction de la fréquence de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+    <label>Période de versement</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensuelle</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Annuelle</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Hebdomadaire</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Quotidienne</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>1er et 15e jours du mois</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>IsPause__c</name>
+    <help>Définissez quand l'enregistrement de la planification représente une plage de date d'interruption du Don récurrent</help>
+    <label>Interrompu</label>
+  </fields>
+  <fields>
+    <name>StatusReason__c</name>
+    <help>Contient des détails supplémentaires sur la planification, par exemple un motif d'interruption pour une planification interrompue.</help>
+    <label>Motif du statut</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
+    <label>Mode de paiement</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Carte de crédit</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Chèque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>CCA</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringDonation__c</name>
+    <help>Le don récurrent auquel l'enregistrement de ce calendrier est associé.</help>
+    <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
+    <label>Don récurrent</label>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>La date à laquelle l'enregistrement de ce calendrier s'applique.</help>
+    <label>Date de début</label>
+  </fields>
+  <layouts>
+    <layout>Recurring Schedule Layout</layout>
+    <sections>
+      <label>Détails de planification</label>
+      <section>Schedule Details</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Numéro de planification récurrente</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Numéro de planification récurrente</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Calendrier de dons récurrents</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Calendriers de dons récurrents</value>
+  </caseValues>
 </CustomObjectTranslation>
