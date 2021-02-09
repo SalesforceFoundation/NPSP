@@ -298,7 +298,8 @@ public with sharing class GE_GiftEntryController {
                 'npe01__Scheduled_Date__c, ' +
                 'npe01__Opportunity__r.Name, ' +
                 'npe01__Opportunity__c, ' +
-                'npe01__Payment_Amount__c ' +
+                'npe01__Payment_Amount__c, ' +
+                'Elevate_Payment_API_Status__c ' +
                 'FROM npe01__OppPayment__c ' +
                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
                 'AND npe01__Written_Off__c = false ' +
@@ -326,8 +327,10 @@ public with sharing class GE_GiftEntryController {
                     'npe01__Opportunity__r.Name, ' +
                     'npe01__Opportunity__c, ' +
                     'npe01__Payment_Amount__c,' +
+                    'npe01__Payment_Date__c,' +
                     'npe01__Paid__c, ' +
-                    'npe01__Written_Off__c ' +
+                    'npe01__Written_Off__c, ' +
+                    'Elevate_Payment_API_Status__c ' +
                     'FROM npe01__OppPayment__r ' +
                     'WHERE npe01__Written_Off__c = false ' +
                     'AND npe01__Paid__c = false)' +

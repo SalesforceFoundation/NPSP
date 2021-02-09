@@ -106,6 +106,8 @@ import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+import ELEVATE_PAYMENT_STATUS_FIELD
+    from '@salesforce/schema/npe01__OppPayment__c.Elevate_Payment_API_Status__c';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_ACCOUNT1_NAME
     from '@salesforce/schema/DataImport__c.Account1_Name__c';
@@ -183,7 +185,9 @@ export default class GeFormRenderer extends LightningElement{
             [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
                 record[apiNameFor(PARENT_OPPORTUNITY_FIELD)],
             [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]: userSelectedMatch,
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch,
+            [apiNameFor(PAYMENT_STATUS)]:
+                record[apiNameFor(ELEVATE_PAYMENT_STATUS_FIELD)],
         };
         this.updateFormState(updatedData);
     }
