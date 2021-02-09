@@ -49,6 +49,9 @@ public class CallableApiParameters {
     public static final String PARAM_PROCESSING_BOUNDARY = 'ProcessingBoundary';
     public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
     public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
+    public static final String PARAM_SCHEDULED_JOB_NAME = 'JobName';
+    public static final String PARAM_SCHEDULED_JOB_CRON_EXPRESSION = 'CronExpression';
+    public static final String PARAM_SCHEDULED_JOB_CLASS = 'ApexClass';
     public static final String PARAM_RECORD_IDS = 'RecordIds';
     public static final String PARAM_START_DATE = 'StartDate';
     public static final String PARAM_END_DATE = 'EndDate';
@@ -70,11 +73,25 @@ public class CallableApiParameters {
     private Boolean isParamRequired = false;
 
     /**
+     * @description Allow the getDataType methods to thrown an exception if a string parameter is empty.
+     */
+    private Boolean isParamEmptyStringProhibited = false;
+
+    /**
      * @description Configure all future calls to retrieve a typed-parameter to require the parameter
      * @return this
      */
     public CallableApiParameters withRequiredParamCheck() {
         this.isParamRequired = true;
+        return this;
+    }
+
+    /**
+     * @description Configure all future calls to retrieve a string parameter to require a non-empty string
+     * @return this
+     */
+    public CallableApiParameters withEmptyStringParamCheck() {
+        this.isParamEmptyStringProhibited = true;
         return this;
     }
 
@@ -94,6 +111,7 @@ public class CallableApiParameters {
      */
     public String getString(String paramName) {
         validateRequiredParameter('String', paramName);
+        validateStringParameterNotBlank('String', paramName);
         try {
             return (String) params.get(paramName);
         } catch (Exception ex) {
@@ -317,6 +335,24 @@ public class CallableApiParameters {
      */
     private void validateRequiredParameter(String paramType, String paramName) {
         if (isParamRequired && !params.containsKey(paramName)) {
+            throwParameterException(paramType, paramName);
+        }
+    }
+
+    /**
+     * @description Throw an exception if a string parameter is empty. Does not validate
+     * data type. That is handled by the specific 'get' methods. This only validates that the
+     * string parameter is non-empty. This check is disabled by default, but can be enabled when required.
+     * @param paramType The Parameter Data Type
+     * @param paramName The parameter name to check for
+     */
+    private void validateStringParameterNotBlank(String paramType, String paramName) {
+        if (!isParamEmptyStringProhibited || !params.containsKey(paramName)) {
+            return;
+        }
+
+        String paramString = ((String) params.get(paramName)).trim();
+        if (String.isEmpty(paramString)) {
             throwParameterException(paramType, paramName);
         }
     }
