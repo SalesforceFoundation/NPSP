@@ -595,3 +595,13 @@ Verify No Errors Displayed on AM Page And Object Group
     View Field Mappings Of The Object   Account 1
     Page Should Not Contain Locator     npsp_settings.page_error    warning     ${object_group} : ${field} (${field}__c)
     Wait For Locator Is Not Visible     npsp_settings.field_error   ${field}__c
+
+Create Test User
+    [Documentation]   Creates a new testing user if one does not currently exist.
+    [Arguments]       ${perm_sets}  ${test_user_alias}
+    &{result} =  Soql Query  SELECT IsActive from User WHERE Alias = '${test_user_alias}'
+    ${test_user_exists} =  Get From Dictionary  ${result}  totalSize
+    Run Keyword If  '${test_user_exists}' != '1'
+    ...         Run Process  cci   flow   run   create_testing_user
+    ...         Run Process  cci   flow   run   assign_permission_set   --api_names ${perm_sets}   --user_alias  ${test_user_alias}
+    ...  ELSE   Log to Console  'Test User exists. Skipping...'
