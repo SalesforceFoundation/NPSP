@@ -41,6 +41,7 @@ private with sharing class Callable_API_TEST {
     private static final String CRLP_IS_ENABLED_ACTION = 'CRLP.iscrlpenabled';
     private static final String RD2_EXECUTE_MIGRATION_ACTION = 'RD2.ExecuteDataMigration';
     private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
+    private static final String JOB_SCHEDULE_ACTION = 'Apex.ScheduleJob';
 
     /**
     * @description verify the TDTM Callable action returns an Object
