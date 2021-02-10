@@ -20,7 +20,8 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         otherwise waits until page contains batches table"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix("Nonprofit Success Pack"), name)
+        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Cumulus Managed Feature Test")
+        object_name = "{}{}".format(namespace, name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
@@ -388,7 +389,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                             self.salesforce._jsclick(field_checkbox)
                         except ElementClickInterceptedException:
                             self.selenium.execute_javascript("window.scrollBy(0,0)")
-                            self.salesforce._jsclick(field_checkbox)               
+                            self.salesforce._jsclick(field_checkbox)
             else:
                 self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
@@ -631,7 +632,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             locator=npsp_lex_locators["gift_entry"]["progress_bar"].format(key, value)
             self.selenium.scroll_element_into_view(locator)
             self.selenium.wait_until_page_contains_element(locator)
-            
+
     def verify_batch_error(self,error,message):
         """Verify batch error alert present in the page"""
         locator=npsp_lex_locators["gift_entry"]["batch_error"].format(error,message)
