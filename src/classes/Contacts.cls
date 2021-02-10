@@ -383,12 +383,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
     }
 
-    private static npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
-        npo02__household__c h = new npo02__household__c();
-        String hName = con.LastName;
-        hName += ' ' + system.label.npo02.DefaultHouseholdName;
-        h.Name = hName;
-        //sync the primary address block
+    private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
+        npo02__household__c h = new npo02__household__c(Name=getDefaultHouseholdName(con));
+        syncPrimaryAddressBlock(h, con);
+        return h;
+    }
+
+    private void syncPrimaryAddressBlock(npo02__Household__c h, Contact con) {
         h.npo02__MailingStreet__c = con.MailingStreet;
         h.npo02__MailingCity__c = con.MailingCity;
         h.npo02__MailingState__c = con.MailingState;
@@ -396,7 +397,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         h.npo02__MailingCountry__c = con.MailingCountry;
         h.npo02__HouseholdPhone__c = con.HomePhone;
         h.npo02__HouseholdEmail__c = con.Email;
-        return h;
+    }
+
+    private static String getDefaultHouseholdName(Contact con) {
+        String hName = con.LastName;
+        return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
     /*******************************************************************************************************
