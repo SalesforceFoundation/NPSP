@@ -134,7 +134,7 @@ public class HH_HouseholdNaming_TEST {
 
         //use future to prevent the before HH trigger from firing
         test.starttest();
-        HH_HouseholdNaming.FutureUpdateNames(householdids);
+        HH_HouseholdNaming.updateHouseholdNamesAsynchronously(householdids);
         test.stoptest();
         //test a single member household, lastname, firstname, householdname:
         Contact con = [
@@ -223,7 +223,7 @@ public class HH_HouseholdNaming_TEST {
         //update our newly updated contact's households
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         test.startTest();
-        hn.UpdateNames(newhhids);
+        hn.updateHouseholdNames(newhhids);
 
         test.stopTest();
     }
@@ -281,7 +281,7 @@ public class HH_HouseholdNaming_TEST {
 
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
 
-        hn.UpdateNames(new list<Id>{hh.id});
+        hn.updateHouseholdNames(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -299,7 +299,7 @@ public class HH_HouseholdNaming_TEST {
         update con1;
         update con2;
 
-        hn.UpdateNames(new list<Id>{hh.id});
+        hn.updateHouseholdNames(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -314,7 +314,7 @@ public class HH_HouseholdNaming_TEST {
         update con0;
         update con1;
 
-        hn.UpdateNames(new list<Id>{hh.id});
+        hn.updateHouseholdNames(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -331,7 +331,7 @@ public class HH_HouseholdNaming_TEST {
         update con0;
         update con1;
 
-        hn.UpdateNames(new list<Id>{hh.id});
+        hn.updateHouseholdNames(new list<Id>{hh.id});
         Test.stopTest();
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
@@ -390,7 +390,7 @@ public class HH_HouseholdNaming_TEST {
         // Specify null argument -> ensure records with null Account or Household do not have names updated
         List<Id> hhIds = new List<Id>{ contacts[0].AccountId, null };
 
-        hhNaming.updateNames(hhIds);
+        hhNaming.updateHouseholdNames(hhIds);
 
         actualContacts = getContactsOrderById();
 

@@ -127,7 +127,7 @@ public with sharing class BDI_ContactService {
         }
         if (setHHId.size() > 0) {
             HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            hn.UpdateNames(new List<Id>(setHHId));
+            hn.updateHouseholdNames(new List<Id>(setHHId));
         }
     }
 

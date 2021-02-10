@@ -46,18 +46,12 @@ public without sharing class HH_HouseholdNaming {
     * @return void
     */
     @future
-    public static void FutureUpdateNames(List<Id> hhids){
+    public static void updateHouseholdNamesAsynchronously(List<Id> hhids){
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-
-        //create a new instance of the HH_HouseholdNaming class -
-        //and pass in our param
-        //this is b/c of the public visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
-
-        hn.UpdateNames(hhids);
-
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);    
+        hn.updateHouseholdNames(hhids);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
     /*******************************************************************************************************
@@ -68,13 +62,10 @@ public without sharing class HH_HouseholdNaming {
     * @param hhids the list of household Id's (either Household__c or Account Id's)
     * @return void
     */
-    public void UpdateNames(List<Id> hhids){
-
-        // Skip automatic naming during Batch Data Import to improve performance
+    public void updateHouseholdNames(List<Id> hhids){
         if (isHouseholdNamingDisabled) {
             return;
         }
-
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
@@ -341,9 +332,9 @@ public without sharing class HH_HouseholdNaming {
 
         if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
-            hhName.UpdateNames(accountIds);
+            hhName.updateHouseholdNames(accountIds);
         } else {
-            HH_HouseholdNaming.FutureUpdateNames(accountIds);
+            HH_HouseholdNaming.updateHouseholdNamesAsynchronously(accountIds);
         }
     }
 }

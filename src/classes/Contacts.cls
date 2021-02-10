@@ -190,10 +190,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void updateHouseholdNames(List<Id> contactsNeedingHouseholdNamesUpdated) {
         if (isFutureEligible()) {
-            HH_HouseholdNaming.FutureUpdateNames(contactsNeedingHouseholdNamesUpdated);
+            HH_HouseholdNaming.updateHouseholdNamesAsynchronously(contactsNeedingHouseholdNamesUpdated);
         } else {
             HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            hn.UpdateNames(contactsNeedingHouseholdNamesUpdated);
+            hn.updateHouseholdNames(contactsNeedingHouseholdNamesUpdated);
         }
     }
 

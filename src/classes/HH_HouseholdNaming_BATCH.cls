@@ -184,7 +184,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         list<id> hhidlist = new list<id>();
         hhidlist.addall(hhids);
         
-        hn.UpdateNames(hhidlist);
+        hn.updateHouseholdNames(hhidlist);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
     
