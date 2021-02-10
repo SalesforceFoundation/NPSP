@@ -1704,7 +1704,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """
         org_info = self.cumulusci.get_org_info()
         if "sfdx_alias" in org_info.keys():
-            self.builtin.log_to_console(org_info["sfdx_alias"])
             orgname = org_info["sfdx_alias"].split("__")
             return orgname[-1]
         else:
