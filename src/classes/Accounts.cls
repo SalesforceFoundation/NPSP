@@ -99,7 +99,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     public void setSystemFieldValues() {
-        for (Account acc : accounts) {
+        for (Account acc : (List<Account>) getRecords()) {
             if (shouldResetAccountTypeAndIndividualFields(acc)) {
                 resetAccountTypeAndIndividualFields(acc);
             }

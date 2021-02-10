@@ -105,7 +105,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Id householdIdFor(Contact c) {
-        return householdIdFor(c);
+        return c.npo02__Household__c;
     }
 
     private Boolean needsHouseholdNameUpdated(Contact c) {
@@ -134,7 +134,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         //an agg query doesn't pick empty HHs, so if we have an ID, and no
         //HH in the ag, we know we have an empty hh
-        for (id hhid : oldHouseholds) {
+        for (Id hhid : oldHouseholds) {
             if (!oldHouseholdSizeById.containskey(hhid))
                 oldHouseholdSizeById.put(hhid, 0);
         }
@@ -144,11 +144,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         List<Id> oldHouseholdIds = new List<Id>();
         for (SObject sobj : getRecords()) {
             Contact c = (Contact) sobj;
-            if (oldMap.get(c.id).npo02__household__c != null) {
-                oldHouseholdIds.add(oldMap.get(c.id).npo02__household__c);
+            if (conWasInAHousehold(c)) {
+                oldHouseholdIds.add(oldHouseholdIdFor(c));
             }
         }
         return oldHouseholdIds;
+    }
+
+    private Id oldHouseholdIdFor(Contact c) {
+        return oldVersionOf(c).npo02__Household__c;
+    }
+
+    private Boolean conWasInAHousehold(Contact c) {
+        return oldHouseholdIdFor(c) != null;
     }
 
     private List<AggregateResult> getMemberCountForOldHouseholds() {
@@ -177,7 +185,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
         for (Contact con : (List<Contact>) getRecords()) {
-            Contact oldCon = oldMap.get(con.Id);
+            Contact oldCon = oldVersionOf(con);
 
             //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
             //then, copy from multiselect to checkboxes if multiselect has changed
@@ -378,7 +386,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Account> getContactAccountMap(List<Contact> contacts) {
         List<Id> accountIds = getAccountIds(contacts);
-        //todo: accountSelector
         Map<Id, Account> contactAccountMap = new Map<Id, Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
         return contactAccountMap;
     }
@@ -394,22 +401,28 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private List<Contact> getContactsNeedingHouseholds(List<Contact> contacts) {
-        //get all the Accounts so we can test to see if they are individuals
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
 
         List<Contact> householdInserts = new List<Contact>();
         for (Contact c : contacts) {
-            if (c.AccountId != null) {
+            if (hasAccount(c)) {
                 Account acc = contactAccountMap.get(c.AccountId);
-                //check the system field on Account to see if the account is an individual
-                if (acc.npe01__SYSTEMIsIndividual__c == true) {
+                if (isIndividualAccount(acc)) {
                     householdInserts.add(c);
                 }
-            } else if (c.AccountId == null) {
+            } else {
                 householdInserts.add(c);
             }
         }
         return householdInserts;
+    }
+
+    private Boolean hasAccount(Contact c) {
+        return c.AccountId != null;
+    }
+
+    private Boolean isIndividualAccount(Account acc) {
+        return acc.npe01__SYSTEMIsIndividual__c == true;
     }
 
     List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
@@ -488,8 +501,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         Boolean namingFieldChanged = false;
         if (hasHousehold(c)) {
             for (String fieldName : householdNamingFieldsInUse) {
-                Boolean fieldChanged = isFieldChanged(c, fieldName);
-                if (fieldChanged) {
+                if (isFieldChanged(c, fieldName)) {
                     namingFieldChanged = true;
                     break;
                 }
@@ -511,32 +523,27 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isNamingExclusionsChanged(Contact c) {
-        return c.npo02__Naming_Exclusions__c != oldMap.get(c.id).npo02__Naming_Exclusions__c;
+        return c.npo02__Naming_Exclusions__c != oldVersionOf(c).npo02__Naming_Exclusions__c;
     }
 
     private void handleHouseholdChanged(Contact c) {
         householdsNeedingNamesUpdated.add(householdIdFor(c));
         householdIdsNeedingRollup.add(householdIdFor(c));
 
-        Id oldHouseholdId = getOldHouseholdId(oldMap, c);
-        if (oldHouseholdNeedsRefresh(oldHouseholdSizeById, oldMap, c)) {
-            householdsNeedingNamesUpdated.add(oldHouseholdId);
-            householdIdsNeedingRollup.add(oldHouseholdId);
-        } else if (oldHouseholdIsEmpty(oldHouseholdSizeById, oldMap, c)) {
-            emptyHouseholdsToDelete.add(new npo02__Household__c(Id = oldHouseholdId));
+        if (oldHouseholdNeedsRefresh(c)) {
+            householdsNeedingNamesUpdated.add(oldHouseholdIdFor(c));
+            householdIdsNeedingRollup.add(oldHouseholdIdFor(c));
+        } else if (oldHouseholdIsEmpty(c)) {
+            emptyHouseholdsToDelete.add(new npo02__Household__c(Id = oldHouseholdIdFor(c)));
         }
     }
 
-    private Boolean oldHouseholdIsEmpty(Map<Id, Integer> oldHouseholdSize, Map<Id, Contact> oldcmap, Contact c) {
-        return oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0;
+    private Boolean oldHouseholdIsEmpty(Contact c) {
+        return oldHouseholdSizeById.get(oldHouseholdIdFor(c)) == 0;
     }
 
-    private Id getOldHouseholdId(Map<Id, Contact> oldcmap, Contact c) {
-        return oldcmap.get(c.id).npo02__household__c;
-    }
-
-    private Boolean oldHouseholdNeedsRefresh(Map<Id, Integer> oldHouseholdSize, Map<Id, Contact> oldcmap, Contact c) {
-        return oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0;
+    private Boolean oldHouseholdNeedsRefresh(Contact c) {
+        return oldHouseholdSizeById.get(oldHouseholdIdFor(c)) > 0;
     }
 
     private void handleContactHasNoHousehold(Contact c) {
@@ -553,23 +560,27 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 deletedContactsInHouseholds.add(c);
             }
 
-            //check if this Contact is the loser in a merge
-            if (c.MasterRecordId != null) {
+            if (isLosingRecordInMergeOperation(c)) {
                 mergedWinningContact.add(c.MasterRecordId);
             }
         }
     }
 
+    private Boolean isLosingRecordInMergeOperation(Contact c) {
+        return c.MasterRecordId != null;
+    }
+
     private Boolean householdChanged(Contact c) {
-        return householdIdFor(c) != oldMap.get(c.id).npo02__household__c;
+        return householdIdFor(c) != oldHouseholdIdFor(c);
     }
 
     private String getOldFieldValue(Contact c, String fieldName) {
-        String strNameOld = String.valueOf(oldMap.get(c.id).get(fieldName));
-        if (strNameOld == null) {
-            strNameOld = '';
-        }
-        return strNameOld;
+        String strNameOld = String.valueOf(oldVersionOf(c).get(fieldName));
+        return strNameOld == null ? '' : strNameOld;
+    }
+
+    private Contact oldVersionOf(Contact c) {
+        return oldMap.get(c.id);
     }
 
     private String getNewFieldValue(Contact c, String fieldName) {
