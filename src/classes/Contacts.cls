@@ -34,14 +34,18 @@
 */
 public inherited sharing class Contacts extends fflib_SObjects {
 
-    HouseholdSettings settings;
-    Map<Id, Contact> oldMap;
-    List<Contact> contactsNeedingHouseholds = new List<Contact>();
-    List<Id> householdsNeedingNamesUpdated = new List<Id>();
-    Set<Id> householdIdsNeedingRollup = new Set<Id>();
-    List<Id> oldHouseholds = new List<Id>();
-    Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
+    private HouseholdSettings settings;
+    private Map<Id, Contact> oldMap;
+    private List<Contact> contactsNeedingHouseholds = new List<Contact>();
+    private List<Id> householdsNeedingNamesUpdated = new List<Id>();
+    private Set<Id> householdIdsNeedingRollup = new Set<Id>();
+    private List<Id> oldHouseholds = new List<Id>();
+    private Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
     private final String RECORD_TYPE_ID = 'RecordTypeId';
+    private List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
+    private List<Contact> deletedContactsInHouseholds = new List<Contact>();
+    private List<Contact> contactEvaluations = new List<Contact>();
+    private Set<Id> mergedWinningContact = new Set<Id>();
 
     public Contacts(List<Contact> records) {
         this(records, null, null);
@@ -422,10 +426,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return acc.npe01__SYSTEMIsIndividual__c == true;
     }
 
-    List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
-    List<Contact> deletedContactsInHouseholds = new List<Contact>();
-    List<Contact> contactEvaluations = new List<Contact>();
-    Set<Id> mergedWinningContact = new Set<Id>();
     public TDTM_Runnable.DmlWrapper handleAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         //if its an update, we need to get some data about their
