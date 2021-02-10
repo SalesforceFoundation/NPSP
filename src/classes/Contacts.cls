@@ -271,7 +271,7 @@ public with sharing class Contacts extends fflib_SObjects {
     * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
     * @return void
     ********************************************************************************************************/
-    private void insertHouseholdsForContacts(Contact[] contacts, Boolean isInsertTrigger) {
+    private void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
         List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
         if (householdInserts.size() > 0) {
             Database.SaveResult[] householdSaveResults =
@@ -287,7 +287,7 @@ public with sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private List<Contact> processHouseholdSaveResults(Contact[] contacts,
+    private List<Contact> processHouseholdSaveResults(List<Contact> contacts,
             Database.SaveResult[] householdSaveResults) {
         List<Contact> contactsToBeUpdatedWithHouseholdId = new List<Contact>();
         Integer i = 0;
@@ -325,7 +325,7 @@ public with sharing class Contacts extends fflib_SObjects {
         return householdIdsNeedingNamesUpdated;
     }
 
-    private List<npo02__Household__c> getHouseholdsForInsert(Contact[] contacts) {
+    private List<npo02__Household__c> getHouseholdsForInsert(List<Contact> contacts) {
         List<npo02__household__c> householdInserts_local = new List<npo02__household__c>();
         for (Contact c : contacts) {
             if (isExclusion(c)) {
@@ -368,18 +368,18 @@ public with sharing class Contacts extends fflib_SObjects {
     * @param dmlWrapper Not used. Commits are immediate.
     * @return void
     ********************************************************************************************************/
-    public void insertHouseholdsAfterInsert(Contact[] contacts) {
+    public void insertHouseholdsAfterInsert(List<Contact> contacts) {
         insertHouseholdsForContacts(contacts, true);
     }
 
-    private Map<Id, Account> getContactAccountMap(Contact[] contacts) {
+    private Map<Id, Account> getContactAccountMap(List<Contact> contacts) {
         List<Id> accountIds = getAccountIds(contacts);
         //todo: accountSelector
         Map<Id, Account> contactAccountMap = new Map<Id, Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
         return contactAccountMap;
     }
 
-    private List<Id> getAccountIds(Contact[] contacts) {
+    private List<Id> getAccountIds(List<Contact> contacts) {
         List<Id> accountIds = new List<Id>();
         for (Contact c : contacts) {
             if (c.accountId != null) {
@@ -389,7 +389,7 @@ public with sharing class Contacts extends fflib_SObjects {
         return accountIds;
     }
 
-    private List<Contact> getContactsNeedingHouseholds(Contact[] contacts) {
+    private List<Contact> getContactsNeedingHouseholds(List<Contact> contacts) {
         //get all the Accounts so we can test to see if they are individuals
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
 
@@ -597,7 +597,7 @@ public with sharing class Contacts extends fflib_SObjects {
     * @param dmlWrapper On return, holds the Households to delete.
     * @return void
     ********************************************************************************************************/
-    public void deleteOrRenameHouseholdsWhenContactDeleted(Contact[] contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void deleteOrRenameHouseholdsWhenContactDeleted(List<Contact> contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         List<SObject> householdDeletes = new List<SObject>();
         Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
