@@ -489,7 +489,7 @@ Enable RD2
     ${ns} =                   Get Npsp Namespace Prefix
     ${orgname} =              Get Org Name
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
-    ...                       Enable RD2QA
+    ...                       Run Process     cci  flow  run  enable_rd2   --org   ${orgname}
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
     ...                       Run Process     cci  flow  run  enable_rd2_managed   --org   ${orgname}
 
