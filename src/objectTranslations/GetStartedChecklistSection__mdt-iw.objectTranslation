@@ -25,8 +25,8 @@
         <label><!-- Description Label Name --></label>
         <name>Description_Label__c</name>
     </fields>
-     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
+    <fields>
+        <help><!-- The type of Get Started page (Admin or End User) where this section will appear. --></help>
         <label><!-- Page Type --></label>
         <name>Page_Type__c</name>
         <picklistValues>
@@ -49,4 +49,11 @@
         <name>Title_Label__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>

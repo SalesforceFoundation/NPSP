@@ -1,71 +1,67 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Description__c</name>
-    <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
-    <label>Beschreibung</label>
-  </fields>
-  <fields>
-    <name>Format_Version__c</name>
-    <help>Die Version des Spendeneintrags, die zum Erstellen dieser Vorlage verwendet wurde.</help>
-    <label>Formatversion</label>
-  </fields>
-  <fields>
-    <name>Template_JSON__c</name>
-    <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
-    <label>Vorlagen-JSON</label>
-  </fields>
-  <layouts>
-    <layout>Form Template Layout</layout>
-    <sections>
-      <label>Benutzerdefinierte Links</label>
-      <section>Custom Links</section>
-    </sections>
-  </layouts>
-  <nameFieldLabel>Name der Formularvorlage</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Name der Formularvorlage</label>
-  </standardFields>
-  <gender>Feminine</gender>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Nominative</caseType>
-    <value>Formularvorlage</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Accusative</caseType>
-    <value>Formularvorlage</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Dative</caseType>
-    <value>Formularvorlage</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Genitive</caseType>
-    <value>Formularvorlage</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Nominative</caseType>
-    <value>Formularvorlagen</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Accusative</caseType>
-    <value>Formularvorlagen</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Dative</caseType>
-    <value>Formularvorlagen</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Genitive</caseType>
-    <value>Formularvorlagen</value>
-  </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <fields>
+        <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
+        <label>Beschreibung</label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help>Die Version des Spendeneintrags, die zum Erstellen dieser Vorlage verwendet wurde.</help>
+        <label>Formatversion</label>
+        <name>Format_Version__c</name>
+    </fields>
+    <fields>
+        <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
+        <label>Vorlagen-JSON</label>
+        <name>Template_JSON__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Form Template Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Name der Formularvorlage</nameFieldLabel>
 </CustomObjectTranslation>
