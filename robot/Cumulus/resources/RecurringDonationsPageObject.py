@@ -385,7 +385,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             if rdtype == "Open":
                 next_year_value = next_year_value + (12-next_year_count)*int(amount)
             values['Current Year Value']=f"${curr_year_value}.00"
-            values['Next Year Value']=f"${ next_year_value}.00"
+            #values['Next Year Value']=f"${ next_year_value}.00"
             self.validate_field_values_under_section("Statistics",**values)
 
     @capture_screenshot_on_error
