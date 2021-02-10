@@ -35,7 +35,8 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
     def go_to_related_engagement_actionplans_page(self,customerid):
 
         """ Navigates to the related engagement plans listing page"""
-        objectname = "Action_Plans__r"
+        name = "Action_Plans__r"
+        objectname = "{}{}".format(self.npsp.get_npsp_namespace_prefix(), name)
         values =  self.npsp.get_url_formatted_object_name(objectname)
         url = "{}/lightning/r/{}/related/{}/view".format(values['baseurl'],customerid,values['objectname'])
         self.selenium.go_to(url)

@@ -12,6 +12,17 @@ import time
 @pageobject("Listing", "Level__c")
 class LevelListPage(BaseNPSPPage, ListingPage):
 
+    def _go_to_page(self, filter_name=None):
+        """Adding this go to page keyword as a workaround for namespace issue
+        when running with 2GP orgs"""
+        url_template = "{root}/lightning/o/{object}/list"
+        name = self._object_name
+        namespace= self.npsp.get_npsp_namespace_prefix()
+        object_name = "{}{}".format(namespace, name)
+        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+
     def _is_current_page(self):
         """
         Waits for the current page to be level list view
@@ -91,7 +102,7 @@ class LevelListPage(BaseNPSPPage, ListingPage):
                 self.selenium.wait_until_element_is_not_visible(spinner)
 
 @pageobject("Details", "Level__c")
-class LevelDetailPage(BaseNPSPPage, DetailPage): 
+class LevelDetailPage(BaseNPSPPage, DetailPage):
 
     def _is_current_page(self):
         """ Verify we are on the Level detail page
