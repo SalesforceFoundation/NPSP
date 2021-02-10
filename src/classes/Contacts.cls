@@ -574,10 +574,7 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private String getNewFieldValue(Contact c, String fieldName) {
         String strName = String.valueOf(c.get(fieldName));
-        if (strName == null) {
-            strName = '';
-        }
-        return strName;
+        return strName == null ? '' : strName;
     }
 
     private void calculateRollups() {
