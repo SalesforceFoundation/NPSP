@@ -51,10 +51,7 @@ public with sharing class HouseholdSettings {
 
     public String getImplementingClass() {
         String implementingClass = namingSettings.Implementing_Class__c;
-        if (implementingClass == null || implementingClass == '') {
-            implementingClass = defaultNamingService;
-        }
-        return implementingClass;
+        return String.isBlank(implementingClass) ? defaultNamingService : implementingClass;
     }
 
     /*******************************************************************************************************
