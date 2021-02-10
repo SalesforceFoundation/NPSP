@@ -43,6 +43,12 @@ tasks:
         group: Salesforce Metadata
         class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
 
+    create_perms_testing_user:
+        description: Creates a test user for testing permissions.
+        class_path: cumulusci.tasks.sfdx.SFDXOrgTask
+        options:
+            command: "force:user:create -a permtest --definitionfile datasets/users/perms_test_user.json"
+
     delete_files:
         description: Delete the specified files from the current working folder
         group: Salesforce Metadata

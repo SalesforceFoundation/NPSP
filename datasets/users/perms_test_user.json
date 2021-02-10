@@ -1,0 +1,14 @@
+{
+    "Username": "testinggeperms@sfdx.org",
+    "FirstName": "TestUser",
+    "LastName": "ForQE",
+    "Email": "testinggeperms@sfdx.org",
+    "Alias": "permtest",
+    "TimeZoneSidKey": "America/Los_Angeles",
+    "LocaleSidKey": "en_US",
+    "EmailEncodingKey": "UTF-8",
+    "LanguageLocaleKey": "en_US",
+    "profileName": "Standard Platform User",
+    "permsets": ["QA", "Gift_Entry"],
+    "generatePassword": true
+}
