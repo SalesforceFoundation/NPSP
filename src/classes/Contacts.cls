@@ -180,7 +180,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
-                && !system.isFuture() && !system.isBatch();
+                && !System.isFuture() && !System.isBatch();
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
@@ -193,7 +193,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (shouldCopyNamingExclusionsFromCheckboxes(con, oldCon)) {
                 copyNamingExclusionsFromCheckboxes(con);
             } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con, oldCon)) {
-                copyNamingExclusionsFromMSP(con);
+                synchronizeNamingExclusionStringToCheckboxes(
+                        new NamingExclusions(namingExclusionsFor(con)), con);
             }
         }
     }
@@ -210,39 +211,31 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void synchronizeNamingExclusionsFieldsBeforeInsert() {
         for (Contact con : (List<Contact>) getRecords()) {
-            //first, copy multiselect exclusions to checkboxes, then recreate multiselect values from checboxes
-            //this ensures all values from either source are kept
-            if (hasNamingExclusions(con)) {
-                copyNamingExclusionsFromMSP(con);
+            NamingExclusions exclusions = new NamingExclusions(namingExclusionsFor(con));
+            if (exclusions.hasNamingExclusions()) {
+                synchronizeNamingExclusionStringToCheckboxes(exclusions, con);
             }
-            if (shouldCopyNamingExclusionsFromCheckboxesBeforeInsert(con)) {
+            if (hasExclusionCheckboxesChecked(con)) {
                 copyNamingExclusionsFromCheckboxes(con);
             }
         }
     }
 
-    private Boolean hasNamingExclusions(Contact con) {
-        return con.npo02__Naming_Exclusions__c != null;
+    private Boolean hasExclusionCheckboxesChecked(Contact con) {
+        return con.Exclude_from_Household_Name__c
+                || con.Exclude_from_Household_Informal_Greeting__c
+                || con.Exclude_from_Household_Formal_Greeting__c;
     }
 
-    private Boolean shouldCopyNamingExclusionsFromCheckboxesBeforeInsert(Contact con) {
-        return con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c;
+    private static void synchronizeNamingExclusionStringToCheckboxes(
+            NamingExclusions exclusions, Contact con) {
+        con.Exclude_from_Household_Name__c = exclusions.isNameExcluded();
+        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isFormalGreetingExcluded();
+        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isInformalGreetingExcluded();
     }
 
-    /*******************************************************************************************************
-    * @description Copies the values from the naming exclusions multiselect picklist to the individual
-    * checkbox fields.
-    * @param con The Contact
-    * @return void
-    ********************************************************************************************************/
-    private static void copyNamingExclusionsFromMSP(Contact con) {
-        String strExclusions = con.npo02__Naming_Exclusions__c;
-        if (strExclusions == null) {
-            strExclusions = '';
-        }
-        con.Exclude_from_Household_Name__c = strExclusions.contains('Household__c.Name');
-        con.Exclude_from_Household_Formal_Greeting__c = strExclusions.contains('Household__c.Formal_Greeting__c');
-        con.Exclude_from_Household_Informal_Greeting__c = strExclusions.contains('Household__c.Informal_Greeting__c');
+    private static String namingExclusionsFor(Contact con) {
+        return con.npo02__Naming_Exclusions__c;
     }
 
     /*******************************************************************************************************
@@ -677,6 +670,32 @@ public inherited sharing class Contacts extends fflib_SObjects {
             } else {
                 RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
             }
+        }
+    }
+
+    private inherited sharing class NamingExclusions {
+        String value;
+
+        public NamingExclusions(String namingExclusionsString) {
+            this.value = namingExclusionsString == null ? '' : namingExclusionsString;
+        }
+
+        public Boolean isNameExcluded() {
+            return value.contains('Household__c.Name');
+        }
+
+        public Boolean isFormalGreetingExcluded() {
+            return value.contains('Household__c.Formal_Greeting__c');
+        }
+
+        public Boolean isInformalGreetingExcluded() {
+            return value.contains('Household__c.Informal_Greeting__c');
+        }
+
+        public Boolean hasNamingExclusions() {
+            return isNameExcluded()
+                    || isFormalGreetingExcluded()
+                    || isInformalGreetingExcluded();
         }
     }
 }
