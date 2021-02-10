@@ -1149,11 +1149,16 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentMessage</name>
-        <label>Elevate 継続支払を作成しています。これには数分かかる場合があります。</label>
+        <label>Elevate 継続支払を保存しています... これには数分かかる場合があります。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
-        <label>ただし、次のエラーのため Elevate 継続支払を作成できませんでした:</label>
+        <label>Elevate に継続支払が作成されました。 Elevate 継続 ID: {0}.
+        
+       ただし、次のようなエラーが発生したため、対応する継続支援は NPSP に作成されませんでした:
+        ● {1}
+        
+        このフォームを開いたままエラーを修正し、継続支援を再度保存することができます。または、キャンセルしてシステム管理者にお問い合わせください。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -3536,7 +3541,7 @@
         <label>60 分間の動画</label>
     </customLabels>
     <customLabels>
-        <name>gsChecklistItemExtraTwoMinuteVideo</name>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
         <label>2 分間の動画</label>
     </customLabels>
     <customLabels>
@@ -7372,7 +7377,7 @@
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>エンゲージメント</label>
+        <label>エンゲージメント学習パス</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7488,7 +7493,7 @@
     </customTabs>
     <customTabs>
         <name>GetStarted</name>
-        <label>NPSP の使用開始</label>
+        <label>NPSP の使用開始 - 管理</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>

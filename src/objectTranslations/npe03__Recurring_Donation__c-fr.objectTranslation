@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
+    <name>ACH_Last_4__c</name>
+    <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
+    <label>Quatre derniers chiffres du code CCA</label>
+  </fields>
+  <fields>
     <name>Always_Use_Last_Day_Of_Month__c</name>
     <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
     <label>Toujours utiliser dernier jour du mois</label>

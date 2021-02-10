@@ -1147,11 +1147,16 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentMessage</name>
-        <label>Création d'un paiement récurrent Elevate... Cette opération peut prendre quelques minutes.</label>
+        <label>Enregistrement d'un paiement récurrent Elevate... Cette opération peut prendre quelques minutes.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
-        <label>Cependant, le paiement récurrent Elevate n'a pas pu être créé en raison des erreurs suivantes :</label>
+        <label>Un paiement récurrent a été créé dans Elevate. ID récurrent Elevate : {0}.
+        
+        Cependant, un don récurrent correspondant n’a pas été créé dans NPSP en raison de l’erreur suivante :
+        ● {1}
+        
+        Vous pouvez garder ce formulaire ouvert, corriger l’erreur et enregistrer à nouveau le don récurrent. Vous pouvez également annuler et contacter l’administrateur système pour obtenir de l’aide.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -3539,7 +3544,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemExtraFourMinuteVideo</name>
-        <label>Vidéo de 4 minutes</label>
+        <label>Vidéo de 4 minutes</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemExtraOneMinuteVideo</name>
@@ -3550,8 +3555,8 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Vidéo de 60 minutes</label>
     </customLabels>
     <customLabels>
-        <name>gsChecklistItemExtraTwoMinuteVideo</name>
-        <label>Vidéo de 2 minutes</label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+        <label>Vidéo de 2 minutes</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherDesc</name>
@@ -4075,7 +4080,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemExtraTwoMinutesVideo</name>
-        <label>Vidéo de 2 minutes</label>
+        <label>Vidéo de 2 minutes</label>
     </customLabels>
     <customLabels>
         <name>commonFieldsNotFound</name>
@@ -7381,7 +7386,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>Engagement</label>
+        <label>Parcours de formation à l'engagement</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7497,7 +7502,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customTabs>
     <customTabs>
         <name>GetStarted</name>
-        <label>Démarrer avec NPSP</label>
+        <label>Démarrer avec NPSP - Administrateur</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>

@@ -1151,7 +1151,12 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
-        <label>Leider konnte eine wiederkehrende Elevate-Zahlung aufgrund der folgenden Fehler nicht erstellt werden:</label>
+        <label>Es wurde eine wiederkehrende Zahlung in Elevate erstellt. Wiederholungs-ID in Elevate: {0}.
+        
+        Jedoch wurde keine entsprechende wiederkehrende Spende in NPSP erstellt, aufgrund des folgenden Fehlers:
+        ● {1}
+        
+        Sie können dieses Formular geöffnet lassen, den Fehler beheben und die wiederkehrende Spende erneut speichern. Brechen Sie alternativ den Vorgang ab, und bitten Sie Ihren Systemadministrator um Hilfe.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -3543,7 +3548,7 @@ Wenn Sie es vorziehen, können Sie "Spendeneintrag" deaktivieren und stattdessen
         <label>60-minütiges Video</label>
     </customLabels>
     <customLabels>
-        <name>gsChecklistItemExtraTwoMinuteVideo</name>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
         <label>2-minütiges Video</label>
     </customLabels>
     <customLabels>
@@ -7371,7 +7376,7 @@ Hinweis: Die Registerkarte "NPSP-Einstellungen" ist in der Nonprofit Success Pac
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>Engagement</label>
+        <label>Engagement-Lernpfad</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7487,7 +7492,7 @@ Hinweis: Die Registerkarte "NPSP-Einstellungen" ist in der Nonprofit Success Pac
     </customTabs>
     <customTabs>
         <name>GetStarted</name>
-        <label>Erste Schritte mit NPSP</label>
+        <label>Erste Schritte mit NPSP – Administrator</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>

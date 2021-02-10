@@ -1147,11 +1147,16 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentMessage</name>
-        <label>Terugkerende betaling in Elevate wordt gemaakt... Dit kan enkele minuten duren.</label>
+        <label>Terugkerende betaling in Elevate wordt opgeslagen... Dit kan enkele minuten duren.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
-        <label>Een terugkerende betaling in Elevate is echter niet gemaakt vanwege de volgende fouten:</label>
+        <label>Er is een terugkerende betaling gemaakt in Elevate. Herhalings-ID Elevate: {0}.
+        
+        Er is echter geen bijbehorende terugkerende donatie gemaakt in NPSP vanwege de volgende fout:
+        ● {1}
+        
+        U kunt dit formulier open laten, de fout verhelpen en de terugkerende donatie opnieuw opslaan. U kunt er ook voor kiezen te annuleren en voor hulp contact op te nemen met de systeembeheerder.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -3552,7 +3557,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Video van 60 minuten</label>
     </customLabels>
     <customLabels>
-        <name>gsChecklistItemExtraTwoMinuteVideo</name>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
         <label>Video van 2 minuten</label>
     </customLabels>
     <customLabels>
@@ -7389,7 +7394,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>Betrokkenheid</label>
+        <label>Leertraject voor betrokkenheid</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7461,7 +7466,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemWebinarsLabel</name>
-        <label>Evenementen en webinars zoeken</label>
+        <label>Zoeken naar events en webinars</label>
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemWebinarsLinkLabel</name>
@@ -7505,7 +7510,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     </customTabs>
     <customTabs>
         <name>GetStarted</name>
-        <label>Aan de slag met NPSP</label>
+        <label>Aan de slag met NPSP - Beheerder</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>

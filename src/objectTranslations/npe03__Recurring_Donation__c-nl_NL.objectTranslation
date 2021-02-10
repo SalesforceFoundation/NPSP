@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
+    <name>ACH_Last_4__c</name>
+    <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+    <label>Laatste 4 cijfers ACH</label>
+  </fields>
+  <fields>
     <name>Always_Use_Last_Day_Of_Month__c</name>
     <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
     <label>Altijd laatste dag van maand gebruiken</label>

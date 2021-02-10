@@ -1147,11 +1147,16 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentMessage</name>
-        <label>Creando pago recurrente de Elevate... Esta acción puede tardar unos minutos.</label>
+        <label>Guardando pago recurrente de Elevate... Esta acción puede tardar unos minutos.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
-        <label>No obstante, no se pudo crear un pago recurrente de Elevate debido a los siguientes errores:</label>
+        <label>Se ha creado un pago recurrente en Elevate. Id. recurrente de Elevate: {0}.
+        
+        No obstante, no se creó una Donación recurrente equivalente en NPSP debido al siguiente error:
+        ● {1}
+        
+        Puede mantener este formulario abierto, solucionar el error y guardar la Donación recurrente de nuevo. De manera alternativa, cancele y póngase en contacto con su administrador del sistema para obtener ayuda.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -3540,7 +3545,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Vídeo de 60 minutos</label>
     </customLabels>
     <customLabels>
-        <name>gsChecklistItemExtraTwoMinuteVideo</name>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
         <label>Vídeo de 2 minutos</label>
     </customLabels>
     <customLabels>
@@ -7371,7 +7376,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>Implicación</label>
+        <label>Ruta de aprendizaje de implicación</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7487,7 +7492,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customTabs>
     <customTabs>
         <name>GetStarted</name>
-        <label>Empezar a trabajar con NPSP</label>
+        <label>Empezar a trabajar con NPSP - Administrador</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
