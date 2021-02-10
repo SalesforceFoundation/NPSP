@@ -37,7 +37,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     Map<Id, Account> oldMap = new Map<Id, Account>();
     List<Account> householdAccounts = new List<Account>();
 
-    HH_HouseholdNaming service;
+    HH_HouseholdNaming householdNamingService;
     HouseholdSettings settings;
 
     public Accounts(List<Account> records) {
@@ -54,7 +54,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
-        this.service = service == null ? new HH_HouseholdNaming() : service;
+        this.householdNamingService = service == null ? new HH_HouseholdNaming() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 
@@ -82,16 +82,16 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     private void setHouseholdNameFields() {
         buildHouseholdAccountLists();
-        service.setHouseholdNameFields(householdAccounts, oldMap);
+        householdNamingService.setHouseholdNameFields(householdAccounts, oldMap);
     }
 
     private void renameHouseholdsNeedingNameUpdates() {
         buildHouseholdAccountLists();
-        service.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+        householdNamingService.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
-        return service.getHouseholdsNeedingNameUpdates(
+        return householdNamingService.getHouseholdsNeedingNameUpdates(
                 householdAccounts, oldMap
         );
     }
