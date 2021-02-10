@@ -46,6 +46,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Contact> deletedContactsInHouseholds = new List<Contact>();
     private List<Contact> contactEvaluations = new List<Contact>();
     private Set<Id> mergedWinningContact = new Set<Id>();
+    private Set<String> householdNamingFieldsInUse;
 
     public Contacts(List<Contact> records) {
         this(records, null, null);
@@ -501,7 +502,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return isNamingExclusionsChanged(con) || isNamingFieldChanged(con);
     }
 
-    Set<String> householdNamingFieldsInUse;
     private Boolean isNamingFieldChanged(Contact con) {
         if (householdNamingFieldsInUse == null) {
             householdNamingFieldsInUse =
