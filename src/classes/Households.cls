@@ -45,7 +45,7 @@ public with sharing class Households extends fflib_SObjects {
     @TestVisible
     private Households(List<npo02__Household__c> records, List<npo02__Household__c>
             oldlist, HH_HouseholdNaming service, HouseholdSettings settings) {
-        super(records);
+        super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
         this.service = service == null ? new HH_HouseholdNaming() : service;
