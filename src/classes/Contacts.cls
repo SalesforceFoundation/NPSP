@@ -35,7 +35,6 @@
 public with sharing class Contacts extends fflib_SObjects {
 
     HouseholdSettings settings;
-    List<Contact> contacts;
     Map<Id, Contact> oldMap;
     List<Contact> contactsNeedingHouseholds = new List<Contact>();
     List<Id> householdsNeedingNamesUpdated = new List<Id>();
@@ -55,8 +54,7 @@ public with sharing class Contacts extends fflib_SObjects {
     @TestVisible
     private Contacts(List<Contact> records, List<Contact> oldList, HouseholdSettings
             settings) {
-        super(records);
-        this.contacts = (List<Contact>) getRecords();
+        super(records, Contact.SObjectType);
         this.oldMap = oldList != null ?
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
         this.settings = settings == null ? new HouseholdSettings() : settings;
@@ -174,7 +172,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
-        for (Contact con : contacts) {
+        for (Contact con : (List<Contact>) getRecords()) {
             Contact oldCon = oldMap.get(con.Id);
 
             //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
@@ -199,7 +197,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeInsert() {
-        for (Contact con : contacts) {
+        for (Contact con : (List<Contact>) getRecords()) {
             //first, copy multiselect exclusions to checkboxes, then recreate multiselect values from checboxes
             //this ensures all values from either source are kept
             if (hasNamingExclusions(con)) {
@@ -452,7 +450,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void processHouseholdAndNamingFieldChangesAfterUpdate() {
-        for (Contact c : contacts) {
+        for (Contact c : (List<Contact>) getRecords()) {
             //if we're doing an update, pile up all of the households into a list
             //and send it to our naming code for action
             //first contact's names to their old names, and see if anything changed
@@ -546,7 +544,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void buildDeletedAndMergedContactCollections() {
-        for (Contact c : contacts) {
+        for (Contact c : (List<Contact>) getRecords()) {
             if (c.npo02__household__c != null) {
                 deletedContactsInHouseholds.add(c);
             }
