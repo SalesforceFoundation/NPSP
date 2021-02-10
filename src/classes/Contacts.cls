@@ -130,16 +130,32 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void buildOldHouseholdSizeMap() {
-        for (AggregateResult a : getMemberCountForOldHouseholds()) {
-            oldHouseholdSizeById.put((id) a.get('oldhh'), (integer) a.get('membercount'));
+        for (AggregateResult aggregateResult : getMemberCountForOldHouseholds()) {
+            oldHouseholdSizeById.put(
+                    oldHouseholdIdFrom(aggregateResult),
+                    memberCountFrom(aggregateResult));
         }
 
-        //an agg query doesn't pick empty HHs, so if we have an ID, and no
-        //HH in the ag, we know we have an empty hh
+        populateOldHouseholdSizeMapForEmptyHouseholds();
+    }
+
+    private void populateOldHouseholdSizeMapForEmptyHouseholds() {
         for (Id hhid : oldHouseholds) {
-            if (!oldHouseholdSizeById.containskey(hhid))
+            if (oldHouseholdIsEmpty(hhid))
                 oldHouseholdSizeById.put(hhid, 0);
         }
+    }
+
+    private Boolean oldHouseholdIsEmpty(Id hhid) {
+        return !oldHouseholdSizeById.containskey(hhid);
+    }
+
+    private Integer memberCountFrom(AggregateResult a) {
+        return (integer) a.get('membercount');
+    }
+
+    private Id oldHouseholdIdFrom(AggregateResult a) {
+        return (id) a.get('oldhh');
     }
 
     private List<Id> getOldHouseholdIds() {
