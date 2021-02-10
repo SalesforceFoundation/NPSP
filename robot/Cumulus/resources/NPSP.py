@@ -75,11 +75,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
-        # patch salesforce locators for winter 21
-        if int(self.latest_api_version) == 51:
-            from cumulusci.robotframework import Salesforce
-            Salesforce.lex_locators["modal"]["button"] = ("//div[contains(@class,'uiModal')]//*//button[.='{}']")
-            Salesforce.lex_locators["record"]["related"]["button"] = ("//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']")
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -1300,7 +1295,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             engobjname = "Engagement_Plan_Template__c"
             contactobjname = "Contact__c"
             # Fromatting the objects names with namespace prefix
-            formattedengobjname = "{}{}".format(self.cumulusci.get_namespace_prefix(), engobjname)
+            formattedengobjname = "{}{}".format(self.get_npsp_namespace_prefix(), engobjname)
             formattedcontactobjname = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
             engagement_id = self.salesforce.salesforce_insert(formattedengobjname, **engagement_data)
             engagement = self.salesforce.salesforce_get(formattedengobjname,engagement_id)
