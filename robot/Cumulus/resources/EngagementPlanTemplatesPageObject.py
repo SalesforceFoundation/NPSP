@@ -60,6 +60,17 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
 @pageobject("Listing", "Engagement_Plan_Template__c")
 class EngagementPlanListPage(BaseNPSPPage, ListingPage):
 
+    def _go_to_page(self, filter_name=None):
+        """Adding this go to page keyword as a workaround for namespace issue
+        when running with 2GP orgs"""
+        url_template = "{root}/lightning/o/{object}/list"
+        name = self._object_name
+        namespace= self.npsp.get_npsp_namespace_prefix()
+        object_name = "{}{}".format(namespace, name)
+        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+
     def _is_current_page(self):
         """
         Waits for the current page to be a Engagement Plan list view page
@@ -69,8 +80,8 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
 
     def go_to_engagement_plan_page(self,action,engagementid=None):
         """ Navigates to the specified mode of engagement plant template page """
-
-        objectname = "Engagement_Plan_Template__c"
+        name = self._object_name
+        objectname = "{}{}".format(self.npsp.get_npsp_namespace_prefix(), name)
         values =  self.npsp.get_url_formatted_object_name(objectname)
         if action.lower() == "create":
             url = "{}/lightning/o/{}/new".format(values['baseurl'],values['objectname'])
@@ -95,5 +106,4 @@ class EngagementPlanDetailPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/view",timeout=60, message="Engagement plan detail view did not load in 1 min")
         self.selenium.location_should_contain("Engagement_Plan_Template__c",message="Current page is not an Engagement Plan record view")
-                    
-    
+
