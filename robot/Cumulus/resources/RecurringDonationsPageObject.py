@@ -18,10 +18,16 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def wait_for_rd2_modal(self):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
-        self.builtin.sleep(2,"Wait Needed for now to wait for the new modal")
+        self.builtin.sleep(3,"Wait Needed for now to wait for the new modal")
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.wait_until_element_is_visible(btnlocator,60)
+        for i in range(3):
+            if self.npsp.check_if_element_displayed(btnlocator):
+                return
+            else:
+                time.sleep(2)
+                i += 1
     
     @capture_screenshot_on_error
     def click_rd2_modal_button(self, name):
@@ -379,7 +385,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             if rdtype == "Open":
                 next_year_value = next_year_value + (12-next_year_count)*int(amount)
             values['Current Year Value']=f"${curr_year_value}.00"
-            #values['Next Year Value']=f"${ next_year_value}.00"
+            values['Next Year Value']=f"${ next_year_value}.00"
             self.validate_field_values_under_section("Statistics",**values)
 
     @capture_screenshot_on_error
