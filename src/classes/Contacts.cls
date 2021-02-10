@@ -149,10 +149,10 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private List<AggregateResult> getMemberCountForOldHouseholds() {
         return [
-                select npo02__Household__c oldhh, count(id) membercount
-                from Contact
-                where npo02__Household__c IN :oldHouseholds
-                group by npo02__Household__c
+                SELECT npo02__Household__c oldhh, count(id) membercount
+                FROM Contact
+                WHERE npo02__Household__c IN :oldHouseholds
+                GROUP BY npo02__Household__c
         ];
     }
 
