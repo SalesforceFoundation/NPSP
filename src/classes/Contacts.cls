@@ -41,7 +41,7 @@ public with sharing class Contacts extends fflib_SObjects {
     Set<Id> householdIdsNeedingRollup = new Set<Id>();
     List<Id> oldHouseholds = new List<Id>();
     Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
-    private final String RECORDTYPEID = 'RecordTypeId';
+    private final String RECORD_TYPE_ID = 'RecordTypeId';
 
     public Contacts(List<Contact> records) {
         this(records, null, null);
@@ -342,11 +342,11 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private Boolean isExclusion(Contact c) {
         return !isRecordTypesOnContacts()
-                || !settings.contactRecordTypesToExclude().contains((id) c.get(RECORDTYPEID));
+                || !settings.contactRecordTypesToExclude().contains((id) c.get(RECORD_TYPE_ID));
     }
 
     private Boolean isRecordTypesOnContacts() {
-        return Schema.sObjectType.Contact.fields.getMap().get(RECORDTYPEID) != null;
+        return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
     }
 
     private static npo02__Household__c getHouseholdForInsertFromContact(Contact c) {
