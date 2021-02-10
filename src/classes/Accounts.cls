@@ -52,7 +52,7 @@ public with sharing class Accounts extends fflib_SObjects {
     @TestVisible
     private Accounts(List<Account> records, List<Account> oldlist, HH_HouseholdNaming
             service, HouseholdSettings settings) {
-        super(records);
+        super(records, Account.SObjectType);
         this.accounts = records;
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
