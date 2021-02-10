@@ -86,7 +86,7 @@ public with sharing class Contacts extends fflib_SObjects {
             else if (needsEvaluation(c)) {
                 contactEvaluations.add(c);
             } else if (needsHouseholdNameUpdated(c)) {
-                householdsNeedingNamesUpdated.add(c.npo02__household__c);
+                householdsNeedingNamesUpdated.add(householdIdFor(c));
             }
         }
 
@@ -104,17 +104,21 @@ public with sharing class Contacts extends fflib_SObjects {
         }
     }
 
+    private Id householdIdFor(Contact c) {
+        return householdIdFor(c);
+    }
+
     private Boolean needsHouseholdNameUpdated(Contact c) {
-        return c.npo02__household__c != null;
+        return householdIdFor(c) != null;
     }
 
     private Boolean needsEvaluation(Contact c) {
-        return c.npo02__household__c == null &&
+        return householdIdFor(c) == null &&
                 settings.isAllIndividualsProcessor();
     }
 
     private Boolean needsHousehold(Contact c) {
-        return c.npo02__household__c == null
+        return householdIdFor(c) == null
                 && settings.isAllProcessor();
     }
 
@@ -465,7 +469,7 @@ public with sharing class Contacts extends fflib_SObjects {
             if (householdChanged(c)) {
                 handleHouseholdChanged(c);
             } else if (isHouseholdNamingFieldsChanged(c)) {
-                householdsNeedingNamesUpdated.add(c.npo02__household__c);
+                householdsNeedingNamesUpdated.add(householdIdFor(c));
             }
         }
     }
@@ -503,7 +507,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean hasHousehold(Contact c) {
-        return c.npo02__household__c != null;
+        return householdIdFor(c) != null;
     }
 
     private Boolean isNamingExclusionsChanged(Contact c) {
@@ -511,8 +515,8 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private void handleHouseholdChanged(Contact c) {
-        householdsNeedingNamesUpdated.add(c.npo02__household__c);
-        householdIdsNeedingRollup.add(c.npo02__household__c);
+        householdsNeedingNamesUpdated.add(householdIdFor(c));
+        householdIdsNeedingRollup.add(householdIdFor(c));
 
         Id oldHouseholdId = getOldHouseholdId(oldMap, c);
         if (oldHouseholdNeedsRefresh(oldHouseholdSizeById, oldMap, c)) {
@@ -545,7 +549,7 @@ public with sharing class Contacts extends fflib_SObjects {
 
     private void buildDeletedAndMergedContactCollections() {
         for (Contact c : (List<Contact>) getRecords()) {
-            if (c.npo02__household__c != null) {
+            if (householdIdFor(c) != null) {
                 deletedContactsInHouseholds.add(c);
             }
 
@@ -557,7 +561,7 @@ public with sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean householdChanged(Contact c) {
-        return c.npo02__household__c != oldMap.get(c.id).npo02__household__c;
+        return householdIdFor(c) != oldMap.get(c.id).npo02__household__c;
     }
 
     private String getOldFieldValue(Contact c, String fieldName) {
@@ -605,25 +609,25 @@ public with sharing class Contacts extends fflib_SObjects {
 
         //Generate a list of Household Ids
         for (Contact c : contacts) {
-            if (c.npo02__household__c != null)
-                householdCountMap.put(c.npo02__household__c, 0);
+            if (householdIdFor(c) != null)
+                householdCountMap.put(householdIdFor(c), 0);
         }
 
         //Loop through all Contacts at one of the Household Ids
         for (Contact c : [Select Id, npo02__Household__c from Contact where npo02__Household__c in :householdCountMap.keyset()]) {
-            Integer lastCount = householdCountMap.get(c.npo02__household__c);
+            Integer lastCount = householdCountMap.get(householdIdFor(c));
             lastCount += 1;
-            householdCountMap.put(c.npo02__household__c, lastCount);
+            householdCountMap.put(householdIdFor(c), lastCount);
         }
 
         //Loop through all the contacts to determine if they can be deleted
         for (Contact c : contacts) {
-            if (householdCountMap.get(c.npo02__household__c) < 1) {
+            if (householdCountMap.get(householdIdFor(c)) < 1) {
                 //If there are no other Contacts on the Account
-                householdDeletes.add(new npo02__Household__c(Id = c.npo02__household__c));
+                householdDeletes.add(new npo02__Household__c(Id = householdIdFor(c)));
             } else {
                 //otherwise, we need to update the household
-                contactsNeedingHouseholdsRenamed.add(c.npo02__household__c);
+                contactsNeedingHouseholdsRenamed.add(householdIdFor(c));
             }
         }
 
