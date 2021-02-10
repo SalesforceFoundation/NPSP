@@ -116,12 +116,20 @@ public without sharing class HH_HouseholdNaming {
     }
 
     private List<SObject> getListHHAcct(List<Id> hhids) {
-        List<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN :hhids];
+        List<SObject> listHHAcct = [
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                FROM Account
+                WHERE Id IN :hhids
+        ];
         return listHHAcct;
     }
 
     private List<SObject> getListHHObj(List<Id> hhids) {
-        List<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN :hhids];
+        List<SObject> listHHObj = [
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                FROM Npo02__Household__c
+                WHERE Id IN :hhids
+        ];
         return listHHObj;
     }
 
