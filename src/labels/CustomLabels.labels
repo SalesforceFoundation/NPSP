@@ -5158,6 +5158,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>campaignMemberStatusResponded</value>
     </labels>
     <labels>
+        <fullName>CallableApiJobScheduleInvalidClass</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CallableApi Job.Schedule Invalid Class</shortDescription>
+        <value>The Apex class {0} doesn&apos;&apos;t exist or doesn&apos;&apos;t implement the Schedulable interface.</value>
+    </labels>
+    <labels>
         <fullName>CallableApiMethodNotImplemented</fullName>
         <categories>API</categories>
         <language>en_US</language>
