@@ -379,7 +379,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Account> getContactAccountMap(List<Contact> contacts) {
         List<Id> accountIds = getAccountIds(contacts);
-        Map<Id, Account> contactAccountMap = new Map<Id, Account>([Select Id, npe01__SYSTEMIsIndividual__c, Name from Account where Id in :accountIds]);
+        Map<Id, Account> contactAccountMap = new Map<Id, Account>([
+                SELECT Id, npe01__SYSTEMIsIndividual__c, Name
+                FROM Account
+                WHERE Id IN :accountIds
+        ]);
         return contactAccountMap;
     }
 
