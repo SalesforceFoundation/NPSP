@@ -167,8 +167,8 @@ public inherited sharing class Accounts extends fflib_SObjects {
         }
     }
 
-    private Account oldVersionOf(Account a) {
-        return oldMap.get(a.Id);
+    private Account oldVersionOf(Account acc) {
+        return oldMap.get(acc.Id);
     }
 
     private Boolean isHouseholdAccountType(Account acc) {
