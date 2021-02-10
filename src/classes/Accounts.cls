@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Accounts in NPSP.
 */
-public with sharing class Accounts extends fflib_SObjects {
+public inherited sharing class Accounts extends fflib_SObjects {
 
     List<Account> accounts = new List<Account>();
     Map<Id, Account> oldMap = new Map<Id, Account>();

@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public with sharing class Contacts extends fflib_SObjects {
+public inherited sharing class Contacts extends fflib_SObjects {
 
     HouseholdSettings settings;
     Map<Id, Contact> oldMap;

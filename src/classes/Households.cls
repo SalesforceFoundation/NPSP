@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Households in NPSP.
 */
-public with sharing class Households extends fflib_SObjects {
+public inherited sharing class Households extends fflib_SObjects {
 
     Map<Id, npo02__Household__c> oldMap;
     HH_HouseholdNaming service;
