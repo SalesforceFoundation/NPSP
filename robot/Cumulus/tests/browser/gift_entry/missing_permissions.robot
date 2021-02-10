@@ -2,12 +2,13 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
-...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             API Check And Enable Gift Entry
 Suite Teardown  Run Keywords
+# ...             Salesforce Update         ${ns}FieldPermissions  ${PROF_DI_BATCH_DESCRIPTION_ID}  PermissionsRead=true  PermissionsEdit=true                      
+# ...             Salesforce Update         ${ns}FieldPermissions  ${PERM_DI_BATCH_DESCRIPTION_ID}  PermissionsRead=true  PermissionsEdit=true
 ...             Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
@@ -19,18 +20,22 @@ ${user_alias} =     0000User
 
 Get Field ID
   [Arguments]             ${profile_name}       ${object_name}       ${field_name}
-  &{result} =             Soql Query  SELECT Id, PermissionsRead, PermissionsEdit FROM FieldPermissions WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Profile.Name = '${profile_name}') AND SobjectType='${object_name}' AND Field='${field_name}'         
-  ${Id} =                 Get From List  ${result}[records]  0
-  Set Suite Variable  ${Id}
+  &{result} =             Soql Query  SELECT Id, PermissionsRead, PermissionsEdit FROM FieldPermissions WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Profile.Name = '${profile_name}') AND SobjectType='${object_name}' AND Field='${field_name}'
+  &{Id} =                 Get From List  ${result}[records]  0
+  [Return]  ${Id}[Id]
+
 
 Get Permission Set Field ID
   [Arguments]             ${perm_set_name}       ${object_name}       ${field_name}
   &{result} =             Soql Query  SELECT Id, PermissionsRead, PermissionsEdit FROM FieldPermissions WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${perm_set_name}') AND SobjectType='${object_name}' AND Field='${field_name}'         
-  ${Id} =                 Get From List  ${result}[records]  0
-  Set Suite Variable  ${Id}
+  &{Id} =                 Get From List  ${result}[records]  0
+  [Return]  ${Id}[Id]
 
 
 Setup Test Data
+
+  ${ns} =  Get Npsp Namespace Prefix
+  Set Suite Variable  ${ns}
 
   ${PROF_FORM_TEMPLATE_DESCRIPTION_ID} =  Get Field ID  ${profile_name}  Form_Template__c  Form_Template__c.Description__c
   Set Suite Variable  ${PROF_FORM_TEMPLATE_DESCRIPTION_ID}
@@ -58,21 +63,22 @@ Setup Test Data
 
 Verify Permissions Error When DI Batch Description is Revoked
 
-  ${ns} =                  Get Npsp Namespace Prefix
   Salesforce Update         ${ns}FieldPermissions  ${PROF_DI_BATCH_DESCRIPTION_ID}
   ...                       PermissionsRead=false
   ...                       PermissionsEdit=false
   Salesforce Update         ${ns}FieldPermissions  ${PERM_DI_BATCH_DESCRIPTION_ID}
   ...                       PermissionsRead=false
   ...                       PermissionsEdit=false
-  Open Test Browser         useralias=${user_alias}
-  Go to Page                Landing    GE_Gift_Entry
-  # Validate Error Message    error
-  # # ...                   
-  Salesforce Update         ${NS}FieldPermissions  ${PROF_DI_BATCH_DESCRIPTION_ID}
+  Go to Setup Page            ManageUsers
+  Choose Frame                All
+  Click Link                  Login
+  Go to Page                  Landing    GE_Gift_Entry
+  Current Page Should Be      Landing    GE_Gift_Entry
+  Page Should Contain         You must have permission to edit the following fields: DataImportBatch__c: (Batch_Description__c)
+  Salesforce Update         ${ns}FieldPermissions  ${PROF_DI_BATCH_DESCRIPTION_ID}
   ...                       PermissionsRead=true
   ...                       PermissionsEdit=true
-  Salesforce Update         ${NS}FieldPermissions  ${PERM_PROF_DI_BATCH_DESCRIPTION_ID}
+  Salesforce Update         ${ns}FieldPermissions  ${PERM_DI_BATCH_DESCRIPTION_ID}
   ...                       PermissionsRead=true
   ...                       PermissionsEdit=true     
 
