@@ -583,16 +583,24 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void calculateRollups() {
-        if (System.isFuture() || System.isBatch() || householdIdsNeedingRollup.size() <= 2) {
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-            Map<Id, npo02__Household__c> hhmap = new Map<Id, npo02__Household__c>(
-                    (List<npo02__Household__c>) Database.query(oppRollupUtil.buildHouseholdQuery() +
-                            ' WHERE Id IN :householdIdsNeedingRollup'));
+        if (rollupsShouldRunSynchronously()) {
             RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupHouseholds(hhmap);
+            rg.rollupHouseholds(getHouseholdMap());
         } else {
             RLLP_OppRollup.rollupHouseholdsFuture(householdIdsNeedingRollup);
         }
+    }
+
+    private Map<Id, npo02__Household__c> getHouseholdMap() {
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        Map<Id, npo02__Household__c> hhmap = new Map<Id, npo02__Household__c>(
+                (List<npo02__Household__c>) Database.query(oppRollupUtil.buildHouseholdQuery() +
+                        ' WHERE Id IN :householdIdsNeedingRollup'));
+        return hhmap;
+    }
+
+    private Boolean rollupsShouldRunSynchronously() {
+        return System.isFuture() || System.isBatch() || householdIdsNeedingRollup.size() <= 2;
     }
 
     /*******************************************************************************************************
@@ -659,11 +667,24 @@ public inherited sharing class Contacts extends fflib_SObjects {
      ********************************************************************************************************/
     public static void contactMergeUpdate(Set<Id> winningContacts) {
 
-        npe01__Contacts_And_Orgs_Settings__c candoSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        if (candoSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+        npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings =
+                UTIL_CustomSettingsFacade.getContactsSettings();
+        if (contactsAndOrgsSettings.npe01__Account_Processor__c ==
+                CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             return;
         }
 
+        Set<Id> oppIds = getOppIdsForWinningContacts(winningContacts);
+        if (!oppIds.isEmpty()) {
+            if (System.isFuture() || System.isBatch()) {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
+            } else {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
+            }
+        }
+    }
+
+    private static Set<Id> getOppIdsForWinningContacts(Set<Id> winningContacts) {
         Set<Id> oppIds = new Set<Id>();
         for (OpportunityContactRole ocr : [
                 SELECT OpportunityId
@@ -673,14 +694,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         ) {
             oppIds.add(ocr.OpportunityId);
         }
-
-        if (!oppIds.isEmpty()) {
-            if (System.isFuture() || System.isBatch()) {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
-            } else {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
-            }
-        }
+        return oppIds;
     }
 
     private inherited sharing class NamingExclusions {
