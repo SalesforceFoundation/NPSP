@@ -213,24 +213,39 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 copyNamingExclusionsFromCheckboxes(con);
             } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con, oldCon)) {
                 synchronizeNamingExclusionStringToCheckboxes(
-                        new NamingExclusions(namingExclusionsFor(con)), con);
+                        new HouseholdNamingExclusions(namingExclusionsFor(con)), con);
             }
         }
     }
 
     private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con, Contact oldCon) {
-        return con.npo02__Naming_Exclusions__c != oldCon.npo02__Naming_Exclusions__c;
+        HouseholdNamingExclusions consHouseholdNamingExclusions =
+                new HouseholdNamingExclusions(namingExclusionsFor(con));
+        return consHouseholdNamingExclusions.isNotEqualTo(namingExclusionsFor(oldCon));
     }
 
     private Boolean shouldCopyNamingExclusionsFromCheckboxes(Contact con, Contact oldCon) {
-        return con.Exclude_from_Household_Name__c != oldCon.Exclude_from_Household_Name__c ||
-                con.Exclude_from_Household_Informal_Greeting__c != oldCon.Exclude_from_Household_Informal_Greeting__c ||
-                con.Exclude_from_Household_Formal_Greeting__c != oldCon.Exclude_from_Household_Formal_Greeting__c;
+        return isExcludedFromHouseholdName(con) != isExcludedFromHouseholdName(oldCon) ||
+                isExcludedFromInformalGreeting(con) != isExcludedFromInformalGreeting(oldCon) ||
+                isExcludedFromFormalGreeting(con) != isExcludedFromFormalGreeting(oldCon);
+    }
+
+    private Boolean isExcludedFromFormalGreeting(Contact con) {
+        return con.Exclude_from_Household_Formal_Greeting__c;
+    }
+
+    private Boolean isExcludedFromInformalGreeting(Contact con) {
+        return con.Exclude_from_Household_Informal_Greeting__c;
+    }
+
+    private Boolean isExcludedFromHouseholdName(Contact con) {
+        return con.Exclude_from_Household_Name__c;
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeInsert() {
         for (Contact con : (List<Contact>) getRecords()) {
-            NamingExclusions exclusions = new NamingExclusions(namingExclusionsFor(con));
+            HouseholdNamingExclusions exclusions =
+                    new HouseholdNamingExclusions(namingExclusionsFor(con));
             if (exclusions.hasNamingExclusions()) {
                 synchronizeNamingExclusionStringToCheckboxes(exclusions, con);
             }
@@ -247,7 +262,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private static void synchronizeNamingExclusionStringToCheckboxes(
-            NamingExclusions exclusions, Contact con) {
+            HouseholdNamingExclusions exclusions, Contact con) {
         con.Exclude_from_Household_Name__c = exclusions.isNameExcluded();
         con.Exclude_from_Household_Formal_Greeting__c = exclusions.isFormalGreetingExcluded();
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isInformalGreetingExcluded();
@@ -270,12 +285,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void copyNamingExclusionsFromCheckboxes(Contact con) {
-        NamingExclusions exclusions = buildNamingExclusionsFromCheckboxesFor(con);
+        HouseholdNamingExclusions exclusions = buildNamingExclusionsFromCheckboxesFor(con);
         con.npo02__Naming_Exclusions__c = exclusions.getDisplayValue();
     }
 
-    private NamingExclusions buildNamingExclusionsFromCheckboxesFor(Contact con) {
-        NamingExclusions exclusions = new NamingExclusions(null);
+    private HouseholdNamingExclusions buildNamingExclusionsFromCheckboxesFor(Contact con) {
+        HouseholdNamingExclusions exclusions = new HouseholdNamingExclusions(null);
         if (con.Exclude_from_Household_Name__c) {
             exclusions.excludeName();
         }
@@ -713,52 +728,4 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return oppIds;
     }
 
-    private inherited sharing class NamingExclusions {
-        private String value;
-
-        public NamingExclusions(String namingExclusionsString) {
-            this.value = namingExclusionsString == null ? '' : namingExclusionsString;
-        }
-
-        public Boolean isNameExcluded() {
-            return value.contains('Household__c.Name');
-        }
-
-        public Boolean isFormalGreetingExcluded() {
-            return value.contains('Household__c.Formal_Greeting__c');
-        }
-
-        public Boolean isInformalGreetingExcluded() {
-            return value.contains('Household__c.Informal_Greeting__c');
-        }
-
-        public Boolean hasNamingExclusions() {
-            return isNameExcluded()
-                    || isFormalGreetingExcluded()
-                    || isInformalGreetingExcluded();
-        }
-
-        public void excludeName() {
-            value += 'Household__c.Name;';
-        }
-
-        public void excludeFormalGreeting() {
-            value += 'Household__c.Formal_Greeting__c;';
-        }
-
-        public void excludeInformalGreeting() {
-            value += 'Household__c.Informal_Greeting__c;';
-        }
-
-        public String getDisplayValue() {
-            prepareFinalValue();
-            return value;
-        }
-
-        private void prepareFinalValue() {
-            if (value.endsWith(';')) {
-                value = value.subString(0, value.length() - 1);
-            }
-        }
-    }
 }
