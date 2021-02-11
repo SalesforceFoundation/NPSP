@@ -1697,14 +1697,3 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 print(f'Table contains {record} with empty {key} as expected')
             else:
                 raise Exception(f'Table did not contain {record} with expected {key}={value}')
-            
-    def get_org_name(self):
-        """
-        Obtains the orgname info from the cumulsci's get org info and returns the value
-        """
-        org_info = self.cumulusci.get_org_info()
-        if "sfdx_alias" in org_info.keys():
-            orgname = org_info["sfdx_alias"].split("__")
-            return orgname[-1]
-        else:
-            raise Exception('sfdx_alias not found in org information')

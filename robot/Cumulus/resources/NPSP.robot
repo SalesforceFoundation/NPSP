@@ -487,11 +487,10 @@ Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
     ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
     ${ns} =                   Get Npsp Namespace Prefix
-    ${orgname} =              Get Org Name
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
-    ...                       Run Process     cci  flow  run  enable_rd2   --org   ${orgname}
+    ...                       Run Process     cci  flow  run  enable_rd2   --org   self.cumulusci.org.name
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
-    ...                       Run Process     cci  flow  run  enable_rd2_managed   --org   ${orgname}
+    ...                       Run Process     cci  flow  run  enable_rd2_managed   --org   self.cumulusci.org.name
 
 Run Recurring Donations Batch
     [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
