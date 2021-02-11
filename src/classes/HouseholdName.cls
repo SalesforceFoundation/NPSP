@@ -238,31 +238,31 @@ public with sharing class HouseholdName {
         }
 
         public Boolean contains(String val) {
-            return this.customNameSet.contains(val);
+            return customNameSet.contains(val);
         }
+
         public void removeName() {
-            customFormat.replace('Name;', ';');
+            replace('Name;', ';');
         }
 
         public void removeFormalGreeting() {
-            customFormat.replace('Formal_Greeting__c;', ';');
+            replace('Formal_Greeting__c;', ';');
         }
 
         public void removeInformalGreeting() {
-            customFormat.replace('Informal_Greeting__c;', ';');
+            replace('Informal_Greeting__c;', ';');
         }
 
         public void appendFormalGreeting() {
-            customFormat.append('Formal_Greeting__c');
+            append('Formal_Greeting__c');
         }
 
         public void appendInformalGreeting() {
-            customFormat.append('Informal_Greeting__c');
+            append('Informal_Greeting__c');
         }
 
         public void appendName() {
-            customFormat.append('Name');
+            append('Name');
         }
-
     }
 }
