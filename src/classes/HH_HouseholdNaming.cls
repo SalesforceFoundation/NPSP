@@ -238,7 +238,8 @@ public without sharing class HH_HouseholdNaming {
     * @description the soql select String to use which includes any fields we use or are referred to in
     * any of the naming specifications.
     */
-    public String strContactSelectStmtAllNamingFields {
+    @TestVisible
+    private String strContactSelectStmtAllNamingFields {
         get {
             if (strContactSelectStmtAllNamingFields == null) {
                 //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
@@ -258,20 +259,51 @@ public without sharing class HH_HouseholdNaming {
         private set;
     }
 
-    public Boolean needsNamingFieldsUpdated(SObject h, SObject oldRecord) {
-        if (h.get('Name') == nameReplacementText) {
+    private Boolean needsNamingFieldsUpdated(SObject h, SObject oldRecord) {
+        if (needsNameReplaced(h)) {
             return true;
-        } else if (h.get('npo02__Informal_Greeting__c') == nameReplacementText) {
+        } else if (needsInformalGreetingReplaced(h)) {
             return true;
-        } else if (h.get('npo02__Formal_Greeting__c') == nameReplacementText) {
+        } else if (needsFormalGreetingReplaced(h)) {
             return true;
         } else if (isSystemCustomNamingChanged(h, oldRecord)) {
             return true;
-        } else if (h.getSObjectType() == Account.sObjectType &&
-                isOneToOneContactChanged(h, oldRecord)) {
+        } else if (oneToOneAccountChanged(h, oldRecord)) {
             return true;
         }
         return false;
+    }
+
+    private Boolean oneToOneAccountChanged(SObject h, SObject oldRecord) {
+        return isAccount(h) && isOneToOneContactChanged(h, oldRecord);
+    }
+
+    private Boolean isAccount(SObject h) {
+        return h.getSObjectType() == Account.sObjectType;
+    }
+
+    private Boolean needsFormalGreetingReplaced(SObject h) {
+        return formalGreetingFor(h) == nameReplacementText;
+    }
+
+    private Boolean needsInformalGreetingReplaced(SObject h) {
+        return informalGreetingFor(h) == nameReplacementText;
+    }
+
+    private Boolean needsNameReplaced(SObject h) {
+        return nameFor(h) == nameReplacementText;
+    }
+
+    private Object formalGreetingFor(SObject h) {
+        return h.get('npo02__Formal_Greeting__c');
+    }
+
+    private Object informalGreetingFor(SObject h) {
+        return h.get('npo02__Informal_Greeting__c');
+    }
+
+    private Object nameFor(SObject h) {
+        return h.get('Name');
     }
 
     private Boolean isOneToOneContactChanged(SObject h, SObject oldRecord) {
