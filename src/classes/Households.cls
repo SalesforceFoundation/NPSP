@@ -34,9 +34,9 @@
 */
 public inherited sharing class Households extends fflib_SObjects {
 
-    Map<Id, npo02__Household__c> oldMap;
-    HH_HouseholdNaming service;
-    HouseholdSettings settings;
+    private Map<Id, npo02__Household__c> oldMap;
+    private HH_HouseholdNaming service;
+    private HouseholdSettings settings;
 
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
         this(records, oldlist, null, null);
