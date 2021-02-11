@@ -9,19 +9,29 @@ from NPSP import npsp_lex_locators
 @pageobject("Listing", "General_Accounting_Unit__c")
 class GAUListPage(BaseNPSPPage, ListingPage):
 
-    
+    def _go_to_page(self, filter_name=None):
+        """Adding this go to page keyword as a workaround for namespace issue
+        when running with 2GP orgs"""
+        url_template = "{root}/lightning/o/{object}/list"
+        name = self._object_name
+        namespace= self.npsp.get_npsp_namespace_prefix()
+        object_name = "{}{}".format(namespace, name)
+        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+
     def _is_current_page(self):
         """
         Waits for the current page to be a Data Import list view
         """
         self.selenium.wait_until_location_contains("/list",timeout=60, message="Records list view did not load in 1 min")
         self.selenium.location_should_contain("General_Accounting_Unit__c",message="Current page is not a GAU List view")
-            
-    
-    
+
+
+
 @pageobject("Custom", "ManageAllocations")
 class GauAllocationPage(BaseNPSPPage, BasePage):
-  
+
     def _is_current_page(self):
         """
         Waits for the GAU Allocations iframe to load
@@ -39,10 +49,10 @@ class GauAllocationPage(BaseNPSPPage, BasePage):
                 self.npsp.select_search(key, value)
             else:
                 self.add_gau_allocation(key, value)
-                   
-    
+
+
     def add_gau_allocation(self,field, value):
         """Enter an allocation of sepecified 'value' in the given 'field'"""
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
-        self.salesforce._populate_field(locator,value)      
+        self.salesforce._populate_field(locator,value)
 
