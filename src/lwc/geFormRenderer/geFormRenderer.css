@@ -51,3 +51,7 @@ p.critical-error-text {
     --sds-c-alert-text-color: var(--lwc-colorTextDefault);
     justify-content: start;
 }
+
+.payment-warn h2 {
+    font-weight: 400;
+}
