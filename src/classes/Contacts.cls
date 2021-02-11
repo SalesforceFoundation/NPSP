@@ -152,11 +152,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Integer memberCountFrom(AggregateResult a) {
-        return (integer) a.get('membercount');
+        return (Integer) a.get('membercount');
     }
 
     private Id oldHouseholdIdFrom(AggregateResult a) {
-        return (id) a.get('oldhh');
+        return (Id) a.get('oldhh');
     }
 
     private List<Id> getOldHouseholdIds() {
@@ -364,8 +364,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         List<npo02__household__c> householdInserts_local = new List<npo02__household__c>();
         for (Contact con : contacts) {
             if (isExclusion(con)) {
-                npo02__Household__c h = getHouseholdForInsertFromContact(con);
-                householdInserts_local.add(h);
+                householdInserts_local.add(getHouseholdForInsertFromContact(con));
             }
         }
         return householdInserts_local;
@@ -373,7 +372,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Boolean isExclusion(Contact con) {
         return !isRecordTypesOnContacts()
-                || !settings.contactRecordTypesToExclude().contains((id) con.get(RECORD_TYPE_ID));
+                || !settings.contactRecordTypesToExclude().contains(recordTypeIdFor(con));
+    }
+
+    private Id recordTypeIdFor(Contact con) {
+        return (Id) con.get(RECORD_TYPE_ID);
     }
 
     private Boolean isRecordTypesOnContacts() {
@@ -381,19 +384,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
-        npo02__household__c h = new npo02__household__c(Name = getDefaultHouseholdName(con));
-        syncPrimaryAddressBlock(h, con);
-        return h;
+        npo02__household__c household = new npo02__household__c(Name = getDefaultHouseholdName(con));
+        syncPrimaryAddressBlock(household, con);
+        return household;
     }
 
-    private void syncPrimaryAddressBlock(npo02__Household__c h, Contact con) {
-        h.npo02__MailingStreet__c = con.MailingStreet;
-        h.npo02__MailingCity__c = con.MailingCity;
-        h.npo02__MailingState__c = con.MailingState;
-        h.npo02__MailingPostalCode__c = con.MailingPostalCode;
-        h.npo02__MailingCountry__c = con.MailingCountry;
-        h.npo02__HouseholdPhone__c = con.HomePhone;
-        h.npo02__HouseholdEmail__c = con.Email;
+    private void syncPrimaryAddressBlock(npo02__Household__c household, Contact con) {
+        household.npo02__MailingStreet__c = con.MailingStreet;
+        household.npo02__MailingCity__c = con.MailingCity;
+        household.npo02__MailingState__c = con.MailingState;
+        household.npo02__MailingPostalCode__c = con.MailingPostalCode;
+        household.npo02__MailingCountry__c = con.MailingCountry;
+        household.npo02__HouseholdPhone__c = con.HomePhone;
+        household.npo02__HouseholdEmail__c = con.Email;
     }
 
     private static String getDefaultHouseholdName(Contact con) {
@@ -418,7 +421,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Id> getAccountIds(List<Contact> contacts) {
         List<Id> accountIds = new List<Id>();
         for (Contact con : contacts) {
-            if (con.accountId != null) {
+            if (con.AccountId != null) {
                 accountIds.add(con.AccountId);
             }
         }

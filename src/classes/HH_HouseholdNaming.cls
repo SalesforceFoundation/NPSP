@@ -74,16 +74,16 @@ public without sharing class HH_HouseholdNaming {
         Map<Id, List<Contact>> hhIdToContactsMap = getHhIDContactMap(hhids);
 
         //loop through the households needing name changes, if necessary, make them.
-        for (SObject h : householdsNeedingUpdates) {
-            List<Contact> listCon = getContactsForHousehold(h, hhIdToContactsMap);
+        for (SObject household : householdsNeedingUpdates) {
+            List<Contact> listCon = getContactsForHousehold(household, hhIdToContactsMap);
 
             if (settings.isAdvancedHouseholdNaming()) {
-                new HouseholdName(h, listCon)
+                new HouseholdName(household, listCon)
                         .setNameFieldValuesOnHousehold();
             }
 
             // now we also store the number of members on the Household!
-            h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
+            household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
                     listCon != null ? listCon.size() : 0);
         }
 
@@ -124,22 +124,22 @@ public without sharing class HH_HouseholdNaming {
         return listHHObj;
     }
 
-    private List<Contact> getContactsForHousehold(SObject h, Map<Id, List<Contact>> hhIDContactMap) {
-        Id hhId = String.valueOf(h.get('Id'));
+    private List<Contact> getContactsForHousehold(SObject household, Map<Id, List<Contact>> hhIDContactMap) {
+        Id hhId = String.valueOf(household.get('Id'));
         List<Contact> listCon = hhIDContactMap.get(hhId);
         return listCon;
     }
 
-    private Map<Id, List<Contact>> getHhIDContactMap(List<Contact> contactlist) {
+    private Map<Id, List<Contact>> getHhIDContactMap(List<Contact> contacts) {
         Map<Id, List<Contact>> hhIDContactMap = new Map<Id, List<Contact>>();
-        for (Contact c : contactlist) {
-            if (!hhIDContactMap.containskey(c.hhId__c)) {
-                hhIDContactMap.put(c.hhId__c, new List<Contact>{
-                        c
+        for (Contact con : contacts) {
+            if (!hhIDContactMap.containskey(con.hhId__c)) {
+                hhIDContactMap.put(con.hhId__c, new List<Contact>{
+                        con
                 });
             } else {
-                List<Contact> clist = hhIDContactMap.get(c.hhId__c);
-                clist.add(c);
+                List<Contact> clist = hhIDContactMap.get(con.hhId__c);
+                clist.add(con);
             }
         }
         return hhIDContactMap;
@@ -259,68 +259,68 @@ public without sharing class HH_HouseholdNaming {
         private set;
     }
 
-    private Boolean needsNamingFieldsUpdated(SObject h, SObject oldRecord) {
-        if (needsNameReplaced(h)) {
+    private Boolean needsNamingFieldsUpdated(SObject household, SObject oldRecord) {
+        if (needsNameReplaced(household)) {
             return true;
-        } else if (needsInformalGreetingReplaced(h)) {
+        } else if (needsInformalGreetingReplaced(household)) {
             return true;
-        } else if (needsFormalGreetingReplaced(h)) {
+        } else if (needsFormalGreetingReplaced(household)) {
             return true;
-        } else if (isSystemCustomNamingChanged(h, oldRecord)) {
+        } else if (isSystemCustomNamingChanged(household, oldRecord)) {
             return true;
-        } else if (oneToOneAccountChanged(h, oldRecord)) {
+        } else if (oneToOneAccountChanged(household, oldRecord)) {
             return true;
         }
         return false;
     }
 
-    private Boolean oneToOneAccountChanged(SObject h, SObject oldRecord) {
-        return isAccount(h) && isOneToOneContactChanged(h, oldRecord);
+    private Boolean oneToOneAccountChanged(SObject household, SObject oldRecord) {
+        return isAccount(household) && isOneToOneContactChanged(household, oldRecord);
     }
 
-    private Boolean isAccount(SObject h) {
-        return h.getSObjectType() == Account.sObjectType;
+    private Boolean isAccount(SObject household) {
+        return household.getSObjectType() == Account.sObjectType;
     }
 
-    private Boolean needsFormalGreetingReplaced(SObject h) {
-        return formalGreetingFor(h) == nameReplacementText;
+    private Boolean needsFormalGreetingReplaced(SObject household) {
+        return formalGreetingFor(household) == nameReplacementText;
     }
 
-    private Boolean needsInformalGreetingReplaced(SObject h) {
-        return informalGreetingFor(h) == nameReplacementText;
+    private Boolean needsInformalGreetingReplaced(SObject household) {
+        return informalGreetingFor(household) == nameReplacementText;
     }
 
-    private Boolean needsNameReplaced(SObject h) {
-        return nameFor(h) == nameReplacementText;
+    private Boolean needsNameReplaced(SObject household) {
+        return nameFor(household) == nameReplacementText;
     }
 
-    private Object formalGreetingFor(SObject h) {
-        return h.get('npo02__Formal_Greeting__c');
+    private Object formalGreetingFor(SObject household) {
+        return household.get('npo02__Formal_Greeting__c');
     }
 
-    private Object informalGreetingFor(SObject h) {
-        return h.get('npo02__Informal_Greeting__c');
+    private Object informalGreetingFor(SObject household) {
+        return household.get('npo02__Informal_Greeting__c');
     }
 
-    private Object nameFor(SObject h) {
-        return h.get('Name');
+    private Object nameFor(SObject household) {
+        return household.get('Name');
     }
 
-    private Boolean isOneToOneContactChanged(SObject h, SObject oldRecord) {
-        return h.get('npe01__One2OneContact__c') != oldRecord.get('npe01__One2OneContact__c');
+    private Boolean isOneToOneContactChanged(SObject household, SObject oldRecord) {
+        return household.get('npe01__One2OneContact__c') != oldRecord.get('npe01__One2OneContact__c');
     }
 
-    private Boolean isSystemCustomNamingChanged(SObject h, SObject oldRecord) {
-        return h.get('npo02__SYSTEM_CUSTOM_NAMING__c') !=
+    private Boolean isSystemCustomNamingChanged(SObject household, SObject oldRecord) {
+        return household.get('npo02__SYSTEM_CUSTOM_NAMING__c') !=
                 oldRecord.get('npo02__SYSTEM_CUSTOM_NAMING__c');
     }
 
     public List<Id> getHouseholdsNeedingNameUpdates(List<SObject> records,
             Map<Id, SObject> oldMap) {
         List<Id> hhList = new List<Id>();
-        for (SObject h : records) {
-            if (needsNamingFieldsUpdated(h, oldMap.get(h.Id))) {
-                hhList.add(h.Id);
+        for (SObject household : records) {
+            if (needsNamingFieldsUpdated(household, oldMap.get(household.Id))) {
+                hhList.add(household.Id);
             }
         }
         return hhList;
@@ -334,12 +334,12 @@ public without sharing class HH_HouseholdNaming {
         Map<Id, List<Contact>> contactsByHouseholdId =
                 getHhIDContactMap(ids);
 
-        for (SObject h : records) {
-            SObject oldRecord = oldMap.get(h.Id);
-            HouseholdName householdName = new HouseholdName(h, oldRecord,
-                    contactsByHouseholdId.get(h.Id), namingService);
+        for (SObject household : records) {
+            SObject oldRecord = oldMap.get(household.Id);
+            HouseholdName householdName = new HouseholdName(household, oldRecord,
+                    contactsByHouseholdId.get(household.Id), namingService);
             householdName.processHouseholdNamingReplacements();
-            h.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.customNameString);
+            household.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.customNameString);
         }
     }
 
@@ -362,11 +362,15 @@ public without sharing class HH_HouseholdNaming {
             return;
         }
 
-        if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
+        if (shouldBeRenamedSynchronously(accountIds)) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.updateHouseholdNames(accountIds);
         } else {
             HH_HouseholdNaming.updateHouseholdNamesAsynchronously(accountIds);
         }
+    }
+
+    private static Boolean shouldBeRenamedSynchronously(List<Id> accountIds) {
+        return accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
     }
 }

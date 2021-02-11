@@ -42,24 +42,24 @@ public with sharing class HouseholdName {
     private HouseholdSettings settings;
     private String nameReplacementText = System.Label.npo02.NameReplacementText;
 
-    public HouseholdName(SObject h, List<Contact> contacts) {
-        this(h, null, contacts, null, null);
+    public HouseholdName(SObject household, List<Contact> contacts) {
+        this(household, null, contacts, null, null);
     }
 
-    public HouseholdName(SObject h, SObject oldRecord, List<Contact> contacts, HH_INaming
+    public HouseholdName(SObject household, SObject oldRecord, List<Contact> contacts, HH_INaming
             service) {
-        this(h, oldRecord, contacts, service, null);
+        this(household, oldRecord, contacts, service, null);
     }
 
-    public HouseholdName(SObject h, SObject oldRecord, List<Contact> contacts,
+    public HouseholdName(SObject household, SObject oldRecord, List<Contact> contacts,
             HH_INaming service, HouseholdSettings settings) {
-        this.household = h;
+        this.household = household;
         this.oldRecord = oldRecord;
         this.contacts = contacts == null ?
                 new Contacts(new List<Contact>()) : new Contacts(contacts);
         this.service = service == null ? new HH_NameSpec() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
-        this.customFormat = new CustomFormat(h);
+        this.customFormat = new CustomFormat(household);
     }
 
     public String customNameString {
@@ -198,8 +198,8 @@ public with sharing class HouseholdName {
     }
 
 
-    private Boolean isFieldValueChanged(SObject h, String fieldApiName, SObject oldRecord) {
-        return (String) h.get(fieldApiName) != oldRecord.get(fieldApiName);
+    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
+        return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
     }
 
     private Boolean isReplaceable(SObject household, String fieldApiName) {
