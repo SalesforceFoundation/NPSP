@@ -306,7 +306,7 @@ public without sharing class HH_HouseholdNaming {
             SObject oldRecord = oldMap.get(h.Id);
             HouseholdName householdName = new HouseholdName(h, oldRecord,
                     contactsByHouseholdId.get(h.Id), namingService);
-            householdName.processReplacementText();
+            householdName.processHouseholdNamingReplacements();
             h.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.customNameString);
         }
     }

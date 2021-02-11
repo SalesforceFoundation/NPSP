@@ -34,11 +34,11 @@
 */
 public inherited sharing class Accounts extends fflib_SObjects {
 
-    Map<Id, Account> oldMap = new Map<Id, Account>();
-    List<Account> householdAccounts = new List<Account>();
+    private Map<Id, Account> oldMap = new Map<Id, Account>();
+    private List<Account> householdAccounts = new List<Account>();
 
-    HH_HouseholdNaming householdNamingService;
-    HouseholdSettings settings;
+    private HH_HouseholdNaming householdNamingService;
+    private HouseholdSettings settings;
 
     public Accounts(List<Account> records) {
         this(records, null, null, null);
@@ -105,7 +105,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     private void resetAccountTypeAndIndividualFields(Account acc) {
-        acc.npe01__SYSTEMISINDIVIDUAL__c = false;
+        acc.npe01__SYSTEMIsIndividual__c = false;
         acc.npe01__SYSTEM_AccountType__c = null;
     }
 
@@ -138,13 +138,13 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     private void setTypeAndIndividualFieldsForOneToOneAccount(Account acc) {
         acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
+        acc.npe01__SYSTEMIsIndividual__c = true;
     }
 
     private void setTypeAndIndividualFieldsForHouseholdAccount(Account acc) {
         acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
         acc.Type = CAO_Constants.HH_TYPE;
-        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
+        acc.npe01__SYSTEMIsIndividual__c = true;
     }
 
     private Boolean needsTypeAndIndividualFieldsSet(Account acc) {
@@ -152,7 +152,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     private Boolean isNotIndividualAccount(Account acc) {
-        return acc.npe01__SYSTEMISINDIVIDUAL__c != true;
+        return acc.npe01__SYSTEMIsIndividual__c != true;
     }
 
     private Boolean isMissingAccountType(Account acc) {
@@ -207,7 +207,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     * @return Id. recordtype Id to use, or null if none is specified for the account model.
     */
     public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
-        npe01__Contacts_and_Orgs_Settings__c contactsSettings =
+        npe01__Contacts_And_Orgs_Settings__c contactsSettings =
                 UTIL_CustomSettingsFacade.getContactsSettings();
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.

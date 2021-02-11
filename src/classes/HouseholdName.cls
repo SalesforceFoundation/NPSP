@@ -34,13 +34,13 @@
 */
 public with sharing class HouseholdName {
 
-    SObject household;
-    SObject oldRecord;
-    Contacts contacts;
-    CustomFormat customFormat;
-    HH_INaming service;
-    HouseholdSettings settings;
-    String nameReplacementText = System.Label.npo02.NameReplacementText;
+    private SObject household;
+    private SObject oldRecord;
+    private Contacts contacts;
+    private CustomFormat customFormat;
+    private HH_INaming service;
+    private HouseholdSettings settings;
+    private String nameReplacementText = System.Label.npo02.NameReplacementText;
 
     public HouseholdName(SObject h, List<Contact> contacts) {
         this(h, null, contacts, null, null);
@@ -68,27 +68,63 @@ public with sharing class HouseholdName {
         }
     }
 
-    public void processReplacementText() {
-        if (isReplaceable(household, 'Name')) {
-            customFormat.replace('Name;', ';');
-            household.put('Name', nameReplacementText);
-        } else if (isFieldValueChanged(household, 'Name', oldRecord)) {
-            customFormat.append('Name');
+    public void processHouseholdNamingReplacements() {
+        if (isNameReplaceable()) {
+            customFormat.removeName();
+            replaceHouseholdName();
+        } else if (isNameChanged()) {
+            customFormat.appendName();
         }
 
-        if (isReplaceable(household, 'npo02__Informal_Greeting__c')) {
-            customFormat.replace('Informal_Greeting__c;', ';');
-            household.put('npo02__Informal_Greeting__c', nameReplacementText);
-        } else if (isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord)) {
-            customFormat.append('Informal_Greeting__c');
+        if (isInformalGreetingReplaceable()) {
+            customFormat.removeInformalGreeting();
+            replaceHouseholdInformalGreeting();
+        } else if (isInformalGreetingChanged()) {
+            customFormat.appendInformalGreeting();
         }
 
-        if (isReplaceable(household, 'npo02__Formal_Greeting__c')) {
-            customFormat.replace('Formal_Greeting__c;', ';');
-            household.put('npo02__Formal_Greeting__c', nameReplacementText);
-        } else if (isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord)) {
-            customFormat.append('Formal_Greeting__c');
+        if (isFormalGreetingReplaceable()) {
+            customFormat.removeFormalGreeting();
+            replaceHouseholdFormalGreeting();
+        } else if (isFormalGreetingChanged()) {
+            customFormat.appendFormalGreeting();
         }
+    }
+
+    private Boolean isFormalGreetingChanged() {
+        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isInformalGreetingChanged() {
+        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isNameChanged() {
+        return isFieldValueChanged(household, 'Name', oldRecord);
+    }
+
+    private Boolean isFormalGreetingReplaceable() {
+        return isReplaceable(household, 'npo02__Formal_Greeting__c');
+    }
+
+    private Boolean isInformalGreetingReplaceable() {
+        return isReplaceable(household, 'npo02__Informal_Greeting__c');
+    }
+
+    private Boolean isNameReplaceable() {
+        return isReplaceable(household, 'Name');
+    }
+
+    private void replaceHouseholdFormalGreeting() {
+        household.put('npo02__Formal_Greeting__c', nameReplacementText);
+    }
+
+    private void replaceHouseholdInformalGreeting() {
+        household.put('npo02__Informal_Greeting__c', nameReplacementText);
+    }
+
+    private void replaceHouseholdName() {
+        household.put('Name', nameReplacementText);
     }
 
     public void setNameFieldValuesOnHousehold() {
@@ -107,7 +143,7 @@ public with sharing class HouseholdName {
     * @description returns the Household Name for the list of Contacts
     * @return String
     */
-    public String getHHName() {
+    private String getHHName() {
         List<Contact> listCon = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
             if (con.npo02__Naming_Exclusions__c == null
@@ -121,7 +157,7 @@ public with sharing class HouseholdName {
     * @description returns the Informal Greeting for the list of Contacts
     * @return String
     */
-    public String getInformalName() {
+    private String getInformalName() {
         return service.getHouseholdInformalGreeting(getContactsForInformalName());
     }
 
@@ -143,7 +179,7 @@ public with sharing class HouseholdName {
     * @description returns the Formal Greeting for the list of Contacts
     * @return String
     */
-    public String getFormalName() {
+    private String getFormalName() {
         return service.getHouseholdFormalGreeting(getContactsForFormalName());
     }
 
@@ -204,5 +240,29 @@ public with sharing class HouseholdName {
         public Boolean contains(String val) {
             return this.customNameSet.contains(val);
         }
+        public void removeName() {
+            customFormat.replace('Name;', ';');
+        }
+
+        public void removeFormalGreeting() {
+            customFormat.replace('Formal_Greeting__c;', ';');
+        }
+
+        public void removeInformalGreeting() {
+            customFormat.replace('Informal_Greeting__c;', ';');
+        }
+
+        public void appendFormalGreeting() {
+            customFormat.append('Formal_Greeting__c');
+        }
+
+        public void appendInformalGreeting() {
+            customFormat.append('Informal_Greeting__c');
+        }
+
+        public void appendName() {
+            customFormat.append('Name');
+        }
+
     }
 }
