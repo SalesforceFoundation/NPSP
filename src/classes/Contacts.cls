@@ -98,12 +98,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (householdInserts.size() > 0) {
-            insertHouseholdsAfterInsert(householdInserts);
+            insertHouseholdsForContacts(householdInserts, true);
         }
 
         if (contactEvaluations.size() > 0) {
-            insertHouseholdsAfterInsert(
-                    getContactsNeedingHouseholds(contactEvaluations));
+            insertHouseholdsForContacts(
+                    getContactsNeedingHouseholds(contactEvaluations), true);
         }
     }
 
@@ -230,15 +230,15 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isExcludedFromFormalGreeting(Contact con) {
-        return isExcludedFromFormalGreeting(con);
+        return con.Exclude_from_Household_Formal_Greeting__c;
     }
 
     private Boolean isExcludedFromInformalGreeting(Contact con) {
-        return isExcludedFromInformalGreeting(con);
+        return con.Exclude_from_Household_Informal_Greeting__c;
     }
 
     private Boolean isExcludedFromHouseholdName(Contact con) {
-        return isExcludedFromHouseholdName(con);
+        return con.Exclude_from_Household_Name__c;
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeInsert() {
@@ -268,7 +268,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private static String namingExclusionsFor(Contact con) {
-        return namingExclusionsFor(con);
+        return con.npo02__Naming_Exclusions__c;
     }
 
     /*******************************************************************************************************
@@ -401,13 +401,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
-    /*******************************************************************************************************
-    * @description Determines if a Contact Should have a household object created
-    * @param contacts List of Contacts
-    * @param isAfterTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
-    * @param dmlWrapper Not used. Commits are immediate.
-    * @return void
-    ********************************************************************************************************/
     public void insertHouseholdsAfterInsert(List<Contact> contacts) {
         insertHouseholdsForContacts(contacts, true);
     }
@@ -700,7 +693,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * @param winningContacts Set of Contact Id's
      * @return void
      ********************************************************************************************************/
-    public static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
+    @TestVisible
+    private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings =
                 UTIL_CustomSettingsFacade.getContactsSettings();
