@@ -125,7 +125,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 && settings.isAllProcessor();
     }
 
-    public void buildOldHouseholdCollections() {
+    private void buildOldHouseholdCollections() {
         oldHouseholds.addAll(getOldHouseholdIds());
         buildOldHouseholdSizeMap();
     }
@@ -204,42 +204,41 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
         for (Contact con : (List<Contact>) getRecords()) {
-            Contact oldCon = oldVersionOf(con);
-
             //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
             //then, copy from multiselect to checkboxes if multiselect has changed
             //if both have changed, prefers checkboxes
-            if (shouldCopyNamingExclusionsFromCheckboxes(con, oldCon)) {
+            if (shouldCopyNamingExclusionsFromCheckboxes(con)) {
                 copyNamingExclusionsFromCheckboxes(con);
-            } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con, oldCon)) {
+            } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con)) {
                 synchronizeNamingExclusionStringToCheckboxes(
                         new HouseholdNamingExclusions(namingExclusionsFor(con)), con);
             }
         }
     }
 
-    private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con, Contact oldCon) {
+    private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con) {
         HouseholdNamingExclusions consHouseholdNamingExclusions =
                 new HouseholdNamingExclusions(namingExclusionsFor(con));
-        return consHouseholdNamingExclusions.isNotEqualTo(namingExclusionsFor(oldCon));
+        return consHouseholdNamingExclusions.isNotEqualTo(
+                namingExclusionsFor(oldVersionOf(con)));
     }
 
-    private Boolean shouldCopyNamingExclusionsFromCheckboxes(Contact con, Contact oldCon) {
-        return isExcludedFromHouseholdName(con) != isExcludedFromHouseholdName(oldCon) ||
-                isExcludedFromInformalGreeting(con) != isExcludedFromInformalGreeting(oldCon) ||
-                isExcludedFromFormalGreeting(con) != isExcludedFromFormalGreeting(oldCon);
+    private Boolean shouldCopyNamingExclusionsFromCheckboxes(Contact con) {
+        return isExcludedFromHouseholdName(con) != isExcludedFromHouseholdName(oldVersionOf(con)) ||
+                isExcludedFromInformalGreeting(con) != isExcludedFromInformalGreeting(oldVersionOf(con)) ||
+                isExcludedFromFormalGreeting(con) != isExcludedFromFormalGreeting(oldVersionOf(con));
     }
 
     private Boolean isExcludedFromFormalGreeting(Contact con) {
-        return con.Exclude_from_Household_Formal_Greeting__c;
+        return isExcludedFromFormalGreeting(con);
     }
 
     private Boolean isExcludedFromInformalGreeting(Contact con) {
-        return con.Exclude_from_Household_Informal_Greeting__c;
+        return isExcludedFromInformalGreeting(con);
     }
 
     private Boolean isExcludedFromHouseholdName(Contact con) {
-        return con.Exclude_from_Household_Name__c;
+        return isExcludedFromHouseholdName(con);
     }
 
     private void synchronizeNamingExclusionsFieldsBeforeInsert() {
@@ -256,9 +255,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean hasExclusionCheckboxesChecked(Contact con) {
-        return con.Exclude_from_Household_Name__c
-                || con.Exclude_from_Household_Informal_Greeting__c
-                || con.Exclude_from_Household_Formal_Greeting__c;
+        return isExcludedFromHouseholdName(con)
+                || isExcludedFromInformalGreeting(con)
+                || isExcludedFromFormalGreeting(con);
     }
 
     private static void synchronizeNamingExclusionStringToCheckboxes(
@@ -269,13 +268,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private static String namingExclusionsFor(Contact con) {
-        return con.npo02__Naming_Exclusions__c;
+        return namingExclusionsFor(con);
     }
 
     /*******************************************************************************************************
     * @description Copies the values from the naming exclusions checkboxes to the multiselect picklist.
-    * @param con The Contact
-    * @return void
     ********************************************************************************************************/
     public void copyNamingExclusionsFromCheckboxes() {
         for (SObject sobj : getRecords()) {
@@ -291,13 +288,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private HouseholdNamingExclusions buildNamingExclusionsFromCheckboxesFor(Contact con) {
         HouseholdNamingExclusions exclusions = new HouseholdNamingExclusions(null);
-        if (con.Exclude_from_Household_Name__c) {
+        if (isExcludedFromHouseholdName(con)) {
             exclusions.excludeName();
         }
-        if (con.Exclude_from_Household_Formal_Greeting__c) {
+        if (isExcludedFromFormalGreeting(con)) {
             exclusions.excludeFormalGreeting();
         }
-        if (con.Exclude_from_Household_Informal_Greeting__c) {
+        if (isExcludedFromInformalGreeting(con)) {
             exclusions.excludeInformalGreeting();
         }
         return exclusions;
@@ -384,7 +381,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
-        npo02__household__c h = new npo02__household__c(Name=getDefaultHouseholdName(con));
+        npo02__household__c h = new npo02__household__c(Name = getDefaultHouseholdName(con));
         syncPrimaryAddressBlock(h, con);
         return h;
     }
@@ -488,7 +485,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         if (mergedWinningContact.size() > 0) {
             // this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            contactMergeUpdate(mergedWinningContact);
+            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
         }
 
         if (deletedContactsInHouseholds.size() > 0) {
@@ -553,7 +550,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isNamingExclusionsChanged(Contact con) {
-        return con.npo02__Naming_Exclusions__c != oldVersionOf(con).npo02__Naming_Exclusions__c;
+        HouseholdNamingExclusions exclusions =
+                new HouseholdNamingExclusions(namingExclusionsFor(con));
+        return exclusions.isNotEqualTo(namingExclusionsFor(oldVersionOf(con)));
     }
 
     private void handleHouseholdChanged(Contact con) {
@@ -610,7 +609,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Contact oldVersionOf(Contact con) {
-        return oldMap.get(con.id);
+        return oldMap.get(con.Id);
     }
 
     private String getNewFieldValue(Contact con, String fieldName) {
@@ -701,7 +700,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * @param winningContacts Set of Contact Id's
      * @return void
      ********************************************************************************************************/
-    public static void contactMergeUpdate(Set<Id> winningContacts) {
+    public static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings =
                 UTIL_CustomSettingsFacade.getContactsSettings();
