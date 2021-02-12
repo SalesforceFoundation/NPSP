@@ -46,9 +46,6 @@
 
     <script>
         var namespace = '{!namespace}';
-        if (!namespace || namespace === '') {
-            namespace = 'c';
-        }
 
         var isSimpleVersion = {!isSimpleVersion};
         var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
