@@ -191,7 +191,7 @@
             "description": "shown if validation fails"
         },
         "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
-            "message": "",
+            "message": "Dit installatieprogramma is uitsluitend bedoeld voor Trailhead Playground-organisaties. Uw organisatie is kennelijk geen Trailhead Playground. Als u de installatie voortzet, kan uw organisatie beschadigd raken.",
             "description": "shown if validation fails"
         }
     },
