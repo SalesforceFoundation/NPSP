@@ -41,15 +41,6 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelRelReciprocal'; }
 
     /*********************************************************************************************************
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isEmpty(namespace)) return 'c';
-        return namespace;
-    }
-
-    /*********************************************************************************************************
     * @description Returns true if user has full CRUD access to npe4__Relationship_Lookup__c
     */
     public Boolean getHasAccess() {
