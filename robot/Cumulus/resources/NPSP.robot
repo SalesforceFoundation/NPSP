@@ -490,10 +490,14 @@ Enable RD2
     ${orgname} =              Get Org Name
     Log                       ${ns}
     Log                       ${orgname}
-    Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
-    ...                       Enable RD2QA
+
+    ${return} =                Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
+    ...                       Run Process     cci  flow  run  enable_rd2  --org    ${orgname}   stdout=true
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
-    ...                       Run Process     cci  flow  run  enable_rd2_managed   --org    ${orgname}
+    ...                       Run Process     cci  flow  run  enable_rd2_managed   --org    ${orgname}  stdout=true
+    Run Keyword if            "${return}"!="None"
+    ...                        Should Be Equal As Integers	    ${return.rc}	    0
+    Sleep                     1                         Wait Added For Metadata Get Loaded
 
 Run Recurring Donations Batch
     [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
