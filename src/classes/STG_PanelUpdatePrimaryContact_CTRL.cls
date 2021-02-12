@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -39,11 +39,16 @@ public with sharing class STG_PanelUpdatePrimaryContact_CTRL extends STG_Panel {
         isRunningBatch = false;
     }
     
-    public override string idPanel() { return 'idPanelUpdatePrimaryContact'; }
-    
+    public override string idPanel() {
+        return 'idPanelUpdatePrimaryContact';
+    }
+
+    /**
+    * @description Whether we are currently running the batch process 
+    */
     public boolean isRunningBatch { get; set; }
     
-    /*********************************************************************************************************
+    /**
     * @description Action Method to run batch update opportunity primary contact.
     * @return null 
     */
@@ -52,5 +57,19 @@ public with sharing class STG_PanelUpdatePrimaryContact_CTRL extends STG_Panel {
         OPP_PrimaryContact_BATCH batch = new OPP_PrimaryContact_BATCH();
         id batchProcessId = database.executeBatch(batch, 200);
         return null;
+    }
+
+    /**
+    * @description Check if the running user has update access to the Opportunity sObject and Read access to the
+    * Contact sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String oppObject = Schema.SObjectType.Opportunity.getName();
+        String contactObject = Schema.SObjectType.Contact.getName();
+
+        return UTIL_Permissions.canRead(oppObject, false) &&
+            UTIL_Permissions.canUpdate(oppObject, false) &&
+            UTIL_Permissions.canRead(contactObject, false);
     }
 }
