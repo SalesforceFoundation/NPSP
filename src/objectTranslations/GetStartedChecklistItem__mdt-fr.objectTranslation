@@ -1,136 +1,136 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Élément de la liste de contrôle Premiers pas NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Éléments de la liste de contrôle Premiers pas NPSP</value>
-    </caseValues>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette Description de cet élément dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-        <label>Nom de l&apos;étiquette de la description</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette d&apos;informations supplémentaires, qui fournit des informations complémentaires sur un élément de section (par exemple durée de la vidéo, PDF, etc.). Affiché dans le coin supérieur droit.</help>
-        <label>Nom étiquette information supplémentaire</label>
-        <name>Extra_Info_Label__c</name>
-    </fields>
-    <fields>
-        <help>La section de la page Premiers pas à laquelle appartient cet élément.</help>
-        <label>Section de la liste de contrôle PP</label>
-        <name>GS_Checklist_Section__c</name>
-        <relationshipLabel>Élément de la liste de contrôle Premiers pas</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indique si l&apos;élément inclut un lien à afficher.</help>
-        <label>Contient un lien</label>
-        <name>Has_Link__c</name>
-    </fields>
-    <fields>
-        <help>Le filename de l&apos;image dans la ressource statique CumulusResources (dans le dossier gsAssets/step) à restituer.</help>
-        <label>Image</label>
-        <name>Image__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette Lien d&apos;un lien de la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-        <label>Nom de l&apos;étiquette du lien</label>
-        <name>Link_Label__c</name>
-    </fields>
-    <fields>
-        <help>L&apos;URL cible d&apos;un lien dans la page Premiers pas.</help>
-        <label>URL du lien</label>
-        <name>Link_URL__c</name>
-    </fields>
-    <fields>
-        <help>L&apos;emplacement de cet élément de section dans la page Premiers pas.</help>
-        <label>Position</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette Bouton principal d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-        <label>Nom de l&apos;étiquette du bouton principal</label>
-        <name>Primary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>Le type d&apos;action associé au bouton principal. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
-        <label>Type du bouton principal</label>
-        <name>Primary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Désactivé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Page externe</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Nouvel onglet Salesforce</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>L&apos;action du bouton principal.
-Pour un bouton Page externe, l&apos;URL externe.
-Pour un bouton Nouvel onglet Salesforce, le format est &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. La documentation Lightning présente des exemples et les spécifications.</help>
-        <label>Valeur du bouton principal</label>
-        <name>Primary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette Bouton secondaire d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-        <label>Nom de l&apos;étiquette du bouton secondaire</label>
-        <name>Secondary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>Le type d&apos;action associé au bouton secondaire. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
-        <label>Type du bouton secondaire</label>
-        <name>Secondary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Désactivé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Page externe</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Nouvel onglet Salesforce</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>L&apos;action du bouton secondaire.
-Pour un bouton Page externe, l&apos;URL externe.
-Pour un bouton Nouvel onglet Salesforce, le format est &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. La documentation Lightning présente des exemples et les spécifications.</help>
-        <label>Valeur du bouton secondaire</label>
-        <name>Secondary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;étiquette Titre d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
-        <label>Nom de l&apos;étiquette du titre</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>GS Checklist Item Layout</layout>
-        <sections>
-            <label>Boutons</label>
-            <section>Buttons</section>
-        </sections>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Informations</label>
-            <section>Info</section>
-        </sections>
-        <sections>
-            <label>Lien</label>
-            <section>Link</section>
-        </sections>
-    </layouts>
-    <startsWith>Vowel</startsWith>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>Le nom d'API de l'étiquette Description de cet élément dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette de la description</label>
+  </fields>
+  <fields>
+    <name>Extra_Info_Label__c</name>
+    <help>Le nom d'API de l'étiquette d'informations supplémentaires, qui fournit des informations complémentaires sur un élément de section (par exemple durée de la vidéo, PDF, etc.). Affiché dans le coin supérieur droit.</help>
+    <label>Nom étiquette information supplémentaire</label>
+  </fields>
+  <fields>
+    <name>GS_Checklist_Section__c</name>
+    <help>La section de la page Premiers pas à laquelle appartient cet élément.</help>
+    <relationshipLabel>Élément de la liste de contrôle Premiers pas</relationshipLabel>
+    <label>Section de la liste de contrôle PP</label>
+  </fields>
+  <fields>
+    <name>Has_Link__c</name>
+    <help>Indique si l'élément inclut un lien à afficher.</help>
+    <label>Contient un lien</label>
+  </fields>
+  <fields>
+    <name>Image__c</name>
+    <help>Le filename de l'image dans la ressource statique CumulusResources (dans le dossier gsAssets/step) à restituer.</help>
+    <label>Image</label>
+  </fields>
+  <fields>
+    <name>Link_Label__c</name>
+    <help>Le nom d'API de l'étiquette Lien d'un lien de la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette du lien</label>
+  </fields>
+  <fields>
+    <name>Link_URL__c</name>
+    <help>L'URL cible d'un lien dans la page Premiers pas.</help>
+    <label>URL du lien</label>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>L'emplacement de cet élément de section dans la page Premiers pas.</help>
+    <label>Position</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Label__c</name>
+    <help>Le nom d'API de l'étiquette Bouton principal d'un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette du bouton principal</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Type__c</name>
+    <help>Le type d'action associé au bouton principal. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
+    <label>Type du bouton principal</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>Désactivé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>Nouvel onglet Salesforce</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>Page externe</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Primary_Button_Value__c</name>
+    <help>L'action du bouton principal.
+Pour un bouton Page externe, l'URL externe.
+Pour un bouton Nouvel onglet Salesforce, le format est "{pageReference}:{objectOrPageApiName}:{action}". La documentation Lightning présente des exemples et les spécifications.</help>
+    <label>Valeur du bouton principal</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Label__c</name>
+    <help>Le nom d'API de l'étiquette Bouton secondaire d'un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette du bouton secondaire</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Type__c</name>
+    <help>Le type d'action associé au bouton secondaire. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
+    <label>Type du bouton secondaire</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>Désactivé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>Nouvel onglet Salesforce</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>Page externe</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Value__c</name>
+    <help>L'action du bouton secondaire.
+Pour un bouton Page externe, l'URL externe.
+Pour un bouton Nouvel onglet Salesforce, le format est "{pageReference}:{objectOrPageApiName}:{action}". La documentation Lightning présente des exemples et les spécifications.</help>
+    <label>Valeur du bouton secondaire</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>Le nom d'API de l'étiquette Titre d'un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+    <label>Nom de l'étiquette du titre</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Item Layout</layout>
+    <sections>
+      <label>Informations</label>
+      <section>Info</section>
+    </sections>
+    <sections>
+      <label>Lien</label>
+      <section>Link</section>
+    </sections>
+    <sections>
+      <label>Boutons</label>
+      <section>Buttons</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Élément de la liste de contrôle Premiers pas NPSP</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Éléments de la liste de contrôle Premiers pas NPSP</value>
+  </caseValues>
 </CustomObjectTranslation>

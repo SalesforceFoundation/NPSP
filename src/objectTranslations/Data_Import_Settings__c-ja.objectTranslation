@@ -1,83 +1,83 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポート設定</value>
-    </caseValues>
-    <fields>
-        <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の取引先カスタム ID</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>既存の取引先に対してデータインポートレコード内の取引先を照合するときのルールを指定します。</help>
-        <label>取引先マッチングルール</label>
-        <name>Account_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>各バッチで処理する NPSP データインポートレコードの数。</help>
-        <label>バッチサイズ</label>
-        <name>Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>CMT リリース結果用の JSON
-{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
-        <label>CMT API リリース結果</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>カスタムメタデータリリースの ID</help>
-        <label>CMT リリース ID</label>
-        <name>CMT_Deployment_ID__c</name>
-    </fields>
-    <fields>
-        <help>取引先責任者のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の取引先責任者カスタム ID</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>既存の取引先責任者に対してデータインポートレコード内の取引先責任者を照合するときのルールを指定します。</help>
-        <label>取引先責任者マッチングルール</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>デフォルトで使用する必要のあるデータインポート項目の対応付けセットレコードのカスタムメタデータ API 参照名。</help>
-        <label>デフォルトのデータインポート項目の対応付けセット</label>
-        <name>Default_Data_Import_Field_Mapping_Set__c</name>
-    </fields>
-    <fields>
-        <help>マッチング商談または支払を探すときの [日付(商談)] からの日数を入力します。データインポーターはその日数範囲内で最も近い、マッチングする商談または支払を選択します。</help>
-        <label>日付(支援)からの日数</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>データインポーターがマッチング支援をどのように処理するかを定義します。値を選択する必要があります。</help>
-        <label>支援マッチング動作</label>
-        <name>Donation_Matching_Behavior__c</name>
-    </fields>
-    <fields>
-        <help>支援の BDI_IMatching インターフェースを実装する Apex クラスの API 参照名。NPSP がマッチングを処理できるように、空のままにします。</help>
-        <label>支援マッチング実装クラス</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>既存の商談および支払に対してデータインポートレコードの商談をマッチングするとき、どの項目をマッチングするかを指定します。複数の項目を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
-        <label>支援マッチングルール</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>NPSP データインポートレコードの項目を Salesforce の他のオブジェクトに対応付ける方法を定義します。オプションは [ヘルプテキスト] または [データインポート項目の対応付け] です。</help>
-        <label>項目の対応付け方法</label>
-        <name>Field_Mapping_Method__c</name>
-    </fields>
-    <fields>
-        <help>NPSP データインポートレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</help>
-        <label>ポストプロセス実装クラス</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>オンの場合、支援処理時に支援者の統計情報が計算されます。オフの場合、支援者の統計情報はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
-        <label>バッチでの支援積み上げ集計の計算</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>
+    <label>一意の取引先カスタム ID</label>
+  </fields>
+  <fields>
+    <name>Account_Matching_Rule__c</name>
+    <help>既存の取引先に対してデータインポートレコード内の取引先を照合するときのルールを指定します。</help>
+    <label>取引先マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Batch_Size__c</name>
+    <help>各バッチで処理する NPSP データインポートレコードの数。</help>
+    <label>バッチサイズ</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>CMT リリース結果用の JSON
+{ "jobId": "repsonse" }</help>
+    <label>CMT API リリース結果</label>
+  </fields>
+  <fields>
+    <name>CMT_Deployment_ID__c</name>
+    <help>カスタムメタデータリリースの ID</help>
+    <label>CMT リリース ID</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>取引先責任者のマッチングに使用する任意の一意の ID 項目</help>
+    <label>一意の取引先責任者カスタム ID</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>既存の取引先責任者に対してデータインポートレコード内の取引先責任者を照合するときのルールを指定します。</help>
+    <label>取引先責任者マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
+    <help>デフォルトで使用する必要のあるデータインポート項目の対応付けセットレコードのカスタムメタデータ API 参照名。</help>
+    <label>デフォルトのデータインポート項目の対応付けセット</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>マッチング商談または支払を探すときの [日付(商談)] からの日数を入力します。データインポーターはその日数範囲内で最も近い、マッチングする商談または支払を選択します。</help>
+    <label>日付(支援)からの日数</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>データインポーターがマッチング支援をどのように処理するかを定義します。値を選択する必要があります。</help>
+    <label>支援マッチング動作</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>支援の BDI_IMatching インターフェースを実装する Apex クラスの API 参照名。NPSP がマッチングを処理できるように、空のままにします。</help>
+    <label>支援マッチング実装クラス</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>既存の商談および支払に対してデータインポートレコードの商談をマッチングするとき、どの項目をマッチングするかを指定します。複数の項目を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+    <label>支援マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Field_Mapping_Method__c</name>
+    <help>NPSP データインポートレコードの項目を Salesforce の他のオブジェクトに対応付ける方法を定義します。オプションは [ヘルプテキスト] または [データインポート項目の対応付け] です。</help>
+    <label>項目の対応付け方法</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>NPSP データインポートレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</help>
+    <label>ポストプロセス実装クラス</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>オンの場合、支援処理時に支援者の統計情報が計算されます。オフの場合、支援者の統計情報はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
+    <label>バッチでの支援積み上げ集計の計算</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>データインポート設定</value>
+  </caseValues>
 </CustomObjectTranslation>

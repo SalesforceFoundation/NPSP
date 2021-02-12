@@ -1,57 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>住所検証設定</value>
-    </caseValues>
-    <fields>
-        <help>住所検証に使用する URL。</help>
-        <label>住所検証 URL</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>認証 ID。</help>
-        <label>認証 ID</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>認証トークン。</help>
-        <label>認証トークン</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。</help>
-        <label>検証サービス</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>新しい住所の自動住所検証を有効にします。</help>
-        <label>自動検証の有効化</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Cicero API による検証時の住所の上書きを禁止します。</help>
-        <label>住所の上書きの禁止</label>
-        <name>Prevent_Address_Overwrite__c</name>
-    </fields>
-    <fields>
-        <help>API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。</help>
-        <label>あいまいな住所の拒否</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>コールアウトのタイムアウト (秒)。</help>
-        <label>タイムアウト</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>SmartyStreets 住所検証サービスを使用しているかどうかを指定します。</help>
-        <label>廃止 - SmartyStreets の使用</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>郵便番号検証に使用される URL。</help>
-        <label>郵便番号検証エンドポイント</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>住所検証に使用する URL。</help>
+    <label>住所検証 URL</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>認証 ID。</help>
+    <label>認証 ID</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>認証トークン。</help>
+    <label>認証トークン</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。</help>
+    <label>検証サービス</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>新しい住所の自動住所検証を有効にします。</help>
+    <label>自動検証の有効化</label>
+  </fields>
+  <fields>
+    <name>Prevent_Address_Overwrite__c</name>
+    <help>Cicero API による検証時の住所の上書きを禁止します。</help>
+    <label>住所の上書きの禁止</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。</help>
+    <label>あいまいな住所の拒否</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>コールアウトのタイムアウト (秒)。</help>
+    <label>タイムアウト</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>SmartyStreets 住所検証サービスを使用しているかどうかを指定します。</help>
+    <label>廃止 - SmartyStreets の使用</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>郵便番号検証に使用される URL。</help>
+    <label>郵便番号検証エンドポイント</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>住所検証設定</value>
+  </caseValues>
 </CustomObjectTranslation>

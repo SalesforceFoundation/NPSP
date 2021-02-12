@@ -1,425 +1,409 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <fields>
-        <help>De datum waarop u deze Opportunity hebt erkend.</help>
-        <label>Datum van Erkenning</label>
-        <name>Acknowledgment_Date__c</name>
-    </fields>
-    <fields>
-        <help>De status van erkenning van deze Opportunity.</help>
-        <label>Status van Erkenning</label>
-        <name>Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>Erkend</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Niet Erkennen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
-            <translation>Erkenningse-mail Niet Verzonden</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Now</masterLabel>
-            <translation>Erkenning nu e-mailen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Te Erkennen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De datum waarop de donor om deze Donatie werd gevraagd. Dit kan afwijken van de datum waarop u de Donatie hebt ontvangen.</help>
-        <label>Vraagdatum</label>
-        <name>Ask_Date__c</name>
-    </fields>
-    <fields>
-        <help>De batch waarmee deze opportunity is gemaakt. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
-        <label>Batchnummer</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <label>Batch</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Opportunities</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Notities over waarom de vraag naar donatie niet succesvol was.</help>
-        <label>Reden voor Gesloten Verloren</label>
-        <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <help>Externe ID voor integratie van de Salesforce.org-betalingsservice.</help>
-        <label>Herhalings-ID Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, schakelt dit veld verscheidene aspecten van de automatisering van NPSP-Opportunitycontactpersoonrol uit, wat mogelijk leidt tot onjuiste gegevens of duplicaatgegevens. Raadpleeg de productdocumentatie voor meer informatie.</help>
-        <label>Automatisering Contactpersoonrol uitsch.</label>
-        <name>DisableContactRoleAutomation__c</name>
-    </fields>
-    <fields>
-        <help>De Eerlijke Marktwaarde van een In Natura gift.</help>
-        <label>Eerlijke Marktwaarde</label>
-        <name>Fair_Market_Value__c</name>
-    </fields>
-    <fields>
-        <help>Categoriseert het type vraag voor deze opportunity, bijvoorbeeld Nieuwe Donor.</help>
-        <label>Giftstrategie</label>
-        <name>Gift_Strategy__c</name>
-        <picklistValues>
-            <masterLabel>New Donor</masterLabel>
-            <translation>Nieuwe Donor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Renewal</masterLabel>
-            <translation>Verlenging</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Upgrade</masterLabel>
-            <translation>Upgraden</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De datum waarop de Subsidie is ontstaan, volgens het document of contract verzonden door de subsidieverlenende organisatie.</help>
-        <label>Contractdatum Subsidie</label>
-        <name>Grant_Contract_Date__c</name>
-    </fields>
-    <fields>
-        <help>Gebruik dit om unieke nummers te volgen die soms door subsidieverlenende organisaties toegewezen worden.</help>
-        <label>Contractnummer Subsidie</label>
-        <name>Grant_Contract_Number__c</name>
-    </fields>
-    <fields>
-        <label>Einddatum Subsidieperiode</label>
-        <name>Grant_Period_End_Date__c</name>
-    </fields>
-    <fields>
-        <label>Begindatum Subsidieperiode</label>
-        <name>Grant_Period_Start_Date__c</name>
-    </fields>
-    <fields>
-        <help>Gebruik dit om de financieringsgebieden voor de Subsidie of Donatie te beschrijven. Bijvoorbeeld, de namen van de programma&apos;s waarvoor de Subsidie of Donatie is bestemd.</help>
-        <label>Programmagebieden</label>
-        <name>Grant_Program_Area_s__c</name>
-    </fields>
-    <fields>
-        <help>Een URL die wijst naar de subsidievereisten op de website van de subsidieverlener.</help>
-        <label>Website Subsidievereisten</label>
-        <name>Grant_Requirements_Website__c</name>
-    </fields>
-    <fields>
-        <help>Opzoeking van de Contactpersoonrecord van de gehonoreerde persoon voor deze Donatie.</help>
-        <label>Gehonoreerde Contactpersoon</label>
-        <name>Honoree_Contact__c</name>
-        <relationshipLabel>Opportunities (Gehonoreerde Contactpersoon)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De naam van de gehonoreerde zoals voorzien door de donor. Indien dit veld leeg is, en indien het veld Gehonoreerde Contactpersoon een waarde bevat, vult NPSP dit veld automatisch in met die waarde.</help>
-        <label>Naam van Gehonoreerde</label>
-        <name>Honoree_Name__c</name>
-    </fields>
-    <fields>
-        <help>Bevat rich text-beschrijving van een In Natura Gift, inclusief afbeeldingen.</help>
-        <label>Beschrijving In Natura</label>
-        <name>In_Kind_Description__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of de donor de Eerlijke Marktwaarde voor dit In Natura Gift heeft opgegeven.</help>
-        <label>Door Donor Aangegeven Waarde In Natura</label>
-        <name>In_Kind_Donor_Declared_Value__c</name>
-    </fields>
-    <fields>
-        <help>Het type In Natura Gift, bijvoorbeeld, Goederen of Diensten.</help>
-        <label>Type In Natura</label>
-        <name>In_Kind_Type__c</name>
-        <picklistValues>
-            <masterLabel>Goods</masterLabel>
-            <translation>Goederen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Services</masterLabel>
-            <translation>Diensten</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Geeft aan of de Subsidie een verlenging van een vorige Subsidie is.</help>
-        <label>Is Subsidieverlenging</label>
-        <name>Is_Grant_Renewal__c</name>
-    </fields>
-    <fields>
-        <help>Opzoeking van de Accountrecord van het bedrijf dat met deze Donatie zal overeenkomen.</help>
-        <label>Overeenkomende Giftaccount</label>
-        <name>Matching_Gift_Account__c</name>
-        <relationshipLabel>Overeenkomende Giften</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De naam van het bedrijf dat met deze Donatie zal overeenkomen.</help>
-        <label>Werkgever Overeenkomende Gift</label>
-        <name>Matching_Gift_Employer__c</name>
-    </fields>
-    <fields>
-        <help>De status van de Overeenkomende Gift voor deze Donatie, bijvoorbeeld, Ingediend of Ontvangen.</help>
-        <label>Status Overeenkomende Gift</label>
-        <name>Matching_Gift_Status__c</name>
-        <picklistValues>
-            <masterLabel>Potential</masterLabel>
-            <translation>Potentieel</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Received</masterLabel>
-            <translation>Ontvangen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Submitted</masterLabel>
-            <translation>Ingediend</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Opzoeking van de Opportunityrecord voor de Overeenkomende Gift voor deze Donatie.</help>
-        <label>Overeenkomende Gift</label>
-        <name>Matching_Gift__c</name>
-        <relationshipLabel>Overeenkomende Giften</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De vervaldatum voor de volgende Oplevering van deze Opportunity (enkel lezen).</help>
-        <label>Volgende Leverdatum</label>
-        <name>Next_Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>Een persoonlijk bericht voor de ontvanger van meldingen.</help>
-        <label>Bericht van Melding</label>
-        <name>Notification_Message__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan hoe de ontvanger van meldingen op de hoogte moet worden gebracht, bijvoorbeeld via e-mail of telefoon.</help>
-        <label>Meldingsvoorkeur</label>
-        <name>Notification_Preference__c</name>
-        <picklistValues>
-            <masterLabel>Do Not Notify</masterLabel>
-            <translation>Niet op de hoogte brengen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>E-mail</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Phone</masterLabel>
-            <translation>Telefoon</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Postal Mail</masterLabel>
-            <translation>Post</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Opzoeking van de Contactpersoonrecord die van deze Donatie op de hoogte moet worden gebracht.</help>
-        <label>Contactpersoon Ontvanger van Meldingen</label>
-        <name>Notification_Recipient_Contact__c</name>
-        <relationshipLabel>Opportunities (Ontvanger van Meldingen)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Geef contactinformatie op zoals adres, telefoon of e-mailadres die de donor verschaft voor de ontvanger van meldingen.</help>
-        <label>Informatie van Ontvanger van Meldingen</label>
-        <name>Notification_Recipient_Information__c</name>
-    </fields>
-    <fields>
-        <help>De naam die de donor verschaft van de persoon die u over deze Donatie op de hoogte moet brengen. Als dit veld leeg is en als het veld Contactpersoon Ontvanger van Meldingen een waarde bevat, vult NPSP dat veld automatisch in met die waarde.</help>
-        <label>Naam van Ontvanger van Meldingen</label>
-        <name>Notification_Recipient_Name__c</name>
-    </fields>
-    <fields>
-        <help>Als deze Subsidie een verlenging is van een vorige Subsidie, gebruikt u dit veld om deze record te relateren aan de vorige Subsidie.</help>
-        <label>Vorige Subsidie/Giftopportunity</label>
-        <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>Gerelateerde Subsidies/Giften</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De status die NPSP gebruikt wanneer het een Campagnelid maakt voor de Primaire Contactpersoon van een Opportunity. Laat leeg om dit standaard op de gereageerd-status te zetten voor Gesloten/Gewonnen Opp., en op de niet gereageerd-status voor andere Opp.</help>
-        <label>Campagnelidstatus Primaire Contactpers.</label>
-        <name>Primary_Contact_Campaign_Member_Status__c</name>
-    </fields>
-    <fields>
-        <help>De Primaire Contactpersoon voor deze Opportunity. Als dit een Individuele Donatie is, schrijft NPSP de Donatie toe aan de Primaire Contactpersoon. Als het een Organisatiedonatie is, schrijft NPSP een soft credit toe aan de Primaire Contactpersoon.</help>
-        <label>Primaire contactpersoon</label>
-        <name>Primary_Contact__c</name>
-        <relationshipLabel>Opportunities</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De datum waarop uw organisatie deze donor geïdentificeerd heeft als gekwalificeerd voor deze Donatie.</help>
-        <label>Datum Kwalificatie</label>
-        <name>Qualified_Date__c</name>
-    </fields>
-    <fields>
-        <help>De termijnnaam voor inclusie in Opportunitybenoeming. Laat het termijnnummer zien in de haakjes voor open Terugkerende Donaties, of het termijnnummer van het totale aantal Terugkerende Donaties met een vast aantal termijnen.</help>
-        <label>Termijnnaam voor Terugkerende Donatie</label>
-        <name>Recurring_Donation_Installment_Name__c</name>
-    </fields>
-    <fields>
-        <help>Het termijnnummer van de Terugkerende Donatieplanning van deze Opportunity.</help>
-        <label>Termijnnummer van Terugkerende Donatie</label>
-        <name>Recurring_Donation_Installment_Number__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag dat u vraagt. Dit cijfer kan afwijken van het uiteindelijk toegekende bedrag.</help>
-        <label>Aangevraagd Bedrag</label>
-        <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of de Donatie een eerbetoon is aan een individu of ter nagedachtenis is van een individu.</help>
-        <label>Type Hommage</label>
-        <name>Tribute_Type__c</name>
-        <picklistValues>
-            <masterLabel>Honor</masterLabel>
-            <translation>Eerbetoon</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Memorial</masterLabel>
-            <translation>Nagedachtenis</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Donation Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Overeenkomende Giftinformatie</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Hommage-informatie</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Grant Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Subsidie-informatie</label>
-            <section>Grant Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>In-Kind Gift Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Informatie In Natura</label>
-            <section>In-Kind Information</section>
-        </sections>
-        <sections>
-            <label>Hommage-informatie</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Major Gift Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Grote Giftinformatie</label>
-            <section>Major Gift Information</section>
-        </sections>
-        <sections>
-            <label>Overeenkomende Giftinformatie</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Hommage-informatie</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Matching Gift Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Membership Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Velden</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Lidinformatie</label>
-            <section>Member Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Systeeminformatie</label>
-            <section>System Information</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Nieuwe Betaling</label>
-        <name>New_Payment</name>
-    </quickActions>
-    <quickActions>
-        <label>Snelle Update</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Erkenning e-mailen</label>
-        <name>Email_Acknowledgment</name>
-    </webLinks>
-    <webLinks>
-        <label>Erkenningen e-mailen</label>
-        <name>Email_Acknowledgments</name>
-    </webLinks>
-    <webLinks>
-        <label>Overeenkomende Giften zoeken</label>
-        <name>Find_Matched_Gifts</name>
-    </webLinks>
-    <webLinks>
-        <label>Soft Credits beheren</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
-    <webLinks>
-        <label>Naam opnieuw laden</label>
-        <name>Refresh_Name</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Acknowledgment_Date__c</name>
+    <help>De datum waarop u deze Opportunity hebt erkend.</help>
+    <label>Datum van Erkenning</label>
+  </fields>
+  <fields>
+    <name>Acknowledgment_Status__c</name>
+    <help>De status van erkenning van deze Opportunity.</help>
+    <label>Status van Erkenning</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>Te Erkennen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>Erkend</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>Niet Erkennen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Now</masterLabel>
+      <translation>Erkenning nu e-mailen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+      <translation>Erkenningse-mail Niet Verzonden</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Ask_Date__c</name>
+    <help>De datum waarop de donor om deze Donatie werd gevraagd. Dit kan afwijken van de datum waarop u de Donatie hebt ontvangen.</help>
+    <label>Vraagdatum</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <relationshipLabel>Opportunities</relationshipLabel>
+    <label>Batch</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>De batch waarmee deze opportunity is gemaakt. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
+    <label>Batchnummer</label>
+  </fields>
+  <fields>
+    <name>Closed_Lost_Reason__c</name>
+    <help>Notities over waarom de vraag naar donatie niet succesvol was.</help>
+    <label>Reden voor Gesloten Verloren</label>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Externe ID voor integratie van de Salesforce.org-betalingsservice.</help>
+    <label>Herhalings-ID Elevate</label>
+  </fields>
+  <fields>
+    <name>DisableContactRoleAutomation__c</name>
+    <help>Indien aangevinkt, schakelt dit veld verscheidene aspecten van de automatisering van NPSP-Opportunitycontactpersoonrol uit, wat mogelijk leidt tot onjuiste gegevens of duplicaatgegevens. Raadpleeg de productdocumentatie voor meer informatie.</help>
+    <label>Automatisering Contactpersoonrol uitsch.</label>
+  </fields>
+  <fields>
+    <name>Fair_Market_Value__c</name>
+    <help>De Eerlijke Marktwaarde van een In Natura gift.</help>
+    <label>Eerlijke Marktwaarde</label>
+  </fields>
+  <fields>
+    <name>Gift_Strategy__c</name>
+    <help>Categoriseert het type vraag voor deze opportunity, bijvoorbeeld Nieuwe Donor.</help>
+    <label>Giftstrategie</label>
+    <picklistValues>
+      <masterLabel>New Donor</masterLabel>
+      <translation>Nieuwe Donor</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Renewal</masterLabel>
+      <translation>Verlenging</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Upgrade</masterLabel>
+      <translation>Upgraden</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Date__c</name>
+    <help>De datum waarop de Subsidie is ontstaan, volgens het document of contract verzonden door de subsidieverlenende organisatie.</help>
+    <label>Contractdatum Subsidie</label>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Number__c</name>
+    <help>Gebruik dit om unieke nummers te volgen die soms door subsidieverlenende organisaties toegewezen worden.</help>
+    <label>Contractnummer Subsidie</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_End_Date__c</name>
+    <label>Einddatum Subsidieperiode</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_Start_Date__c</name>
+    <label>Begindatum Subsidieperiode</label>
+  </fields>
+  <fields>
+    <name>Grant_Program_Area_s__c</name>
+    <help>Gebruik dit om de financieringsgebieden voor de Subsidie of Donatie te beschrijven. Bijvoorbeeld, de namen van de programma's waarvoor de Subsidie of Donatie is bestemd.</help>
+    <label>Programmagebieden</label>
+  </fields>
+  <fields>
+    <name>Grant_Requirements_Website__c</name>
+    <help>Een URL die wijst naar de subsidievereisten op de website van de subsidieverlener.</help>
+    <label>Website Subsidievereisten</label>
+  </fields>
+  <fields>
+    <name>Honoree_Contact__c</name>
+    <help>Opzoeking van de Contactpersoonrecord van de gehonoreerde persoon voor deze Donatie.</help>
+    <relationshipLabel>Opportunities (Gehonoreerde Contactpersoon)</relationshipLabel>
+    <label>Gehonoreerde Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Honoree_Name__c</name>
+    <help>De naam van de gehonoreerde zoals voorzien door de donor. Indien dit veld leeg is, en indien het veld Gehonoreerde Contactpersoon een waarde bevat, vult NPSP dit veld automatisch in met die waarde.</help>
+    <label>Naam van Gehonoreerde</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Description__c</name>
+    <help>Bevat rich text-beschrijving van een In Natura Gift, inclusief afbeeldingen.</help>
+    <label>Beschrijving In Natura</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Donor_Declared_Value__c</name>
+    <help>Geeft aan of de donor de Eerlijke Marktwaarde voor dit In Natura Gift heeft opgegeven.</help>
+    <label>Door Donor Aangegeven Waarde In Natura</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Type__c</name>
+    <help>Het type In Natura Gift, bijvoorbeeld, Goederen of Diensten.</help>
+    <label>Type In Natura</label>
+    <picklistValues>
+      <masterLabel>Goods</masterLabel>
+      <translation>Goederen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Services</masterLabel>
+      <translation>Diensten</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Is_Grant_Renewal__c</name>
+    <help>Geeft aan of de Subsidie een verlenging van een vorige Subsidie is.</help>
+    <label>Is Subsidieverlenging</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Account__c</name>
+    <help>Opzoeking van de Accountrecord van het bedrijf dat met deze Donatie zal overeenkomen.</help>
+    <relationshipLabel>Overeenkomende Giften</relationshipLabel>
+    <label>Overeenkomende Giftaccount</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Employer__c</name>
+    <help>De naam van het bedrijf dat met deze Donatie zal overeenkomen.</help>
+    <label>Werkgever Overeenkomende Gift</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Status__c</name>
+    <help>De status van de Overeenkomende Gift voor deze Donatie, bijvoorbeeld, Ingediend of Ontvangen.</help>
+    <label>Status Overeenkomende Gift</label>
+    <picklistValues>
+      <masterLabel>Potential</masterLabel>
+      <translation>Potentieel</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Submitted</masterLabel>
+      <translation>Ingediend</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Received</masterLabel>
+      <translation>Ontvangen</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Matching_Gift__c</name>
+    <help>Opzoeking van de Opportunityrecord voor de Overeenkomende Gift voor deze Donatie.</help>
+    <relationshipLabel>Overeenkomende Giften</relationshipLabel>
+    <label>Overeenkomende Gift</label>
+  </fields>
+  <fields>
+    <name>Next_Grant_Deadline_Due_Date__c</name>
+    <help>De vervaldatum voor de volgende Oplevering van deze Opportunity (enkel lezen).</help>
+    <label>Volgende Leverdatum</label>
+  </fields>
+  <fields>
+    <name>Notification_Message__c</name>
+    <help>Een persoonlijk bericht voor de ontvanger van meldingen.</help>
+    <label>Bericht van Melding</label>
+  </fields>
+  <fields>
+    <name>Notification_Preference__c</name>
+    <help>Geeft aan hoe de ontvanger van meldingen op de hoogte moet worden gebracht, bijvoorbeeld via e-mail of telefoon.</help>
+    <label>Meldingsvoorkeur</label>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>E-mail</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Postal Mail</masterLabel>
+      <translation>Post</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Phone</masterLabel>
+      <translation>Telefoon</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Notify</masterLabel>
+      <translation>Niet op de hoogte brengen</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Contact__c</name>
+    <help>Opzoeking van de Contactpersoonrecord die van deze Donatie op de hoogte moet worden gebracht.</help>
+    <relationshipLabel>Opportunities (Ontvanger van Meldingen)</relationshipLabel>
+    <label>Contactpersoon Ontvanger van Meldingen</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Information__c</name>
+    <help>Geef contactinformatie op zoals adres, telefoon of e-mailadres die de donor verschaft voor de ontvanger van meldingen.</help>
+    <label>Informatie van Ontvanger van Meldingen</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Name__c</name>
+    <help>De naam die de donor verschaft van de persoon die u over deze Donatie op de hoogte moet brengen. Als dit veld leeg is en als het veld Contactpersoon Ontvanger van Meldingen een waarde bevat, vult NPSP dat veld automatisch in met die waarde.</help>
+    <label>Naam van Ontvanger van Meldingen</label>
+  </fields>
+  <fields>
+    <name>Previous_Grant_Opportunity__c</name>
+    <help>Als deze Subsidie een verlenging is van een vorige Subsidie, gebruikt u dit veld om deze record te relateren aan de vorige Subsidie.</help>
+    <relationshipLabel>Gerelateerde Subsidies/Giften</relationshipLabel>
+    <label>Vorige Subsidie/Giftopportunity</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact_Campaign_Member_Status__c</name>
+    <help>De status die NPSP gebruikt wanneer het een Campagnelid maakt voor de Primaire Contactpersoon van een Opportunity. Laat leeg om dit standaard op de gereageerd-status te zetten voor Gesloten/Gewonnen Opp., en op de niet gereageerd-status voor andere Opp.</help>
+    <label>Campagnelidstatus Primaire Contactpers.</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>De Primaire Contactpersoon voor deze Opportunity. Als dit een Individuele Donatie is, schrijft NPSP de Donatie toe aan de Primaire Contactpersoon. Als het een Organisatiedonatie is, schrijft NPSP een soft credit toe aan de Primaire Contactpersoon.</help>
+    <relationshipLabel>Opportunities</relationshipLabel>
+    <label>Primaire contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Qualified_Date__c</name>
+    <help>De datum waarop uw organisatie deze donor geïdentificeerd heeft als gekwalificeerd voor deze Donatie.</help>
+    <label>Datum Kwalificatie</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Name__c</name>
+    <help>De termijnnaam voor inclusie in Opportunitybenoeming. Laat het termijnnummer zien in de haakjes voor open Terugkerende Donaties, of het termijnnummer van het totale aantal Terugkerende Donaties met een vast aantal termijnen.</help>
+    <label>Termijnnaam voor Terugkerende Donatie</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Number__c</name>
+    <help>Het termijnnummer van de Terugkerende Donatieplanning van deze Opportunity.</help>
+    <label>Termijnnummer van Terugkerende Donatie</label>
+  </fields>
+  <fields>
+    <name>Requested_Amount__c</name>
+    <help>Het bedrag dat u vraagt. Dit cijfer kan afwijken van het uiteindelijk toegekende bedrag.</help>
+    <label>Aangevraagd Bedrag</label>
+  </fields>
+  <fields>
+    <name>Tribute_Type__c</name>
+    <help>Geeft aan of de Donatie een eerbetoon is aan een individu of ter nagedachtenis is van een individu.</help>
+    <label>Type Hommage</label>
+    <picklistValues>
+      <masterLabel>Honor</masterLabel>
+      <translation>Eerbetoon</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Memorial</masterLabel>
+      <translation>Nagedachtenis</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Email_Acknowledgment</name>
+    <label>Erkenning e-mailen</label>
+  </webLinks>
+  <webLinks>
+    <name>Email_Acknowledgments</name>
+    <label>Erkenningen e-mailen</label>
+  </webLinks>
+  <webLinks>
+    <name>Find_Matched_Gifts</name>
+    <label>Overeenkomende Giften zoeken</label>
+  </webLinks>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Soft Credits beheren</label>
+  </webLinks>
+  <webLinks>
+    <name>Refresh_Name</name>
+    <label>Naam opnieuw laden</label>
+  </webLinks>
+  <layouts>
+    <layout>Grant Layout</layout>
+    <sections>
+      <label>Donatie-informatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Subsidie-informatie</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsinformatie</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>In-Kind Gift Layout</layout>
+    <sections>
+      <label>Donatie-informatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Informatie In Natura</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>Hommage-informatie</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Donation Layout</layout>
+    <sections>
+      <label>Donatie-informatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsinformatie</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Overeenkomende Giftinformatie</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Hommage-informatie</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Major Gift Layout</layout>
+    <sections>
+      <label>Donatie-informatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Grote Giftinformatie</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsinformatie</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Overeenkomende Giftinformatie</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Hommage-informatie</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Matching Gift Layout</layout>
+    <sections>
+      <label>Donatie-informatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsinformatie</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Membership Layout</layout>
+    <sections>
+      <label>Velden</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Lidinformatie</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsinformatie</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+    <sections>
+      <label>Systeeminformatie</label>
+      <section>System Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

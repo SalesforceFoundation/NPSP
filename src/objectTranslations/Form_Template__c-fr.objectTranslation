@@ -1,36 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Modèle de formulaire</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Modèles de formulaire</value>
-    </caseValues>
-    <fields>
-        <help>La courte description que les utilisateurs saisissent pour un modèle.</help>
-        <label>Description</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>La version de Saisie de dons utilisée pour créer ce modèle.</help>
-        <label>Version du format</label>
-        <name>Format_Version__c</name>
-    </fields>
-    <fields>
-        <help>Les sections et les champs de ce modèle, ainsi que leur ordre, les exigences et les valeurs par défaut. Stockés sous le format JSON. Ne pas modifier directement.</help>
-        <label>JSON du modèle</label>
-        <name>Template_JSON__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Form Template Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du modèle de formulaire</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Description__c</name>
+    <help>La courte description que les utilisateurs saisissent pour un modèle.</help>
+    <label>Description</label>
+  </fields>
+  <fields>
+    <name>Format_Version__c</name>
+    <help>La version de Saisie de dons utilisée pour créer ce modèle.</help>
+    <label>Version du format</label>
+  </fields>
+  <fields>
+    <name>Template_JSON__c</name>
+    <help>Les sections et les champs de ce modèle, ainsi que leur ordre, les exigences et les valeurs par défaut. Stockés sous le format JSON. Ne pas modifier directement.</help>
+    <label>JSON du modèle</label>
+  </fields>
+  <layouts>
+    <layout>Form Template Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du modèle de formulaire</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du modèle de formulaire</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Modèle de formulaire</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Modèles de formulaire</value>
+  </caseValues>
 </CustomObjectTranslation>

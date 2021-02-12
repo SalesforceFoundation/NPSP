@@ -1,143 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Payment Wizard FS --></label>
-        <name>Payment_WizardFS</name>
-    </fieldSets>
-    <fields>
-        <help>De SEC-code (Standard Entry Class) voor deze ACH-transactie.</help>
-        <label>ACH-code</label>
-        <name>ACH_Code__c</name>
-    </fields>
-    <fields>
-        <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
-        <label>Laatste 4 cijfers ACH</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>De datum en het tijdstip waarop de transactie is goedgekeurd.</help>
-        <label>Datum van goedkeuring</label>
-        <name>Authorized_Date__c</name>
-    </fields>
-    <fields>
-        <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is goedgekeurd door de betalingsgateway.</help>
-        <label>UTC-tijdstempel van goedkeuring</label>
-        <name>Authorized_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>De batch waarin deze betaling is voldaan. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
-        <label>Batchnummer</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>De maand waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
-        <label>Vervaldatum kaart</label>
-        <name>Card_Expiration_Month__c</name>
-    </fields>
-    <fields>
-        <help>Het jaar waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
-        <label>Verloopjaar kaart</label>
-        <name>Card_Expiration_Year__c</name>
-    </fields>
-    <fields>
-        <help>De laatste vier cijfers van de kaart die voor deze transactie is gebruikt.</help>
-        <label>Laatste 4 kaart</label>
-        <name>Card_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Het kaartnetwerk van de kaart die voor deze transactie is gebruikt.</help>
-        <label>Kaartnetwerk</label>
-        <name>Card_Network__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag dat de donateur heeft betaald boven op het donatiebedrag, vaak om de transactiekosten te dekken of om meer te doneren.</help>
-        <label>Bedrag door donateur gedekt</label>
-        <name>Donor_Cover_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Alleen voor terugbetalingen. Toont de ID van de oorspronkelijke betalingstransactie uit Elevate.</help>
-        <label>Oorspronkelijke betalings-ID Elevate</label>
-        <name>Elevate_Original_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Biedt informatie over waarom een transactie is geweigerd.</help>
-        <label>Elevate-betalings-API - Reden weigering</label>
-        <name>Elevate_Payment_API_Declined_Reason__c</name>
-    </fields>
-    <fields>
-        <help>De API-status voor deze aan Elevate gekoppelde betalingsrecord.</help>
-        <label>API-status van betaling in Elevate</label>
-        <name>Elevate_Payment_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>
-        <label>Aanmaakdatum betaling in Elevate</label>
-        <name>Elevate_Payment_Created_Date__c</name>
-    </fields>
-    <fields>
-        <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is gemaakt in Elevate.</help>
-        <label>UTC-tijdstempel maken betaling Elevate</label>
-        <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>De unieke ID van deze transactie in Elevate.</help>
-        <label>Betalings-ID Elevate</label>
-        <name>Elevate_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>De ID van de betalingsgateway die deze transactie heeft verwerkt.</help>
-        <label>Gateway-ID</label>
-        <name>Gateway_ID__c</name>
-    </fields>
-    <fields>
-        <help>De unieke ID van deze transactie in de betalingsgateway.</help>
-        <label>Betalings-ID gateway</label>
-        <name>Gateway_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>De ID van het systeem waarin de transactie is geïnitieerd.</help>
-        <label>Herkomst-ID</label>
-        <name>Origin_ID__c</name>
-    </fields>
-    <fields>
-        <help>De naam van het systeem waarin de transactie is geïnitieerd.</help>
-        <label>Naam herkomst</label>
-        <name>Origin_Name__c</name>
-    </fields>
-    <fields>
-        <help>Het type systeem dat is gebruikt om de transactie te initiëren. Beschikbare waarden zijn Engagement Hub, Giving Page, Payment-API en Salesforce.</help>
-        <label>Type herkomst</label>
-        <name>Origin_Type__c</name>
-    </fields>
-    <fields>
-        <help>Datum van erkenning</help>
-        <label>Datum Betaling Erkend</label>
-        <name>Payment_Acknowledged_Date__c</name>
-    </fields>
-    <fields>
-        <help>Status van Erkenning van deze betaling.</help>
-        <label>Status Erkenning van Betaling</label>
-        <name>Payment_Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>Erkend</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Niet Erkennen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Te Erkennen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Geeft aan om welk type transactie het gaat.</help>
-        <label>Type</label>
-        <name>Type__c</name>
-    </fields>
-    <quickActions>
-        <label>Snelle Update</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Code__c</name>
+    <help>De SEC-code (Standard Entry Class) voor deze ACH-transactie.</help>
+    <label>ACH-code</label>
+  </fields>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+    <label>Laatste 4 cijfers ACH</label>
+  </fields>
+  <fields>
+    <name>Authorized_Date__c</name>
+    <help>De datum en het tijdstip waarop de transactie is goedgekeurd.</help>
+    <label>Datum van goedkeuring</label>
+  </fields>
+  <fields>
+    <name>Authorized_UTC_Timestamp__c</name>
+    <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is goedgekeurd door de betalingsgateway.</help>
+    <label>UTC-tijdstempel van goedkeuring</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>De batch waarin deze betaling is voldaan. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
+    <label>Batchnummer</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Month__c</name>
+    <help>De maand waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
+    <label>Vervaldatum kaart</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Year__c</name>
+    <help>Het jaar waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
+    <label>Verloopjaar kaart</label>
+  </fields>
+  <fields>
+    <name>Card_Last_4__c</name>
+    <help>De laatste vier cijfers van de kaart die voor deze transactie is gebruikt.</help>
+    <label>Laatste 4 kaart</label>
+  </fields>
+  <fields>
+    <name>Card_Network__c</name>
+    <help>Het kaartnetwerk van de kaart die voor deze transactie is gebruikt.</help>
+    <label>Kaartnetwerk</label>
+  </fields>
+  <fields>
+    <name>Donor_Cover_Amount__c</name>
+    <help>Het bedrag dat de donateur heeft betaald boven op het donatiebedrag, vaak om de transactiekosten te dekken of om meer te doneren.</help>
+    <label>Bedrag door donateur gedekt</label>
+  </fields>
+  <fields>
+    <name>Elevate_Original_Payment_ID__c</name>
+    <help>Alleen voor terugbetalingen. Toont de ID van de oorspronkelijke betalingstransactie uit Elevate.</help>
+    <label>Oorspronkelijke betalings-ID Elevate</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Declined_Reason__c</name>
+    <help>Biedt informatie over waarom een transactie is geweigerd.</help>
+    <label>Elevate-betalings-API - Reden weigering</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Status__c</name>
+    <help>De API-status voor deze aan Elevate gekoppelde betalingsrecord.</help>
+    <label>API-status van betaling in Elevate</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_Date__c</name>
+    <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>
+    <label>Aanmaakdatum betaling in Elevate</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is gemaakt in Elevate.</help>
+    <label>UTC-tijdstempel maken betaling Elevate</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_ID__c</name>
+    <help>De unieke ID van deze transactie in Elevate.</help>
+    <label>Betalings-ID Elevate</label>
+  </fields>
+  <fields>
+    <name>Gateway_ID__c</name>
+    <help>De ID van de betalingsgateway die deze transactie heeft verwerkt.</help>
+    <label>Gateway-ID</label>
+  </fields>
+  <fields>
+    <name>Gateway_Payment_ID__c</name>
+    <help>De unieke ID van deze transactie in de betalingsgateway.</help>
+    <label>Betalings-ID gateway</label>
+  </fields>
+  <fields>
+    <name>Origin_ID__c</name>
+    <help>De ID van het systeem waarin de transactie is geïnitieerd.</help>
+    <label>Herkomst-ID</label>
+  </fields>
+  <fields>
+    <name>Origin_Name__c</name>
+    <help>De naam van het systeem waarin de transactie is geïnitieerd.</help>
+    <label>Naam herkomst</label>
+  </fields>
+  <fields>
+    <name>Origin_Type__c</name>
+    <help>Het type systeem dat is gebruikt om de transactie te initiëren. Beschikbare waarden zijn Engagement Hub, Giving Page, Payment-API en Salesforce.</help>
+    <label>Type herkomst</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledged_Date__c</name>
+    <help>Datum van erkenning</help>
+    <label>Datum Betaling Erkend</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledgment_Status__c</name>
+    <help>Status van Erkenning van deze betaling.</help>
+    <label>Status Erkenning van Betaling</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>Te Erkennen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>Erkend</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>Niet Erkennen</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>Geeft aan om welk type transactie het gaat.</help>
+    <label>Type</label>
+  </fields>
+</CustomObjectTranslation>

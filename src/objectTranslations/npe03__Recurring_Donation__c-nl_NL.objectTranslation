@@ -1,301 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
-        <name>RD2_Entry_Form_Custom_Fields</name>
-    </fieldSets>
-    <fields>
-        <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
-        <label>Laatste 4 cijfers ACH</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
-        <label>Altijd laatste dag van maand gebruiken</label>
-        <name>Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <help>De maand waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
-        <label>Vervaldatum kaart</label>
-        <name>CardExpirationMonth__c</name>
-    </fields>
-    <fields>
-        <help>Het jaar waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
-        <label>Verloopjaar kaart</label>
-        <name>CardExpirationYear__c</name>
-    </fields>
-    <fields>
-        <help>De laatste vier cijfers van de kaart die voor deze terugkerende donatie is gebruikt.</help>
-        <label>Laatste 4 kaart</label>
-        <name>CardLast4__c</name>
-    </fields>
-    <fields>
-        <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
-        <label>Statusreden</label>
-        <name>ClosedReason__c</name>
-        <picklistValues>
-            <masterLabel>Card Expired</masterLabel>
-            <translation>Kaart vervallen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Commitment Completed</masterLabel>
-            <translation>Verplichting voltooid</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deceased Donor</masterLabel>
-            <translation>Donateur overleden</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Financial Difficulty</masterLabel>
-            <translation>Financieel probleem</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Longer Interested</masterLabel>
-            <translation>Geen interesse meer</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Unknown</masterLabel>
-            <translation>Onbekend</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Externe ID voor integratie van de Salesforce.org-betalingsservice.</help>
-        <label>Herhalings-ID Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>Het totaalbedrag van deze terugkerende donatie voor de huidige kalender of het huidige fiscale jaar (alleen-lezen). Omvat Gesloten Gewonnen opportunities plus toekomstige termijnen voor de rest van het jaar.</help>
-        <label>Waarde voor huidig jaar</label>
-        <name>CurrentYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op geselecteerde dag van de maand, onafh. van Volgende Donatiedatum. OPMERKING: Altijd laatste dag van maand aanvinken, overschrijft de waarde Dag van Maand.</help>
-        <label>Dag van de Maand</label>
-        <name>Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>31</masterLabel>
-            <translation>31</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Voorkomt het maken van de eerste termijnopportunity voor een nieuwe terugkerende donatie, onafhankelijk van de instelling &apos;Opportunity voor termijnen autom. maken&apos; in de NPSP-instellingen.</help>
-        <label>Eerste termijn uitschakelen</label>
-        <name>DisableFirstInstallment__c</name>
-    </fields>
-    <fields>
-        <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
-        <label>Einddatum</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
-        <label>Frequentie van termijnen</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Het laatste Elevate-event dat is afgespeeld en heeft geleid tot een update van deze terugkerende donatie.</help>
-        <label>Laatst afgespeelde Elevate-event</label>
-        <name>LastElevateEventPlayed__c</name>
-    </fields>
-    <fields>
-        <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
-        <label>Waarde voor volgend jaar</label>
-        <name>NextYearValue__c</name>
-    </fields>
-    <fields>
-        <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
-        <label>Betalingswijze</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Cheque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Creditcard</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Selecteer Open voor een doorlopende terugkerende donatie. Selecteer Vast voor een terugkerende donatie die een specifiek aantal termijnen heeft. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
-        <label>Type terugkeer</label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Fixed</masterLabel>
-            <translation>Vast</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Open</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De datum waarop nieuwe of bijgewerkte planningsgegevens (Bedrag, Dag van de maand, enz.) voor deze terugkerende donatie van kracht worden. De standaardwaarde is de huidige datum.</help>
-        <label>Ingangsdatum</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
-        <label>Status</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Actief</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Gesloten</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Verstreken</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Paused</masterLabel>
-            <translation>Onderbroken</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>Terugkerende donatie sluiten</label>
-        <name>Close_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nieuwe Opportunity</label>
-        <name>New_Opportunity</name>
-    </quickActions>
-    <quickActions>
-        <label>Onderbreken</label>
-        <name>Pause</name>
-    </quickActions>
-    <quickActions>
-        <label>Snelle Update</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Totaliseringen opnieuw berekenen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+    <label>Laatste 4 cijfers ACH</label>
+  </fields>
+  <fields>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
+    <label>Altijd laatste dag van maand gebruiken</label>
+  </fields>
+  <fields>
+    <name>CardExpirationMonth__c</name>
+    <help>De maand waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
+    <label>Vervaldatum kaart</label>
+  </fields>
+  <fields>
+    <name>CardExpirationYear__c</name>
+    <help>Het jaar waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
+    <label>Verloopjaar kaart</label>
+  </fields>
+  <fields>
+    <name>CardLast4__c</name>
+    <help>De laatste vier cijfers van de kaart die voor deze terugkerende donatie is gebruikt.</help>
+    <label>Laatste 4 kaart</label>
+  </fields>
+  <fields>
+    <name>ClosedReason__c</name>
+    <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
+    <label>Statusreden</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Kaart vervallen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Verplichting voltooid</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Donateur overleden</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Financieel probleem</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>Geen interesse meer</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Onbekend</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Externe ID voor integratie van de Salesforce.org-betalingsservice.</help>
+    <label>Herhalings-ID Elevate</label>
+  </fields>
+  <fields>
+    <name>CurrentYearValue__c</name>
+    <help>Het totaalbedrag van deze terugkerende donatie voor de huidige kalender of het huidige fiscale jaar (alleen-lezen). Omvat Gesloten Gewonnen opportunities plus toekomstige termijnen voor de rest van het jaar.</help>
+    <label>Waarde voor huidig jaar</label>
+  </fields>
+  <fields>
+    <name>Day_of_Month__c</name>
+    <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op geselecteerde dag van de maand, onafh. van Volgende Donatiedatum. OPMERKING: Altijd laatste dag van maand aanvinken, overschrijft de waarde Dag van Maand.</help>
+    <label>Dag van de Maand</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>DisableFirstInstallment__c</name>
+    <help>Voorkomt het maken van de eerste termijnopportunity voor een nieuwe terugkerende donatie, onafhankelijk van de instelling 'Opportunity voor termijnen autom. maken' in de NPSP-instellingen.</help>
+    <label>Eerste termijn uitschakelen</label>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
+    <label>Einddatum</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
+    <label>Frequentie van termijnen</label>
+  </fields>
+  <fields>
+    <name>LastElevateEventPlayed__c</name>
+    <help>Het laatste Elevate-event dat is afgespeeld en heeft geleid tot een update van deze terugkerende donatie.</help>
+    <label>Laatst afgespeelde Elevate-event</label>
+  </fields>
+  <fields>
+    <name>NextYearValue__c</name>
+    <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
+    <label>Waarde voor volgend jaar</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
+    <label>Betalingswijze</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Creditcard</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Cheque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>ACH</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringType__c</name>
+    <help>Selecteer Open voor een doorlopende terugkerende donatie. Selecteer Vast voor een terugkerende donatie die een specifiek aantal termijnen heeft. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
+    <label>Type terugkeer</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Open</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Vast</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>De datum waarop nieuwe of bijgewerkte planningsgegevens (Bedrag, Dag van de maand, enz.) voor deze terugkerende donatie van kracht worden. De standaardwaarde is de huidige datum.</help>
+    <label>Ingangsdatum</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
+    <label>Status</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Actief</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Verstreken</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Gesloten</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Onderbroken</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Totaliseringen opnieuw berekenen</label>
+  </webLinks>
+</CustomObjectTranslation>

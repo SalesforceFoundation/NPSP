@@ -1,99 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Règle de filtrage</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Règles de filtrage</value>
-    </caseValues>
-    <fields>
-        <label>Valeur</label>
-        <name>Constant__c</name>
-    </fields>
-    <fields>
-        <label>Champ</label>
-        <name>Field__c</name>
-        <relationshipLabel>Règles_filtrage</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Groupe de filtres</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Règles de filtrage</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Supprimé</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Objet</label>
-        <name>Object__c</name>
-        <relationshipLabel>Règles_filtrage</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Opérateur</label>
-        <name>Operator__c</name>
-        <picklistValues>
-            <masterLabel>Contains</masterLabel>
-            <translation>Contient</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Does Not Contain</masterLabel>
-            <translation>Ne contient pas</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Equals</masterLabel>
-            <translation>Est égal à</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater Than</masterLabel>
-            <translation>Supérieur à</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater or Equal</masterLabel>
-            <translation>Supérieur ou égal</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In List</masterLabel>
-            <translation>Dans la liste</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Included</masterLabel>
-            <translation>Est inclus(e)</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Not Included</masterLabel>
-            <translation>N&apos;est pas inclus(e)</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less Than</masterLabel>
-            <translation>Inférieur à</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less or Equal</masterLabel>
-            <translation>Inférieur ou égal</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Equals</masterLabel>
-            <translation>N’est pas égal à</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not In List</masterLabel>
-            <translation>Absence dans liste</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Starts With</masterLabel>
-            <translation>Commence par</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Constant__c</name>
+    <label>Valeur</label>
+  </fields>
+  <fields>
+    <name>Field__c</name>
+    <relationshipLabel>Règles_filtrage</relationshipLabel>
+    <label>Champ</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>Règles de filtrage</relationshipLabel>
+    <label>Groupe de filtres</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Supprimé</label>
+  </fields>
+  <fields>
+    <name>Object__c</name>
+    <relationshipLabel>Règles_filtrage</relationshipLabel>
+    <label>Objet</label>
+  </fields>
+  <fields>
+    <name>Operator__c</name>
+    <label>Opérateur</label>
+    <picklistValues>
+      <masterLabel>Equals</masterLabel>
+      <translation>Est égal à</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not Equals</masterLabel>
+      <translation>N’est pas égal à</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater Than</masterLabel>
+      <translation>Supérieur à</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less Than</masterLabel>
+      <translation>Inférieur à</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater or Equal</masterLabel>
+      <translation>Supérieur ou égal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less or Equal</masterLabel>
+      <translation>Inférieur ou égal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Starts With</masterLabel>
+      <translation>Commence par</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contains</masterLabel>
+      <translation>Contient</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Does Not Contain</masterLabel>
+      <translation>Ne contient pas</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In List</masterLabel>
+      <translation>Dans la liste</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not In List</masterLabel>
+      <translation>Absence dans liste</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Included</masterLabel>
+      <translation>Est inclus(e)</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Not Included</masterLabel>
+      <translation>N'est pas inclus(e)</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Filter Rule Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Règle de filtrage</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Règles de filtrage</value>
+  </caseValues>
 </CustomObjectTranslation>

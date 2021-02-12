@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Sección de lista de comprobación de Empezar a trabajar de NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Secciones de listas de comprobación de Empezar a trabajar de NPSP</value>
-    </caseValues>
-    <fields>
-        <help>El nombre de API para la etiqueta Descripción de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de descripción</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>El tipo de página Empezar a trabajar (Administrador o Usuario final) donde aparecerá esta sección.</help>
-        <label>Tipo de página</label>
-        <name>Page_Type__c</name>
-        <picklistValues>
-            <masterLabel>Admin</masterLabel>
-            <translation>Administrador</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>End User</masterLabel>
-            <translation>Usuario final</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La posición de esta sección en la página Empezar a trabajar.</help>
-        <label>Posición</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API para la etiqueta Título de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de título</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>GS Checklist Section Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>El nombre de API para la etiqueta Descripción de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de descripción</label>
+  </fields>
+  <fields>
+    <name>Page_Type__c</name>
+    <help>El tipo de página Empezar a trabajar (Administrador o Usuario final) donde aparecerá esta sección.</help>
+    <label>Tipo de página</label>
+    <picklistValues>
+      <masterLabel>Admin</masterLabel>
+      <translation>Administrador</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>End User</masterLabel>
+      <translation>Usuario final</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>La posición de esta sección en la página Empezar a trabajar.</help>
+    <label>Posición</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>El nombre de API para la etiqueta Título de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de título</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Section Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Sección de lista de comprobación de Empezar a trabajar de NPSP</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Secciones de listas de comprobación de Empezar a trabajar de NPSP</value>
+  </caseValues>
 </CustomObjectTranslation>

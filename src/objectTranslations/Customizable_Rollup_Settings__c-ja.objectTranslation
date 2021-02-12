@@ -1,108 +1,108 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>カスタマイズ可能な積み上げ集計設定</value>
-    </caseValues>
-    <fields>
-        <help>オンにすると、取引先ハードクレジット (スキューでない) 夜間ジョブは、これらの取引先の最近更新された商談を探し、再計算で選択される取引先の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
-        <label>スキューでない増分取引先ハードクレジット</label>
-        <name>AccountHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>CMT 開発結果用の JSON
-{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
-        <label>CMT API 開発結果</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>LDV 取引先のみ対象。SFDO ガイダンス併用。たくさんの取引先が登録された組織取引先の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先の最大数を指定します。</help>
-        <label>LDV: 取引先ハードクレジットチャンクサイズ</label>
-        <name>ChunkSize_Account_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの取引先責任者が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先責任者の最大数を指定します。</help>
-        <label>LDV: 取引先責任者ハードクレジットチャンクサイズ</label>
-        <name>ChunkSize_Contact_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの取引先責任者が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先責任者の最大数を指定します。</help>
-        <label>LDV: 取引先責任者ソフトクレジットチャンクサイズ</label>
-        <name>ChunkSize_Contact_SoftCredit__c</name>
-    </fields>
-    <fields>
-        <help>オンにすると、取引先責任者ハードクレジット (スキューでない) 夜間ジョブは、これらの取引先責任者の最近更新された商談を探し、再計算で選択される取引先責任者の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
-        <label>スキューでない増分取引先責任者ハードクレジット</label>
-        <name>ContactHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>このボックスをオンにすると、新しい NPSP のカスタマイズ可能な積み上げ集計エンジンが有効になります。</help>
-        <label>カスタマイズ可能な積み上げ集計の有効化</label>
-        <name>Customizable_Rollups_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>このボックスをオンにすると、取引先と取引先責任者のハードクレジットおよびソフトクレジット積み上げ集計が、既存の関連商談または商談取引先責任者の役割レコードを含む取引先責任者レコードおよび取引先レコードだけを処理しないようになります。</help>
-        <label>関連レコード絞り込みの無効化</label>
-        <name>Disable_Related_Records_Filter__c</name>
-    </fields>
-    <fields>
-        <help>取引先オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先ハードクレジットバッチサイズ</label>
-        <name>Rollups_Account_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>スキューモードを使用する取引先オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先スキューモードバッチサイズ</label>
-        <name>Rollups_Account_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>取引先オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先ソフトクレジットバッチサイズ</label>
-        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>取引先オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先への取引先責任者ソフトクレジットバッチサイズ</label>
-        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>取引先責任者オブジェクトへのハードクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先責任者ハードクレジットバッチサイズ</label>
-        <name>Rollups_Contact_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>スキューモードを使用する取引先責任者オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先責任者スキューモードバッチサイズ</label>
-        <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>取引先責任者オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>取引先責任者ソフトクレジットバッチサイズ</label>
-        <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>一般取引先単位オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
-        <label>GAU バッチサイズ</label>
-        <name>Rollups_GAU_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>増分積み上げ集計上書きにしか使用しません。この値は関連商談を絞り込むために使用される項目を上書きし、どの取引先、取引先責任者、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。デフォルトは SystemModStamp です。</help>
-        <label>増分: 過去 N 日間の項目上書き</label>
-        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
-    </fields>
-    <fields>
-        <help>増分積み上げ集計上書きにしか使用しません。この値は、関連商談を絞り込むための計算された日数を上書きし、どの取引先、取引先責任者、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。</help>
-        <label>増分: 過去 N 日間の値上書き</label>
-        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
-    </fields>
-    <fields>
-        <help>スキューモードでない積み上げ集計バッチジョブで許可する、取引先または取引先責任者の関連商談の最大数。関連商談数がこれを上回る取引先または取引先責任者は、常にスキューモードで積み上げ集計されます。</help>
-        <label>スキューモードしきい値</label>
-        <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
-    </fields>
-    <fields>
-        <help>スキューモード処理で選択されるバッチあたりの取引先、取引先責任者、または GAU レコードの数。</help>
-        <label>スキューモードディスパッチャーバッチサイズ</label>
-        <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
-    </fields>
+  <fields>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+    <help>オンにすると、取引先ハードクレジット (スキューでない) 夜間ジョブは、これらの取引先の最近更新された商談を探し、再計算で選択される取引先の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
+    <label>スキューでない増分取引先ハードクレジット</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>CMT 開発結果用の JSON
+{ "jobId": "repsonse" }</help>
+    <label>CMT API 開発結果</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    <help>増分積み上げ集計上書きにしか使用しません。この値は関連商談を絞り込むために使用される項目を上書きし、どの取引先、取引先責任者、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。デフォルトは SystemModStamp です。</help>
+    <label>増分: 過去 N 日間の項目上書き</label>
+  </fields>
+  <fields>
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+    <help>オンにすると、取引先責任者ハードクレジット (スキューでない) 夜間ジョブは、これらの取引先責任者の最近更新された商談を探し、再計算で選択される取引先責任者の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
+    <label>スキューでない増分取引先責任者ハードクレジット</label>
+  </fields>
+  <fields>
+    <name>Customizable_Rollups_Enabled__c</name>
+    <help>このボックスをオンにすると、新しい NPSP のカスタマイズ可能な積み上げ集計エンジンが有効になります。</help>
+    <label>カスタマイズ可能な積み上げ集計の有効化</label>
+  </fields>
+  <fields>
+    <name>Disable_Related_Records_Filter__c</name>
+    <help>このボックスをオンにすると、取引先と取引先責任者のハードクレジットおよびソフトクレジット積み上げ集計が、既存の関連商談または商談取引先責任者の役割レコードを含む取引先責任者レコードおよび取引先レコードだけを処理しないようになります。</help>
+    <label>関連レコード絞り込みの無効化</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Batch_Size__c</name>
+    <help>取引先オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先ハードクレジットバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    <help>増分積み上げ集計上書きにしか使用しません。この値は、関連商談を絞り込むための計算された日数を上書きし、どの取引先、取引先責任者、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。</help>
+    <label>増分: 過去 N 日間の値上書き</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    <help>スキューモードを使用する取引先オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先スキューモードバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+    <help>取引先オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先ソフトクレジットバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    <help>取引先オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先への取引先責任者ソフトクレジットバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Batch_Size__c</name>
+    <help>取引先責任者オブジェクトへのハードクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先責任者ハードクレジットバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
+    <help>スキューモードを使用する取引先責任者オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先責任者スキューモードバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+    <help>取引先責任者オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先責任者ソフトクレジットバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_GAU_Batch_Size__c</name>
+    <help>一般取引先単位オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>GAU バッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    <help>スキューモードでない積み上げ集計バッチジョブで許可する、取引先または取引先責任者の関連商談の最大数。関連商談数がこれを上回る取引先または取引先責任者は、常にスキューモードで積み上げ集計されます。</help>
+    <label>スキューモードしきい値</label>
+  </fields>
+  <fields>
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
+    <help>スキューモード処理で選択されるバッチあたりの取引先、取引先責任者、または GAU レコードの数。</help>
+    <label>スキューモードディスパッチャーバッチサイズ</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_HardCredit__c</name>
+    <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの取引先責任者が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先責任者の最大数を指定します。</help>
+    <label>LDV: 取引先責任者ハードクレジットチャンクサイズ</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Account_HardCredit__c</name>
+    <help>LDV 取引先のみ対象。SFDO ガイダンス併用。たくさんの取引先が登録された組織取引先の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先の最大数を指定します。</help>
+    <label>LDV: 取引先ハードクレジットチャンクサイズ</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_SoftCredit__c</name>
+    <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの取引先責任者が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先責任者の最大数を指定します。</help>
+    <label>LDV: 取引先責任者ソフトクレジットチャンクサイズ</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>カスタマイズ可能な積み上げ集計設定</value>
+  </caseValues>
 </CustomObjectTranslation>

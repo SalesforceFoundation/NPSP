@@ -1,301 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
-        <name>RD2_Entry_Form_Custom_Fields</name>
-    </fieldSets>
-    <fields>
-        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
-        <label>ACH の最後の 4 桁</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を月末日に設定します。間隔は [毎月] または [毎四半期] にするか、月を使用するカスタム間隔にする必要があります。</help>
-        <label>常に末日を使用</label>
-        <name>Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援で使用されたカードの有効期限 (月)。</help>
-        <label>カードの有効期限 (月)</label>
-        <name>CardExpirationMonth__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援で使用されたカードの有効期限 (年)。</help>
-        <label>カードの有効期限 (年)</label>
-        <name>CardExpirationYear__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援で使用されたカードの最後の 4 桁。</help>
-        <label>カードの最後の 4 桁</label>
-        <name>CardLast4__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援が現在の状況値になっている理由。</help>
-        <label>状況の理由</label>
-        <name>ClosedReason__c</name>
-        <picklistValues>
-            <masterLabel>Card Expired</masterLabel>
-            <translation>カードの期限が切れた</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Commitment Completed</masterLabel>
-            <translation>約束を達成した</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deceased Donor</masterLabel>
-            <translation>支援者が死亡した</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Financial Difficulty</masterLabel>
-            <translation>資金難</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Longer Interested</masterLabel>
-            <translation>関心がなくなった</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Unknown</masterLabel>
-            <translation>不明</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
-        <label>Elevate 継続 ID</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>今年または当会計年度の継続支援の総額 (参照のみ)。成立した商談とその年の残りの期間の割賦が含まれます。</help>
-        <label>今年の金額</label>
-        <name>CurrentYearValue__c</name>
-    </fields>
-    <fields>
-        <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を指定日に設定します。注意: [常に末日を使用] チェックボックスを選択している場合、そちらの設定が優先されます。</help>
-        <label>日付</label>
-        <name>Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>31</masterLabel>
-            <translation>31</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>NPSP 設定の [割賦商談の自動作成] の設定に関わらず、新規継続支援に初回の割賦商談が作成されないようにします。</help>
-        <label>初回の割賦を無効化</label>
-        <name>DisableFirstInstallment__c</name>
-    </fields>
-    <fields>
-        <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
-        <label>終了日</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
-        <label>頻度</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援が更新される最終再生 Elevate イベント。</help>
-        <label>最終再生 Elevate イベント</label>
-        <name>LastElevateEventPlayed__c</name>
-    </fields>
-    <fields>
-        <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
-        <label>来年の金額</label>
-        <name>NextYearValue__c</name>
-    </fields>
-    <fields>
-        <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
-        <label>支払方法</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>小切手</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>クレジットカード</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>継続的な継続支援には [無期限] を選択し、特定の回数が設定されている継続支援には [固定] を選択します。[固定] の場合、[予定回数] 項目も入力する必要があります。</help>
-        <label>継続種別</label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Fixed</masterLabel>
-            <translation>固定</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>無期限</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
-        <label>発効日</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
-        <label>状況</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>有効</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>完了</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>失効</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Paused</masterLabel>
-            <translation>一時停止</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>継続支援を完了</label>
-        <name>Close_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>新規商談</label>
-        <name>New_Opportunity</name>
-    </quickActions>
-    <quickActions>
-        <label>一時停止</label>
-        <name>Pause</name>
-    </quickActions>
-    <quickActions>
-        <label>クイック更新</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>積み上げ集計の再計算</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+    <label>ACH の最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を月末日に設定します。間隔は [毎月] または [毎四半期] にするか、月を使用するカスタム間隔にする必要があります。</help>
+    <label>常に末日を使用</label>
+  </fields>
+  <fields>
+    <name>CardExpirationMonth__c</name>
+    <help>この継続支援で使用されたカードの有効期限 (月)。</help>
+    <label>カードの有効期限 (月)</label>
+  </fields>
+  <fields>
+    <name>CardExpirationYear__c</name>
+    <help>この継続支援で使用されたカードの有効期限 (年)。</help>
+    <label>カードの有効期限 (年)</label>
+  </fields>
+  <fields>
+    <name>CardLast4__c</name>
+    <help>この継続支援で使用されたカードの最後の 4 桁。</help>
+    <label>カードの最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>ClosedReason__c</name>
+    <help>この継続支援が現在の状況値になっている理由。</help>
+    <label>状況の理由</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>カードの期限が切れた</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>約束を達成した</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>支援者が死亡した</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>資金難</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>関心がなくなった</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>不明</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
+    <label>Elevate 継続 ID</label>
+  </fields>
+  <fields>
+    <name>CurrentYearValue__c</name>
+    <help>今年または当会計年度の継続支援の総額 (参照のみ)。成立した商談とその年の残りの期間の割賦が含まれます。</help>
+    <label>今年の金額</label>
+  </fields>
+  <fields>
+    <name>Day_of_Month__c</name>
+    <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を指定日に設定します。注意: [常に末日を使用] チェックボックスを選択している場合、そちらの設定が優先されます。</help>
+    <label>日付</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>DisableFirstInstallment__c</name>
+    <help>NPSP 設定の [割賦商談の自動作成] の設定に関わらず、新規継続支援に初回の割賦商談が作成されないようにします。</help>
+    <label>初回の割賦を無効化</label>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
+    <label>終了日</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+    <label>頻度</label>
+  </fields>
+  <fields>
+    <name>LastElevateEventPlayed__c</name>
+    <help>この継続支援が更新される最終再生 Elevate イベント。</help>
+    <label>最終再生 Elevate イベント</label>
+  </fields>
+  <fields>
+    <name>NextYearValue__c</name>
+    <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
+    <label>来年の金額</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
+    <label>支払方法</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>クレジットカード</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>小切手</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>ACH</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringType__c</name>
+    <help>継続的な継続支援には [無期限] を選択し、特定の回数が設定されている継続支援には [固定] を選択します。[固定] の場合、[予定回数] 項目も入力する必要があります。</help>
+    <label>継続種別</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>無期限</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>固定</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
+    <label>発効日</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
+    <label>状況</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>有効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>失効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>完了</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>一時停止</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>積み上げ集計の再計算</label>
+  </webLinks>
+</CustomObjectTranslation>

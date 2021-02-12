@@ -1,425 +1,409 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <fields>
-        <help>受領確認の日付。</help>
-        <label>受領確認日</label>
-        <name>Acknowledgment_Date__c</name>
-    </fields>
-    <fields>
-        <help>この商談の受領確認の状況。</help>
-        <label>受領確認の状況</label>
-        <name>Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>承認済み</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>承認しない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
-            <translation>メール受領確認未送信</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Now</masterLabel>
-            <translation>今すぐメール受領確認</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>承認予定</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>取引先が設定する支援完了日 (支援が最初に作成された日、または支援が成立した日) に対して、支援者が支援について具体的に質問された日付。</help>
-        <label>質問日</label>
-        <name>Ask_Date__c</name>
-    </fields>
-    <fields>
-        <help>この商談を作成したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
-        <label>バッチ番号</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <label>一括処理</label>
-        <name>Batch__c</name>
-        <relationshipLabel>商談</relationshipLabel>
-    </fields>
-    <fields>
-        <help>支援の質問が成功しなかった理由に関するメモ。</help>
-        <label>不成立の理由</label>
-        <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
-        <label>Elevate 継続 ID</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>選択すると、一部の商談取引先責任者の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
-        <label>自動的な取引先責任者の役割の無効化</label>
-        <name>DisableContactRoleAutomation__c</name>
-    </fields>
-    <fields>
-        <help>現物支援の公正な時価。</help>
-        <label>公正な時価</label>
-        <name>Fair_Market_Value__c</name>
-    </fields>
-    <fields>
-        <help>この商談の質問種別を分類します。</help>
-        <label>支援の戦略</label>
-        <name>Gift_Strategy__c</name>
-        <picklistValues>
-            <masterLabel>New Donor</masterLabel>
-            <translation>新規支援者</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Renewal</masterLabel>
-            <translation>更新</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Upgrade</masterLabel>
-            <translation>アップグレード</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>助成金提供団体から送信されたドキュメントまたは契約による、助成金の開始日付。</help>
-        <label>助成金契約日付</label>
-        <name>Grant_Contract_Date__c</name>
-    </fields>
-    <fields>
-        <help>助成金提供団体から割り当てられることがある一意の番号を追跡します。</help>
-        <label>助成金契約番号</label>
-        <name>Grant_Contract_Number__c</name>
-    </fields>
-    <fields>
-        <label>助成金期間終了日</label>
-        <name>Grant_Period_End_Date__c</name>
-    </fields>
-    <fields>
-        <label>助成金期間開始日</label>
-        <name>Grant_Period_Start_Date__c</name>
-    </fields>
-    <fields>
-        <help>助成金の資金調達領域を説明します。ここには任意の内容を入力できます。たとえば、助成金が適用されるプログラムの名前を入力できます。</help>
-        <label>助成金プログラム領域</label>
-        <name>Grant_Program_Area_s__c</name>
-    </fields>
-    <fields>
-        <help>助成金提供団体の Web サイトにある助成金の要件を指し示す URL。</help>
-        <label>助成金の要件 Web サイト</label>
-        <name>Grant_Requirements_Website__c</name>
-    </fields>
-    <fields>
-        <help>この支援の名誉会員の既存の取引先責任者レコード。</help>
-        <label>名誉会員取引先責任者</label>
-        <name>Honoree_Contact__c</name>
-        <relationshipLabel>商談 (名誉会員取引先責任者)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>支援者によって指定される名誉会員名。この項目が空白のままで [名誉会員取引先責任者] 項目に値がある場合、その値がこの項目に自動的に入力されます。</help>
-        <label>名誉会員名</label>
-        <name>Honoree_Name__c</name>
-    </fields>
-    <fields>
-        <help>現物支援のリッチテキストの説明 (写真を含む) を保持します。</help>
-        <label>現物支援の説明</label>
-        <name>In_Kind_Description__c</name>
-    </fields>
-    <fields>
-        <help>支援者がこの現物支援の適正な市場価格を入力している場合はオンにします。</help>
-        <label>現物支援者の申告価格</label>
-        <name>In_Kind_Donor_Declared_Value__c</name>
-    </fields>
-    <fields>
-        <help>現物支援の種別。</help>
-        <label>現物種別</label>
-        <name>In_Kind_Type__c</name>
-        <picklistValues>
-            <masterLabel>Goods</masterLabel>
-            <translation>商品</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Services</masterLabel>
-            <translation>サービス</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>選択されている場合、助成金が以前の助成金の更新であることを示します。</help>
-        <label>助成金の更新</label>
-        <name>Is_Grant_Renewal__c</name>
-    </fields>
-    <fields>
-        <help>この支援をマッチングする会社の取引先レコードに対する参照。</help>
-        <label>マッチングギフトの取引先</label>
-        <name>Matching_Gift_Account__c</name>
-        <relationshipLabel>マッチングされたギフト</relationshipLabel>
-    </fields>
-    <fields>
-        <help>この支援をマッチングする会社の名前。</help>
-        <label>マッチングギフト利用者</label>
-        <name>Matching_Gift_Employer__c</name>
-    </fields>
-    <fields>
-        <help>この支援のマッチングギフトの状況 (送信済みや受信済みなど)。</help>
-        <label>マッチングギフトの状況</label>
-        <name>Matching_Gift_Status__c</name>
-        <picklistValues>
-            <masterLabel>Potential</masterLabel>
-            <translation>可能性</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Received</masterLabel>
-            <translation>受信済み</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Submitted</masterLabel>
-            <translation>送信済み</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>この支援のマッチングギフトの商談レコードに対する参照。</help>
-        <label>マッチングギフト</label>
-        <name>Matching_Gift__c</name>
-        <relationshipLabel>マッチングされたギフト</relationshipLabel>
-    </fields>
-    <fields>
-        <help>NPSP では、次の提出書類期日レコードに基づいてこの項目が自動的に更新されます。</help>
-        <label>次の提出書類期日</label>
-        <name>Next_Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>通知受信者のパーソナライズされたメッセージ。</help>
-        <label>通知メッセージ</label>
-        <name>Notification_Message__c</name>
-    </fields>
-    <fields>
-        <help>通知受信者の通知方法。</help>
-        <label>通知設定</label>
-        <name>Notification_Preference__c</name>
-        <picklistValues>
-            <masterLabel>Do Not Notify</masterLabel>
-            <translation>通知しない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>メール</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Phone</masterLabel>
-            <translation>電話</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Postal Mail</masterLabel>
-            <translation>郵便</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>この支援について通知される個人の既存の取引先責任者レコード。</help>
-        <label>通知受信者の連絡先</label>
-        <name>Notification_Recipient_Contact__c</name>
-        <relationshipLabel>商談 (通知受信者)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>通知受信者の連絡先情報 (支援者によって提供される)。</help>
-        <label>通知受信者の情報</label>
-        <name>Notification_Recipient_Information__c</name>
-    </fields>
-    <fields>
-        <help>この支援について通知される個人の名前 (支援者によって提供される)。この項目が空白のままで、[通知受信者の取引先責任者] 項目に値が指定されている場合、この項目にその値が自動的に入力されます。</help>
-        <label>通知受信者名</label>
-        <name>Notification_Recipient_Name__c</name>
-    </fields>
-    <fields>
-        <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
-        <label>以前の助成金商談</label>
-        <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>関連する助成金支援</relationshipLabel>
-    </fields>
-    <fields>
-        <help>この商談の主取引先責任者や主キャンペーンソースのキャンペーンメンバーを作成するときに使用する状況。デフォルト (成立した商談ではレスポンスありの状況、他の商談ではレスポンスなしの状況) に設定するには、空白のままにします。</help>
-        <label>主取引先責任者のキャンペーンメンバーの状況</label>
-        <name>Primary_Contact_Campaign_Member_Status__c</name>
-    </fields>
-    <fields>
-        <help>この商談の主取引先責任者。主取引先責任者の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
-        <label>主取引先責任者</label>
-        <name>Primary_Contact__c</name>
-        <relationshipLabel>商談</relationshipLabel>
-    </fields>
-    <fields>
-        <help>この支援者がこの支援の資格があると認定された日付。</help>
-        <label>認定日</label>
-        <name>Qualified_Date__c</name>
-    </fields>
-    <fields>
-        <help>商談の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
-        <label>継続支援の各支払の名前</label>
-        <name>Recurring_Donation_Installment_Name__c</name>
-    </fields>
-    <fields>
-        <help>この商談でスケジュールされている継続支援の割賦の回数。</help>
-        <label>継続支援の回数</label>
-        <name>Recurring_Donation_Installment_Number__c</name>
-    </fields>
-    <fields>
-        <help>要求している金額。この金額は、最終的に獲得する金額と異なる可能性があります。</help>
-        <label>要求金額</label>
-        <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <help>支援が個人に敬意を表して行われるのか、個人を追悼して行われるのかを示します。</help>
-        <label>敬意/追悼種別</label>
-        <name>Tribute_Type__c</name>
-        <picklistValues>
-            <masterLabel>Honor</masterLabel>
-            <translation>名誉</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Memorial</masterLabel>
-            <translation>追悼</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Donation Layout</layout>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>マッチングギフト情報</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>敬意/追悼情報</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Grant Layout</layout>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>助成金情報</label>
-            <section>Grant Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>In-Kind Gift Layout</layout>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>現物情報</label>
-            <section>In-Kind Information</section>
-        </sections>
-        <sections>
-            <label>敬意/追悼情報</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Major Gift Layout</layout>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>大口支援情報</label>
-            <section>Major Gift Information</section>
-        </sections>
-        <sections>
-            <label>マッチングギフト情報</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>敬意/追悼情報</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Matching Gift Layout</layout>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Membership Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>項目</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>メンバー情報</label>
-            <section>Member Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>システム情報</label>
-            <section>System Information</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>新規支払</label>
-        <name>New_Payment</name>
-    </quickActions>
-    <quickActions>
-        <label>クイック更新</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>メール受領確認</label>
-        <name>Email_Acknowledgment</name>
-    </webLinks>
-    <webLinks>
-        <label>メール受領確認</label>
-        <name>Email_Acknowledgments</name>
-    </webLinks>
-    <webLinks>
-        <label>マッチングされた支援の検索</label>
-        <name>Find_Matched_Gifts</name>
-    </webLinks>
-    <webLinks>
-        <label>ソフトクレジットの管理</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
-    <webLinks>
-        <label>名前の更新</label>
-        <name>Refresh_Name</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Acknowledgment_Date__c</name>
+    <help>受領確認の日付。</help>
+    <label>受領確認日</label>
+  </fields>
+  <fields>
+    <name>Acknowledgment_Status__c</name>
+    <help>この商談の受領確認の状況。</help>
+    <label>受領確認の状況</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>承認予定</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>承認済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>承認しない</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Now</masterLabel>
+      <translation>今すぐメール受領確認</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+      <translation>メール受領確認未送信</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Ask_Date__c</name>
+    <help>取引先が設定する支援完了日 (支援が最初に作成された日、または支援が成立した日) に対して、支援者が支援について具体的に質問された日付。</help>
+    <label>質問日</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <relationshipLabel>商談</relationshipLabel>
+    <label>一括処理</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>この商談を作成したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
+    <label>バッチ番号</label>
+  </fields>
+  <fields>
+    <name>Closed_Lost_Reason__c</name>
+    <help>支援の質問が成功しなかった理由に関するメモ。</help>
+    <label>不成立の理由</label>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
+    <label>Elevate 継続 ID</label>
+  </fields>
+  <fields>
+    <name>DisableContactRoleAutomation__c</name>
+    <help>選択すると、一部の商談取引先責任者の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
+    <label>自動的な取引先責任者の役割の無効化</label>
+  </fields>
+  <fields>
+    <name>Fair_Market_Value__c</name>
+    <help>現物支援の公正な時価。</help>
+    <label>公正な時価</label>
+  </fields>
+  <fields>
+    <name>Gift_Strategy__c</name>
+    <help>この商談の質問種別を分類します。</help>
+    <label>支援の戦略</label>
+    <picklistValues>
+      <masterLabel>New Donor</masterLabel>
+      <translation>新規支援者</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Renewal</masterLabel>
+      <translation>更新</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Upgrade</masterLabel>
+      <translation>アップグレード</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Date__c</name>
+    <help>助成金提供団体から送信されたドキュメントまたは契約による、助成金の開始日付。</help>
+    <label>助成金契約日付</label>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Number__c</name>
+    <help>助成金提供団体から割り当てられることがある一意の番号を追跡します。</help>
+    <label>助成金契約番号</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_End_Date__c</name>
+    <label>助成金期間終了日</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_Start_Date__c</name>
+    <label>助成金期間開始日</label>
+  </fields>
+  <fields>
+    <name>Grant_Program_Area_s__c</name>
+    <help>助成金の資金調達領域を説明します。ここには任意の内容を入力できます。たとえば、助成金が適用されるプログラムの名前を入力できます。</help>
+    <label>助成金プログラム領域</label>
+  </fields>
+  <fields>
+    <name>Grant_Requirements_Website__c</name>
+    <help>助成金提供団体の Web サイトにある助成金の要件を指し示す URL。</help>
+    <label>助成金の要件 Web サイト</label>
+  </fields>
+  <fields>
+    <name>Honoree_Contact__c</name>
+    <help>この支援の名誉会員の既存の取引先責任者レコード。</help>
+    <relationshipLabel>商談 (名誉会員取引先責任者)</relationshipLabel>
+    <label>名誉会員取引先責任者</label>
+  </fields>
+  <fields>
+    <name>Honoree_Name__c</name>
+    <help>支援者によって指定される名誉会員名。この項目が空白のままで [名誉会員取引先責任者] 項目に値がある場合、その値がこの項目に自動的に入力されます。</help>
+    <label>名誉会員名</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Description__c</name>
+    <help>現物支援のリッチテキストの説明 (写真を含む) を保持します。</help>
+    <label>現物支援の説明</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Donor_Declared_Value__c</name>
+    <help>支援者がこの現物支援の適正な市場価格を入力している場合はオンにします。</help>
+    <label>現物支援者の申告価格</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Type__c</name>
+    <help>現物支援の種別。</help>
+    <label>現物種別</label>
+    <picklistValues>
+      <masterLabel>Goods</masterLabel>
+      <translation>商品</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Services</masterLabel>
+      <translation>サービス</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Is_Grant_Renewal__c</name>
+    <help>選択されている場合、助成金が以前の助成金の更新であることを示します。</help>
+    <label>助成金の更新</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Account__c</name>
+    <help>この支援をマッチングする会社の取引先レコードに対する参照。</help>
+    <relationshipLabel>マッチングされたギフト</relationshipLabel>
+    <label>マッチングギフトの取引先</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Employer__c</name>
+    <help>この支援をマッチングする会社の名前。</help>
+    <label>マッチングギフト利用者</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Status__c</name>
+    <help>この支援のマッチングギフトの状況 (送信済みや受信済みなど)。</help>
+    <label>マッチングギフトの状況</label>
+    <picklistValues>
+      <masterLabel>Potential</masterLabel>
+      <translation>可能性</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Submitted</masterLabel>
+      <translation>送信済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Received</masterLabel>
+      <translation>受信済み</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Matching_Gift__c</name>
+    <help>この支援のマッチングギフトの商談レコードに対する参照。</help>
+    <relationshipLabel>マッチングされたギフト</relationshipLabel>
+    <label>マッチングギフト</label>
+  </fields>
+  <fields>
+    <name>Next_Grant_Deadline_Due_Date__c</name>
+    <help>NPSP では、次の提出書類期日レコードに基づいてこの項目が自動的に更新されます。</help>
+    <label>次の提出書類期日</label>
+  </fields>
+  <fields>
+    <name>Notification_Message__c</name>
+    <help>通知受信者のパーソナライズされたメッセージ。</help>
+    <label>通知メッセージ</label>
+  </fields>
+  <fields>
+    <name>Notification_Preference__c</name>
+    <help>通知受信者の通知方法。</help>
+    <label>通知設定</label>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>メール</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Postal Mail</masterLabel>
+      <translation>郵便</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Phone</masterLabel>
+      <translation>電話</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Notify</masterLabel>
+      <translation>通知しない</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Contact__c</name>
+    <help>この支援について通知される個人の既存の取引先責任者レコード。</help>
+    <relationshipLabel>商談 (通知受信者)</relationshipLabel>
+    <label>通知受信者の連絡先</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Information__c</name>
+    <help>通知受信者の連絡先情報 (支援者によって提供される)。</help>
+    <label>通知受信者の情報</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Name__c</name>
+    <help>この支援について通知される個人の名前 (支援者によって提供される)。この項目が空白のままで、[通知受信者の取引先責任者] 項目に値が指定されている場合、この項目にその値が自動的に入力されます。</help>
+    <label>通知受信者名</label>
+  </fields>
+  <fields>
+    <name>Previous_Grant_Opportunity__c</name>
+    <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
+    <relationshipLabel>関連する助成金支援</relationshipLabel>
+    <label>以前の助成金商談</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact_Campaign_Member_Status__c</name>
+    <help>この商談の主取引先責任者や主キャンペーンソースのキャンペーンメンバーを作成するときに使用する状況。デフォルト (成立した商談ではレスポンスありの状況、他の商談ではレスポンスなしの状況) に設定するには、空白のままにします。</help>
+    <label>主取引先責任者のキャンペーンメンバーの状況</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>この商談の主取引先責任者。主取引先責任者の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
+    <relationshipLabel>商談</relationshipLabel>
+    <label>主取引先責任者</label>
+  </fields>
+  <fields>
+    <name>Qualified_Date__c</name>
+    <help>この支援者がこの支援の資格があると認定された日付。</help>
+    <label>認定日</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Name__c</name>
+    <help>商談の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
+    <label>継続支援の各支払の名前</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Number__c</name>
+    <help>この商談でスケジュールされている継続支援の割賦の回数。</help>
+    <label>継続支援の回数</label>
+  </fields>
+  <fields>
+    <name>Requested_Amount__c</name>
+    <help>要求している金額。この金額は、最終的に獲得する金額と異なる可能性があります。</help>
+    <label>要求金額</label>
+  </fields>
+  <fields>
+    <name>Tribute_Type__c</name>
+    <help>支援が個人に敬意を表して行われるのか、個人を追悼して行われるのかを示します。</help>
+    <label>敬意/追悼種別</label>
+    <picklistValues>
+      <masterLabel>Honor</masterLabel>
+      <translation>名誉</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Memorial</masterLabel>
+      <translation>追悼</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Email_Acknowledgment</name>
+    <label>メール受領確認</label>
+  </webLinks>
+  <webLinks>
+    <name>Email_Acknowledgments</name>
+    <label>メール受領確認</label>
+  </webLinks>
+  <webLinks>
+    <name>Find_Matched_Gifts</name>
+    <label>マッチングされた支援の検索</label>
+  </webLinks>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>ソフトクレジットの管理</label>
+  </webLinks>
+  <webLinks>
+    <name>Refresh_Name</name>
+    <label>名前の更新</label>
+  </webLinks>
+  <layouts>
+    <layout>Grant Layout</layout>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>助成金情報</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>In-Kind Gift Layout</layout>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>現物情報</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>敬意/追悼情報</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Donation Layout</layout>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>マッチングギフト情報</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>敬意/追悼情報</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Major Gift Layout</layout>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>大口支援情報</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>マッチングギフト情報</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>敬意/追悼情報</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Matching Gift Layout</layout>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Membership Layout</layout>
+    <sections>
+      <label>項目</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>メンバー情報</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+    <sections>
+      <label>システム情報</label>
+      <section>System Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

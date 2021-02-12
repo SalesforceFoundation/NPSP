@@ -1,32 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-
-  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
-  <fields>
-    <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
-    <label>Desusado:Utilizar siempre último día del mes</label>
-    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-  </fields>
-  <fields>
-    <label>Desusado:Importe de cuota</label>
-    <name>npe03__Installment_Amount__c</name>
-  </fields>
-  <fields>
-    <help>Para donaciones recurrentes sin finalización definida, es el importe total de todas las oportunidades.</help>
-    <label>Desusado:Total</label>
-    <name>npe03__Total__c</name>
-  </fields>
-  <fields>
-    <help>Elija Abierto para donaciones recurrentes sin finalización definida. Seleccione Ninguno para donaciones recurrentes con duración fija. Seleccione Cerrada para cerrar una donación recurrente.</help>
-    <label>Desusado:Estado sin finalización definida</label>
-    <name>npe03__Open_Ended_Status__c</name>
-  </fields>
-  <fields>
-    <help>Especifica como se debe calcular el importe de las oportunidades recurrentes, basado en el campo Importe. Solo para donaciones recurrentes con duración fija.</help>
-    <label>Desusado:Tipo de programación</label>
-    <name>npe03__Schedule_Type__c</name>
-  </fields>
-  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
   <fields>
     <name>npe03__Amount__c</name>
     <help>El importe de cada oportunidad de cuota.</help>
@@ -240,7 +213,7 @@
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
+    <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
     <label>Frecuencia</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -265,7 +238,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
+    <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
     <label>Frecuencia de cuota</label>
   </fields>
   <fields>
@@ -311,4 +284,18 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  </CustomObjectTranslation>
+  <nameFieldLabel>Nombre de donación recurrente</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de donación recurrente</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Donación recurrente</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Donaciones recurrentes</value>
+  </caseValues>
+</CustomObjectTranslation>

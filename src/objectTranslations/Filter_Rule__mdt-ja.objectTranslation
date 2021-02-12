@@ -1,93 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>絞り込みルール</value>
-    </caseValues>
-    <fields>
-        <label>値</label>
-        <name>Constant__c</name>
-    </fields>
-    <fields>
-        <label>項目</label>
-        <name>Field__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>絞り込みグループ</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>絞り込みルール</relationshipLabel>
-    </fields>
-    <fields>
-        <label>削除済み</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>オブジェクト</label>
-        <name>Object__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>演算子</label>
-        <name>Operator__c</name>
-        <picklistValues>
-            <masterLabel>Contains</masterLabel>
-            <translation>次の値を含む</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Does Not Contain</masterLabel>
-            <translation>次の値を含まない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Equals</masterLabel>
-            <translation>次の値と等しい</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater Than</masterLabel>
-            <translation>次の値より大きい</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater or Equal</masterLabel>
-            <translation>次の値以上</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In List</masterLabel>
-            <translation>リストに含まれる</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Included</masterLabel>
-            <translation>含まれる</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Not Included</masterLabel>
-            <translation>含まれない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less Than</masterLabel>
-            <translation>次の値より小さい</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less or Equal</masterLabel>
-            <translation>次の値以下</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Equals</masterLabel>
-            <translation>次の値と等しくない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not In List</masterLabel>
-            <translation>リストに含まれない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Starts With</masterLabel>
-            <translation>次の値で始まる</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Constant__c</name>
+    <label>値</label>
+  </fields>
+  <fields>
+    <name>Field__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>項目</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>絞り込みルール</relationshipLabel>
+    <label>絞り込みグループ</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>削除済み</label>
+  </fields>
+  <fields>
+    <name>Object__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>オブジェクト</label>
+  </fields>
+  <fields>
+    <name>Operator__c</name>
+    <label>演算子</label>
+    <picklistValues>
+      <masterLabel>Equals</masterLabel>
+      <translation>次の値と等しい</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not Equals</masterLabel>
+      <translation>次の値と等しくない</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater Than</masterLabel>
+      <translation>次の値より大きい</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less Than</masterLabel>
+      <translation>次の値より小さい</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater or Equal</masterLabel>
+      <translation>次の値以上</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less or Equal</masterLabel>
+      <translation>次の値以下</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Starts With</masterLabel>
+      <translation>次の値で始まる</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contains</masterLabel>
+      <translation>次の値を含む</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Does Not Contain</masterLabel>
+      <translation>次の値を含まない</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In List</masterLabel>
+      <translation>リストに含まれる</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not In List</masterLabel>
+      <translation>リストに含まれない</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Included</masterLabel>
+      <translation>含まれる</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Not Included</masterLabel>
+      <translation>含まれない</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Filter Rule Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <caseValues>
+    <plural>false</plural>
+    <value>絞り込みルール</value>
+  </caseValues>
 </CustomObjectTranslation>

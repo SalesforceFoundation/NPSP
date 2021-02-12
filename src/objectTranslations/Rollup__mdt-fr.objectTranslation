@@ -1,157 +1,157 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Cumul</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Cumuls</value>
-    </caseValues>
-    <fields>
-        <label>Actif</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <label>Champ montant</label>
-        <name>Amount_Field__c</name>
-        <relationshipLabel>MontantCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objet montant</label>
-        <name>Amount_Object__c</name>
-        <relationshipLabel>MontantCumul</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Champ date</label>
-        <name>Date_Field__c</name>
-        <relationshipLabel>DateCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objet date</label>
-        <name>Date_Object__c</name>
-        <relationshipLabel>DateCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Descriptif</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Champ à cumuler</label>
-        <name>Detail_Field__c</name>
-        <relationshipLabel>DétailCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objet détail</label>
-        <name>Detail_Object__c</name>
-        <relationshipLabel>DétailCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Groupe de filtres</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Cumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Entier</label>
-        <name>Integer__c</name>
-    </fields>
-    <fields>
-        <label>EstSupprimé(e)</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Opération</label>
-        <name>Operation__c</name>
-        <picklistValues>
-            <masterLabel>Average</masterLabel>
-            <translation>Moyenne</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year</masterLabel>
-            <translation>Meilleure année</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year Total</masterLabel>
-            <translation>Total de la meilleure année</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Count</masterLabel>
-            <translation>Nombre</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Donor Streak</masterLabel>
-            <translation>Série de donateurs</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>First</masterLabel>
-            <translation>Premier</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Largest</masterLabel>
-            <translation>Plus grand(e)</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last</masterLabel>
-            <translation>Dernier</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Smallest</masterLabel>
-            <translation>Plus petit(e)</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Sum</masterLabel>
-            <translation>Somme</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Donated</masterLabel>
-            <translation>Années de don</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Champ cible</label>
-        <name>Summary_Field__c</name>
-        <relationshipLabel>RésuméCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objet cible</label>
-        <name>Summary_Object__c</name>
-        <relationshipLabel>RésuméCumuls</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Délai d&apos;exécution</label>
-        <name>Time_Bound_Operation_Type__c</name>
-        <picklistValues>
-            <masterLabel>All Time</masterLabel>
-            <translation>Depuis le début</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Days Back</masterLabel>
-            <translation>Jours avant</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Ago</masterLabel>
-            <translation>Il y a des années</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Utiliser l’année fiscale</label>
-        <name>Use_Fiscal_Year__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Rollup Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Nouvelle section</label>
-            <section>New Section</section>
-        </sections>
-        <sections>
-            <label>Détails du cumul</label>
-            <section>Rollup Details</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Active__c</name>
+    <label>Actif</label>
+  </fields>
+  <fields>
+    <name>Amount_Field__c</name>
+    <relationshipLabel>MontantCumuls</relationshipLabel>
+    <label>Champ montant</label>
+  </fields>
+  <fields>
+    <name>Amount_Object__c</name>
+    <relationshipLabel>MontantCumul</relationshipLabel>
+    <label>Objet montant</label>
+  </fields>
+  <fields>
+    <name>Date_Field__c</name>
+    <relationshipLabel>DateCumuls</relationshipLabel>
+    <label>Champ date</label>
+  </fields>
+  <fields>
+    <name>Date_Object__c</name>
+    <relationshipLabel>DateCumuls</relationshipLabel>
+    <label>Objet date</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Descriptif</label>
+  </fields>
+  <fields>
+    <name>Detail_Field__c</name>
+    <relationshipLabel>DétailCumuls</relationshipLabel>
+    <label>Champ à cumuler</label>
+  </fields>
+  <fields>
+    <name>Detail_Object__c</name>
+    <relationshipLabel>DétailCumuls</relationshipLabel>
+    <label>Objet détail</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>Cumuls</relationshipLabel>
+    <label>Groupe de filtres</label>
+  </fields>
+  <fields>
+    <name>Integer__c</name>
+    <label>Entier</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>EstSupprimé(e)</label>
+  </fields>
+  <fields>
+    <name>Operation__c</name>
+    <label>Opération</label>
+    <picklistValues>
+      <masterLabel>Count</masterLabel>
+      <translation>Nombre</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Sum</masterLabel>
+      <translation>Somme</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Average</masterLabel>
+      <translation>Moyenne</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Largest</masterLabel>
+      <translation>Plus grand(e)</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Smallest</masterLabel>
+      <translation>Plus petit(e)</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>First</masterLabel>
+      <translation>Premier</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last</masterLabel>
+      <translation>Dernier</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Donated</masterLabel>
+      <translation>Années de don</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Donor Streak</masterLabel>
+      <translation>Série de donateurs</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year</masterLabel>
+      <translation>Meilleure année</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year Total</masterLabel>
+      <translation>Total de la meilleure année</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Summary_Field__c</name>
+    <relationshipLabel>RésuméCumuls</relationshipLabel>
+    <label>Champ cible</label>
+  </fields>
+  <fields>
+    <name>Summary_Object__c</name>
+    <relationshipLabel>RésuméCumuls</relationshipLabel>
+    <label>Objet cible</label>
+  </fields>
+  <fields>
+    <name>Time_Bound_Operation_Type__c</name>
+    <label>Délai d'exécution</label>
+    <picklistValues>
+      <masterLabel>All Time</masterLabel>
+      <translation>Depuis le début</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Ago</masterLabel>
+      <translation>Il y a des années</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Days Back</masterLabel>
+      <translation>Jours avant</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year__c</name>
+    <label>Utiliser l’année fiscale</label>
+  </fields>
+  <layouts>
+    <layout>Rollup Layout</layout>
+    <sections>
+      <label>Nouvelle section</label>
+      <section>New Section</section>
+    </sections>
+    <sections>
+      <label>Détails du cumul</label>
+      <section>Rollup Details</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Cumul</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Cumuls</value>
+  </caseValues>
 </CustomObjectTranslation>

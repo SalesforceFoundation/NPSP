@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP パッケージ設定</value>
-    </caseValues>
-    <fields>
-        <help>NPSP の有効なパッケージ名前空間プレフィックス。手動で編集しないでください。</help>
-        <label>名前空間プレフィックス</label>
-        <name>Namespace_Prefix__c</name>
-    </fields>
+  <fields>
+    <name>Namespace_Prefix__c</name>
+    <help>NPSP の有効なパッケージ名前空間プレフィックス。手動で編集しないでください。</help>
+    <label>名前空間プレフィックス</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP パッケージ設定</value>
+  </caseValues>
 </CustomObjectTranslation>

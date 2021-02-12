@@ -1,72 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de CCG</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de CCG</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <fields>
-        <help>Importe de la oportunidad asignado a esta cuenta contable general. Se deja en blanco para asignaciones basadas en porcentaje.</help>
-        <label>Importe</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>La campaña asociada con esta asignación. Utilice este campo si desea que las nuevas oportunidades asociadas con esta campaña se asignen de la misma manera.</help>
-        <label>Campaña</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La cuenta contable general a la que se atribuye esta asignación. Solo las cuentas contables generales activas están disponibles para nuevas asignaciones.</help>
-        <label>Cuenta Contable General</label>
-        <lookupFilter>
-            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
-            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
-        </lookupFilter>
-        <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La oportunidad a la que desea atribuir esta asignación. NPSP totaliza todas las oportunidades de una etapa Cerrada/Ganada en la Cuenta contable general de esta asignación.</help>
-        <label>Oportunidad</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Asignaciones de atributos a un pago.</help>
-        <label>Pago</label>
-        <name>Payment__c</name>
-        <relationshipLabel>Asignaciones de pago</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Importe del porcentaje de una oportunidad asignado a la Cuenta de contabilidad general de esta asignación. Si modifica más adelante el importe de la oportunidad, NPSP actualizará el importe de la asignación en la Cuenta contable general.</help>
-        <label>Porcentaje</label>
-        <name>Percent__c</name>
-    </fields>
-    <fields>
-        <help>La donación recurrente a la que se atribuye esta asignación. NPSP asigna automáticamente todas las nuevas oportunidades asociadas con la donación recurrente de la misma manera.</help>
-        <label>Donación recurrente</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Allocation Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de asignación de CCG</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar asignaciones</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>Importe de la oportunidad asignado a esta cuenta contable general. Se deja en blanco para asignaciones basadas en porcentaje.</help>
+    <label>Importe</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>La campaña asociada con esta asignación. Utilice este campo si desea que las nuevas oportunidades asociadas con esta campaña se asignen de la misma manera.</help>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+    <label>Campaña</label>
+  </fields>
+  <fields>
+    <name>General_Accounting_Unit__c</name>
+    <help>La cuenta contable general a la que se atribuye esta asignación. Solo las cuentas contables generales activas están disponibles para nuevas asignaciones.</help>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+    <label>Cuenta Contable General</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>La oportunidad a la que desea atribuir esta asignación. NPSP totaliza todas las oportunidades de una etapa Cerrada/Ganada en la Cuenta contable general de esta asignación.</help>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+    <label>Oportunidad</label>
+  </fields>
+  <fields>
+    <name>Payment__c</name>
+    <help>Asignaciones de atributos a un pago.</help>
+    <relationshipLabel>Asignaciones de pago</relationshipLabel>
+    <label>Pago</label>
+  </fields>
+  <fields>
+    <name>Percent__c</name>
+    <help>Importe del porcentaje de una oportunidad asignado a la Cuenta de contabilidad general de esta asignación. Si modifica más adelante el importe de la oportunidad, NPSP actualizará el importe de la asignación en la Cuenta contable general.</help>
+    <label>Porcentaje</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <help>La donación recurrente a la que se atribuye esta asignación. NPSP asigna automáticamente todas las nuevas oportunidades asociadas con la donación recurrente de la misma manera.</help>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+    <label>Donación recurrente</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Allocations</name>
+    <label>Gestionar asignaciones</label>
+  </webLinks>
+  <layouts>
+    <layout>Allocation Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de asignación de CCG</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de asignación de CCG</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Asignación de CCG</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Asignaciones de CCG</value>
+  </caseValues>
 </CustomObjectTranslation>

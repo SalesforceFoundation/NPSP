@@ -1,28 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-
-  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
-  <fields>
-    <label>Déprécié:Toujours utiliser dernier jour du mois</label>
-    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Montant du versement</label>
-    <name>npe03__Installment_Amount__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Statut de date de fin</label>
-    <name>npe03__Open_Ended_Status__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Critère</label>
-    <name>npe03__Schedule_Type__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Total</label>
-    <name>npe03__Total__c</name>
-  </fields>
-  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
   <fields>
     <name>npe03__Amount__c</name>
     <help>Le montant de chaque opportunité de versement.</help>
@@ -55,7 +32,7 @@
     </picklistValues>
     <picklistValues>
       <masterLabel>No Longer Interested</masterLabel>
-      <translation>N&apos;est plus intéressé</translation>
+      <translation>N'est plus intéressé</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Unknown</masterLabel>
@@ -210,7 +187,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%StartDate__c</name>
-    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
+    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s'appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
     <label>Date de début</label>
   </fields>
   <fields>
@@ -266,7 +243,7 @@
   </fields>
   <fields>
     <name>npe03__Last_Payment_Date__c</name>
-    <help>NPSP calcule automatiquement cette valeur en fonction de la dernière fois qu&apos;une opportunité de versement a été marquée comme payée (lecture seule).</help>
+    <help>NPSP calcule automatiquement cette valeur en fonction de la dernière fois qu'une opportunité de versement a été marquée comme payée (lecture seule).</help>
     <label>Date du dernier don</label>
   </fields>
   <fields>
@@ -276,7 +253,7 @@
   </fields>
   <fields>
     <name>npe03__Total_Paid_Installments__c</name>
-    <help>Nombre total d&apos;opportunités de versement payées pour ce don récurrent (lecture seule).</help>
+    <help>Nombre total d'opportunités de versement payées pour ce don récurrent (lecture seule).</help>
     <label>Nombre de versements payés</label>
   </fields>
   <fields>
@@ -307,5 +284,19 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
+  <nameFieldLabel>Nom du don récurrent</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du don récurrent</label>
+  </standardFields>
+  <gender>Masculine</gender>
   <startsWith>Consonant</startsWith>
-  </CustomObjectTranslation>
+  <caseValues>
+    <plural>false</plural>
+    <value>Don récurrent</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Dons récurrents</value>
+  </caseValues>
+</CustomObjectTranslation>

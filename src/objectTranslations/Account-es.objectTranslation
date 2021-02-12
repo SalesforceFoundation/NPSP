@@ -1,231 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Manage Household Custom --></label>
-        <name>Manage_Household_Custom</name>
-    </fieldSets>
-    <fields>
-        <help>Lote en el que la cuenta fue creada.</help>
-        <label>Lote</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Cuentas</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Áreas generales de programa que esta organización financia.</help>
-        <label>Foco de financiación</label>
-        <name>Funding_Focus__c</name>
-        <picklistValues>
-            <masterLabel>Animal Welfare</masterLabel>
-            <translation>Bienestar de los animales</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Arts and Culture</masterLabel>
-            <translation>Arte y Cultura</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Capacity Building</masterLabel>
-            <translation>Creación de capacidad</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Education</masterLabel>
-            <translation>Educación</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Environmental</masterLabel>
-            <translation>Ambiental</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Health Services</masterLabel>
-            <translation>Servicios de salud</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Human Services</masterLabel>
-            <translation>Servicios Humanos</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Indica que esta organización es una organización que entrega becas.</help>
-        <label>Otorgante de becas</label>
-        <name>Grantmaker__c</name>
-    </fields>
-    <fields>
-        <help>El nombre del administrador del regalo que iguala en la empresa.</help>
-        <label>Nombre administrador del regalo igualado</label>
-        <name>Matching_Gift_Administrator_Name__c</name>
-    </fields>
-    <fields>
-        <help>El importe máximo que la empresa igualará en un solo regalo.</help>
-        <label>Importe máximo de regalo que iguala</label>
-        <name>Matching_Gift_Amount_Max__c</name>
-    </fields>
-    <fields>
-        <help>El importe más pequeño que la empresa igualará en una sola donación.</help>
-        <label>Importe mínimo de regalo que iguala</label>
-        <name>Matching_Gift_Amount_Min__c</name>
-    </fields>
-    <fields>
-        <help>El importe máximo que la empresa igualará cada año por empleado.</help>
-        <label>Máximo por empleado de regalo igualado</label>
-        <name>Matching_Gift_Annual_Employee_Max__c</name>
-    </fields>
-    <fields>
-        <help>Notas adicionales sobre el programa de regalos que igualan de la empresa.</help>
-        <label>Comentarios de regalo que iguala</label>
-        <name>Matching_Gift_Comments__c</name>
-    </fields>
-    <fields>
-        <help>Indica que esta empresa ofrece regalos que igualan.</help>
-        <label>Empresa de regalos que igualan</label>
-        <name>Matching_Gift_Company__c</name>
-    </fields>
-    <fields>
-        <help>Correo electrónico del administrador de los regalos que igualan en la empresa.</help>
-        <label>Correo electrónico de regalo que iguala</label>
-        <name>Matching_Gift_Email__c</name>
-    </fields>
-    <fields>
-        <help>Fecha en la que la información del regalo que iguala fue actualizada por última vez.</help>
-        <label>Info actualizada de regalo que iguala</label>
-        <name>Matching_Gift_Info_Updated__c</name>
-    </fields>
-    <fields>
-        <help>Porcentaje de la donación que la empresa igualará.</help>
-        <label>Porcentaje de regalo que iguala</label>
-        <name>Matching_Gift_Percent__c</name>
-    </fields>
-    <fields>
-        <help>Teléfono de la oficina del administrador del regalo que iguala.</help>
-        <label>Teléfono de regalo que iguala</label>
-        <name>Matching_Gift_Phone__c</name>
-    </fields>
-    <fields>
-        <help>Utilice este campo para indicar cualquier restricción de edad que esta empresa aplique en la aptitud para los regalos que igualan.</help>
-        <label>Fecha límite de regalo que iguala</label>
-        <name>Matching_Gift_Request_Deadline__c</name>
-    </fields>
-    <fields>
-        <help>El número de años que este hogar ha tenido una afiliación (solo lectura)</help>
-        <label>Duración de la membresía</label>
-        <name>Membership_Span__c</name>
-    </fields>
-    <fields>
-        <help>El estado de afiliación de este hogar, por ej. Actual, Vencido o en período de gracia. El valor se basa en Fecha de finalización de afiliación y Período de gracia. El Período se establece en Configuración de NPSP, parámetros del hogar. Es de solo lectura.</help>
-        <label>Estado de la afiliación</label>
-        <name>Membership_Status__c</name>
-    </fields>
-    <fields>
-        <help>El número de contactos que son miembros de este hogar.</help>
-        <label>Cantidad de miembros en el hogar</label>
-        <name>Number_of_Household_Members__c</name>
-    </fields>
-    <layouts>
-        <layout>Household Layout</layout>
-        <sections>
-            <label>Dirección</label>
-            <section>Address</section>
-        </sections>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Descripción</label>
-            <section>Description</section>
-        </sections>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Totales de donaciones</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Campos</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Información de afiliaciones</label>
-            <section>Membership Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Organization Layout</layout>
-        <sections>
-            <label>Dirección</label>
-            <section>Address</section>
-        </sections>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Descripción</label>
-            <section>Description</section>
-        </sections>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Totales de donaciones</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Campos</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Información de otorgamiento de donaciones</label>
-            <section>Grantmaking Information</section>
-        </sections>
-        <sections>
-            <label>Comentarios de regalo que iguala</label>
-            <section>Matching Gift Comments</section>
-        </sections>
-        <sections>
-            <label>Información del regalo que iguala</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Información de afiliaciones</label>
-            <section>Membership Information</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Nueva dirección</label>
-        <name>New_Address</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva afiliación</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Household_Update</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Organization_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Gestionar hogar</label>
-        <name>Manage_Household</name>
-    </webLinks>
-    <webLinks>
-        <label>Nuevo regalo</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Volver a calcular totales</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+  <fields>
+    <name>Batch__c</name>
+    <help>Lote en el que la cuenta fue creada.</help>
+    <relationshipLabel>Cuentas</relationshipLabel>
+    <label>Lote</label>
+  </fields>
+  <fields>
+    <name>Funding_Focus__c</name>
+    <help>Áreas generales de programa que esta organización financia.</help>
+    <label>Foco de financiación</label>
+    <picklistValues>
+      <masterLabel>Animal Welfare</masterLabel>
+      <translation>Bienestar de los animales</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Arts and Culture</masterLabel>
+      <translation>Arte y Cultura</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Capacity Building</masterLabel>
+      <translation>Creación de capacidad</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Education</masterLabel>
+      <translation>Educación</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Environmental</masterLabel>
+      <translation>Ambiental</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Health Services</masterLabel>
+      <translation>Servicios de salud</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Human Services</masterLabel>
+      <translation>Servicios Humanos</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Grantmaker__c</name>
+    <help>Indica que esta organización es una organización que entrega becas.</help>
+    <label>Otorgante de becas</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Administrator_Name__c</name>
+    <help>El nombre del administrador del regalo que iguala en la empresa.</help>
+    <label>Nombre administrador del regalo igualado</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Amount_Max__c</name>
+    <help>El importe máximo que la empresa igualará en un solo regalo.</help>
+    <label>Importe máximo de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Amount_Min__c</name>
+    <help>El importe más pequeño que la empresa igualará en una sola donación.</help>
+    <label>Importe mínimo de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Annual_Employee_Max__c</name>
+    <help>El importe máximo que la empresa igualará cada año por empleado.</help>
+    <label>Máximo por empleado de regalo igualado</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Comments__c</name>
+    <help>Notas adicionales sobre el programa de regalos que igualan de la empresa.</help>
+    <label>Comentarios de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Company__c</name>
+    <help>Indica que esta empresa ofrece regalos que igualan.</help>
+    <label>Empresa de regalos que igualan</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Email__c</name>
+    <help>Correo electrónico del administrador de los regalos que igualan en la empresa.</help>
+    <label>Correo electrónico de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Info_Updated__c</name>
+    <help>Fecha en la que la información del regalo que iguala fue actualizada por última vez.</help>
+    <label>Info actualizada de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Percent__c</name>
+    <help>Porcentaje de la donación que la empresa igualará.</help>
+    <label>Porcentaje de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Phone__c</name>
+    <help>Teléfono de la oficina del administrador del regalo que iguala.</help>
+    <label>Teléfono de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Request_Deadline__c</name>
+    <help>Utilice este campo para indicar cualquier restricción de edad que esta empresa aplique en la aptitud para los regalos que igualan.</help>
+    <label>Fecha límite de regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Membership_Span__c</name>
+    <help>El número de años que este hogar ha tenido una afiliación (solo lectura)</help>
+    <label>Duración de la membresía</label>
+  </fields>
+  <fields>
+    <name>Membership_Status__c</name>
+    <help>El estado de afiliación de este hogar, por ej. Actual, Vencido o en período de gracia. El valor se basa en Fecha de finalización de afiliación y Período de gracia. El Período se establece en Configuración de NPSP, parámetros del hogar. Es de solo lectura.</help>
+    <label>Estado de la afiliación</label>
+  </fields>
+  <fields>
+    <name>Number_of_Household_Members__c</name>
+    <help>El número de contactos que son miembros de este hogar.</help>
+    <label>Cantidad de miembros en el hogar</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Household</name>
+    <label>Gestionar hogar</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>Nuevo regalo</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Volver a calcular totales</label>
+  </webLinks>
+  <layouts>
+    <layout>Organization Layout</layout>
+    <sections>
+      <label>Campos</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Dirección</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>Descripción</label>
+      <section>Description</section>
+    </sections>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totales de donaciones</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Información de afiliaciones</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Información de otorgamiento de donaciones</label>
+      <section>Grantmaking Information</section>
+    </sections>
+    <sections>
+      <label>Información del regalo que iguala</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Comentarios de regalo que iguala</label>
+      <section>Matching Gift Comments</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Household Layout</layout>
+    <sections>
+      <label>Campos</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Dirección</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>Descripción</label>
+      <section>Description</section>
+    </sections>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totales de donaciones</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Información de afiliaciones</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
 </CustomObjectTranslation>

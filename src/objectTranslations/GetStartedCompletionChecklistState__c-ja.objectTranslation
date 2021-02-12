@@ -1,17 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>使用開始の完了チェックリスト状態</value>
-    </caseValues>
-    <fields>
-        <label>項目 ID</label>
-        <name>Item_Id__c</name>
-    </fields>
-    <fields>
-        <label>ユーザ</label>
-        <name>User__c</name>
-        <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
-    </fields>
-    <nameFieldLabel>使用開始の完了チェックリスト状態名</nameFieldLabel>
+  <fields>
+    <name>Item_Id__c</name>
+    <label>項目 ID</label>
+  </fields>
+  <fields>
+    <name>User__c</name>
+    <label>ユーザ</label>
+  </fields>
+  <nameFieldLabel>使用開始の完了チェックリスト状態名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>使用開始の完了チェックリスト状態名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>使用開始の完了チェックリスト状態</value>
+  </caseValues>
 </CustomObjectTranslation>
