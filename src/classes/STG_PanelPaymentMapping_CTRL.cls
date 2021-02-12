@@ -41,17 +41,6 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelPaymentMapping'; }
 
     /*********************************************************************************************************
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
-    }
-
-    /*********************************************************************************************************
     * @description Map of Field names to DisplayTypes
     */
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
