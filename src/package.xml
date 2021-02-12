@@ -509,6 +509,7 @@
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
+        <members>STG_PanelCreatePayments_CTRL_TEST</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
         <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
@@ -519,7 +520,9 @@
         <members>STG_PanelHouseholds_TEST</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelLvlAssignBatch_CTRL</members>
+        <members>STG_PanelLvlAssignBatch_CTRL_TEST</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
+        <members>STG_PanelMakeDefaultAllocations_TEST</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
         <members>STG_PanelOppCampaignMembers_CTRL</members>
@@ -533,6 +536,7 @@
         <members>STG_PanelPaymentMapping_CTRL_TEST</members>
         <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
+        <members>STG_PanelRDBatch_CTRL_TEST</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
         <members>STG_PanelRDCustomInstallment_CTRL</members>
         <members>STG_PanelRDHealthCheck</members>
@@ -545,9 +549,11 @@
         <members>STG_PanelRel_CTRL</members>
         <members>STG_PanelRel_CTRL_TEST</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
+        <members>STG_PanelRenameHouseholds_CTRL_TEST</members>
         <members>STG_PanelSchedule_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
         <members>STG_PanelUpdatePrimaryContact_CTRL</members>
+        <members>STG_PanelUpdatePrimaryContact_CTRL_TEST</members>
         <members>STG_PanelUserRollup_CTRL</members>
         <members>STG_SettingsManager_CTRL</members>
         <members>STG_SettingsManager_TEST</members>
