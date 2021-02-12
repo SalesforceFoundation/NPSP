@@ -162,7 +162,12 @@
         <editable>true</editable>
         <field>Opportunity.npe01__Membership_Start_Date__c</field>
         <readable>true</readable>
-    </fieldPermissions>    
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>npe01__OppPayment__c.Payment_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</field>
