@@ -46,6 +46,7 @@ public with sharing class GE_PaymentServices {
         NONRETRYABLEERROR,
         RETRYABLEERROR,
         REFUNDISSUED,
+        SETTLED,
         SUBMITTED
     }
 
