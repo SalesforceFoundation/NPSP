@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,51 +29,42 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2021
 * @group Settings
-* @description Controller for the Donor Statistics panel.
+* @description Test class for STG_PanelRenameHouseholds_CTRL
 */
-public with sharing class STG_PanelCreatePayments_CTRL extends STG_Panel { 
-    /**
-    * @description Returns the string Id of the Donor Statistics panel. 
+@isTest
+private with sharing class STG_PanelRenameHouseholds_CTRL_TEST {
+     /**
+    * @description Validate that the User has the proper permissions to Account and Contact object
+    * during page load
     */
-    public override string idPanel() { 
-        return 'idPanelCreatePayments';
+    @isTest
+    private static void shouldAllowAccessToUser() {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        System.runAs(adminUser) {
+            STG_PanelRenameHouseholds_CTRL controller = new STG_PanelRenameHouseholds_CTRL();
+            Boolean hasAccess = controller.getHasAccess();
+
+            System.assertEquals(true, hasAccess, 'The access check should return true if the user has update ' +
+                'access to Account object');
+        }
     }
 
     /**
-    * @description The panel's constructor.
+    * @description Validate that the method returns false if User does not have Update permissions to Account object
     */
-    public STG_PanelCreatePayments_CTRL() {
-      isRunningBatch = false;
+    @isTest
+    private static void shouldNotAllowAccessToReadOnlyUser() {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+            STG_PanelRenameHouseholds_CTRL controller = new STG_PanelRenameHouseholds_CTRL();
+            Boolean hasAccess = controller.getHasAccess();
+
+            System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
+                'update access to the Account object');
+        }
     }
-    
-    /**
-    * @description Whether we are running the batch opportunity naming process 
-    */
-    public boolean isRunningBatch { get; set; }
-
-    /**
-    * @description Action Method to run batch opportunity renaming.
-    * @return null 
-    */
-    public PageReference runBatch() {
-        isRunningBatch = true;
-        id batchProcessId = database.executeBatch(new PMT_PaymentCreator_BATCH(), 200);
-        return null;
-    }
-
-    /**
-    * @description Check if the running user has update access to the Opportunity sObject and Read access to the
-    * Payment object
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String oppObject = Schema.SObjectType.Opportunity.getName();
-        String paymentObject = Schema.SObjectType.npe01__OppPayment__c.getName();
-
-        return UTIL_Permissions.canRead(oppObject, false) &&
-            UTIL_Permissions.canUpdate(oppObject, false) &&
-            UTIL_Permissions.canRead(paymentObject, false);
-  }
 }

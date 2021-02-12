@@ -104,13 +104,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
-    }
-
-    /***
     * @description An empty method called from actionFunction to reRender panels when it completes
     */
     public void refreshPanels() {
