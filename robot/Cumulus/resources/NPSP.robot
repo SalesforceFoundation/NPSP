@@ -496,7 +496,9 @@ Enable RD2
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
     ...                       Run Process     cci  flow  run  enable_rd2_managed   --org    ${orgname}  stdout=true
     Run Keyword if            "${return}"!="None"
-    ...                        Should Be Equal As Integers	    ${return.rc}	    0
+    ...                       Log To Console            ${return.stdout}
+    ...                       Log To Console            ${return.stderr}
+    ...                       Should Be Equal As Integers	    ${return.rc}	    0
     Sleep                     1                         Wait Added For Metadata Get Loaded
 
 Run Recurring Donations Batch
