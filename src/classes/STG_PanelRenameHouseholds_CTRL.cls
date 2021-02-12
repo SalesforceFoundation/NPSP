@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -35,24 +35,26 @@
 */
 public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel { 
 
-    /*********************************************************************************************************
+    /**
     * @description The panel's constructor.
     */
     public STG_PanelRenameHouseholds_CTRL() {
         isRunningBatch = false;
     }
 
-    /*********************************************************************************************************
+    /**
     * @description Returns the string Id of the refresh household names panel. 
     */
-    public override string idPanel() { return 'idPanelRefreshHouseholdNames'; }
+    public override string idPanel() {
+        return 'idPanelRefreshHouseholdNames';
+    }
 
-    /*********************************************************************************************************
+    /**
     * @description Whether we are currently running the batch process 
     */
     public boolean isRunningBatch { get; set; }
     
-    /*********************************************************************************************************
+    /**
     * @description Action Method to run the Refresh Household Names batch process
     * @return PageReference The PageReference is null regardless if an error occurs or the batch runs successfully
     */
@@ -71,6 +73,19 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
         isRunningBatch = true;
         HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);
         return null;
+    }
+
+    /**
+    * @description Check if the running user has update access to the Account sObject and Read access to the
+    * Contact sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String accountObject = Schema.SObjectType.Account.getName();
+        String contactObject = Schema.SObjectType.Contact.getName();
+
+        return UTIL_Permissions.canUpdate(accountObject, false) &&
+            UTIL_Permissions.canRead(contactObject, false);
     }
 
 }
