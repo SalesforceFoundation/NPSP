@@ -487,10 +487,7 @@ Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
     ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
     ${ns} =                   Get Npsp Namespace Prefix
-    ${orgname} =              Get Org Name
     Log                       ${ns}
-    Log                       ${orgname}
-
     ${return} =                Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
     ...                        Run Flow                  enable_rd2
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
@@ -501,7 +498,7 @@ Enable RD2
     ...                       Log           ${return.stderr}
     Run Keyword if            "${return}"!="None"
     ...                       Should Be Equal As Integers	    ${return.rc}	    0
-    Sleep                     1                         Wait Added For Metadata Get Loaded
+    Sleep                     1                                 Wait Added For Metadata Get Loaded
 
 Run Recurring Donations Batch
     [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
