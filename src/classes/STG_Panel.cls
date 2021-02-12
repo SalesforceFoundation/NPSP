@@ -492,4 +492,16 @@ public with sharing virtual class STG_Panel {
 
         return apiValue;
     }
+
+    /**
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    * @return String
+    */
+    public virtual String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
+    }
 }

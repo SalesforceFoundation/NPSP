@@ -38,15 +38,8 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Relationships panel. 
     */
-    public override string idPanel() { return 'idPanelRel'; }
-
-    /*********************************************************************************************************
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) return 'c';
-        return namespace;
+    public override string idPanel() {
+        return 'idPanelRel';
     }
 
     /*********************************************************************************************************
