@@ -8,7 +8,7 @@
     "LocaleSidKey": "en_US",
     "EmailEncodingKey": "UTF-8",
     "LanguageLocaleKey": "en_US",
-    "profileName": "Standard Platform User",
-    "permsets": ["QA", "Gift_Entry"],
+    "profileName": "SysAdminClone",
+    "permsets": ["QA", "Gift_Entry_Clone"],
     "generatePassword": true
 }

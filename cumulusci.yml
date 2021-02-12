@@ -47,7 +47,7 @@ tasks:
         description: Creates a test user for testing permissions.
         class_path: cumulusci.tasks.sfdx.SFDXOrgTask
         options:
-            command: "force:user:create -a permtest --definitionfile datasets/users/perms_test_user.json"
+            command: "force:user:create -a permtest --definitionfile datasets/qa_org/users/perms_test_user.json"
 
     delete_files:
         description: Delete the specified files from the current working folder
@@ -770,6 +770,8 @@ flows:
             10:
                 task: deploy_reports
             11:
+                task: create_perms_testing_user
+            12:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
@@ -801,7 +803,9 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
-            12:
+            12: 
+                task: create_perms_testing_user
+            13:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry

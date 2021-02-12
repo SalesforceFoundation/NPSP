@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<PermissionSetGroup xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>DI_Batch_Obj_Muted</label>
-    <mutingPermissionSets>DI_Batch_Obj_Muted_Muted</mutingPermissionSets>
-    <permissionSets>Gift_Entry</permissionSets>
-    <permissionSets>QA</permissionSets>
-    <status>Updated</status>
-</PermissionSetGroup>
