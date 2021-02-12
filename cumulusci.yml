@@ -1049,7 +1049,7 @@ flows:
                 task: deploy_qa_config
             8:
                 task: deploy_regression_bdi_metadata_config
-        11:
+            9:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
