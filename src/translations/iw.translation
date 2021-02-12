@@ -7395,11 +7395,11 @@
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>מיזוג אנשי קשר</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>מיזוג אנשי קשר</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
