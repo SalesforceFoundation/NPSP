@@ -1697,12 +1697,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 print(f'Table contains {record} with empty {key} as expected')
             else:
                 raise Exception(f'Table did not contain {record} with expected {key}={value}')
-            
-    def get_org_name(self):
-        """
-        Obtains the orgname info from the cumulsci's get org info and returns the value
-        """
-        org_name = self.cumulusci.org.name
-        return org_name
 
-
+    def run_flow(self, flow_name):
+        """
+        Runs the specified cci flow
+        """
+        from cumulusci.core.flowrunner import FlowCoordinator
+        flow_config = self.cumulusci.project_config.get_flow(flow_name)
+        flow = FlowCoordinator(self.cumulusci.project_config, flow_config, flow_name)
+        flow.run(self.cumulusci.org)

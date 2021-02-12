@@ -492,10 +492,9 @@ Enable RD2
     Log                       ${orgname}
 
     ${return} =                Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
-    ...                       Run Process     cci  flow  run  enable_rd2  --org    ${orgname}   stdout=true
+    ...                        Run Flow                  enable_rd2
     Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
-    ...                       Run Process     cci  flow  run  enable_rd2_managed   --org    ${orgname}  stdout=true
-
+    ...                        Run flow                  enable_rd2_managed
     Run Keyword if            "${return}"!="None"
     ...                       Log           ${return.stdout}
     Run Keyword if            "${return}"!="None"
