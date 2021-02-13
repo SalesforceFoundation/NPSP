@@ -74,10 +74,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        processHouseholdsAfterInsert();
-    }
-
-    private void processHouseholdsAfterInsert() {
         updateHouseholdsNamesForContactsInHouseholds();
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContactsThatDoNotHaveOne();
@@ -88,10 +84,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void insertHouseholdsForContactsInIndividualAccounts() {
-        if (contactsThatDoNotHaveAHousehold().getRecords().size() > 0) {
+        List<SObject> contactsThatDoNotHaveAHouseholdRecord = contactsThatDoNotHaveAHousehold().getRecords();
+        if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
             insertHouseholdsForContacts(
                     contactsInIndividualAccounts(
-                            contactsThatDoNotHaveAHousehold().getRecords()),
+                            contactsThatDoNotHaveAHouseholdRecord),
                     true);
         }
     }
@@ -112,7 +109,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void updateHouseholdsNamesForContactsInHouseholds() {
-        List<Id> contactsThatHaveAHousehold = contactsThatHaveAHousehold();
+        List<Id> contactsThatHaveAHousehold = idsForContactsInHouseholds();
         if (contactsThatHaveAHousehold.size() > 0) {
             updateHouseholdNames(contactsThatHaveAHousehold);
         }
@@ -122,14 +119,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return selectByFieldValue(Contact.npo02__Household__c, null);
     }
 
-    private List<Id> contactsThatHaveAHousehold() {
-        List<Id> contactsInHouseholds = new List<Id>();
+    private List<Id> idsForContactsInHouseholds() {
+        List<Id> idsForContactsInHouseholds = new List<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
-            if (!contactsThatDoNotHaveAHousehold().getRecords().contains(con)) {
-                contactsInHouseholds.add(con.Id);
+            if (hasHousehold(con)) {
+                idsForContactsInHouseholds.add(con.Id);
             }
         }
-        return contactsInHouseholds;
+        return idsForContactsInHouseholds;
     }
 
     private Id householdIdFor(Contact con) {
