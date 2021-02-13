@@ -336,17 +336,24 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
         List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
         if (householdInserts.size() > 0) {
-            Database.SaveResult[] householdSaveResults =
-                    UTIL_DMLService.insertRecords(householdInserts, false);
-
-            List<Contact> contactsToBeUpdatedWithHouseholdId =
-                    processHouseholdSaveResults(contacts, householdSaveResults);
-            update contactsToBeUpdatedWithHouseholdId;
-
+            Database.SaveResult[] householdSaveResults = insertHouseholds(householdInserts);
+            putHouseholdIdOntoContacts(contacts, householdSaveResults);
             if (isInsertTrigger) {
                 updateNamesAfterHouseholdInsert(householdSaveResults);
             }
         }
+    }
+
+    private Database.SaveResult[] insertHouseholds(List<npo02__Household__c> householdInserts) {
+        Database.SaveResult[] householdSaveResults =
+                UTIL_DMLService.insertRecords(householdInserts, false);
+        return householdSaveResults;
+    }
+
+    private void putHouseholdIdOntoContacts(List<Contact> contacts, Database.SaveResult[] householdSaveResults) {
+        List<Contact> contactsToBeUpdatedWithHouseholdId =
+                processHouseholdSaveResults(contacts, householdSaveResults);
+        update contactsToBeUpdatedWithHouseholdId;
     }
 
     private List<Contact> processHouseholdSaveResults(List<Contact> contacts,
