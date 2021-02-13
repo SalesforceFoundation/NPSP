@@ -84,9 +84,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (needsHousehold(con)) {
                 householdInserts.add(con);
             }
+        }
+        for (Contact con : (List<Contact>) getRecords()) {
             //If the user has chosen for only Contacts connected to Individual Accounts to have Households
             //add them all to a list for evaluation
-            else if (needsEvaluation(con)) {
+            if (needsEvaluation(con)) {
                 contactEvaluations.add(con);
             } else if (needsHouseholdNameUpdated(con)) {
                 householdsNeedingNamesUpdated.add(householdIdFor(con));
