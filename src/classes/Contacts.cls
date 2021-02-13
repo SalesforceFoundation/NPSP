@@ -79,14 +79,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void processHouseholdsAfterInsert() {
         List<Contact> householdInserts = getHouseholdInserts();
-        List<Contact> contactEvaluations = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
-            //add them all to a list for evaluation
-            if (needsEvaluation(con)) {
-                contactEvaluations.add(con);
-            }
-        }
+        List<Contact> contactEvaluations = getContactEvaluations();
         for (Contact con : (List<Contact>) getRecords()) {
             //If the user has chosen for only Contacts connected to Individual Accounts to have Households
             //add them all to a list for evaluation
@@ -107,6 +100,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
             insertHouseholdsForContacts(
                     getContactsNeedingHouseholds(contactEvaluations), true);
         }
+    }
+
+    private List<Contact> getContactEvaluations() {
+        List<Contact> contactEvaluations = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
+            //add them all to a list for evaluation
+            if (needsEvaluation(con)) {
+                contactEvaluations.add(con);
+            }
+        }
+        return contactEvaluations;
     }
 
     private List<Contact> getHouseholdInserts() {
