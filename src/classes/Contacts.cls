@@ -78,78 +78,62 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void processHouseholdsAfterInsert() {
-        List<Contact> householdInserts = getHouseholdInserts();
-        List<Contact> contactEvaluations = getContactEvaluations();
-        updateHouseholdsNeedingNameUpdates();
+        updateHouseholdsNamesForContactsInHouseholds();
+        if (allContactsGetHouseholds()) {
+            insertHouseholdsForContactsThatDoNotHaveOne();
+        }
+        if (allIndividualContactsGetHouseholds()) {
+            insertHouseholdsForContactsInIndividualAccounts();
+        }
+    }
 
+    private void insertHouseholdsForContactsInIndividualAccounts() {
+        if (contactsThatDoNotHaveAHousehold().getRecords().size() > 0) {
+            insertHouseholdsForContacts(
+                    contactsInIndividualAccounts(
+                            contactsThatDoNotHaveAHousehold().getRecords()),
+                    true);
+        }
+    }
+
+    private Boolean allIndividualContactsGetHouseholds() {
+        return settings.isAllIndividualsProcessor();
+    }
+
+    private Boolean allContactsGetHouseholds() {
+        return settings.isAllProcessor();
+    }
+
+    private void insertHouseholdsForContactsThatDoNotHaveOne() {
+        List<Contact> householdInserts = contactsThatDoNotHaveAHousehold().getRecords();
         if (householdInserts.size() > 0) {
             insertHouseholdsForContacts(householdInserts, true);
         }
+    }
 
-        if (contactEvaluations.size() > 0) {
-            insertHouseholdsForContacts(
-                    getContactsNeedingHouseholds(contactEvaluations), true);
+    private void updateHouseholdsNamesForContactsInHouseholds() {
+        List<Id> contactsThatHaveAHousehold = contactsThatHaveAHousehold();
+        if (contactsThatHaveAHousehold.size() > 0) {
+            updateHouseholdNames(contactsThatHaveAHousehold);
         }
     }
 
-    private void updateHouseholdsNeedingNameUpdates() {
-        List<Id> householdsNeedingNamesUpdated = getHouseholdsNeedingNamesUpdated();
-
-        if (householdsNeedingNamesUpdated.size() > 0) {
-            updateHouseholdNames(householdsNeedingNamesUpdated);
-        }
+    private fflib_SObjects contactsThatDoNotHaveAHousehold() {
+        return selectByFieldValue(Contact.npo02__Household__c, null);
     }
 
-    private List<Id> getHouseholdsNeedingNamesUpdated() {
-        List<Id> householdsNeedingNamesUpdated = new List<Id>();
+    private List<Id> contactsThatHaveAHousehold() {
+        List<Id> contactsInHouseholds = new List<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
-            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
-            //add them all to a list for evaluation
-            if (needsHouseholdNameUpdated(con)) {
-                householdsNeedingNamesUpdated.add(householdIdFor(con));
+            if (!contactsThatDoNotHaveAHousehold().getRecords().contains(con)) {
+                contactsInHouseholds.add(con.Id);
             }
         }
-        return householdsNeedingNamesUpdated;
-    }
-
-    private List<Contact> getContactEvaluations() {
-        List<Contact> contactEvaluations = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
-            //add them all to a list for evaluation
-            if (needsEvaluation(con)) {
-                contactEvaluations.add(con);
-            }
-        }
-        return contactEvaluations;
-    }
-
-    private List<Contact> getHouseholdInserts() {
-        List<Contact> householdInserts = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (needsHousehold(con)) {
-                householdInserts.add(con);
-            }
-        }
-        return householdInserts;
+        return contactsInHouseholds;
     }
 
     private Id householdIdFor(Contact con) {
         return con.npo02__Household__c;
-    }
-
-    private Boolean needsHouseholdNameUpdated(Contact con) {
-        return householdIdFor(con) != null;
-    }
-
-    private Boolean needsEvaluation(Contact con) {
-        return householdIdFor(con) == null &&
-                settings.isAllIndividualsProcessor();
-    }
-
-    private Boolean needsHousehold(Contact con) {
-        return householdIdFor(con) == null
-                && settings.isAllProcessor();
     }
 
     private void buildOldHouseholdCollections() {
@@ -462,21 +446,21 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return accountIds;
     }
 
-    private List<Contact> getContactsNeedingHouseholds(List<Contact> contacts) {
+    private List<Contact> contactsInIndividualAccounts(List<Contact> contacts) {
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
 
-        List<Contact> householdInserts = new List<Contact>();
+        List<Contact> contactsInIndividualAccounts = new List<Contact>();
         for (Contact con : contacts) {
             if (hasAccount(con)) {
                 Account acc = contactAccountMap.get(con.AccountId);
                 if (isIndividualAccount(acc)) {
-                    householdInserts.add(con);
+                    contactsInIndividualAccounts.add(con);
                 }
             } else {
-                householdInserts.add(con);
+                contactsInIndividualAccounts.add(con);
             }
         }
-        return householdInserts;
+        return contactsInIndividualAccounts;
     }
 
     private Boolean hasAccount(Contact con) {
@@ -496,7 +480,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         dmlWrapper.objectsToDelete.addAll(emptyHouseholdsToDelete);
 
-        contactsNeedingHouseholds.addAll(getContactsNeedingHouseholds(contactEvaluations));
+        contactsNeedingHouseholds.addAll(contactsInIndividualAccounts(contactEvaluations));
         insertHouseholdsForContacts(contactsNeedingHouseholds, false);
 
         // Note: This set will contain Household__c record Id's only (i.e., legacy models)
