@@ -32,7 +32,7 @@
 * @date 2021
 * @description Household Name value object in NPSP.
 */
-public with sharing class HouseholdName {
+public inherited sharing class HouseholdName {
 
     private SObject household;
     private SObject oldRecord;

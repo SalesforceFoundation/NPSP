@@ -1,4 +1,4 @@
-public with sharing class HouseholdSettings {
+public inherited sharing class HouseholdSettings {
 
     npo02__Households_Settings__c settings;
     private static final String defaultNamingService = 'HH_NameSpec';
