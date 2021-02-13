@@ -80,17 +80,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private void processHouseholdsAfterInsert() {
         List<Contact> householdInserts = getHouseholdInserts();
         List<Contact> contactEvaluations = getContactEvaluations();
-        for (Contact con : (List<Contact>) getRecords()) {
-            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
-            //add them all to a list for evaluation
-            if (needsHouseholdNameUpdated(con)) {
-                householdsNeedingNamesUpdated.add(householdIdFor(con));
-            }
-        }
-
-        if (householdsNeedingNamesUpdated.size() > 0) {
-            updateHouseholdNames(householdsNeedingNamesUpdated);
-        }
+        updateHouseholdsNeedingNameUpdates();
 
         if (householdInserts.size() > 0) {
             insertHouseholdsForContacts(householdInserts, true);
@@ -100,6 +90,26 @@ public inherited sharing class Contacts extends fflib_SObjects {
             insertHouseholdsForContacts(
                     getContactsNeedingHouseholds(contactEvaluations), true);
         }
+    }
+
+    private void updateHouseholdsNeedingNameUpdates() {
+        List<Id> householdsNeedingNamesUpdated = getHouseholdsNeedingNamesUpdated();
+
+        if (householdsNeedingNamesUpdated.size() > 0) {
+            updateHouseholdNames(householdsNeedingNamesUpdated);
+        }
+    }
+
+    private List<Id> getHouseholdsNeedingNamesUpdated() {
+        List<Id> householdsNeedingNamesUpdated = new List<Id>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            //If the user has chosen for only Contacts connected to Individual Accounts to have Households
+            //add them all to a list for evaluation
+            if (needsHouseholdNameUpdated(con)) {
+                householdsNeedingNamesUpdated.add(householdIdFor(con));
+            }
+        }
+        return householdsNeedingNamesUpdated;
     }
 
     private List<Contact> getContactEvaluations() {
