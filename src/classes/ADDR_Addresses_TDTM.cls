@@ -86,8 +86,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         Map<Id, Address__c> mapAddressesById = new Map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            for (SObject so : listOld) {
-                Id accId = ((Address__c)so).Household_Account__c;
+            Addresses addresses = new addresses(listOld);
+            for (Address__c address : (List<Address__c>) addresses.getRecords()) {
+                Id accId = address.Household_Account__c;
                 if (accId != null) {
                     mapAddressesByAcctId.put(accId, null);
                 }
