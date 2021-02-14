@@ -201,7 +201,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             HH_HouseholdNaming.updateHouseholdNamesAsynchronously(contactsNeedingHouseholdNamesUpdated);
         } else {
             HH_HouseholdNaming hn = new HH_HouseholdNaming();
-            hn.updateHouseholdNames(contactsNeedingHouseholdNamesUpdated);
+            hn.updateHouseholdNameAndMemberCount(contactsNeedingHouseholdNamesUpdated);
         }
     }
 

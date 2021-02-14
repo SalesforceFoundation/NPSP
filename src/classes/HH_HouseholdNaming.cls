@@ -50,7 +50,7 @@ public without sharing class HH_HouseholdNaming {
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        hn.updateHouseholdNames(hhids);
+        hn.updateHouseholdNameAndMemberCount(hhids);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
@@ -59,10 +59,10 @@ public without sharing class HH_HouseholdNaming {
     * it will be responsible for only updating names if the advanced household naming is true.
     * So any code that used to check for advanced household naming should no longer do so,
     * (unless it is only for a naming scenario that would possibly change number of household members.)
-    * @param hhids the list of household Id's (either Household__c or Account Id's)
+    * @param householdOrAccountIds the list of household Id's (either Household__c or Account Id's)
     * @return void
     */
-    public void updateHouseholdNames(List<Id> hhids){
+    public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds){
         if (isHouseholdNamingDisabled) {
             return;
         }
@@ -70,29 +70,39 @@ public without sharing class HH_HouseholdNaming {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         // handle two types of households by using an SObject
-        List<SObject> householdsNeedingUpdates = householdsOrAccountsFor(hhids);
-        Map<Id, List<Contact>> hhIdToContactsMap = getHouseholdMembersByHouseholdId(hhids);
-
-        //loop through the households needing name changes, if necessary, make them.
-        for (SObject household : householdsNeedingUpdates) {
-            List<Contact> listCon = getContactsForHousehold(household, hhIdToContactsMap);
-
-            if (settings.isAdvancedHouseholdNaming()) {
-                new HouseholdName(household, listCon)
-                        .setNameFieldValuesOnHousehold();
-            }
-
-            // now we also store the number of members on the Household!
-            household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
-                    listCon != null ? listCon.size() : 0);
-        }
-
-        if (!householdsNeedingUpdates.isEmpty()) {
-            // all or nothing, so errors not lost
-            UTIL_DMLService.updateRecords(householdsNeedingUpdates);
-        }
+        List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
+        Map<Id, List<Contact>> membersByHouseholdId =
+                getHouseholdMembersByHouseholdId(householdOrAccountIds);
+        setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
+        setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
+        save(householdsOrAccounts);
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+    }
+
+    private void save(List<SObject> householdsOrAccounts) {
+        if (!householdsOrAccounts.isEmpty()) {
+            // all or nothing, so errors not lost
+            UTIL_DMLService.updateRecords(householdsOrAccounts);
+        }
+    }
+
+    private void setNumberOfHouseholdMembers(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
+        for (SObject household : householdsOrAccounts) {
+            List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
+            household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
+                    householdMembers != null ? householdMembers.size() : 0);
+        }
+    }
+
+    private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
+        for (SObject household : householdsOrAccounts) {
+            List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
+            if (settings.isAdvancedHouseholdNaming()) {
+                new HouseholdName(household, householdMembers)
+                        .setNameFieldValuesOnHousehold();
+            }
+        }
     }
 
     private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
@@ -124,10 +134,9 @@ public without sharing class HH_HouseholdNaming {
         return listHHObj;
     }
 
-    private List<Contact> getContactsForHousehold(SObject household, Map<Id, List<Contact>> hhIDContactMap) {
+    private Id idFor(SObject household) {
         Id hhId = String.valueOf(household.get('Id'));
-        List<Contact> listCon = hhIDContactMap.get(hhId);
-        return listCon;
+        return hhId;
     }
 
     private Map<Id, List<Contact>> householdMembersByHouseholdId(List<Contact> contacts) {
@@ -366,7 +375,7 @@ public without sharing class HH_HouseholdNaming {
 
         if (shouldBeRenamedSynchronously(accountIds)) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
-            hhName.updateHouseholdNames(accountIds);
+            hhName.updateHouseholdNameAndMemberCount(accountIds);
         } else {
             HH_HouseholdNaming.updateHouseholdNamesAsynchronously(accountIds);
         }
