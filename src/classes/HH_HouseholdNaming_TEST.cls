@@ -632,19 +632,19 @@ public class HH_HouseholdNaming_TEST {
         HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
 
         List<Id> hhIds = null;
-        List<Contact> contacts = hhNaming.getHouseholdContacts(hhIds);
+        List<Contact> contacts = hhNaming.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for null Id list argument: ' + contacts);
 
         hhIds = new List<Id>();
-        contacts = hhNaming.getHouseholdContacts(hhIds);
+        contacts = hhNaming.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for empty Id list arg: ' + contacts);
 
         hhIds.add(null);
-        contacts = hhNaming.getHouseholdContacts(hhIds);
+        contacts = hhNaming.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
 
         hhIds.add(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
-        contacts = hhNaming.getHouseholdContacts(hhIds);
+        contacts = hhNaming.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for Account without Contacts: ' + contacts);
     }
 
@@ -698,7 +698,7 @@ public class HH_HouseholdNaming_TEST {
         // their Household/Account is provided in the input Id list
         List<Id> hhIds = new List<Id>{ accounts[0].Id, hhs[0].Id, null };
 
-        List<Contact> hhContacts = hhNaming.getHouseholdContacts(hhIds);
+        List<Contact> hhContacts = hhNaming.householdMembersFor(hhIds);
 
         Set<Id> hhContactIds = new Map<Id, Contact>(hhContacts).keySet();
         Set<Id> expectedContactIds = new Set<Id>{ contacts[0].Id, contacts[1].Id };

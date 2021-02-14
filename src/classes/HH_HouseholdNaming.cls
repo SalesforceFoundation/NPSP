@@ -70,8 +70,8 @@ public without sharing class HH_HouseholdNaming {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
         // handle two types of households by using an SObject
-        List<SObject> householdsNeedingUpdates = getHouseholdsNeedingUpdates(hhids);
-        Map<Id, List<Contact>> hhIdToContactsMap = getHhIDContactMap(hhids);
+        List<SObject> householdsNeedingUpdates = householdsOrAccountsFor(hhids);
+        Map<Id, List<Contact>> hhIdToContactsMap = getHouseholdMembersByHouseholdId(hhids);
 
         //loop through the households needing name changes, if necessary, make them.
         for (SObject household : householdsNeedingUpdates) {
@@ -95,18 +95,18 @@ public without sharing class HH_HouseholdNaming {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
-    private Map<Id, List<Contact>> getHhIDContactMap(List<Id> hhids) {
-        return getHhIDContactMap(getHouseholdContacts(hhids));
+    private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
+        return householdMembersByHouseholdId(householdMembersFor(householdOrAccountIds));
     }
 
-    private List<SObject> getHouseholdsNeedingUpdates(List<Id> hhids) {
+    private List<SObject> householdsOrAccountsFor(List<Id> householdOrAccountIds) {
         List<SObject> hhupdatelist = new List<SObject>();
-        hhupdatelist.addAll(getListHHObj(hhids));
-        hhupdatelist.addAll(getListHHAcct(hhids));
+        hhupdatelist.addAll(householdsFor(householdOrAccountIds));
+        hhupdatelist.addAll(accountsFor(householdOrAccountIds));
         return hhupdatelist;
     }
 
-    private List<SObject> getListHHAcct(List<Id> hhids) {
+    private List<SObject> accountsFor(List<Id> hhids) {
         List<SObject> listHHAcct = [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
                 FROM Account
@@ -115,7 +115,7 @@ public without sharing class HH_HouseholdNaming {
         return listHHAcct;
     }
 
-    private List<SObject> getListHHObj(List<Id> hhids) {
+    private List<SObject> householdsFor(List<Id> hhids) {
         List<SObject> listHHObj = [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
                 FROM Npo02__Household__c
@@ -130,7 +130,7 @@ public without sharing class HH_HouseholdNaming {
         return listCon;
     }
 
-    private Map<Id, List<Contact>> getHhIDContactMap(List<Contact> contacts) {
+    private Map<Id, List<Contact>> householdMembersByHouseholdId(List<Contact> contacts) {
         Map<Id, List<Contact>> hhIDContactMap = new Map<Id, List<Contact>>();
         for (Contact con : contacts) {
             if (!hhIDContactMap.containskey(con.hhId__c)) {
@@ -148,28 +148,30 @@ public without sharing class HH_HouseholdNaming {
     /*******************************************************************************************************
     * @description Returns Contacts for specified Accounts or Households.
     * Private Contacts or records not belonging to the specified Accounts/Households are not selected.
-    * @param hhIds The list of Household Id's (either Household__c or Account Id's)
+    * @param householdOrAccountIds The list of Household Id's (either Household__c or Account Id's)
     * @return List<Contact>
     */
     @TestVisible
-    private List<Contact> getHouseholdContacts(List<Id> hhIds) {
-        Set<Id> queryHHIds = hhIds == null ? new Set<Id>() : new Set<Id>(hhIds);
+    private List<Contact> householdMembersFor(List<Id> householdOrAccountIds) {
+        Set<Id> queryHHIds = householdOrAccountIds == null ? new Set<Id>() : new Set<Id>(householdOrAccountIds);
         queryHHIds.remove(null);
 
         if (queryHHIds.isEmpty()) {
             return new List<Contact>();
         }
 
+        return Database.Query(householdMembersQueryFor(queryHHIds));
+    }
+
+    private String householdMembersQueryFor(Set<Id> queryHHIds) {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
         String strSoql = strContactSelectStmtAllNamingFields;
         String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-
         strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
                 ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
-
-        return Database.Query(strSoql);
+        return strSoql;
     }
 
 
@@ -332,7 +334,7 @@ public without sharing class HH_HouseholdNaming {
             ids.add(sobj.Id);
         }
         Map<Id, List<Contact>> contactsByHouseholdId =
-                getHhIDContactMap(ids);
+                getHouseholdMembersByHouseholdId(ids);
 
         for (SObject household : records) {
             SObject oldRecord = oldMap.get(household.Id);
