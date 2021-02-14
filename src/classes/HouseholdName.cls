@@ -37,7 +37,7 @@ public inherited sharing class HouseholdName {
     private SObject household;
     private SObject oldRecord;
     private Contacts contacts;
-    private CustomFormat customFormat;
+    private HouseholdCustomNamingString customNamingString;
     private HH_INaming service;
     private HouseholdSettings settings;
     private String nameReplacementText = System.Label.npo02.NameReplacementText;
@@ -59,35 +59,39 @@ public inherited sharing class HouseholdName {
                 new Contacts(new List<Contact>()) : new Contacts(contacts);
         this.service = service == null ? new HH_NameSpec() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
-        this.customFormat = new CustomFormat(household);
+        this.customNamingString = new HouseholdCustomNamingString(customNamingStringFor(household));
     }
 
-    public String customNameString {
-        get {
-            return customFormat.value;
-        }
+    private String customNamingStringFor(SObject household) {
+        return (String) household.get
+                ('npo02__SYSTEM_CUSTOM_NAMING__c');
+    }
+
+    public String getCustomNamingString() {
+        processHouseholdNamingReplacements();
+        return this.customNamingString.value;
     }
 
     public void processHouseholdNamingReplacements() {
         if (isNameReplaceable()) {
-            customFormat.removeName();
+            customNamingString.removeName();
             replaceHouseholdName();
         } else if (isNameChanged()) {
-            customFormat.appendName();
+            customNamingString.appendName();
         }
 
         if (isInformalGreetingReplaceable()) {
-            customFormat.removeInformalGreeting();
+            customNamingString.removeInformalGreeting();
             replaceHouseholdInformalGreeting();
         } else if (isInformalGreetingChanged()) {
-            customFormat.appendInformalGreeting();
+            customNamingString.appendInformalGreeting();
         }
 
         if (isFormalGreetingReplaceable()) {
-            customFormat.removeFormalGreeting();
+            customNamingString.removeFormalGreeting();
             replaceHouseholdFormalGreeting();
         } else if (isFormalGreetingChanged()) {
-            customFormat.appendFormalGreeting();
+            customNamingString.appendFormalGreeting();
         }
     }
 
@@ -128,13 +132,13 @@ public inherited sharing class HouseholdName {
     }
 
     public void setNameFieldValuesOnHousehold() {
-        if (!customFormat.contains('Name')) {
+        if (!customNamingString.contains('Name')) {
             household.put('Name', getHHName());
         }
-        if (!customFormat.contains('Formal_Greeting__c')) {
+        if (!customNamingString.contains('Formal_Greeting__c')) {
             household.put('npo02__Formal_Greeting__c', getFormalName());
         }
-        if (!customFormat.contains('Informal_Greeting__c')) {
+        if (!customNamingString.contains('Informal_Greeting__c')) {
             household.put('npo02__Informal_Greeting__c', getInformalName());
         }
     }
@@ -207,7 +211,7 @@ public inherited sharing class HouseholdName {
         return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText;
     }
 
-    private class CustomFormat {
+    private class HouseholdCustomNamingString {
         String value { get; private set; }
         Set<String> customNameSet {
             get {
@@ -216,13 +220,9 @@ public inherited sharing class HouseholdName {
                                 value.split(';')));
             }
         }
-        public CustomFormat(SObject h) {
-            this.value = getCustomName(h);
-        }
 
-        private String getCustomName(SObject h) {
-            return h.get('npo02__SYSTEM_CUSTOM_NAMING__c') == null ? ';' :
-                    h.get('npo02__SYSTEM_CUSTOM_NAMING__c') + ';';
+        public HouseholdCustomNamingString(String str) {
+            this.value = str == null ? ';' : str + ';';
         }
 
         public void replace(String searchVal, String newVal) {

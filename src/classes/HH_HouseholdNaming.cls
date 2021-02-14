@@ -348,8 +348,8 @@ public without sharing class HH_HouseholdNaming {
             SObject oldRecord = oldMap.get(household.Id);
             HouseholdName householdName = new HouseholdName(household, oldRecord,
                     contactsByHouseholdId.get(household.Id), namingService);
-            householdName.processHouseholdNamingReplacements();
-            household.put('npo02__SYSTEM_CUSTOM_NAMING__c', householdName.customNameString);
+            household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
+                    householdName.getCustomNamingString());
         }
     }
 
