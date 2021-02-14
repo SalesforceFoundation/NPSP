@@ -135,8 +135,7 @@ public without sharing class HH_HouseholdNaming {
     }
 
     private Id idFor(SObject household) {
-        Id hhId = String.valueOf(household.get('Id'));
-        return hhId;
+        return String.valueOf(household.get('Id'));
     }
 
     private Map<Id, List<Contact>> householdMembersByHouseholdId(List<Contact> contacts) {
