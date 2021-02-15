@@ -68,30 +68,43 @@ public inherited sharing class HouseholdName {
     }
 
     public String getCustomNamingString() {
-        processHouseholdNamingReplacements();
-        return this.customNamingString.value;
+        processHouseholdCustomNamingStringAdjustments();
+        return this.customNamingString.value();
     }
 
-    public void processHouseholdNamingReplacements() {
+    public void processHouseholdCustomNamingStringAdjustments() {
         if (isNameReplaceable()) {
             customNamingString.removeName();
-            replaceHouseholdName();
         } else if (isNameChanged()) {
             customNamingString.appendName();
         }
 
         if (isInformalGreetingReplaceable()) {
             customNamingString.removeInformalGreeting();
-            replaceHouseholdInformalGreeting();
         } else if (isInformalGreetingChanged()) {
             customNamingString.appendInformalGreeting();
         }
 
         if (isFormalGreetingReplaceable()) {
             customNamingString.removeFormalGreeting();
-            replaceHouseholdFormalGreeting();
         } else if (isFormalGreetingChanged()) {
             customNamingString.appendFormalGreeting();
+        }
+
+        setGreetingFieldsToReplacementValue();
+    }
+
+    private void setGreetingFieldsToReplacementValue() {
+        if (isNameReplaceable()) {
+            replaceHouseholdName();
+        }
+
+        if (isInformalGreetingReplaceable()) {
+            replaceHouseholdInformalGreeting();
+        }
+
+        if (isFormalGreetingReplaceable()) {
+            replaceHouseholdFormalGreeting();
         }
     }
 
@@ -211,58 +224,7 @@ public inherited sharing class HouseholdName {
         return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText;
     }
 
-    private class HouseholdCustomNamingString {
-        String value { get; private set; }
-        Set<String> customNameSet {
-            get {
-                return new Set<String>(
-                        new List<String>(
-                                value.split(';')));
-            }
-        }
-
-        public HouseholdCustomNamingString(String str) {
-            this.value = str == null ? ';' : str + ';';
-        }
-
-        public void replace(String searchVal, String newVal) {
-            if (customNameSet.contains(searchVal)) {
-                value = value.replace(searchVal, newVal);
-            }
-        }
-
-        public void append(String val) {
-            if (!customNameSet.contains(val)) {
-                value += val + ';';
-            }
-        }
-
-        public Boolean contains(String val) {
-            return customNameSet.contains(val);
-        }
-
-        public void removeName() {
-            replace('Name;', ';');
-        }
-
-        public void removeFormalGreeting() {
-            replace('Formal_Greeting__c;', ';');
-        }
-
-        public void removeInformalGreeting() {
-            replace('Informal_Greeting__c;', ';');
-        }
-
-        public void appendFormalGreeting() {
-            append('Formal_Greeting__c');
-        }
-
-        public void appendInformalGreeting() {
-            append('Informal_Greeting__c');
-        }
-
-        public void appendName() {
-            append('Name');
-        }
+    public void setCustomNamingStringValue() {
+        household.put('npo02__SYSTEM_CUSTOM_NAMING__c', getCustomNamingString());
     }
 }
