@@ -37,8 +37,20 @@
 */
 public without sharing class HH_HouseholdNaming {
 
-    HouseholdSettings settings = new HouseholdSettings();
-    String nameReplacementText = System.Label.npo02.NameReplacementText;
+    private HouseholdSettings settings = new HouseholdSettings();
+    private String nameReplacementText = System.Label.npo02.NameReplacementText;
+
+    /*******************************************************************************************************
+    * @description turns off household naming in the current execution context.  provided for other
+    * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
+    * direct way to do that by disabling TDTM trigger handlers, or using existing static flags.
+    * @param disable True to disable, False to enable
+    * @return void
+    */
+    private static Boolean isHouseholdNamingDisabled = false;
+    public static void disableHouseholdNaming(Boolean disable) {
+        isHouseholdNamingDisabled = disable;
+    }
 
     /*******************************************************************************************************
     * @description future method to update the household names for the specified households
@@ -82,7 +94,6 @@ public without sharing class HH_HouseholdNaming {
 
     private void save(List<SObject> householdsOrAccounts) {
         if (!householdsOrAccounts.isEmpty()) {
-            // all or nothing, so errors not lost
             UTIL_DMLService.updateRecords(householdsOrAccounts);
         }
     }
@@ -181,19 +192,6 @@ public without sharing class HH_HouseholdNaming {
                 ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
         return strSoql;
     }
-
-
-    /*******************************************************************************************************
-    * @description turns off household naming in the current execution context.  provided for other
-    * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
-    * direct way to do that by disabling TDTM trigger handlers, or using existing static flags.
-    * @param disable True to disable, False to enable
-    * @return void
-    */
-    public static void disableHouseholdNaming(Boolean disable) {
-        isHouseholdNamingDisabled = disable;
-    }
-    private static Boolean isHouseholdNamingDisabled = false;
 
     /*******************************************************************************************************
     * @description Returns Contact fields specified in the Household Naming Settings format fields.
