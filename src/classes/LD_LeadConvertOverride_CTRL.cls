@@ -467,7 +467,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
                        hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
                         Contacts contacts = new Contacts(new list<Contact>{con});
-                        contacts.insertHouseholdsAfterInsert(new list<Contact>{con});
+                        contacts.onAfterInsert();
                         UTIL_DMLService.updateRecord(con);
                     }
                 }

@@ -81,7 +81,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             }
             when AfterUpdate {
                 Contacts contacts = new Contacts(contacts, oldContacts);
-                contacts.handleAfterUpdate(dmlWrapper);
+                contacts.handleAfterUpdate();
             }
         }
         return dmlWrapper;
