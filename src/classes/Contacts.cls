@@ -44,7 +44,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private final String RECORD_TYPE_ID = 'RecordTypeId';
     private List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
     private List<Contact> contactEvaluations = new List<Contact>();
-    private Set<Id> mergedWinningContact = new Set<Id>();
     private Set<String> householdNamingFieldsInUse;
 
     public Contacts(List<Contact> records) {
@@ -491,17 +490,20 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void rollupAndRenameHouseholdsAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        buildMergedContactCollections();
-
-        if (mergedWinningContact.size() > 0) {
-            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
-        }
+        fireRollupsForMergedContacts();
 
         List<Contact> contactsInHouseholds = contactsInHouseholds();
         if (contactsInHouseholds.size() > 0) {
             deleteOrRenameHouseholdsWhenContactDeleted(
                     contactsInHouseholds, dmlWrapper);
+        }
+    }
+
+    private void fireRollupsForMergedContacts() {
+        Set<Id> mergedWinningContact = getMergedWinningContactIds();
+        if (mergedWinningContact.size() > 0) {
+            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
+            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
         }
     }
 
@@ -594,13 +596,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private void buildMergedContactCollections() {
-        contactsInHouseholds();
+    private Set<Id> getMergedWinningContactIds() {
+        Set<Id> mergedWinningContactIds = new Set<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (isLosingRecordInMergeOperation(con)) {
-                mergedWinningContact.add(con.MasterRecordId);
+                mergedWinningContactIds.add(con.MasterRecordId);
             }
         }
+        return mergedWinningContactIds;
     }
 
     private List<Contact> contactsInHouseholds() {
@@ -665,24 +668,27 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @return void
     ********************************************************************************************************/
     public void deleteOrRenameHouseholdsWhenContactDeleted(List<Contact> cons, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<SObject> householdDeletes = new List<SObject>();
-        List<id> contactsNeedingHouseholdsRenamed = new List<id>();
-
+        List<SObject> householdsToDelete = new List<SObject>();
         Map<Id, Integer> householdCountMap = getHouseholdCountMap(cons);
         for (Contact con : cons) {
             if (householdIsEmpty(householdCountMap, con)) {
-                householdDeletes.add(new npo02__Household__c(Id = householdIdFor(con)));
-            } else {
-                contactsNeedingHouseholdsRenamed.add(householdIdFor(con));
+                householdsToDelete.add(new npo02__Household__c(Id = householdIdFor(con)));
             }
         }
 
-        if (householdDeletes.size() > 0) {
-            dmlWrapper.objectsToDelete.addAll(householdDeletes);
+        if (householdsToDelete.size() > 0) {
+            dmlWrapper.objectsToDelete.addAll(householdsToDelete);
         }
 
-        if (contactsNeedingHouseholdsRenamed.size() > 0) {
-            updateHouseholdNames(contactsNeedingHouseholdsRenamed);
+        List<id> householdIdsNeedingNameUpdates = new List<id>();
+        for (Contact con : cons) {
+            if (!householdIsEmpty(householdCountMap, con)) {
+                householdIdsNeedingNameUpdates.add(householdIdFor(con));
+            }
+        }
+
+        if (householdIdsNeedingNameUpdates.size() > 0) {
+            updateHouseholdNames(householdIdsNeedingNameUpdates);
         }
     }
 
