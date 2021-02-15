@@ -35,7 +35,6 @@
 public inherited sharing class Accounts extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
-    private List<Account> householdAccounts = new List<Account>();
 
     private HH_HouseholdNaming householdNamingService;
     private HouseholdSettings settings;
@@ -81,18 +80,16 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     private void setHouseholdNameFields() {
-        buildHouseholdAccountLists();
-        householdNamingService.setHouseholdNameFields(householdAccounts, oldMap);
+        householdNamingService.setHouseholdNameFields(householdAccounts(), oldMap);
     }
 
     private void renameHouseholdsNeedingNameUpdates() {
-        buildHouseholdAccountLists();
         householdNamingService.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
         return householdNamingService.getHouseholdsNeedingNameUpdates(
-                householdAccounts, oldMap
+                householdAccounts(), oldMap
         );
     }
 
@@ -159,20 +156,15 @@ public inherited sharing class Accounts extends fflib_SObjects {
         return acc.npe01__SYSTEM_AccountType__c == null;
     }
 
-    private void buildHouseholdAccountLists() {
-        for (Account account : (List<Account>) getRecords()) {
-            if (isHouseholdAccountType(account)) {
-                householdAccounts.add(account);
-            }
-        }
+    private List<Account> householdAccounts() {
+        return (List<Account>) selectByFieldValue(
+                Account.npe01__SYSTEM_AccountType__c,
+                CAO_Constants.HH_ACCOUNT_TYPE)
+                .getRecords();
     }
 
     private Account oldVersionOf(Account acc) {
         return oldMap.get(acc.Id);
-    }
-
-    private Boolean isHouseholdAccountType(Account acc) {
-        return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private Boolean isOneToOneAccount(Account acc) {
