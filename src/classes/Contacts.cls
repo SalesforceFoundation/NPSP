@@ -43,7 +43,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Map<Id, Integer> oldHouseholdSizeById = new Map<Id, Integer>();
     private final String RECORD_TYPE_ID = 'RecordTypeId';
     private List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
-    private List<Contact> deletedContactsInHouseholds = new List<Contact>();
     private List<Contact> contactEvaluations = new List<Contact>();
     private Set<Id> mergedWinningContact = new Set<Id>();
     private Set<String> householdNamingFieldsInUse;
@@ -275,7 +274,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isInformalGreetingExcluded();
     }
 
-    private static String namingExclusionsFor(Contact con) {
+    private String namingExclusionsFor(Contact con) {
         return con.npo02__Naming_Exclusions__c;
     }
 
@@ -414,7 +413,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         household.npo02__HouseholdEmail__c = con.Email;
     }
 
-    private static String getDefaultHouseholdName(Contact con) {
+    private String getDefaultHouseholdName(Contact con) {
         String hName = con.LastName;
         return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
     }
@@ -492,16 +491,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void rollupAndRenameHouseholdsAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        buildDeletedAndMergedContactCollections();
+        buildMergedContactCollections();
 
         if (mergedWinningContact.size() > 0) {
             // this fires off opp rollups, which we aren't going to move to dmlWrapper!
             rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
         }
 
-        if (deletedContactsInHouseholds.size() > 0) {
+        List<Contact> contactsInHouseholds = contactsInHouseholds();
+        if (contactsInHouseholds.size() > 0) {
             deleteOrRenameHouseholdsWhenContactDeleted(
-                    deletedContactsInHouseholds, dmlWrapper);
+                    contactsInHouseholds, dmlWrapper);
         }
     }
 
@@ -594,16 +594,23 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private void buildDeletedAndMergedContactCollections() {
+    private void buildMergedContactCollections() {
+        contactsInHouseholds();
         for (Contact con : (List<Contact>) getRecords()) {
-            if (householdIdFor(con) != null) {
-                deletedContactsInHouseholds.add(con);
-            }
-
             if (isLosingRecordInMergeOperation(con)) {
                 mergedWinningContact.add(con.MasterRecordId);
             }
         }
+    }
+
+    private List<Contact> contactsInHouseholds() {
+        List<Contact> consInHouseholds = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (householdIdFor(con) != null) {
+                consInHouseholds.add(con);
+            }
+        }
+        return consInHouseholds;
     }
 
     private Boolean isLosingRecordInMergeOperation(Contact con) {
