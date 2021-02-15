@@ -77,7 +77,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             }
             when AfterDelete {
                 Contacts contacts = new Contacts(oldContacts);
-                contacts.rollupAndRenameHouseholdsAfterDelete(dmlWrapper);
+                contacts.onAfterDelete();
             }
             when AfterUpdate {
                 Contacts contacts = new Contacts(contacts, oldContacts);

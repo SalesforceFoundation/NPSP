@@ -489,13 +489,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return dmlWrapper;
     }
 
-    public void rollupAndRenameHouseholdsAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterDelete() {
         fireRollupsForMergedContacts();
-
         List<Contact> contactsInHouseholds = contactsInHouseholds();
-        if (contactsInHouseholds.size() > 0) {
-            deleteOrRenameHouseholdsWhenContactDeleted(
-                    contactsInHouseholds, dmlWrapper);
+        if (!contactsInHouseholds.isEmpty()) {
+            new ContactsInLegacyHouseholds(contactsInHouseholds, this.settings)
+                    .onAfterDelete();
         }
     }
 
@@ -657,65 +656,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Boolean rollupsShouldRunSynchronously() {
         return System.isFuture() || System.isBatch() || householdIdsNeedingRollup.size() <= 2;
-    }
-
-    /*******************************************************************************************************
-    * @description Deletes a Household object when no Contacts are related to it. Called by the AfterDelete
-    * trigger handler on Contact.  Also detects if other Contacts remain in the Household, and thus the
-    * Household needs its names updated.
-    * @param cons List of Contacts being deleted
-    * @param dmlWrapper On return, holds the Households to delete.
-    * @return void
-    ********************************************************************************************************/
-    public void deleteOrRenameHouseholdsWhenContactDeleted(List<Contact> cons, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<SObject> householdsToDelete = new List<SObject>();
-        Map<Id, Integer> householdCountMap = getHouseholdCountMap(cons);
-        for (Contact con : cons) {
-            if (householdIsEmpty(householdCountMap, con)) {
-                householdsToDelete.add(new npo02__Household__c(Id = householdIdFor(con)));
-            }
-        }
-
-        if (householdsToDelete.size() > 0) {
-            dmlWrapper.objectsToDelete.addAll(householdsToDelete);
-        }
-
-        List<id> householdIdsNeedingNameUpdates = new List<id>();
-        for (Contact con : cons) {
-            if (!householdIsEmpty(householdCountMap, con)) {
-                householdIdsNeedingNameUpdates.add(householdIdFor(con));
-            }
-        }
-
-        if (householdIdsNeedingNameUpdates.size() > 0) {
-            updateHouseholdNames(householdIdsNeedingNameUpdates);
-        }
-    }
-
-    private Boolean householdIsEmpty(Map<Id, Integer> householdCountMap, Contact con) {
-        return householdCountMap.get(householdIdFor(con)) < 1;
-    }
-
-    private List<Contact> getContactsWithHouseholdIds(Map<Id, Integer> householdCountMap) {
-        return [
-                SELECT Id, npo02__Household__c
-                FROM Contact
-                WHERE npo02__Household__c IN :householdCountMap.keyset()
-        ];
-    }
-
-    private Map<Id, Integer> getHouseholdCountMap(List<Contact> contacts) {
-        Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
-        for (Contact con : contacts) {
-            if (householdIdFor(con) != null)
-                householdCountMap.put(householdIdFor(con), 0);
-        }
-        for (Contact con : getContactsWithHouseholdIds(householdCountMap)) {
-            Integer lastCount = householdCountMap.get(householdIdFor(con));
-            lastCount += 1;
-            householdCountMap.put(householdIdFor(con), lastCount);
-        }
-        return householdCountMap;
     }
 
     /*******************************************************************************************************
