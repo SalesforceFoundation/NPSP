@@ -268,7 +268,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 || isExcludedFromFormalGreeting(con);
     }
 
-    private static void synchronizeNamingExclusionStringToCheckboxes(
+    private void synchronizeNamingExclusionStringToCheckboxes(
             HouseholdNamingExclusions exclusions, Contact con) {
         con.Exclude_from_Household_Name__c = exclusions.isNameExcluded();
         con.Exclude_from_Household_Formal_Greeting__c = exclusions.isFormalGreetingExcluded();
