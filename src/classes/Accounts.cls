@@ -35,7 +35,6 @@
 public inherited sharing class Accounts extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
-
     private HH_HouseholdNaming householdNamingService;
     private HouseholdSettings settings;
 
