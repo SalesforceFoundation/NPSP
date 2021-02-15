@@ -36,8 +36,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private HouseholdSettings settings;
     private Map<Id, Contact> oldMap;
-    private List<Contact> contactsInHouseholds;
-    private Set<String> householdNamingFieldsInUse;
     private final String RECORD_TYPE_ID = 'RecordTypeId';
 
     public ContactsInLegacyHouseholds(List<Contact> records, HouseholdSettings settings) {
@@ -47,7 +45,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap,
             HouseholdSettings settings) {
         super(records, Contact.SObjectType);
-        this.contactsInHouseholds = records;
         this.oldMap = oldMap != null ?
                 new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
         this.settings = settings == null ? new HouseholdSettings() : settings;
@@ -539,14 +536,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Boolean isNamingFieldChanged(Contact con) {
-        if (householdNamingFieldsInUse == null) {
-            householdNamingFieldsInUse =
-                    new HH_HouseholdNaming().getHouseholdNamingContactFields();
-        }
-
         Boolean namingFieldChanged = false;
         if (hasHousehold(con)) {
-            for (String fieldName : householdNamingFieldsInUse) {
+            for (String fieldName : getHouseholdNamingFieldsInUse()) {
                 if (isFieldChanged(con, fieldName)) {
                     namingFieldChanged = true;
                     break;
@@ -554,6 +546,16 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             }
         }
         return namingFieldChanged;
+    }
+
+    private Set<String> householdNamingFieldsInUse;
+    private Set<String> getHouseholdNamingFieldsInUse() {
+        if (householdNamingFieldsInUse != null) {
+            return householdNamingFieldsInUse;
+        }
+        householdNamingFieldsInUse = new HH_HouseholdNaming()
+                .getHouseholdNamingContactFields();
+        return householdNamingFieldsInUse;
     }
 
     private Boolean isFieldChanged(Contact con, String fieldName) {
