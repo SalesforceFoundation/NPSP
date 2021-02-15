@@ -81,7 +81,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private void updateOldHouseholdNames(List<Contact> cons, Map<Id, Integer> householdCountMap) {
         List<Id> nonEmptyHouseholdIds = getNonEmptyHouseholdIds(cons, householdCountMap);
         if (nonEmptyHouseholdIds.size() > 0) {
-            updateHouseholdNames(nonEmptyHouseholdIds);
+            updateHouseholdNameAndMemberCount(nonEmptyHouseholdIds);
         }
     }
 
@@ -121,9 +121,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return con.npo02__Household__c;
     }
 
-    private void updateHouseholdNames(List<Id> contactsNeedingHouseholdNamesUpdated) {
+    private void updateHouseholdNameAndMemberCount(List<Id> contactsNeedingHouseholdNamesUpdated) {
         if (isFutureEligible()) {
-            HH_HouseholdNaming.updateHouseholdNamesAsynchronously(
+            HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(
                     contactsNeedingHouseholdNamesUpdated);
         } else {
             HH_HouseholdNaming hn = new HH_HouseholdNaming();
@@ -147,6 +147,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         delete getEmptyHouseholdsToDelete(contactsThatChangedHouseholds());
     }
 
+    private static Integer timesRun = 0;
     private void updateHouseholdNames() {
         List<Id> householdsNeedingNamesUpdated = new List<Id>();
         householdsNeedingNamesUpdated.addAll(
@@ -154,8 +155,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         householdsNeedingNamesUpdated.addAll(
                 getOldNonEmptyHouseholdIds());
         householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
-        if (householdsNeedingNamesUpdated.size() > 0) {
-            updateHouseholdNames(householdsNeedingNamesUpdated);
+        if (householdsNeedingNamesUpdated.size() > 0 && timesRun < 2) {
+            updateHouseholdNameAndMemberCount(householdsNeedingNamesUpdated);
+            timesRun++;
         }
     }
 
@@ -348,7 +350,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private void updateHouseholdsNamesForContactsInHouseholds() {
         List<Id> contactsThatHaveAHousehold = idsForContactsInHouseholds();
         if (contactsThatHaveAHousehold.size() > 0) {
-            updateHouseholdNames(contactsThatHaveAHousehold);
+            updateHouseholdNameAndMemberCount(contactsThatHaveAHousehold);
         }
     }
 
@@ -416,7 +418,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
         List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdated(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
-            updateHouseholdNames(householdIdsNeedingNamesUpdated);
+            updateHouseholdNameAndMemberCount(householdIdsNeedingNamesUpdated);
         }
     }
 

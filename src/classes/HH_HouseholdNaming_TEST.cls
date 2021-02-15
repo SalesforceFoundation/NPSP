@@ -134,7 +134,7 @@ public class HH_HouseholdNaming_TEST {
 
         //use future to prevent the before HH trigger from firing
         test.starttest();
-        HH_HouseholdNaming.updateHouseholdNamesAsynchronously(householdids);
+        HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(householdids);
         test.stoptest();
         //test a single member household, lastname, firstname, householdname:
         Contact con = [

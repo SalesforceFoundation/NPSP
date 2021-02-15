@@ -58,7 +58,7 @@ public without sharing class HH_HouseholdNaming {
     * @return void
     */
     @future
-    public static void updateHouseholdNamesAsynchronously(List<Id> hhids){
+    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
@@ -81,7 +81,6 @@ public without sharing class HH_HouseholdNaming {
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
-        // handle two types of households by using an SObject
         List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
         Map<Id, List<Contact>> membersByHouseholdId =
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
@@ -127,22 +126,30 @@ public without sharing class HH_HouseholdNaming {
         return hhupdatelist;
     }
 
+    private List<Account> accounts;
     private List<SObject> accountsFor(List<Id> hhids) {
-        List<SObject> listHHAcct = [
+        if (accounts != null) {
+            return accounts;
+        }
+        accounts = [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
                 FROM Account
                 WHERE Id IN :hhids
         ];
-        return listHHAcct;
+        return accounts;
     }
 
+    private List<npo02__Household__c> households;
     private List<SObject> householdsFor(List<Id> hhids) {
-        List<SObject> listHHObj = [
+        if (households != null) {
+            return households;
+        }
+        households = [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
                 FROM Npo02__Household__c
                 WHERE Id IN :hhids
         ];
-        return listHHObj;
+        return households;
     }
 
     private Id idFor(SObject household) {
@@ -369,15 +376,15 @@ public without sharing class HH_HouseholdNaming {
             return;
         }
 
-        if (shouldBeRenamedSynchronously(accountIds)) {
+        if (shouldProcessSynchronously(accountIds)) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.updateHouseholdNameAndMemberCount(accountIds);
         } else {
-            HH_HouseholdNaming.updateHouseholdNamesAsynchronously(accountIds);
+            HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(accountIds);
         }
     }
 
-    private static Boolean shouldBeRenamedSynchronously(List<Id> accountIds) {
+    private static Boolean shouldProcessSynchronously(List<Id> accountIds) {
         return accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
     }
 }
