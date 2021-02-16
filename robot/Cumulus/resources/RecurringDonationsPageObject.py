@@ -18,16 +18,10 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def wait_for_rd2_modal(self):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
-        self.builtin.sleep(3,"Wait Needed for now to wait for the new modal")
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
-        # The logic below is to support the inconsistent loading times of RD2 Modal window
-        for i in range(3):
-            if self.npsp.check_if_element_displayed(btnlocator):
-                return
-            else:
-                time.sleep(2)
-                i += 1
+        self.selenium.wait_until_page_contains_element(btnlocator,timeout=60,error="Recurring Donations Modal window did not open")
+        self.selenium.wait_until_element_is_visible(btnlocator,60)
     
     @capture_screenshot_on_error
     def click_rd2_modal_button(self, name):
