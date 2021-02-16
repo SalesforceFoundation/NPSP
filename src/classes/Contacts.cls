@@ -65,7 +65,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void onAfterInsert() {
         ContactsInLegacyHouseholds contactsInLegacyHouseholds =
                 new ContactsInLegacyHouseholds(
-                        getRecords(),
+                        contactsInHouseholds(),
                         this.settings
                 );
         contactsInLegacyHouseholds.onAfterInsert();
