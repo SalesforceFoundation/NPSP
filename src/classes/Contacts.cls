@@ -63,12 +63,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                new ContactsInLegacyHouseholds(
-                        contactsInHouseholds(),
-                        this.settings
-                );
-        contactsInLegacyHouseholds.onAfterInsert();
+        if (orgUsesLegacyHouseholds()) {
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
+                    new ContactsInLegacyHouseholds(
+                            getRecords(),
+                            this.settings
+                    );
+            contactsInLegacyHouseholds.onAfterInsert();
+        }
+    }
+
+    private Boolean orgUsesLegacyHouseholds() {
+        return settings.isAllProcessor() || settings.isAllIndividualsProcessor();
     }
 
     private Id householdIdFor(Contact con) {
