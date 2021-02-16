@@ -21,7 +21,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         self.builtin.sleep(3,"Wait Needed for now to wait for the new modal")
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
-        self.selenium.wait_until_element_is_visible(btnlocator,60)
+        # The logic below is to support the inconsistent loading times of RD2 Modal window
         for i in range(3):
             if self.npsp.check_if_element_displayed(btnlocator):
                 return
