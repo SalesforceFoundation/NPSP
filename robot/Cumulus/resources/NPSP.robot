@@ -615,9 +615,8 @@ Change Object Permissions
 
     ${addobjperms} =  Catenate  SEPARATOR=\n
     ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
-    ...  ObjectPermissions objperm;
-    ...  objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
-    ...  PermissionsDelete = true, ParentId = :permid, SobjectType='${ns}${objectapiname}');
+    ...  ObjectPermissions objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
+    ...  PermissionsDelete = true, ParentId = permid, SobjectType='${ns}${objectapiname}');
     ...  insert objperm;
 
     Run Keyword if  "${action}" == "remove"
