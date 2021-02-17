@@ -1,14 +1,13 @@
 {
-    "Username": "testinggeperms@sfdx.org",
-    "FirstName": "TestUser",
-    "LastName": "ForQE",
+    "FirstName": "PermsTestingUser",
+    "LastName": "ForGiftEntry",
     "Email": "testinggeperms@sfdx.org",
     "Alias": "permtest",
     "TimeZoneSidKey": "America/Los_Angeles",
     "LocaleSidKey": "en_US",
     "EmailEncodingKey": "UTF-8",
     "LanguageLocaleKey": "en_US",
-    "profileName": "SysAdminClone",
-    "permsets": ["QA", "Gift_Entry_Clone"],
+    "profileName": "Standard Platform User",
+    "permsets": ["QA", "Gift_Entry_Perms"],
     "generatePassword": true
 }

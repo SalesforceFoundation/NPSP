@@ -120,13 +120,9 @@
     </types>
     <types>
         <members>Gift_Entry</members>
-        <members>Gift_Entry_Clone</members>
+        <members>Gift_Entry_Perms</members>
         <members>QA</members>
         <name>PermissionSet</name>
     </types>
-    <types>
-        <members>SysAdminClone</members>
-        <name>Profile</name>
-    </types>    
     <version>50.0</version>
 </Package>

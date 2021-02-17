@@ -488,7 +488,7 @@ tasks:
                 User sunil = [SELECT Id FROM User WHERE LastName = 'Divani'];
                 sunil.IsActive = false;
                 update sunil;
-
+          
     dx:
         group: "Salesforce DX"
         description: "Calls a sfdx task with the cci Org User specified.  Enter the sfdx task with the command option"
