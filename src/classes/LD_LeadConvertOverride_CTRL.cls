@@ -425,7 +425,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
             // fix the account that lead conversion created
             if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
-                string strSoql = 'select id, firstname, lastname,';
+                string strSoql = 'select id, firstname, lastname, accountId,';
                 if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
                    strSoql += ' recordtypeId,';
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
