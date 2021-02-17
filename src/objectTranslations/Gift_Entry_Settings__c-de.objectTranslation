@@ -3,52 +3,52 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Spendeneintragseinstellungen</value>
     </caseValues>
     <fields>
-        <help>Dies ist eine Ausgangsvorlage, die für die Schenkungseingabe zur Eingabe einzelner Schenkungen oder Batches von Schenkungen verwendet wird. Dies ist die Standardvorlage für die Eingabe einzelner Schenkungen.</help>
-        <label>Standardvorlage für Schenkungseingabe</label>
+        <help>Dies ist eine Ausgangsvorlage, die für den Spendeneintrag zur Eingabe einzelner Spenden oder Batches von Spenden verwendet wird. Dies ist die Standardvorlage für die Eingabe einzelner Spenden.</help>
+        <label>Standardvorlage für Spendeneintrag</label>
         <name>Default_Gift_Entry_Template__c</name>
     </fields>
     <fields>
-        <help>Aktiviert das Schenkungseingabe-Tool. Für dieses Feature ist erweiterte Zuordnung erforderlich.</help>
-        <label>Schenkungseingabe aktivieren</label>
+        <help>Aktiviert das Spendeneintrags-Tool. Für dieses Feature ist erweiterte Zuordnung erforderlich.</help>
+        <label>Spendeneintrag aktivieren</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

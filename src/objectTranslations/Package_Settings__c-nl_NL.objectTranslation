@@ -2,16 +2,16 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Package Settings --></value>
+        <value>NPSP-pakketinstellingen</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Package Settings --></value>
+        <value>NPSP-pakketinstellingen</value>
     </caseValues>
     <fields>
         <help>De actieve pakketnaamruimteprefix voor NPSP. Niet handmatig bewerken.</help>
         <label>Naamruimteprefix</label>
         <name>Namespace_Prefix__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

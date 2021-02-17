@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließende Feld</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließende Feld</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Felds</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Feld</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Aus der Synchronisierung auszuschließenden Feldern</value>
     </caseValues>
-    <gender><!-- Neuter --></gender>
+    <gender>Neuter</gender>
 </CustomObjectTranslation>

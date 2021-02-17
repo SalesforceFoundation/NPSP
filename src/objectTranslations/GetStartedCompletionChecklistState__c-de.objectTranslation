@@ -3,52 +3,52 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
     </caseValues>
     <fields>
-        <label><!-- Item Id --></label>
+        <label>Element-ID</label>
         <name>Item_Id__c</name>
     </fields>
     <fields>
-        <label><!-- User --></label>
+        <label>Benutzer</label>
         <name>User__c</name>
         <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <nameFieldLabel><!-- Get Started Completion Checklist State N --></nameFieldLabel>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Statusname für die Abschluss-Checkliste der Seite &quot;Erste Schritte&quot;</nameFieldLabel>
 </CustomObjectTranslation>

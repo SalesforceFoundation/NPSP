@@ -5,6 +5,16 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help><!-- The Standard Entry Class (SEC) code used for this ACH transaction. --></help>
+        <label><!-- ACH Code --></label>
+        <name>ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help><!-- The last four digits of the bank account used for this transaction. --></help>
+        <label><!-- ACH Last 4 --></label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help><!-- The date and time the transaction was authorized. --></help>
         <label><!-- Authorized Date --></label>
         <name>Authorized_Date__c</name>
@@ -13,6 +23,11 @@
         <help><!-- The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized. --></help>
         <label><!-- Authorized UTC Timestamp --></label>
         <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help><!-- The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings. --></help>
+        <label><!-- Batch Number --></label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help><!-- The expiration month of the card used for this transaction. --></help>
@@ -43,6 +58,16 @@
         <help><!-- For refunds only. Shows the ID of the original payment transaction from Elevate. --></help>
         <label><!-- Elevate Original Payment ID --></label>
         <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Provides detail about why a transaction was declined. --></help>
+        <label><!-- Elevate Payment API Declined Reason --></label>
+        <name>Elevate_Payment_API_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API status value for this Elevate connected Payment record. --></help>
+        <label><!-- Elevate Payment API Status --></label>
+        <name>Elevate_Payment_API_Status__c</name>
     </fields>
     <fields>
         <help><!-- The date and time the transaction was created. --></help>
