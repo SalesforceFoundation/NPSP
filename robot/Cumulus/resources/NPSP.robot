@@ -629,28 +629,30 @@ Change Object Permissions
 
 Change Field Permissions
     [Documentation]  Allows the user to add or remove field permissions for the specified permission set.
-    [Arguments]  ${action}  ${fieldapiname}  ${permset}
+    [Arguments]  ${action}  ${objectapiname}  ${fieldapiname}  ${permset}
 
     ${ns} =  Get NPSP Namespace Prefix
 
-    ${removefieldperms} =  Catenate  SEPARATOR=/n
-    ...  FieldPermissions fldperm = [SELECT Id, PermissionsRead, PermissionsEdit FROM FieldPermissions 
+    ${removefieldperms} =  Catenate  SEPARATOR=\n
+    ...  FieldPermissions fldperm;
+    ...  fldperm = [SELECT Id, Field, PermissionsRead, PermissionsEdit FROM FieldPermissions 
     ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}')
-    ...  AND SobjectType='${ns}${fieldapiname}'];        
+    ...  AND SobjectType='${ns}${objectapiname}'
+    ...  AND Field='${ns}${objectapiname}.${ns}${fieldapiname}'];        
     ...  fldperm.PermissionsRead = false;
     ...  fldperm.PermissionsEdit = false;
     ...  update fldperm;
 
-    ${addfieldperms} =  Catenate  SEPARATOR=/n
+    ${addfieldperms} =  Catenate  SEPARATOR=\n
     ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
     ...  FieldPermissions fldperm = New FieldPermissions(PermissionsRead = true, PermissionsEdit = true,
-    ...  ParentId = permid, SobjectType='${ns}${fieldapiname}');
+    ...  ParentId = permid, Field = '${ns}${objectapiname}.${ns}${fieldapiname}', SobjectType='${ns}${objectapiname}');
     ...  insert fldperm;
 
     Run Keyword if  "${action}" == "remove"
     ...             Run Task  execute_anon
     ...             apex= ${removefieldperms}
 
-    Run Keyword if  ${action}==add
+    Run Keyword if  "${action}" == "add"
     ...             Run Task  execute_anon
     ...             apex= ${addfieldperms}
