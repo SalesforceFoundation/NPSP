@@ -221,9 +221,9 @@ public class HH_HouseholdNaming_TEST {
         newhhids.add(clist[clist.size() - 4].npo02__Household__r.id);
 
         //update our newly updated contact's households
-        HouseholdNamingService hn = new HouseholdNamingService();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
         test.startTest();
-        hn.updateHouseholdNameAndMemberCount(newhhids);
+        householdNamingService.updateHouseholdNameAndMemberCount(newhhids);
 
         test.stopTest();
     }
@@ -279,9 +279,9 @@ public class HH_HouseholdNaming_TEST {
 
         //test various re-orderings of names
 
-        HouseholdNamingService hn = new HouseholdNamingService();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
 
-        hn.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
+        householdNamingService.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -299,7 +299,7 @@ public class HH_HouseholdNaming_TEST {
         update con1;
         update con2;
 
-        hn.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
+        householdNamingService.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -314,7 +314,7 @@ public class HH_HouseholdNaming_TEST {
         update con0;
         update con1;
 
-        hn.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
+        householdNamingService.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
 
@@ -331,7 +331,7 @@ public class HH_HouseholdNaming_TEST {
         update con0;
         update con1;
 
-        hn.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
+        householdNamingService.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
         Test.stopTest();
 
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
@@ -386,11 +386,11 @@ public class HH_HouseholdNaming_TEST {
 
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
-        HouseholdNamingService hhNaming = new HouseholdNamingService();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
         // Specify null argument -> ensure records with null Account or Household do not have names updated
         List<Id> hhIds = new List<Id>{ contacts[0].AccountId, null };
 
-        hhNaming.updateHouseholdNameAndMemberCount(hhIds);
+        householdNamingService.updateHouseholdNameAndMemberCount(hhIds);
 
         actualContacts = getContactsOrderById();
 
@@ -490,7 +490,7 @@ public class HH_HouseholdNaming_TEST {
             '{!{!FirstName}}'
         );
 
-        String soql = new HouseholdNamingService().strContactSelectStmtAllNamingFields;
+        String soql = new HouseholdNamingService().getQueryForContactNamingFields();
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', // mandatory fields
@@ -526,7 +526,7 @@ public class HH_HouseholdNaming_TEST {
             '{!{!FirstName}}}'
         );
 
-        String soql = new HouseholdNamingService().strContactSelectStmtAllNamingFields;
+        String soql = new HouseholdNamingService().getQueryForContactNamingFields();
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c' // mandatory fields
@@ -629,22 +629,22 @@ public class HH_HouseholdNaming_TEST {
         // The private Contact should not be returned by the query
         insert new Contact(LastName = 'foo', npe01__Private__c = true);
 
-        HouseholdNamingService hhNaming = new HouseholdNamingService();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
 
         List<Id> hhIds = null;
-        List<Contact> contacts = hhNaming.householdMembersFor(hhIds);
+        List<Contact> contacts = householdNamingService.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for null Id list argument: ' + contacts);
 
         hhIds = new List<Id>();
-        contacts = hhNaming.householdMembersFor(hhIds);
+        contacts = householdNamingService.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for empty Id list arg: ' + contacts);
 
         hhIds.add(null);
-        contacts = hhNaming.householdMembersFor(hhIds);
+        contacts = householdNamingService.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
 
         hhIds.add(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
-        contacts = hhNaming.householdMembersFor(hhIds);
+        contacts = householdNamingService.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for Account without Contacts: ' + contacts);
     }
 
@@ -692,13 +692,13 @@ public class HH_HouseholdNaming_TEST {
             System.assertEquals(contacts[i].AccountId, actual.AccountId, 'Account should be unchanged: ' + actual);
         }
 
-        HouseholdNamingService hhNaming = new HouseholdNamingService();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
 
         // Provide null Id to ensure records with null Account/Household are not selected unless
         // their Household/Account is provided in the input Id list
         List<Id> hhIds = new List<Id>{ accounts[0].Id, hhs[0].Id, null };
 
-        List<Contact> hhContacts = hhNaming.householdMembersFor(hhIds);
+        List<Contact> hhContacts = householdNamingService.householdMembersFor(hhIds);
 
         Set<Id> hhContactIds = new Map<Id, Contact>(hhContacts).keySet();
         Set<Id> expectedContactIds = new Set<Id>{ contacts[0].Id, contacts[1].Id };

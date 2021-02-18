@@ -126,8 +126,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                     contactsNeedingHouseholdNamesUpdated);
         } else {
-            HouseholdNamingService hn = new HouseholdNamingService();
-            hn.updateHouseholdNameAndMemberCount(contactsNeedingHouseholdNamesUpdated);
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.updateHouseholdNameAndMemberCount(contactsNeedingHouseholdNamesUpdated);
         }
     }
 

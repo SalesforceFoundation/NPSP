@@ -60,8 +60,8 @@ public without sharing class HouseholdNamingService {
     public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-        HouseholdNamingService hn = new HouseholdNamingService();
-        hn.updateHouseholdNameAndMemberCount(hhids);
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
+        householdNamingService.updateHouseholdNameAndMemberCount(hhids);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
@@ -197,7 +197,7 @@ public without sharing class HouseholdNamingService {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        String strSoql = strContactSelectStmtAllNamingFields;
+        String strSoql = getQueryForContactNamingFields();
         String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
         strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
                 ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
@@ -257,25 +257,23 @@ public without sharing class HouseholdNamingService {
     * @description the soql select String to use which includes any fields we use or are referred to in
     * any of the naming specifications.
     */
+    private String queryForContactNamingFields;
     @TestVisible
-    private String strContactSelectStmtAllNamingFields {
-        get {
-            if (strContactSelectStmtAllNamingFields == null) {
-                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-                String[] selectFields = new String[]{
-                        'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
-                };
-                selectFields.addAll(getHouseholdNamingContactFields());
+    private String getQueryForContactNamingFields() {
+        if (queryForContactNamingFields == null) {
+            //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+            String[] selectFields = new String[]{
+                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
+            };
+            selectFields.addAll(getHouseholdNamingContactFields());
 
-                strContactSelectStmtAllNamingFields = new UTIL_Query()
-                        .withSelectFields(selectFields)
-                        .withToLabelSalutation()
-                        .withFrom('Contact')
-                        .build();
+            queryForContactNamingFields = new UTIL_Query()
+                    .withSelectFields(selectFields)
+                    .withToLabelSalutation()
+                    .withFrom('Contact')
+                    .build();
             }
-            return strContactSelectStmtAllNamingFields;
-        }
-        private set;
+        return queryForContactNamingFields;
     }
 
     private Boolean needsNamingFieldsUpdated(SObject household, SObject oldRecord) {
@@ -356,16 +354,6 @@ public without sharing class HouseholdNamingService {
         for (SObject household : records) {
             SObject oldRecord = oldMap.get(household.Id);
             setCustomNamingStringValue(household, oldRecord);
-            //todo: this isn't quite right
-//            List<Contact> householdMembers =
-//                    contactsByHouseholdId.get(idFor(household)) == null ?
-//                            new List<Contact>() :
-//                            contactsByHouseholdId.get(idFor(household));
-//            setNameFieldValuesOnHousehold(
-//                    household,
-//                    new HouseholdName(
-//                            new Contacts(householdMembers),
-//                            this.namingService));
         }
     }
 
@@ -389,8 +377,8 @@ public without sharing class HouseholdNamingService {
         }
 
         if (shouldProcessSynchronously(accountIds)) {
-            HouseholdNamingService hhName = new HouseholdNamingService();
-            hhName.updateHouseholdNameAndMemberCount(accountIds);
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.updateHouseholdNameAndMemberCount(accountIds);
         } else {
             HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(accountIds);
         }
@@ -417,7 +405,6 @@ public without sharing class HouseholdNamingService {
     public HouseholdCustomNamingString getCustomNamingString(SObject household, SObject oldRecord) {
         HouseholdCustomNamingString customNamingString = new HouseholdCustomNamingString
                 (customNamingStringFor(household));
-        //todo: just do this in constructor of HCNS?
         processHouseholdCustomNamingStringAdjustments(customNamingString, household, oldRecord);
         return customNamingString;
     }

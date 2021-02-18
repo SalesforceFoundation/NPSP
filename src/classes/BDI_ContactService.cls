@@ -126,8 +126,8 @@ public with sharing class BDI_ContactService {
             }
         }
         if (setHHId.size() > 0) {
-            HouseholdNamingService hn = new HouseholdNamingService();
-            hn.updateHouseholdNameAndMemberCount(new List<Id>(setHHId));
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.updateHouseholdNameAndMemberCount(new List<Id>(setHHId));
         }
     }
 

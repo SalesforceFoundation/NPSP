@@ -526,8 +526,8 @@ public with sharing class HH_Container_LCTRL {
                 return hh;
             }
 
-            HouseholdNamingService hhHouseholdNaming = new HouseholdNamingService();
-            hhHouseholdNaming.setNameFieldValuesOnHousehold(
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.setNameFieldValuesOnHousehold(
                     hh,
                     new HouseholdName(contacts));
 
