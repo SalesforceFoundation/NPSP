@@ -432,13 +432,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private List<npo02__Household__c> getHouseholdsForInsert(List<Contact> contacts) {
-        List<npo02__household__c> householdInserts_local = new List<npo02__household__c>();
+        List<npo02__household__c> households = new List<npo02__household__c>();
         for (Contact con : contacts) {
-            if (isExclusion(con)) {
-                householdInserts_local.add(getHouseholdForInsertFromContact(con));
+            if (shouldExcludeForNewHHAccount(con)) {
+                households.add(getHouseholdForInsertFromContact(con));
             }
         }
-        return householdInserts_local;
+        return households;
     }
 
     private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
@@ -463,7 +463,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
-    private Boolean isExclusion(Contact con) {
+    private Boolean shouldExcludeForNewHHAccount(Contact con) {
         return !isRecordTypesOnContacts()
                 || !settings.contactRecordTypesToExclude().contains(recordTypeIdFor(con));
     }
@@ -473,7 +473,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         List<Contact> contactsToBeUpdatedWithHouseholdId = new List<Contact>();
         Integer i = 0;
         for (Contact con : contacts) {
-            if (isExclusion(con)) {
+            if (shouldExcludeForNewHHAccount(con)) {
                 Database.SaveResult saveResult = householdSaveResults[i];
                 if (saveResult.isSuccess() == true) {
                     //write the new Household Ids to the Contacts
