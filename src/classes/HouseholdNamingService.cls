@@ -249,8 +249,11 @@ public without sharing class HouseholdNamingService {
         String strSoql = 'SELECT Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' FROM Contact WHERE ' +
                 UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' != NULL ';
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(strSoql, isActivation);
-        Integer batchSize = 200;
-        Id batchProcessId = database.executeBatch(batch, batchSize);
+        Id batchProcessId = database.executeBatch(batch, getBatchSize());
+    }
+
+    private static Integer getBatchSize() {
+        return 200;
     }
 
     /*******************************************************************************************************
