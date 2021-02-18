@@ -214,6 +214,27 @@
     <label>Date de début</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>Indique si ce Don récurrent est activement utilisé, temporairement suspendu ou fermé.</help>
+    <label>Statut</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Actif</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Écoulé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Fermé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Interrompu</translation>
+    </picklistValues>
+  </fields>
+  <fields>
     <name>npe03__Installment_Period__c</name>
     <help>La Période de versement et la Fréquence de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
     <label>Période de versement</label>

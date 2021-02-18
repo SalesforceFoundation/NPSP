@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Toewijzingsinstellingen</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Toewijzingsinstellingen</value>
     </caseValues>
     <fields>
         <help>Standaardtoewijzingen inschakelen creëert een Toewijzingsobject voor elke Opportunity. Hierdoor wordt rapportering over toewijzingen aan een standaard GAU mogelijk gemaakt, maar het gebruikt meer gegevensopslag.</help>
@@ -43,5 +43,5 @@
         <label>Fisc. Jaar voor Totaliseringen gebruiken</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

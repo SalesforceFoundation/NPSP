@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Paramètre de Saisie de don</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Paramètres de Saisie de don</value>
     </caseValues>
     <fields>
         <help>Modèle de départ utilisé pour la Saisie de dons, qui peut être utilisé pour saisir des dons uniques ou des lots de dons. Ce modèle est défini par défaut pour la saisie de don unique.</help>
@@ -18,6 +18,6 @@
         <label>Activer la saisie de dons</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

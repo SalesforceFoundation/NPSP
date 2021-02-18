@@ -2,40 +2,47 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Section de la liste de contrôle Premiers pas NPSP</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Sections de la liste de contrôle Premiers pas NPSP</value>
     </caseValues>
     <fields>
-        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
+        <help>Le nom d&apos;API de l&apos;étiquette Description d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+        <label>Nom de l&apos;étiquette de la description</label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
-        <label><!-- Page Type --></label>
+        <help>Le type de page Premier pas (Administrateur ou Utilisateur) dans lequel cette section est affichée.</help>
+        <label>Type de page</label>
         <name>Page_Type__c</name>
         <picklistValues>
             <masterLabel>Admin</masterLabel>
-            <translation><!-- Admin --></translation>
+            <translation>Administrateur</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>End User</masterLabel>
-            <translation><!-- End User --></translation>
+            <translation>Utilisateur</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The position of this section on the Get Started page. --></help>
-        <label><!-- Position --></label>
+        <help>L&apos;emplacement de cette section dans la page Premiers pas.</help>
+        <label>Position</label>
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Title Label Name --></label>
+        <help>Le nom d&apos;API de l&apos;étiquette Titre d&apos;un élément de section dans la page Premiers pas. Il doit correspondre à une étiquette importée dans le Composant Web Lightning gsLabelMapper.</help>
+        <label>Nom de l&apos;étiquette du titre</label>
         <name>Title_Label__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

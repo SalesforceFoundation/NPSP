@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help>El número de lote que creó esta oportunidad. Este campo se rellena automáticamente en base a su configuración de números de lote en Configuraciónd e NPSP.</help>
+        <label>Número de lote</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>Lote</label>
         <name>Batch__c</name>
         <relationshipLabel>Oportunidades</relationshipLabel>

@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Ebeneneinstellungen</value>
     </caseValues>
     <fields>
         <label>Startzeit letzter Auftrag: Account</label>
@@ -53,5 +53,5 @@
         <label>Ebenenzuweisung der Batch-Größe </label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

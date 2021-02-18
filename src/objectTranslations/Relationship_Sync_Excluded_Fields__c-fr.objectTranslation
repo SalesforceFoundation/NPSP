@@ -2,12 +2,12 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Champ à exclure de la synchronisation</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Fields to Exclude from Sync --></value>
+        <value>Champs à exclure de la synchronisation</value>
     </caseValues>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
