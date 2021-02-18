@@ -521,8 +521,8 @@ public with sharing class HH_Container_LCTRL {
             Contacts contacts = new Contacts(listCon);
             contacts.copyNamingExclusionsFromCheckboxes();
 
-            HouseholdSettings settings = new HouseholdSettings();
-            if (!settings.isAdvancedHouseholdNaming()) {
+            HouseholdSettings householdSettings = new HouseholdSettings();
+            if (!householdSettings.isAdvancedHouseholdNaming()) {
                 return hh;
             }
 
