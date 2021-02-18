@@ -218,6 +218,27 @@
     <label>Fecha efectiva</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>Indica si esta Donación recurrente está en uso activamente, suspendida temporalmente o cerrada.</help>
+    <label>Estado</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Activo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Transcurrido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Cerrado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>En pausa</translation>
+    </picklistValues>
+  </fields>
+  <fields>
     <name>npe03__Installment_Period__c</name>
     <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
     <label>Frecuencia</label>

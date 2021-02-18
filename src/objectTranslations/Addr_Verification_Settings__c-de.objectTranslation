@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Adressüberprüfungseinstellungen</value>
     </caseValues>
     <fields>
         <help>Für die Adressenüberprüfung verwendeter URL</help>
@@ -90,5 +90,5 @@
         <label>Endpunkt der Postleitzahlüberprüfung</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

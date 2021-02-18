@@ -537,7 +537,8 @@
         <name>CRLP_CreateRollupFiscalYearHelpText</name>
     </customLabels>
     <customLabels>
-        <label>Wählen Sie das Zielobjekt aus, um die verfügbaren Felder zu ermitteln. Wählen Sie dann das Zielfeld aus, in dem diese Informationen gemeinsam angezeigt werden sollen. Geben Sie auf jeden Fall eine detaillierte Beschreibung ein, die Ihnen (und anderen) dabei hilft, genau zu verstehen, was die Aufgabe dieses Rollups ist.</label>
+        <label>Wählen Sie das Zielobjekt aus, um die verfügbaren Felder zu ermitteln. Wählen Sie dann das Zielfeld aus, in dem diese Informationen gemeinsam angezeigt werden sollen. Geben Sie auf jeden Fall eine detaillierte Beschreibung ein, die Ihnen (und anderen) dabei hilft, genau zu verstehen, was die Aufgabe dieses Rollups ist.
+        </label>
         <name>CRLP_CreateRollupIntroHelpText</name>
     </customLabels>
     <customLabels>
@@ -679,6 +680,10 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <name>CallableApiJobScheduleInvalidClass</name>
+    </customLabels>
+    <customLabels>
         <label>{0} ist nicht implementiert.</label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -753,6 +758,10 @@
     <customLabels>
         <label>bis</label>
         <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehlerprotokoll</label>
+        <name>ERR_RecordLogTitle</name>
     </customLabels>
     <customLabels>
         <label>Salesforce ist auf diese NPSP-Fehler gestoßen. Weitere Informationen zu häufigen Fehlern finden Sie unter &quot;Fehlerbehebung im Nonprofit Success Pack&quot; auf dem Power of Us Hub. Wenn Sie sich nicht sicher sind, wie Sie die Fehler beheben können, veröffentlichen Sie eine Nachricht in der Nonprofit Success Pack-Gruppe: https://powerofus.force.com/HUB_NPSP_Group</label>
@@ -839,6 +848,10 @@
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
+        <label>Wenn &quot;Status &apos;unbefristet&apos;&quot; geschlossen und &quot;Zeitplantyp&quot; nicht aufgefüllt ist, muss die Anzahl der geplanten Ragen gleich 1 sein.</label>
+        <name>RD2_DataMigrationInvalidPlannedInstallments</name>
+    </customLabels>
+    <customLabels>
         <label>Bei monatlicher Ratenlaufzeit müssen Sie einen Wert für &quot;Tag des Monats&quot; eingeben.</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
@@ -851,12 +864,52 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Der Abbruch der wiederkehrenden Spenden wird verarbeitet</label>
+        <name>RD2_ElevateCancelInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Keine Zahlungsinformationen eingeben.</label>
+        <name>RD2_ElevateDisableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate ist für Ihre Salesforce-Organisation nicht aktiviert</label>
+        <name>RD2_ElevateDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie geben keine Zahlungsinformationen für die Verarbeitung durch Elevate ein.</label>
+        <name>RD2_ElevateDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Geben Sie alternativ die Zahlungsdetails jetzt ein.</label>
+        <name>RD2_ElevateEnableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate-Informationen</label>
+        <name>RD2_ElevateInformationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Keine Fehler</label>
+        <name>RD2_ElevateInformationStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label>Diese Funktionalität wird aktuell für wiederkehrende Spenden, die von Elevate-Zahlungsservices erstellt wurden, nicht unterstützt.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
+        <label>Ausstehender Elevate-Prozess</label>
+        <name>RD2_ElevatePendingStatus</name>
+    </customLabels>
+    <customLabels>
         <label>Wiederkehrende Spenden von Elevate-Zahlungsservices können in NPSP nicht geändert werden., außer durch den Benutzer der Elevate-Zahlungsserviceintegration.</label>
         <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie können den Status einer mit Elevate verbundenen wiederkehrenden Spende nicht bearbeiten, wenn der Status &quot;Geschlossen&quot; ist.</label>
+        <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>Eine wiederkehrende Elevate-Zahlung konnte nicht erstellt werden. Bitten Sie Ihren Systemadministrator um Unterstützung.</label>
+        <name>RD2_ElevateRecordCreateFailed</name>
     </customLabels>
     <customLabels>
         <label>Sie haben es fast geschafft! Sie müssen nur noch ein paar Dinge überprüfen...</label>
@@ -1041,6 +1094,10 @@
         <name>RD2_EnablementSimpleIntro</name>
     </customLabels>
     <customLabels>
+        <label>Das Enddatum für mit Elevate verbundene wiederkehrende Spenden kann nicht in der Zukunft liegen.</label>
+        <name>RD2_EndDateElevateCannotBeInFuture</name>
+    </customLabels>
+    <customLabels>
         <label>Das Enddatum muss nach dem Schlussdatum der letzten geschlossenen gewonnenen Opportunitiy liegen.</label>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
     </customLabels>
@@ -1113,6 +1170,27 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Es wurde eine wiederkehrende Zahlung in Elevate erstellt. Wiederholungs-ID in Elevate: {0}.
+        
+        Jedoch wurde keine entsprechende wiederkehrende Spende in NPSP erstellt, aufgrund des folgenden Fehlers:
+        ● {1}
+        
+        Sie können dieses Formular geöffnet lassen, den Fehler beheben und die wiederkehrende Spende erneut speichern. Brechen Sie alternativ den Vorgang ab, und bitten Sie Ihren Systemadministrator um Hilfe.</label>
+        <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Eine wiederkehrende Elevate-Zahlung wird erstellt... Dies kann ein paar Minuten dauern.</label>
+        <name>RD2_EntryFormSaveCommitmentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Kreditkarte wird geprüft...</label>
+        <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Die wiederkehrende Spende wird gespeichert...</label>
+        <name>RD2_EntryFormSaveRecurringDonationMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Alle</label>
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
@@ -1131,6 +1209,10 @@
     <customLabels>
         <label>Sie müssen Erweiterte wiederkehrende Spenden aktivieren, bevor Sie den Batch-Auftrag Erweiterte wiederkehrende Spenden ausführen können.</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehler beim Erstellen des Datensatzes für die wiederkehrende Spende. Es wurde keine Anforderung einer wiederkehrenden Zahlung an Elevate gesendet. Bitten Sie Ihren Systemadministrator um Hilfe.</label>
+        <name>RD2_ErrorRDIdIsMissingForCommitment</name>
     </customLabels>
     <customLabels>
         <label>Die Häufigkeit der Ratenzahlungen ist ein erforderlicher Wert. Geben Sie einen Wert zwischen 1 und 20 ein.</label>
@@ -1203,6 +1285,10 @@
     <customLabels>
         <label>Sie haben 1 Rate ausgewählt.</label>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP kann den Status und den Grund für den Status für aufgeschobene wiederkehrende Spenden nicht aktualisieren. Sie müssen dem Statusfeld den Wert &apos;Aufschub&apos; aus der Auswahlliste hinzufügen.</label>
+        <name>RD2_PauseStatusMustExist</name>
     </customLabels>
     <customLabels>
         <label>Grund für Aufschub</label>
@@ -1328,7 +1414,7 @@
         <name>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</name>
     </customLabels>
     <customLabels>
-        <label>Der kombinierte Betrag aus allen verwandten geschlossenen und gewonnenen und verpflichteten Opportunities muss dem Betrag einer wiederkehrende Spende mit fester Dauer entsprechen.</label>
+        <label>Der kombinierte Betrag aus allen verwandten geschlossenen und gewonnenen und zugesagten Opportunities muss dem Betrag einer wiederkehrende Spende mit fester Dauer entsprechen.</label>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
@@ -1489,12 +1575,12 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <name>accordionSection_ToggleInstructionsWhenOpen</name>
-        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist geöffnet.</label>
+        <label>Klicken, um diesen Abschnitt zu erweitern.</label>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
     </customLabels>
     <customLabels>
-        <name>accordionSection_ToggleInstructionsWhenClosed</name>
-        <label>Zum Umschalten des Abschnitts klicken. Dieser Abschnitt ist nicht geöffnet.</label>
+        <label>Klicken, um diesen Abschnitt zu schließen.</label>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
     </customLabels>
     <customLabels>
         <label>Ungültiger Aufruf. Diese Funktion ist der Salesforce-Nutzung vorbehalten.</label>
@@ -1707,15 +1793,82 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <label>Dieses Anzeigeformat wird bereits verwendet.</label>
+        <name>autoNumberErrorDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>Ungültiges Anzeigeformat.</label>
+        <name>autoNumberErrorInvalidDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Speichern und aktivieren</label>
+        <name>batchNumberSettingsActivate</name>
+    </customLabels>
+    <customLabels>
+        <label>Batch-Nummer konfigurieren</label>
+        <name>batchNumberSettingsConfigureHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Aktivieren oder Deaktivieren von Batch-Nummernformaten. Es kann zu jedem Zeitpunkt nur ein Batch-Nummernformat aktiv sein.</label>
+        <name>batchNumberSettingsDescActivation</name>
+    </customLabels>
+    <customLabels>
+        <label>Mithilfe des Anzeigeformats können Sie die Darstellung Ihres automatisch nummerierten Felds
+            steuern. Es muss eindeutig sein und die Anzahl der Stellen sowie auf Wunsch ein Präfix
+            enthalten. Ihr Format darf bis zu 30 Zeichen lang sein.&lt;/br&gt;&lt;/br&gt;
+            Beispiele&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            Eine als {0} formatierte Reihe mit der Anfangszahl 9 wird als 9, 10, 11 usw.
+            angezeigt.
+            &lt;/li&gt;
+            &lt;li&gt;
+            Eine als {00000} formatierte Reihe mit der Anfangszahl 9 wird als 00009,
+            00010, 00011 usw. angezeigt.
+
+            &lt;/li&gt;
+            &lt;li&gt;
+            Eine als ABC-{0000} formatierte Reihe mit er Anfangszahl 9 wird als 
+            ABC-0009, ABC-0010, ABC-0011 usw. angezeigt.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </label>
+        <name>batchNumberSettingsDescDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Batch-Nummern sind eindeutige Bezeichner, die im Spendeneintrag und im NPSP-Datenimport verwendet werden. Der automatisch nummerierte Wert wird in den Batch-Nummernfeldern für Opportunities und Zahlungen angezeigt.</label>
+        <name>batchNumberSettingsDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen Sie ein benutzerdefiniertes Batch-Nummernformat, und wählen Sie eine Anfangsnummer. Sie müssen das neue Batch-Nummernformat aktivieren. Es kann jederzeit nur jeweils ein Batch-Nummernformat aktiv sein. </label>
+        <name>batchNumberSettingsDescriptionCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>Das automatische Nummernformat kann nicht gespeichert werden. Überprüfen Sie die Fehler, und versuchen Sie es noch einmal.</label>
+        <name>batchNumberSettingsError</name>
+    </customLabels>
+    <customLabels>
+        <label>Einstellungen für Batch-Nummern</label>
+        <name>batchNumberSettingsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Anzeigeformaten.</label>
+        <name>batchNumberSettingsHeaderDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Batch-Nummernformate</label>
+        <name>batchNumberSettingsHeaderFormats</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Batch-Dateneingabe wird nicht unterstützt</label>
         <name>bdeRetirementBlockerHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt; auf dem Power of Us-Hub.</label>
         <name>bdeRetirementBlockerMessage</name>
     </customLabels>
     <customLabels>
-        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie die Schenkungseingabe vor dem 1. Oktober. Weitere Informationen zur Schenkungseingabe finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt; auf dem Power of Us-Hub.</label>
+        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt; auf dem Power of Us-Hub.</label>
         <name>bdeRetirementWarningBody</name>
     </customLabels>
     <customLabels>
@@ -1739,7 +1892,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiAdditionalObjRequiredFieldsNull</name>
     </customLabels>
     <customLabels>
-        <label>Erweiterte Zuordnung für Datenimport und Schenkungseintrag</label>
+        <label>Erweiterte Zuordnung für Datenimport und Spendeneintrag</label>
         <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
@@ -1955,7 +2108,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiErrorNonHHAccountContact</name>
     </customLabels>
     <customLabels>
-        <label>Dieser Kontakt entspricht mit einem vorhandenen Kontakt, der mit einem Nicht-Haushalt-, Nicht-Verwaltungs-Account verbunden ist. Das Schenkungseintragstool kann nur Kontakte aktualisieren, die Teil eines Haushalts- oder Verwaltungs-Accounts sind.</label>
+        <label>Dieser Kontakt entspricht einem vorhandenen Kontakt, der mit einem Nicht-Haushalt-, Nicht-Verwaltungs-Account verbunden ist. Das Spendeneintrags-Tool kann nur Kontakte aktualisieren, die Teil eines Haushalts- oder Verwaltungs-Accounts sind.</label>
         <name>bdiErrorNonHHAccountContactWithAdv</name>
     </customLabels>
     <customLabels>
@@ -1979,7 +2132,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label>Verbinden Sie das Feld, dass Sie für das NPSP-Datenimportobjekt erstellt haben, mit dem Feld für Ihr Zielobjekt im
+        <label>Verbinden Sie das Feld, das Sie für das NPSP-Datenimportobjekt erstellt haben, mit dem Feld für Ihr Zielobjekt im
             Raster unten. Sie können Felder anhand der Feldbezeichnung oder des Namens der Feld-API suchen.</label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
@@ -2103,7 +2256,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Sie sind dabei, {0} Datensatz/Datensätze zu löschen.
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;WICHTIG:&lt;/b&gt; Wenn Sie mithilfe der Funktion Batch-Schenkungseingabe Schenkungen in Ihrer Organisation erstellen, wird die Verwendung der Schaltfläche &quot;Massenlöschen&quot; nicht empfohlen. Hinweise zum Löschen von Datensätzen mit dem Data Loader finden Sie in der NPSP-Dokumentation.</label>
+        &lt;br/&gt;&lt;b&gt;WICHTIG:&lt;/b&gt; Wenn Sie mithilfe der Funktion Batch-Spendeneintrag Spenden in Ihrer Organisation erstellen, wird die Verwendung der Schaltfläche &quot;Massenlöschen&quot; nicht empfohlen. Hinweise zum Löschen von Datensätzen mit dem Data Loader finden Sie in der NPSP-Dokumentation.</label>
         <name>bdiMassDeleteWarning</name>
     </customLabels>
     <customLabels>
@@ -2360,7 +2513,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeBatchDonationMatchingRuleHelp</name>
     </customLabels>
     <customLabels>
-        <label>Wählen Sie die Felder aus, die Sie zum Eingeben von Schenkungen in diesem Batch verwenden möchten. Es werden immer der Spendertyp und ein Account- oder Kontakt-Nachschlagefeld angezeigt. Angezeigt werden nur Felder, auf die Sie Zugriff nehmen können.</label>
+        <label>Wählen Sie die Felder aus, die Sie zum Eingeben von Spenden in diesem Batch verwenden möchten. Es werden immer der Spendertyp und ein Account- oder Kontakt-Nachschlagefeld angezeigt. Angezeigt werden nur Felder, auf die Sie Zugriff nehmen können.</label>
         <name>bgeBatchDonorLookupInfo</name>
     </customLabels>
     <customLabels>
@@ -2432,7 +2585,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeEditBatchFieldOptionsWarning</name>
     </customLabels>
     <customLabels>
-        <label>WARNUNG: In diesem Batch wurden Datensätze gespeichert. Änderungen, die Sie vornehmen, haben keine Auswirkung auf vorhandene Datensätze. Wenn Sie Felder entfernen, werden diese Felder nicht mehr auf dem Schenkungseingabebildschirm angezeigt, aber die Daten werden in vorhandenen Datensätzen nicht aus diesen Feldern gelöscht. Daher wird empfohlen, keine Felder zu entfernen.</label>
+        <label>WARNUNG: In diesem Batch wurden Datensätze gespeichert. Änderungen, die Sie vornehmen, haben keine Auswirkung auf vorhandene Datensätze. Wenn Sie Felder entfernen, werden diese Felder nicht mehr auf dem Spendeneintragsbildschirm angezeigt, aber die Daten werden in vorhandenen Datensätzen nicht aus diesen Feldern gelöscht. Daher wird empfohlen, keine Felder zu entfernen.</label>
         <name>bgeEditBatchFieldSelectionWarning</name>
     </customLabels>
     <customLabels>
@@ -2488,7 +2641,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeFormUpdatePayment</name>
     </customLabels>
     <customLabels>
-        <label>Alle Schenkungen</label>
+        <label>Alle Spenden</label>
         <name>bgeGridAllGifts</name>
     </customLabels>
     <customLabels>
@@ -2496,7 +2649,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeGridDonorType</name>
     </customLabels>
     <customLabels>
-        <label>Dieser Batch enthält in Konflikt stehende Schenkungen. Sie müssen diese Konflikte klären, bevor Sie diesen Batch verarbeiten können.</label>
+        <label>Dieser Batch enthält in Konflikt stehende Spenden. Sie müssen diese Konflikte klären, bevor Sie diesen Batch verarbeiten können.</label>
         <name>bgeGridErrorConflictingGifts</name>
     </customLabels>
     <customLabels>
@@ -2504,31 +2657,31 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeGridErrorFromDryRun</name>
     </customLabels>
     <customLabels>
-        <label>Entweder die Anzahl der Schenkungen oder die Schenkungen insgesamt entsprechen nicht den für diesen Batch erwarteten Werten. Diese Werte müssen übereinstimmen, bevor Sie den Batch verarbeiten können.</label>
+        <label>Entweder die Anzahl der Spenden oder die Spenden insgesamt entsprechen nicht den für diesen Batch erwarteten Werten. Diese Werte müssen übereinstimmen, bevor Sie den Batch verarbeiten können.</label>
         <name>bgeGridErrorRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>
-        <label>Eingegebene Schenkungen</label>
+        <label>Eingegebene Spenden</label>
         <name>bgeGridGiftCountHeader</name>
     </customLabels>
     <customLabels>
-        <label>Schenkung erfolgreich gelöscht.</label>
+        <label>Spende erfolgreich gelöscht.</label>
         <name>bgeGridGiftDeleted</name>
     </customLabels>
     <customLabels>
-        <label>Es wurde eine neue Schenkung zu dem Batch hinzugefügt.</label>
+        <label>Es wurde eine neue Spende zu dem Batch hinzugefügt.</label>
         <name>bgeGridGiftSaved</name>
     </customLabels>
     <customLabels>
-        <label>Schenkungen erfolgreich aktualisiert.</label>
+        <label>Spenden erfolgreich aktualisiert.</label>
         <name>bgeGridGiftUpdated</name>
     </customLabels>
     <customLabels>
-        <label>Wenn Sie eine neue Schenkung eingeben, wird sie hier angezeigt.</label>
+        <label>Wenn Sie eine neue Spende eingeben, wird sie hier angezeigt.</label>
         <name>bgeGridNoGiftsBody</name>
     </customLabels>
     <customLabels>
-        <label>Sie haben offenbar noch keine Schenkungen eingegeben.</label>
+        <label>Sie haben offenbar noch keine Spenden eingegeben.</label>
         <name>bgeGridNoGiftsHeader</name>
     </customLabels>
     <customLabels>
@@ -2540,7 +2693,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeGridTotalCount</name>
     </customLabels>
     <customLabels>
-        <label>&quot;Übereinstimmung der Summen erforderlich&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Schenkungen&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinstimmung der Summen erforderlich&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
+        <label>&quot;Übereinstimmung der Summen erforderlich&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Spenden&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinstimmung der Summen erforderlich&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
         <name>bgeGridWarningRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>
@@ -2556,7 +2709,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeNewBatch</name>
     </customLabels>
     <customLabels>
-        <label>Neue Schenkung</label>
+        <label>Neue Spende</label>
         <name>bgeNewGift</name>
     </customLabels>
     <customLabels>
@@ -2564,7 +2717,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeProcessBatch</name>
     </customLabels>
     <customLabels>
-        <label>Batch-Schenkungseingabe</label>
+        <label>Batch-Spendeneintrag</label>
         <name>bgeTabHeader</name>
     </customLabels>
     <customLabels>
@@ -2610,6 +2763,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>campaignMemberStatusResponded</label>
         <name>campaignMemberStatusResponded</name>
+    </customLabels>
+    <customLabels>
+        <label>Aktivieren</label>
+        <name>commonActivate</name>
     </customLabels>
     <customLabels>
         <label>Sie müssen ein Systemadministrator sein, um auf diese Seite zugreifen zu können.</label>
@@ -2660,12 +2817,24 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonCardType</name>
     </customLabels>
     <customLabels>
+        <label>Name des Karteninhabers</label>
+        <name>commonCardholderName</name>
+    </customLabels>
+    <customLabels>
         <label>Duplizieren</label>
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label>Schließen</label>
+        <name>commonClose</name>
+    </customLabels>
+    <customLabels>
         <label>In der Apex-Klasse {0} wird bereits ein Auftrag ausgeführt. Der Auftrag muss abgeschlossen werden, bevor er erneut ausgeführt werden kann.</label>
         <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Bitten Sie Ihren Systemadministrator um Hilfe.</label>
+        <name>commonContactSystemAdminMessage</name>
     </customLabels>
     <customLabels>
         <label>Kartennummer</label>
@@ -2674,6 +2843,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Kritischer Fehler</label>
         <name>commonCriticalError</name>
+    </customLabels>
+    <customLabels>
+        <label>Deaktivieren</label>
+        <name>commonDeactivate</name>
     </customLabels>
     <customLabels>
         <label>Standardwert</label>
@@ -2696,15 +2869,19 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonError</name>
     </customLabels>
     <customLabels>
+        <label>Fehler: {0}</label>
+        <name>commonErrorPrefix</name>
+    </customLabels>
+    <customLabels>
         <label>Feldbezeichnung</label>
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Field not found --></label>
+        <label>Feld nicht gefunden</label>
         <name>commonFieldNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fields Not Found --></label>
+        <label>Felder nicht gefunden</label>
         <name>commonFieldsNotFound</name>
     </customLabels>
     <customLabels>
@@ -2736,7 +2913,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonMissingRequiredFields</name>
     </customLabels>
     <customLabels>
-        <label>Neue Schenkung</label>
+        <label>Neue Spende</label>
         <name>commonNewGift</name>
     </customLabels>
     <customLabels>
@@ -2816,8 +2993,16 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonViewAll</name>
     </customLabels>
     <customLabels>
+        <label>Fehlerprotokoll anzeigen</label>
+        <name>commonViewErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label>Mehr anzeigen</label>
         <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Bitte warten...</label>
+        <name>commonWaitMessage</name>
     </customLabels>
     <customLabels>
         <label>Warnung</label>
@@ -3056,19 +3241,19 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
-        <label>Anzahl der Schenkungen</label>
+        <label>Anzahl der Spenden</label>
         <name>geBatchGiftsCount</name>
     </customLabels>
     <customLabels>
-        <label>Die Erwartung entspricht entweder nicht der Anzahl oder nicht dem Betrag der Schenkungen. Diese Werte müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
+        <label>Die Erwartung entspricht entweder nicht der Anzahl oder nicht dem Betrag der Spenden. Diese Werte müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
         <name>geBatchGiftsExpectedCountOrTotalMessage</name>
     </customLabels>
     <customLabels>
-        <label>Die erwartete und die Gesamtzahl der Schenkungen sowie der Betrag der Schenkungen müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
+        <label>Die erwartete und die Gesamtzahl der Spenden sowie der Betrag der Spenden müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
         <name>geBatchGiftsExpectedTotalsMessage</name>
     </customLabels>
     <customLabels>
-        <label>Für {0} eingegebene Schenkungen</label>
+        <label>Für {0} eingegebene Spenden</label>
         <name>geBatchGiftsHeader</name>
     </customLabels>
     <customLabels>
@@ -3076,11 +3261,11 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBatchGiftsTotal</name>
     </customLabels>
     <customLabels>
-        <label>Erweiterte Optionen für Schenkungseinträge werden verfügbar, wenn Sie Felder aus den folgenden Objektgruppen auswählen.</label>
+        <label>Erweiterte Optionen für Spendeneinträge werden verfügbar, wenn Sie Felder aus den folgenden Objektgruppen auswählen.</label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label>Legen Sie Standardwerte für diesen Batch fest. Sie können die Standardwerte beim Eingeben von Schenkungen überschreiben.</label>
+        <label>Legen Sie Standardwerte für diesen Batch fest. Sie können die Standardwerte beim Eingeben von Spenden überschreiben.</label>
         <name>geBodyBatchDefaultValues</name>
     </customLabels>
     <customLabels>
@@ -3100,19 +3285,17 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
-        <label>Die Batchtabelle wird unter dem Formular Ihres Schenkungseintrags angezeigt und listet die im Batch enthaltenen Schenkungen auf.</label>
+        <label>Die Batchtabelle wird unter dem Formular Ihres Spendeneintrags angezeigt und listet die im Batch enthaltenen Spenden auf.</label>
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
-        <label>
-        Wir empfehlen, die folgenden Felder aufzunehmen:
+        <label>Wir empfehlen, die folgenden Felder aufzunehmen:
         &lt;/br&gt;
         &lt;ul&gt;
             &lt;li&gt; Spendername: mit dem Organisations-Account oder dem Kontakt verknüpft, der die Spende gibt. &lt;/li&gt;
             &lt;li&gt; Spendenname: mit der Opportunity oder der Zahlung für die Spende verknüpft. &lt;/li&gt;
             &lt;li&gt; Status- und Fehlerinformationen: Informationen zur Batchverarbeitung. &lt;/li&gt;
-        &lt;/ul&gt;
-        </label>
+        &lt;/ul&gt;</label>
         <name>geBodyBatchTableColumnsPart2</name>
     </customLabels>
     <customLabels>
@@ -3120,11 +3303,11 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyEmptyFormSection</name>
     </customLabels>
     <customLabels>
-        <label>Jedes Feldpaket ist eine verwaltete Menge von Feldern, die Benutzern das Ausführen verschiedener Aktionen für Schenkungseinträge ermöglichen.</label>
+        <label>Jedes Feldpaket ist eine verwaltete Menge von Feldern, die Benutzern das Ausführen verschiedener Aktionen für Spendeneinträge ermöglichen.</label>
         <name>geBodyFieldBundlesLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Diese Felder sind normalerweise auf Formularen für Schenkungseinträge vorhanden. Benutzerdefinierte Objektgruppen finden sich ebenfalls in diesem Abschnitt.</label>
+        <label>Diese Felder sind normalerweise auf Formularen für Spendeneinträge vorhanden. Benutzerdefinierte Objektgruppen finden sich ebenfalls in diesem Abschnitt.</label>
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3149,15 +3332,15 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>Wählen Sie einen Abschnitt und dann ein Feld in der Seitenleiste &quot;Formularfelder und Feldpakete&quot; aus, um es diesem Abschnitt auf dem Hauptbildschirm &quot;Formularfelder konfigurieren&quot; hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Schenkungseintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
+        <label>Wählen Sie einen Abschnitt und dann ein Feld in der Seitenleiste &quot;Formularfelder und Feldpakete&quot; aus, um es diesem Abschnitt auf dem Hauptbildschirm &quot;Formularfelder konfigurieren&quot; hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Spendeneintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
-        <label>Bevor Sie die Schenkungseingabe aktivieren, müssen Sie &quot;Erweiterte Zuordnung&quot; aktivieren.
+        <label>Bevor Sie den Spendeneintrag aktivieren, müssen Sie &quot;Erweiterte Zuordnung&quot; aktivieren.
 &lt;br/&gt;&lt;br/&gt;
-Verwenden Sie die Schenkungseingabe-Vorlagen, um einzelne Schenkungen oder Serien von Schenkungen einzutragen. Die über das ältere Batch-Schenkungseingabe-Tool eingegebenen Schenkungen werden in &quot;Schenkungseingabe&quot; nicht angezeigt – und umgekehrt.
+Verwenden Sie die Spendeneintrags-Vorlagen, um einzelne Spenden oder Serien von Spenden einzutragen. Die über das ältere Batch-Spendeneintrags-Tool eingegebenen Spenden werden in &quot;Spendeneintrag&quot; nicht angezeigt – und umgekehrt.
 &lt;br/&gt;&lt;br/&gt;
-Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren und stattdessen die ältere Batch-Schenkungseingabe (oder Einzelner Schenkungseintrag bei Nutzung von GEM) verwenden.</label>
+Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und stattdessen den älteren Batch-Spendeneintrag (oder Einzelner Spendeneintrag bei Nutzung von GEM) verwenden.</label>
         <name>geBodyGiftEntryHelp</name>
     </customLabels>
     <customLabels>
@@ -3189,7 +3372,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geBodyPaymentNotProcessingTransaction</name>
     </customLabels>
     <customLabels>
-        <label>Geben Sie Details zu dieser Schenkungseingabe-Vorlage ein.</label>
+        <label>Geben Sie Details zu dieser Spendeneintrags-Vorlage ein.</label>
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3273,7 +3456,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geButtonNewBatch</name>
     </customLabels>
     <customLabels>
-        <label>Neue Einzelschenkung</label>
+        <label>Neue Einzelspende</label>
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
@@ -3285,7 +3468,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geButtonPaymentDoNotCharge</name>
     </customLabels>
     <customLabels>
-        <label>Speichern und neue Schenkung eingeben</label>
+        <label>Speichern und neue Spende eingeben</label>
         <name>geButtonSaveNewGift</name>
     </customLabels>
     <customLabels>
@@ -3293,7 +3476,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geButtonTemplatesTabCreateTemplate</name>
     </customLabels>
     <customLabels>
-        <label>Schenkungseingabe deaktiviert</label>
+        <label>Spendeneintrag deaktiviert</label>
         <name>geDisableGiftEntryInfo</name>
     </customLabels>
     <customLabels>
@@ -3309,7 +3492,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geEditBatchInfo</name>
     </customLabels>
     <customLabels>
-        <label>Schenkungseingabe aktiviert</label>
+        <label>Spendeneintrag aktiviert</label>
         <name>geEnableGiftEntrySuccess</name>
     </customLabels>
     <customLabels>
@@ -3365,11 +3548,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorObjectCRUDHeader</name>
     </customLabels>
     <customLabels>
-        <label>Für diese Funktion ist sowohl Erweiterte Zuordnung als auch Schenkungseingabe erforderlich. Bitte aktivieren Sie diese in den NPSP-Einstellungen.</label>
+        <label>Für diese Funktion ist sowohl Erweiterte Zuordnung als auch Spendeneintrag erforderlich. Bitte aktivieren Sie diese in den NPSP-Einstellungen.</label>
         <name>geErrorPageLevelAdvancedMappingBody</name>
     </customLabels>
     <customLabels>
-        <label>Erweiterte Zuordnung und Schenkungseingabe aktivieren</label>
+        <label>Erweiterte Zuordnung und Spendeneintrag aktivieren</label>
         <name>geErrorPageLevelAdvancedMappingHeader</name>
     </customLabels>
     <customLabels>
@@ -3413,7 +3596,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <label>Dieses Formular enthält Felder, die nicht gefunden werden können. Bitte wenden Sie sich an Ihren Administrator.</label>
         <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
@@ -3425,7 +3608,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderBatchEnterInfo</name>
     </customLabels>
     <customLabels>
-        <label>Batch-Schenkungseingabe</label>
+        <label>Batch-Spendeneintrag</label>
         <name>geHeaderBatchGiftEntry</name>
     </customLabels>
     <customLabels>
@@ -3457,7 +3640,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderFieldBundles</name>
     </customLabels>
     <customLabels>
-        <label>Schenkungseingabeformular</label>
+        <label>Spendeneintragsformular</label>
         <name>geHeaderFormFieldsDefaultSectionName</name>
     </customLabels>
     <customLabels>
@@ -3485,11 +3668,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
-        <label>Schenkungseintrag</label>
+        <label>Spendeneintrag</label>
         <name>geHeaderGiftEntry</name>
     </customLabels>
     <customLabels>
-        <label>Schenkung nach {0}</label>
+        <label>Spende nach {0}</label>
         <name>geHeaderMatchingGiftBy</name>
     </customLabels>
     <customLabels>
@@ -3521,11 +3704,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderPaymentServices</name>
     </customLabels>
     <customLabels>
-        <label>Einzelner Schenkungseintrag</label>
+        <label>Einzelner Spendeneintrag</label>
         <name>geHeaderSingleGiftEntry</name>
     </customLabels>
     <customLabels>
-        <label>Informationen zur Schenkungseintrag-Vorlage</label>
+        <label>Informationen zur Spendeneintrags-Vorlage</label>
         <name>geHeaderTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3577,7 +3760,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHelpTextHouseholdMapping</name>
     </customLabels>
     <customLabels>
-        <label>Hinweis: Dieses Feldpaket steht nur für Einzelschenkungen zur Verfügung und wird bei der Eingabe von Schenkungen in Batches nicht angezeigt.</label>
+        <label>Hinweis: Dieses Feldpaket steht nur für Einzelspenden zur Verfügung und wird bei der Eingabe von Spenden in Batches nicht angezeigt.</label>
         <name>geHelpTextPaymentServices</name>
     </customLabels>
     <customLabels>
@@ -3623,7 +3806,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Fehler beim Verarbeiten der Zahlung. Bitte überprüfen Sie den Fehler, und versuchen Sie es erneut. Wählen Sie
             alternativ &quot;Karte nicht belasten aus&quot;, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
-            /0x0A/ {1} </label>
+            /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
     </customLabels>
     <customLabels>
@@ -3669,6 +3852,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Karte wird belastet...</label>
         <name>geTextChargingCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Instructions to add Payment Method --></label>
+        <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>{0} Element</label>
@@ -3759,12 +3946,784 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
-        <label>Die Schenkungsverarbeitung unterstützt nicht das Accountmodell &quot;Einzelperson&quot; (&quot;Bucket&quot;).</label>
+        <label>Die Spendenverarbeitung unterstützt nicht das Accountmodell &quot;Einzelperson&quot; (&quot;Bucket&quot;).</label>
         <name>giftProcessingAccountException</name>
     </customLabels>
     <customLabels>
-        <label>Ihrer Organisation fehlt die erforderliche Konfiguration für die Schenkungsverarbeitung. Wenden Sie sich für Unterstützung an Ihren Administrator.</label>
+        <label>Ihrer Organisation fehlt die erforderliche Konfiguration für die Spendenverarbeitung. Bitten Sie Ihren Administrator um Unterstützung.</label>
         <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
+        <label>SETUP-CHECKLISTE FÜR ADMINISTRATOREN</label>
+        <name>gsAdminSetupTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Antragsstatus: </label>
+        <name>gsApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Antragsstatus überprüfen</label>
+        <name>gsApplicationStatusModalHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce-Lizenzen beantragen</label>
+        <name>gsApplyForFreeLicenses</name>
+    </customLabels>
+    <customLabels>
+        <label>Status prüfen</label>
+        <name>gsCheckStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Machen Sie sich mit den wichtigsten Konzepten und Funktionen vertraut.</label>
+        <name>gsChecklistExploreNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erkunden Sie das Nonprofit Success Pack (NPSP)</label>
+        <name>gsChecklistExploreNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erteilen Sie Benutzern Zugriff auf NPSP, und verwalten Sie die Berechtigungen für Ihre Organisation, um sicherzustellen, dass die richtigen Personen Zugriff auf genau das haben, was sie brauchen, damit alles reibungslos läuft.</label>
+        <name>gsChecklistItemAddUserDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über das Hinzufügen von Benutzern in Trailhead</label>
+        <name>gsChecklistItemAddUserLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Benutzer hinzufügen</label>
+        <name>gsChecklistItemAddUserTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Lange bevor Sie den Schalter umlegen und mit der Verwendung von Salesforce beginnen, sollten Sie einen Plan machen, wie Sie die Umstellung in Ihrer Organisation klar, einfühlsam und transparent kommunizieren.</label>
+        <name>gsChecklistItemCommunicateWithUserskDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Chatter in Trailhead</label>
+        <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Kommunizieren Sie mit Ihren Benutzern</label>
+        <name>gsChecklistItemCommunicateWithUserskTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Behalten Sie den Überblick über Spenden, Zuschüsse oder andere Arten von Einnahmen, damit Sie Spendenmuster erkennen und verstehen können, was das Spenden auf der Seite der Auftraggeber antreibt. Lernen Sie zunächst, wie Sie Spenden in NPSP eingeben.</label>
+        <name>gsChecklistItemCreateDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Spenden in Trailhead</label>
+        <name>gsChecklistItemCreateDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Spenden</label>
+        <name>gsChecklistItemCreateDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eine Spende erstellen</label>
+        <name>gsChecklistItemCreateDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Lernen Sie bewährte Methoden für das Verwenden von Auswahllisten, Filtern, Formeln und anderen Tools im Objekt-Manager kennen, um Objekte in Ihrer Organisation anzupassen.</label>
+        <name>gsChecklistItemCustomFieldsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zum Objekt-Manager in Trailhead</label>
+        <name>gsChecklistItemCustomFieldsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Anpassen von Objekten</label>
+        <name>gsChecklistItemCustomFieldsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>4-minütiges Video</label>
+        <name>gsChecklistItemExtraFourMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>1-minütiges Video</label>
+        <name>gsChecklistItemExtraOneMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>60-minütiges Video</label>
+        <name>gsChecklistItemExtraSixtyMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>2-minütiges Video</label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie, wie Sie integrierte Tools wie Listenansichten und Pfad nutzen können, um Ihre Fundraising- und Spendenprozesse effektiv zu verwalten.</label>
+        <name>gsChecklistItemFundraisingProcessDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Listenansichten und Pfad in Trailhead</label>
+        <name>gsChecklistItemFundraisingProcessLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Listenansichten</label>
+        <name>gsChecklistItemFundraisingProcessPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualisieren Sie Ihre Fundraising-Prozesse</label>
+        <name>gsChecklistItemFundraisingProcessTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Mit diesen ersten Schritten schaffen Sie den Einstieg, bedenken Sie aber, dass die Möglichkeiten in Salesforce grenzenlos sind. Erfahren Sie mehr über die weiteren Funktionen sowie über einige der unglaublichen Dinge, die andere Unternehmen mit der Plattform erreicht haben.</label>
+        <name>gsChecklistItemGoFurtherDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über NPSP in Trailhead</label>
+        <name>gsChecklistItemGoFurtherLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gehen Sie weiter</label>
+        <name>gsChecklistItemGoFurtherTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwenden Sie den NPSP-Datenimport, um Ihre Datensätze in Salesforce zu übertragen.</label>
+        <name>gsChecklistItemImportDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zum Importieren von Daten in Trailhead</label>
+        <name>gsChecklistItemImportDataLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importieren von Daten</label>
+        <name>gsChecklistItemImportDataPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Mehr erfahren Sie in der Dokumentation</label>
+        <name>gsChecklistItemImportDataSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importieren von Daten</label>
+        <name>gsChecklistItemImportDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce wird häufig aktualisiert, um Probleme zu beheben und neue Funktionen hinzuzufügen. Wenn Sie diese Änderungen verstehen und wissen, wie Sie den Aktualisierungsprozess verwalten, können Sie sicherstellen, dass Ihr Unternehmen immer bereit ist, die Vorteile der Plattform voll auszuschöpfen.</label>
+        <name>gsChecklistItemManageChangeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Veröffentlichungsreife in Trailhead</label>
+        <name>gsChecklistItemManageChangeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gruppe &quot;Veröffentlichungsreife&quot; anzeigen</label>
+        <name>gsChecklistItemManageChangePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwalten von Änderungen an Ihrer Organisation</label>
+        <name>gsChecklistItemManageChangeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dieser kurze Überblick soll Ihnen zeigen, was mit NPSP alles möglich ist. Sie können aber auch tiefer eintauchen und die vielen anderen Funktionen entdecken, die Ihrer Organisation zur Verfügung stehen.</label>
+        <name>gsChecklistItemNPSPCloudDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu NPSP-Funktionen in Trailhead</label>
+        <name>gsChecklistItemNPSPCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Funktionen anzeigen</label>
+        <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Informationen zu anderen Funktionen der Nonprofit Cloud</label>
+        <name>gsChecklistItemNPSPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nehmen Sie sich Zeit, Ihre Implementierung sorgfältig zu planen und sicherzustellen, dass Ihre Salesforce-Organisation den Anforderungen Ihrer gemeinnützigen Organisation entspricht.</label>
+        <name>gsChecklistItemNPSPGuideDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>PDF herunterladen</label>
+        <name>gsChecklistItemNPSPGuidePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP-Planungshilfe</label>
+        <name>gsChecklistItemNPSPGuideTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Navigieren Sie zur Seite &quot;NPSP-Einstellungen&quot;, und überprüfen Sie gründlich, ob die Einstellungen für Ihre Organisation korrekt sind und so funktionieren, wie Sie es erwarten.</label>
+        <name>gsChecklistItemNPSPSettingsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu NPSP-Einstellungen finden Sie in der Planungshilfe</label>
+        <name>gsChecklistItemNPSPSettingsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP-Einstellungen</label>
+        <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Anpassen von NPSP-Einstellungen</label>
+        <name>gsChecklistItemNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nehmen Sie sich die Zeit, das Erscheinungsbild und Verhalten Ihrer Organisation anzupassen, damit Sie sicher sein können, dass Ihre Benutzer die benötigten Daten leicht finden können.</label>
+        <name>gsChecklistItemPageLayoutsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Seitenlayouts in Trailhead</label>
+        <name>gsChecklistItemPageLayoutsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Anpassen von Seitenlayouts</label>
+        <name>gsChecklistItemPageLayoutsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Setzen Sie sich konkrete Ziele, und lernen Sie bewährte Methoden für die Implementierung der Nonprofit Cloud kennen.</label>
+        <name>gsChecklistItemPrepareNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Erfolgen mit NPSP Success in Trailhead</label>
+        <name>gsChecklistItemPrepareNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Festlegen von Zielen</label>
+        <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Bereiten Sie Ihren Erfolg mit Nonprofit Cloud vor</label>
+        <name>gsChecklistItemPrepareNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Innerhalb von Salesforce werden Organisationsinformationen als &quot;Unternehmensinformationen&quot; bezeichnet. Hier richten Sie die Standardzeitzone ihrer Organisation, Währung, Gebietsschema und den Anfangsmonat des Geschäftsjahrs ein. Darüber hinaus finden Sie hier Informationen zu Ihrer Lizenzverwendung.</label>
+        <name>gsChecklistItemReviewCompanyDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu den Einstellungen für Ihre Unternehmensinformationen in Trailhead</label>
+        <name>gsChecklistItemReviewCompanyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Überprüfen der Unternehmensinformationen</label>
+        <name>gsChecklistItemReviewCompanyTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie, wie Sie Berichte und Dashboards erstellen, um Ihre Daten zum Leben zu erwecken und die Wirkung Ihrer Organisation darzustellen.</label>
+        <name>gsChecklistItemRunningReportsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie in Trailhead, wie Sie NPSP-Berichte und -Dashboards anpassen</label>
+        <name>gsChecklistItemRunningReportsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erkunden von Berichten</label>
+        <name>gsChecklistItemRunningReportsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ausführen von Berichten für Auftraggeberdaten</label>
+        <name>gsChecklistItemRunningReportsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie, wie Sie relevante Daten zu Auftraggebern (wie etwa den Namen, die Adresse oder den Arbeitgeber) in Ihrer Salesforce-Instanz eingeben.</label>
+        <name>gsChecklistItemSetupContactDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen über Kontakte und Accounts</label>
+        <name>gsChecklistItemSetupContactLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Haushalten</label>
+        <name>gsChecklistItemSetupContactPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erkunden von Kontakten</label>
+        <name>gsChecklistItemSetupContactSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Einrichten eines Kontakt- und eines Haushalt-Accounts</label>
+        <name>gsChecklistItemSetupContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Aktivitäten sind Aufgaben, Ereignisse oder sonstige Interaktionen, die auf der Aktivitätszeitachse erfasst werden. Mit Aktivitäten können Sie jeden Kontakt mit einem Auftraggeber nachverfolgen. Erfahren Sie, wie Sie Aktivitäten nutzen, um Interaktionen mit Auftraggebern zu protokollieren und Aufgaben zuzuweisen.</label>
+        <name>gsChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Aktivitäten in Trailhead</label>
+        <name>gsChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Aktivitäten</label>
+        <name>gsChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Bleiben Sie mit Aktivitäten auf dem Laufenden</label>
+        <name>gsChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn der Tag kommt, Ihre Salesforce-Organisation zu starten, soll jeder Benutzer in Ihrer Organisation bereit sein. Deshalb ist es wichtig, einen Plan für das Onboarding Ihrer Benutzer zu erstellen und ihnen dabei zu helfen, Salesforce optimal zu nutzen.</label>
+        <name>gsChecklistItemTrainUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über das Schulen Ihrer Benutzer in Trailhead.</label>
+        <name>gsChecklistItemTrainUsersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Schulen Sie Ihre Benutzer</label>
+        <name>gsChecklistItemTrainUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Passen Sie Salesforce mit Informationen an, die für Ihre Organisation spezifisch sind.</label>
+        <name>gsChecklistMakeItYourDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Eignen Sie es sich an</label>
+        <name>gsChecklistMakeItYourTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Fügen Sie Ihre Benutzer zu Salesforce hinzu, und planen Sie Ihren Rollout.</label>
+        <name>gsChecklistOnboardUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Bringen Sie Ihre Benutzer an Bord</label>
+        <name>gsChecklistOnboardUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>30 Tage hinzugefügt</label>
+        <name>gsDaysAdded</name>
+    </customLabels>
+    <customLabels>
+        <label>Verbleibende Tage in der kostenlosen Testversion</label>
+        <name>gsDaysRemainingInFreeTrial</name>
+    </customLabels>
+    <customLabels>
+        <label>Um den Status Ihres Antrags zu verfolgen, senden Sie uns bitte eine E-Mail an: </label>
+        <name>gsFollowUpApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen</label>
+        <name>gsLearnMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Kein Antrag eingereicht</label>
+        <name>gsNoApplicationSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>Fundraising-Lernpfad</label>
+        <name>gsResourcesItemFundraisingLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Mit Fundraising beginnen</label>
+        <name>gsResourcesItemFundraisingLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us-Hub</label>
+        <name>gsResourcesItemHubLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Von anderen gemeinnützigen Organisationen lernen</label>
+        <name>gsResourcesItemHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Engagement-Lernpfad</label>
+        <name>gsResourcesItemMarketingEngagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gewinnen von Auftraggebern</label>
+        <name>gsResourcesItemMarketingEngagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud-Grundlagen</label>
+        <name>gsResourcesItemNonprofitCloudLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Kennenlernen der Nonprofit Cloud</label>
+        <name>gsResourcesItemNonprofitCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Implementierungspartner</label>
+        <name>gsResourcesItemPartnersLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Einen Partner finden</label>
+        <name>gsResourcesItemPartnersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Programm-Management-Lernpfad</label>
+        <name>gsResourcesItemProgramManagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwalten von Programmen</label>
+        <name>gsResourcesItemProgramManagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce-Veranstaltungskalender</label>
+        <name>gsResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Veranstaltungen und Webinare finden</label>
+        <name>gsResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ressourcen</label>
+        <name>gsResourcesTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP-Videokanal</label>
+        <name>gsResourcesVideographyLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Videos ansehen</label>
+        <name>gsResourcesVideographyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Abgesendet</label>
+        <name>gsSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>in 2 Minuten</label>
+        <name>gsVideoHeaderLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Erste Schritte in NPSP</label>
+        <name>gsVideoHeaderTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Menschen sind das Herzstück jeder gemeinnützigen Organisation. Entdecken Sie die Funktionen des Nonprofit Success Packs, um zu erfahren, wie Sie Ihre Auftraggeber und deren private, persönliche und berufliche Verbindungen verwalten können.</label>
+        <name>gseuChecklistCreateConstituentRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Auftraggeber-Datensätze erstellen</label>
+        <name>gseuChecklistCreateConstituentRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn Sie Spenden für einen bestimmten Zweck sammeln, möchten Sie sicher sein, dass Sie die Absicht des Spenders respektieren. Stellen Sie mithilfe von Verwendungszwecken sicher, dass Spenden korrekt zugewiesen werden.</label>
+        <name>gseuChecklistItemCaptureDonorIntentDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über die Zuweisung von Spenden in Trailhead</label>
+        <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Zuweisungen</label>
+        <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfassen der Absicht von Spendern mithilfe von Spendenzuweisungen</label>
+        <name>gseuChecklistItemCaptureDonorIntentTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Monatliche Spenden können eine vorhersehbare Einnahmequelle für gemeinnützige Organisationen sein, und dauerhafte Spender sind oft die treuesten und engagiertesten Unterstützer einer gemeinnützigen Organisation. Halten Sie monatliche Spenden nach, indem Sie eine wiederkehrende Spende erstellen.</label>
+        <name>gseuChecklistItemCollectGiftsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über wiederkehrende Spenden in Trailhead</label>
+        <name>gseuChecklistItemCollectGiftsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von wiederkehrenden Spenden</label>
+        <name>gseuChecklistItemCollectGiftsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfassen Sie langfristige Gaben mit wiederkehrenden Spenden</label>
+        <name>gseuChecklistItemCollectGiftsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Zugehörigkeiten erstellen</label>
+        <name>gseuChecklistItemConnectContactOrganizationBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Mithilfe von Zugehörigkeiten erfassen Sie in NPSP wichtige Verbindungen zwischen Ihren Auftraggebern und den ihnen zugeordneten Organisationen, wie Arbeitgeber, Schule oder Unternehmen. Verbinden Sie einen Kontakt mit einer Organisation, indem Sie Organisationszugehörigkeiten verwenden.</label>
+        <name>gseuChecklistItemConnectContactOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Zugehörigkeiten in Trailhead.</label>
+        <name>gseuChecklistItemConnectContactOrganizationLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Verbinden eines Kontakts mit einer Organisation mithilfe von Zugehörigkeiten</label>
+        <name>gseuChecklistItemConnectContactOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Beziehungen</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Mithilfe von Beziehungen erfassen Sie in NPSP wichtige Verbindungen zwischen Ihren Auftraggebern. Verbinden Sie Kontakte mithilfe der auf Beziehungen bezogenen Liste in Kontaktdatensätzen.</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Beziehungen in Trailhead.</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Verbinden von zwei Kontakten mit Beziehungen</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Kontakten</label>
+        <name>gseuChecklistItemCreateContactAndAccountBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Menschen sind für gemeinnützige Organisationen die wichtigste Ressource, daher ist es entscheidend, die Funktion des Objekts &quot;Kontakt&quot; zu verstehen, um sie nachzuverfolgen. Das Objekt &quot;Kontakt&quot; speichert Namen zu Auftraggebern, wie den Namen, die Adresse und den Arbeitgeber.</label>
+        <name>gseuChecklistItemCreateContactAndAccountDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Kontakte und Accounts in Trailhead</label>
+        <name>gseuChecklistItemCreateContactAndAccountLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Kontakten und Haushalt-Accounts</label>
+        <name>gseuChecklistItemCreateContactAndAccountTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Bei den meisten gemeinnützigen Organisationen stammen Spendengelder aus Einzelspenden. Verfolgen Sie Einzelspenden nach, indem Sie aus einem Kontaktdatensatz eine Opportunity erstellen.</label>
+        <name>gseuChecklistItemDonationIndividualDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Einzelspenden in Trailhead</label>
+        <name>gseuChecklistItemDonationIndividualLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eingeben von Einzelspenden</label>
+        <name>gseuChecklistItemDonationIndividualPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eingeben einer Spende von einer Einzelperson</label>
+        <name>gseuChecklistItemDonationIndividualTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Institutionelle und Unternehmensspenden sind eine wichtige Unterstützungsquelle für gemeinnützige Organisationen. Verfolgen Sie Spenden von Organisationen, indem Sie aus einem Account-Datensatz eine Opportunity erstellen.</label>
+        <name>gseuChecklistItemDonationOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Unternehmensspenden in Trailhead</label>
+        <name>gseuChecklistItemDonationOrganizationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eingeben von Unternehmensspenden</label>
+        <name>gseuChecklistItemDonationOrganizationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eingeben einer Spende von einer Organisation</label>
+        <name>gseuChecklistItemDonationOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>2-minütiges Video</label>
+        <name>gseuChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn Sie gerade erst in NPSP einsteigen, kann es schwierig sein, Datensätze zu finden. Verwenden Sie die globale Suche, um Ihre gesamte Salesforce-Organisation zu durchsuchen und schnell zu finden, was Sie brauchen.</label>
+        <name>gseuChecklistItemGlobalSearchDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr zu Suchergebnissen in Trailhead</label>
+        <name>gseuChecklistItemGlobalSearchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Suchen von Datensätzen</label>
+        <name>gseuChecklistItemGlobalSearchPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Suchen von Datensätzen mit der globalen Suche</label>
+        <name>gseuChecklistItemGlobalSearchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP enthält 87 der gängigsten Berichte zu Auftraggebern und Spendenaktionen. Verwenden Sie diese Berichte wie sie sind, oder passen Sie sie an.</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über NPSP-Berichte in Trailhead</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ausführen von Berichten</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Arbeitsmappe &quot;Berichte&quot;</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ausführen eines vorkonfigurierten NPSP-Berichts</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Lightning Report Builder gibt Ihnen die Möglichkeit, mithilfe von Standardberichtstypen eigene, benutzerdefinierte Berichte zu erstellen. Die gewählten Berichtstypen bestimmen, welche Objekte und Felder in Ihrem Bericht verfügbar sind.</label>
+        <name>gseuChecklistItemStandardReportTypeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Standardberichtstypen in Trailhead</label>
+        <name>gseuChecklistItemStandardReportTypeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen von Berichten</label>
+        <name>gseuChecklistItemStandardReportTypePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erstellen eines Berichts aus einem Standardberichtstyp</label>
+        <name>gseuChecklistItemStandardReportTypeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Bereich &quot;Aktivitäten&quot; hilft Ihnen und Ihren Kollegen, die gesamte Arbeit im Zusammenhang mit einem bestimmten Kontakt, einer Organisation oder Opportunity zu erfassen. Protokollieren Sie Anrufe, weisen Sie Aufgaben zu, senden Sie E-Mails und erstellen Sie Kalenderereignisse direkt aus dem Datensatz, an dem Sie arbeiten.</label>
+        <name>gseuChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen zu Aktivitäten in Trailhead</label>
+        <name>gseuChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachverfolgen von Aktivitäten</label>
+        <name>gseuChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Bleiben Sie mit Aktivitäten auf dem Laufenden</label>
+        <name>gseuChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Mithilfe von Kampagnen können Sie die Ansprache Ihrer Auftraggeber in Salesforce verbessern. Verwenden Sie das Feld &quot;Primäre Kampagne&quot; für Opportunities, um Ihre Spendenbeschaffung besser bewerten zu können.</label>
+        <name>gseuChecklistItemTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Kampagnen in Trailhead</label>
+        <name>gseuChecklistItemTrackDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachverfolgen der Spenderansprache</label>
+        <name>gseuChecklistItemTrackDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachverfolgen von Spendenquellen mit Kampagnen</label>
+        <name>gseuChecklistItemTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dashboards ziehen Daten aus einem oder mehreren Berichten und stellen sie nebeneinander im gleichen Fenster dar. NPSP enthält drei Dashboards, die Sie unverändert verwenden oder anpassen können.</label>
+        <name>gseuChecklistItemViewDashboardDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Dashboards in Trailhead</label>
+        <name>gseuChecklistItemViewDashboardLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Anzeigen von Dashboards</label>
+        <name>gseuChecklistItemViewDashboardPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Dashboard anzeigen</label>
+        <name>gseuChecklistItemViewDashboardTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über die Nonprofit Cloud in Trailhead</label>
+        <name>gseuChecklistItemWhatIsNPCloudLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Was ist Nonprofit Cloud?</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud beinhaltet Apps, Tools, Features, Services und Technologie, die dafür ausgelegt sind, die besonderen Bedürfnisse von gemeinnützigen Organisationen zu erfüllen.</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitleDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Grundlage der Nonprofit Cloud bildet die App Nonprofit Success Pack (NPSP). NPSP hilft Ihnen, Ihre Auftraggeber und Spendenaktionen zu verwalten. Wenn Ihnen jemand sagt, dass er die &quot;gemeinnützige Version&quot; von Salesforce verwendet, spricht er in der Regel von NPSP.</label>
+        <name>gseuChecklistItemWhatIsNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Nonprofit Success Pack in Trailhead</label>
+        <name>gseuChecklistItemWhatIsNPSPLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Was ist Nonprofit Success Pack?</label>
+        <name>gseuChecklistItemWhatIsNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Listenansichten helfen Ihnen, mithilfe von gefilterten Gruppen von Kontakten, Accounts, Opportunities und anderen Objekten, leicht zu finden, was Sie brauchen.</label>
+        <name>gseuChecklistItemWorkMultipleRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie mehr über Listenansichten in Trailhead</label>
+        <name>gseuChecklistItemWorkMultipleRecordsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualisieren von Prozessen</label>
+        <name>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Arbeiten mit mehreren Datensätzen mithilfe von Listenansichten</label>
+        <name>gseuChecklistItemWorkMultipleRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>In NPSP verfolgen Sie Spenden, Zuschüsse, Zusagen und andere Arten von Einnahmen mit dem Opportunity-Objekt nach. Sie können Spenden von Einzelpersonen oder von Organisationen wie einer Stiftung, einem Unternehmen oder einer Behörde nachverfolgen.</label>
+        <name>gseuChecklistTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachverfolgen von Spenden und anderen Einnahmearten mit NPSP</label>
+        <name>gseuChecklistTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nutzen Sie diese grundlegenden Ressourcen, um mit Ihrer NPSP-Reise zu beginnen.</label>
+        <name>gseuChecklistWelcomeNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Willkommen beim Nonprofit Success Pack und der Nonprofit Cloud</label>
+        <name>gseuChecklistWelcomeNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachdem Sie Ihre Auftraggeber- und Spendendaten in NPSP eingegeben haben, müssen Sie die Datensätze, die Sie bearbeiten, auch leicht finden können, um mit ihnen zu arbeiten.</label>
+        <name>gseuChecklistWorkRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Arbeiten mit Datensätzen</label>
+        <name>gseuChecklistWorkRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Berichte und Dashboards helfen Ihnen, Ihre Daten so zu strukturieren, dass Sie den Einfluss Ihrer Organisation im zeitlichen Verlauf darstellen können. NPSP beinhaltet vorkonfigurierte Berichte – alternativ können Sie eigene Berichte erstellen.</label>
+        <name>gseuChecklistYourDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Verstehen Sie Ihre Daten</label>
+        <name>gseuChecklistYourDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead erkunden</label>
+        <name>gseuExploreTrailheadButton</name>
+    </customLabels>
+    <customLabels>
+        <label>SETUP-CHECKLISTE</label>
+        <name>gseuPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Mehr über NPSP erfahren</label>
+        <name>gseuResourcesItemAboutNPSPLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP-Dokumentation</label>
+        <name>gseuResourcesItemAboutNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Eine Community-Gruppe finden</label>
+        <name>gseuResourcesItemCommunityGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead-Community</label>
+        <name>gseuResourcesItemCommunityGroupLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Antworten auf Ihre Fragen erhalten</label>
+        <name>gseuResourcesItemQuestionsAnsweredLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us-Hub</label>
+        <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Anleitungsvideos ansehen</label>
+        <name>gseuResourcesItemWatchVideosLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP-Videokanal</label>
+        <name>gseuResourcesItemWatchVideosLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Veranstaltungen und Webinare finden</label>
+        <name>gseuResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce-Kalender</label>
+        <name>gseuResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Erfahren Sie noch mehr über die Nonprofit Cloud und Salesforce.</label>
+        <name>gseuTrailheadText</name>
     </customLabels>
     <customLabels>
         <label>Statusprüfung ausführen</label>
@@ -4267,7 +5226,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
     <customLabels>
-        <label>Wenn mehrere &quot;Opportunity-Kontaktrollen&quot; mit &quot;Primär&quot; gekennzeichnet sind, kann dies dazu führen, dass Opportunity-Rollups wie &quot;Schenkungen insgesamt&quot; in NPSP falsch berechnet werden. Um zu sehen, welche Opportunities über mehr als eine Opportunity-Kontaktrolle verfügen, die als &quot;Primär&quot; gekennzeichnet ist, führen Sie den Bericht &lt;b&gt;Opportunities mit primären Kontaktrollen&lt;/b&gt; im Berichtsordner &quot;NPSP-Statusprüfungen&quot; aus.</label>
+        <label>Wenn mehrere &quot;Opportunity-Kontaktrollen&quot; mit &quot;Primär&quot; gekennzeichnet sind, kann dies dazu führen, dass Opportunity-Rollups wie &quot;Spenden gesamt&quot; in NPSP falsch berechnet werden. Um zu sehen, welche Opportunities über mehr als eine Opportunity-Kontaktrolle verfügen, die als &quot;Primär&quot; gekennzeichnet ist, führen Sie den Bericht &lt;b&gt;Opportunities mit primären Kontaktrollen&lt;/b&gt; im Berichtsordner &quot;NPSP-Statusprüfungen&quot; aus.</label>
         <name>healthSolutionOCRDupPrimary</name>
     </customLabels>
     <customLabels>
@@ -4655,7 +5614,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>mtchFindMatchedGiftsSectionHeader</name>
     </customLabels>
     <customLabels>
-        <label>Weitere Schenkungen suchen</label>
+        <label>Weitere Spenden suchen</label>
         <name>mtchFindMoreGifts</name>
     </customLabels>
     <customLabels>
@@ -4857,6 +5816,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Eine abgeschriebene Zahlung muss über ein Zahlungsdatum verfügen.</label>
         <name>pmtWrittenOffPaymentDateRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>Zeile löschen</label>
@@ -5149,8 +6112,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
             ● Filter verwenden, um problemlos bestimmte Datensätze oder Daten auszuschließen&lt;br/&gt;
             ● Daten aus mehr als 2 zurückliegenden Jahren zusammenfassen&lt;br/&gt;
             &lt;br/&gt;
-            Gehen Sie zu NPSP-Einstellungen | Spenden | Anpassbare Rollups, um anpassbare Rollups zu aktivieren und zu beginnen, sie zu nutzen!
-        </label>
+            Gehen Sie zu NPSP-Einstellungen | Spenden | Anpassbare Rollups, um anpassbare Rollups zu aktivieren und zu beginnen, sie zu nutzen!</label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
     <customLabels>
@@ -5357,7 +6319,8 @@ Dieser Vorgang kann einige Zeit dauern, aber Sie können diese Seite ruhig schli
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities und aktualisiert die jeweiligen Kontakte, Haushalte und Accounts. Dieser Vorgang kann einige Zeit dauern, aber Sie können diese Seite ruhig schließen, da der Vorgang im Hintergrund weiter ausgeführt wird.</label>
+        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities und aktualisiert die jeweiligen Kontakte, Haushalte und Accounts.
+Dieser Vorgang kann einige Zeit dauern, aber Sie können diese Seite ruhig schließen, da der Vorgang im Hintergrund weiter ausgeführt wird.</label>
         <name>stgHelpBatchOppRollup</name>
     </customLabels>
     <customLabels>
@@ -5406,18 +6369,18 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpContactRTExcluded</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;WARNUNG:&lt;/b&gt; Durch Klicken auf diese Schaltfläche wird die Batch-Erstellung von Zahlungen aktiviert. In NPSP wird eine Zahlung für jede Opportunity ohne Zahlung mit den folgenden Eigenschaften erstellt: 
+        <label>&lt;b&gt;WARNUNG:&lt;/b&gt; Durch Klicken auf diese Schaltfläche wird die Batch-Erstellung von Zahlungen aktiviert. In NPSP wird eine Zahlung für jede Opportunity ohne Zahlung mit den folgenden Eigenschaften erstellt:
 &lt;br/&gt;
-&lt;br/&gt; 
+&lt;br/&gt;
 ● Ein Betrag ist größer als null&lt;br/&gt;
 ● &quot;Zahlung nicht automatisch erstellen&quot; ist nicht aktiviert&lt;br/&gt;
 ● Nicht aus den Einstellungen für Spenden und Zahlungen ausgeschlossen&lt;br/&gt;
-&lt;br/&gt; 
+&lt;br/&gt;
 
 &lt;b&gt;Dieser Vorgang kann nicht rückgängig gemacht werden.&lt;/br&gt; 
-Wir empfehlen Ihnen, vor dem Starten dieses Vorgangs Folgendes zu deaktivieren, sofern Zahlungen davon betroffen sind: 
-&lt;br/&gt; 
-&lt;br/&gt; 
+Wir empfehlen Ihnen, vor dem Starten dieses Vorgangs Folgendes zu deaktivieren, sofern Zahlungen davon betroffen sind:
+&lt;br/&gt;
+&lt;br/&gt;
 ● Benutzerdefinierte Validierungsregeln&lt;br/&gt;
 ● Workflow-Regeln&lt;br/&gt;
 ● Prozessgenerator&lt;br/&gt;
@@ -5429,23 +6392,17 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label>
-            Die vollständige Dokumentation zu anpassbaren Rollups finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.
-        </label>
+        <label>Die vollständige Dokumentation zu anpassbaren Rollups finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.</label>
         <name>stgHelpCustomizableRollupsEnable1</name>
     </customLabels>
     <customLabels>
-        <label>
-            Wenn Sie anpassbare Rollups zum ersten Mal aktivieren, werden Ihre vorhandenen Rollups und die 87 vorgefertigten NPSP-Rollups in anpassbare Rollups konvertiert. Vollständige Details finden Sie in &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;diesem Dokument&lt;/a&gt;.
+        <label>Wenn Sie anpassbare Rollups zum ersten Mal aktivieren, werden Ihre vorhandenen Rollups und die 87 vorgefertigten NPSP-Rollups in anpassbare Rollups konvertiert. Vollständige Details finden Sie in &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;diesem Dokument&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            Sie können sie deaktivieren und zu den alten Rollups zurückkehren, aber neue Rollups und Rollup-/Filteränderungen, die in anpassbaren Rollups vorgenommen werden, werden nicht auf Ihre alten Rollup-Einstellungen angewendet.
-        </label>
+            Sie können sie deaktivieren und zu den alten Rollups zurückkehren, aber neue Rollups und Rollup-/Filteränderungen, die in anpassbaren Rollups vorgenommen werden, werden nicht auf Ihre alten Rollup-Einstellungen angewendet.</label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
-        <label>
-            Entfernt alle neuen Rollups, Filtergruppen und Filterregeln, die Sie erstellt haben, während Sie anpassbare Rollups verwendet haben, UND setzt alle alten NPSP-Rollups auf ihr Standardverhalten zurück.
-        </label>
+        <label>Entfernt alle neuen Rollups, Filtergruppen und Filterregeln, die Sie erstellt haben, während Sie anpassbare Rollups verwendet haben, UND setzt alle alten NPSP-Rollups auf ihr Standardverhalten zurück.</label>
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
@@ -5515,7 +6472,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpHHNaming</name>
     </customLabels>
     <customLabels>
-        <label>Wenn diese Option ausgewählt ist, erstellt NPSP automatisch Kontaktrollen zu einzelnen Schenkungen für Haushalt-Mitglieder des Hauptansprechpartners der Opportunity.</label>
+        <label>Wenn diese Option ausgewählt ist, erstellt NPSP automatisch Kontaktrollen zu einzelnen Spenden für Haushalt-Mitglieder des Hauptansprechpartners der Opportunity.</label>
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
@@ -5707,7 +6664,7 @@ Sobald der Vorgang zu 100 % abgeschlossen ist, können Sie diese Seite sicher v
     <customLabels>
         <label>Dieses Dienstprogramm führt einen Batch-Vorgang für alle unbefristeten wiederkehrenden Spenden aus und nimmt Folgendes basierend auf dem Wert in &quot;Opportunity-Vorschau in Monaten&quot; vor:
 &lt;br/&gt;
-&lt;br/&gt; 
+&lt;br/&gt;
 ● erstellt neue Opportunities&lt;br/&gt;
 ● aktualisiert die Anzahl der Raten und bezahlten Beträge&lt;br/&gt;
 &lt;br/&gt;
@@ -6534,15 +7491,15 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>Batch_Data_Entry</name>
     </customTabs>
     <customTabs>
-        <label>Batch-Schenkungseingabe</label>
+        <label>Batch-Spendeneintrag</label>
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>Kontaktzusammenführung</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>Kontaktzusammenführung</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
@@ -6550,8 +7507,16 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>Contacts_Settings</name>
     </customTabs>
     <customTabs>
-        <label>Schenkungseintrag</label>
+        <label>Spendeneintrag</label>
         <name>GE_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>Erste Schritte mit NPSP – Administrator</label>
+        <name>GetStarted</name>
+    </customTabs>
+    <customTabs>
+        <label>Erste Schritte mit NPSP</label>
+        <name>GetStartedEndUser</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>

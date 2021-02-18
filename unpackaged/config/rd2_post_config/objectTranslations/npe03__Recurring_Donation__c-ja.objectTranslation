@@ -214,6 +214,27 @@
     <label>発効日</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
+    <label>状況</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>有効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>失効</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>完了済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>一時停止</translation>
+    </picklistValues>
+  </fields>
+  <fields>
     <name>npe03__Installment_Period__c</name>
     <help>[間隔] と [頻度] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
     <label>間隔</label>

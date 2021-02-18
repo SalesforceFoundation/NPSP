@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Batch-Dateneintragseinstellungen</value>
     </caseValues>
     <fields>
         <help>Wenn diese Option ausgewählt ist, werden bei der Batch-Dateneingabe niemals Opportunity-Namen vergeben, auch wenn die Felder leer sind (nicht auf der BDE-Seite enthalten).</help>
@@ -54,5 +54,5 @@
         <label>Einstellungsbenachrichtigung angesehen</label>
         <name>Viewed_Retirement_Alert__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>
