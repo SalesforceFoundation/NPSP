@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellung für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellungen für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellung für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellungen für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellung für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellungen für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellung für anpassbares Rollup</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Einstellungen für anpassbares Rollup</value>
     </caseValues>
     <fields>
         <help>Bei Akt. begrenzt der nächtl. Auftr. z. Acc.-Hard Credit (nicht verz.) die Anz. der Acc‘s, die zur Neuberechn. ausgew. werden, indem nach vor Kurzem aktual. Opp. in d. Acc. gesucht wird. So wird die Leist. d. nächtl. Auftr. zu anpassb. Rollups verbessert.</help>
@@ -141,5 +141,5 @@
         <label>Verzerrter Modus, Disponent-Batch-Größe</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help>Los últimos cuatro dígitos de la cuenta bancaria empleada para esta transacción.</help>
+        <label>Últimos 4 de ACH</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
         <label>Utilizar siempre último día del mes</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>El mes de caducidad de la tarjeta empleada para esta donación recurrente.</help>
+        <label>Mes de caducidad de tarjeta</label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>El año de caducidad de la tarjeta empleada para esta donación recurrente.</help>
+        <label>Año de caducidad de tarjeta</label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>Los últimos cuatro dígitos de la tarjeta empleada para esta donación recurrente.</help>
+        <label>Últimos 4 dígitos de tarjeta</label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help>El último evento de Elevate realizado que da como resultado una actualización a esta donación recurrente.</help>
+        <label>Último evento de Elevate realizado</label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help>El importe esperado en total de esta Donación recurrente para el próximo año de calendario o fiscal (solo lectura).</help>
         <label>Valor de año próximo</label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation>Transcurrido</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>En pausa</translation>
         </picklistValues>
     </fields>
     <quickActions>

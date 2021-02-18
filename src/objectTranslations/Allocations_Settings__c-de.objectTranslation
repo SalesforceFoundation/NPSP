@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Zugehörigkeitseinstellungen</value>
     </caseValues>
     <fields>
         <help>Durch die Aktivierung von Standardzuweisungen wird für jede Opportunity ein Zuweisungsobjekt erstellt. Dadurch wird die Berichterstellung zu Zuweisungen zu einem Standard-Verwendungszweck aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</help>
@@ -75,5 +75,5 @@
         <label>Geschäftsjahr für Rollups verwenden</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

@@ -15,17 +15,16 @@
                                     <h1 class='slds-text-body_regular'>{CUSTOM_LABELS.commonPaymentServices}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <button  class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                             if:true={displayDoNotChargeCardButton}
-                                            onclick={handleUserDisabledWidget}>
-                                        {CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                        <lightning-icon icon-name='utility:close'
-                                                        alternative-text={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                                        class='do-not-charge-card-icon'
-                                                        size='xx-small'
-                                                        title={CUSTOM_LABELS.geButtonPaymentDoNotCharge}>
-                                        </lightning-icon>
-                                    </button>
+                                    <template if:true={displayDisableWidgetButton}>
+                                        <lightning-button variant="base"
+                                                          label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
+                                                          icon-name='utility:close'
+                                                          icon-position="right"
+                                                          onclick={handleUserDisabledWidget}
+                                                          class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                          data-qa-locator='button Do Not Use Elevate'>
+                                        </lightning-button>
+                                    </template>
                                 </lightning-layout-item>
                             </lightning-layout>
                         </div>
@@ -37,18 +36,20 @@
                             <template if:true={hasUserDisabledWidget}>
                                 <p class='fade-in'>
                                     <span class='slds-content-message'>
-                                        {CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction}
+                                        {disabledWidgetMessage}
                                     </span>
-                                    <lightning-button variant='base'
-                                                      label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                      title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                      onclick={handleUserEnabledWidget}
-                                                      class='slds-m-left_xx-small'>
-                                    </lightning-button>
+                                    <template if:true={shouldDisplayEnableButton}>
+                                        <lightning-button variant='base'
+                                                          label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                          title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                          onclick={handleUserEnabledWidget}
+                                                          class='slds-m-left_xx-small'>
+                                        </lightning-button>
+                                    </template>
                                 </p>
                             </template>
                             <template if:false={hasUserDisabledWidget}>
-                                <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
+                                <p class='slds-content-message slds-p-vertical_medium'>{disabledMessage}</p>
                             </template>
                         </template>
                         <template if:false={isDisabled}>

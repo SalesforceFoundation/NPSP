@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Paramètre de nommage de foyer</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Paramètres de nommage de foyer</value>
     </caseValues>
     <fields>
         <help>Indique le nombre de contacts à afficher explicitement dans un nom. Après ce montant, le dépassement de nom sera utilisé.</help>
@@ -43,6 +43,6 @@
         <label>Dépassement de nom</label>
         <name>Name_Overrun__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

@@ -2,42 +2,41 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>自動採番</value>
     </caseValues>
     <fields>
-        <label><!-- Display Format --></label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <label><!-- Field API Name --></label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <label><!-- Active --></label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <label><!-- Max Used Number --></label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
-        <label><!-- Description --></label>
+        <label>説明</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Starting Number --></label>
-        <name>Starting_Number__c</name>
+        <help>自動採番項目の形式。桁数、および必要に応じてプレフィックスが含まれます。</help>
+        <label>表示形式</label>
+        <name>Display_Format__c</name>
     </fields>
     <fields>
-        <label><!-- Object API Name --></label>
+        <help>自動採番が含まれる項目の API 参照名。</help>
+        <label>項目 API 参照名</label>
+        <name>Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>選択すると、自動採番形式が有効になります。</help>
+        <label>有効</label>
+        <name>IsActive__c</name>
+    </fields>
+    <fields>
+        <help>この形式で使用する自動採番の最大値。</help>
+        <label>使用する最大番号</label>
+        <name>Max_Used_Number__c</name>
+    </fields>
+    <fields>
+        <help>自動採番のオブジェクトの API 参照名。</help>
+        <label>オブジェクト API 参照名</label>
         <name>Object_API_Name__c</name>
     </fields>
-    <layouts>
-        <layout>AutoNumber Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
+    <fields>
+        <help>自動採番シーケンスの最初の番号。</help>
+        <label>開始番号</label>
+        <name>Starting_Number__c</name>
+    </fields>
+    <nameFieldLabel>自動採番名</nameFieldLabel>
 </CustomObjectTranslation>

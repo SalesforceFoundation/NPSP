@@ -214,6 +214,27 @@
     <label>Inkrafttreten</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
+    <label>Status</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Aktiv</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Erloschen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Geschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Aufschub</translation>
+    </picklistValues>
+  </fields>
+  <fields>
     <name>npe03__Installment_Period__c</name>
     <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
     <label>Ratenlaufzeit</label>
