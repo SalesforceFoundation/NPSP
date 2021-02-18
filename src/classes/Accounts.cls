@@ -70,7 +70,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     public void onAfterUpdate() {
         if (settings.isAdvancedHouseholdNaming()) {
-            renameHouseholdsNeedingNameUpdates();
+            renameHouseholdsNeedingNameUpdate();
         }
     }
 
@@ -82,11 +82,11 @@ public inherited sharing class Accounts extends fflib_SObjects {
         householdNamingService.setHouseholdNameFields(householdAccounts(), oldMap);
     }
 
-    private void renameHouseholdsNeedingNameUpdates() {
-        householdNamingService.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+    private void renameHouseholdsNeedingNameUpdate() {
+        householdNamingService.renameHouseholdAccounts(getHouseholdsNeedingNameUpdate());
     }
 
-    private List<Id> getHouseholdsNeedingNameUpdates() {
+    private List<Id> getHouseholdsNeedingNameUpdate() {
         return householdNamingService.getHouseholdsNeedingNameUpdates(
                 householdAccounts(), oldMap
         );
