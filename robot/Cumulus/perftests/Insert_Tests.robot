@@ -13,7 +13,7 @@ Documentation   Performance Testing of inserting records into an Org:
 Library         DateTime
 Resource        cumulusci/robotframework/Salesforce.robot
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Disable Duplicate Matching
+Suite Setup     Test Setup
 ##  Suite Teardown  Final Cleanup
 
 *** Keywords ***
@@ -134,10 +134,20 @@ Get 200 Contacts Without Address
 ## Helper Keywords
 ## =============================================================================================
 
+Test Setup
+    Disable Duplicate Matching
+    Delete Default Data
+
 Disable Duplicate Matching
     [Documentation]  Disable Salesforce duplicate matching
     Run Task        set_duplicate_rule_status
         ...     active=${False}
+
+Delete Default Data
+    [Documentation]     Delete Entitlement & Associated Records (these are created by default in new scratch orgs)
+    Log to Console      Deleting Entitlement Records
+    Run Task            test_data_delete
+        ...     objects=Entitlement,Contact,Account
 
 Disable NPSP Triggers
     [Documentation]  Disable all NPSP Triggers
