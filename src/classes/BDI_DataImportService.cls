@@ -51,7 +51,6 @@ global with sharing class BDI_DataImportService {
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
     public static final String ACH_PAYMENT_METHOD = 'ACH';
 
-
     public BDI_MappingService mappingService;
 
     /*******************************************************************************************************
@@ -670,7 +669,7 @@ global with sharing class BDI_DataImportService {
         for (DataImport__c dataImport : dataImports) {
             /* Use a single boolean to determine if each data import should be processed. If new criteria is added
             * it can be added to isSuccessfulPayment using conditional operators. */
-            Boolean shouldProcess = isSuccessfulPayment(dataImport);
+            Boolean shouldProcess = isAllowableDataImport(dataImport);
 
             if (shouldProcess) {
                 dataImportsToProcess.add(dataImport);
@@ -681,20 +680,20 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
-     * @description Checks a collection of data imports and returns a filtered list of only those data import records
-     * that have been successfully charged by payment services or those with a blank payment status which were not
-     * sent to payment services because a credit card charge was not required.  Also allow processing of all ACH
-     * Payment Types since we do need to process DI for Elevate ACH payments of several payment statuses.
+     * @description Checks if data import record meets the initial processing criteria of not having a payment status
+     *  or if the data import record is a successful Elevate transaction.
      *
-     * @param di DataImport__c record to be filtered
+     * @param dataImport {DataImport__c}
      * @return Boolean
      */
-    private Boolean isSuccessfulPayment(DataImport__c di) {
-        String paymentStatus = di.Payment_Status__c;
+    private Boolean isAllowableDataImport(DataImport__c dataImport) {
+        String paymentStatus = dataImport.Payment_Status__c;
 
-        return String.isBlank(paymentStatus) || 
-            di.Payment_Status__c.equalsIgnoreCase(GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()) ||
-                (di.Payment_Method__c == ACH_PAYMENT_METHOD && di.Payment_Elevate_ID__c != null);
+        return String.isBlank(paymentStatus) ||
+            (dataImport.Payment_Status__c.equalsIgnoreCase(
+                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
+            ) || (dataImport.Payment_Method__c == ACH_PAYMENT_METHOD
+                && dataImport.Payment_Elevate_ID__c != null));
     }
 
     /**
@@ -2025,7 +2024,7 @@ global with sharing class BDI_DataImportService {
     * @param diFieldToTargetFieldMap the mapping of DI field to target field that will be evaluated.
     * @return Boolean whether any fields were populated
     */
-    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di, 
+    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di,
                                                             Map<String,String> diFieldToTargetFieldMap) {
         Boolean isPopulated = false;
         for (String diField : diFieldToTargetFieldMap.keySet()){
@@ -2034,7 +2033,7 @@ global with sharing class BDI_DataImportService {
                 break;
             }
         }
-        
+
         return isPopulated;
     }
 

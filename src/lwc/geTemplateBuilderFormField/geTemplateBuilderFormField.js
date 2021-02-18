@@ -106,6 +106,14 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
     }
 
+    get cssClassRenderedWidget() {
+        if (this.isWidget) {
+            return 'slds-size_10-of-12 slds-p-right_small';
+        } else {
+            return 'slds-size_5-of-12 slds-p-right_small';
+        }
+    }
+
     get name() {
         if (this.field.elementType === WIDGET) {
             return this.field.componentName;

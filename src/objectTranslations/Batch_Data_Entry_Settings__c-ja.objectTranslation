@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>バッチデータエントリ設定</value>
     </caseValues>
     <fields>
         <help>オンにすると、商談名が空白の場合 (バッチデータエントリページに含まれていない場合)、バッチデータエントリで商談に名前が付けられることはありません。</help>

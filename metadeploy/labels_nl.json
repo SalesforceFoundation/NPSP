@@ -79,6 +79,54 @@
         "Enhanced Recurring Donations Metadata Updates": {
             "message": "Updates van metagegevens van Uitgebreide terugkerende donaties",
             "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Relaties toevoegen voor Trailhead",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "Recordtypen voor opportunity inschakelen",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Configuratie Trailhead Playground",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "Standaardmetagegevens verwijderen",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "Beheerdersprofiel bijwerken",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "Laden van gegevens voorbereiden",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Gegevensset Trailhead laden",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "Laden van gegevens voltooien",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "Gebruiker maken",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "Taakeigenaarschap toewijzen",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "Gebruikers configureren",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "Eventeigenaarschap toewijzen",
+            "description": "title of installation step"
         }
     },
     "plan:new_org": {
@@ -116,6 +164,34 @@
     "checks": {
         "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
             "message": "Zorg ervoor dat Uitgebreide terugkerende donaties is ingeschakeld in uw organisatie voordat u start met de installatie.",
+            "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "Schakel vóór de installatie Mijn domein in uw organisatie in.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.": {
+            "message": "Voor het Nonprofit Success Pack is Chatter vereist. Schakel Chatter in uw organisatie in en probeer het opnieuw.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+            "message": "Geavanceerd valutabeheer moet uitgeschakeld zijn wanneer het Nonprofit Success Pack wordt geïnstalleerd, maar kan daarna weer worden ingeschakeld.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.": {
+            "message": "Het Nonprofit Success Pack is al geïnstalleerd in deze organisatie. Dit installatieprogramma is niet geschikt voor organisaties die al zijn voorzien van NPSP.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.": {
+            "message": "Het Nonprofit Success Pack is vereist voor de installatie van NPSP-rapporten en -dashboards. Installeer NPSP en probeer het opnieuw.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.": {
+            "message": "Geavanceerd valutabeheer moet uitgeschakeld zijn wanneer het Nonprofit Success Pack wordt geïnstalleerd, maar kan daarna weer worden ingeschakeld.",
+            "description": "shown if validation fails"
+        },
+        "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
+            "message": "Dit installatieprogramma is uitsluitend bedoeld voor Trailhead Playground-organisaties. Uw organisatie is kennelijk geen Trailhead Playground. Als u de installatie voortzet, kan uw organisatie beschadigd raken.",
             "description": "shown if validation fails"
         }
     },

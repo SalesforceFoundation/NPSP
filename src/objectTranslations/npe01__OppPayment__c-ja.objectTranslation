@@ -5,6 +5,16 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+        <label>ACH コード</label>
+        <name>ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+        <label>ACH の最後の 4 桁</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>トランザクションが承認された日時。</help>
         <label>承認日</label>
         <name>Authorized_Date__c</name>
@@ -13,6 +23,11 @@
         <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
         <label>承認 UTC タイムスタンプ</label>
         <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>この支払を支払済として設定したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
+        <label>バッチ番号</label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
@@ -35,14 +50,24 @@
         <name>Card_Network__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Donor Cover Amount --></label>
+        <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+        <label>支援者補償金額</label>
         <name>Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
         <label>Elevate の元の支払 ID</label>
         <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが却下された理由に関する詳細を提供します。</help>
+        <label>Elevate 支払 API 却下理由</label>
+        <name>Elevate_Payment_API_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>この Elevate に接続された支払レコードの API 状況値。</help>
+        <label>Elevate 支払 API 状況</label>
+        <name>Elevate_Payment_API_Status__c</name>
     </fields>
     <fields>
         <help>トランザクションが作成された日時。</help>
