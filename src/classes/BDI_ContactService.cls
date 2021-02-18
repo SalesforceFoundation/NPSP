@@ -112,13 +112,13 @@ public with sharing class BDI_ContactService {
         }
 
         // defer household naming until the end
-        HH_HouseholdNaming.disableHouseholdNaming(true);
+        HouseholdNamingService.disableHouseholdNaming(true);
 
         Set<Id> setDIIdUpdated = updateAndSaveContacts('Contact1');
         setDIIdUpdated.addAll(updateAndSaveContacts('Contact2'));
 
         // now update HH Names that we deferred
-        HH_HouseholdNaming.disableHouseholdNaming(false);
+        HouseholdNamingService.disableHouseholdNaming(false);
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : bdi.listDI) {
             if (setDIIdUpdated.contains(di.Id)) {
@@ -126,7 +126,7 @@ public with sharing class BDI_ContactService {
             }
         }
         if (setHHId.size() > 0) {
-            HH_HouseholdNaming hn = new HH_HouseholdNaming();
+            HouseholdNamingService hn = new HouseholdNamingService();
             hn.updateHouseholdNameAndMemberCount(new List<Id>(setHHId));
         }
     }

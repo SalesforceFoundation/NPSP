@@ -35,7 +35,7 @@
 public inherited sharing class Households extends fflib_SObjects {
 
     private Map<Id, npo02__Household__c> oldMap;
-    private HH_HouseholdNaming service;
+    private HouseholdNamingService service;
     private HouseholdSettings settings;
 
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
@@ -44,11 +44,11 @@ public inherited sharing class Households extends fflib_SObjects {
 
     @TestVisible
     private Households(List<npo02__Household__c> records, List<npo02__Household__c>
-            oldlist, HH_HouseholdNaming service, HouseholdSettings settings) {
+            oldlist, HouseholdNamingService service, HouseholdSettings settings) {
         super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
-        this.service = service == null ? new HH_HouseholdNaming() : service;
+        this.service = service == null ? new HouseholdNamingService() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 

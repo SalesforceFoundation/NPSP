@@ -134,7 +134,7 @@ public class HH_HouseholdNaming_TEST {
 
         //use future to prevent the before HH trigger from firing
         test.starttest();
-        HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(householdids);
+        HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(householdids);
         test.stoptest();
         //test a single member household, lastname, firstname, householdname:
         Contact con = [
@@ -221,7 +221,7 @@ public class HH_HouseholdNaming_TEST {
         newhhids.add(clist[clist.size() - 4].npo02__Household__r.id);
 
         //update our newly updated contact's households
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
+        HouseholdNamingService hn = new HouseholdNamingService();
         test.startTest();
         hn.updateHouseholdNameAndMemberCount(newhhids);
 
@@ -279,7 +279,7 @@ public class HH_HouseholdNaming_TEST {
 
         //test various re-orderings of names
 
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
+        HouseholdNamingService hn = new HouseholdNamingService();
 
         hn.updateHouseholdNameAndMemberCount(new list<Id>{hh.id});
 
@@ -386,7 +386,7 @@ public class HH_HouseholdNaming_TEST {
 
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
-        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+        HouseholdNamingService hhNaming = new HouseholdNamingService();
         // Specify null argument -> ensure records with null Account or Household do not have names updated
         List<Id> hhIds = new List<Id>{ contacts[0].AccountId, null };
 
@@ -490,7 +490,7 @@ public class HH_HouseholdNaming_TEST {
             '{!{!FirstName}}'
         );
 
-        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+        String soql = new HouseholdNamingService().strContactSelectStmtAllNamingFields;
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', // mandatory fields
@@ -526,7 +526,7 @@ public class HH_HouseholdNaming_TEST {
             '{!{!FirstName}}}'
         );
 
-        String soql = new HH_HouseholdNaming().strContactSelectStmtAllNamingFields;
+        String soql = new HouseholdNamingService().strContactSelectStmtAllNamingFields;
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c' // mandatory fields
@@ -561,7 +561,7 @@ public class HH_HouseholdNaming_TEST {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
-        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+        Set<String> fieldNames = new HouseholdNamingService().getHouseholdNamingContactFields();
 
         System.assert(fieldNames.isEmpty(), 'No field name should be returned: ' + fieldNames);
     }
@@ -582,7 +582,7 @@ public class HH_HouseholdNaming_TEST {
             '{!{!FirstName}}'
         );
 
-        Set<String> fieldNames = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+        Set<String> fieldNames = new HouseholdNamingService().getHouseholdNamingContactFields();
 
         // LastName is added to the HH Naming fields even if it is not in format fields
         Set<String> expectedFieldNames = new Set<String>{ 'lastname', 'LASTNAME', 'LastName', 'firstname', 'FirstName', 'SALUTATION' };
@@ -629,7 +629,7 @@ public class HH_HouseholdNaming_TEST {
         // The private Contact should not be returned by the query
         insert new Contact(LastName = 'foo', npe01__Private__c = true);
 
-        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+        HouseholdNamingService hhNaming = new HouseholdNamingService();
 
         List<Id> hhIds = null;
         List<Contact> contacts = hhNaming.householdMembersFor(hhIds);
@@ -692,7 +692,7 @@ public class HH_HouseholdNaming_TEST {
             System.assertEquals(contacts[i].AccountId, actual.AccountId, 'Account should be unchanged: ' + actual);
         }
 
-        HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
+        HouseholdNamingService hhNaming = new HouseholdNamingService();
 
         // Provide null Id to ensure records with null Account/Household are not selected unless
         // their Household/Account is provided in the input Id list

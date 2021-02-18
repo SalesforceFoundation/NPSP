@@ -35,7 +35,7 @@
 public inherited sharing class Accounts extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
-    private HH_HouseholdNaming householdNamingService;
+    private HouseholdNamingService householdNamingService;
     private HouseholdSettings settings;
 
     public Accounts(List<Account> records) {
@@ -47,12 +47,12 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     @TestVisible
-    private Accounts(List<Account> records, List<Account> oldlist, HH_HouseholdNaming
+    private Accounts(List<Account> records, List<Account> oldlist, HouseholdNamingService
             service, HouseholdSettings settings) {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
-        this.householdNamingService = service == null ? new HH_HouseholdNaming() : service;
+        this.householdNamingService = service == null ? new HouseholdNamingService() : service;
         this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 

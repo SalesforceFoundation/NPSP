@@ -123,10 +123,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private void updateHouseholdNameAndMemberCount(List<Id> contactsNeedingHouseholdNamesUpdated) {
         if (isFutureEligible()) {
-            HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(
+            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                     contactsNeedingHouseholdNamesUpdated);
         } else {
-            HH_HouseholdNaming hn = new HH_HouseholdNaming();
+            HouseholdNamingService hn = new HouseholdNamingService();
             hn.updateHouseholdNameAndMemberCount(contactsNeedingHouseholdNamesUpdated);
         }
     }
@@ -555,7 +555,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         if (householdNamingFieldsInUse != null) {
             return householdNamingFieldsInUse;
         }
-        householdNamingFieldsInUse = new HH_HouseholdNaming()
+        householdNamingFieldsInUse = new HouseholdNamingService()
                 .getHouseholdNamingContactFields();
         return householdNamingFieldsInUse;
     }

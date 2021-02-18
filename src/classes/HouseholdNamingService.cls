@@ -35,7 +35,7 @@
 * NOTE: This class handles both household naming for the Household__c object
 * as well as for HH Account objects.
 */
-public without sharing class HH_HouseholdNaming {
+public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
     private String nameReplacementText = System.Label.npo02.NameReplacementText;
@@ -61,7 +61,7 @@ public without sharing class HH_HouseholdNaming {
     public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
         //set our process control to avoid recursive updating on household records
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
+        HouseholdNamingService hn = new HouseholdNamingService();
         hn.updateHouseholdNameAndMemberCount(hhids);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
@@ -377,10 +377,10 @@ public without sharing class HH_HouseholdNaming {
         }
 
         if (shouldProcessSynchronously(accountIds)) {
-            HH_HouseholdNaming hhName = new HH_HouseholdNaming();
+            HouseholdNamingService hhName = new HouseholdNamingService();
             hhName.updateHouseholdNameAndMemberCount(accountIds);
         } else {
-            HH_HouseholdNaming.updateHouseholdNameAndMemberCountAsynchronously(accountIds);
+            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(accountIds);
         }
     }
 

@@ -662,7 +662,7 @@ private with sharing class HH_NameSpec_TEST {
 
         // refresh all names
         Test.startTest();
-        HH_HouseholdNaming.refreshAllHouseholdNaming(false);
+        HouseholdNamingService.refreshAllHouseholdNaming(false);
         Test.stopTest();
 
         // verify the results
@@ -766,7 +766,7 @@ private with sharing class HH_NameSpec_TEST {
 
         // refresh all names
         Test.startTest();
-        HH_HouseholdNaming.refreshAllHouseholdNaming(true);
+        HouseholdNamingService.refreshAllHouseholdNaming(true);
         Test.stopTest();
 
         // verify the results
@@ -828,7 +828,7 @@ private with sharing class HH_NameSpec_TEST {
 
         // refresh all names
         Test.startTest();
-        HH_HouseholdNaming.refreshAllHouseholdNaming(true);
+        HouseholdNamingService.refreshAllHouseholdNaming(true);
         Test.stopTest();
 
         // verify the results

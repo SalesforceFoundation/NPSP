@@ -246,7 +246,7 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(new HH_HouseholdNaming().getHouseholdNamingContactFields());
+            setContactFields.addAll(new HouseholdNamingService().getHouseholdNamingContactFields());
 
             return setContactFields;
         } catch (Exception ex) {

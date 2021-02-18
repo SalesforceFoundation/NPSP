@@ -175,7 +175,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         //process status in the UI.
 
         //now run the regular process for completing the batch run                
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
+        HouseholdNamingService hn = new HouseholdNamingService();
         set<id> hhids = new set<id>();
         for (sobject s : result) {
             Contact c = (Contact)s;        

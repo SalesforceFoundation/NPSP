@@ -35,7 +35,7 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    HH_HouseholdNaming service = new HH_HouseholdNaming();
+    HouseholdNamingService service = new HouseholdNamingService();
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -43,7 +43,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************************
      * @description the set of fields used for household naming
      */
-    private static final Set<String> HH_NAMING_FIELDS = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+    private static final Set<String> HH_NAMING_FIELDS = new HouseholdNamingService().getHouseholdNamingContactFields();
     /*******************************************************************************************************************
      * @description a set of languages that require different naming conventions
      */
