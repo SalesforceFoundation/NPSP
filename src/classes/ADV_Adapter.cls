@@ -120,7 +120,7 @@ global virtual with sharing class ADV_Adapter {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert
                 || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             accounts.setAccountTypeAndIndividualFieldValues();
-            accounts.setSystemFieldValues();
+            accounts.setSystemAccountTypeAndIndividualFieldValues();
         }
     }
 

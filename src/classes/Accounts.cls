@@ -62,7 +62,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     public void onBeforeUpdate() {
         setAccountTypeAndIndividualFieldValues();
-        setSystemFieldValues();
+        setSystemAccountTypeAndIndividualFieldValues();
         if (shouldSetHouseholdNameFields()) {
             setHouseholdNameFields();
         }
@@ -92,7 +92,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         );
     }
 
-    public void setSystemFieldValues() {
+    public void setSystemAccountTypeAndIndividualFieldValues() {
         for (Account acc : (List<Account>) getRecords()) {
             if (shouldResetAccountTypeAndIndividualFields(acc)) {
                 resetAccountTypeAndIndividualFields(acc);
