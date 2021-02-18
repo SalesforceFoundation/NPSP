@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Paramètre d&apos;allocation</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Paramètres d&apos;allocation</value>
     </caseValues>
     <fields>
         <help>L’activation des allocations par défaut crée un objet d’allocation pour chaque opportunité. Ceci permet des rapports sur les allocations pour une unité comptable générale par défaut, mais utilise plus d’espace de stockage.</help>
@@ -43,6 +43,6 @@
         <label>Utiliser l’année fiscale pour les cumuls</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

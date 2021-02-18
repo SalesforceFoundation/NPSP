@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Configuración de implantación personalizable</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Configuraciones de implantaciones personalizables</value>
     </caseValues>
     <fields>
         <help>Cuando se marcado, el trabajo nocturno Crédito duro cuenta (sin desfase) limita el número de cuentas para recalcularlas con oportunidades actualizadas recientemente en cuentas. Esto mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
@@ -109,5 +109,5 @@
         <label>Tamaño de lote despachador modo Desfase</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

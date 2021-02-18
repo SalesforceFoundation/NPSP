@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>カスタム列ヘッダー</value>
     </caseValues>
     <fields>
         <help>リストビューに表示される項目の API 参照名。</help>

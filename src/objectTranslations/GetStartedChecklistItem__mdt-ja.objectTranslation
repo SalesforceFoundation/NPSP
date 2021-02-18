@@ -2,128 +2,128 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Item --></value>
-   </caseValues>
+        <value>NPSP 使用開始チェックリスト項目</value>
+    </caseValues>
     <fields>
-        <help><!-- The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
+        <help>[使用開始] ページでのこの項目の [説明] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>説明表示ラベル名</label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- The API name of the Extra Info Label, which provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner. --></help>
-        <label><!-- Extra Info Label Name --></label>
+        <help>セクション項目に関する追加情報 (動画の長さ、PDF など) を提供する [追加情報] 表示ラベルの API 参照名。右上隅に表示されます。</help>
+        <label>追加情報表示ラベル名</label>
         <name>Extra_Info_Label__c</name>
     </fields>
     <fields>
-        <help><!-- The section on the Get Started page that this item is part of. --></help>
-        <label><!-- GS Checklist Section --></label>
+        <help>この項目が含まれる [使用開始] ページのセクション。</help>
+        <label>GS チェックリストセクション</label>
         <name>GS_Checklist_Section__c</name>
-        <relationshipLabel><!-- GS Checklist Items --></relationshipLabel>
-   </fields>
+        <relationshipLabel>GS チェックリスト項目</relationshipLabel>
+    </fields>
     <fields>
-        <help><!-- Indicates if the item has a link to display. --></help>
-        <label><!-- Has Link --></label>
+        <help>表示するリンクが項目にあるかどうかを示します。</help>
+        <label>リンクあり</label>
         <name>Has_Link__c</name>
     </fields>
     <fields>
-        <help><!-- The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render. --></help>
-        <label><!-- Image --></label>
+        <help>表示する CumulusResources 静的リソース (gsAssets/step フォルダ) 内の画像のファイル名。</help>
+        <label>画像</label>
         <name>Image__c</name>
     </fields>
     <fields>
-        <help><!-- The API name for the Link label of a link on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Link Label Name --></label>
+        <help>[使用開始] ページでのリンクの [リンク] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>リンク表示ラベル名</label>
         <name>Link_Label__c</name>
     </fields>
     <fields>
-        <help><!-- The target URL for a link on the Get Started page. --></help>
-        <label><!-- Link URL --></label>
+        <help>[使用開始] ページでのリンクのリダイレクト先 URL。</help>
+        <label>リンク URL</label>
         <name>Link_URL__c</name>
     </fields>
     <fields>
-        <help><!-- The position of this section item on the Get Started page. --></help>
-        <label><!-- Position --></label>
+        <help>[使用開始] ページでのこのセクション項目の位置。</help>
+        <label>位置</label>
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- The API name for the Primary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Primary Button Label Name --></label>
+        <help>[使用開始] ページでのセクション項目の [プライマリボタン] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>プライマリボタン表示ラベル名</label>
         <name>Primary_Button_Label__c</name>
     </fields>
     <fields>
-        <help><!-- The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page. --></help>
-        <label><!-- Primary Button Type --></label>
+        <help>プライマリボタンに関連するアクションの種別。ボタンが無効か、新しい Salesforce タブを開くか、外部ページを開くかを示します。</help>
+        <label>プライマリボタン種別</label>
         <name>Primary_Button_Type__c</name>
         <picklistValues>
             <masterLabel>Disabled</masterLabel>
-            <translation><!-- Disabled --></translation>
+            <translation>無効</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>External Page</masterLabel>
-            <translation><!-- External Page --></translation>
+            <translation>外部ページ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>SFDC New Tab</masterLabel>
-            <translation><!-- SFDC New Tab --></translation>
+            <translation>SFDC 新規タブ</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The action of the Primary Button.
-For an External Page button, the external URL.
-For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs. --></help>
-        <label><!-- Primary Button Value --></label>
+        <help>プライマリボタンのアクション。
+[外部ページ] ボタンの場合、外部 URL。
+[SFDC 新規タブ] ボタンの場合、形式は「{pageReference}:{objectOrPageApiName}:{action}」です。例とすべての仕様については、Lightning NavigationMixin ドキュメントを参照してください。</help>
+        <label>プライマリボタン値</label>
         <name>Primary_Button_Value__c</name>
     </fields>
     <fields>
-        <help><!-- The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Secondary Button Label Name --></label>
+        <help>[使用開始] ページでのセクション項目の [セカンダリボタン] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>セカンダリボタン表示ラベル名</label>
         <name>Secondary_Button_Label__c</name>
     </fields>
     <fields>
-        <help><!-- The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page --></help>
-        <label><!-- Secondary Button Type --></label>
+        <help>セカンダリボタンに関連するアクションの種別。ボタンが無効か、新しい Salesforce タブを開くか、外部ページを開くかを示します。</help>
+        <label>セカンダリボタン種別</label>
         <name>Secondary_Button_Type__c</name>
         <picklistValues>
             <masterLabel>Disabled</masterLabel>
-            <translation><!-- Disabled --></translation>
+            <translation>無効</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>External Page</masterLabel>
-            <translation><!-- External Page --></translation>
+            <translation>外部ページ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>SFDC New Tab</masterLabel>
-            <translation><!-- SFDC New Tab --></translation>
+            <translation>SFDC 新規タブ</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The action of the Secondary Button.
-For an External Page button, the external URL.
-For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs. --></help>
-        <label><!-- Secondary Button Value --></label>
+        <help>セカンダリボタンのアクション。
+[外部ページ] ボタンの場合、外部 URL。
+[SFDC 新規タブ] ボタンの場合、形式は「{pageReference}:{objectOrPageApiName}:{action}」です。例とすべての仕様については、Lightning NavigationMixin ドキュメントを参照してください。</help>
+        <label>セカンダリボタン値</label>
         <name>Secondary_Button_Value__c</name>
     </fields>
     <fields>
-        <help><!-- The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Title Label Name --></label>
+        <help>[使用開始] ページでのセクション項目の [タイトル] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>タイトル表示ラベル名</label>
         <name>Title_Label__c</name>
     </fields>
     <layouts>
         <layout>GS Checklist Item Layout</layout>
         <sections>
-            <label><!-- Buttons --></label>
+            <label>ボタン</label>
             <section>Buttons</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Info --></label>
+            <label>情報</label>
             <section>Info</section>
         </sections>
         <sections>
-            <label><!-- Link --></label>
+            <label>リンク</label>
             <section>Link</section>
         </sections>
     </layouts>

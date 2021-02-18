@@ -3,70 +3,77 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
     </caseValues>
     <fields>
-        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
+        <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+        <label>Name der Beschreibungsbezeichnung</label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
-        <label><!-- Page Tyepe --></label>
+        <help>Der Typ der Seite &quot;Erste Schritte&quot; (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
+        <label>Seitentyp</label>
         <name>Page_Type__c</name>
         <picklistValues>
             <masterLabel>Admin</masterLabel>
-            <translation><!-- Admin --></translation>
+            <translation>Administrator</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>End User</masterLabel>
-            <translation><!-- End User --></translation>
+            <translation>Endbenutzer</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The position of this section on the Get Started page. --></help>
-        <label><!-- Position --></label>
+        <help>Die Position dieses Abschnitts auf der Seite &quot;Erste Schritte&quot;.</help>
+        <label>Position</label>
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Title Label Name --></label>
+        <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+        <label>Name der Titelbezeichnung</label>
         <name>Title_Label__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>

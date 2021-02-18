@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierte Spaltenüberschrift</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschriften</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierte Spaltenüberschrift</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschriften</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschrift</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschriften</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschrift</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Benutzerdefinierten Spaltenüberschriften</value>
     </caseValues>
     <fields>
         <help>Der API-Name des Felds, das in der Listenansicht angezeigt wird.</help>
@@ -55,5 +55,5 @@
         <label>Listenname</label>
         <name>List_Name__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

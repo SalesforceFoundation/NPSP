@@ -2,16 +2,16 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Package Settings --></value>
+        <value>Configuración de paquete de NPSP</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Package Settings --></value>
+        <value>Configuraciones de paquetes de NPSP</value>
     </caseValues>
     <fields>
         <help>El prefijo del espacio de nombres del paquete activo para NPSP. No lo modifique manualmente.</help>
         <label>Prefijo de espacio de nombres</label>
         <name>Namespace_Prefix__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

@@ -17,7 +17,7 @@
     </fields>
     <fields>
         <help>エンゲージメント計画の作成日からの日数、またはこの ToDo の期日である親 ToDo の期日からの日数。</help>
-        <label>日後</label>
+        <label>経過日数</label>
         <name>Days_After__c</name>
     </fields>
     <fields>
