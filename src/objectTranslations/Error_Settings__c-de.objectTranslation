@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Error Settings --></value>
+        <value>Fehlereinstellungen</value>
     </caseValues>
     <fields>
         <help>Wird verwendet, um die letzte Ausführung der asynchronen Auftragsfehlerprotokollierung zu verfolgen.</help>
@@ -46,8 +46,8 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
-        <help>Wenn dies aktiviert ist, prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</help>
-        <label>Statusprüfungen für Daten in Datensätzen deaktivieren</label>
+        <help>Aktiviert prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</help>
+        <label>Keine Statusprüfungen von Datensätzen</label>
         <name>DisableRecordDataHealthChecks__c</name>
     </fields>
     <fields>
@@ -90,5 +90,5 @@
         <label>Fehler speichern</label>
         <name>Store_Errors_On__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

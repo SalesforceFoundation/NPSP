@@ -62,7 +62,7 @@
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
-        <help>Der maximale Betrag, den das Unternehmen mit jeder Schenkung abgleicht.</help>
+        <help>Der maximale Betrag, den das Unternehmen für jede Einzelspende verdoppelt.</help>
         <label>Max. Betrag Spendenverdopplung</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
@@ -221,7 +221,7 @@
         <name>Manage_Household</name>
     </webLinks>
     <webLinks>
-        <label>Neue Schenkung</label>
+        <label>Neue Spende</label>
         <name>New_Gift</name>
     </webLinks>
     <webLinks>

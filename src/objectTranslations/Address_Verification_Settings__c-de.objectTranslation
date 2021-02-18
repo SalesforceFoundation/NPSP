@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellung-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellungen-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellung-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellungen-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellung-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellungen-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellung-ERSETZT</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Adressüberprüfungseinstellungen-ERSETZT</value>
     </caseValues>
     <fields>
         <help>Für die Adressenüberprüfung verwendeter URL</help>
@@ -95,5 +95,5 @@
         <label>Endpunkt der PLZ-Überprüfung – ERSETZT</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

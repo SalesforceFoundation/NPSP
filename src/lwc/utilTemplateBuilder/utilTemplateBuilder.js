@@ -305,6 +305,12 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
+    let message = buildErrorMessage(error);
+
+    showToast(commonError, message, 'error', 'sticky');
+};
+
+const buildErrorMessage = (error) => {
     let message = commonUnknownError;
 
     // error.body is the error from apex calls
@@ -335,8 +341,8 @@ const handleError = (error) => {
         message = error.body.message;
     }
 
-    showToast(commonError, message, 'error', 'sticky');
-};
+    return message;
+}
 
 /*******************************************************************************
 * @description Creates a 'unique' id made to look like a UUID.
@@ -559,6 +565,7 @@ export {
     PICKLIST_FALSE,
     dispatch,
     handleError,
+    buildErrorMessage,
     generateId,
     inputTypeByDescribeType,
     isCheckboxToCheckbox,

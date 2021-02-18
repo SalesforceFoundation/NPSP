@@ -2,39 +2,46 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Sección de lista de comprobación de Empezar a trabajar de NPSP</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>Secciones de listas de comprobación de Empezar a trabajar de NPSP</value>
     </caseValues>
     <fields>
-        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
+        <help>El nombre de API para la etiqueta Descripción de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+        <label>Nombre de etiqueta de descripción</label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
-        <label><!-- Page Type --></label>
+        <help>El tipo de página Empezar a trabajar (Administrador o Usuario final) donde aparecerá esta sección.</help>
+        <label>Tipo de página</label>
         <name>Page_Type__c</name>
         <picklistValues>
             <masterLabel>Admin</masterLabel>
-            <translation><!-- Admin --></translation>
+            <translation>Administrador</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>End User</masterLabel>
-            <translation><!-- End User --></translation>
+            <translation>Usuario final</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The position of this section on the Get Started page. --></help>
-        <label><!-- Position --></label>
+        <help>La posición de esta sección en la página Empezar a trabajar.</help>
+        <label>Posición</label>
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Title Label Name --></label>
+        <help>El nombre de API para la etiqueta Título de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+        <label>Nombre de etiqueta de título</label>
         <name>Title_Label__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>

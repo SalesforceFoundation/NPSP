@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>住所検証設定-廃止</value>
     </caseValues>
     <fields>
         <help>住所検証に使用する URL。</help>

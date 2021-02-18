@@ -5,6 +5,16 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>Der SEC-Code (Standard Entry Class), der für diese ACH-Transaktion verwendet wird.</help>
+        <label>ACH-Code</label>
+        <name>ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>Die letzten vier Ziffern des Bankkontos, das für diese Transaktion verwendet wird.</help>
+        <label>ACH Letzte 4</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Datum und Uhrzeit der Autorisierung der Transaktion.</help>
         <label>Autorisierungsdatum</label>
         <name>Authorized_Date__c</name>
@@ -13,6 +23,11 @@
         <help>Datum und exakte Uhrzeit (auf die Millisekunde genau) der erfolgreichen Autorisierung dieser Transaktion vom Zahlungsgateway.</help>
         <label>UTC-Zeitstempel der Autorisierung</label>
         <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>Der Batch, der diese Zahlung als bezahlt festlegt. Dieses Feld wird auf der Grundlage Ihrer Einstellungen für Batch-Nummern in den NPSP-Einstellungen automatisch aufgefüllt.</help>
+        <label>Batch-Nummer</label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help>Der Ablaufmonat der Karte, die für diese Transaktion verwendet wurde.</help>
@@ -35,14 +50,24 @@
         <name>Card_Network__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Donor Cover Amount --></label>
+        <help>Der Betrag, den der Spender über den Spendenbetrag hinaus gezahlt hat, oftmals um die Transaktionsgebühren abzudecken oder der Spende ein Trinkgeld hinzuzufügen.</help>
+        <label>Deckungsbetrag des Spenders</label>
         <name>Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>Nur für Rückerstattungen. Zeigt die ID der ursprünglichen Zahlungstransaktion in Elevate.</help>
         <label>Ursprüngliche Zahlungs-ID in Elevate</label>
         <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Gibt Details zum Grund ab, warum eine Transaktion abgelehnt wurde.</help>
+        <label>Ablehnungsgrund Elevate-API für Zahlung</label>
+        <name>Elevate_Payment_API_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>Der API-Statuswert für diesen mit Elevate verbundenen Zahlungsdatensatz.</help>
+        <label>Status der Elevate-API für Zahlung</label>
+        <name>Elevate_Payment_API_Status__c</name>
     </fields>
     <fields>
         <help>Datum und Uhrzeit der Transaktionserstellung</help>

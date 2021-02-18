@@ -2,47 +2,46 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Numeración automática</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Numeraciones automáticas</value>
     </caseValues>
     <fields>
-        <label><!-- Display Format --></label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <label><!-- Field API Name --></label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <label><!-- Active --></label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <label><!-- Max Used Number --></label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
-        <label><!-- Description --></label>
+        <label>Descripción</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Starting Number --></label>
-        <name>Starting_Number__c</name>
+        <help>El formato para el campo con numeración automática, incluyendo el número de dígitos y, si se desea, un prefijo.</help>
+        <label>Formato de visualización</label>
+        <name>Display_Format__c</name>
     </fields>
     <fields>
-        <label><!-- Object API Name --></label>
+        <help>Nombre de API del campo que contiene la numeración automática.</help>
+        <label>Nombre de API de campo</label>
+        <name>Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>Cuando se selecciona el formato de la numeración automática es activo.</help>
+        <label>Activo</label>
+        <name>IsActive__c</name>
+    </fields>
+    <fields>
+        <help>La numeración automática más alta empleada para este formato.</help>
+        <label>Número utilizado máximo</label>
+        <name>Max_Used_Number__c</name>
+    </fields>
+    <fields>
+        <help>Nombre de API del objeto para la numeración automática.</help>
+        <label>Nombre API del objeto</label>
         <name>Object_API_Name__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
-    <layouts>
-        <layout>AutoNumber Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
+    <fields>
+        <help>El primer número de la secuencia de numeración automática.</help>
+        <label>Número inicial</label>
+        <name>Starting_Number__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Nombre de numeración automática</nameFieldLabel>
 </CustomObjectTranslation>
