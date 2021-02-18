@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help>この商談を作成したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
+        <label>バッチ番号</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>一括処理</label>
         <name>Batch__c</name>
         <relationshipLabel>商談</relationshipLabel>
@@ -154,18 +159,18 @@
     </fields>
     <fields>
         <help>この支援をマッチングする会社の取引先レコードに対する参照。</help>
-        <label>マッチング支援の取引先</label>
+        <label>マッチングギフトの取引先</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
     </fields>
     <fields>
         <help>この支援をマッチングする会社の名前。</help>
-        <label>マッチング支援利用者</label>
+        <label>マッチングギフト利用者</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help>この支援のマッチング支援の状況 (送信済みや受信済みなど)。</help>
-        <label>マッチング支援の状況</label>
+        <help>この支援のマッチングギフトの状況 (送信済みや受信済みなど)。</help>
+        <label>マッチングギフトの状況</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
@@ -181,8 +186,8 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>この支援のマッチング支援の商談レコードに対する参照。</help>
-        <label>マッチング支援</label>
+        <help>この支援のマッチングギフトの商談レコードに対する参照。</help>
+        <label>マッチングギフト</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
     </fields>
@@ -290,7 +295,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>マッチング支援情報</label>
+            <label>マッチングギフト情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -343,7 +348,7 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label>マッチング支援情報</label>
+            <label>マッチングギフト情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>

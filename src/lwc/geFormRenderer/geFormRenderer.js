@@ -13,11 +13,18 @@ import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_C
 import PAYMENT_GATEWAY_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
 import PAYMENT_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
 import PAYMENT_AUTHORIZED_AT from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
+import PAYMENT_CREATED_AT from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c';
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_CAMPAIGN_NAME from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-
+import PAYMENT_ACH_CODE from '@salesforce/schema/DataImport__c.Payment_ACH_Code__c';
+import PAYMENT_ACH_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
+import PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID
+    from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
+import PAYMENT_TYPE from '@salesforce/schema/DataImport__c.Payment_Type__c';
+import PAYMENT_ACH_CONSENT from '@salesforce/schema/DataImport__c.ACH_Consent__c';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
@@ -53,7 +60,8 @@ import {
     getNamespace,
     validateJSONString,
     relatedRecordFieldNameFor,
-    apiNameFor
+    apiNameFor,
+    isString
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -80,7 +88,15 @@ import DONATION_RECORD_TYPE_NAME
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME, LABEL_NEW_LINE } from 'c/geConstants';
+import {
+    DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+    LABEL_NEW_LINE,
+    ACCOUNT_HOLDER_BANK_TYPES,
+    ACCOUNT_HOLDER_TYPES,
+    PAYMENT_METHODS, ACH_CODE,
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_UNKNOWN_ERROR_STATUS
+} from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -109,6 +125,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     CONTACT1: 'Contact1'
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
+const ACH_CONSENT_MESSAGE = 'true';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -138,13 +155,13 @@ export default class GeFormRenderer extends LightningElement{
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
-    _isCreditCardWidgetInDoNotChargeState = false;
-    _hasCreditCardWidget = false;
+    _isElevateWidgetInDisabledState = false;
+    _hasPaymentWidget = false;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track widgetData = {}; // data that must be passed down to the allocations widget.
+    @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
     @track isAccessible = true;
 
     set selectedDonationOrPaymentRecord(record) {
@@ -206,7 +223,7 @@ export default class GeFormRenderer extends LightningElement{
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
-        return this._hasCreditCardWidget && this._isCreditCardWidgetInDoNotChargeState === false;
+        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -243,7 +260,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
-        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
+        registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
@@ -329,6 +346,11 @@ export default class GeFormRenderer extends LightningElement{
 
         this.sections = this.appendRecordTypeLocationInfoToPicklistElements();
         this.initializeFormState();
+        this.initializeWidgetConfig();
+    }
+
+    initializeWidgetConfig() {
+        this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
@@ -566,7 +588,7 @@ export default class GeFormRenderer extends LightningElement{
             this.addPageLevelErrorMessage({ errorMessage: exceptionWrapper.errorMessage, index: 0 });
         }
 
-        // focus either the page level or field level error messsage somehow
+        // focus either the page level or field level error message somehow
         window.scrollTo(0, 0);
     }
 
@@ -625,7 +647,7 @@ export default class GeFormRenderer extends LightningElement{
     tokenizeCard = async (sections) => {
         let widgetValues = [];
         sections.forEach(section => {
-            if (section.isCreditCardWidgetAvailable) {
+            if (section.isPaymentWidgetAvailable) {
                 widgetValues = widgetValues.concat(
                     section.paymentToken
                 );
@@ -635,6 +657,7 @@ export default class GeFormRenderer extends LightningElement{
             const tokenResponse = await Promise.all(
                 [widgetValues[0].payload]
             );
+
             if (tokenResponse) {
                 this.updateFormState(tokenResponse[0]);
             }
@@ -642,8 +665,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenizeCard() {
-        return !!(this.showPaymentSaveNotice &&
-            this.hasChargeableTransactionStatus());
+        return !!(this.showPaymentSaveNotice) && this.hasChargeableTransactionStatus();
     }
 
     /*******************************************************************************
@@ -1014,13 +1036,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     /**
-     * @description Set variable that informs the form renderer when the
-     *  credit card widget is in a 'do not charge' state
+     * @description Set variable that informs the form renderer when the widget is in a disabled state
      * @param event
      */
-    handleDoNotChargeCardState (event) {
-        this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
-        if (this._isCreditCardWidgetInDoNotChargeState) {
+    handleDisableElevateWidgetState (event) {
+        this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
+        if (this._isElevateWidgetInDisabledState) {
             this.removePaymentFieldsFromFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -1393,8 +1414,8 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handleRegisterCreditCardWidget() {
-       this._hasCreditCardWidget = true;
+    handleRegisterPaymentWidget() {
+       this._hasPaymentWidget = true;
     }
 
     /*******************************************************************************
@@ -1961,7 +1982,7 @@ export default class GeFormRenderer extends LightningElement{
 
     hasProcessableDataImport() {
         return !this.hasFailedPurchaseRequest ||
-            this._isCreditCardWidgetInDoNotChargeState;
+            this._isElevateWidgetInDisabledState;
     }
 
     hasAuthorizationToken() {
@@ -1972,22 +1993,39 @@ export default class GeFormRenderer extends LightningElement{
     shouldMakePurchaseRequest() {
         return this.hasAuthorizationToken() &&
             this.hasChargeableTransactionStatus() &&
-            !this._isCreditCardWidgetInDoNotChargeState;
+            !this._isElevateWidgetInDisabledState;
     }
 
     hasChargeableTransactionStatus = () => {
-        const paymentStatus = this.getFieldValueFromFormState(apiNameFor(PAYMENT_STATUS));
-        switch (paymentStatus) {
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
-            default: return true;
+        if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
+            this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+
+            return false;
         }
+
+        const paymentStatus = this.convertPaymentStatusToUpperCase(
+            this.getFieldValueFromFormState(PAYMENT_STATUS));
+
+        switch (paymentStatus) {
+            case '':
+            case undefined:
+            case null:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
+            case PAYMENT_UNKNOWN_ERROR_STATUS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    convertPaymentStatusToUpperCase(paymentStatus) {
+        if (isString(paymentStatus)) {
+            return paymentStatus.toUpperCase();
+        }
+        return paymentStatus;
     }
 
     /*******************************************************************************
@@ -2015,20 +2053,25 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     saveDataImport = async (dataImportFromFormState) => {
-        this.loadingText = this.hasDataImportId ?
-            this.CUSTOM_LABELS.geTextUpdating :
-            this.CUSTOM_LABELS.geTextSaving;
+        this.loadingText = this.hasDataImportId
+            ? this.CUSTOM_LABELS.geTextUpdating
+            : this.CUSTOM_LABELS.geTextSaving;
 
-        const upsertResponse = await upsertDataImport({ dataImport: dataImportFromFormState });
-        this.updateFormState(upsertResponse);
+        try {
+            const upsertResponse = await upsertDataImport({
+                dataImport: dataImportFromFormState
+            });
+            this.updateFormState(upsertResponse);
+        } catch (err) {
+            handleError(err);
+        }
     };
 
     makePurchaseRequest = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
-
         const responseBodyString = await sendPurchaseRequest({
             requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
-            dataImportRecordId: this.getFieldValueFromFormState('id')
+            dataImportRecordId: this.getFieldValueFromFormState('id'),
         });
 
         const responseBody = JSON.parse(responseBodyString);
@@ -2036,48 +2079,126 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     buildPurchaseRequestBodyParameters() {
-        const { firstName, lastName } = this.cardholderNames;
-        const metadata = {
-            campaignCode: this.getFieldValueFromFormState(apiNameFor(DONATION_CAMPAIGN_NAME))
-        };
+        if (this.selectedPaymentMethod() === PAYMENT_METHODS.ACH) {
+            return this.buildACHPurchaseRequestBodyParameters();
+        } else {
+            return this.buildCreditCardPurchaseRequestBodyParameters();
+        }
+    }
 
+    buildACHPurchaseRequestBodyParameters() {
+        const metadata = {
+            campaignCode: this.getFieldValueFromFormState(DONATION_CAMPAIGN_NAME)
+        };
+        const achData = {
+            achCode: ACH_CODE,
+            consent: ACH_CONSENT_MESSAGE,
+            type: this.accountHolderType(),
+            bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
+        }
+        const amount = getCurrencyLowestCommonDenominator(
+            this.getFieldValueFromFormState(DONATION_AMOUNT));
+        const paymentMethodToken =
+            this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN);
+
+        return JSON.stringify({
+            ...this.buildACHPurchaseBodyNameParameter(),
+            paymentMethodType : PAYMENT_METHODS.ACH,
+            amount: amount,
+            paymentMethodToken: paymentMethodToken,
+            achData : achData,
+            metadata: metadata
+        });
+
+    }
+
+    buildACHPurchaseBodyNameParameter() {
+        let names;
+        if (this.isDonorTypeContact()) {
+            names = {
+                firstName: this.donorNames.firstName,
+                lastName: this.donorNames.lastName
+            };
+        } else {
+            names = {
+                accountName: this.donorNames.accountName
+            }
+        }
+        return names;
+    }
+
+    buildCreditCardPurchaseRequestBodyParameters() {
+        const {firstName, lastName} = this.cardholderNames;
+        const metadata = {
+            campaignCode: this.getFieldValueFromFormState(
+                apiNameFor(DONATION_CAMPAIGN_NAME)),
+        };
         return JSON.stringify({
             firstName: firstName,
             lastName: lastName,
             metadata: metadata,
             amount: getCurrencyLowestCommonDenominator(
-                this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT))
+                this.getFieldValueFromFormState(apiNameFor(DONATION_AMOUNT)),
             ),
             paymentMethodToken:
-                this.getFieldValueFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
+                this.getFieldValueFromFormState(
+                    apiNameFor(PAYMENT_AUTHORIZE_TOKEN)),
+            paymentMethodType: PAYMENT_METHODS.CREDIT_CARD,
         });
     }
 
+    accountHolderType() {
+        return this.isDonorTypeContact()
+            ? ACCOUNT_HOLDER_TYPES.INDIVIDUAL
+            : ACCOUNT_HOLDER_TYPES.BUSINESS;
+    }
+
+    selectedPaymentMethod () {
+        return this.getFieldValueFromFormState(PAYMENT_METHOD);
+    }
+
     processPurchaseResponse = async (responseBody) => {
-        const isPurchaseFailed = responseBody.errors;
-        if (isPurchaseFailed) {
+        if (responseBody.errors) {
             this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
             this.handlePurchaseCallValidationErrors(responseBody.errors);
             this.hasFailedPurchaseRequest = true;
         }
 
-        const isPurchaseTimedout = !responseBody.id && responseBody.message && responseBody.status;
-        if (isPurchaseTimedout) {
+        if (this.hasPurchaseTimedOut(responseBody)) {
             this.updateFormStateWithTimedoutPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = true;
             this.hasPurchaseCallTimedout = true;
             this.formatTimeoutErrorMessage();
         }
 
-        const isPurchaseCreated =
-            responseBody.id && responseBody.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
-        if (isPurchaseCreated) {
+        if (this.isPurchaseCreated(responseBody)) {
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
 
         await this.saveDataImport(this.saveableFormState());
     }
+
+    isPurchaseCreated(responseBody) {
+        return responseBody.id
+            && this.isCreditCardTransactionSuccessResponse(responseBody)
+            || this.isACHTransactionSuccessResponse(responseBody);
+    }
+
+    isCreditCardTransactionSuccessResponse(responseBody) {
+        return responseBody.status ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+    }
+
+    isACHTransactionSuccessResponse(responseBody) {
+        return responseBody.status ===
+            this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED;
+    }
+
+    hasPurchaseTimedOut (responseBody) {
+        return !responseBody.id && responseBody.message && responseBody.status;
+    }
+
 
     updateFormStateWithFailedPurchaseCall(errors) {
         if (errors && errors[0]) {
@@ -2095,9 +2216,13 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handlePurchaseCallValidationErrors(errors) {
-        const errorMessage = JSON.stringify(errors.map(error => error.message)) || this.CUSTOM_LABELS.commonUnknownError;
-        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorMessage];
-        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+        const errorMessage = JSON.stringify(
+            errors.map(error => error.message))
+            || this.CUSTOM_LABELS.commonUnknownError;
+        let labelReplacements = [
+            this.CUSTOM_LABELS.commonPaymentServices, errorMessage];
+        let formattedErrorResponse = format(
+            this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
 
         const error = {
             message: formattedErrorResponse.split(LABEL_NEW_LINE),
@@ -2114,18 +2239,55 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     updateFormStateWithSuccessfulPurchaseCall(responseBody) {
-        this.updateFormState({
+        const baseDataImportPaymentFields = {
             [apiNameFor(PAYMENT_ELEVATE_ID)]: responseBody.id,
             [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
-            [apiNameFor(PAYMENT_CARD_NETWORK)]: responseBody.cardData.brand,
-            [apiNameFor(PAYMENT_LAST_4)]: responseBody.cardData.last4,
-            [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: responseBody.cardData.expirationMonth,
-            [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: responseBody.cardData.expirationYear,
             [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
             [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
             [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
             [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
+            [apiNameFor(PAYMENT_CREATED_AT)]: responseBody.createdAt
+        };
+
+        if (this.isCreditCardTransaction()) {
+            this.updateFormStateWithCreditCardTransactionResponse(
+                baseDataImportPaymentFields, responseBody);
+        } else {
+            this.updateFormStateWithACHTransactionResponse(
+                baseDataImportPaymentFields, responseBody);
+        }
+    }
+
+    updateFormStateWithCreditCardTransactionResponse(
+        baseDataImportPaymentFields, responseBody) {
+        this.updateFormState({
+            ...baseDataImportPaymentFields,
+            [apiNameFor(PAYMENT_CARD_NETWORK)]: responseBody.cardData.brand,
+            [apiNameFor(PAYMENT_LAST_4)]: responseBody.cardData.last4,
+            [apiNameFor(
+                PAYMENT_EXPIRATION_MONTH)]: responseBody.cardData.expirationMonth,
+            [apiNameFor(
+                PAYMENT_EXPIRATION_YEAR)]: responseBody.cardData.expirationYear
         });
+    }
+
+    updateFormStateWithACHTransactionResponse(
+        baseDataImportPaymentFields, responseBody) {
+        this.updateFormState({
+            ...baseDataImportPaymentFields,
+            [apiNameFor(PAYMENT_ACH_LAST_4)]: responseBody.achData.last4,
+            [apiNameFor(PAYMENT_ACH_CODE)]: responseBody.achData.achCode,
+            [apiNameFor(PAYMENT_METHOD)]: responseBody.paymentType,
+            [apiNameFor(
+                PAYMENT_ACH_CONSENT)]: responseBody.achData.consentMessage,
+            [apiNameFor(PAYMENT_TYPE)]: responseBody.paymentType,
+            [apiNameFor(
+                PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: responseBody.originalTransactionId,
+        });
+    }
+
+    isCreditCardTransaction() {
+        return this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     processDataImport = async () => {
@@ -2145,36 +2307,35 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleBdiProcessingError(error) {
-        if (this.hasCapturedPayment) {
+        if (this.isProcessableElevateTransaction) {
             const exceptionDataError = new ExceptionDataError(error);
-            this.handleCardChargedBDIFailedError(exceptionDataError);
+            this.handleElevateTransactionBDIError(exceptionDataError);
         } else {
             this.handleCatchOnSave(error);
             this.toggleSpinner();
         }
     }
 
-    get hasCapturedPayment() {
-        const paymentStatus = this.getFieldValueFromFormState(
-            apiNameFor(PAYMENT_STATUS)
-        );
-        return paymentStatus &&
-            paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+    get isProcessableElevateTransaction() {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
+        return paymentStatus
+            && (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED);
 
     }
 
-    handleCardChargedBDIFailedError(exceptionDataError) {
+    handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
 
-        const pageLevelError = this.buildCardChargedBDIFailedError(exceptionDataError);
+        const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
         this.addPageLevelErrorMessage(pageLevelError);
 
         this.disabled = false;
         this.toggleSpinner();
     }
 
-    buildCardChargedBDIFailedError(exceptionDataError) {
+    buildElevateTransactionBDIError(exceptionDataError) {
         return {
             index: 0,
             errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,

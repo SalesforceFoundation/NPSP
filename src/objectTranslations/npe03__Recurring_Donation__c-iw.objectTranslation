@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help><!-- The last four digits of the bank account used for this transaction. --></help>
+        <label><!-- ACH Last 4 --></label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help><!-- Sets future monthly, custom monthly, or quarterly donation installments to the last day of the month, regardless of Next Donation Date. Installment period must be Monthly or Quarterly, or a custom installment period using months. --></help>
         <label><!-- Always use last day of month --></label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help><!-- The expiration month of the card used for this Recurring Donation. --></help>
+        <label><!-- Card Expiration Month --></label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help><!-- The expiration year of the card used for this Recurring Donation. --></help>
+        <label><!-- Card Expiration Year --></label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The last four digits of the card used for this Recurring Donation. --></help>
+        <label><!-- Card Last 4 --></label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help><!-- The reason this Recurring Donation has its current Status value. --></help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help><!-- The last Elevate event played resulting in an update to this Recurring Donation. --></help>
+        <label><!-- Last Elevate Event Played --></label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help><!-- This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only). --></help>
         <label><!-- Next Year Value --></label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation><!-- Lapsed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation><!-- Paused --></translation>
         </picklistValues>
     </fields>
     <quickActions>

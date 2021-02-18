@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help>De batch waarmee deze opportunity is gemaakt. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
+        <label>Batchnummer</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>Batch</label>
         <name>Batch__c</name>
         <relationshipLabel>Opportunities</relationshipLabel>

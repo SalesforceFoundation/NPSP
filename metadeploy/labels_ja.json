@@ -79,6 +79,54 @@
         "Enhanced Recurring Donations Metadata Updates": {
             "message": "拡張継続支援メタデータの更新",
             "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Trailhead 用のリレーションの追加",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "商談レコードタイプの確認",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Trailhead Playground 設定",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "デフォルトのメタデータの削除",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "管理者プロファイルの更新",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "データ読み込みの準備",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Trailhead データセットの読み込み",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "データ読み込みの最終処理",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "ユーザの作成",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "ToDo の所有者の割り当て",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "ユーザの設定",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "行動の所有者の割り当て",
+            "description": "title of installation step"
         }
     },
     "plan:new_org": {
@@ -116,6 +164,34 @@
     "checks": {
         "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
             "message": "インストールを開始する前に組織で拡張継続支援が有効になっていることを確認してください。",
+            "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "インストールの前に組織で [私のドメイン] を有効にしてください。",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.": {
+            "message": "Nonprofit Success Pack には Chatter が必要です。組織で Chatter を有効にして、もう一度お試しください。",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+            "message": "Nonprofit Success Pack をインストールするには、高度な通貨管理が無効になっている必要があります。インストール後に高度な通貨管理を有効化できます。",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.": {
+            "message": "Nonprofit Success Pack はすでにこの組織にインストールされています。このインストーラは、すでに NPSP がある組織では使用できません。",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.": {
+            "message": "NPSP レポート & ダッシュボードをインストールするには、Nonprofit Success Pack が必要です。NPSP をインストールして、もう一度お試しください。",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.": {
+            "message": "Nonprofit Success Pack をインストールするには、高度な通貨管理が無効になっている必要があります。インストール後に高度な通貨管理を有効化できます。",
+            "description": "shown if validation fails"
+        },
+        "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
+            "message": "このインストーラは Trailhead Playground 組織のみを対象としています。この組織は Trailhead Playground ではないようです。インストールを続行すると、組織に悪影響を及ぼす可能性があります。",
             "description": "shown if validation fails"
         }
     },

@@ -33,6 +33,11 @@
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
+        <help>このバッチの一意の自動採番識別子。</help>
+        <label>バッチ番号</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <help>各バッチで一度に処理されるレコードの数。</help>
         <label>バッチサイズ</label>
         <name>Batch_Process_Size__c</name>
@@ -151,7 +156,7 @@
     </fields>
     <fields>
         <help>[最終処理日時] 項目の日付で処理に失敗したレコードの数を示します。</help>
-        <label>失敗したレコード</label>
+        <label>失敗したレコード数</label>
         <name>Records_Failed__c</name>
     </fields>
     <fields>

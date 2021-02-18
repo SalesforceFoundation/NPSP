@@ -680,6 +680,10 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <name>CallableApiJobScheduleInvalidClass</name>
+    </customLabels>
+    <customLabels>
         <label>{0} no está implementado</label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -754,6 +758,10 @@
     <customLabels>
         <label>a</label>
         <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Registro de errores</label>
+        <name>ERR_RecordLogTitle</name>
     </customLabels>
     <customLabels>
         <label>Salesforce encontró estos errores de NPSP. Para conocer más detalles sobre errores comunes, consulte &quot;Solucionar problemas del Nonprofit Success Pack&quot; en Power of Us Hub. Si no está seguro de cómo resolver los errores, publique un mensaje en el grupo Nonprofit Success Pack: https://powerofus.force.com/HUB_NPSP_Group</label>
@@ -840,6 +848,10 @@
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
+        <label>Cuando Estado sin finalización definida es Cerrado y Tipo de programación no está relleno, Cantidad de cuotas planificadas debe ser 1.</label>
+        <name>RD2_DataMigrationInvalidPlannedInstallments</name>
+    </customLabels>
+    <customLabels>
         <label>Debe introducir un valor para Día del mes cuando Período de cuota es Mensual.</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
@@ -852,12 +864,52 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Cancelación de pago recurrente en progreso</label>
+        <name>RD2_ElevateCancelInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>No introduzca información de pago.</label>
+        <name>RD2_ElevateDisableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate no está activado para su organización de Salesforce</label>
+        <name>RD2_ElevateDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>No está introduciendo información de pago que Elevate procesará.</label>
+        <name>RD2_ElevateDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>De forma alternativa, introduzca los detalles del pago ahora.</label>
+        <name>RD2_ElevateEnableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Información de Elevate</label>
+        <name>RD2_ElevateInformationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>No hay errores</label>
+        <name>RD2_ElevateInformationStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label>Esta función no se admite en estos momentos para Donaciones recurrentes generadas desde Servicios de pago de Elevate.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
+        <label>Proceso de Elevate pendiente</label>
+        <name>RD2_ElevatePendingStatus</name>
+    </customLabels>
+    <customLabels>
         <label>No se pueden modificar las Donaciones recurrentes procedentes de Servicios de pago de Elevate en NPSP excepto por el usuario de Integración de Servicios de pago de Elevate.</label>
         <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede modificar el estado de una donación recurrente de Elevate conectada cuando Estado es Cerrado.</label>
+        <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>No se pudo crear un pago recurrente de Elevate. Póngase en contacto con su administrador del sistema para obtener asistencia.</label>
+        <name>RD2_ElevateRecordCreateFailed</name>
     </customLabels>
     <customLabels>
         <label>¡Casi hemos terminado! Solo hay que comprobar un par de cosas primero. . .</label>
@@ -1042,6 +1094,10 @@
         <name>RD2_EnablementSimpleIntro</name>
     </customLabels>
     <customLabels>
+        <label>La fecha de finalización no puede estar en el para donaciones recurrentes de Elevate conectadas.</label>
+        <name>RD2_EndDateElevateCannotBeInFuture</name>
+    </customLabels>
+    <customLabels>
         <label>La fecha de finalización debe ser posterior a la fecha de cierre de la última Oportunidad Cerrada ganada.</label>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
     </customLabels>
@@ -1114,6 +1170,27 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Se ha creado un pago recurrente en Elevate. Id. recurrente de Elevate: {0}.
+        
+        No obstante, no se creó una Donación recurrente equivalente en NPSP debido al siguiente error:
+        ● {1}
+        
+        Puede mantener este formulario abierto, solucionar el error y guardar la Donación recurrente de nuevo. De manera alternativa, cancele y póngase en contacto con su administrador del sistema para obtener ayuda.</label>
+        <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardando pago recurrente de Elevate... Esta acción puede tardar unos minutos.</label>
+        <name>RD2_EntryFormSaveCommitmentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Validando tarjeta de crédito...</label>
+        <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardando donación recurrente...</label>
+        <name>RD2_EntryFormSaveRecurringDonationMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Todos</label>
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
@@ -1132,6 +1209,10 @@
     <customLabels>
         <label>Debe activar Donaciones recurrentes mejoradas antes de que pueda ejecutar el trabajo por lotes de Donaciones recurrentes mejoradas.</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Se produjo un error al crear el registro Donación recurrente. No se envió ninguna solicitud de pago recurrente a Elevate. Póngase en contacto con su administrador del sistema para obtener asistencia.</label>
+        <name>RD2_ErrorRDIdIsMissingForCommitment</name>
     </customLabels>
     <customLabels>
         <label>Se requiere la frecuencia de la cuota. Introduzca un valor entre 1 y 20.</label>
@@ -1204,6 +1285,10 @@
     <customLabels>
         <label>Ha seleccionado 1 cuota.</label>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP no puede actualizar Estado y Motivo de estado en donaciones recurrentes en pausa. Debe agregar el valor de lista de selección &quot;En pausa&quot; al campo Estado.</label>
+        <name>RD2_PauseStatusMustExist</name>
     </customLabels>
     <customLabels>
         <label>Motivo de la pausa</label>
@@ -1490,12 +1575,12 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label>Haga clic para ampliar esta sección.</label>
         <name>accordionSection_ToggleInstructionsWhenClosed</name>
-        <label>Haga clic para alternar la sección. Esta sección no está abierta.</label>
     </customLabels>
     <customLabels>
+        <label>Haga clic para cerrar esta sección.</label>
         <name>accordionSection_ToggleInstructionsWhenOpen</name>
-        <label>Haga clic para alternar la sección. Esta sección está abierta.</label>
     </customLabels>
     <customLabels>
         <label>Llamada no válida. Esta función está reservada para uso de Salesforce.</label>
@@ -1708,11 +1793,75 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <label>Este formato de visualización ya está en uso.</label>
+        <name>autoNumberErrorDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>Formato de visualización no válido.</label>
+        <name>autoNumberErrorInvalidDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardar y activar</label>
+        <name>batchNumberSettingsActivate</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurar número de lote</label>
+        <name>batchNumberSettingsConfigureHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Active o desactive formatos de número de lotes. Solo puede haber un formato de número de lotes activo al mismo tiempo.</label>
+        <name>batchNumberSettingsDescActivation</name>
+    </customLabels>
+    <customLabels>
+        <label>El formato de visualización le permite controlar el aspecto de su campo con numeración automática. Debe ser exclusivo e incluir el número de dígitos, así como un prefijo si se desea. Su formato puede tener hasta 30 caracteres.&lt;/br&gt;&lt;/br&gt;
+            Ejemplos&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            Una secuencia con formato {0} con un número inicial de 9 se muestra como 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            Una secuencia con formato {00000} con un número inicial de 9 se muestra como 00009,
+            00010, 00011, etc.
+
+            &lt;/li&gt;
+            &lt;li&gt;
+            Una secuencia con formato ABC-{0000} con un número inicial de 9 se muestra como ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </label>
+        <name>batchNumberSettingsDescDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Los números de lote son identificadores exclusivos empleados en Entrada de regalos y el Importador de datos de NPSP. El valor con numeración automática aparece en los campos Número de lote en Oportunidades y Pagos.</label>
+        <name>batchNumberSettingsDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Cree un formato de número de lote y elija un número inicial. Deberá activar el nuevo formato de número de lote. Solo puede haber un formato de número de lote activo al mismo tiempo.</label>
+        <name>batchNumberSettingsDescriptionCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>No se puede guardar el formato con numeración automática. Revise los errores e inténtelo de nuevo.</label>
+        <name>batchNumberSettingsError</name>
+    </customLabels>
+    <customLabels>
+        <label>Configuración de número de lote</label>
+        <name>batchNumberSettingsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre los formatos de visualización.</label>
+        <name>batchNumberSettingsHeaderDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Formatos de número de lotes</label>
+        <name>batchNumberSettingsHeaderFormats</name>
+    </customLabels>
+    <customLabels>
+        <label>No se admite la entrada de datos en lote</label>
         <name>bdeRetirementBlockerHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.</label>
         <name>bdeRetirementBlockerMessage</name>
     </customLabels>
     <customLabels>
@@ -2611,6 +2760,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>Activar</label>
+        <name>commonActivate</name>
+    </customLabels>
+    <customLabels>
         <label>Debe ser administrador del sistema para acceder a esta página.</label>
         <name>commonAdminPermissionErrorMessage</name>
     </customLabels>
@@ -2659,12 +2812,24 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonCardType</name>
     </customLabels>
     <customLabels>
+        <label>Nombre de titular de tarjeta</label>
+        <name>commonCardholderName</name>
+    </customLabels>
+    <customLabels>
         <label>Duplicar</label>
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label>Cerrar</label>
+        <name>commonClose</name>
+    </customLabels>
+    <customLabels>
         <label>Ya hay un trabajo ejecutándose en la clase de Apex {0}. El trabajo debe completarse antes de que pueda ejecutarse de nuevo.</label>
         <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Póngase en contacto con su administrador del sistema para obtener ayuda.</label>
+        <name>commonContactSystemAdminMessage</name>
     </customLabels>
     <customLabels>
         <label>Número de tarjeta</label>
@@ -2673,6 +2838,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Error crítico</label>
         <name>commonCriticalError</name>
+    </customLabels>
+    <customLabels>
+        <label>Desactivar</label>
+        <name>commonDeactivate</name>
     </customLabels>
     <customLabels>
         <label>Valor predeterminado</label>
@@ -2695,15 +2864,19 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonError</name>
     </customLabels>
     <customLabels>
+        <label>Error: {0}</label>
+        <name>commonErrorPrefix</name>
+    </customLabels>
+    <customLabels>
         <label>Etiqueta de campo</label>
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Field not found --></label>
+        <label>Campo no encontrado</label>
         <name>commonFieldNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fields Not Found --></label>
+        <label>Campos no encontrados</label>
         <name>commonFieldsNotFound</name>
     </customLabels>
     <customLabels>
@@ -2815,8 +2988,16 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonViewAll</name>
     </customLabels>
     <customLabels>
+        <label>Ver registro de errores</label>
+        <name>commonViewErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label>Ver más</label>
         <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Espere...</label>
+        <name>commonWaitMessage</name>
     </customLabels>
     <customLabels>
         <label>Advertencia</label>
@@ -3412,7 +3593,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <label>Este formulario contiene campos que no se pueden encontrar. Consúltelo con su administrador.</label>
         <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
@@ -3622,7 +3803,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
             seleccione No realizar cargo en tarjeta para introducir una donación sin procesar un pago con tarjeta. {0} errores:
-            /0x0A/ {1} </label>
+            /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
     </customLabels>
     <customLabels>
@@ -3668,6 +3849,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Realizando cargo en tarjeta…</label>
         <name>geTextChargingCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Instructions to add Payment Method --></label>
+        <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>{0} elemento</label>
@@ -3764,6 +3949,778 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>A su organización le falta la configuración necesaria para el procesamiento de regalos. Póngase en contacto con su administrador para obtener ayuda.</label>
         <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
+        <label>LISTA DE COMPROBACIÓN DE CONFIGURACIÓN DE ADMINISTRADOR</label>
+        <name>gsAdminSetupTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Estado de solicitud:</label>
+        <name>gsApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Comprobar estado de solicitud</label>
+        <name>gsApplicationStatusModalHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Solicitar licencias de Salesforce</label>
+        <name>gsApplyForFreeLicenses</name>
+    </customLabels>
+    <customLabels>
+        <label>Comprobar estado</label>
+        <name>gsCheckStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Familiarícese con conceptos y funciones clave.</label>
+        <name>gsChecklistExploreNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorar el Nonprofit Success Pack (NPSP)</label>
+        <name>gsChecklistExploreNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dé a los usuarios acceso a NPSP y gestione permisos para su organización para garantizar que las personas adecuadas tengan acceso a justo lo que necesitan para seguir llevando las cosas con suavidad.</label>
+        <name>gsChecklistItemAddUserDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre la incorporación de usuarios en Trailhead</label>
+        <name>gsChecklistItemAddUserLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Agregar usuarios</label>
+        <name>gsChecklistItemAddUserTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Mucho antes de que mueva el interruptor y empiece a utilizar Salesforce, debería crear un plan para comunicarse con claridad, de manera compasiva y transparente con su organización sobre el cambio.</label>
+        <name>gsChecklistItemCommunicateWithUserskDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre Chatter en Trailhead</label>
+        <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Comunicarse con sus usuarios</label>
+        <name>gsChecklistItemCommunicateWithUserskTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Mantenga un seguimiento de las donaciones, las becas y cualquier otro tipo de ingresos de modo que pueda identificar patrones de aportación y comprender lo que dirige la aportación al nivel constitutivo. Empiece aprendiendo cómo introducir donaciones en NPSP.</label>
+        <name>gsChecklistItemCreateDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las donaciones en Trailhead</label>
+        <name>gsChecklistItemCreateDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear donaciones</label>
+        <name>gsChecklistItemCreateDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear una donación</label>
+        <name>gsChecklistItemCreateDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprenda prácticas recomendadas para utilizar listas de selección, filtros, fórmulas y otras herramientas en el Gestor de objetos para personalizar los objetos de su organización.</label>
+        <name>gsChecklistItemCustomFieldsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre el Gestor de objetos en Trailhead</label>
+        <name>gsChecklistItemCustomFieldsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Personalizar objetos</label>
+        <name>gsChecklistItemCustomFieldsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vídeo de 4 minutos</label>
+        <name>gsChecklistItemExtraFourMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vídeo de 1 minuto</label>
+        <name>gsChecklistItemExtraOneMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vídeo de 60 minutos</label>
+        <name>gsChecklistItemExtraSixtyMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vídeo de 2 minutos</label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprenda cómo aprovechar herramientas incorporadas como las vistas de listas y Ruta para gestionar con eficiencia sus procesos de obtención de fondos y donación.</label>
+        <name>gsChecklistItemFundraisingProcessDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre las vistas de lista y Ruta en Trailhead</label>
+        <name>gsChecklistItemFundraisingProcessLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear vistas de lista</label>
+        <name>gsChecklistItemFundraisingProcessPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualizar sus procesos de obtención de fondos</label>
+        <name>gsChecklistItemFundraisingProcessTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Estos pasos iniciales le ayudarán a empezar a trabajar, pero tenga en cuenta que las posibilidades dentro de Salesforce son ilimitadas. Conozca más detalles sobre funciones adicionales, así como algunas de las cosas increíbles que otras organizaciones han realizado con la plataforma.</label>
+        <name>gsChecklistItemGoFurtherDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Descubrir más sobre NPSP en Trailhead</label>
+        <name>gsChecklistItemGoFurtherLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ir más allá</label>
+        <name>gsChecklistItemGoFurtherTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Utilice el Importador de datos de NPSP para aportar sus registros a Salesforce.</label>
+        <name>gsChecklistItemImportDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre la importación de datos en Trailhead</label>
+        <name>gsChecklistItemImportDataLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importar datos</label>
+        <name>gsChecklistItemImportDataPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver la documentación</label>
+        <name>gsChecklistItemImportDataSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importar datos</label>
+        <name>gsChecklistItemImportDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce se actualiza con frecuencia para solucionar problemas e incorporar nuevas funciones. La comprensión de estos cambios y cómo gestionar el proceso de actualización garantizará que su organización siempre esté lista para aprovechar al máximo la plataforma.</label>
+        <name>gsChecklistItemManageChangeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre la preparación para versiones en Trailhead</label>
+        <name>gsChecklistItemManageChangeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver el grupo de preparación para versiones</label>
+        <name>gsChecklistItemManageChangePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gestionar cambios en su organización</label>
+        <name>gsChecklistItemManageChangeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Esta breve descripción general está destinada como acercamiento sobre lo que es posible con NPSP, pero puede profundizar más y descubrir muchas de las otras funciones disponibles para su organización.</label>
+        <name>gsChecklistItemNPSPCloudDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre otras funciones de NPSP en Trailhead</label>
+        <name>gsChecklistItemNPSPCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver funciones</label>
+        <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre otras funciones de Nonprofit Cloud</label>
+        <name>gsChecklistItemNPSPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Tómese el tiempo para planificar cuidadosamente su implementación y garantizar que su organización de Salesforce cumple las necesidades de su organización sin ánimo de lucro.</label>
+        <name>gsChecklistItemNPSPGuideDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Descargar PDF</label>
+        <name>gsChecklistItemNPSPGuidePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Guía de planificación de NPSP</label>
+        <name>gsChecklistItemNPSPGuideTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Navegue a la página Configuración de NPSP y realice una revisión completa para confirmar que los parámetros son correctos para su organización y que están funcionando como se espera.</label>
+        <name>gsChecklistItemNPSPSettingsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre la Configuración de NPSP en la Guía de planificación</label>
+        <name>gsChecklistItemNPSPSettingsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Configuración de NPSP</label>
+        <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajustar la configuración de NPSP</label>
+        <name>gsChecklistItemNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Tómese tiempo para personalizar el aspecto y el comportamiento de su organización, de modo que pueda estar seguro de que sus usuarios puedan encontrar con facilidad los datos que necesitan.</label>
+        <name>gsChecklistItemPageLayoutsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre formatos de página en Trailhead</label>
+        <name>gsChecklistItemPageLayoutsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Personalizar formatos de página</label>
+        <name>gsChecklistItemPageLayoutsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Establezca objetivos específicos y aprenda prácticas recomendadas para implementar Nonprofit Cloud.</label>
+        <name>gsChecklistItemPrepareNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre el éxito con NPSP en Trailhead</label>
+        <name>gsChecklistItemPrepareNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Establecer objetivos</label>
+        <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Prepararse para el éxito con Nonprofit Cloud</label>
+        <name>gsChecklistItemPrepareNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dentro de Salesforce, la información de la organización se conoce como &quot;Información de empresa&quot;. Aquí configurará la zona horaria, la configuración regional de divisa y el mes de inicio del año fiscal predeterminados. También podrá encontrar información sobre el uso de su licencia.</label>
+        <name>gsChecklistItemReviewCompanyDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre los parámetros de Información de empresa en Trailhead.</label>
+        <name>gsChecklistItemReviewCompanyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Revisar la información de empresa</label>
+        <name>gsChecklistItemReviewCompanyTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Conozca cómo construir informes y paneles para dar vida a sus datos y ayudar a contar la historia de la repercusión de su organización.</label>
+        <name>gsChecklistItemRunningReportsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprenda cómo personalizar informes y paneles de NPSP en Trailhead</label>
+        <name>gsChecklistItemRunningReportsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorar informes</label>
+        <name>gsChecklistItemRunningReportsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ejecutar informes sobre datos constitutivos</label>
+        <name>gsChecklistItemRunningReportsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprenda cómo agregar datos constitutivos relevantes (por ejemplo, un nombre, una dirección o un empleador) a su instancia de Salesforce.</label>
+        <name>gsChecklistItemSetupContactDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre contactos y cuentas</label>
+        <name>gsChecklistItemSetupContactLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear hogares</label>
+        <name>gsChecklistItemSetupContactPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorar contactos</label>
+        <name>gsChecklistItemSetupContactSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurar un contacto y una cuenta de hogar</label>
+        <name>gsChecklistItemSetupContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las actividades son tareas, eventos u otras interacciones con seguimiento en la Cronología de actividad. Las actividades le permiten mantener un seguimiento de cada vez que tiene contacto con un integrante. Aprenda cómo aprovechar las actividades para registrar interacciones con integrantes y asignar tareas.</label>
+        <name>gsChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las actividades en Trailhead</label>
+        <name>gsChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear actividades</label>
+        <name>gsChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Estar al tanto con actividades</label>
+        <name>gsChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuando llega el día del lanzamiento de su organización de Salesforce, querrá que todos los usuarios de su organización estén listos. Esa es la razón por la que es importante realizar un plan para incorporar sus usuarios y ayudarlos a obtener el máximo de Salesforce.</label>
+        <name>gsChecklistItemTrainUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre la formación de sus usuarios en Trailhead</label>
+        <name>gsChecklistItemTrainUsersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Formar a sus usuarios</label>
+        <name>gsChecklistItemTrainUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Personalice Salesforce con información que sea exclusiva para su organización.</label>
+        <name>gsChecklistMakeItYourDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Hacerla propia</label>
+        <name>gsChecklistMakeItYourTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Incorpore sus usuarios a Salesforce y planifique su implantación.</label>
+        <name>gsChecklistOnboardUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Incorporar sus usuarios</label>
+        <name>gsChecklistOnboardUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>30 días agregados</label>
+        <name>gsDaysAdded</name>
+    </customLabels>
+    <customLabels>
+        <label>Días restantes en prueba gratuita</label>
+        <name>gsDaysRemainingInFreeTrial</name>
+    </customLabels>
+    <customLabels>
+        <label>Para realizar el seguimiento del estado de su solicitud, envíenos un mensaje a:</label>
+        <name>gsFollowUpApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información</label>
+        <name>gsLearnMore</name>
+    </customLabels>
+    <customLabels>
+        <label>No se envió ninguna solicitud</label>
+        <name>gsNoApplicationSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>Ruta de aprendizaje de obtención de fondos</label>
+        <name>gsResourcesItemFundraisingLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Iniciar obtención de fondos</label>
+        <name>gsResourcesItemFundraisingLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us Hub</label>
+        <name>gsResourcesItemHubLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprender de otras ONG</label>
+        <name>gsResourcesItemHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ruta de aprendizaje de implicación</label>
+        <name>gsResourcesItemMarketingEngagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Implicar integrantes</label>
+        <name>gsResourcesItemMarketingEngagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Conceptos básicos de Nonprofit Cloud</label>
+        <name>gsResourcesItemNonprofitCloudLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Conocer Nonprofit Cloud</label>
+        <name>gsResourcesItemNonprofitCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Socios de implementación</label>
+        <name>gsResourcesItemPartnersLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar un socio</label>
+        <name>gsResourcesItemPartnersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ruta de aprendizaje de gestión de programas</label>
+        <name>gsResourcesItemProgramManagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gestionar programas</label>
+        <name>gsResourcesItemProgramManagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendario de eventos de Salesforce</label>
+        <name>gsResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar eventos y seminarios web</label>
+        <name>gsResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Recursos</label>
+        <name>gsResourcesTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Canal videográfico de NPSP</label>
+        <name>gsResourcesVideographyLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver vídeos</label>
+        <name>gsResourcesVideographyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Presentado</label>
+        <name>gsSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>en 2 minutos</label>
+        <name>gsVideoHeaderLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Empezar a trabajar en NPSP</label>
+        <name>gsVideoHeaderTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las personas se encuentran en el corazón de cualquier organización sin ánimo de lucro. Explore las funciones del Nonprofit Success Pack para aprender cómo gestionar sus integrantes y sus conexiones domésticas, personales y profesionales.</label>
+        <name>gseuChecklistCreateConstituentRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear registros de integrantes</label>
+        <name>gseuChecklistCreateConstituentRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuando obtiene fondos para un propósito específico, quiere estar seguro de que está respetando la intención del donante. Asegúrese de que las donaciones están asignadas correctamente con Unidades de asignación general.</label>
+        <name>gseuChecklistItemCaptureDonorIntentDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las asignaciones de donaciones en Trailhead</label>
+        <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear asignaciones</label>
+        <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Capturar la intención del donante con Asignaciones de donaciones</label>
+        <name>gseuChecklistItemCaptureDonorIntentTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las aportaciones mensuales pueden proporcionar una fuente predecible de ingresos sin ánimo de lucro, y los donantes sostenidos son a menudo los colaboradores más leales y comprometidos de una organización sin ánimo de lucro. Realice un seguimiento de las aportaciones mensuales creando una Donación recurrente.</label>
+        <name>gseuChecklistItemCollectGiftsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las donaciones recurrentes en Trailhead</label>
+        <name>gseuChecklistItemCollectGiftsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear donaciones recurrentes</label>
+        <name>gseuChecklistItemCollectGiftsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Recopilar regalos sostenidos con donaciones recurrentes</label>
+        <name>gseuChecklistItemCollectGiftsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear afiliaciones</label>
+        <name>gseuChecklistItemConnectContactOrganizationBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Las afiliaciones en NPSP le permiten capturar conexiones importantes entre sus integrantes y organizaciones relacionadas como trabajos, escuelas o negocios. Conecte un contacto con una organización empleando Afiliaciones de la organización.</label>
+        <name>gseuChecklistItemConnectContactOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las afiliaciones en Trailhead</label>
+        <name>gseuChecklistItemConnectContactOrganizationLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Conectar un contacto con una organización con afiliaciones</label>
+        <name>gseuChecklistItemConnectContactOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear relaciones</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Las relaciones en NPSP le permiten capturar conexiones importantes entre sus integrantes. Conecte contactos empleando la lista relacionada Relaciones en los registros Contacto.</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las relaciones en Trailhead</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Conectar dos contactos con relaciones</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear contactos</label>
+        <name>gseuChecklistItemCreateContactAndAccountBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Las personas son el recurso más importante para una organización sin ánimo de lucro, de modo que comprender cómo utilizamos el objeto Contacto para realizar un seguimiento de ellas en NPSP es clave. El objeto Contacto almacena datos de integrantes como el nombre, la dirección y el empleador.</label>
+        <name>gseuChecklistItemCreateContactAndAccountDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre contactos y cuentas en Trailhead</label>
+        <name>gseuChecklistItemCreateContactAndAccountLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear cuentas de contactos y hogares</label>
+        <name>gseuChecklistItemCreateContactAndAccountTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Para la mayoría de las organizaciones sin ánimo de lucro, las donaciones provienen de contribuciones individuales. Realice un seguimiento de las donaciones individuales creando una oportunidad desde un registro Contacto.</label>
+        <name>gseuChecklistItemDonationIndividualDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las donaciones individuales en Trailhead</label>
+        <name>gseuChecklistItemDonationIndividualLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Introducir donaciones individuales</label>
+        <name>gseuChecklistItemDonationIndividualPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Introducir una donación procedente de un individuo</label>
+        <name>gseuChecklistItemDonationIndividualTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las aportaciones institucionales y corporativas son una fuente importante de apoyo a las organizaciones sin ánimo de lucro. Realice un seguimiento de las aportaciones de organizaciones creando una oportunidad desde un registro Cuenta.</label>
+        <name>gseuChecklistItemDonationOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las donaciones de organizaciones en Trailhead</label>
+        <name>gseuChecklistItemDonationOrganizationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Introducir donaciones de organizaciones</label>
+        <name>gseuChecklistItemDonationOrganizationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Introducir una donación procedente de una organización</label>
+        <name>gseuChecklistItemDonationOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vídeo de 2 minutos</label>
+        <name>gseuChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuando está empezando a trabajar con NPSP, encontrar registros puede ser complicado. Utilice la búsqueda global para buscar en toda su organización de Salesforce y encontrar lo que necesita rápidamente.</label>
+        <name>gseuChecklistItemGlobalSearchDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre los resultados de búsquedas en Trailhead</label>
+        <name>gseuChecklistItemGlobalSearchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar registros</label>
+        <name>gseuChecklistItemGlobalSearchPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar registros con Búsqueda global</label>
+        <name>gseuChecklistItemGlobalSearchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP incluye 87 de los informes de integrantes y obtención de fondos más utilizados. Utilice estos informes tal cual o personalícelos.</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre los informes de NPSP en Trailhead</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ejecutar informes</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Libro de trabajo de informes</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ejecutar un informe de NPSP preconstruido</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>El Generador de informes Lightning le da la capacidad de crear sus propios informes personalizados empleando tipos de informes estándar. El tipo de informe que elija determina los objetos y campos disponibles en su informe.</label>
+        <name>gseuChecklistItemStandardReportTypeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre los tipos de informes estándar en Trailhead</label>
+        <name>gseuChecklistItemStandardReportTypeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear informes</label>
+        <name>gseuChecklistItemStandardReportTypePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Crear un informe desde un tipo de informe estándar</label>
+        <name>gseuChecklistItemStandardReportTypeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>El panel de actividades le ayuda a usted y a sus compañeros a capturar todo el trabajo relacionado con un Contacto, Organización u Oportunidad en particular. Registre llamadas, asigne tareas, envíe un mensaje de correo electrónico y cree eventos de calendario directamente desde el registro en el que esté trabajando.</label>
+        <name>gseuChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las actividades en Trailhead</label>
+        <name>gseuChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Seguimiento de actividades</label>
+        <name>gseuChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Estar al tanto con actividades</label>
+        <name>gseuChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las campañas le permiten realizar un seguimiento de su alcance a los integrantes en Salesforce. Utilice el campo Campaña principal en Oportunidades para evaluar mejor sus esfuerzos de obtención de fondos.</label>
+        <name>gseuChecklistItemTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las campañas en Trailhead</label>
+        <name>gseuChecklistItemTrackDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Seguimiento del alcance a los integrantes</label>
+        <name>gseuChecklistItemTrackDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Seguimiento de fuentes de donaciones con campañas</label>
+        <name>gseuChecklistItemTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Los paneles extraen datos desde uno o más informes y los muestran lado a lado en la misma ventana. NPSP incluye tres paneles que puede utilizar tal cual o personalizar.</label>
+        <name>gseuChecklistItemViewDashboardDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre los paneles en Trailhead</label>
+        <name>gseuChecklistItemViewDashboardLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver paneles</label>
+        <name>gseuChecklistItemViewDashboardPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver un panel</label>
+        <name>gseuChecklistItemViewDashboardTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre Nonprofit Cloud en Trailhead</label>
+        <name>gseuChecklistItemWhatIsNPCloudLink</name>
+    </customLabels>
+    <customLabels>
+        <label>¿Qué es Nonprofit Cloud?</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud incluye aplicaciones, herramientas, servicios y tecnología diseñada para cumplir las necesidades exclusivas de las organizaciones sin ánimo de lucro.</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitleDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>La base de Nonprofit Cloud e la aplicación Nonprofit Success Pack (NPSP). NPSP le ayuda a gestionar sus integrantes y esfuerzos de obtención de fondos. Si alguien dice que está utilizando la &quot;versión sin ánimo de lucro&quot; de Salesforce, normalmente está hablando de NPSP.</label>
+        <name>gseuChecklistItemWhatIsNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre Nonprofit Success Pack en Trailhead</label>
+        <name>gseuChecklistItemWhatIsNPSPLink</name>
+    </customLabels>
+    <customLabels>
+        <label>¿Qué es el Nonprofit Success Pack?</label>
+        <name>gseuChecklistItemWhatIsNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Las vistas de lista le ayudan a encontrar con facilidad lo que necesita proporcionando grupos filtrados de Contactos, Cuentas, Oportunidades y otros objetos.</label>
+        <name>gseuChecklistItemWorkMultipleRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Más detalles sobre las vistas de lista en Trailhead</label>
+        <name>gseuChecklistItemWorkMultipleRecordsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualizar procesos</label>
+        <name>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Trabajar con registros múltiples empleando vistas de lista</label>
+        <name>gseuChecklistItemWorkMultipleRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>En NPSP, realiza un seguimiento de donaciones, becas, compromisos y otros tipos de ingresos empleando el objeto Oportunidad. Puede crear donaciones procedentes de un individuo o desde una organización como una fundación, negocio o entidad gubernamental.</label>
+        <name>gseuChecklistTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Seguimiento de donaciones y otros tipos de ingresos con NPSP</label>
+        <name>gseuChecklistTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Utilice estos recursos esenciales para ayudarle a empezar a trabajar con su recorrido por NPSP.</label>
+        <name>gseuChecklistWelcomeNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Le damos la bienvenida a Nonprofit Success Pack y Nonprofit Cloud</label>
+        <name>gseuChecklistWelcomeNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Después de aportar sus datos de integrantes y donaciones a NPSP, es necesario que encuentre fácilmente e interactúe con los registros en los que está trabajando.</label>
+        <name>gseuChecklistWorkRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trabajar con registros</label>
+        <name>gseuChecklistWorkRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Los informes y paneles le ayudan a organizar sus datos de modo que pueda contar la historia sobre la repercusión de su organización. NPSP incluye informes ya preparados, o puede crear los suyos propios.</label>
+        <name>gseuChecklistYourDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Comprender sus datos</label>
+        <name>gseuChecklistYourDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorar Trailhead</label>
+        <name>gseuExploreTrailheadButton</name>
+    </customLabels>
+    <customLabels>
+        <label>LISTA DE COMPROBACIÓN DE CONFIGURACIÓN</label>
+        <name>gseuPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Más información sobre NPSP</label>
+        <name>gseuResourcesItemAboutNPSPLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Documentación de NPSP</label>
+        <name>gseuResourcesItemAboutNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar un grupo de comunidad</label>
+        <name>gseuResourcesItemCommunityGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Comunidad de Trailhead</label>
+        <name>gseuResourcesItemCommunityGroupLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Consiga respuestas a sus preguntas</label>
+        <name>gseuResourcesItemQuestionsAnsweredLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us Hub</label>
+        <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver vídeos de procedimientos</label>
+        <name>gseuResourcesItemWatchVideosLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Canal videográfico de NPSP</label>
+        <name>gseuResourcesItemWatchVideosLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Encontrar eventos y seminarios web</label>
+        <name>gseuResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendario de Salesforce</label>
+        <name>gseuResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Aprenda más incluso sobre Nonprofit Cloud y Salesforce.</label>
+        <name>gseuTrailheadText</name>
     </customLabels>
     <customLabels>
         <label>Ejecutar comprobación de estado</label>
@@ -4856,6 +5813,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Un pago amortizado debe tener una fecha de pago.</label>
         <name>pmtWrittenOffPaymentDateRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>Eliminar fila</label>
@@ -6534,11 +7495,11 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>Combinar contacto</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>Combinar contacto</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
@@ -6548,6 +7509,14 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customTabs>
         <label>Entrada de regalos</label>
         <name>GE_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>Empezar a trabajar con NPSP - Administrador</label>
+        <name>GetStarted</name>
+    </customTabs>
+    <customTabs>
+        <label>Empezar a trabajar con NPSP</label>
+        <name>GetStartedEndUser</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>

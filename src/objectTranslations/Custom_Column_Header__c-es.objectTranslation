@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Encabezado de columna personalizado</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Custom Column Header --></value>
+        <value>Encabezados de columnas personalizados</value>
     </caseValues>
     <fields>
         <help>Nombre de API del campo mostrado en la vista de lista.</help>
@@ -23,5 +23,5 @@
         <label>Nombre de lista</label>
         <name>List_Name__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
 </CustomObjectTranslation>

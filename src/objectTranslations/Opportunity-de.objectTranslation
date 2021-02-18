@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help>Der Batch, der diese Opportunity erstellt hat. Dieses Feld wird auf der Grundlage Ihrer Einstellungen für Batch-Nummern in den NPSP-Einstellungen automatisch aufgefüllt.</help>
+        <label>Batch-Nummer</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>Batch</label>
         <name>Batch__c</name>
         <relationshipLabel>Opportunities</relationshipLabel>
@@ -70,7 +75,7 @@
     </fields>
     <fields>
         <help>Kategorisiert den Typ des Aufrufs für diese Opportunity, wie z. B. &quot;Neuer Spender&quot;.</help>
-        <label>Schenkungsstrategie</label>
+        <label>Spendenstrategie</label>
         <name>Gift_Strategy__c</name>
         <picklistValues>
             <masterLabel>New Donor</masterLabel>
@@ -229,15 +234,15 @@
         <name>Notification_Recipient_Information__c</name>
     </fields>
     <fields>
-        <help>Der (vom Spender angegebene) Name d. Person, d. über diese Schenkung benachrichtigt werden soll. Wenn dieses Feld leer bleibt und d. Feld f. d. Kontakt des Benachrichtigungsempfängers einen Wert enthält, wird dieser automatisch von NPSP übertragen.</help>
+        <help>Der (vom Spender angegebene) Name d. Person, d. über diese Spende benachrichtigt werden soll. Wenn dieses Feld leer bleibt und d. Feld f. d. Kontakt des Benachrichtigungsempfängers einen Wert enthält, wird dieser automatisch von NPSP übertragen.</help>
         <label>Name des Benachrichtigungsempfängers</label>
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
         <help>Wenn mit diesem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird, verwenden Sie dieses Feld, um diesen Datensatz mit dem vorherigen Fördergeld zu verknüpfen.</help>
-        <label>Frühere Fördergeld-/Schenkungs-Opp.</label>
+        <label>Frühere Fördergeld-/Spenden-Opp.</label>
         <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>Zugehörige Fördergelder/Schenkungen</relationshipLabel>
+        <relationshipLabel>Zugehörige Fördergelder/Spenden</relationshipLabel>
     </fields>
     <fields>
         <help>Status, den NPSP beim Erst. e-s Kamp‘mitgl. für den Hauptansprechp. dieser Opp. u. d. prim. Kampagnenqu. verwendet. Leer lassen, wenn die Stand‘einst. a. d. Status &quot;Geantwortet&quot; f. geschl./gew. Opp. u. &quot;Nicht geantwortet&quot; f. sonst. Opp. ges. werden soll.</help>

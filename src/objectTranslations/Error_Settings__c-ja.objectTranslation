@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>エラー設定</value>
     </caseValues>
     <fields>
         <help>非同期ジョブエラーロガーの最近の実行を追跡するために使用されます</help>
