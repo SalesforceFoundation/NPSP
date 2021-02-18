@@ -1,21 +1,23 @@
 <template>
-    <div class="slds-grid slds-wrap">
-        <div class="slds-size_1-of-1 slds-p-bottom_xx-small">
-            <label class="slds-text-body_regular widget-label">{uiTitle}</label>
-        </div>
-        <div class="slds-size_1-of-1 slds-p-left_small">
-            <template if:true={isAllocations}>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonGeneralAccountUnit}</p>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonAmount}</p>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonPercent}</p>
-            </template>
-
-            <template if:true={isTokenizeCard}>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCreditNumber}</p>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCardType}</p>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonMMYY}</p>
-                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCVV}</p>
-            </template>
-        </div>
-    </div>
+    <lightning-layout>
+        <lightning-layout-item size="12" class="slds-p-left_small">
+            <lightning-layout>
+                <template if:true={isAllocations}>
+                    <lightning-layout-item size="12">
+                        <label class="slds-text-body_regular widget-label slds-p-bottom_xx-small">{uiTitle}</label>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonGeneralAccountUnit}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonAmount}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonPercent}</p>
+                    </lightning-layout-item>
+                </template>
+                <template if:true={isTokenizeCard}>
+                    <lightning-layout-item size="12">
+                        <p class="slds-text-body_regular slds-text-title_bold widget-text">
+                            {CUSTOM_LABELS.geTextFieldBundlePaymentMethod }
+                        </p>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
 </template>

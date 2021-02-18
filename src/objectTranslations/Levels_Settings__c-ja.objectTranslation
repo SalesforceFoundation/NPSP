@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>レベル設定</value>
     </caseValues>
     <fields>
         <label>前回のジョブ開始時間 : 取引先</label>

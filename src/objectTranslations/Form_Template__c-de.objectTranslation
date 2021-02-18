@@ -46,7 +46,7 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>Die Version der Schenkungseingabe, die zum Erstellen dieser Vorlage verwendet wurde.</help>
+        <help>Die Version des Spendeneintrags, die zum Erstellen dieser Vorlage verwendet wurde.</help>
         <label>Formatversion</label>
         <name>Format_Version__c</name>
     </fields>

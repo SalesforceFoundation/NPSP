@@ -5,6 +5,11 @@
         <value>NPSP データインポート</value>
     </caseValues>
     <fields>
+        <help>支援者が同意した Elevate Giving Page 同意メッセージ。</help>
+        <label>支払 ACH 同意メッセージ</label>
+        <name>ACH_Consent__c</name>
+    </fields>
+    <fields>
         <label>インポート状況(取引先1)</label>
         <name>Account1ImportStatus__c</name>
     </fields>
@@ -538,6 +543,16 @@
         <relationshipLabel>NPSP データインポート</relationshipLabel>
     </fields>
     <fields>
+        <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+        <label>支払 ACH コード</label>
+        <name>Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+        <label>支払 ACH の最後の 4 桁</label>
+        <name>Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>トランザクションの承認トークン。</help>
         <label>支払承認トークン</label>
         <name>Payment_Authorization_Token__c</name>
@@ -578,12 +593,12 @@
     </fields>
     <fields>
         <help>トランザクションが却下された理由に関する詳細を提供します。</help>
-        <label>支払却下理由</label>
+        <label>支払 Elevate API 却下理由</label>
         <name>Payment_Declined_Reason__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Payment Donor Cover Amount --></label>
+        <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+        <label>支払支援者補償金額</label>
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
@@ -636,13 +651,26 @@
         <name>Payment_Origin_Type__c</name>
     </fields>
     <fields>
+        <help>支払が支払済かどうかを示します。</help>
+        <label>支払済</label>
+        <name>Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation>False</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation>True</translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>支援にマッチングする潜在的な支払上位 10 件の ID のコンマ区切りリスト。</help>
         <label>支払見込みマッチ</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help>Elevate から取得した、トランザクションの API 状況。</help>
-        <label>支払状況</label>
+        <label>支払 Elevate API 状況</label>
         <name>Payment_Status__c</name>
     </fields>
     <fields>

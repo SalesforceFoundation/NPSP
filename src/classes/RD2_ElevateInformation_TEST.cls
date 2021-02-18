@@ -74,7 +74,6 @@ private with sharing class RD2_ElevateInformation_TEST {
             PS_IntegrationServiceConfig.class,
             configStub
         );
-        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(true);
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
 
@@ -158,7 +157,6 @@ private with sharing class RD2_ElevateInformation_TEST {
     */
     private static void enableElevate() {
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
-        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(true);
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
     }
 

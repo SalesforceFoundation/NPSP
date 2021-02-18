@@ -21,40 +21,39 @@
         <value><!-- הAutoNumber --></value>
     </caseValues>
     <fields>
-        <label><!-- Display Format --></label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <label><!-- Field API Name --></label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <label><!-- Active --></label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <label><!-- Max Used Number --></label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
         <label><!-- Description --></label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Starting Number --></label>
-        <name>Starting_Number__c</name>
+        <help><!-- The format for the auto-numbered field including number of digits and, if desired, a prefix. --></help>
+        <label><!-- Display Format --></label>
+        <name>Display_Format__c</name>
     </fields>
     <fields>
+        <help><!-- The API name of the field that contains the auto-number. --></help>
+        <label><!-- Field API Name --></label>
+        <name>Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- When selected, the auto-number format is active. --></help>
+        <label><!-- Active --></label>
+        <name>IsActive__c</name>
+    </fields>
+    <fields>
+        <help><!-- The highest auto-number used for this format. --></help>
+        <label><!-- Max Used Number --></label>
+        <name>Max_Used_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name of the object for the auto-number. --></help>
         <label><!-- Object API Name --></label>
         <name>Object_API_Name__c</name>
     </fields>
+    <fields>
+        <help><!-- The first number in the auto-numbered sequence. --></help>
+        <label><!-- Starting Number --></label>
+        <name>Starting_Number__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
-    <layouts>
-        <layout>AutoNumber Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
     <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
 </CustomObjectTranslation>

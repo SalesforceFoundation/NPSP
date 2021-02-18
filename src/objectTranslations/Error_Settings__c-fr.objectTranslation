@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Error Settings --></value>
+        <value>Paramètre d&apos;erreur</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Error Settings --></value>
+        <value>Paramètres d&apos;erreur</value>
     </caseValues>
     <fields>
         <help>Utilisé pour garder une trace de l’exécution la plus récente de l’enregistreur d’erreur de tâche asynchrone</help>
@@ -58,6 +58,6 @@
         <label>Enregistrer les erreurs</label>
         <name>Store_Errors_On__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

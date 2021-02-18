@@ -9,6 +9,11 @@
         <value>Importations de données NPSP</value>
     </caseValues>
     <fields>
+        <help>Le message de consentement de la page Elevate Giving que le donateur a accepté.</help>
+        <label>Message de consentement CCA de paiement</label>
+        <name>ACH_Consent__c</name>
+    </fields>
+    <fields>
         <label>Statut d’importation du Compte1</label>
         <name>Account1ImportStatus__c</name>
     </fields>
@@ -542,6 +547,16 @@
         <relationshipLabel>Importations de données NPSP</relationshipLabel>
     </fields>
     <fields>
+        <help>Le code de Classe d&apos;entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
+        <label>Code CCA de paiement</label>
+        <name>Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
+        <label>4 derniers chiffres de CCA de paiement</label>
+        <name>Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Jeton d’autorisation pour une transaction.</help>
         <label>Jeton d&apos;autorisation de paiement</label>
         <name>Payment_Authorization_Token__c</name>
@@ -582,12 +597,12 @@
     </fields>
     <fields>
         <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
-        <label>Motif de refus du paiement</label>
+        <label>Motif refus de l&apos;API de paiement Elevate</label>
         <name>Payment_Declined_Reason__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Payment Donor Cover Amount --></label>
+        <help>Le montant payé par le donateur en plus du montant du don, souvent utilisé pour couvrir les frais de transaction ou ajouter un pourboire au don.</help>
+        <label>Montant de couverture donateur paiement</label>
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
@@ -640,13 +655,26 @@
         <name>Payment_Origin_Type__c</name>
     </fields>
     <fields>
+        <help>Indique si ce paiement a été effectué ou non.</help>
+        <label>Paiement effectué</label>
+        <name>Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation>Faux</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation>Vrai</translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Une liste d’identifiants séparés par des virgules pour les 10 premières correspondances de paiement possibles pour un don.</help>
         <label>Correspondances possibles de paiements</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>Le statut API de la transaction d’Elevate.</help>
-        <label>Statut du paiement</label>
+        <help>Le statut de l&apos;API de la transaction Elevate.</help>
+        <label>Statut de l&apos;API Elevate de paiement</label>
         <name>Payment_Status__c</name>
     </fields>
     <fields>
