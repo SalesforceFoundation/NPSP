@@ -38,7 +38,6 @@
 public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
-    private String nameReplacementText = System.Label.npo02.NameReplacementText;
 
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
@@ -105,12 +104,19 @@ public without sharing class HouseholdNamingService {
         }
     }
 
-    private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
+    private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts,
+            Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
-            List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
+            List<Contact> householdMembers =
+                    membersByHouseholdId.get(idFor(household)) == null ?
+                            new List<Contact>() :
+                            membersByHouseholdId.get(idFor(household));
             if (settings.isAdvancedHouseholdNaming()) {
-                new HouseholdName(household, householdMembers)
-                        .setNameFieldValuesOnHousehold();
+                setNameFieldValuesOnHousehold(
+                        household,
+                        new HouseholdName(
+                                new Contacts(householdMembers),
+                                namingService));
             }
         }
     }
@@ -128,27 +134,25 @@ public without sharing class HouseholdNamingService {
 
     private List<Account> accounts;
     private List<SObject> accountsFor(List<Id> hhids) {
-        if (accounts != null) {
-            return accounts;
+        if (accounts == null) {
+            accounts = [
+                    SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                    FROM Account
+                    WHERE Id IN :hhids
+            ];
         }
-        accounts = [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
-                FROM Account
-                WHERE Id IN :hhids
-        ];
         return accounts;
     }
 
     private List<npo02__Household__c> households;
     private List<SObject> householdsFor(List<Id> hhids) {
-        if (households != null) {
-            return households;
+        if (households == null) {
+            households = [
+                    SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                    FROM Npo02__Household__c
+                    WHERE Id IN :hhids
+            ];
         }
-        households = [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
-                FROM Npo02__Household__c
-                WHERE Id IN :hhids
-        ];
         return households;
     }
 
@@ -298,15 +302,15 @@ public without sharing class HouseholdNamingService {
     }
 
     private Boolean needsFormalGreetingReplaced(SObject household) {
-        return formalGreetingFor(household) == nameReplacementText;
+        return formalGreetingFor(household) == nameReplacementText();
     }
 
     private Boolean needsInformalGreetingReplaced(SObject household) {
-        return informalGreetingFor(household) == nameReplacementText;
+        return informalGreetingFor(household) == nameReplacementText();
     }
 
     private Boolean needsNameReplaced(SObject household) {
-        return nameFor(household) == nameReplacementText;
+        return nameFor(household) == nameReplacementText();
     }
 
     private Object formalGreetingFor(SObject household) {
@@ -351,9 +355,17 @@ public without sharing class HouseholdNamingService {
 
         for (SObject household : records) {
             SObject oldRecord = oldMap.get(household.Id);
-            HouseholdName householdName = new HouseholdName(household, oldRecord,
-                    contactsByHouseholdId.get(household.Id), namingService);
-            householdName.setCustomNamingStringValue();
+            setCustomNamingStringValue(household, oldRecord);
+            //todo: this isn't quite right
+//            List<Contact> householdMembers =
+//                    contactsByHouseholdId.get(idFor(household)) == null ?
+//                            new List<Contact>() :
+//                            contactsByHouseholdId.get(idFor(household));
+//            setNameFieldValuesOnHousehold(
+//                    household,
+//                    new HouseholdName(
+//                            new Contacts(householdMembers),
+//                            this.namingService));
         }
     }
 
@@ -386,5 +398,125 @@ public without sharing class HouseholdNamingService {
 
     private static Boolean shouldProcessSynchronously(List<Id> accountIds) {
         return accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
+    }
+
+    public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
+        HouseholdCustomNamingString customNamingString =
+                new HouseholdCustomNamingString(customNamingStringFor(household));
+        if (!customNamingString.contains('Name')) {
+            household.put('Name', householdName.value());
+        }
+        if (!customNamingString.contains('Formal_Greeting__c')) {
+            household.put('npo02__Formal_Greeting__c', householdName.asFormalGreeting());
+        }
+        if (!customNamingString.contains('Informal_Greeting__c')) {
+            household.put('npo02__Informal_Greeting__c', householdName.asInformalGreeting());
+        }
+    }
+
+    public HouseholdCustomNamingString getCustomNamingString(SObject household, SObject oldRecord) {
+        HouseholdCustomNamingString customNamingString = new HouseholdCustomNamingString
+                (customNamingStringFor(household));
+        //todo: just do this in constructor of HCNS?
+        processHouseholdCustomNamingStringAdjustments(customNamingString, household, oldRecord);
+        return customNamingString;
+    }
+
+    public void processHouseholdCustomNamingStringAdjustments(
+            HouseholdCustomNamingString customNamingString,
+            SObject household,
+            SObject oldRecord) {
+        if (isNameReplaceable(household)) {
+            customNamingString.removeName();
+        } else if (isNameChanged(household, oldRecord)) {
+            customNamingString.appendName();
+        }
+
+        if (isInformalGreetingReplaceable(household)) {
+            customNamingString.removeInformalGreeting();
+        } else if (isInformalGreetingChanged(household, oldRecord)) {
+            customNamingString.appendInformalGreeting();
+        }
+
+        if (isFormalGreetingReplaceable(household)) {
+            customNamingString.removeFormalGreeting();
+        } else if (isFormalGreetingChanged(household, oldRecord)) {
+            customNamingString.appendFormalGreeting();
+        }
+
+        setGreetingFieldsToReplacementValue(household);
+    }
+
+    private Boolean isFormalGreetingChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isInformalGreetingChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isNameChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'Name', oldRecord);
+    }
+
+    private Boolean isFormalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Formal_Greeting__c');
+    }
+
+    private Boolean isInformalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Informal_Greeting__c');
+    }
+
+    private Boolean isNameReplaceable(SObject household) {
+        return isReplaceable(household, 'Name');
+    }
+
+    private void replaceHouseholdFormalGreeting(SObject household) {
+        household.put('npo02__Formal_Greeting__c', nameReplacementText());
+    }
+
+    private void replaceHouseholdInformalGreeting(SObject household) {
+        household.put('npo02__Informal_Greeting__c', nameReplacementText());
+    }
+
+    private void replaceHouseholdName(SObject household) {
+        household.put('Name', nameReplacementText());
+    }
+
+    private void setGreetingFieldsToReplacementValue(SObject household) {
+        if (isNameReplaceable(household)) {
+            replaceHouseholdName(household);
+        }
+
+        if (isInformalGreetingReplaceable(household)) {
+            replaceHouseholdInformalGreeting(household);
+        }
+
+        if (isFormalGreetingReplaceable(household)) {
+            replaceHouseholdFormalGreeting(household);
+        }
+    }
+
+    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
+        return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
+    }
+
+    private Boolean isReplaceable(SObject household, String fieldApiName) {
+        String fieldValue = (String) household.get(fieldApiName);
+        return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText();
+    }
+
+    public void setCustomNamingStringValue(SObject household, SObject oldRecord) {
+        household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
+                getCustomNamingString(household, oldRecord).value());
+    }
+
+    private String customNamingStringFor(SObject household) {
+        return (String) household.get
+                ('npo02__SYSTEM_CUSTOM_NAMING__c');
+    }
+
+    private String nameReplacementText() {
+        return System.Label.npo02.NameReplacementText;
     }
 }

@@ -526,8 +526,10 @@ public with sharing class HH_Container_LCTRL {
                 return hh;
             }
 
-            HouseholdName householdName = new HouseholdName(hh, listCon);
-            householdName.setNameFieldValuesOnHousehold();
+            HouseholdNamingService hhHouseholdNaming = new HouseholdNamingService();
+            hhHouseholdNaming.setNameFieldValuesOnHousehold(
+                    hh,
+                    new HouseholdName(contacts));
 
             return hh;
         } catch (Exception ex) {

@@ -34,133 +34,23 @@
 */
 public inherited sharing class HouseholdName {
 
-    private SObject household;
-    private SObject oldRecord;
     private Contacts contacts;
-    private HouseholdCustomNamingString customNamingString;
     private HH_INaming service;
-    private HouseholdSettings settings;
-    private String nameReplacementText = System.Label.npo02.NameReplacementText;
 
-    public HouseholdName(SObject household, List<Contact> contacts) {
-        this(household, null, contacts, null, null);
+    public HouseholdName(Contacts contacts) {
+        this(contacts, null);
     }
-
-    public HouseholdName(SObject household, SObject oldRecord, List<Contact> contacts, HH_INaming
-            service) {
-        this(household, oldRecord, contacts, service, null);
-    }
-
-    public HouseholdName(SObject household, SObject oldRecord, List<Contact> contacts,
-            HH_INaming service, HouseholdSettings settings) {
-        this.household = household;
-        this.oldRecord = oldRecord;
-        this.contacts = contacts == null ?
-                new Contacts(new List<Contact>()) : new Contacts(contacts);
+    
+    public HouseholdName(Contacts contacts, HH_INaming service) {
+        this.contacts = contacts;
         this.service = service == null ? new HH_NameSpec() : service;
-        this.settings = settings == null ? new HouseholdSettings() : settings;
-        this.customNamingString = new HouseholdCustomNamingString(customNamingStringFor(household));
-    }
-
-    private String customNamingStringFor(SObject household) {
-        return (String) household.get
-                ('npo02__SYSTEM_CUSTOM_NAMING__c');
-    }
-
-    public String getCustomNamingString() {
-        processHouseholdCustomNamingStringAdjustments();
-        return this.customNamingString.value();
-    }
-
-    public void processHouseholdCustomNamingStringAdjustments() {
-        if (isNameReplaceable()) {
-            customNamingString.removeName();
-        } else if (isNameChanged()) {
-            customNamingString.appendName();
-        }
-
-        if (isInformalGreetingReplaceable()) {
-            customNamingString.removeInformalGreeting();
-        } else if (isInformalGreetingChanged()) {
-            customNamingString.appendInformalGreeting();
-        }
-
-        if (isFormalGreetingReplaceable()) {
-            customNamingString.removeFormalGreeting();
-        } else if (isFormalGreetingChanged()) {
-            customNamingString.appendFormalGreeting();
-        }
-
-        setGreetingFieldsToReplacementValue();
-    }
-
-    private void setGreetingFieldsToReplacementValue() {
-        if (isNameReplaceable()) {
-            replaceHouseholdName();
-        }
-
-        if (isInformalGreetingReplaceable()) {
-            replaceHouseholdInformalGreeting();
-        }
-
-        if (isFormalGreetingReplaceable()) {
-            replaceHouseholdFormalGreeting();
-        }
-    }
-
-    private Boolean isFormalGreetingChanged() {
-        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
-    }
-
-    private Boolean isInformalGreetingChanged() {
-        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
-    }
-
-    private Boolean isNameChanged() {
-        return isFieldValueChanged(household, 'Name', oldRecord);
-    }
-
-    private Boolean isFormalGreetingReplaceable() {
-        return isReplaceable(household, 'npo02__Formal_Greeting__c');
-    }
-
-    private Boolean isInformalGreetingReplaceable() {
-        return isReplaceable(household, 'npo02__Informal_Greeting__c');
-    }
-
-    private Boolean isNameReplaceable() {
-        return isReplaceable(household, 'Name');
-    }
-
-    private void replaceHouseholdFormalGreeting() {
-        household.put('npo02__Formal_Greeting__c', nameReplacementText);
-    }
-
-    private void replaceHouseholdInformalGreeting() {
-        household.put('npo02__Informal_Greeting__c', nameReplacementText);
-    }
-
-    private void replaceHouseholdName() {
-        household.put('Name', nameReplacementText);
-    }
-
-    public void setNameFieldValuesOnHousehold() {
-        if (!customNamingString.contains('Name')) {
-            household.put('Name', getHHName());
-        }
-        if (!customNamingString.contains('Formal_Greeting__c')) {
-            household.put('npo02__Formal_Greeting__c', getFormalName());
-        }
-        if (!customNamingString.contains('Informal_Greeting__c')) {
-            household.put('npo02__Informal_Greeting__c', getInformalName());
-        }
     }
 
     /*******************************************************************************************************
     * @description returns the Household Name for the list of Contacts
     * @return String
     */
-    private String getHHName() {
+    public String value() {
         List<Contact> listCon = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
             if (con.npo02__Naming_Exclusions__c == null
@@ -174,7 +64,7 @@ public inherited sharing class HouseholdName {
     * @description returns the Informal Greeting for the list of Contacts
     * @return String
     */
-    private String getInformalName() {
+    public String asInformalGreeting() {
         return service.getHouseholdInformalGreeting(getContactsForInformalName());
     }
 
@@ -196,7 +86,7 @@ public inherited sharing class HouseholdName {
     * @description returns the Formal Greeting for the list of Contacts
     * @return String
     */
-    private String getFormalName() {
+    public String asFormalGreeting() {
         return service.getHouseholdFormalGreeting(getContactsForFormalName());
     }
 
@@ -214,17 +104,4 @@ public inherited sharing class HouseholdName {
                 || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
     }
 
-
-    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
-        return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
-    }
-
-    private Boolean isReplaceable(SObject household, String fieldApiName) {
-        String fieldValue = (String) household.get(fieldApiName);
-        return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText;
-    }
-
-    public void setCustomNamingStringValue() {
-        household.put('npo02__SYSTEM_CUSTOM_NAMING__c', getCustomNamingString());
-    }
 }
