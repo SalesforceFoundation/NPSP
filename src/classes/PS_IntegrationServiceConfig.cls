@@ -36,7 +36,7 @@
 public with sharing class PS_IntegrationServiceConfig {
     
     // Names of Payment Service configuration sets
-    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    public static final String PAYMENTS_SERVICE_NAME = 'payments';
     @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
 
     // Properties used to configure headers in

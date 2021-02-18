@@ -79,6 +79,54 @@
         "Enhanced Recurring Donations Metadata Updates": {
             "message": "Aktualisierungen der Metadaten zu Erweiterte wiederkehrende Spenden",
             "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Beziehungen für Trailhead hinzufügen",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "Opportunity-Datensatztypen absichern",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Trailhead Playground-Konfiguration",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "Standardmetadaten entfernen",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "Administratorprofil aktualisieren",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "Laden von Daten vorbereiten",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Trailhead-Dataset laden",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "Laden von Daten abschließen",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "Benutzer erstellen",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "Besitz an Aufgabe zuweisen",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "Benutzer konfigurieren",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "Besitz an Ereignis zuweisen",
+            "description": "title of installation step"
         }
     },
     "plan:new_org": {
@@ -117,6 +165,34 @@
         "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
             "message": "Bitte vergewissern Sie sich, dass Erweiterte wiederkehrende Spenden in Ihrer Organisation aktiviert ist, bevor Sie mit der Installation beginnen.",
             "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "Aktivieren Sie \"Meine Domäne\" vor der Installation in Ihrer Organisation.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.": {
+            "message": "Für das Nonprofit Success Pack ist Chatter erforderlich. Aktivieren Sie Chatter in Ihrer Organisation, und versuchen Sie es noch einmal.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+            "message": "Für die Installation von Nonprofit Success Pack muss das erweiterte Währungsmanagement deaktiviert sein, Sie können es aber nach der Installation aktivieren.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is already installed in this org. This installer cannot be used with orgs that already have NPSP.": {
+            "message": "Nonprofit Success Pack ist in dieser Organisation bereits installiert. Dieses Installationsprogramm kann nicht in Organisationen verwendet werden, die bereits über NPSP verfügen.",
+            "description": "shown if validation fails"
+        },
+        "Nonprofit Success Pack is required to install NPSP Reports & Dashboards. Please install NPSP and try again.": {
+            "message": "Nonprofit Success Pack ist erforderlich, um NPSP-Berichte und -Dashboards zu installieren. Installieren Sie NPSP, und versuchen Sie es noch einmal.",
+            "description": "shown if validation fails"
+        },
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.": {
+            "message": "Für die Installation von Nonprofit Success Pack muss das erweiterte Währungsmanagement deaktiviert sein, Sie können es aber nach der Installation aktivieren.",
+            "description": "shown if validation fails"
+        },
+        "This installer is intended only for Trailhead Playground orgs. Your org doesn't appear to be a Trailhead Playground. Continuing with the installation can damage your org.": {
+            "message": "Dieses Installationsprogramm ist nur für Trailhead Playground-Organisationen vorgesehen. Ihre Organisation scheint kein Trailhead Playground zu sein. Das Fortsetzen der Installation kann zu einer Beschädigung Ihrer Organisation führen.",
+            "description": "shown if validation fails"
         }
     },
     "plan:reports": {
@@ -125,7 +201,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen. Umfassende Informationen zu den NPSP-Berichten und -Dashboards finden Sie im [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSchenkung)\n* MatchingDonation (Spendenverdopplung)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
+            "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen. Umfassende Informationen zu den NPSP-Berichten und -Dashboards finden Sie im [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSpende)\n* MatchingDonation (Spendenverdopplung)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
             "description": "shown before user starts installation (markdown)"
         }
     }

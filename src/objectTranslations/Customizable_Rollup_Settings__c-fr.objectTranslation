@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Paramètre de cumul personnalisable</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Paramètres de cumul personnalisable</value>
     </caseValues>
     <fields>
         <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des comptes limite les comptes sélectionnés pour le recalcul en recherchant des mises à jour d’opp. sur ces comptes. Cela améliore la performance du traitement de nuit des cumuls pers.</help>
@@ -109,6 +109,6 @@
         <label>Taille du lot répartiteur mode asymétrie</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

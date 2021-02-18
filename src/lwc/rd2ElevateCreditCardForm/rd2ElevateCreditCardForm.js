@@ -17,6 +17,8 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
+const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
 */
@@ -34,6 +36,17 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @track isLoading = true;
     @track isDisabled = false;
     @track alert = {};
+
+    _paymentMethod = undefined;
+
+    @api
+    get paymentMethod() {
+        return this._paymentMethod;
+    }
+
+    set paymentMethod(value) {
+        this._paymentMethod = value;
+    }
 
     /***
     * @description Get the organization domain information such as domain and the pod name
@@ -70,9 +83,26 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
-        if (message.isLoaded) {
-            this.isLoading = false;
+        if (message.isReadyToMount && !this.isMounted) {
+            this.requestMount();
         }
+    }
+
+    /***
+    * @description Method sends a message to the Visualforce iframe wrapper for the Elevate sdk to mount
+    * the tokenization iframe.
+    */
+    requestMount() {
+        const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
+        tokenHandler.mount(iframe, this.paymentMethod, this.handleError, this.resolveMount);
+    }
+
+    /***
+    * @description Handles a successful response from the Elevate sdk mount request.
+    */
+    resolveMount = () => {
+        this.isLoading = false;
+        this.isMounted = true;
     }
 
     /***
@@ -82,8 +112,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-
-        return tokenHandler.requestToken(iframe, this.getCardholderName(), this.handleError);
+        const params = { nameOnCard : this.getCardholderName() };
+        return tokenHandler.requestToken({
+            iframe: iframe,
+            tokenizeParameters: params,
+            eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+            handleError: this.handleError,
+        });
     }
 
     /***
@@ -120,6 +155,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     */
     hideWidget() {
         this.isDisabled = true;
+        this.isMounted = false;
         this.clearError();
     }
 

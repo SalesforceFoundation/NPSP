@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Configuración de Entrada de regalos</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Configuraciones de Entrada de regalos</value>
     </caseValues>
     <fields>
         <help>Esta es una plantilla de inicio empleada para Entrada de regalos que puede utilizarse para introducir regalos por separado o lotes de regalos. Esta es la plantilla predeterminada para introducir regalos por separado.</help>
@@ -18,5 +18,5 @@
         <label>Activar Entrada de regalos</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

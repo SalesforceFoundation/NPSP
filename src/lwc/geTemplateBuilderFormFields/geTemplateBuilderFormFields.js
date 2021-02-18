@@ -35,6 +35,9 @@ import PAYMENT_ORIGIN_NAME_FIELD from '@salesforce/schema/DataImport__c.Payment_
 import PAYMENT_ORIGIN_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_Type__c';
 import PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Type__c';
+import PAYMENT_ACH_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
+import PAYMENT_ACH_CODE from '@salesforce/schema/DataImport__c.Payment_ACH_Code__c';
+import PAYMENT_DONOR_COVER_AMOUNT from '@salesforce/schema/DataImport__c.Payment_Donor_Cover_Amount__c';
 
 const FIELD = 'field';
 const BOOLEAN_TYPE = 'BOOLEAN';
@@ -85,6 +88,9 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     PAYMENT_ORIGIN_TYPE_FIELD.fieldApiName,
     PAYMENT_STATUS_FIELD.fieldApiName,
     PAYMENT_TYPE_FIELD.fieldApiName,
+    PAYMENT_ACH_LAST_4.fieldApiName,
+    PAYMENT_ACH_CODE.fieldApiName,
+    PAYMENT_DONOR_COVER_AMOUNT.fieldApiName
 ];
 
 const FIELD_BUNDLE_MASTER_NAMES = [

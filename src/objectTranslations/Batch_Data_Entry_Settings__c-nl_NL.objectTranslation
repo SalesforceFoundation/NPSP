@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Instellingen voor batchgegevensinvoer</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Instellingen voor batchgegevensinvoer</value>
     </caseValues>
     <fields>
         <help>Indien aangevinkt, zal Batch-Gegevensinvoer Opportunities nooit benoemen, zelfs niet als ze blanco zijn (niet inbegrepen op de BDE-pagina).</help>
@@ -22,5 +22,5 @@
         <label>Waarsch. buitengebruikstelling bekeken</label>
         <name>Viewed_Retirement_Alert__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

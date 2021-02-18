@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Configuración de Verificación de dirección-DESUSADO</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Configuraciones de Verificación de dirección-DESUSADO</value>
     </caseValues>
     <fields>
         <help>URL utilizada para la verificación de la dirección.</help>
@@ -63,5 +63,5 @@
         <label>Extremo de verif. de cód. post.-DESUSADO</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

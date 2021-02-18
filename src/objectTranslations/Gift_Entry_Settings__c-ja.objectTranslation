@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>支援エントリ設定</value>
     </caseValues>
     <fields>
         <help>これは、支援エントリで使用するスターターテンプレートで、1 回の支援または支援のバッチの入力に使用できます。これは、1 回の支援を入力するときのデフォルトのテンプレートです。</help>
