@@ -8,6 +8,10 @@
         <plural>true</plural>
         <value>Toewijzingen</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help>Het bedrag van de Opportunity toegewezen aan deze GAU. Laat blanco voor op procent gebaseerde Toewijzingen.</help>
         <label>Bedrag</label>

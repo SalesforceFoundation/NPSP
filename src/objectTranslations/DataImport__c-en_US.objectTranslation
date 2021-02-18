@@ -9,6 +9,11 @@
         <value>NPSP Data Imports</value>
     </caseValues>
     <fields>
+        <help><!-- The Elevate Giving Page consent message the donor agreed to. --></help>
+        <label><!-- Payment ACH Consent Message --></label>
+        <name>ACH_Consent__c</name>
+    </fields>
+    <fields>
         <label><!-- Account1 Import Status --></label>
         <name>Account1ImportStatus__c</name>
     </fields>
@@ -542,6 +547,16 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
+        <help><!-- The Standard Entry Class (SEC) code used for this ACH transaction. --></help>
+        <label><!-- Payment ACH Code --></label>
+        <name>Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help><!-- The last four digits of the bank account used for this transaction. --></help>
+        <label><!-- Payment ACH Last 4 --></label>
+        <name>Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help><!-- Authorization token for a transaction. --></help>
         <label><!-- Payment Authorization Token --></label>
         <name>Payment_Authorization_Token__c</name>
@@ -582,7 +597,7 @@
     </fields>
     <fields>
         <help><!-- Provides detail about why a transaction was declined. --></help>
-        <label><!-- Payment Declined Reason --></label>
+        <label><!-- Payment Elevate API Declined Reason --></label>
         <name>Payment_Declined_Reason__c</name>
     </fields>
     <fields>
@@ -640,13 +655,26 @@
         <name>Payment_Origin_Type__c</name>
     </fields>
     <fields>
+        <help><!-- Indicates if this payment is paid or not. --></help>
+        <label><!-- Payment Paid --></label>
+        <name>Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation><!-- False --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation><!-- True --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help><!-- A comma-separated list of Ids for the first 10 possible Payment matches for a Donation. --></help>
         <label><!-- Payment Possible Matches --></label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help><!-- The API status of the transaction from Elevate. --></help>
-        <label><!-- Payment Status --></label>
+        <label><!-- Payment Elevate API Status --></label>
         <name>Payment_Status__c</name>
     </fields>
     <fields>

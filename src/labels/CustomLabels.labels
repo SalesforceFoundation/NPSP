@@ -6481,8 +6481,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text indicating card is not being charged</shortDescription>
-        <value>You aren't processing a card payment for this gift.</value>
+        <shortDescription>Text indicating payment isn't being charged</shortDescription>
+        <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
@@ -6666,7 +6666,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link to toggle and reactivate payment processing fields</shortDescription>
-        <value>Alternatively, charge a card now.</value>
+        <value>Alternatively, enter payment now.</value>
     </labels>
     <labels>
         <fullName>geButtonPaymentDoNotCharge</fullName>
@@ -6674,7 +6674,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link to toggle payment processing off</shortDescription>
-        <value>Do Not Charge Card</value>
+        <value>Don&apos;t enter payment information.</value>
     </labels>
     <labels>
         <fullName>geButtonSaveNewGift</fullName>
@@ -6721,8 +6721,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure description if card is charged and donation record has not been created</shortDescription>
-        <value>The card has been successfully charged but the payment has not been recorded in Salesforce. Please correct the errors and resubmit the form to record the donation in Salesforce.</value>
+        <shortDescription>Failure msg when transaction is processed but record isn't created in Salesforce</shortDescription>
+        <value>Elevate successfully processed the payment, but NPSP didn't create the record for the transaction in Salesforce. Please correct the errors and resubmit the form to create the Salesforce record.</value>
     </labels>
     <labels>
         <fullName>geDonorColumnLabel</fullName>
@@ -8133,8 +8133,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Reason for system error when uncertain if card charged</shortDescription>
-        <value>Request to charge card timed out.</value>
+        <shortDescription>Reason for system error when uncertain if payment was processed</shortDescription>
+        <value>Request to process payment timed out.</value>
     </labels>
     <labels>
         <fullName>geErrorRequiredField</fullName>
@@ -8149,33 +8149,33 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 1</shortDescription>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 1</shortDescription>
         <!-- {0} = Donation Amount {1} = Donor Name {2} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the card was charged.</value>
+        <value>A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the payment was processed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart2</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 2</shortDescription>
-        <value>If the card was not charged, reenter the gift and card payment in Gift Entry.</value>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 2</shortDescription>
+        <value>If the payment was not processed, reenter the gift and payment information in Gift Entry.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart3</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 3</shortDescription>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 3</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>If the card was charged, note the Transaction ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
+        <value>If the payment was processed, note the Payment ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart4</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 4</shortDescription>
+        <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 4</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
         <value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
     </labels>
@@ -8531,6 +8531,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Note: This field bundle is only available for single gifts and will not show up when entering batches of gifts.</value>
     </labels>
     <labels>
+        <fullName>geTextFieldBundlePaymentMethod</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Instructions to add Payment Method</shortDescription>
+        <value>Salesforce.org Elevate field bundle includes fields for entering payment information. Allow users to switch payment types by adding Payment Method from the Payment object to the form before this field bundle.</value>
+    </labels>
+    <labels>
         <fullName>geJWTUtilInvalidBase64Message</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8553,7 +8561,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message description for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the payment. Please review the error and try again. Alternatively,
-            select Do Not Charge Card to enter a donation without processing a card payment. {0} errors:
+            select "Don't enter payment information." to enter a donation without processing a payment. {0} errors:
             /0x0A/ {1} </value>
     </labels>
     <labels>
@@ -8702,8 +8710,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text indicating the card is being charged</shortDescription>
-        <value>Charging card...</value>
+        <shortDescription>Text indicating the payment is being charged</shortDescription>
+        <value>Charging payment...</value>
     </labels>
     <labels>
         <fullName>geTextListViewItemCount</fullName>
@@ -8753,7 +8761,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Notification user will process a payment and record donation when clicking Save</shortDescription>
-        <value>Click Save to process the card payment and record the donation in Salesforce.</value>
+        <value>Click Save to process the payment and record the donation in Salesforce.</value>
     </labels>
     <labels>
         <fullName>geTextProcessing</fullName>
@@ -11182,6 +11190,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>pmtWrittenOffPaymentDateRequired</shortDescription>
         <value>A written off Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>psSelectValidPaymentMethod</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>How to activate the Elevate field bundle to enter payment information</shortDescription>
+        <value>To enter payment, select a valid Payment Method.</value>
     </labels>
     <labels>
         <fullName>ProgressMarkerAssistiveTextProgress</fullName>

@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Paramètre de niveau</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Levels Settings --></value>
+        <value>Paramètres de niveau</value>
     </caseValues>
     <fields>
         <label>Dernière heure début tâche : Compte</label>
@@ -21,6 +21,6 @@
         <label>Taille du lot attribution de niveau</label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

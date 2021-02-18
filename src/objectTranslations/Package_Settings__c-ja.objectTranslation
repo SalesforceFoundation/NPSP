@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Package Settings --></value>
+        <value>NPSP パッケージ設定</value>
     </caseValues>
     <fields>
         <help>NPSP の有効なパッケージ名前空間プレフィックス。手動で編集しないでください。</help>

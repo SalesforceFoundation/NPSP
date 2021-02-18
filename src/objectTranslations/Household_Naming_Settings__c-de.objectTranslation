@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Haushalt-Benennungseinstellungen</value>
     </caseValues>
     <fields>
         <help>Gibt die Anzahl der Kontakte an, die explizit in einem Namen aufgelistet werden sollen. Nach Erreichen dieses Werts wird der Namensüberlauf verwendet.</help>
@@ -75,5 +75,5 @@
         <label>Namensüberlauf</label>
         <name>Name_Overrun__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

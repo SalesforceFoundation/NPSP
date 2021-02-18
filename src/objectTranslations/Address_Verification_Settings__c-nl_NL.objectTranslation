@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Instellingen voor adresverificatie-VEROUDERD</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Instellingen voor adresverificatie-VEROUDERD</value>
     </caseValues>
     <fields>
         <help>URL die wordt gebruikt voor adresverificatie.</help>
@@ -63,5 +63,5 @@
         <label>Eindpunt Postcodeverificatie-VEROUDERD</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

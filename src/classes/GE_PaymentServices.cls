@@ -45,7 +45,8 @@ public with sharing class GE_PaymentServices {
         DECLINED,
         NONRETRYABLEERROR,
         RETRYABLEERROR,
-        REFUNDISSUED
+        REFUNDISSUED,
+        SUBMITTED
     }
 
     /***
@@ -195,6 +196,16 @@ public with sharing class GE_PaymentServices {
         public String campaignCode;
     }
 
+    /**
+     * @description Inner class for constructing ACH specific data for the purchase request body
+     */
+    public with sharing class AchData {
+        public String achCode;
+        public String consent;
+        public String type;
+        public String bankType;
+    }
+
     /***
     * @description Inner class to assist in constructing the Purchase http request body.
     */
@@ -217,18 +228,15 @@ public with sharing class GE_PaymentServices {
         */
         // May be any key:value pairs. i.e. campaignCode: 123
         public Metadata metadata;
-        // The donor salutation. E.g. Mr., Ms.
-        public String salutation;
-        // The donor suffix. E.g. III, Esq.
-        public String suffix;
         public String phone;
-        public String addressLine1;
-        public String addressLine2;
         public String city;
         public String state;
         public String postalCode;
         // The ISO 3166-1 alpha-2 country code. E.g. US
         public String country;
+        public AchData achData;
+        public String paymentMethodType;
+        public String accountName;
 
         public PurchaseCallBody(String currencyCode, String merchantIds, String gatewayIds) {
             this.currencyCode = currencyCode;
