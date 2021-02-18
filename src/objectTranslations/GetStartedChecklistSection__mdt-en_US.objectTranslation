@@ -14,7 +14,7 @@
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
+        <help><!-- The type of Get Started page (Admin or End User) where this section will appear. --></help>
         <label><!-- Page Type --></label>
         <name>Page_Type__c</name>
         <picklistValues>
@@ -36,5 +36,12 @@
         <label><!-- Title Label Name --></label>
         <name>Title_Label__c</name>
     </fields>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

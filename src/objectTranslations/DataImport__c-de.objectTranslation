@@ -41,6 +41,11 @@
         <value>NPSP-Datenimporten</value>
     </caseValues>
     <fields>
+        <help>Die Zusagenachricht der Elevate Giving Page, der der Spender zugestimmt hat.</help>
+        <label>ACH-Zusagenachricht für Zahlung</label>
+        <name>ACH_Consent__c</name>
+    </fields>
+    <fields>
         <label>Account1 Importstatus</label>
         <name>Account1ImportStatus__c</name>
     </fields>
@@ -574,6 +579,16 @@
         <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
+        <help>Der SEC-Code (Standard Entry Class), der für diese ACH-Transaktion verwendet wird.</help>
+        <label>ACH-Code der Zahlung</label>
+        <name>Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>Die letzten vier Ziffern des Bankkontos, das für diese Transaktion verwendet wird.</help>
+        <label>Letzte 4 für ACH-Zahlung</label>
+        <name>Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Autorisierungstoken für eine Transaktion.</help>
         <label>Zahlungs-Autorisierungstoken</label>
         <name>Payment_Authorization_Token__c</name>
@@ -614,12 +629,12 @@
     </fields>
     <fields>
         <help>Gibt Details zum Grund ab, warum eine Transaktion abgelehnt wurde.</help>
-        <label>Grund für Ablehnung der Zahlung</label>
+        <label>Ablehnungsgrund Elevate-API für Zahlung</label>
         <name>Payment_Declined_Reason__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Payment Donor Cover Amount --></label>
+        <help>Der Betrag, den der Spender über den Spendenbetrag hinaus gezahlt hat, oftmals um die Transaktionsgebühren abzudecken oder der Spende ein Trinkgeld hinzuzufügen.</help>
+        <label>Deckungsbetrag für Zahlung des Spenders</label>
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
@@ -672,13 +687,26 @@
         <name>Payment_Origin_Type__c</name>
     </fields>
     <fields>
+        <help>Gibt an, ob diese Zahlung bezahlt wurde oder nicht.</help>
+        <label>Bezahlte Zahlung</label>
+        <name>Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation>Falsch</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation>Wahr</translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Eine durch Komma getrennte Liste mit Kennungen für die ersten 10 möglichen Zahlungsübereinstimmungen für eine Spende.</help>
         <label>Mögliche Zahlungsübereinstimmungen</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help>Der API-Status der Transaktion von Elevate.</help>
-        <label>Zahlungsstatus</label>
+        <label>Elevate-API-Status der Zahlung</label>
         <name>Payment_Status__c</name>
     </fields>
     <fields>

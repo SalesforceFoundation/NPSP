@@ -54,7 +54,7 @@
         <name>Related_Record_ID__c</name>
     </fields>
     <fields>
-        <help>Indien geselecteerd, geeft dit aan dat de record die is opgegeven in ID van gerelateerde record opnieuw wordt verwerkt in het volgende geplande proces. Als opnieuw verwerken slaagt, wordt de selectie van dit veld opgeheven. Is ook van toepassing op specifieke typen fouten die plaatsvinden tijdens geplande processen.</help>
+        <help>Indien gesel., geeft dit aan dat de opgegeven record in ID van gerelateerde record weer wordt verwerkt in het volg. geplande proces. Als dit lukt, wordt het veld gedeselecteerd. Geldt ook voor specifieke fouten die plaatsvinden tijdens geplande processen.</help>
         <label>In behandeling opnieuw proberen?</label>
         <name>Retry_Pending__c</name>
     </fields>

@@ -5,6 +5,16 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>De SEC-code (Standard Entry Class) voor deze ACH-transactie.</help>
+        <label>ACH-code</label>
+        <name>ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+        <label>Laatste 4 cijfers ACH</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>De datum en het tijdstip waarop de transactie is goedgekeurd.</help>
         <label>Datum van goedkeuring</label>
         <name>Authorized_Date__c</name>
@@ -13,6 +23,11 @@
         <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is goedgekeurd door de betalingsgateway.</help>
         <label>UTC-tijdstempel van goedkeuring</label>
         <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>De batch waarin deze betaling is voldaan. Dit veld wordt automatisch ingevuld op basis van Instellingen voor batchnummers in uw NPSP-instellingen.</help>
+        <label>Batchnummer</label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help>De maand waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
@@ -35,14 +50,24 @@
         <name>Card_Network__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Donor Cover Amount --></label>
+        <help>Het bedrag dat de donateur heeft betaald boven op het donatiebedrag, vaak om de transactiekosten te dekken of om meer te doneren.</help>
+        <label>Bedrag door donateur gedekt</label>
         <name>Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>Alleen voor terugbetalingen. Toont de ID van de oorspronkelijke betalingstransactie uit Elevate.</help>
         <label>Oorspronkelijke betalings-ID Elevate</label>
         <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Biedt informatie over waarom een transactie is geweigerd.</help>
+        <label>Elevate-betalings-API - Reden weigering</label>
+        <name>Elevate_Payment_API_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>De API-status voor deze aan Elevate gekoppelde betalingsrecord.</help>
+        <label>API-status van betaling in Elevate</label>
+        <name>Elevate_Payment_API_Status__c</name>
     </fields>
     <fields>
         <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>
