@@ -267,6 +267,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorNotify}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavTriggerConfig}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportAdvancedMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportAdvancedMapping');return false;" class="slds-grow slds-m-left_large">{!$Label.bdiAdvancedMapping}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelGatewayManagementNav" data-qa-locator="elevate gateway management setting"><a href="#" onclick="ShowPanel('idPanelGatewayManagement');return false;" class="slds-grow slds-m-left_large"> Elevate Gateway Management</a></li>
                             </ul>
                         </ul>
                     </nav>
@@ -374,7 +375,7 @@
 
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
                     <apex:include pageName="STG_PanelRD" id="idPanelRD"/>
-                </div> 
+                </div>
 
                 <div class="panel noborder" id="idPanelRD2StatusMapping" style="display:none">
                     <apex:include pageName="STG_PanelRD2StatusMapping" id="idPanelRD2StatusMapping"/>
@@ -452,6 +453,10 @@
 
                 <div class="panel noborder" id="idPanelDataImportAdvancedMapping" style="display:none" >
                     <apex:include pageName="STG_PanelDataImportAdvancedMapping" />
+                </div>
+
+                <div class="panel noborder" id="idPanelGatewayManagement" style="display:none" >
+                    <apex:include pageName="STG_PanelGatewayManagement" />
                 </div>
             </div>
         </div>

@@ -214,6 +214,27 @@
     <label>Ingangsdatum</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
+    <label>Status</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Actief</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Verstreken</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Gesloten</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Onderbroken</translation>
+    </picklistValues>
+  </fields>
+  <fields>
     <name>npe03__Installment_Period__c</name>
     <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
     <label>Termijnperiode</label>

@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help><!-- The batch that created this Opportunity. This field is automatically populated based on your Batch Number Settings in NPSP Settings. --></help>
+        <label><!-- Batch Number --></label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>אצווה</label>
         <name>Batch__c</name>
         <relationshipLabel>הזדמנויות</relationshipLabel>

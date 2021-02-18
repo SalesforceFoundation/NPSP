@@ -49,8 +49,8 @@ import commonYes from '@salesforce/label/c.commonYes';
 import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
-import geAssistiveDescriptionFieldRequired from '@salesforce/label/c.geAssistiveDescriptionFieldRequired';
 import geAssistiveDescriptionFieldOptional from '@salesforce/label/c.geAssistiveDescriptionFieldOptional';
+import geAssistiveDescriptionFieldRequired from '@salesforce/label/c.geAssistiveDescriptionFieldRequired';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
 import geAssistiveFieldUp from '@salesforce/label/c.geAssistiveFieldUp';
 import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
@@ -138,8 +138,8 @@ import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertai
 import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
 import geErrorUncertainCardChargePart3 from '@salesforce/label/c.geErrorUncertainCardChargePart3';
 import geErrorUncertainCardChargePart4 from '@salesforce/label/c.geErrorUncertainCardChargePart4';
-import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geFieldsNotFoundMessage from '@salesforce/label/c.geFieldsNotFoundMessage';
+import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
@@ -152,9 +152,9 @@ import geHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
 import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
+import geHeaderFormFieldsModalDisplayOptionsSection from '@salesforce/label/c.geHeaderFormFieldsModalDisplayOptionsSection';
 import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFormFieldsModalRenameSection';
 import geHeaderFormFieldsModalSectionSettings from '@salesforce/label/c.geHeaderFormFieldsModalSectionSettings';
-import geHeaderFormFieldsModalDisplayOptionsSection from '@salesforce/label/c.geHeaderFormFieldsModalDisplayOptionsSection';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
 import geHeaderGiftEntry from '@salesforce/label/c.geHeaderGiftEntry';
 import geHeaderMatchingGiftBy from '@salesforce/label/c.geHeaderMatchingGiftBy';
@@ -198,6 +198,7 @@ import geTabBatchTableColumns from '@salesforce/label/c.geTabBatchTableColumns';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
 import geTextChargingCard from '@salesforce/label/c.geTextChargingCard';
+import geTextFieldBundlePaymentMethod from '@salesforce/label/c.geTextFieldBundlePaymentMethod';
 import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
@@ -215,8 +216,9 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
+import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
+import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
 
 class GeLabelService {
 
@@ -285,9 +287,9 @@ class GeLabelService {
         geAssistiveFormFieldsSectionEdit,
         geAssistiveModalCancelAndDiscard,
         geAssistiveRemoveSelectedOption,
+        geAssistiveRequireField,
         geAssistiveSectionDown,
         geAssistiveSectionUp,
-        geAssistiveRequireField,
         geAssistiveShowMenu,
         geAssistiveSpinner,
         geBodyAdvancedFieldMapping,
@@ -378,9 +380,9 @@ class GeLabelService {
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
         geHeaderFormFieldsModalDeleteSection,
+        geHeaderFormFieldsModalDisplayOptionsSection,
         geHeaderFormFieldsModalRenameSection,
         geHeaderFormFieldsModalSectionSettings,
-        geHeaderFormFieldsModalDisplayOptionsSection,
         geHeaderFormFieldsRightCol,
         geHeaderGiftEntry,
         geHeaderMatchingGiftBy,
@@ -424,6 +426,7 @@ class GeLabelService {
         geTabFormFields,
         geTabTemplateInfo,
         geTextChargingCard,
+        geTextFieldBundlePaymentMethod,
         geTextListViewItemCount,
         geTextListViewItemsCount,
         geTextListViewSortedBy,
@@ -441,8 +444,9 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
+        labelBooleanFalse,
         labelBooleanTrue,
-        labelBooleanFalse
+        psSelectValidPaymentMethod,
     });
 
     /*******************************************************************************

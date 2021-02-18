@@ -8,6 +8,10 @@
         <plural>true</plural>
         <value>GAU Allocations</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help><!-- The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations. --></help>
         <label><!-- Amount --></label>

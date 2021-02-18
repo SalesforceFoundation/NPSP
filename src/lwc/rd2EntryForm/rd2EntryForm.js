@@ -296,7 +296,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     handleElevateWidgetDisplay() {
         if (this.isElevateCustomer) {
-            this.evaluateElevateWidget(this.getPaymentMethod());
+            this.evaluateElevateWidget(this.paymentMethod);
         }
     }
 
@@ -782,7 +782,7 @@ export default class rd2EntryForm extends LightningElement {
     /***
      * @description Returns value of the Payment Method field
      */
-    getPaymentMethod() {
+    get paymentMethod() {
         const paymentMethod = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
 
         return paymentMethod ? paymentMethod.value : null;

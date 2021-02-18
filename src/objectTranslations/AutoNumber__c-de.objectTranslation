@@ -3,78 +3,77 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatische Nummerierung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatische Nummerierungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatische Nummerierung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatische Nummerierungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatischen Nummerierung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatischen Nummerierungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatischen Nummerierung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value>Automatischen Nummerierungen</value>
     </caseValues>
     <fields>
-        <label><!-- Display Format --></label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <label><!-- Field API Name --></label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <label><!-- Active --></label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <label><!-- Max Used Number --></label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
-        <label><!-- Description --></label>
+        <label>Beschreibung</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Starting Number --></label>
-        <name>Starting_Number__c</name>
+        <help>Das Format für das automatisch nummerierte Feld, einschließlich der Anzahl der Stellen und, falls gewünscht, eines Präfixes.</help>
+        <label>Anzeigeformat</label>
+        <name>Display_Format__c</name>
     </fields>
     <fields>
-        <label><!-- Object API Name --></label>
+        <help>Der API-Name des Felds, das die automatische Nummerierung enthält.</help>
+        <label>Feld-API-Name</label>
+        <name>Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>Wenn diese Option ausgewählt ist, ist das Format für die automatische Nummerierung aktiv.</help>
+        <label>Aktiv</label>
+        <name>IsActive__c</name>
+    </fields>
+    <fields>
+        <help>Die höchste automatisch vergebene Nummer, die für dieses Format verwendet wird.</help>
+        <label>Maximal verwendete Nummer</label>
+        <name>Max_Used_Number__c</name>
+    </fields>
+    <fields>
+        <help>Der API-Name des Objekts für die automatisch vergebene Nummer.</help>
+        <label>Objekt-API-Name</label>
         <name>Object_API_Name__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <layouts>
-        <layout>AutoNumber Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
+    <fields>
+        <help>Die erste Nummer in der automatisch nummerierten Reihe.</help>
+        <label>Anfangsnummer</label>
+        <name>Starting_Number__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Name der automatischen Nummerierung</nameFieldLabel>
 </CustomObjectTranslation>

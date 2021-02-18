@@ -1,5 +1,4 @@
-<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true"
-           applyBodyTag="false">
+<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true" applyBodyTag="false">
 
     <head>
         <apex:slds />
@@ -13,56 +12,44 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
-        const hostname = window.location.hostname;
-        const arr = hostname.split(".");
-        let domain = arr[0].replace('--npsp', '');
-        domain = domain.replace('--c', '');
-        const lightningOrigin = `https://${domain}.lightning.force.com`;
-
-        const DEFAULT_NAME_ON_CARD = '[Not Provided]';
-        let nameOnCard = DEFAULT_NAME_ON_CARD;
-
         const sfdo = new sfdoPaymentsJsSdk();
-        sfdo.mount({
-            id: 'payments',
-            clientId: '{!productId}',
-            gatewayId: '{!gatewayIds}',
-            merchantId: '{!merchantIds}',
-            designSystem: 'Lightning',
-            styles: '' +
-                '.logo {' +
-                    'left: 8px !important;' +
-                '}' +
-                '.fieldset.cc-number {' +
-                    'padding-left: 0;' +
-                    'padding-right: 1rem;' +
-                '}' +
-                '.fieldset.exp {' +
-                    'padding-left: 0;' +
-                    'padding-right: 1rem;' +
-                '}' +
-                '.fieldset.cvc {' +
-                    'padding: 0;' +
-                '}' +
-                '.error-wrapper.fieldset.exp {' +
-                    'max-width: fit-content;' +
-                '}' +
-                '.error-wrapper.fieldset.cvc {' +
-                    'max-width: fit-content;' +
-                '}'
-        })
-        .then(() => {
-            isLoaded();
-
-            setTimeout(function() {
-                isLoaded();
-            }, 3000);
-        });
-
-        function isLoaded() {
-            const message = JSON.stringify({ isLoaded: true });
-            postMessage(message);
-        }
+        const lightningOrigin = buildLightningOrigin();
+        const DEFAULT_NAME_ON_CARD = '[Not Provided]';
+        const postMessageType = 'post__npsp';
+        const CREDIT_CARD = 'Credit Card';
+        const ACH = 'ACH';
+        const styles = `
+            .logo {
+                left: 8px !important;
+            }
+            .fieldset.cc-number {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .fieldset.exp {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .fieldset.cvc {
+                padding: 0;
+            }
+            .fieldset.account-number {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            .error-wrapper.fieldset.exp {
+                max-width: fit-content;
+            }
+            .error-wrapper.fieldset.cvc {
+                max-width: fit-content;
+            }
+            div[class^="ACHInput__TooltipContainer"] {
+                display: none !important;
+            }
+            button[class^="ACHInput__ButtonContainer"] {
+                display: none !important;
+            }
+        `;
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
@@ -72,47 +59,132 @@
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
                 return;
+            }
+            if (event.data) {
+                handleMessage(event);
+            }
+        }
 
-            } else if (event.data && event.data.action === 'createToken') {
-                if (event.data.nameOnCard) {
-                    nameOnCard = event.data.nameOnCard;
-                } else {
-                    nameOnCard = DEFAULT_NAME_ON_CARD;
-                }
+        function handleMessage(event) {
+            const action = event.data.action;
+            switch (action) {
+                case 'mount':
+                    handleMounting(event.data.paymentMethod);
+                    break;
 
-                handleTokenCreation();
+                case 'setPaymentMethod':
+                    handleSetPaymentMethod(event.data.paymentMethod);
+                    break;
+
+                case 'createToken':
+                    handleTokenCreation(event.data.params.nameOnCard || DEFAULT_NAME_ON_CARD);
+                    break;
+
+                case 'createAchToken':
+                    handleAchTokenCreation(event.data.params);
+                    break;
+            }
+        }
+
+        function handleMounting(paymentMethod) {
+            if (isValidPaymentMethod(paymentMethod)) {
+                const config = {
+                    id: 'payments',
+                    clientId: '{!productId}',
+                    gatewayId: '{!gatewayIds}',
+                    merchantId: '{!merchantIds}',
+                    designSystem: 'Lightning',
+                    paymentMethod: deriveElevatePaymentMethodFrom(paymentMethod),
+                    styles: styles
+                };
+
+                sfdo.mount(config)
+                    .then(() => {
+                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        postMessage(successMessage);
+                    })
+                    .catch((err) => {
+                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        postMessage(errorString);
+                    });
+            }
+        }
+
+        function handleSetPaymentMethod(paymentMethod) {
+            if (isValidPaymentMethod(paymentMethod)) {
+                sfdo.setPaymentMethod(deriveElevatePaymentMethodFrom(paymentMethod))
+                    .then(() => {
+                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        postMessage(successMessage);
+                    })
+                    .catch((err) => {
+                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        postMessage(errorString);
+                    });
             }
         }
 
         /*******************************************************************************
         * @description Creates a token and posts the response to a credit card widget LWC
         */
-        function handleTokenCreation() {
+        function handleTokenCreation(nameOnCard) {
             const auth = {
                 jwt: '{!jwtForToken}',
                 userName: '{!$User.Username}'
-            }
-            sfdo
-                .createToken({
-                    auth: auth,
-                    nameOnCard: nameOnCard
-                })
-                .then(function response(resp) {
+            };
+            const tokenConfig = {
+                auth: auth,
+                nameOnCard: nameOnCard
+            };
+
+            sfdo.createToken(tokenConfig)
+                .then((resp) => {
                     if (resp.token) {
                         // Send token to lwc
-                        const successString = JSON.stringify({ token: resp.token });
+                        const successString = JSON.stringify({ type: postMessageType, token: resp.token });
                         postMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        postMessage(JSON.stringify(resp));
+                        postMessage(JSON.stringify({ type: postMessageType, ...resp }));
                     }
                 })
-                .catch(function handleError(err) {
+                .catch((err) => {
                     // Send error to lwc
-                    const errorString = JSON.stringify(err);
+                    const errorString = JSON.stringify({ type: postMessageType, ...err });
                     postMessage(errorString);
                 });
+        }
+
+        function handleAchTokenCreation (params) {
+           const auth = {
+              jwt: '{!jwtForToken}',
+              userName: '{!$User.Username}'
+           };
+           const tokenConfig = {
+              auth: auth,
+              achCode: 'WEB',
+              currencyCode: 'USD',
+              ach: JSON.parse(params)
+           };
+
+           sfdo.createToken(tokenConfig)
+           .then((resp) => {
+              if (resp.token) {
+                 // Send token to lwc
+                 const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                 postMessage(successString);
+
+              } else if (resp.error) {
+                 // Response contains the error, send it to lwc
+                 postMessage(JSON.stringify({ type: postMessageType, ...resp }));
+              }
+           })
+           .catch((err) => {
+              // Send error to lwc
+              const errorString = JSON.stringify({ type: postMessageType, ...err });
+              postMessage(errorString);
+           });
         }
 
         /*******************************************************************************
@@ -123,6 +195,32 @@
         function postMessage(message) {
             window.top.postMessage(message, lightningOrigin);
         }
+
+        function deriveElevatePaymentMethodFrom(paymentMethodValue) {
+            return paymentMethodValue === ACH
+                ? sfdo.PaymentMethod.ACH
+                : sfdo.PaymentMethod.CREDIT_CARD;
+        }
+
+        function isValidPaymentMethod(paymentMethod) {
+            return paymentMethod === CREDIT_CARD || paymentMethod === ACH;
+        }
+
+        function buildLightningOrigin() {
+            const hostname = window.location.hostname;
+            const arr = hostname.split(".");
+            let domain = arr[0].replace('--npsp', '');
+            domain = domain.replace('--c', '');
+
+            return `https://${domain}.lightning.force.com`;
+        }
+
+        function isReadyToMount() {
+            const message = JSON.stringify({ isReadyToMount: true });
+            postMessage(message);
+        }
+
+        window.onload = isReadyToMount();
     </script>
 
 </apex:page>

@@ -34,9 +34,9 @@
     </customLabels>
     <customLabels>
         <label>&lt;br/&gt;Pour démarrer :&lt;br/&gt;&lt;br/&gt;
-1. Ouvrir un compte de vérification d’adresse sur un service tiers. (Certains sont gratuits pour les organisations à but non lucratif.)&lt;br/&gt;
+1. Ouvrez un compte de vérification d’adresse sur un service tiers. (Certains sont gratuits pour les organisations à but non lucratif.)&lt;br/&gt;
 2. Dans votre service de vérification d’adresse, créez l’ID et/ou le jeton d’authentification nécessaire(s).&lt;br/&gt;
-3. Retournez à cette page de configuration cliquez sur le bouton Modifier en haut, et collez l’ID et/ou le jeton dans les champs appropriés.&lt;br/&gt;
+3. Retournez à cette page de configuration, cliquez sur le bouton Modifier en haut, et collez l’ID et/ou le jeton dans les champs appropriés.&lt;br/&gt;
 4. Remplissez les champs restants et cliquez sur Enregistrer. Le texte d’aide pour chaque champ fournit des informations. Si vous avez besoin de plus d’aide, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
         <name>Addr_Settings_Intro_Body2</name>
     </customLabels>
@@ -680,6 +680,10 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <name>CallableApiJobScheduleInvalidClass</name>
+    </customLabels>
+    <customLabels>
         <label>{0} n’est pas implémenté</label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -754,6 +758,10 @@
     <customLabels>
         <label>vers</label>
         <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Journal des erreurs</label>
+        <name>ERR_RecordLogTitle</name>
     </customLabels>
     <customLabels>
         <label>Salesforce a rencontré ces erreurs NPSP. Pour en savoir plus sur les erreurs courantes, consultez « Troubleshoot the Nonprofit Success Pack » dans le hub Power of Us. Si vous ne savez pas comment résoudre les erreurs, publiez un message dans le groupe Nonprofit Success Pack : https://powerofus.force.com/HUB_NPSP_Group</label>
@@ -840,6 +848,10 @@
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
+        <label>Lorsque le Statut sans date de fin est Fermé et que le Type de planification n&apos;est pas rempli, le Nombre de versements prévus doit être de 1.</label>
+        <name>RD2_DataMigrationInvalidPlannedInstallments</name>
+    </customLabels>
+    <customLabels>
         <label>Vous devez saisir une valeur de Jour du mois lorsque la Période de versement est définie sur Mensuelle.</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
@@ -852,12 +864,52 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Annulation du paiement récurrent en cours</label>
+        <name>RD2_ElevateCancelInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Ne saisissez pas d&apos;informations de paiement.</label>
+        <name>RD2_ElevateDisableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate n&apos;est pas activé pour votre organisation Salesforce</label>
+        <name>RD2_ElevateDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ne saisissez pas d&apos;informations de paiement pour le traitement Elevate.</label>
+        <name>RD2_ElevateDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Alternativement, saisissez les informations de paiement maintenant.</label>
+        <name>RD2_ElevateEnableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Information Elevate</label>
+        <name>RD2_ElevateInformationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucune erreur</label>
+        <name>RD2_ElevateInformationStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label>Actuellement, cette fonctionnalité n&apos;est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
+        <label>Processus Elevate en attente</label>
+        <name>RD2_ElevatePendingStatus</name>
+    </customLabels>
+    <customLabels>
         <label>Les Dons récurrents des Services de paiement Elevate ne peuvent pas être modifiés dans NPSP, sauf par l’utilisateur de l’intégration des Services de paiement Elevate.</label>
         <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Nous ne pouvons pas mettre à jour le Statut d&apos;un don récurrent connecté Elevate lorsqu&apos;il est Fermé.</label>
+        <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>Le paiement récurrent Elevate n&apos;a pas pu être créé. Contactez votre administrateur système pour obtenir une aide.</label>
+        <name>RD2_ElevateRecordCreateFailed</name>
     </customLabels>
     <customLabels>
         <label>Vous avez bientôt terminé ! Il reste quelques éléments à vérifier...</label>
@@ -974,15 +1026,15 @@
         <name>RD2_EnablementMigrationButton</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Le processus de mise à niveau est terminé !&lt;/b&gt;&lt;br/&gt;
-        &lt;br/&gt;Avant que votre organisation commence à utiliser les Dons récurrents avancés, procédez comme suit :&lt;br/&gt;
+        <label>&lt;b&gt;Le processus de mise à niveau est terminé.&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;Avant que votre organisation commence à utiliser les dons récurrents avancés, procédez comme suit :&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Activez les workflows, processus, règles de validation et déclencheurs que vous avez désactivés avant la mise à niveau.&lt;/li&gt;
-        &lt;li&gt;Attribuez la présentation de page Dons récurrents avancés à tous les profils utilisateur et retirez l&apos;ancienne présentation de page Dons récurrents.&lt;/li&gt;
-        &lt;li&gt;Définissez la page d&apos;enregistrement NPSP Recurring Donation Lightning en tant que page par défaut de l&apos;organisation.&lt;/li&gt;
+        &lt;li&gt;Attribuez la présentation de page Dons récurrents avancés à tous les profils utilisateur et retirez l’ancienne présentation de page Dons récurrents.&lt;/li&gt;
+        &lt;li&gt;Définissez la page d’enregistrement Lightning Don récurrent NPSP en tant que page par défaut de l’organisation.&lt;/li&gt;
         &lt;li&gt;Attribuez la classe Apex RD2_VisualizeScheduleController à vos profils personnalisés.&lt;/li&gt;
-        &lt;li&gt;Ajustez la sécurité au niveau des champs Dons récurrents en fonction de vos profils et ensembles d&apos;autorisations.&lt;/li&gt;
-        &lt;li&gt;Adaptez les rapports sur les Dons récurrents à la fonctionnalité Dons récurrents avancés.&lt;/li&gt;
-        &lt;li&gt;Formez vos équipes à la fonctionnalité Dons récurrents avancés.&lt;/li&gt;</label>
+        &lt;li&gt;Ajustez la sécurité au niveau des champs Dons récurrents en fonction de vos profils et ensembles d’autorisations.&lt;/li&gt;
+        &lt;li&gt;Adaptez les rapports sur les dons récurrents à la fonctionnalité Dons récurrents avancés.&lt;/li&gt;
+        &lt;li&gt;Formez vos équipes à l’utilisation de la fonctionnalité Dons récurrents avancés.&lt;/li&gt;</label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
@@ -1027,8 +1079,8 @@
     </customLabels>
     <customLabels>
         <label>&lt;ul&gt;&lt;li&gt;Désactivez les workflows, processus, règles de validation et déclencheurs dans les objets Dons récurrents, Opportunité et Paiement.&lt;/li&gt;
-&lt;li&gt;Sauvegardez votre base de données, notamment tous les Dons récurrents et leurs enregistrements associés.&lt;/li&gt;
-&lt;li&gt;Lisez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; sur les Dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;
+&lt;li&gt;Lisez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; sur les dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_EnablementPrepTasks</name>
     </customLabels>
     <customLabels>
@@ -1036,17 +1088,21 @@
         <name>RD2_EnablementPrepTitle</name>
     </customLabels>
     <customLabels>
-        <label>Les Dons récurrents avancés rendent les dons récurrents plus flexibles et plus faciles à gérer que jamais. Pour activer les Dons récurrents avancés, suivez les étapes ci-dessous. Vous devez suivre TOUTES les étapes pour activer complètement les Dons récurrents avancés.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de Don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Pour plus d’informations, consultez la documentation sur les Dons récurrents avancés &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;&lt;/a&gt;.</label>
+        <label>Les dons récurrents avancés rendent les dons récurrents plus flexibles et plus faciles à gérer que jamais. Pour activer les dons récurrents avancés, suivez les étapes ci-dessous. Vous devez suivre TOUTES les étapes pour activer complètement les dons récurrents avancés.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;Pour plus d’informations, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les dons récurrents avancés&lt;/a&gt;.</label>
         <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>La date de fin ne peut pas être future pour des Dons récurrents connectés Elevate.</label>
+        <name>RD2_EndDateElevateCannotBeInFuture</name>
     </customLabels>
     <customLabels>
         <label>La date de fin doit être postérieure à la dernière date de fermeture de l’Opportunité clôturée/gagnée.</label>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
     </customLabels>
     <customLabels>
-        <label>La date de fin ne peut pas être dans le futur lorsque le Type de récurrence est Fixe.</label>
+        <label>La date de fin ne peut pas être future lorsque le Type de récurrence est Fixe.</label>
         <name>RD2_EndDateMustBeValidForFixedLength</name>
     </customLabels>
     <customLabels>
@@ -1114,6 +1170,27 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Un paiement récurrent a été créé dans Elevate. ID récurrent Elevate : {0}.
+        
+        Cependant, un don récurrent correspondant n’a pas été créé dans NPSP en raison de l’erreur suivante :
+        ● {1}
+        
+        Vous pouvez garder ce formulaire ouvert, corriger l’erreur et enregistrer à nouveau le don récurrent. Vous pouvez également annuler et contacter l’administrateur système pour obtenir de l’aide.</label>
+        <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrement d&apos;un paiement récurrent Elevate... Cette opération peut prendre quelques minutes.</label>
+        <name>RD2_EntryFormSaveCommitmentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Validation de la carte de crédit...</label>
+        <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrement du don récurrent...</label>
+        <name>RD2_EntryFormSaveRecurringDonationMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Tous les</label>
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
@@ -1132,6 +1209,10 @@
     <customLabels>
         <label>Vous devez activer les Dons récurrents avancés avant d&apos;exécuter la tâche par lots des Dons récurrents avancés.</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Une erreur a été rencontrée lors de la création de l&apos;enregistrement Don récurrent. Aucune demande de paiement récurrente n&apos;a été envoyée à Elevate. Contactez votre administrateur système pour obtenir une aide.</label>
+        <name>RD2_ErrorRDIdIsMissingForCommitment</name>
     </customLabels>
     <customLabels>
         <label>La Fréquence de versement est requise. Saisissez une valeur de 1 à 20.</label>
@@ -1206,6 +1287,10 @@
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
     </customLabels>
     <customLabels>
+        <label>NPSP ne peut pas mettre à jour le Statut et le Motif du statut dans des Dons récurrents interrompus. Vous devez ajouter la valeur de liste de sélection &apos;Interrompu&apos; au champ Statut.</label>
+        <name>RD2_PauseStatusMustExist</name>
+    </customLabels>
+    <customLabels>
         <label>Motif de l&apos;interruption</label>
         <name>RD2_PausedReasonLabel</name>
     </customLabels>
@@ -1262,9 +1347,9 @@
         <name>RD2_StatusMappingColumnStatusAPIName</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement tel que défini par le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Échelonné : les dons ne sont pas reçus comme prévu, mais NPSP crée toujours des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée aucune nouvelle Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
+        <label>&lt;b&gt;Définitions des états&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : le donateur effectue régulièrement des dons. NPSP crée des opportunités de versement telles que définies par le calendrier de dons récurrents.&lt;/li&gt;
+&lt;li&gt;Échelonné : les dons ne sont pas reçus comme prévu, mais NPSP crée toujours des opportunités de versement selon le calendrier de dons récurrents.&lt;/li&gt;
+&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés par le donateur. NPSP ne crée aucune nouvelle opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_StatusMappingDefinitions</name>
     </customLabels>
     <customLabels>
@@ -1276,8 +1361,8 @@
         <name>RD2_StatusMappingInProgressMessage</name>
     </customLabels>
     <customLabels>
-        <label>Lorsque vous créez des valeurs de liste de sélection personnalisées pour le Statut du Don récurrent, vous devez les mapper à un État pour indiquer à NPSP comment traiter les enregistrements avec ces valeurs de Statut personnalisées.
-        &lt;br/&gt;&lt;br/&gt;Si vous n’avez créé aucune valeur de liste de sélection personnalisée pour le Statut du Don récurrent, vous ne devez rien mapper.</label>
+        <label>Lorsque vous créez des valeurs de liste de sélection personnalisées pour le statut du don récurrent, vous devez les mapper à un état pour indiquer à NPSP comment traiter les enregistrements présentant ces valeurs de statut personnalisées.
+        &lt;br/&gt;&lt;br/&gt;Si vous n’avez créé aucune valeur de liste de sélection personnalisée pour le statut du don récurrent, aucun mappage n’est nécessaire.</label>
         <name>RD2_StatusMappingIntro</name>
     </customLabels>
     <customLabels>
@@ -1333,8 +1418,8 @@
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
-        <label>Ce processus met à jour toutes les Opportunités de versement pour qu’elles correspondent aux données actuelles de ce Don récurrent. Pour certains versements, NPSP peut supprimer et recréer de nouveaux versements.
-&lt;br/&gt;&lt;br/&gt;Cliquez sur Continuer pour démarrer le processus ou sur Annuler pour revenir à la page des Dons récurrents.</label>
+        <label>Ce processus met à jour toutes les opportunités de versement pour qu’elles correspondent aux données actuelles de ce don récurrent. Pour certains versements, NPSP peut supprimer et recréer de nouveaux versements.
+&lt;br/&gt;&lt;br/&gt;Cliquez sur Continuer pour démarrer le processus ou sur Annuler pour revenir à la page des dons récurrents.</label>
         <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
@@ -1490,12 +1575,12 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label>Cliquez pour agrandir cette section.</label>
         <name>accordionSection_ToggleInstructionsWhenClosed</name>
-        <label>Cliquez pour basculer la section. Cette section n&apos;est pas ouverte.</label>
     </customLabels>
     <customLabels>
+        <label>Cliquez pour fermer cette section.</label>
         <name>accordionSection_ToggleInstructionsWhenOpen</name>
-        <label>Cliquez pour basculer la section. Cette section est ouverte.</label>
     </customLabels>
     <customLabels>
         <label>Appel non valide. Cette fonction est réservée à l&apos;usage de Salesforce.</label>
@@ -1708,11 +1793,79 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <label>Ce Format d&apos;affichage est déjà utilisé.</label>
+        <name>autoNumberErrorDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>Format d&apos;affichage non valide.</label>
+        <name>autoNumberErrorInvalidDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrer et activer</label>
+        <name>batchNumberSettingsActivate</name>
+    </customLabels>
+    <customLabels>
+        <label>Numéro le numéro par lot</label>
+        <name>batchNumberSettingsConfigureHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Activez ou désactivez des formats numériques par lot. Un seul format numérique par lot peut être actif à la fois.</label>
+        <name>batchNumberSettingsDescActivation</name>
+    </customLabels>
+    <customLabels>
+        <label>Le format d’affichage vous permet de contrôler l’apparence de votre champ à
+            numérotation automatique. Il doit être unique et inclure le nombre de
+            chiffres ainsi qu’un préfixe, si vous le souhaitez. Votre format peut 
+            comporter jusqu’à 30 caractères.&lt;/br&gt;&lt;/br&gt;
+            Exemples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            Une séquence au format {0} débutant à 9 s’affiche sous la forme 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            Une séquence au format {00000} débutant à 9 s’affiche sous la forme 00009,
+            00010, 00011, etc.
+
+            &lt;/li&gt;
+            &lt;li&gt;
+            Une séquence au format ABC-{0000} débutant à 9 s’affiche sous la forme
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </label>
+        <name>batchNumberSettingsDescDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Les numéros par lot sont des identificateurs uniques utilisés dans Saisie de dons et Importateur de données NPSP. La valeur à numérotation automatique est affichée dans les champs Numéro du lot des Opportunités et des Paiements.</label>
+        <name>batchNumberSettingsDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Créez un format numérique par lot personnalisé et choisissez un numéro de départ. Vous devez activer le nouveau format numérique par lot. Un seul format numérique par lot peut être actif à la fois. </label>
+        <name>batchNumberSettingsDescriptionCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>Impossible d&apos;enregistrer le format à numérotation automatique. Examinez les erreurs, puis réessayez.</label>
+        <name>batchNumberSettingsError</name>
+    </customLabels>
+    <customLabels>
+        <label>Paramètres de Numéro du lot</label>
+        <name>batchNumberSettingsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>En savoir plus sur les formats d&apos;affichage.</label>
+        <name>batchNumberSettingsHeaderDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>Formats numériques par lot</label>
+        <name>batchNumberSettingsHeaderFormats</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de données par lots non prise en charge</label>
         <name>bdeRetirementBlockerHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <label>Depuis le 1er octobre 2020, la Saisie de données par lots n&apos;est plus prise en charge. La plupart des capacités ont été remplacées par de nouvelles fonctionnalités dans NPSP. Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la Saisie de données par lots. Pour accéder à des lots en cours, contactez le Support. &lt;br/&gt; Vous pouvez explorer la Saisie de dons comme alternative à la Saisie de données par lots. Pour plus d&apos;informations sur la Saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentation NPSP&lt;/a&gt; sur la plate-forme Power of Us.</label>
         <name>bdeRetirementBlockerMessage</name>
     </customLabels>
     <customLabels>
@@ -1896,7 +2049,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiDryRunRecordsValidated</name>
     </customLabels>
     <customLabels>
-        <label>Importations de données NPSP - Essai</label>
+        <label>Importateur de données NPSP - Essai</label>
         <name>bdiDryRunTitle</name>
     </customLabels>
     <customLabels>
@@ -1980,13 +2133,17 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label>Connectez le champ que vous avez créé dans l&apos;objet Importation de données NPSP avec le champ de votre objet cible dans la
-            grille ci-dessous. Vous pouvez rechercher les champs par Étiquette du champ et Nom d&apos;API du champ.</label>
+        <label>
+            Connectez le champ que vous avez créé dans l’objet Importation de données NPSP avec le champ de votre objet cible dans la
+            grille ci-dessous. Vous pouvez rechercher les champs par Étiquette du champ ou Nom d’API du champ.
+        </label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
     <customLabels>
-        <label>Les champs de l&apos;objet Importation de données NPSP doivent être mappés avec des types de champ compatibles dans votre objet cible.
-            Lorsque vous sélectionnez un champ d&apos;importation de données NPSP, seuls les champs cibles compatibles sont disponibles.</label>
+        <label>
+            Les champs de l’objet Importation de données NPSP doivent être mappés avec des types de champ compatibles dans votre objet cible.
+            Lorsque vous sélectionnez un champ d’importation de données NPSP, seuls les champs cibles compatibles sont disponibles.
+        </label>
         <name>bdiFMUIDescription2</name>
     </customLabels>
     <customLabels>
@@ -2104,7 +2261,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Vous êtes sur le point de supprimer {0} enregistrement(s).
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;IMPORTANT :&lt;/b&gt; Si vous créez des dons dans votre organisation à l’aide de la fonctionnalité Saisie de dons par lots, nous recommandons de ne pas utiliser le bouton Suppression en masse. Consultez la documentation NPSP pour obtenir des instructions sur la suppression d’enregistrements à l’aide du chargeur de données.</label>
+        &lt;br/&gt;&lt;b&gt;IMPORTANT :&lt;/b&gt; si vous créez des dons dans votre organisation à l’aide de la fonctionnalité Saisie de dons par lots, nous vous recommandons de ne pas utiliser le bouton Suppression en masse. Consultez la documentation NPSP pour obtenir des instructions sur la suppression d’enregistrements à l’aide du chargeur de données.</label>
         <name>bdiMassDeleteWarning</name>
     </customLabels>
     <customLabels>
@@ -2256,16 +2413,16 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label>Examinons deux exemples de groupes d&apos;objets, Allocation UCG 1 et Allocation UCG 2. Ces groupes sont directement liés à l&apos;objet Opportunité.
-            Vous pouvez attribuer deux allocations UCG à une seule Opportunité. Pour cela, saisissez les informations sur l&apos;opportunité dans les colonnes Dons de votre fichier d&apos;importation.
-            Insérez ensuite la première allocation UCG dans les colonnes Allocations UCG 1 et la deuxième dans les colonnes Allocations UCG 2. En raison du mappage des objets Allocations UCG 1 et
-            Allocations UCG 2, lors de l&apos;importation, les allocations UCG sont toutes les deux attribuées à l&apos;opportunité.</label>
+        <label>Examinons deux exemples de groupes d’objets, Allocation UCG 1 et Allocation UCG 2. Ces groupes sont directement liés à l’objet Opportunité.
+            Vous pouvez attribuer deux allocations UCG à une même opportunité. Pour cela, saisissez les informations sur l’opportunité dans les colonnes Dons de votre fichier d’importation.
+            Insérez ensuite la première allocation UCG dans les colonnes Allocations UCG 1 et la deuxième dans les colonnes Allocations UCG 2. En raison du mappage des objets Allocations UCG 1 et
+            Allocations UCG 2, lors de l’importation, les allocations UCG sont toutes les deux attribuées à l’opportunité.</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
-        <label>La Relation de référence ou le champ Principal - Détails qui connecte votre objet cible au Groupe d&apos;objets associé.
-            Si l&apos;objet cible est un enfant de l&apos;objet associé, ce champ est dans l&apos;objet cible. Alternativement,
-            si l&apos;objet cible est le parent de l&apos;objet associé, ce champ est dans l&apos;objet associé.</label>
+        <label>La relation de référence ou le champ Principal - Détails qui connecte votre objet cible au groupe d’objets associé.
+            Si l’objet cible est un enfant de l’objet associé, ce champ est dans l’objet cible. Sinon,
+            si l’objet cible est le parent de l’objet associé, ce champ est dans l’objet associé.</label>
         <name>bdiOMUIThroughFieldHelp</name>
     </customLabels>
     <customLabels>
@@ -2385,8 +2542,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bgeBatchOverviewWizard</name>
     </customLabels>
     <customLabels>
-        <label>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements par lots NPSP.
-        </label>
+        <label>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements par lots NPSP.</label>
         <name>bgeBatchPostProcessClassHelp</name>
     </customLabels>
     <customLabels>
@@ -2614,6 +2770,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>Activer</label>
+        <name>commonActivate</name>
+    </customLabels>
+    <customLabels>
         <label>Vous devez être Administrateur système pour accéder à cette page.</label>
         <name>commonAdminPermissionErrorMessage</name>
     </customLabels>
@@ -2662,12 +2822,24 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonCardType</name>
     </customLabels>
     <customLabels>
+        <label>Nom du titulaire de la carte</label>
+        <name>commonCardholderName</name>
+    </customLabels>
+    <customLabels>
         <label>Cloner</label>
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label>Fermer</label>
+        <name>commonClose</name>
+    </customLabels>
+    <customLabels>
         <label>Une tâche est déjà en cours dans la classe Apex {0}. La tâche doit être terminée avant d&apos;être réexécutée.</label>
         <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Contactez votre administrateur système pour obtenir une aide.</label>
+        <name>commonContactSystemAdminMessage</name>
     </customLabels>
     <customLabels>
         <label>Numéro de carte</label>
@@ -2676,6 +2848,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Erreur critique</label>
         <name>commonCriticalError</name>
+    </customLabels>
+    <customLabels>
+        <label>Désactiver</label>
+        <name>commonDeactivate</name>
     </customLabels>
     <customLabels>
         <label>Valeur par défaut</label>
@@ -2698,15 +2874,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonError</name>
     </customLabels>
     <customLabels>
+        <label>Erreur : {0}</label>
+        <name>commonErrorPrefix</name>
+    </customLabels>
+    <customLabels>
         <label>Étiquette du champ</label>
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Field not found --></label>
+        <label>Champ introuvable</label>
         <name>commonFieldNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fields Not Found --></label>
+        <label>Champs introuvables</label>
         <name>commonFieldsNotFound</name>
     </customLabels>
     <customLabels>
@@ -2818,8 +2998,16 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonViewAll</name>
     </customLabels>
     <customLabels>
+        <label>Afficher le journal d’erreurs</label>
+        <name>commonViewErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label>Afficher plus</label>
         <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Veuillez patienter...</label>
+        <name>commonWaitMessage</name>
     </customLabels>
     <customLabels>
         <label>Avertissement</label>
@@ -3110,9 +3298,9 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         Nous vous recommandons d’inclure les champs suivants :
         &lt;/br&gt;
         &lt;ul&gt;
-            &lt;li&gt; Nom du donateur : liens vers le compte ou le contact de l’organisation effectuant le don. &lt;/li&gt;
-            &lt;li&gt; Nom du don : liens vers l’opportunité ou le paiement du don. &lt;/li&gt;
-            &lt;li&gt; Informations sur l’état et l’échec : informations sur le traitement du lot. &lt;/li&gt;
+            &lt;li&gt; Nom du donateur : lien dirigeant vers le compte ou le contact de l’organisation effectuant le don. &lt;/li&gt;
+            &lt;li&gt; Nom du don : lien dirigeant vers l’opportunité ou le paiement correspondant au don. &lt;/li&gt;
+            &lt;li&gt; Informations sur l’état et l’échec : informations sur le traitement par lots. &lt;/li&gt;
         &lt;/ul&gt;
         </label>
         <name>geBodyBatchTableColumnsPart2</name>
@@ -3399,7 +3587,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label>Une erreur système s’est produite pour le don {0} par {1}. Votre administrateur doit examiner les transactions dans {2} et déterminer si la carte a été facturée.</label>
+        <label>Une erreur système s’est produite pour le don {0} provenant de {1}. Votre administrateur doit examiner les transactions dans {2} et déterminer si la carte a été facturée.</label>
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
@@ -3415,7 +3603,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <label>Ce formulaire inclut des champs introuvables. Consultez votre administrateur.</label>
         <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
@@ -3623,7 +3811,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>gePS_IntegrationTestInvalidConfigParams</name>
     </customLabels>
     <customLabels>
-        <label>Une erreur s’est produite lors du traitement du paiement. Examinez l’erreur et réessayez. Vous pouvez également,
+        <label>Une erreur s’est produite lors du traitement du paiement. Examinez l’erreur et réessayez. Vous pouvez également
             sélectionner Ne pas facturer la carte pour saisir un don sans traiter un paiement par carte. {0} erreurs :
             /0x0A/ {1} </label>
         <name>gePaymentProcessError</name>
@@ -3671,6 +3859,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <label>Facturation de la carte...</label>
         <name>geTextChargingCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Instructions to add Payment Method --></label>
+        <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>{0} élément</label>
@@ -3767,6 +3959,778 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <label>La configuration requise pour le traitement de dons est manquante dans votre organisation. Pour obtenir de l’aide, contactez votre administrateur.</label>
         <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
+        <label>LISTE DE CONTRÔLE DE CONFIGURATION ADMINISTRATIVE</label>
+        <name>gsAdminSetupTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Statut de la demande :</label>
+        <name>gsApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier le statut de la demande</label>
+        <name>gsApplicationStatusModalHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Demander des licences Salesforce</label>
+        <name>gsApplyForFreeLicenses</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier le statut</label>
+        <name>gsCheckStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Prenez connaissance des principaux concepts et des fonctionnalités.</label>
+        <name>gsChecklistExploreNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorer Nonprofit Success Pack (NPSP)</label>
+        <name>gsChecklistExploreNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Accordez aux utilisateurs l&apos;accès à NPSP et gérez les autorisations de votre organisation en vous assurant que les personnes appropriées accèdent uniquement aux données dont elles ont besoin pour un fonctionnement optimal.</label>
+        <name>gsChecklistItemAddUserDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à ajouter des utilisateurs avec Trailhead</label>
+        <name>gsChecklistItemAddUserLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajouter des utilisateurs</label>
+        <name>gsChecklistItemAddUserTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Bien avant de basculer l&apos;interrupteur et de commencer à utiliser Salesforce, nous recommandons de définir un plan de communication clair, bienveillant et transparent avec votre organisation au sujet des postes de travail.</label>
+        <name>gsChecklistItemCommunicateWithUserskDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez Chatter avec Trailhead</label>
+        <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Communiquer avec vos utilisateurs</label>
+        <name>gsChecklistItemCommunicateWithUserskTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivez les dons, les subventions et les autres types de revenu afin d&apos;identifier des modèles de donation et de comprendre ce qui motive le don chez l&apos;administré. Commencez par apprendre comment saisir des dons dans NPSP.</label>
+        <name>gsChecklistItemCreateDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les dons avec Trailhead</label>
+        <name>gsChecklistItemCreateDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer des dons</label>
+        <name>gsChecklistItemCreateDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer un don</label>
+        <name>gsChecklistItemCreateDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les meilleures pratiques d&apos;utilisation de listes de sélection, de filtres, de formules et des autres outils du Gestionnaire d&apos;objet pour personnaliser les objets de votre organisation.</label>
+        <name>gsChecklistItemCustomFieldsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à utiliser le Gestionnaire d&apos;objet avec Trailhead</label>
+        <name>gsChecklistItemCustomFieldsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnaliser les objets</label>
+        <name>gsChecklistItemCustomFieldsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo de 4 minutes</label>
+        <name>gsChecklistItemExtraFourMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo d&apos;1 minute</label>
+        <name>gsChecklistItemExtraOneMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo de 60 minutes</label>
+        <name>gsChecklistItemExtraSixtyMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo de 2 minutes</label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à exploiter les outils intégrés tels que les vues de liste et le parcours pour gérer efficacement vos processus de levée de fonds et de dons.</label>
+        <name>gsChecklistItemFundraisingProcessDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les vues de liste et le parcours avec Trailhead</label>
+        <name>gsChecklistItemFundraisingProcessLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer des vues de liste</label>
+        <name>gsChecklistItemFundraisingProcessPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualiser vos processus de levée de fonds</label>
+        <name>gsChecklistItemFundraisingProcessTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Ces étapes initiales vont guider vos premiers pas, mais les possibilités sont illimitées dans Salesforce. Découvrez les autres fonctionnalités ainsi que les activités remarquables que d&apos;autres organisations ont réalisées sur la plate-forme.</label>
+        <name>gsChecklistItemGoFurtherDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez NPSP avec Trailhead</label>
+        <name>gsChecklistItemGoFurtherLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour aller plus loin</label>
+        <name>gsChecklistItemGoFurtherTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Utilisez l&apos;Importateur de données NPSP pour intégrer vos enregistrements à Salesforce.</label>
+        <name>gsChecklistItemImportDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à importer des données avec Trailhead</label>
+        <name>gsChecklistItemImportDataLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importer des données</label>
+        <name>gsChecklistItemImportDataPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Consulter la documentation</label>
+        <name>gsChecklistItemImportDataSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Importer des données</label>
+        <name>gsChecklistItemImportDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce fait l&apos;objet de fréquentes mises à jour qui ont pour but de corriger les problèmes éventuels et d&apos;ajouter de nouvelles fonctionnalités. Découvrez ces modifications et comment gérer le processus de mise à jour pour vous assurer que votre organisation est toujours prête à exploiter tout le potentiel de la plate-forme.</label>
+        <name>gsChecklistItemManageChangeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à préparer les versions avec Trailhead</label>
+        <name>gsChecklistItemManageChangeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher le groupe Release Readiness</label>
+        <name>gsChecklistItemManageChangePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gérer les modifications dans votre organisation</label>
+        <name>gsChecklistItemManageChangeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette vue d&apos;ensemble montre les possibilités qu&apos;offre NPSP, mais vous pouvez approfondir votre exploration et découvrir les nombreuses autres fonctionnalités disponibles pour votre organisation.</label>
+        <name>gsChecklistItemNPSPCloudDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les Fonctionnalités NPSP avec Trailhead</label>
+        <name>gsChecklistItemNPSPCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher les fonctionnalités</label>
+        <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrir les autres fonctionnalités de Nonprofit Cloud</label>
+        <name>gsChecklistItemNPSPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Prenez le temps de planifier soigneusement votre implémentation et vérifiez que votre organisation Salesforce répond à tous les besoins de votre association à but non lucratif.</label>
+        <name>gsChecklistItemNPSPGuideDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Télécharger le fichier PDF</label>
+        <name>gsChecklistItemNPSPGuidePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Guide de planification NPSP</label>
+        <name>gsChecklistItemNPSPGuideTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Parcourez les pages des Paramètres NPSP et examinez attentivement les paramètres pour vérifier qu&apos;ils conviennent à votre organisation et qu&apos;ils fonctionnent comme vous le souhaitez.</label>
+        <name>gsChecklistItemNPSPSettingsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Examinez les Paramètres NPSP dans le Guide de planification</label>
+        <name>gsChecklistItemNPSPSettingsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Paramètres NPSP</label>
+        <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajuster les paramètres NPSP</label>
+        <name>gsChecklistItemNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Prenez le temps de personnaliser la présentation de votre organisation afin de faciliter l&apos;accès aux données pour les utilisateurs.</label>
+        <name>gsChecklistItemPageLayoutsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les Présentations de page avec Trailhead</label>
+        <name>gsChecklistItemPageLayoutsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnaliser les présentations de page</label>
+        <name>gsChecklistItemPageLayoutsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Définissez des objectifs précis et découvrez les meilleures pratiques d&apos;implémentation de Nonprofit Cloud.</label>
+        <name>gsChecklistItemPrepareNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez comment réussir grâce à NPSP avec Trailhead</label>
+        <name>gsChecklistItemPrepareNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Définir des objectifs</label>
+        <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Préparer votre réussite avec Nonprofit Cloud</label>
+        <name>gsChecklistItemPrepareNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dans Salesforce, les informations de l&apos;organisation sont désignées par l&apos;expression « Informations sur la société ». Vous pouvez configurer le fuseau horaire, la devise locale et le mois de début de l&apos;exercice fiscal par défaut de votre organisation. Vous pouvez également rechercher des informations sur votre utilisation des licences.</label>
+        <name>gsChecklistItemReviewCompanyDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les paramètres Informations sur la société avec Trailhead</label>
+        <name>gsChecklistItemReviewCompanyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Réviser les Informations sur la société</label>
+        <name>gsChecklistItemReviewCompanyTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à générer des rapports et des tableaux de bord qui donnent vie à vos données et montrent l&apos;impact de votre organisation.</label>
+        <name>gsChecklistItemRunningReportsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à personnaliser les Rapports et tableaux de bord NPSP avec Trailhead</label>
+        <name>gsChecklistItemRunningReportsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorer les rapports</label>
+        <name>gsChecklistItemRunningReportsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Générer des rapports sur les données des administrés</label>
+        <name>gsChecklistItemRunningReportsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez comment ajouter les données pertinentes de citoyens (par exemple, un nom, une adresse ou un employeur) à votre instance Salesforce.</label>
+        <name>gsChecklistItemSetupContactDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les contacts et les comptes</label>
+        <name>gsChecklistItemSetupContactLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer des foyers</label>
+        <name>gsChecklistItemSetupContactPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorer les contacts</label>
+        <name>gsChecklistItemSetupContactSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurer un Contact et un Compte de foyer</label>
+        <name>gsChecklistItemSetupContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les activités sont des tâches, des événements ou d&apos;autres interactions suivies dans la Chronologie des activités. Les activités vous informent chaque fois que vous êtes en contact avec un administré. Apprenez comment exploiter les activités pour consigner les interactions avec les administrés et attribuer des tâches.</label>
+        <name>gsChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les activités avec Trailhead</label>
+        <name>gsChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer des activités</label>
+        <name>gsChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Rester informé des activités</label>
+        <name>gsChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Le jour où vous lancez votre organisation Salesforce, vous souhaitez que chaque utilisateur soit prêt. Il est par conséquent important de planifier l&apos;intégration de vos utilisateurs et de les aider à tirer parti de Salesforce.</label>
+        <name>gsChecklistItemTrainUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprenez à former vos utilisateurs avec Trailhead</label>
+        <name>gsChecklistItemTrainUsersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Former vos utilisateurs</label>
+        <name>gsChecklistItemTrainUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Personnalisez Salesforce avec des informations uniques à votre organisation.</label>
+        <name>gsChecklistMakeItYourDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>S&apos;approprier Salesforce</label>
+        <name>gsChecklistMakeItYourTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajoutez vos utilisateurs à Salesforce et planifiez votre déploiement</label>
+        <name>gsChecklistOnboardUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Intégrer vos utilisateurs</label>
+        <name>gsChecklistOnboardUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>30 jours ajoutés</label>
+        <name>gsDaysAdded</name>
+    </customLabels>
+    <customLabels>
+        <label>Nombre de jours restants pour l&apos;évaluation gratuite</label>
+        <name>gsDaysRemainingInFreeTrial</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour suivre le statut de votre demande, envoyez-nous un e-mail à l&apos;adresse :</label>
+        <name>gsFollowUpApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>En savoir plus</label>
+        <name>gsLearnMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucune demande soumise</label>
+        <name>gsNoApplicationSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>Parcours de formation à la levée de fonds</label>
+        <name>gsResourcesItemFundraisingLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Démarrer une opération de levée de fonds</label>
+        <name>gsResourcesItemFundraisingLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Hub Power of Us</label>
+        <name>gsResourcesItemHubLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Apprendre auprès d&apos;autres associations à but non lucratif</label>
+        <name>gsResourcesItemHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Parcours de formation à l&apos;engagement</label>
+        <name>gsResourcesItemMarketingEngagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Engager les administrés</label>
+        <name>gsResourcesItemMarketingEngagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Bases de Nonprofit Cloud</label>
+        <name>gsResourcesItemNonprofitCloudLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrir Nonprofit Cloud</label>
+        <name>gsResourcesItemNonprofitCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Partenaires d&apos;implémentation</label>
+        <name>gsResourcesItemPartnersLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Rechercher un partenaire</label>
+        <name>gsResourcesItemPartnersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Parcours de formation à la gestion du programme</label>
+        <name>gsResourcesItemProgramManagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Gérer les programmes</label>
+        <name>gsResourcesItemProgramManagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendrier des événements Salesforce</label>
+        <name>gsResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Rechercher des événements et des webinaires</label>
+        <name>gsResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Ressources</label>
+        <name>gsResourcesTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Canal vidéographie NPSP</label>
+        <name>gsResourcesVideographyLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Regarder des vidéos</label>
+        <name>gsResourcesVideographyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Soumise</label>
+        <name>gsSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>en 2 minutes</label>
+        <name>gsVideoHeaderLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Commencer dans NPSP</label>
+        <name>gsVideoHeaderTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les individus constituent la pierre angulaire de toutes les organisations à but non lucratif. Explorez les fonctionnalités de Nonprofit Success Pack pour apprendre à gérer vos membres ainsi que leurs relations familiales, personnelles et professionnelles.</label>
+        <name>gseuChecklistCreateConstituentRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Création d’enregistrements de membres</label>
+        <name>gseuChecklistCreateConstituentRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Lorsque vous collectez des fonds dans un but précis, il est essentiel d’honorer l’intention du donateur. Assurez-vous que les dons sont correctement attribués à l’aide des unités de comptabilité générale.</label>
+        <name>gseuChecklistItemCaptureDonorIntentDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les allocations de don</label>
+        <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Création d’allocations</label>
+        <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Identification de l’intention du donateur avec les allocations de don</label>
+        <name>gseuChecklistItemCaptureDonorIntentTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les dons mensuels peuvent fournir une source prévisible de revenus aux organismes à but non lucratif, et pour ces structures, les donateurs réguliers constituent souvent les partisans les plus fidèles et les plus engagés. Suivez les dons mensuels en créant un don récurrent.</label>
+        <name>gseuChecklistItemCollectGiftsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les dons récurrents</label>
+        <name>gseuChecklistItemCollectGiftsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Création de dons récurrents</label>
+        <name>gseuChecklistItemCollectGiftsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Collecte régulière de dons avec les dons récurrents</label>
+        <name>gseuChecklistItemCollectGiftsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Création d’affiliations</label>
+        <name>gseuChecklistItemConnectContactOrganizationBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Les affiliations dans NPSP vous permettent d’identifier des liens importants entre vos membres et des organisations associées, telles que leurs lieux de travail, leurs écoles ou leurs entreprises. Connectez un contact à une organisation à l’aide des affiliations d’organisation.</label>
+        <name>gseuChecklistItemConnectContactOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les affiliations</label>
+        <name>gseuChecklistItemConnectContactOrganizationLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Connexion d’un contact à une organisation grâce aux affiliations</label>
+        <name>gseuChecklistItemConnectContactOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Création de relations</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Les relations dans NPSP vous permettent d’identifier des liens importants entre vos membres. Connectez les contacts à l’aide de la liste associée Relations dans les enregistrements de contact.</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les relations</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Connexion de deux contacts grâce aux relations</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Création de contacts</label>
+        <name>gseuChecklistItemCreateContactAndAccountBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Les individus étant la principale ressource d’une organisation à but non lucratif, il est essentiel de comprendre comment utiliser l’objet Contact pour effectuer leur suivi dans NPSP. L’objet Contact permet d’enregistrer les données relatives à un membre, telles que son nom, son adresse et son employeur.</label>
+        <name>gseuChecklistItemCreateContactAndAccountDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les contacts et les comptes</label>
+        <name>gseuChecklistItemCreateContactAndAccountLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Création de contacts et de comptes de foyer</label>
+        <name>gseuChecklistItemCreateContactAndAccountTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour la plupart des organisations à but non lucratif, les dons proviennent de contributions individuelles. Suivez les dons individuels en créant une opportunité à partir d’un enregistrement de contact.</label>
+        <name>gseuChecklistItemDonationIndividualDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les dons individuels</label>
+        <name>gseuChecklistItemDonationIndividualLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons individuels</label>
+        <name>gseuChecklistItemDonationIndividualPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie d’un don provenant d’un individu</label>
+        <name>gseuChecklistItemDonationIndividualTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les dons provenant d’institutions et d’entreprises représentent une part importante de l’aide apportée aux organisations à but non lucratif. Suivez les dons effectués par les organisations en créant une opportunité à partir d’un enregistrement de compte.</label>
+        <name>gseuChecklistItemDonationOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les dons provenant d’organisations</label>
+        <name>gseuChecklistItemDonationOrganizationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons d’une organisation</label>
+        <name>gseuChecklistItemDonationOrganizationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie d’un don provenant d’une organisation</label>
+        <name>gseuChecklistItemDonationOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo de 2 minutes</label>
+        <name>gseuChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>Lorsque vous commencez à utiliser NPSP, il peut être complexe de trouver des enregistrements. Utilisez la recherche globale pour explorer l’ensemble de votre organisation Salesforce et trouver rapidement ce dont vous avez besoin.</label>
+        <name>gseuChecklistItemGlobalSearchDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les résultats de recherche</label>
+        <name>gseuChecklistItemGlobalSearchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Recherche d’enregistrements</label>
+        <name>gseuChecklistItemGlobalSearchPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Recherche d’enregistrements avec la recherche globale</label>
+        <name>gseuChecklistItemGlobalSearchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP comprend 87 des rapports sur les membres et les collectes de fonds les plus couramment utilisés. Utilisez ces rapports tels quels ou personnalisez-les.</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les rapports NPSP</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Exécution de rapports</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Classeur de rapports</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Exécution d’un rapport NPSP prédéfini</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Le générateur de rapport Lightning vous permet de créer vos propres rapports personnalisés à l’aide de types de rapport standard. Le type de rapport que vous choisissez détermine les objets et les champs disponibles dans votre rapport.</label>
+        <name>gseuChecklistItemStandardReportTypeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les types de rapport standard</label>
+        <name>gseuChecklistItemStandardReportTypeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Création de rapports</label>
+        <name>gseuChecklistItemStandardReportTypePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Création d’un rapport à partir d’un type de rapport standard</label>
+        <name>gseuChecklistItemStandardReportTypeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Le panneau des activités vous aide, vous et vos collègues, à identifier toutes les activités liées à un contact, à une organisation ou à une opportunité spécifique. Consignez des appels, attribuez des tâches, envoyez un e-mail et créez des événements de calendrier directement à partir de l’enregistrement sur lequel vous travaillez.</label>
+        <name>gseuChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez les activités avec Trailhead</label>
+        <name>gseuChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivi des activités</label>
+        <name>gseuChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Rester informé des activités</label>
+        <name>gseuChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les campagnes vous permettent de suivre dans Salesforce votre portée auprès de vos membres. Utilisez le champ Campagne principale dans les opportunités pour mieux évaluer l’efficacité de vos initiatives de collectes de fonds.</label>
+        <name>gseuChecklistItemTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les campagnes</label>
+        <name>gseuChecklistItemTrackDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivi de la portée auprès des membres</label>
+        <name>gseuChecklistItemTrackDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivi des sources de dons à l’aide de campagnes</label>
+        <name>gseuChecklistItemTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les tableaux de bord extraient des données à partir d’un ou de plusieurs rapports et les affichent côte à côte dans la même fenêtre. NPSP comprend trois tableaux de bord que vous pouvez utiliser tels quels ou personnaliser.</label>
+        <name>gseuChecklistItemViewDashboardDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les tableaux de bord</label>
+        <name>gseuChecklistItemViewDashboardLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Affichage de tableaux de bord</label>
+        <name>gseuChecklistItemViewDashboardPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Affichage d’un tableau de bord</label>
+        <name>gseuChecklistItemViewDashboardTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur Nonprofit Cloud</label>
+        <name>gseuChecklistItemWhatIsNPCloudLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Présentation de Nonprofit Cloud</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud comprend des applications, des outils, des fonctionnalités, des services et des technologies conçus pour répondre aux besoins uniques des organisations à but non lucratif.</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitleDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>L’application Nonprofit Success Pack (NPSP) constitue la base de Nonprofit Cloud. NPSP vous aide à gérer vos membres et vos collectes de fonds. Lorsqu’une personne évoque la « version à but non lucratif » de Salesforce, elle parle généralement de NPSP.</label>
+        <name>gseuChecklistItemWhatIsNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur Nonprofit Success Pack</label>
+        <name>gseuChecklistItemWhatIsNPSPLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Présentation de Nonprofit Success Pack</label>
+        <name>gseuChecklistItemWhatIsNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les vues de liste vous aident à trouver facilement ce dont vous avez besoin grâce aux groupes filtrés de contacts, de comptes, d’opportunités et d’autres objets.</label>
+        <name>gseuChecklistItemWorkMultipleRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez Trailhead pour en savoir plus sur les vues de liste</label>
+        <name>gseuChecklistItemWorkMultipleRecordsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Visualisation des processus</label>
+        <name>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Exploitation de plusieurs enregistrements à l’aide des vues de liste</label>
+        <name>gseuChecklistItemWorkMultipleRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dans NPSP, vous pouvez suivre les dons, subventions, promesses de dons et autres types de revenus à l’aide de l’objet Opportunité. Vous pouvez créer des dons provenant d’un individu ou d’une organisation telle qu’une fondation, une entreprise ou un service de l’État.</label>
+        <name>gseuChecklistTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivi de dons et d’autres types de revenus avec NPSP</label>
+        <name>gseuChecklistTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Utilisez ces ressources essentielles pour vous aider à démarrer avec NPSP.</label>
+        <name>gseuChecklistWelcomeNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Introduction à Nonprofit Success Pack et à Nonprofit Cloud</label>
+        <name>gseuChecklistWelcomeNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Une fois que vos données relatives aux membres et aux dons sont enregistrées dans NPSP, vous devez être en mesure de trouver et d’exploiter facilement les enregistrements sur lesquels vous travaillez.</label>
+        <name>gseuChecklistWorkRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Exploitation des enregistrements</label>
+        <name>gseuChecklistWorkRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Les rapports et les tableaux de bord vous aident à organiser vos données afin que vous puissiez présenter l’impact de votre organisation. NPSP comprend des rapports prédéfinis, mais vous pouvez aussi créer les vôtres.</label>
+        <name>gseuChecklistYourDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Compréhension de vos données</label>
+        <name>gseuChecklistYourDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Explorer Trailhead</label>
+        <name>gseuExploreTrailheadButton</name>
+    </customLabels>
+    <customLabels>
+        <label>LISTE DE CONTRÔLE DE CONFIGURATION</label>
+        <name>gseuPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrir NPSP</label>
+        <name>gseuResourcesItemAboutNPSPLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Documentation NPSP</label>
+        <name>gseuResourcesItemAboutNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Trouver un groupe de communauté</label>
+        <name>gseuResourcesItemCommunityGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Communauté Trailhead</label>
+        <name>gseuResourcesItemCommunityGroupLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Trouver des réponses à vos questions</label>
+        <name>gseuResourcesItemQuestionsAnsweredLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Hub Power of Us</label>
+        <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Regarder des vidéos didactiques</label>
+        <name>gseuResourcesItemWatchVideosLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Canal vidéographie NPSP</label>
+        <name>gseuResourcesItemWatchVideosLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Rechercher des événements et des webinaires</label>
+        <name>gseuResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendrier Salesforce</label>
+        <name>gseuResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Découvrez plus d’informations sur Nonprofit Cloud et Salesforce.</label>
+        <name>gseuTrailheadText</name>
     </customLabels>
     <customLabels>
         <label>Exécuter un contrôle d’intégrité</label>
@@ -4861,6 +5825,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>pmtWrittenOffPaymentDateRequired</name>
     </customLabels>
     <customLabels>
+        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <name>psSelectValidPaymentMethod</name>
+    </customLabels>
+    <customLabels>
         <label>Supprimer la ligne</label>
         <name>pscDeleteRow</name>
     </customLabels>
@@ -5149,9 +6117,9 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
             &lt;br/&gt;
             ● Cumul de paiements en plus des opportunités&lt;br/&gt;
             ● Utilisation de filtres pour exclure facilement certains enregistrements ou données&lt;br/&gt;
-            ● Cumul de données depuis plus de 2 ans&lt;br/&gt;
+            ● Cumul de données depuis plus de 2 ans&lt;br/&gt;
             &lt;br/&gt;
-            Accédez aux Paramètres NPSP | Dons | Cumuls personnalisables pour activer les Cumuls personnalisables et commencer à les utiliser !
+            Accédez à Paramètres NPSP | Dons | Cumuls personnalisables pour activer les cumuls personnalisables et commencer à les utiliser
         </label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
@@ -5228,12 +6196,12 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>stgDocumentation</name>
     </customLabels>
     <customLabels>
-        <label>NPSP a un certain nombre de tâches planifiées qui calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs. 
-&lt;br/&gt; 
-&lt;br/&gt; 
-Lorsque l&apos;option Ne pas planifier automatiquement les tâches NPSP par défaut n’est pas sélectionnée, chaque fois que vous visitez la page des paramètres NPSP, NPSP vérifie que toutes les tâches récurrentes par défaut sont planifiées. La replanification ne s’applique qu’aux tâches manquantes, pas aux tâches mises à jour. 
-&lt;br/&gt; 
-&lt;br/&gt; 
+        <label>NPSP dispose d’un certain nombre de tâches planifiées qui calculent les cumuls, mettent à jour les dons récurrents et les adresses saisonnières, et effectuent une gestion des erreurs.
+&lt;br/&gt;
+&lt;br/&gt;
+Lorsque l’option Ne pas planifier automatiquement les tâches NPSP par défaut n’est pas sélectionnée, chaque fois que vous visitez la page des paramètres NPSP, NPSP vérifie que toutes les tâches récurrentes par défaut sont planifiées. La replanification ne s’applique qu’aux tâches manquantes, pas aux tâches mises à jour.
+&lt;br/&gt;
+&lt;br/&gt;
 Pour visualiser ces tâches, recherchez les tâches planifiées dans la configuration de Salesforce.
 &lt;br/&gt;
 &lt;br/&gt;
@@ -5286,10 +6254,10 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <label>
-            &lt;b&gt;Ce message ne sera pas affiché si vous quittez la page ! Prenez une capture d&apos;écran de cette page ou copiez les informations du tableau ci-dessous pour suivre les mappages Texte d&apos;aide que vous devez corriger. &lt;/b&gt;
+            &lt;b&gt;Ce message ne sera pas affiché si vous quittez la page. Prenez une capture d’écran de cette page ou copiez les informations du tableau ci-dessous pour garder une trace des mappages Texte d’aide que vous devez corriger. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Nous n&apos;avons pas pu convertir certains mappages Texte d&apos;aide qui n&apos;étaient pas valides. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants de mappages Texte d&apos;aide&lt;/a&gt;. Nous recommandons de désactiver le Mappage avancé, de corriger les mappages Texte d&apos;aide non valides, puis de réactiver le Mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le Mappage avancé à l&apos;écran suivant, mais si vous désactivez le Mappage avancé, le Texte d&apos;aide non valide d&apos;origine sera rétabli pour ces mappages supplémentaires.
+            Nous n’avons pas pu convertir certains mappages Texte d’aide, car ceux-ci n’étaient pas valides. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants relatifs aux mappages Texte d’aide&lt;/a&gt;. Nous vous recommandons de désactiver le mappage avancé, de corriger les mappages Texte d’aide non valides, puis de réactiver le mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le mappage avancé à l’écran suivant, mais si vous désactivez le mappage avancé, le texte d’aide non valide d’origine sera rétabli pour ces mappages supplémentaires.
         </label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
@@ -5314,13 +6282,13 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <name>stgHelpAlloNDayValue</name>
     </customLabels>
     <customLabels>
-        <label>Une allocation est le montant spécifique d&apos;un don qui va dans une Unité comptable générale désignée (UCG). Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant sur le paiement.&lt;br/&gt;&lt;br/&gt;
+        <label>Une allocation est le montant spécifique d’un don qui va dans une unité comptable générale (UCG) désignée. Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant qui correspond au paiement.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; Choisir d&apos;utiliser les allocations de paiement modifie la manière dont les allocations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires qui existent avant de les activer.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; choisir d’utiliser les allocations de paiement modifie la manière dont les allocations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires existantes avant de les activer.&lt;br/&gt;&lt;br/&gt;
 
-Si vous activez et commencez à utiliser les allocations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’allocations d’opportunités pour refléter les informations attribuées précédemment dans les allocations de paiement. Pour mieux comprendre l’impact potentiel, consultez la documentation relative aux allocations de paiement.&lt;br/&gt;&lt;br/&gt;
+Si vous activez et commencez à utiliser les allocations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’allocations d’opportunités pour refléter les informations attribuées précédemment dans les allocations de paiement. Pour mieux comprendre les conséquences que cela peut avoir, consultez la documentation relative aux allocations de paiement.&lt;br/&gt;&lt;br/&gt;
 
-Lorsque vous activez les allocations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ou ne créons pas de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
+Lorsque vous activez les allocations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ni ne créons de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
         <name>stgHelpAllocationLevel</name>
     </customLabels>
     <customLabels>
@@ -5384,10 +6352,10 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpBtnHHNaming</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; cliquer sur ce bouton activera le renommage d’opportunités par lots, et rafraîchira tous les noms d’opportunité en utilisant les formats que vous avez choisis. Salesforce renommera toutes les opportunités de votre organisation, excepté celle dont le format de nom indique « Ne pas renommer ».&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; cliquer sur ce bouton activera le renommage d’opportunités par lots, et rafraîchira tous les noms d’opportunité en utilisant les formats que vous avez choisis. Salesforce renommera toutes les opportunités de votre organisation, excepté celles dont le format de nom indique « Ne pas renommer ».&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Ce processus est irréversible.&lt;/b&gt;
-Nous vous recommandons de sauvegarder vos données avant de démarrer. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités ; 
+Nous vous recommandons de sauvegarder vos données avant de démarrer. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités : 
 &lt;br/&gt;
 &lt;br/&gt;
 ● Règles de validation personnalisées&lt;br/&gt;
@@ -5434,23 +6402,17 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label>
-            Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.
-        </label>
+        <label>Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
         <name>stgHelpCustomizableRollupsEnable1</name>
     </customLabels>
     <customLabels>
-        <label>
-            Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables. Pour plus d&apos;informations, consultez &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;ce document&lt;/a&gt;.
+        <label>Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables. Pour plus d&apos;informations, consultez &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;ce document&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            Vous pouvez désactiver et retourner aux cumuls hérités, mais les nouveaux cumuls ou les modifications de cumuls/filtres effectuées dans les cumuls personnalisables ne seront pas appliquées à vos paramètres de cumuls hérités.
-        </label>
+            Vous pouvez désactiver et retourner aux cumuls hérités, mais les nouveaux cumuls ou les modifications de cumuls/filtres effectuées dans les cumuls personnalisables ne seront pas appliquées à vos paramètres de cumuls hérités.</label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
-        <label>
-            Supprime les nouveaux cumuls, groupes de filtres et règles de filtrage que vous avez créés lors de l’utilisation des cumuls personnalisables ET rétablit tous les cumuls hérités NPSP à leur comportement par défaut.
-        </label>
+        <label>Supprime les nouveaux cumuls, groupes de filtres et règles de filtrage que vous avez créés lors de l’utilisation des cumuls personnalisables ET rétablit le comportement par défaut de tous les cumuls hérités NPSP.</label>
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
@@ -5587,8 +6549,8 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpNameOverrun</name>
     </customLabels>
     <customLabels>
-        <label>Commencez par sélectionner le champ de don régulier que vous voulez relier. Puis sélectionnez le champ d’opportunité vers lequel vous voulez le relier. Le champ de don régulier que vous sélectionnez apparaitra sur toutes les opportunités enfant pour le don régulier.
-IMPORTANT : Ces deux champs doivent avoir le même type de données.</label>
+        <label>Commencez par sélectionner le champ de don récurrent que vous voulez mapper. Ensuite, sélectionnez le champ d’opportunité avec lequel vous voulez réaliser le mappage. Le champ de don récurrent que vous sélectionnez apparaitra sur toutes les opportunités enfant correspondant au don récurrent.
+IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
         <name>stgHelpNewRDFieldMap</name>
     </customLabels>
     <customLabels>
@@ -5679,7 +6641,7 @@ IMPORTANT : Ces deux champs doivent avoir le même type de données.</label>
         <label>&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; cliquer sur ce bouton activera une mise à jour d’opportunité par lots pour rafraîchir le champ de contact principal. Salesforce mettra à jour les enregistrements d’opportunité dont le champ de contact principal n’a pas la même valeur que l’enregistrement de rôle de contact d’opportunité marqué comme principal.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Ce processus est irréversible.&lt;/b&gt;
-Ceci met à jour les enregistrements d’opportunité. Nous recommandons de sauvegarder vos données avant de démarrer ce processus. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités ; 
+Ceci met à jour les enregistrements d’opportunité. Nous recommandons de sauvegarder vos données avant de démarrer ce processus. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités : 
 &lt;br/&gt;
 &lt;br/&gt;
 ● Règles de validation personnalisées&lt;br/&gt;
@@ -5694,7 +6656,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <label>&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; cliquer sur ce bouton activera un lot qui supprime définitivement tous les rôles de contact d’opportunité principale en double. Ces enregistrements ne seront pas récupérables dans la corbeille, veillez donc à examiner les modifications attendues à l’avance.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Ce processus est irréversible.&lt;/b&gt;
-Ceci met à jour les enregistrements de rôle de contact d’opportunité. Nous recommandons de sauvegarder vos données avant de démarrer ce processus. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités ; 
+Ceci met à jour les enregistrements de rôle de contact d’opportunité. Nous recommandons de sauvegarder vos données avant de démarrer ce processus. Nous recommandons aussi de désactiver les éléments suivants affectant les opportunités : 
 &lt;br/&gt;
 &lt;br/&gt;
 ● Règles de validation personnalisées&lt;br/&gt;
@@ -5710,11 +6672,11 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
-        <label>Cet utilitaire exécute un processus par lots pour tous les dons réguliers sans date de fin, qui en fonction du nombre de mois de prévision de l’opportunité :
+        <label>Cet utilitaire exécute un processus par lots pour tous les dons récurrents sans date de fin, qui, en fonction du nombre de mois de prévision de l’opportunité :
 &lt;br/&gt;
 &lt;br/&gt; 
-● crée de nouvelles opportunités&lt;br/&gt;
-● met à jour le nombre de versements et le montant payé&lt;br/&gt;
+● crée de nouvelles opportunités ;&lt;br/&gt;
+● met à jour le nombre de versements et le montant payé.&lt;br/&gt;
 &lt;br/&gt;
 Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page en toute sécurité et le processus continuera en arrière-plan.</label>
         <name>stgHelpRDBatch</name>
@@ -5825,7 +6787,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
     </customLabels>
     <customLabels>
         <label>Respectez les paramètres d’une règle de duplication qui contrôle si les enregistrements en double sont autorisés.
-Pour vérifier vos paramètres existants, accédez à Règles de duplication sous Configuration. Pour les règles, lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser », les doubles seront enregistrés.</label>
+Pour vérifier vos paramètres existants, accédez à Règles de duplication sous Configuration. Pour les règles, lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser », les doubles sont enregistrés.</label>
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
@@ -5943,7 +6905,7 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     <customLabels>
         <label>Votre installation s’est effectuée avec succès, mais nous avons détecté un problème mineur. Pour résoudre le problème, il vous suffit de charger la page des paramètres NPSP dans Salesforce
 
-Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP. Si vous ne voyez pas l’onglet, sélectionnez Nonprofit Success Pack depuis le menu d’applications dans le coin supérieur droit.</label>
+Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP. Si vous ne voyez pas l’onglet, sélectionnez Nonprofit Success Pack depuis le menu d’applications dans le coin supérieur droit.</label>
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
@@ -6543,11 +7505,11 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>Fusion de contact</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>Fusion de contact</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
@@ -6557,6 +7519,14 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customTabs>
         <label>Saisie de dons</label>
         <name>GE_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>Démarrer avec NPSP - Administrateur</label>
+        <name>GetStarted</name>
+    </customTabs>
+    <customTabs>
+        <label>Démarrer avec NPSP</label>
+        <name>GetStartedEndUser</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>

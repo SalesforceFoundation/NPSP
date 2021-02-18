@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Settings --></value>
+        <value>Gegevensimportinstellingen</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Data Import Settings --></value>
+        <value>Gegevensimportinstellingen</value>
     </caseValues>
     <fields>
         <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
@@ -46,7 +46,7 @@
     </fields>
     <fields>
         <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
-        <label>Standaard veldtoewijzingsset voor gegevensimport</label>
+        <label>Std. veldtoew.set voor gegev.import</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -84,5 +84,5 @@
         <label>Donatietotalisering met Batch berekenen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

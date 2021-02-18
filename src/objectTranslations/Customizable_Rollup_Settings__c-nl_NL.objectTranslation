@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Aanpasbare roll-upinstellingen</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Customizable Rollup Settings --></value>
+        <value>Aanpasbare roll-upinstellingen</value>
     </caseValues>
     <fields>
         <help>Indien aangevinkt beperkt de nachttaak Account Hard Credits (niet-Versch.) het aantal Accounts die worden geselecteerd voor opnieuw berekenen, door te zoeken naar bijgewerkte Opp. op die Accounts. Ter verbetering van nachttaak Aanpasbare Totalisering.</help>
@@ -109,5 +109,5 @@
         <label>Batchgr. Dispatcher Verschuivingsmodus</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

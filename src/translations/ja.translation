@@ -682,6 +682,10 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <name>CallableApiJobScheduleInvalidClass</name>
+    </customLabels>
+    <customLabels>
         <label>{0} は実装されていません</label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -756,6 +760,10 @@
     <customLabels>
         <label>-&gt;</label>
         <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label>エラーログ</label>
+        <name>ERR_RecordLogTitle</name>
     </customLabels>
     <customLabels>
         <label>Salesforce でこれらの NPSP エラーが発生しました。一般的なエラーについての詳細は、Power of Us Hub の「Troubleshoot the Nonprofit Success Pack (Nonprofit Success Pack のトラブルシューティング)」を参照してください。エラーの解決方法がわからない場合は、Nonprofit Success Pack グループ (https://powerofus.force.com/HUB_NPSP_Group) にメッセージを投稿してください</label>
@@ -842,6 +850,10 @@
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
+        <label>[状況] が [完了] で [スケジュールタイプ] が入力されていない場合、[予定回数] は 1 である必要があります。</label>
+        <name>RD2_DataMigrationInvalidPlannedInstallments</name>
+    </customLabels>
+    <customLabels>
         <label>[間隔] が [毎月] の場合、[日付] に値を入力する必要があります。</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
@@ -854,12 +866,52 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>継続支払のキャンセル処理中</label>
+        <name>RD2_ElevateCancelInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>支払情報を入力しない。</label>
+        <name>RD2_ElevateDisableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce 組織で Elevate が有効になっていません。</label>
+        <name>RD2_ElevateDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate で処理される支払情報が入力されていません。</label>
+        <name>RD2_ElevateDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>または、今すぐ支払の詳細を入力する。</label>
+        <name>RD2_ElevateEnableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate 情報</label>
+        <name>RD2_ElevateInformationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>エラーはありません</label>
+        <name>RD2_ElevateInformationStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label>Elevate 支払サービスから生成された継続支援については、この機能は現時点ではサポートされていません。</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
+        <label>Elevate 処理待機中</label>
+        <name>RD2_ElevatePendingStatus</name>
+    </customLabels>
+    <customLabels>
         <label>Elevate 支払サービスからの継続支援を Elevate 支払サービスインテグレーションユーザ以外のユーザが NPSP で変更することはできません。</label>
         <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>[状況] が [完了] の場合、Elevate に接続された継続支援の状況は編集できません。</label>
+        <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate 継続支払を作成できませんでした。システム管理者にお問い合わせください。</label>
+        <name>RD2_ElevateRecordCreateFailed</name>
     </customLabels>
     <customLabels>
         <label>もう少しで完了です。最初にいくつかのことを確認する必要があります . . .</label>
@@ -1028,7 +1080,7 @@
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
     <customLabels>
-        <label>&lt;ul&gt;&lt;li&gt;継続支援、商談、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
+        <label>&lt;ul&gt;&lt;li&gt;継続支援、支援、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
 &lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;
 &lt;li&gt;拡張継続支援の&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照する。&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_EnablementPrepTasks</name>
@@ -1042,6 +1094,10 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;継続支援レコードがないため、データの検証や移行を行う必要はありません。&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;拡張継続支援のドキュメント&lt;/a&gt;を参照してください。</label>
         <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate に接続された継続支援の場合、[終了日] を将来の日付にすることはできません。</label>
+        <name>RD2_EndDateElevateCannotBeInFuture</name>
     </customLabels>
     <customLabels>
         <label>[終了日] は最後の成立商談の [完了予定日] よりも後でなければなりません。</label>
@@ -1116,6 +1172,27 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Elevate に継続支払が作成されました。 Elevate 継続 ID: {0}.
+        
+       ただし、次のようなエラーが発生したため、対応する継続支援は NPSP に作成されませんでした:
+        ● {1}
+        
+        このフォームを開いたままエラーを修正し、継続支援を再度保存することができます。または、キャンセルしてシステム管理者にお問い合わせください。</label>
+        <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate 継続支払を保存しています... これには数分かかる場合があります。</label>
+        <name>RD2_EntryFormSaveCommitmentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>クレジットカードを検証中...</label>
+        <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援を保存中...</label>
+        <name>RD2_EntryFormSaveRecurringDonationMessage</name>
+    </customLabels>
+    <customLabels>
         <label>毎</label>
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
@@ -1134,6 +1211,10 @@
     <customLabels>
         <label>拡張継続支援データバッチジョブを実行する前に拡張継続支援を有効にする必要があります。</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援レコードの作成中にエラーが発生しました。Elevate に継続支払要求は送信されませんでした。システム管理者にお問い合わせください。</label>
+        <name>RD2_ErrorRDIdIsMissingForCommitment</name>
     </customLabels>
     <customLabels>
         <label>[頻度] は必須です。1 ～ 20 の値を入力してください。</label>
@@ -1206,6 +1287,10 @@
     <customLabels>
         <label>1 件の割賦が選択されました。</label>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP は、一時停止した継続支援の [状況] および [状況の理由] を更新できません。[状況] 項目に選択リスト値 [一時停止] を追加する必要があります。</label>
+        <name>RD2_PauseStatusMustExist</name>
     </customLabels>
     <customLabels>
         <label>一時停止の理由</label>
@@ -1492,12 +1577,12 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label>クリックするとこのセクションが展開されます。</label>
         <name>accordionSection_ToggleInstructionsWhenClosed</name>
-        <label>クリックするとセクションが切り替わります。このセクションは開いていません。</label>
     </customLabels>
     <customLabels>
+        <label>クリックするとこのセクションが閉じます。</label>
         <name>accordionSection_ToggleInstructionsWhenOpen</name>
-        <label>クリックするとセクションが切り替わります。このセクションは開いています。</label>
     </customLabels>
     <customLabels>
         <label>無効な呼び出しです。この機能は Salesforce が使用します。</label>
@@ -1556,7 +1641,7 @@
         <name>alloBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label>このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている商談を除くすべての既存の商談のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。デフォルトの割り当てを有効にすると、すべての新規商談にデフォルトの割り当てが設定されるため、このツールはデフォルトの割り当てを有効にした後に一度だけ実行する必要があります。</label>
+        <label>このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている支援を除くすべての既存の支援のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。デフォルトの割り当てを有効にすると、すべての新規支援にデフォルトの割り当てが設定されるため、このツールはデフォルトの割り当てを有効にした後に一度だけ実行する必要があります。</label>
         <name>alloBatchDefaultInfo</name>
     </customLabels>
     <customLabels>
@@ -1704,11 +1789,75 @@
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <label>この表示形式はすでに使用されています。</label>
+        <name>autoNumberErrorDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label>無効な表示形式です。</label>
+        <name>autoNumberErrorInvalidDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>保存して有効化</label>
+        <name>batchNumberSettingsActivate</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ番号を設定</label>
+        <name>batchNumberSettingsConfigureHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ番号形式を有効化または無効化します。一度に 1 つのバッチ番号形式を有効化できます。</label>
+        <name>batchNumberSettingsDescActivation</name>
+    </customLabels>
+    <customLabels>
+        <label>表示形式では、自動採番項目の外観を制御できます。
+            項目は一意である必要があり、桁数、および必要に応じてプレフィックスを含める必要があります。
+            形式の最大文字数は 30 です。&lt;/br&gt;&lt;/br&gt;
+            例&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            開始番号が 9 で {0} として形式設定されたシーケンスは、9、10、11 のように表示されます。
+            &lt;/li&gt;
+            &lt;li&gt;
+            開始番号が 9 で {00000} として形式設定されたシーケンスは、00009、000010、00011 のように表示されます。
+
+            &lt;/li&gt;
+            &lt;li&gt;
+            開始番号が 9 で ABC-{0000} として形式設定されたシーケンスは、ABC-0009、ABC-0010、ABC-0011 のように表示されます。
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </label>
+        <name>batchNumberSettingsDescDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ番号は、支援エントリおよび NPSP データインポートで使用される一意の識別子です。自動採番値は、商談および支払の [バッチ番号] 項目に表示されます。</label>
+        <name>batchNumberSettingsDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>カスタムバッチ番号形式を作成し、開始番号を選択します。新しいバッチ番号形式を有効化する必要があります。一度に有効化できるバッチ番号形式は 1 つのみです。</label>
+        <name>batchNumberSettingsDescriptionCreate</name>
+    </customLabels>
+    <customLabels>
+        <label>自動採番形式を保存できません。エラーを確認して、もう一度お試しください。</label>
+        <name>batchNumberSettingsError</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ番号設定</label>
+        <name>batchNumberSettingsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>表示形式についての詳細。</label>
+        <name>batchNumberSettingsHeaderDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ番号形式</label>
+        <name>batchNumberSettingsHeaderFormats</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチデータエントリはサポートされていません</label>
         <name>bdeRetirementBlockerHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、Power of Us Hub の &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
         <name>bdeRetirementBlockerMessage</name>
     </customLabels>
     <customLabels>
@@ -2252,10 +2401,10 @@
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label>例として一般会計単位の割り当て 1 と一般会計単位の割り当て 2  の 2 つのオブジェクトグループを見ていきましょう。これらのオブジェクトグループは商談オブジェクトに直接リンクしています。
-            2 つの一般会計単位の割り当てを 1 つの商談に割り当てるには、インポートファイルの商談列に商談情報を入力し、最初の一般会計単位を一般会計単位の割り当て 1 列に、
+        <label>例として一般会計単位の割り当て 1 と一般会計単位の割り当て 2 の 2 つのオブジェクトグループを見ていきましょう。これらのオブジェクトグループは支援オブジェクトに直接リンクしています。
+            2 つの一般会計単位の割り当てを 1 つの支援に割り当てるには、インポートファイルの支援列に支援情報を入力し、最初の一般会計単位を一般会計単位の割り当て 1 列に、
             2 番目の一般会計単位を一般会計単位の割り当て 2 列に含めます。一般会計単位の割り当て 1 と一般会計単位の割り当て 2 のオブジェクトの対応付けにより、
-            インポートするときに 2 つの一般会計単位の割り当てが両方とも商談に割り当てられます。</label>
+            インポートするときに 2 つの一般会計単位の割り当てが両方とも支援に割り当てられます。</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
@@ -2609,6 +2758,10 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>有効化</label>
+        <name>commonActivate</name>
+    </customLabels>
+    <customLabels>
         <label>このページにアクセスするには、システム管理者である必要があります。</label>
         <name>commonAdminPermissionErrorMessage</name>
     </customLabels>
@@ -2657,12 +2810,24 @@
         <name>commonCardType</name>
     </customLabels>
     <customLabels>
+        <label>カード所有者名</label>
+        <name>commonCardholderName</name>
+    </customLabels>
+    <customLabels>
         <label>コピー</label>
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label>完了</label>
+        <name>commonClose</name>
+    </customLabels>
+    <customLabels>
         <label>{0} Apex クラスですでに実行中のジョブがあります。もう一度実行するには、このジョブを完了する必要があります。</label>
         <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>詳細は、システム管理者にお問い合わせください。</label>
+        <name>commonContactSystemAdminMessage</name>
     </customLabels>
     <customLabels>
         <label>カード番号</label>
@@ -2671,6 +2836,10 @@
     <customLabels>
         <label>重要なエラー</label>
         <name>commonCriticalError</name>
+    </customLabels>
+    <customLabels>
+        <label>無効化</label>
+        <name>commonDeactivate</name>
     </customLabels>
     <customLabels>
         <label>デフォルト値</label>
@@ -2693,15 +2862,19 @@
         <name>commonError</name>
     </customLabels>
     <customLabels>
+        <label>エラー: {0}</label>
+        <name>commonErrorPrefix</name>
+    </customLabels>
+    <customLabels>
         <label>項目表示ラベル</label>
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Field not found --></label>
+        <label>項目が見つかりません</label>
         <name>commonFieldNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fields Not Found --></label>
+        <label>項目が見つかりません</label>
         <name>commonFieldsNotFound</name>
     </customLabels>
     <customLabels>
@@ -2813,8 +2986,16 @@
         <name>commonViewAll</name>
     </customLabels>
     <customLabels>
+        <label>エラーログを表示</label>
+        <name>commonViewErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label>さらに表示</label>
         <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>お待ちください...</label>
+        <name>commonWaitMessage</name>
     </customLabels>
     <customLabels>
         <label>警告</label>
@@ -3408,7 +3589,7 @@
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <label>このフォームには、見つからない項目が含まれています。システム管理者にお問い合わせください。</label>
         <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
@@ -3666,6 +3847,10 @@
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
+        <label><!-- Instructions to add Payment Method --></label>
+        <name>geTextFieldBundlePaymentMethod</name>
+    </customLabels>
+    <customLabels>
         <label>{0} 個の項目</label>
         <name>geTextListViewItemCount</name>
     </customLabels>
@@ -3760,6 +3945,778 @@
     <customLabels>
         <label>団体に、支援処理のために必要な設定が存在しません。管理者にサポートを依頼します。</label>
         <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
+        <label>管理者設定チェックリスト</label>
+        <name>gsAdminSetupTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>申請状況:</label>
+        <name>gsApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>申請状況の確認</label>
+        <name>gsApplicationStatusModalHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce ライセンスを申請</label>
+        <name>gsApplyForFreeLicenses</name>
+    </customLabels>
+    <customLabels>
+        <label>状況の確認</label>
+        <name>gsCheckStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>重要な概念と機能を把握します。</label>
+        <name>gsChecklistExploreNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Success Pack (NPSP) を探索</label>
+        <name>gsChecklistExploreNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザに NPSP へのアクセス権を付与し、組織の権限を管理して、適切なユーザが物事をスムーズに実行し続けるために必要なものだけにアクセスできるようにします。</label>
+        <name>gsChecklistItemAddUserDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でユーザの追加について学習する</label>
+        <name>gsChecklistItemAddUserLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザを追加</label>
+        <name>gsChecklistItemAddUserTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>切り替えを行って Salesforce の使用を開始するずっと前に、その切り替えについて組織での思いやりのある明確かつ透過的なコミュニケーションの計画を立てる必要があります。</label>
+        <name>gsChecklistItemCommunicateWithUserskDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で Chatter について学習する</label>
+        <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザとのコミュニケーション</label>
+        <name>gsChecklistItemCommunicateWithUserskTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>支援、助成金、またはその他の種別の収益を追跡することで、支援のパターンを特定し、賛助者レベルで支援の促進要因を理解できます。NPSP に支援を入力する方法について学習することから始めます。</label>
+        <name>gsChecklistItemCreateDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で支援について学習する</label>
+        <name>gsChecklistItemCreateDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>支援を作成</label>
+        <name>gsChecklistItemCreateDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>支援を作成</label>
+        <name>gsChecklistItemCreateDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>オブジェクトマネージャで選択リスト、検索条件、数式、およびその他のツールを使用して、組織内のオブジェクトをカスタマイズするためのベストプラクティスについて学習します。</label>
+        <name>gsChecklistItemCustomFieldsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でオブジェクトマネージャについて学習する</label>
+        <name>gsChecklistItemCustomFieldsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>オブジェクトをカスタマイズ</label>
+        <name>gsChecklistItemCustomFieldsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>4 分間の動画</label>
+        <name>gsChecklistItemExtraFourMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>1 分間の動画</label>
+        <name>gsChecklistItemExtraOneMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>60 分間の動画</label>
+        <name>gsChecklistItemExtraSixtyMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>2 分間の動画</label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>リストビューやパスなどの組み込みツールを利用して、活動資金集めと支援のプロセスを効果的に管理する方法を学習します。</label>
+        <name>gsChecklistItemFundraisingProcessDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でリストビューとパスについて学習する</label>
+        <name>gsChecklistItemFundraisingProcessLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>リストビューを作成</label>
+        <name>gsChecklistItemFundraisingProcessPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動資金集めプロセスを視覚化</label>
+        <name>gsChecklistItemFundraisingProcessTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>この最初の手順で使用を開始できますが、Salesforce 内には無限の可能性があります。追加機能や、他の組織がこのプラットフォームで達成した偉業のいくつかを確認してください。</label>
+        <name>gsChecklistItemGoFurtherDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で NPSP の理解を深める</label>
+        <name>gsChecklistItemGoFurtherLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>さらに進む</label>
+        <name>gsChecklistItemGoFurtherTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP データインポーターを使用して、レコードを Salesforce に取り込みます。</label>
+        <name>gsChecklistItemImportDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でデータのインポートについて学習する</label>
+        <name>gsChecklistItemImportDataLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>データをインポート</label>
+        <name>gsChecklistItemImportDataPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ドキュメントを参照</label>
+        <name>gsChecklistItemImportDataSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>データをインポート</label>
+        <name>gsChecklistItemImportDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce は、問題に対処して新機能を追加するために頻繁に更新されます。これらの変更と更新プロセスの管理方法を理解することで、組織は常にプラットフォームを最大限に活用できます。</label>
+        <name>gsChecklistItemManageChangeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でリリース準備状況について学習する</label>
+        <name>gsChecklistItemManageChangeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>「Release Readiness」グループを参照</label>
+        <name>gsChecklistItemManageChangePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>組織への変更を管理</label>
+        <name>gsChecklistItemManageChangeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>この簡単な概要は、NPSP で何ができるかを簡潔に説明することを目的としていますが、さらに深く掘り下げて、組織で使用可能な他の多くの機能を見つけることもできます。</label>
+        <name>gsChecklistItemNPSPCloudDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で NPSP の機能について学習する</label>
+        <name>gsChecklistItemNPSPCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>機能を確認</label>
+        <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>その他の Nonprofit Cloud の機能の詳細</label>
+        <name>gsChecklistItemNPSPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>時間をかけて実装を慎重に計画し、Salesforce 組織が非営利団体のニーズを満たすことを確認します。</label>
+        <name>gsChecklistItemNPSPGuideDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>PDF をダウンロード</label>
+        <name>gsChecklistItemNPSPGuidePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP 計画ガイド</label>
+        <name>gsChecklistItemNPSPGuideTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>[NPSP 設定] ページに移動し、徹底的な見直しを行って、設定が組織にとって適切かつ期待どおりに機能することを確認します。</label>
+        <name>gsChecklistItemNPSPSettingsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>計画ガイドで NPSP 設定について学習する</label>
+        <name>gsChecklistItemNPSPSettingsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP 設定</label>
+        <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP 設定を調整</label>
+        <name>gsChecklistItemNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>時間をかけて組織のデザインをカスタマイズし、ユーザが必要なデータを簡単に見つけられるようにします。</label>
+        <name>gsChecklistItemPageLayoutsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でページレイアウトについて学習する</label>
+        <name>gsChecklistItemPageLayoutsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ページレイアウトをカスタマイズ</label>
+        <name>gsChecklistItemPageLayoutsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>特定の目標を設定し、Nonprofit Cloud を実装するためのベストプラクティスについて学習します。</label>
+        <name>gsChecklistItemPrepareNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で NPSP の成功について学習する</label>
+        <name>gsChecklistItemPrepareNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>目標を設定</label>
+        <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud を使用した成功への準備</label>
+        <name>gsChecklistItemPrepareNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce 内では、組織に関する情報は [組織情報] ページにあります。ここで、組織のタイムゾーンのデフォルト値、通貨、および会計年度期首月を設定します。ライセンスの利用状況に関する情報も確認できます。</label>
+        <name>gsChecklistItemReviewCompanyDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で組織情報の設定について学習する</label>
+        <name>gsChecklistItemReviewCompanyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>組織情報を確認</label>
+        <name>gsChecklistItemReviewCompanyTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートおよびダッシュボードを作成してデータを活用し、組織の影響を把握できるようにする方法を学習します。</label>
+        <name>gsChecklistItemRunningReportsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で NPSP レポート &amp; ダッシュボードをカスタマイズする方法を学習する</label>
+        <name>gsChecklistItemRunningReportsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートを探索</label>
+        <name>gsChecklistItemRunningReportsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>賛助者データのレポートを実行</label>
+        <name>gsChecklistItemRunningReportsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>関連する賛助者データ (名前、住所、雇用主など) を Salesforce インスタンスに追加する方法を学習します。</label>
+        <name>gsChecklistItemSetupContactDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>取引先責任者および取引先について学習する</label>
+        <name>gsChecklistItemSetupContactLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>世帯を作成</label>
+        <name>gsChecklistItemSetupContactPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>取引先責任者を探索</label>
+        <name>gsChecklistItemSetupContactSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>取引先責任者および世帯取引先を設定</label>
+        <name>gsChecklistItemSetupContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>活動とは、活動タイムラインで追跡される ToDo、行動、またはその他のインタラクションです。活動を使用すると、賛助者との接触があるたびに追跡できます。活動を利用して、賛助者のインタラクションをログに記録し、ToDo を割り当てる方法を学習します。</label>
+        <name>gsChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で活動について学習する</label>
+        <name>gsChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動を作成</label>
+        <name>gsChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動による順調な業務の進行</label>
+        <name>gsChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce 組織の稼働開始日が来たときに、組織内のすべてのユーザは準備ができている必要があります。そのため、ユーザのオンボーディングの計画、およびユーザが Salesforce を最大限に活用できるようにするための計画を立てることが重要です。</label>
+        <name>gsChecklistItemTrainUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でユーザのトレーニングについて学習する</label>
+        <name>gsChecklistItemTrainUsersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザをトレーニング</label>
+        <name>gsChecklistItemTrainUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>組織に固有の情報を使用して Salesforce をカスタマイズします。</label>
+        <name>gsChecklistMakeItYourDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>独自の内容にカスタマイズ</label>
+        <name>gsChecklistMakeItYourTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザを Salesforce に追加し、ロールアウトを計画します。</label>
+        <name>gsChecklistOnboardUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザのオンボーディング</label>
+        <name>gsChecklistOnboardUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>30 日間追加済み</label>
+        <name>gsDaysAdded</name>
+    </customLabels>
+    <customLabels>
+        <label>無料トライアルの残り日数</label>
+        <name>gsDaysRemainingInFreeTrial</name>
+    </customLabels>
+    <customLabels>
+        <label>申請状況をフォローアップするには、次のアドレスまでメールにてお問い合わせください:</label>
+        <name>gsFollowUpApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>詳細</label>
+        <name>gsLearnMore</name>
+    </customLabels>
+    <customLabels>
+        <label>申請未送信</label>
+        <name>gsNoApplicationSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>活動資金集め学習パス</label>
+        <name>gsResourcesItemFundraisingLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動資金集めを開始</label>
+        <name>gsResourcesItemFundraisingLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us Hub</label>
+        <name>gsResourcesItemHubLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>他の非営利団体から学ぶ</label>
+        <name>gsResourcesItemHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>エンゲージメント学習パス</label>
+        <name>gsResourcesItemMarketingEngagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>賛助者のエンゲージメント</label>
+        <name>gsResourcesItemMarketingEngagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud の基本</label>
+        <name>gsResourcesItemNonprofitCloudLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud の概要</label>
+        <name>gsResourcesItemNonprofitCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>実装パートナー</label>
+        <name>gsResourcesItemPartnersLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>パートナーを検索</label>
+        <name>gsResourcesItemPartnersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>プログラム管理学習パス</label>
+        <name>gsResourcesItemProgramManagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>プログラムを管理</label>
+        <name>gsResourcesItemProgramManagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce イベントカレンダー</label>
+        <name>gsResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>イベントと Web セミナーを検索</label>
+        <name>gsResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>リソース</label>
+        <name>gsResourcesTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP ビデオグラフィチャネル</label>
+        <name>gsResourcesVideographyLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>動画を見る</label>
+        <name>gsResourcesVideographyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>送信済み</label>
+        <name>gsSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label>2 分間</label>
+        <name>gsVideoHeaderLength</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP の使用開始</label>
+        <name>gsVideoHeaderTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>非営利団体の要となるのは人です。Nonprofit Success Pack の機能が賛助者とその世帯、個人、そして専門家との関係をどのように管理するかについて説明します。</label>
+        <name>gseuChecklistCreateConstituentRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>賛助者レコードを作成</label>
+        <name>gseuChecklistCreateConstituentRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>特定の目的のための活動資金を集めるときには、支援者の意図を尊重する必要があります。支援が一般会計単位に正しく割り当てられていることを確認してください。</label>
+        <name>gseuChecklistItemCaptureDonorIntentDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で支援の割り当てについて学習する</label>
+        <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>割り当てを作成</label>
+        <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>支援の割り当てで支援者の意図を取得</label>
+        <name>gseuChecklistItemCaptureDonorIntentTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>毎月の寄付は予測可能な非営利団体の収益源となり、継続的な支援者は非営利団体にとって最も誠実で献身的な支援者となります。継続支援を作成することで、毎月の寄付を追跡してください。</label>
+        <name>gseuChecklistItemCollectGiftsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で継続支援について学習する</label>
+        <name>gseuChecklistItemCollectGiftsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援を作成</label>
+        <name>gseuChecklistItemCollectGiftsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援で継続的なギフトを収集</label>
+        <name>gseuChecklistItemCollectGiftsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>アフィリエーションを作成</label>
+        <name>gseuChecklistItemConnectContactOrganizationBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP のアフィリエーションは、賛助者と関連団体 (勤務先、学校、会社など) との重要な関係を取得します。団体アフィリエーションを使用して、取引先責任者を団体に接続します。</label>
+        <name>gseuChecklistItemConnectContactOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でアフィリエーションについて学習する</label>
+        <name>gseuChecklistItemConnectContactOrganizationLink</name>
+    </customLabels>
+    <customLabels>
+        <label>アフィリエーションで取引先責任者を団体に接続</label>
+        <name>gseuChecklistItemConnectContactOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>リレーションを作成</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP のリレーションは、賛助者どうしの重要な関係を取得します。取引先責任者レコードの [リレーション] 関連リストを使用して、取引先責任者を接続します。</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でリレーションについて学習する</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsLink</name>
+    </customLabels>
+    <customLabels>
+        <label>リレーションで 2 人の取引先責任者を接続</label>
+        <name>gseuChecklistItemConnectContactsRelationshipsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>取引先責任者を作成</label>
+        <name>gseuChecklistItemCreateContactAndAccountBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label>非営利団体にとって人は最も重要なリソースであるため、NPSP で取引先責任者オブジェクトをどのように利用して人を追跡するかが鍵となります。取引先責任者オブジェクトは、賛助者の名前、住所、雇用主などのデータを格納します。</label>
+        <name>gseuChecklistItemCreateContactAndAccountDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で取引先責任者および取引先について学習する</label>
+        <name>gseuChecklistItemCreateContactAndAccountLink</name>
+    </customLabels>
+    <customLabels>
+        <label>取引先責任者と世帯取引先を作成</label>
+        <name>gseuChecklistItemCreateContactAndAccountTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>ほとんどの非営利団体では、個人から支援を受け取ります。個人支援を追跡するには、取引先責任者レコードから商談を作成します。</label>
+        <name>gseuChecklistItemDonationIndividualDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で個人支援について学習する</label>
+        <name>gseuChecklistItemDonationIndividualLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>個人支援を入力</label>
+        <name>gseuChecklistItemDonationIndividualPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>個人からの支援を入力</label>
+        <name>gseuChecklistItemDonationIndividualTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>非営利団体にとって、組織や企業からの支援は重要な資金源となります。団体支援を追跡するには、取引先レコードから商談を作成します。</label>
+        <name>gseuChecklistItemDonationOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で団体支援について学習する</label>
+        <name>gseuChecklistItemDonationOrganizationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>団体支援を入力</label>
+        <name>gseuChecklistItemDonationOrganizationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>組織からの支援を入力</label>
+        <name>gseuChecklistItemDonationOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>2 分間の動画</label>
+        <name>gseuChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP を初めて使用した人は、レコードを探すのが大変だと思うかも知れません。グローバル検索を使用すれば、Salesforce 組織全体から必要なレコードを簡単に見つけることができます。</label>
+        <name>gseuChecklistItemGlobalSearchDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でサーチ結果について学習する</label>
+        <name>gseuChecklistItemGlobalSearchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>レコードを検索</label>
+        <name>gseuChecklistItemGlobalSearchPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>グローバル検索でレコードを検索</label>
+        <name>gseuChecklistItemGlobalSearchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP には、最もよく使用する 87 件の賛助者と活動資金集めのレポートが用意されており、そのまま使用するか、またはカスタマイズして使用できます。</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で NPSP のレポートについて学習する</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートを実行</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートワークブック</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>事前作成済み NPSP レポートを実行</label>
+        <name>gseuChecklistItemPrebuiltNPSPReportTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Lightning レポートビルダーを使用すると、標準レポートタイプを使用してカスタムレポートを作成できます。選択したレポートタイプにより、レポートで使用できるオブジェクトと項目が決まります。</label>
+        <name>gseuChecklistItemStandardReportTypeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で標準レポートタイプについて学習する</label>
+        <name>gseuChecklistItemStandardReportTypeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートを作成</label>
+        <name>gseuChecklistItemStandardReportTypePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>標準レポートタイプからレポートを作成</label>
+        <name>gseuChecklistItemStandardReportTypeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>活動パネルでは、特定の取引先責任者、団体、または商談に関連したすべての作業を取得できます。そして作業中のレコードから、通話の記録、ToDo の割り当て、メールの送信、カレンダーイベントの作成を行うことができます。</label>
+        <name>gseuChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で活動について学習する</label>
+        <name>gseuChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動を追跡</label>
+        <name>gseuChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>活動による順調な業務の進行</label>
+        <name>gseuChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>キャンペーンにより、賛助者のアウトリーチを Salesforce で追跡できます。商談の主キャンペーン項目を使用することで、活動資金集めの成果をより正確に評価できます。</label>
+        <name>gseuChecklistItemTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でキャンペーンについて学習する</label>
+        <name>gseuChecklistItemTrackDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>賛助者のアウトリーチを追跡</label>
+        <name>gseuChecklistItemTrackDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>キャンペーンで支援提供元を追跡</label>
+        <name>gseuChecklistItemTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>ダッシュボードは、1 件以上のレポートからデータを取得して、同じウィンドウ内に並べて表示します。NPSP には、そのまま使用するか、またはカスタマイズして使用できる 3 つのダッシュボードが用意されています。</label>
+        <name>gseuChecklistItemViewDashboardDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でダッシュボードについて学習する</label>
+        <name>gseuChecklistItemViewDashboardLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ダッシュボードを表示</label>
+        <name>gseuChecklistItemViewDashboardPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ダッシュボードを表示</label>
+        <name>gseuChecklistItemViewDashboardTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で Nonprofit Cloud について学習する</label>
+        <name>gseuChecklistItemWhatIsNPCloudLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud とは</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud には、非営利団体に特有のニーズに合わせて設計されたアプリケーション、ツール、機能、サービス、そしてテクノロジが含まれています。</label>
+        <name>gseuChecklistItemWhatIsNPCloudTitleDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud の基盤は Nonprofit Success Pack (NPSP) アプリケーションです。NPSP は、賛助者と活動資金集めの管理を支援します。Salesforce の「非営利バージョン」と言った場合、通常は NPSP を指します。</label>
+        <name>gseuChecklistItemWhatIsNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead で Nonprofit Success Pack について学習する</label>
+        <name>gseuChecklistItemWhatIsNPSPLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Success Pack とは</label>
+        <name>gseuChecklistItemWhatIsNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>リストビューでは、取引先責任者、取引先、商談、その他のオブジェクトのグループを絞り込むことで、必要なレコードを簡単に見つけることができます。</label>
+        <name>gseuChecklistItemWorkMultipleRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead でリストビューについて学習する</label>
+        <name>gseuChecklistItemWorkMultipleRecordsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>プロセスを視覚化</label>
+        <name>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>リストビューで複数のレコードを処理</label>
+        <name>gseuChecklistItemWorkMultipleRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP では、商談オブジェクトを使用して、支援、助成金、確約、その他の種別の収益を追跡します。支援は、個人または団体 (財団、企業、政府機関) から作成できます。</label>
+        <name>gseuChecklistTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP で支援や他の種別の収益を追跡</label>
+        <name>gseuChecklistTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP を初めて使用する場合は、以下の基本リソースを参照してください。</label>
+        <name>gseuChecklistWelcomeNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Success Pack と Nonprofit Cloud の紹介</label>
+        <name>gseuChecklistWelcomeNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>賛助者と支援のデータを NPSP に取り込んだら、必要なレコードを簡単に見つけて処理できる必要があります。</label>
+        <name>gseuChecklistWorkRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>レコードの処理</label>
+        <name>gseuChecklistWorkRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>レポートとダッシュボードは、データを整理して組織への影響を把握するのに役立ちます。NPSP には標準レポートが用意されていますが、カスタムレポートも作成できます。</label>
+        <name>gseuChecklistYourDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>データを理解する</label>
+        <name>gseuChecklistYourDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead を試す</label>
+        <name>gseuExploreTrailheadButton</name>
+    </customLabels>
+    <customLabels>
+        <label>設定チェックリスト</label>
+        <name>gseuPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP の詳細</label>
+        <name>gseuResourcesItemAboutNPSPLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP ドキュメント</label>
+        <name>gseuResourcesItemAboutNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>コミュニティグループを探す</label>
+        <name>gseuResourcesItemCommunityGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Trailhead コミュニティ</label>
+        <name>gseuResourcesItemCommunityGroupLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>質問の答えを探す</label>
+        <name>gseuResourcesItemQuestionsAnsweredLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Power of Us Hub</label>
+        <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>ハウツー動画を見る</label>
+        <name>gseuResourcesItemWatchVideosLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP ビデオグラフィチャネル</label>
+        <name>gseuResourcesItemWatchVideosLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>イベントと Web セミナーを検索</label>
+        <name>gseuResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Salesforce カレンダー</label>
+        <name>gseuResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nonprofit Cloud と Salesforce のさらなる詳細について学習してください。</label>
+        <name>gseuTrailheadText</name>
     </customLabels>
     <customLabels>
         <label>状態チェックを実行</label>
@@ -4646,11 +5603,11 @@
         <name>mtchCloseDateStart</name>
     </customLabels>
     <customLabels>
-        <label>マッチングされた支援の検索</label>
+        <label>マッチングされたギフトの検索</label>
         <name>mtchFindMatchedGiftsSectionHeader</name>
     </customLabels>
     <customLabels>
-        <label>他の支援を検索</label>
+        <label>他のギフトを検索</label>
         <name>mtchFindMoreGifts</name>
     </customLabels>
     <customLabels>
@@ -4670,7 +5627,7 @@
         <name>mtchSelectCbxTitle</name>
     </customLabels>
     <customLabels>
-        <label>マッチング支援の総額</label>
+        <label>マッチングギフトの総額</label>
         <name>mtchTotalMatchingGift</name>
     </customLabels>
     <customLabels>
@@ -4786,7 +5743,7 @@
         <name>pmtWizardPaymentsNoAccessMessage</name>
     </customLabels>
     <customLabels>
-        <label>既存の支払レコードに支払済と取消の両方が該当しています。新しい支払スケジュールを作成するにはまず、これらの支払のいずれかまたは両方のチェックボックスを解除してください。</label>
+        <label>既存の支払レコードに支払済と消去の両方が該当しています。新しい支払スケジュールを作成するにはまず、これらの支払のいずれかまたは両方のチェックボックスを解除してください。</label>
         <name>pmtWizardScheduleInvalidRecords</name>
     </customLabels>
     <customLabels>
@@ -4822,11 +5779,11 @@
         <name>pmtWizardWeek</name>
     </customLabels>
     <customLabels>
-        <label>既存の支払レコードに支払済と取消の両方が該当しています。支払を取り消すにはまず、これらの支払のいずれかまたは両方のチェックボックスを解除してください。</label>
+        <label>既存の支払レコードに支払済と消去の両方が該当しています。支払を消去するにはまず、これらの支払のいずれかまたは両方のチェックボックスを解除してください。</label>
         <name>pmtWizardWriteOffInvalidRecords</name>
     </customLabels>
     <customLabels>
-        <label>注意: この商談には [金額] が含まれていません。支払を取り消すには、[金額] を入力する必要があります。</label>
+        <label>注意: この商談には [金額] が含まれていません。支払を消去するには、[金額] を入力する必要があります。</label>
         <name>pmtWizardWriteOffNoAmount</name>
     </customLabels>
     <customLabels>
@@ -4838,7 +5795,7 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
-        <label>支払を取り消す権限がありません。</label>
+        <label>支払を消去する権限がありません。</label>
         <name>pmtWizardWriteoffNoAccessMessage</name>
     </customLabels>
     <customLabels>
@@ -4852,6 +5809,10 @@
     <customLabels>
         <label>取消対象の支払には [支払日] が必要です。</label>
         <name>pmtWrittenOffPaymentDateRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>行を削除</label>
@@ -5140,11 +6101,11 @@
     <customLabels>
         <label>カスタマイズ可能な積み上げ集計は、ユーザ定義積み上げ集計の機能に加えて、次を可能にします。&lt;br/&gt;
             &lt;br/&gt;
-            ● 商談に加えて支払を積み上げ集計する&lt;br/&gt;
+            ● 支援に加えて支払を積み上げ集計する&lt;br/&gt;
             ● 絞り込みにより、手軽に特定のレコードやデータを除外する&lt;br/&gt;
             ● 2 年以上前のデータを積み上げ集計する&lt;br/&gt;
             &lt;br/&gt;
-            [NPSP 設定] | [商談] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!</label>
+            [NPSP 設定] | [支援] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!</label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
     <customLabels>
@@ -5304,11 +6265,11 @@
         <name>stgHelpAlloNDayValue</name>
     </customLabels>
     <customLabels>
-        <label>割り当てとは、指定された一般会計単位 (GAU) に移動する商談の特定の金額です。この設定は、資金が商談の金額または支払の金額のいずれに基づいて割り当てられるかを決定します。&lt;br/&gt;&lt;br/&gt;
+        <label>割り当てとは、指定された一般会計単位 (GAU) に移動する支援の特定の金額です。この設定は、資金が支援の金額または支払の金額のいずれに基づいて割り当てられるかを決定します。&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;警告:&lt;/b&gt; 支払割り当ての使用を選択すると、団体での商談の割り当ての動作が変わります。これらの変更点やその他の要件を理解してから、有効にしてください。&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;警告:&lt;/b&gt; 支払割り当ての使用を選択すると、団体での支援の割り当ての動作が変わります。これらの変更点やその他の要件を理解してから、有効にしてください。&lt;br/&gt;&lt;br/&gt;
 
-支払割り当てを有効にして使用し始めた後、無効にした場合、それまで支払割り当てで割り当てられていた情報を反映するように、データを手動で調整して、商談割り当てレコードを更新する必要があります。支払割り当てのドキュメントを参照して、潜在的な影響を確認してください。&lt;br/&gt;&lt;br/&gt;
+支払割り当てを有効にして使用し始めた後、無効にした場合、それまで支払割り当てで割り当てられていた情報を反映するように、データを手動で調整して、支援割り当てレコードを更新する必要があります。支払割り当てのドキュメントを参照して、潜在的な影響を確認してください。&lt;br/&gt;&lt;br/&gt;
 
 支払割り当てを有効にする場合、既存の積み上げ集計はそのまま残ります。積み上げ集計が変更されたり、新しいカスタム積み上げ集計が作成されたりすることはありません。必要に応じて、支払だけに基づく新しい積み上げ集計を作成できます。</label>
         <name>stgHelpAllocationLevel</name>
@@ -5342,7 +6303,7 @@
         <name>stgHelpBDEOppNaming</name>
     </customLabels>
     <customLabels>
-        <label>[バッチを実行] をクリックし、完了したすべての商談の総額を商談に設定された割り当てを使用して積み上げ集計します。結果は、一般会計単位レコードに保存されます。
+        <label>[バッチを実行] をクリックし、完了したすべての支援の総額を支援に設定された割り当てを使用して積み上げ集計します。結果は、一般会計単位レコードに保存されます。
 このページはいつでも閉じることができます。このページを閉じても処理はバックグラウンドで実行されます。</label>
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
@@ -5351,11 +6312,11 @@
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label>このページを使用して、完了したすべての商談の総額を積み上げ集計します。結果は取引先責任者、世帯、および取引先レコードに保存されます。処理に時間がかかる場合があります。このページを閉じても処理はバックグラウンドで実行されます。</label>
+        <label>このページを使用して、完了したすべての支援の総額を積み上げ集計します。結果は取引先責任者、世帯、および取引先レコードに保存されます。処理に時間がかかる場合があります。このページを閉じても処理はバックグラウンドで実行されます。</label>
         <name>stgHelpBatchOppRollup</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、自動世帯命名が有効化され、選択した形式に従って既存の世帯名、公式の挨拶文、および非公式の挨拶文に新しい名前が入力されます。Salesforce 組織の各世帯取引先 (世帯オブジェクト) の名前が変更されます (自動命名が有効になっていない世帯は除く)。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、自動世帯命名が有効化され、選択した形式に従って既存の世帯名、公式の挨拶文、および非公式の挨拶文に新しい名前が入力されます。Salesforce 組織の各世帯団体 (世帯オブジェクト) の名前が変更されます (自動命名が有効になっていない世帯は除く)。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;自動世帯命名はいつでも無効化できますが、新しく入力された名前はすべてそのまま残ります。 &lt;br/&gt;&lt;br/&gt;
 
@@ -5373,17 +6334,19 @@
         <name>stgHelpBtnHHNaming</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、商談名のバッチ変更が有効化され、選択した形式に従ってすべての商談名が更新されます。[商談名の形式] で [名前を変更しない] と指定した商談を除き、団体の各商談名が変更されます。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支援名のバッチ変更が有効化され、選択した形式に従ってすべての支援名が更新されます。[支援名の形式] で [名前を変更しない] と指定した支援を除き、団体の各支援名が変更されます。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-商談に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
+支援に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
 &lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;カスタム入力規則&lt;/li&gt;
+&lt;li&gt;ワークフロールール&lt;/li&gt;
+&lt;li&gt;プロセスビルダー&lt;/li&gt;
+&lt;li&gt;Visual Workflow&lt;/li&gt;
+&lt;li&gt;カスタムトリガ&lt;/li&gt;
+&lt;/ul&gt;
 &lt;br/&gt;
-● カスタム入力規則&lt;br/&gt;
-● ワークフロールール&lt;br/&gt;
-● プロセスビルダー&lt;br/&gt;
-● Visual Workflow&lt;br/&gt;
-● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
         <name>stgHelpBtnOppNaming</name>
     </customLabels>
@@ -5400,25 +6363,24 @@
         <name>stgHelpContactRTExcluded</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支払のバッチ作成が有効化されます。次のような支払のない各商談で支払が作成されます:
-&lt;br/&gt;
-&lt;br/&gt;
-● 金額がゼロより大きい&lt;br/&gt;
-● [支払を自動的に作成しない] とマークされていない&lt;br/&gt;
-● 上記の設定で除外されていない&lt;br/&gt;
-&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支払のバッチ作成が有効化されます。次のような支払のない各支援で支払が作成されます:  
+&lt;ul&gt; 
+&lt;li&gt;金額がゼロより大きい&lt;/li&gt; 
+&lt;li&gt;[支払を自動的に作成しない] とマークされていない&lt;/li&gt; 
+&lt;li&gt;上記の設定で除外されていない&lt;/li&gt; 
+&lt;/ul&gt; 
 
-&lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-支払に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします:
-&lt;br/&gt;
-&lt;br/&gt;
-● カスタム入力規則&lt;br/&gt;
-● ワークフロールール&lt;br/&gt;
-● プロセスビルダー&lt;br/&gt;
-● Visual Workflow&lt;br/&gt;
-● カスタムトリガ&lt;br/&gt;
-
-&lt;br/&gt;
+&lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt; 
+支払に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします:  
+&lt;br/&gt; 
+&lt;ul&gt; 
+&lt;li&gt;カスタム入力規則&lt;/li&gt; 
+&lt;li&gt;ワークフロールール&lt;/li&gt; 
+&lt;li&gt;プロセスビルダー&lt;/li&gt; 
+&lt;li&gt;Visual Workflow&lt;/li&gt; 
+&lt;li&gt;カスタムトリガ&lt;/li&gt; 
+&lt;/ul&gt; 
+&lt;br/&gt; 
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
@@ -5535,7 +6497,7 @@
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
-        <label>このユーティリティは、レベルが割り当てられているすべての Salesforce オブジェクト (通常は取引先と取引先責任者であるがそれだけでなくカスタムオブジェクトも含む) のレベル割り当てを計算します。処理に時間がかかる場合がありますが、このページを安全に閉じることができます。処理は引き続きバックグラウンドで実行されます。
+        <label>このユーティリティは、レベルが割り当てられているすべての Salesforce オブジェクト (通常は団体と個人であるがそれだけでなくカスタムオブジェクトも含む) のレベル割り当てを計算します。処理に時間がかかる場合がありますが、このページを安全に閉じることができます。処理は引き続きバックグラウンドで実行されます。
 &lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;重要:&lt;/b&gt; Salesforce は他の一括データ処理から更新された項目に対してレベルを頻繁に評価しています。そのため、まずこの処理を実行することをお勧めします。</label>
@@ -5574,7 +6536,7 @@
         <name>stgHelpNameOverrun</name>
     </customLabels>
     <customLabels>
-        <label>まず、対応付ける継続支援項目を選択します。次に、対応付け先の商談項目を選択します。選択した継続支援項目が継続支援のすべての子商談に表示されます。
+        <label>まず、対応付ける継続支援項目を選択します。次に、対応付け先の支援項目を選択します。選択した継続支援項目が継続支援のすべての子支援に表示されます。
 重要: これらの両方の項目は同じデータ型である必要があります。</label>
         <name>stgHelpNewRDFieldMap</name>
     </customLabels>
@@ -5587,7 +6549,7 @@
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label>ソフトクレジット、 取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
+        <label>ソフトクレジット、取引先責任者の役割、およびマッチングギフトはいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
@@ -5663,32 +6625,36 @@
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、商談のバッチ更新が有効化され、主取引先責任者項目が更新されます。主取引先責任者項目の値が、[主] とマークされている商談取引先責任者の役割レコードと同じでない商談レコードが更新されます。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支援のバッチ更新が有効化され、主個人項目が更新されます。主個人項目の値が、[主] とマークされている支援個人の役割レコードと同じでない支援レコードが更新されます。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-この変更により、商談レコードが更新されます。商談に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
+この変更により、支援レコードが更新されます。支援に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
 &lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;カスタム入力規則&lt;/li&gt;
+&lt;li&gt;ワークフロールール&lt;/li&gt;
+&lt;li&gt;プロセスビルダー&lt;/li&gt;
+&lt;li&gt;Visual Workflow&lt;/li&gt;
+&lt;li&gt;カスタムトリガ&lt;/li&gt;
+&lt;/ul&gt;
 &lt;br/&gt;
-● カスタム入力規則&lt;br/&gt;
-● ワークフロールール&lt;br/&gt;
-● プロセスビルダー&lt;br/&gt;
-● Visual Workflow&lt;br/&gt;
-● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
         <name>stgHelpPrimaryContactBatch</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、取引先の重複する主商談取引先責任者の役割を完全に削除するバッチが有効になります。これらのレコードはごみ箱から修復できないため、前もって予測される変更点をしっかり確認してください。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、団体の重複する主支援個人の役割を完全に削除するバッチが有効になります。これらのレコードはごみ箱から修復できないため、前もって予測される変更点をしっかり確認してください。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-この変更により、商談取引先責任者の役割レコードが更新されます。この処理を開始する前にデータをバックアップしてください。また、次の項目が商談に影響する場合は、無効にしておくことをお勧めします。
+この変更により、支援個人の役割レコードが更新されます。この処理を開始する前にデータをバックアップしてください。また、次の項目が支援に影響する場合は、無効にしておくことをお勧めします。
 &lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;カスタム入力規則&lt;/li&gt;
+&lt;li&gt;ワークフロールール&lt;/li&gt;
+&lt;li&gt;プロセスビルダー&lt;/li&gt;
+&lt;li&gt;Visual Workflow&lt;/li&gt;
+&lt;li&gt;カスタムトリガ&lt;/li&gt;
+&lt;/ul&gt;
 &lt;br/&gt;
-● カスタム入力規則&lt;br/&gt;
-● ワークフロールール&lt;br/&gt;
-● プロセスビルダー&lt;br/&gt;
-● Visual Workflow&lt;br/&gt;
-● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了した後は、このページから移動したり、このページを更新したりしても問題ありません。</label>
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
     </customLabels>
@@ -5697,10 +6663,10 @@
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
-        <label>このユーティリティは、すべての無期限の継続支援のバッチ処理を実行し、商談の売上予測月数に基づきます。
+        <label>このユーティリティは、すべての無期限の継続支援のバッチ処理を実行し、支援の売上予測月数に基づきます。
 &lt;br/&gt;
 &lt;br/&gt; 
-● 新規商談を作成する&lt;br/&gt;
+● 新規支援を作成する&lt;br/&gt;
 ● 回数と既払額を更新する&lt;br/&gt;
 &lt;br/&gt;
 処理に時間がかかる場合がありますが、このページを閉じることができます。処理は引き続きバックグラウンドで実行されます。</label>
@@ -5763,7 +6729,7 @@
         <name>stgHelpRDPeriodName</name>
     </customLabels>
     <customLabels>
-        <label>カスタム間隔の対象となる期間の種類。</label>
+        <label>カスタム間隔の対象となる間隔の種類。</label>
         <name>stgHelpRDPeriodType</name>
     </customLabels>
     <customLabels>
@@ -5771,7 +6737,7 @@
         <name>stgHelpRDSuccesses</name>
     </customLabels>
     <customLabels>
-        <label>この設定を使用すると、NPSP に付属するデフォルトの期間 (月、四半期、年など) とは異なる、継続支援のカスタム期間を作成できます。</label>
+        <label>この設定を使用すると、NPSP に付属するデフォルトの間隔 (月、四半期、年など) とは異なる、継続支援のカスタム間隔を作成できます。</label>
         <name>stgHelpRecDon</name>
     </customLabels>
     <customLabels>
@@ -6530,11 +7496,11 @@
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>取引先責任者のマージ</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>取引先責任者のマージ</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
@@ -6544,6 +7510,14 @@
     <customTabs>
         <label>支援エントリ</label>
         <name>GE_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label>NPSP の使用開始 - 管理</label>
+        <name>GetStarted</name>
+    </customTabs>
+    <customTabs>
+        <label>NPSP の使用開始</label>
+        <name>GetStartedEndUser</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>

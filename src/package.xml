@@ -389,6 +389,8 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_CommitmentRequest</members>
         <members>PS_CommitmentRequest_TEST</members>
+        <members>PS_GatewayManagement</members>
+        <members>PS_GatewayManagement_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -514,6 +516,8 @@
         <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
+        <members>STG_PanelGatewayManagement_CTRL</members>
+        <members>STG_PanelGatewayManagement_CTRL_TEST</members>
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
@@ -744,6 +748,7 @@
         <members>STG_PanelDataImportAdvancedMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
+        <members>STG_PanelGatewayManagement</members>
         <members>STG_PanelHealthCheck</members>
         <members>STG_PanelHome</members>
         <members>STG_PanelHouseholds</members>
@@ -2481,6 +2486,7 @@
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>
+        <members>geTextFieldBundlePaymentMethod</members>
         <members>geTextListViewItemCount</members>
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>
@@ -2971,6 +2977,7 @@
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
         <members>pmtWrittenOffPaymentDateRequired</members>
+        <members>psSelectValidPaymentMethod</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -4188,6 +4195,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>gePaymentGatewayManagement</members>
         <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
