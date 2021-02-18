@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -35,24 +35,24 @@
 */
 public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
 
-    /*********************************************************************************************************
+    /**
     * @description The panel's constructor 
     */
     public STG_PanelLvlAssignBatch_CTRL() {
         isRunningBatch = false;
     }
 
-    /*********************************************************************************************************
+    /**
     * @description Returns the string Id of the panel. 
     */
     public override string idPanel() { return 'idPanelLvlAssignBatch'; }
 
-    /*********************************************************************************************************
+    /**
     * @description Whether we are running the LvlAssignBatch process 
     */
     public boolean isRunningBatch { get; set; }
 
-    /*********************************************************************************************************
+    /**
     * @description Action Method to run the Level Assignment batches.  Scheduler kicks off one batch per
     * Target object type.
     * @return null 
@@ -65,8 +65,23 @@ public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
         return null;
     }
 
-    /*********************************************************************************************************
+    /**
     * @description How many Level Assign Batches were kicked off
     */
     public integer cLvlAssignBatch { get; set; }
+
+    /**
+    * @description Check if the running user has update access to the Account sObject and Contact sObject,
+    * and read access to the Level sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String accountObject = Schema.SObjectType.Account.getName();
+        String contactObject = Schema.SObjectType.Contact.getName();
+        String levelObject = Schema.SObjectType.Level__c.getName();
+
+        return UTIL_Permissions.canUpdate(accountObject, false) &&
+            UTIL_Permissions.canUpdate(contactObject, false) &&
+            UTIL_Permissions.canRead(levelObject, false);
+    }
 }

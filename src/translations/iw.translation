@@ -678,6 +678,10 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <name>CallableApiJobScheduleInvalidClass</name>
+    </customLabels>
+    <customLabels>
         <label><!-- CallableApi Method Not Implemented --></label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -752,6 +756,10 @@
     <customLabels>
         <label>אל</label>
         <name>EPTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title on a page displaying error logs for a record --></label>
+        <name>ERR_RecordLogTitle</name>
     </customLabels>
     <customLabels>
         <label>מערכת Salesforce דיווחה על השגיאות הבאות בזמן ש-NPSP ניסתה לבצע את משימות האצווה שלה, או כאשר לא הייתה לה אפשרות להציג הודעות שגיאה למשתמש באופן ישיר. סביר להניח ש-NPSP ניסתה לעדכן שדות סיכום בחשבונות ואנשי קשר, אך לא הייתה לה אפשרות לשמור רשומות מסוימות. כשל זה עשוי להיגרם עקב גורמים שונים שאינם קשורים ל-NPSP, כגון קוד או כללי התאמה מותאמים אישית.
@@ -842,6 +850,10 @@
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
+        <label><!-- Planned Installments cannot be migrated to enhanced Recurring Donation format --></label>
+        <name>RD2_DataMigrationInvalidPlannedInstallments</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Validate RD data if day of month is blank when installment is monthly --></label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
@@ -854,12 +866,52 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Indicates Elevate recurring commitment cancel is in progress --></label>
+        <name>RD2_ElevateCancelInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label indicating user can hide the credit card and not use Elevate --></label>
+        <name>RD2_ElevateDisableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header indicating the org is not connected to Elevate --></label>
+        <name>RD2_ElevateDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the Recurring Donation will not be committed to Elevate --></label>
+        <name>RD2_ElevateDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text to toggle and enable commitment creation in Elevate --></label>
+        <name>RD2_ElevateEnableButtonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Elevate information widget header --></label>
+        <name>RD2_ElevateInformationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status description displayed when no error is active --></label>
+        <name>RD2_ElevateInformationStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when the functionality is not supported for Elevate Recurring Donation. --></label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
+        <label><!-- Status Reason to indicates Elevate Service is in progress. --></label>
+        <name>RD2_ElevatePendingStatus</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when user does not have a permission to change an RD originated in Elevate --></label>
         <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when an attempt is made to change the Status of a Closed Elevate RD --></label>
+        <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the Recurring Donation could not be created in Elevate --></label>
+        <name>RD2_ElevateRecordCreateFailed</name>
     </customLabels>
     <customLabels>
         <label><!-- Enablement page header displayed due to missing prerequisites --></label>
@@ -1030,6 +1082,10 @@
         <name>RD2_EnablementSimpleIntro</name>
     </customLabels>
     <customLabels>
+        <label><!-- Elevate connected Recurring Donation End Date must be valid. --></label>
+        <name>RD2_EndDateElevateCannotBeInFuture</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Recurring Donation End Date must be valid. --></label>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
     </customLabels>
@@ -1102,6 +1158,22 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message displayed as prefix to errors returned from Elevate API --></label>
+        <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Spinner text when Elevate Commitment is being created --></label>
+        <name>RD2_EntryFormSaveCommitmentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Spinner text when credit card is validated on Recurring Donation save --></label>
+        <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Spinner text when Recurring Donation record is being saved --></label>
+        <name>RD2_EntryFormSaveRecurringDonationMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Label to show as Every --></label>
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
@@ -1120,6 +1192,10 @@
     <customLabels>
         <label><!-- The RD2 Batch job can only be executed when Enhanced RD is enabled --></label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Id must be specified --></label>
+        <name>RD2_ErrorRDIdIsMissingForCommitment</name>
     </customLabels>
     <customLabels>
         <label><!-- Displayed when Installment Frequency on a Recurring Donation is not valid --></label>
@@ -1192,6 +1268,10 @@
     <customLabels>
         <label><!-- Contains message indicating one installment has been selected to skip --></label>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when Recurring Donation Status picklist value Paused does not exist --></label>
+        <name>RD2_PauseStatusMustExist</name>
     </customLabels>
     <customLabels>
         <label><!-- Paused Reason field label on the Recurring Donation Pause page --></label>
@@ -1474,6 +1554,14 @@
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label><!-- Accordion instruction when it&apos;s closed --></label>
+        <name>accordionSection_ToggleInstructionsWhenClosed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Accordion instruction when it&apos;s open --></label>
+        <name>accordionSection_ToggleInstructionsWhenOpen</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Throw exception to external call --></label>
         <name>adapterException</name>
     </customLabels>
@@ -1682,6 +1770,54 @@
     <customLabels>
         <label>לא הוקצה</label>
         <name>alloUnallocated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error for duplicate auto-number format --></label>
+        <name>autoNumberErrorDuplicate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when auto-number Display Format is invalid --></label>
+        <name>autoNumberErrorInvalidDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to save and activate the new batch number format --></label>
+        <name>batchNumberSettingsActivate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for batch number configuration --></label>
+        <name>batchNumberSettingsConfigureHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of how to use the batch number format table --></label>
+        <name>batchNumberSettingsDescActivation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Display Format options --></label>
+        <name>batchNumberSettingsDescDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of the batch number settings --></label>
+        <name>batchNumberSettingsDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for creating a batch number format --></label>
+        <name>batchNumberSettingsDescriptionCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for auto-number format setting --></label>
+        <name>batchNumberSettingsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for batch number settings in NPSP Settings --></label>
+        <name>batchNumberSettingsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for explanation of Display Format options --></label>
+        <name>batchNumberSettingsHeaderDisplayFormat</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for table of batch number formats --></label>
+        <name>batchNumberSettingsHeaderFormats</name>
     </customLabels>
     <customLabels>
         <label><!-- Header about Batch Data Entry being unsupported --></label>
@@ -2580,6 +2716,10 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Activate --></label>
+        <name>commonActivate</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Page-level error message about permissions --></label>
         <name>commonAdminPermissionErrorMessage</name>
     </customLabels>
@@ -2628,12 +2768,24 @@
         <name>commonCardType</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for the cardholder name during credit card entry --></label>
+        <name>commonCardholderName</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Clone --></label>
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Close button label --></label>
+        <name>commonClose</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
         <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message indicating user should contact the system administrator for help --></label>
+        <name>commonContactSystemAdminMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- Common label for credit card number --></label>
@@ -2642,6 +2794,10 @@
     <customLabels>
         <label><!-- Critical Error --></label>
         <name>commonCriticalError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Deactivate --></label>
+        <name>commonDeactivate</name>
     </customLabels>
     <customLabels>
         <label><!-- Default Value --></label>
@@ -2662,6 +2818,10 @@
     <customLabels>
         <label><!-- Error --></label>
         <name>commonError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error prefix --></label>
+        <name>commonErrorPrefix</name>
     </customLabels>
     <customLabels>
         <label><!-- Field Label --></label>
@@ -2784,8 +2944,16 @@
         <name>commonViewAll</name>
     </customLabels>
     <customLabels>
+        <label><!-- Link value displaying error logs for a record --></label>
+        <name>commonViewErrorLog</name>
+    </customLabels>
+    <customLabels>
         <label><!-- View More --></label>
         <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Spinner text displayed to indicate process might take long time --></label>
+        <name>commonWaitMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- Warning --></label>
@@ -3132,7 +3300,7 @@
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
-        <label><!-- Text indicating card is not being charged --></label>
+        <label><!-- Text indicating payment isn&apos;t being charged --></label>
         <name>geBodyPaymentNotProcessingTransaction</name>
     </customLabels>
     <customLabels>
@@ -3264,7 +3432,7 @@
         <name>geErrorAmountDoesNotMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure description if card is charged and donation record has not been created --></label>
+        <label><!-- Failure msg when transaction is processed but record isn&apos;t created in Salesforce --></label>
         <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
@@ -3336,7 +3504,7 @@
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- Reason for system error when uncertain if card charged --></label>
+        <label><!-- Reason for system error when uncertain if payment was processed --></label>
         <name>geErrorRequestTimedout</name>
     </customLabels>
     <customLabels>
@@ -3344,19 +3512,19 @@
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 1 --></label>
+        <label><!-- Failure msg description for system error &amp; uncertain if payment processed - Pt 1 --></label>
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 2 --></label>
+        <label><!-- Failure msg description for system error &amp; uncertain if payment processed - Pt 2 --></label>
         <name>geErrorUncertainCardChargePart2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 3 --></label>
+        <label><!-- Failure msg description for system error &amp; uncertain if payment processed - Pt 3 --></label>
         <name>geErrorUncertainCardChargePart3</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 4 --></label>
+        <label><!-- Failure msg description for system error &amp; uncertain if payment processed - Pt 4 --></label>
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
@@ -3564,7 +3732,7 @@
         <name>gePS_IntegrationTestInvalidAPIKey</name>
     </customLabels>
     <customLabels>
-        <label><!-- Failure messge if invalid configuration params was provided for onboarding --></label>
+        <label><!-- Failure message if invalid configuration params was provided for onboarding --></label>
         <name>gePS_IntegrationTestInvalidConfigParams</name>
     </customLabels>
     <customLabels>
@@ -3612,8 +3780,12 @@
         <name>geTabTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label><!-- Text indicating the card is being charged --></label>
+        <label><!-- Text indicating the payment is being charged --></label>
         <name>geTextChargingCard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Instructions to add Payment Method --></label>
+        <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
         <label><!-- Text to show the record count in the list view, one record --></label>
@@ -3710,6 +3882,778 @@
     <customLabels>
         <label><!-- Gift Processing configuration error --></label>
         <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title in Get Started --></label>
+        <name>gsAdminSetupTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Application Status label for the application status component --></label>
+        <name>gsApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header of the modal label for the application status component --></label>
+        <name>gsApplicationStatusModalHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Apply for licenses button label for the application status component --></label>
+        <name>gsApplyForFreeLicenses</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Check Status label for the application status component --></label>
+        <name>gsCheckStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist Explore Nonprofit in Get Started --></label>
+        <name>gsChecklistExploreNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist Explore Nonprofit in Get Started --></label>
+        <name>gsChecklistExploreNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Add User in Get Started --></label>
+        <name>gsChecklistItemAddUserDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Add User in Get Started --></label>
+        <name>gsChecklistItemAddUserLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Add User in Get Started --></label>
+        <name>gsChecklistItemAddUserTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Communicate with Users in Get Started --></label>
+        <name>gsChecklistItemCommunicateWithUserskDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Communicate with Users in Get Started --></label>
+        <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Communicate with Users in Get Started --></label>
+        <name>gsChecklistItemCommunicateWithUserskTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Create Donation in Get Started --></label>
+        <name>gsChecklistItemCreateDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Create Donation in Get Started --></label>
+        <name>gsChecklistItemCreateDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Create Donation in Get Started --></label>
+        <name>gsChecklistItemCreateDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Create Donation in Get Started --></label>
+        <name>gsChecklistItemCreateDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Custom Fields in Get Started --></label>
+        <name>gsChecklistItemCustomFieldsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Custom Fields in Get Started --></label>
+        <name>gsChecklistItemCustomFieldsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Custom Fields in Get Started --></label>
+        <name>gsChecklistItemCustomFieldsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Extra Info in the Item &apos;4 Minute Video&apos; --></label>
+        <name>gsChecklistItemExtraFourMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Extra Info in the Item &apos;1 Minute Video&apos; --></label>
+        <name>gsChecklistItemExtraOneMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Extra Info in the Item &apos;60 Minute Video&apos; --></label>
+        <name>gsChecklistItemExtraSixtyMinuteVideo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Extra Info in the Item &apos;2 Minutes Video&apos; --></label>
+        <name>gsChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item FundraisingProcess in Get Started --></label>
+        <name>gsChecklistItemFundraisingProcessDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item FundraisingProcess in Get Started --></label>
+        <name>gsChecklistItemFundraisingProcessLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item FundraisingProcess in Get Started --></label>
+        <name>gsChecklistItemFundraisingProcessPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item FundraisingProcess in Get Started --></label>
+        <name>gsChecklistItemFundraisingProcessTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Go Further in Get Started --></label>
+        <name>gsChecklistItemGoFurtherDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Go Further in Get Started --></label>
+        <name>gsChecklistItemGoFurtherLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Go Further in Get Started --></label>
+        <name>gsChecklistItemGoFurtherTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Import Data in Get Started --></label>
+        <name>gsChecklistItemImportDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Import Data in Get Started --></label>
+        <name>gsChecklistItemImportDataLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Import Data in Get Started --></label>
+        <name>gsChecklistItemImportDataPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Import Data in Get Started --></label>
+        <name>gsChecklistItemImportDataSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Import Data in Get Started --></label>
+        <name>gsChecklistItemImportDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Manage Change in Get Started --></label>
+        <name>gsChecklistItemManageChangeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Manage Change in Get Started --></label>
+        <name>gsChecklistItemManageChangeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Manage Change in Get Started --></label>
+        <name>gsChecklistItemManageChangePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Manage Change in Get Started --></label>
+        <name>gsChecklistItemManageChangeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item NPSP Cloud in Get Started --></label>
+        <name>gsChecklistItemNPSPCloudDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item NPSP Cloud in Get Started --></label>
+        <name>gsChecklistItemNPSPCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item NPSP Cloud in Get Started --></label>
+        <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item NPSP Cloud in Get Started --></label>
+        <name>gsChecklistItemNPSPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item NPSP Guide in Get Started --></label>
+        <name>gsChecklistItemNPSPGuideDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item NPSP Guide in Get Started --></label>
+        <name>gsChecklistItemNPSPGuidePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item NPSP Guide in Get Started --></label>
+        <name>gsChecklistItemNPSPGuideTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item NPSP Settings in Get Started --></label>
+        <name>gsChecklistItemNPSPSettingsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item NPSP Settings in Get Started --></label>
+        <name>gsChecklistItemNPSPSettingsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item NPSP Settings in Get Started --></label>
+        <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item NPSP Settings in Get Started --></label>
+        <name>gsChecklistItemNPSPSettingsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Page Layouts in Get Started --></label>
+        <name>gsChecklistItemPageLayoutsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Page Layouts in Get Started --></label>
+        <name>gsChecklistItemPageLayoutsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Page Layouts in Get Started --></label>
+        <name>gsChecklistItemPageLayoutsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Prepare NPSP in Get Started --></label>
+        <name>gsChecklistItemPrepareNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Prepare NPSP in Get Started --></label>
+        <name>gsChecklistItemPrepareNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Prepare NPSP in Get Started --></label>
+        <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Prepare NPSP in Get Started --></label>
+        <name>gsChecklistItemPrepareNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Review Company in Get Started --></label>
+        <name>gsChecklistItemReviewCompanyDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Review Company in Get Started --></label>
+        <name>gsChecklistItemReviewCompanyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Review Company in Get Started --></label>
+        <name>gsChecklistItemReviewCompanyTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Stay Track in Get Started --></label>
+        <name>gsChecklistItemRunningReportsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Running Reports in Get Started --></label>
+        <name>gsChecklistItemRunningReportsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Running Reports in Get Started --></label>
+        <name>gsChecklistItemRunningReportsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Running Reports in Get Started --></label>
+        <name>gsChecklistItemRunningReportsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Setup Contact in Get Started --></label>
+        <name>gsChecklistItemSetupContactDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of checklist item Setup Contact in Get Started --></label>
+        <name>gsChecklistItemSetupContactLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Setup Contact in Get Started --></label>
+        <name>gsChecklistItemSetupContactPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Setup Contact in Get Started --></label>
+        <name>gsChecklistItemSetupContactSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Setup Contact in Get Started --></label>
+        <name>gsChecklistItemSetupContactTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Stay Track in Get Started --></label>
+        <name>gsChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Stay Track in Get Started --></label>
+        <name>gsChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of checklist item Stay Track in Get Started --></label>
+        <name>gsChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Stay Track in Get Started --></label>
+        <name>gsChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist item Train Users in Get Started --></label>
+        <name>gsChecklistItemTrainUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link Label of checklist item Train Users in Get Started --></label>
+        <name>gsChecklistItemTrainUsersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist item Train Users in Get Started --></label>
+        <name>gsChecklistItemTrainUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist Make Your in Get Started --></label>
+        <name>gsChecklistMakeItYourDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist Make Your in Get Started --></label>
+        <name>gsChecklistMakeItYourTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of checklist User Onboard in Get Started --></label>
+        <name>gsChecklistOnboardUsersDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of checklist User Onboard in Get Started --></label>
+        <name>gsChecklistOnboardUsersTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Days added label for the application status component --></label>
+        <name>gsDaysAdded</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Days remaining in the free trial label for the application status component --></label>
+        <name>gsDaysRemainingInFreeTrial</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Follow up Application Status label for the application status component --></label>
+        <name>gsFollowUpApplicationStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Learn more label for the application status component --></label>
+        <name>gsLearnMore</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No application submitted label for the application status component --></label>
+        <name>gsNoApplicationSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Fundraising label in Get Started Resources section --></label>
+        <name>gsResourcesItemFundraisingLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Fundraising link label in Get Started Resources section --></label>
+        <name>gsResourcesItemFundraisingLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Hub label in Get Started Resources section --></label>
+        <name>gsResourcesItemHubLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Hub link label in Get Started Resources section --></label>
+        <name>gsResourcesItemHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Marketing Engagement label in Get Started Resources section --></label>
+        <name>gsResourcesItemMarketingEngagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Marketing Engagement link label in Get Started Resources section --></label>
+        <name>gsResourcesItemMarketingEngagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Nonprofit Cloud label in Get Started Resources section --></label>
+        <name>gsResourcesItemNonprofitCloudLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Nonprofit Cloud link label in Get Started Resources section --></label>
+        <name>gsResourcesItemNonprofitCloudLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Partners label in Get Started Resources section --></label>
+        <name>gsResourcesItemPartnersLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Partners link label in Get Started Resources section --></label>
+        <name>gsResourcesItemPartnersLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Program Management label in Get Started Resources section --></label>
+        <name>gsResourcesItemProgramManagementLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Program Management link label in Get Started Resources section --></label>
+        <name>gsResourcesItemProgramManagementLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Webinars label in Get Started Resources section --></label>
+        <name>gsResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Webinars link label in Get Started Resources section --></label>
+        <name>gsResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The page title in the Get Started Resources section --></label>
+        <name>gsResourcesTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Videography label in Get Started Resources section --></label>
+        <name>gsResourcesVideographyLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resource Videography link label in Get Started Resources section --></label>
+        <name>gsResourcesVideographyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Submitted Status label for the application status component --></label>
+        <name>gsSubmitted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Video Duration displayed in the Video Header Component --></label>
+        <name>gsVideoHeaderLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Video header title in Get Started --></label>
+        <name>gsVideoHeaderTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Create Constituent Records section in Get Started --></label>
+        <name>gseuChecklistCreateConstituentRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for Create Constituent Records section in Get Started --></label>
+        <name>gseuChecklistCreateConstituentRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Capture Donor Intent checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCaptureDonorIntentDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Capture Donor Intent checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Capture Donor Intent checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Capture Donor Intent checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCaptureDonorIntentTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Collect Gifts checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCollectGiftsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Collect Gifts checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCollectGiftsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Collect Gifts checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCollectGiftsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Collect Gifts checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemCollectGiftsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text for Connect Contacts to Organization checklist item --></label>
+        <name>gseuChecklistItemConnectContactOrganizationBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Connect Contact to Organization checklist item in Get Started --></label>
+        <name>gseuChecklistItemConnectContactOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text for Connect Contacts to Organization checklist item in Get Started --></label>
+        <name>gseuChecklistItemConnectContactOrganizationLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for Connect Contact to Organization checklist item in Get Started --></label>
+        <name>gseuChecklistItemConnectContactOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text for Connect Two Contacts with Relationships checklist item --></label>
+        <name>gseuChecklistItemConnectContactsRelationshipsBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Connect Two Contacts with Relationships checklist item --></label>
+        <name>gseuChecklistItemConnectContactsRelationshipsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text for Connect Two Contacts with Relationships checklist item --></label>
+        <name>gseuChecklistItemConnectContactsRelationshipsLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for Connect Two Contacts with Relationships checklist item in Get Started --></label>
+        <name>gseuChecklistItemConnectContactsRelationshipsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text for Create Contacts and Account checklist item in Get Started --></label>
+        <name>gseuChecklistItemCreateContactAndAccountBlueButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Contacts and Account checklist item in Get Started --></label>
+        <name>gseuChecklistItemCreateContactAndAccountDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text for Contacts and Accounts checklist item in Get Started --></label>
+        <name>gseuChecklistItemCreateContactAndAccountLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for Contacts and Accounts checklist item in Get Started --></label>
+        <name>gseuChecklistItemCreateContactAndAccountTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Individual Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationIndividualDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Individual Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationIndividualLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Individual Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationIndividualPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Individual Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationIndividualTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Organization Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationOrganizationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Organization Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationOrganizationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Org Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationOrganizationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Organization Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemDonationOrganizationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Extra Info in the Item &apos;2 Minute Video&apos; --></label>
+        <name>gseuChecklistItemExtraTwoMinutesVideo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Global Search checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemGlobalSearchDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Global Search checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemGlobalSearchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Global Search checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemGlobalSearchPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Global Search checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemGlobalSearchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Prebuilt NPSP Report checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemPrebuiltNPSPReportDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Prebuilt NPSP Report checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemPrebuiltNPSPReportLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Prebuilt NPSP Report checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemPrebuiltNPSPReportPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Prebuilt NPSP Report checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemPrebuiltNPSPReportSecBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Prebuilt NPSP Report checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemPrebuiltNPSPReportTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Standard Report Type checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStandardReportTypeDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Standard Report Type checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStandardReportTypeLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Standard Report Type checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStandardReportTypePriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Standard Report Type checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStandardReportTypeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Stay on Track checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStayTrackDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Stay on Track checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStayTrackLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Stay on Track checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStayTrackPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Stay on Track checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemStayTrackTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Track Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Track Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemTrackDonationLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Track Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemTrackDonationPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Track Donation checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of View Dashboard checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemViewDashboardDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of View Dashboard checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemViewDashboardLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of View Dashboard checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemViewDashboardPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of View Dashboard checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemViewDashboardTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text for What is Nonprofit Cloud checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPCloudLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for What is Nonprofit Cloud checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPCloudTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for What is Nonprofit Cloud checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPCloudTitleDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for What is NPSP checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text for What is NPSP checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPSPLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for What is NPSP checklist item in Welcome section --></label>
+        <name>gseuChecklistItemWhatIsNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Multiple Records checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemWorkMultipleRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link label of Multiple Records checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemWorkMultipleRecordsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label of Multiple Records checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemWorkMultipleRecordsPriBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Work with Multiple Records checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistItemWorkMultipleRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Track Donation checklist in Get Started for End Users --></label>
+        <name>gseuChecklistTrackDonationDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Track Donation checklist in Get Started for End Users --></label>
+        <name>gseuChecklistTrackDonationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Welcome to Nonprofit checklist section in Get Started --></label>
+        <name>gseuChecklistWelcomeNPSPDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Welcome to Nonprofit checklist section in Get Started --></label>
+        <name>gseuChecklistWelcomeNPSPTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Work with Records checklist in Get Started for End Users --></label>
+        <name>gseuChecklistWorkRecordsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Work with Records checklist in Get Started for End Users --></label>
+        <name>gseuChecklistWorkRecordsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description of Understand Your Data checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistYourDataDesc</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of Understand Your Data checklist item in Get Started for End Users --></label>
+        <name>gseuChecklistYourDataTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text displayed in the button on the Trailhead component. --></label>
+        <name>gseuExploreTrailheadButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of the End User Get Started Page --></label>
+        <name>gseuPageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- About NPSP label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemAboutNPSPLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- About NPSP link label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemAboutNPSPLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Community Group label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemCommunityGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Community Group link label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemCommunityGroupLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Questions Answered label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemQuestionsAnsweredLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Questions Answered link label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Watch Videos label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemWatchVideosLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Watch Videos link label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemWatchVideosLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Webinars label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemWebinarsLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Webinars link label in Get Started Resources section for End Users --></label>
+        <name>gseuResourcesItemWebinarsLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text displayed in the trailhead component --></label>
+        <name>gseuTrailheadText</name>
     </customLabels>
     <customLabels>
         <label>הפעל בדיקת תקינות</label>
@@ -4802,6 +5746,10 @@
     <customLabels>
         <label><!-- pmtWrittenOffPaymentDateRequired --></label>
         <name>pmtWrittenOffPaymentDateRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
         <label>מחק שורה</label>
@@ -6447,11 +7395,11 @@
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label>מיזוג אנשי קשר</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>מיזוג אנשי קשר</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
@@ -6461,6 +7409,14 @@
     <customTabs>
         <label><!-- Gift Entry --></label>
         <name>GE_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Get Started with NPSP - Admin --></label>
+        <name>GetStarted</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Get Started with NPSP --></label>
+        <name>GetStartedEndUser</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>

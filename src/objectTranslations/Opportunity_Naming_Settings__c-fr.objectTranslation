@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Opportunity Naming Settings --></value>
+        <value>Paramètre de nommage d&apos;opportunité</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Opportunity Naming Settings --></value>
+        <value>Paramètres de nommage d&apos;opportunité</value>
     </caseValues>
     <fields>
         <help>Détermine si ce paramètre s’applique aux opportunités individuelles, organisationnelles, ou les deux.</help>
@@ -28,6 +28,6 @@
         <label>Types d’enregistrement d’opportunité</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

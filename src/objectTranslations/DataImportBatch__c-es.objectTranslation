@@ -37,6 +37,11 @@
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
+        <help>El identificador con numeración automática exclusivo para este lote.</help>
+        <label>Número de lote</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <help>El número de registros a procesar al mismo tiempo en cada lote.</help>
         <label>Tamaño de procesamiento de lotes</label>
         <name>Batch_Process_Size__c</name>

@@ -5,6 +5,16 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>Le code de Classe d&apos;entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
+        <label>Code CCA</label>
+        <name>ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
+        <label>Quatre derniers chiffres du code CCA</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>La date et l’heure auxquelles la transaction a été autorisée.</help>
         <label>Date autorisée</label>
         <name>Authorized_Date__c</name>
@@ -13,6 +23,11 @@
         <help>La date et l’heure exactes (jusqu’à la milliseconde) de la passerelle de paiement auxquelles cette transaction a été autorisée.</help>
         <label>Horodatage UTC autorisé</label>
         <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>Le lot qui définit ce paiement comme effectué. Ce champ est automatiquement rempli en fonction de vos Paramètres de Numéro du lot dans les Paramètres NPSP.</help>
+        <label>Numéro du lot</label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help>Le mois d’expiration de la carte utilisée pour cette transaction.</help>
@@ -35,14 +50,24 @@
         <name>Card_Network__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Donor Cover Amount --></label>
+        <help>Le montant payé par le donateur en plus du montant du don, souvent utilisé pour couvrir les frais de transaction ou ajouter un pourboire au don.</help>
+        <label>Montant de couverture par le donateur</label>
         <name>Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>Uniquement pour les remboursements. Affiche l’ID de la transaction de paiement d’origine d’Elevate.</help>
         <label>ID de paiement d’origine d’Elevate</label>
         <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
+        <label>Motif refus de l&apos;API de paiement Elevate</label>
+        <name>Elevate_Payment_API_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>La valeur de statut de l&apos;API de cet enregistrement Paiement connecté Elevate.</help>
+        <label>Statut de l&apos;API de paiement Elevate</label>
+        <name>Elevate_Payment_API_Status__c</name>
     </fields>
     <fields>
         <help>La date et l’heure auxquelles la transaction a été créée.</help>

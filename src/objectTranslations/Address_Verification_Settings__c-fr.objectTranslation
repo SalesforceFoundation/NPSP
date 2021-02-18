@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Paramètre de vérification d&apos;adresse - DÉPRÉCIÉ</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Address Verification Settings-DEPRECATED --></value>
+        <value>Paramètres de vérification d&apos;adresse - DÉPRÉCIÉ</value>
     </caseValues>
     <fields>
         <help>URL utilisée pour la vérification d’adresse.</help>
@@ -63,6 +63,6 @@
         <label>Point term. vérif. code postal-DÉPRÉCIÉ</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
