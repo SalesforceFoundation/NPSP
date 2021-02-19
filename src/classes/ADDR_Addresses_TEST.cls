@@ -1771,7 +1771,7 @@ public with sharing class ADDR_Addresses_TEST {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
-        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ account.Id });
+        ContactRepository contactRepo = new ContactRepository(new Set<Id>{ account.Id });
 
         Contact[] contacts = contactRepo.getContacts(account.Id);
         System.assertEquals(0, contacts.size());
@@ -1789,7 +1789,7 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(
+        ContactRepository contactRepo = new ContactRepository(
             UTIL_SObject.extractIds(listAccT)
         );
 
@@ -1808,10 +1808,10 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>());
+        ContactRepository contactRepo = new ContactRepository(new Set<Id>());
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
 
-        contactRepo = new ADDR_Addresses_TDTM.ContactRepository(new Set<Id>{ listAccT[0].Id });
+        contactRepo = new ContactRepository(new Set<Id>{ listAccT[0].Id });
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
     }
 
@@ -1821,7 +1821,7 @@ public with sharing class ADDR_Addresses_TEST {
     verify:
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
-    static void testAndAssertContactRepositoryGetContacts(ADDR_Addresses_TDTM.ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) {
+    static void testAndAssertContactRepositoryGetContacts(ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) {
         Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
         for (Contact c : contacts) {
             if (!contactsByAccountId.containsKey(c.AccountId)) {

@@ -261,6 +261,7 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>ContactRepository</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -319,7 +320,6 @@
         <members>HH_Container_LCTRL</members>
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
-        <members>HouseholdNamingService</members>
         <members>HH_HouseholdNamingSettingValidator</members>
         <members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_HouseholdNaming_BATCH</members>
@@ -338,6 +338,7 @@
         <members>HouseholdCustomNamingString</members>
         <members>HouseholdName</members>
         <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingService</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>LD_LeadConvertOverride_CTRL</members>
@@ -4116,6 +4117,14 @@
     <types>
         <members>Payment_ACH_Code</members>
         <name>GlobalValueSet</name>
+    </types>
+    <types>
+        <members>Payment_ACH_Code-de</members>
+        <members>Payment_ACH_Code-es</members>
+        <members>Payment_ACH_Code-fr</members>
+        <members>Payment_ACH_Code-ja</members>
+        <members>Payment_ACH_Code-nl_NL</members>
+        <name>GlobalValueSetTranslation</name>
     </types>
     <types>
         <members>Account-Household Layout</members>
