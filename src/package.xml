@@ -261,6 +261,7 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>ContactRepository</members>
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
@@ -337,6 +338,7 @@
         <members>HouseholdName</members>
         <members>HouseholdNamingExclusionsCheckboxes</members>
         <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingService</members>
         <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
         <members>HouseholdNamingUserControlledFields</members>
