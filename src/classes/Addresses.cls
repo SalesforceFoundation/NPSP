@@ -35,7 +35,7 @@
 public inherited sharing class Addresses extends fflib_SObjects {
 
     public Addresses(List<Address__c> addresses){
-        super(addresses);
+        super(addresses, Address__c.SObjectType);
     }
 
 }
