@@ -76,17 +76,17 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         //
 
         // prevent recursion
-        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+        if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
 
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
-        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
         Map<Id, Address__c> mapAddressesById = new Map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.
 
+        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            Addresses addresses = new addresses(listOld);
+            Addresses addresses = new Addresses(listOld);
             for (Address__c address : (List<Address__c>) addresses.getRecords()) {
                 Id accId = address.Household_Account__c;
                 if (accId != null) {
@@ -215,8 +215,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
-    }    
-    
+    }
+    private Boolean isRecursive() {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
+    }
+
+
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default
