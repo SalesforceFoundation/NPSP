@@ -51,13 +51,21 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String value() {
-        List<Contact> listCon = new List<Contact>();
+        return service.getHouseholdName(getContactsForHouseholdNameGeneration());
+    }
+
+    private List<Contact> getContactsForHouseholdNameGeneration() {
+        List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (con.npo02__Naming_Exclusions__c == null
-                    || !con.npo02__Naming_Exclusions__c.contains('Name'))
-                listCon.add(con);
+            if (contactShouldBeUsedForHouseholdNameGeneration(con))
+                contactsForHouseholdNameGeneration.add(con);
         }
-        return service.getHouseholdName(listCon);
+        return contactsForHouseholdNameGeneration;
+    }
+
+    private Boolean contactShouldBeUsedForHouseholdNameGeneration(Contact con) {
+        return con.npo02__Naming_Exclusions__c == null
+                || !con.npo02__Naming_Exclusions__c.contains('Name');
     }
 
     /*******************************************************************************************************
