@@ -26,11 +26,14 @@ Setup Test Data
 Verify Permissions Error When Missing Form Template Object Access
   Change Object Permissions   remove  Form_Template__c  ${perm_set_name}
   Open Test Browser           useralias=${user_alias}                     
-  Go to Page                  Landing    ${NS}GE_Gift_Entry  default=permissions_error
-  Current Page Should Be      Landing    ${NS}GE_Gift_Entry  default=permissions_error
-  #Note: The test below is returning an incorrect error message.
+  Go to Page                  Landing    GE_Gift_Entry  #default=permissions_error
+  Current Page Should Be      Landing    GE_Gift_Entry  #default=permissions_error
   Run Keyword And Continue On Failure   Page Should Contain         You must have permission to edit the following fields:
   Change Object Permissions   add  Form_Template__c  ${perm_set_name}
+  Close All Browsers
+  Open Test Browser           useralias=${user_alias}
+  Go to Page                  Landing    GE_Gift_Entry
+  Page Should Not Contain     You must have permission to edit the following fields:
   Close All Browsers
 
 Verify Permissions Error When Missing NPSP DI Batch Object Access
@@ -40,6 +43,9 @@ Verify Permissions Error When Missing NPSP DI Batch Object Access
   Current Page Should Be      Landing    ${NS}GE_Gift_Entry  default=permissions_error
   Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following objects: ${NS}DataImportBatch__c       
   Change Object Permissions   add  DataImportBatch__c  ${perm_set_name}
+  Go to Page                  Landing    ${NS}GE_Gift_Entry 
+  Current Page Should Be      Landing    ${NS}GE_Gift_Entry
+  Page Should Not Contain     Page Should Contain  You must have permission to edit the following objects: ${NS}DataImportBatch__c
   Close All Browsers
 
 Verify Permissions Error When DI Batch Description Field Access is Revoked
@@ -64,5 +70,7 @@ Verify Permissions Error When Form Template Description Field Access is Revoked
   Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})      
   Change Field Permissions   add  ${obj}  ${field}  ${perm_set_name}
   Close All Browsers
+
+Verify Field Without Access Does Not Render in GE Form
 
 

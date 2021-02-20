@@ -7,7 +7,7 @@
     "LocaleSidKey": "en_US",
     "EmailEncodingKey": "UTF-8",
     "LanguageLocaleKey": "en_US",
-    "profileName": "Standard Platform User",
+    "profileName": "sysadmin_test",
     "permsets": ["QA", "Gift_Entry_Perms"],
     "generatePassword": true
 }

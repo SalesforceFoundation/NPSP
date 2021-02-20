@@ -124,5 +124,9 @@
         <members>QA</members>
         <name>PermissionSet</name>
     </types>
+    <types>
+        <members>sysadmin_test</members>
+        <name>Profile</name>
+    </types>
     <version>50.0</version>
 </Package>
