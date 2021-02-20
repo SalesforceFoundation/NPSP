@@ -172,22 +172,22 @@
         <layout>Contact-Contact Lightning Layout</layout>
     </layoutAssignments>
     <objectPermissions>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
         <allowCreate>false</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
-        <allowRead>false</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
         <object>%%%NAMESPACE%%%Form_Template__c</object>
-        <viewAllRecords>false</viewAllRecords>
+        <allowRead>false</allowRead>
     </objectPermissions>
     <objectPermissions>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
         <allowCreate>false</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
-        <allowRead>false</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
         <object>%%%NAMESPACE%%%DataImportBatch__c</object>
-        <viewAllRecords>false</viewAllRecords>
+        <allowRead>false</allowRead>
     </objectPermissions>
     <tabVisibilities>
         <tab>%%%NAMESPACE%%%Address__c</tab>
