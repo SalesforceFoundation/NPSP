@@ -2,22 +2,22 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>État de la liste de contrôle de réalisation Premiers pas</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>États de la liste de contrôle de réalisation Premiers pas</value>
     </caseValues>
     <fields>
-        <label><!-- Item Id --></label>
+        <label>ID d&apos;élément</label>
         <name>Item_Id__c</name>
     </fields>
     <fields>
-        <label><!-- User --></label>
+        <label>Utilisateur</label>
         <name>User__c</name>
         <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
     </fields>
-    <gender><!-- Masculine --></gender>
-    <nameFieldLabel><!-- Get Started Completion Checklist State N --></nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Nom de l&apos;état de la liste de contrôle de réalisation Premier pas</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
 </CustomObjectTranslation>

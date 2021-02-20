@@ -1,0 +1,163 @@
+## ===============================================================================
+## Assign a random donor to the Recurring Donation
+## Will either be the parent Contact OR an organization account with the parent Contact
+## ===============================================================================
+- macro: RD_RandomDonor
+  fields:
+    npe03__Contact__c:
+      reference: Contact
+    npe03__Organization__c:
+      ## 95% of the RDs will use a Household Contact and 5% will use an Organization Account
+      random_choice:
+        - choice:
+            probability: 95%
+            pick: ""
+        - choice:
+            probability: 5%
+            pick:
+              - object: Account
+                fields:
+                  Name: ${{ fake.company }} ${{ fake.company_suffix }}
+                  Description: Org Account related to Recurring Donation
+                  Phone:
+                    fake: phone_number
+                friends:
+                  - object: npe5__Affiliation__c
+                    ## Create an Affiliation between the Contact and this Org Account
+                    fields:
+                      npe5__Primary__c: true
+                      npe5__Contact__c:
+                        reference: Contact
+                      npe5__Organization__c:
+                        reference: Account
+                      npe5__Role__c: Employee
+                      Related_Opportunity_Contact_Role__c: Soft Credit
+
+## ===============================================================================
+## Generate a random "schedule" for a recurring donation:
+## - Date Established/Start Date: 2 Years ago through 14 Days ago
+## - RecurringType: Open (95%), Fixed (5%)
+## - Installment Period: Monthly (90%), Weekly (5%), or "1st and 15th" (5%)
+## - DayOfMonth: Random across all days of the month
+## - NumberOfInstalllments: 24 (if fixed)
+## ===============================================================================
+- macro: RD_RandomSchedule
+  fields:
+    npe03__Date_Established__c:
+      ## Set the DateEstablished and StartDate to a random date up to 2 years ago
+      date_between:
+        start_date: -2y
+        end_date: -14d
+    StartDate__c: ${{this.npe03__Date_Established__c}}
+    PaymentMethod__c:
+      random_choice:
+        - Credit Card
+        - Check
+        - ACH/EFT
+    RecurringType__c:
+      ## 95% of the RD's will be Open Ended and 5% will be Fixed Length
+      random_choice:
+        - choice:
+            probability: 95%
+            pick: Open
+        - choice:
+            probability: 5%
+            pick: Fixed
+    npe03__Installment_Period__c:
+      ## 90% of the RD's are Monthly, 5% Weekly, and 5% 1st & 15th
+      random_choice:
+        - choice:
+            probability: 95%
+            pick: Monthly
+        - choice:
+            probability: 3%
+            pick: Weekly
+        - choice:
+            probability: 2%
+            pick: 1st and 15th
+    InstallmentFrequency__c: 1
+    Day_of_Month__c:
+      ## For Monthly RD's, set the DayOfMonth randomly to either 1, 15, 30 or LastDay
+      if:
+        - choice:
+            when: ${{npe03__Installment_Period__c=='Monthly'}}
+            pick:
+              random_choice:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                - 6
+                - 7
+                - 8
+                - 9
+                - 10
+                - 11
+                - 12
+                - 13
+                - 14
+                - 15
+                - 16
+                - 17
+                - 18
+                - 19
+                - 20
+                - 21
+                - 22
+                - 23
+                - 24
+                - 25
+                - 26
+                - 27
+                - 28
+                - 29
+                - 30
+                - Last_Day
+        - choice:
+            pick: ""
+    npe03__Installments__c:
+      ## Fixed Length RD's will all get 24 installments
+      if:
+        - choice:
+            when: ${{RecurringType__c=='Fixed'}}
+            pick: 24
+        - choice:
+            pick:
+
+## ===============================================================================
+## Create a single associated ClosedWon historical Opportunity for a Recurring Donation
+## - CloseDate: Calculate (roughly) based on the installment period and day of month
+## - Stage: ClosedWon
+## ===============================================================================
+- macro: RD_RelatedClosedWonOpp
+  fields:
+    RecordType: Donation
+    ## Calculate the CloseDate for this historical Opp to be relative to the InstallmentPeriod
+    ## and DayOfMonth (for monthly).
+    CloseDate:
+      if:
+        - choice:
+            when: ${{ npe03__Recurring_Donation__c.npe03__Installment_Period__c == 'Monthly' }}
+            pick:
+              if:
+                - choice:
+                    when: ${{ npe03__Recurring_Donation__c.Day_of_Month__c == 'Last_Day' }}
+                    pick: ${{ today + relativedelta(day=1, months=-2) + relativedelta(months=1) }}
+                - choice:
+                    pick: ${{ today + relativedelta(day=npe03__Recurring_Donation__c.Day_of_Month__c, months=-1) }}
+        - choice:
+            when: ${{ npe03__Recurring_Donation__c.npe03__Installment_Period__c == 'Weekly' }}
+            pick: ${{ today + relativedelta(days=-7) }}
+        - choice:
+            pick: ${{ today + relativedelta(months=-1, day=15) }}
+    Amount: ${{ npe03__Recurring_Donation__c.npe03__Amount__c }}
+    Name: ${{Contact.FirstName}} ${{Contact.LastName}} Donation (0) ${{this.CloseDate}}
+    StageName: "Closed Won"
+    Primary_Contact__c:
+      reference: Contact
+
+## ===============================================================================
+## TBD: Create a related Allocation record for a recurring donation
+## ===============================================================================
+- macro: RD_RelatedAllocation

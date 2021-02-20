@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Configuración de entrada de datos en lote</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Batch Data Entry Settings --></value>
+        <value>Configuraciones de entrada de datos en lote</value>
     </caseValues>
     <fields>
         <help>Si se establece, la entrada de datos de lote nunca asignará un nombre a las oportunidades, incluso si esta en blanco (no se incluye en la página BDE).</help>
@@ -22,5 +22,5 @@
         <label>Alerta de retirada vista</label>
         <name>Viewed_Retirement_Alert__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

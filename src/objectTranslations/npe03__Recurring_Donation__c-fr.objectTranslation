@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
+        <label>Quatre derniers chiffres du code CCA</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
         <label>Toujours utiliser dernier jour du mois</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>Le mois d’expiration de la carte utilisée pour ce don récurrent.</help>
+        <label>Mois d’expiration de la carte</label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>L’année d’expiration de la carte utilisée pour ce don récurrent.</help>
+        <label>Année d’expiration de la carte</label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>Les quatre derniers chiffres de la carte utilisée pour ce don récurrent.</help>
+        <label>Quatre derniers chiffres de la carte</label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help>Le dernier événement Elevate exécuté suite à la mise à jour de ce don récurrent.</help>
+        <label>Dernier événement Elevate exécuté</label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal suivant (en lecture seule).</help>
         <label>Valeur annuelle suivante</label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation>Écoulé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>Interrompu</translation>
         </picklistValues>
     </fields>
     <quickActions>

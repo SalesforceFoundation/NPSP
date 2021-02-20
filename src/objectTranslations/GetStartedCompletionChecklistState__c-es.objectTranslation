@@ -2,21 +2,21 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Estado de lista de comprobación de realización de Empezar a trabajar</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value>Estados de listas de comprobación de realización de Empezar a trabajar</value>
     </caseValues>
     <fields>
-        <label><!-- Item Id --></label>
+        <label>Id. de elemento</label>
         <name>Item_Id__c</name>
     </fields>
     <fields>
-        <label><!-- User --></label>
+        <label>Usuario</label>
         <name>User__c</name>
         <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
     </fields>
-    <gender><!-- Feminine --></gender>
-    <nameFieldLabel><!-- Get Started Completion Checklist State N --></nameFieldLabel>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Nombre de estado de lista de comprobación de realización de Empezar a trabajar</nameFieldLabel>
 </CustomObjectTranslation>

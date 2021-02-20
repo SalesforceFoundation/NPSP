@@ -44,6 +44,11 @@
         <name>Ask_Date__c</name>
     </fields>
     <fields>
+        <help>Le lot qui a créé cette opportunité. Ce champ est automatiquement rempli en fonction de vos Paramètres de Numéro du lot dans les Paramètres NPSP.</help>
+        <label>Numéro du lot</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <label>Lot</label>
         <name>Batch__c</name>
         <relationshipLabel>Opportunités</relationshipLabel>
@@ -74,7 +79,7 @@
         <name>Gift_Strategy__c</name>
         <picklistValues>
             <masterLabel>New Donor</masterLabel>
-            <translation>Nouveau donneur</translation>
+            <translation>Nouveau donateur</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Renewal</masterLabel>

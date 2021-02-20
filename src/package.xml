@@ -251,6 +251,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApiApexDelegationService</members>
+        <members>CallableApiApexDelegationService_TEST</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
         <members>CallableDispatchService_ERR</members>
@@ -386,6 +388,8 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_CommitmentRequest</members>
         <members>PS_CommitmentRequest_TEST</members>
+        <members>PS_GatewayManagement</members>
+        <members>PS_GatewayManagement_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -506,17 +510,22 @@
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
+        <members>STG_PanelCreatePayments_CTRL_TEST</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
         <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
+        <members>STG_PanelGatewayManagement_CTRL</members>
+        <members>STG_PanelGatewayManagement_CTRL_TEST</members>
         <members>STG_PanelHealthCheck_CTRL</members>
         <members>STG_PanelHealthCheck_TEST</members>
         <members>STG_PanelHouseholds_CTRL</members>
         <members>STG_PanelHouseholds_TEST</members>
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelLvlAssignBatch_CTRL</members>
+        <members>STG_PanelLvlAssignBatch_CTRL_TEST</members>
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
+        <members>STG_PanelMakeDefaultAllocations_TEST</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
         <members>STG_PanelOppCampaignMembers_CTRL</members>
@@ -530,6 +539,7 @@
         <members>STG_PanelPaymentMapping_CTRL_TEST</members>
         <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
+        <members>STG_PanelRDBatch_CTRL_TEST</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
         <members>STG_PanelRDCustomInstallment_CTRL</members>
         <members>STG_PanelRDHealthCheck</members>
@@ -542,9 +552,11 @@
         <members>STG_PanelRel_CTRL</members>
         <members>STG_PanelRel_CTRL_TEST</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
+        <members>STG_PanelRenameHouseholds_CTRL_TEST</members>
         <members>STG_PanelSchedule_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
         <members>STG_PanelUpdatePrimaryContact_CTRL</members>
+        <members>STG_PanelUpdatePrimaryContact_CTRL_TEST</members>
         <members>STG_PanelUserRollup_CTRL</members>
         <members>STG_SettingsManager_CTRL</members>
         <members>STG_SettingsManager_TEST</members>
@@ -735,6 +747,7 @@
         <members>STG_PanelDataImportAdvancedMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
+        <members>STG_PanelGatewayManagement</members>
         <members>STG_PanelHealthCheck</members>
         <members>STG_PanelHome</members>
         <members>STG_PanelHouseholds</members>
@@ -1696,6 +1709,7 @@
         <members>CRLP_SaveSuccess</members>
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
+        <members>CallableApiJobScheduleInvalidClass</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
         <members>CallableApiProcessingError</members>
@@ -2469,6 +2483,7 @@
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>
+        <members>geTextFieldBundlePaymentMethod</members>
         <members>geTextListViewItemCount</members>
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>
@@ -2959,6 +2974,7 @@
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
         <members>pmtWrittenOffPaymentDateRequired</members>
+        <members>psSelectValidPaymentMethod</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -4169,6 +4185,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>gePaymentGatewayManagement</members>
         <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>

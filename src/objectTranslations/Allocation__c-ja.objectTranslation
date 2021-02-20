@@ -4,6 +4,10 @@
         <plural>false</plural>
         <value>一般会計単位の割り当て</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help>この一般会計単位に割り当てられる商談金額。パーセントベースの割り当ての場合は空白のままにします。</help>
         <label>金額</label>

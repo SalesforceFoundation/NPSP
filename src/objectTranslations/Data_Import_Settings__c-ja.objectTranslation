@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Settings --></value>
+        <value>データインポート設定</value>
     </caseValues>
     <fields>
         <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>

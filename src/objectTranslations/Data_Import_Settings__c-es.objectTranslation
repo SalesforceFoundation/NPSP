@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Settings --></value>
+        <value>Configuración de importación de datos</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Data Import Settings --></value>
+        <value>Configuraciones de importaciones de datos</value>
     </caseValues>
     <fields>
         <help>Campo opcional de Id. exclusivo para utilizar en la coincidencia de cuentas de organización.</help>
@@ -84,5 +84,5 @@
         <label>Calcular totalizaciones donaciones lote</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

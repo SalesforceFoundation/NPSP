@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Configuración de asignaciones</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>Configuraciones de asignaciones</value>
     </caseValues>
     <fields>
         <help>Al habilitar Asignaciones predeterminadas se crea un registro de asignación por cada oportunidad. Esto permite la creación de informes de asignaciones a la cuenta contable general de forma predeterminada, pero utiliza más espacio.</help>
@@ -43,5 +43,5 @@
         <label>Usar año fiscal en totales</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

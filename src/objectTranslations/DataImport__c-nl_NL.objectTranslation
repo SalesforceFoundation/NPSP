@@ -9,6 +9,11 @@
         <value>NPSP-Gegevensimports</value>
     </caseValues>
     <fields>
+        <help>Het goedkeuringsbericht op de Elevate Giving Page waarmee de donateur akkoord is gegaan.</help>
+        <label>Goedkeuringsbericht ACH-betaling</label>
+        <name>ACH_Consent__c</name>
+    </fields>
+    <fields>
         <label>Account1 Importstatus</label>
         <name>Account1ImportStatus__c</name>
     </fields>
@@ -542,6 +547,16 @@
         <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
     </fields>
     <fields>
+        <help>De SEC-code (Standard Entry Class) voor deze ACH-transactie.</help>
+        <label>Code ACH-betaling</label>
+        <name>Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+        <label>Laatste 4 ACH-betaling</label>
+        <name>Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Goedkeuringstoken van een transactie.</help>
         <label>Token betalingsgoedkeuring</label>
         <name>Payment_Authorization_Token__c</name>
@@ -582,12 +597,12 @@
     </fields>
     <fields>
         <help>Biedt informatie over waarom een transactie is geweigerd.</help>
-        <label>Reden betalingsweigering</label>
+        <label>Elevate-betalings-API - Reden weigering</label>
         <name>Payment_Declined_Reason__c</name>
     </fields>
     <fields>
-        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
-        <label><!-- Payment Donor Cover Amount --></label>
+        <help>Het bedrag dat de donateur heeft betaald boven op het donatiebedrag, vaak om de transactiekosten te dekken of om meer te doneren.</help>
+        <label>Bedrag door donateur gedekt</label>
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
@@ -640,13 +655,26 @@
         <name>Payment_Origin_Type__c</name>
     </fields>
     <fields>
+        <help>Geeft aan of deze betaling wel of niet is voldaan.</help>
+        <label>Betaling voldaan</label>
+        <name>Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation>Onjuist</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation>Juist</translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betalingsovereenkomsten voor een Donatie.</help>
         <label>Mogelijke Overeenkomsten Betaling</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
         <help>De API-status van de transactie in Elevate.</help>
-        <label>Status van betaling</label>
+        <label>API-status van betaling in Elevate</label>
         <name>Payment_Status__c</name>
     </fields>
     <fields>
