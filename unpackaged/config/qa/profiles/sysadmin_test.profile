@@ -168,6 +168,12 @@
         <readable>false</readable>
         <hidden>true</hidden>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>%%%NAMESPACE%%%npe01__OppPayment__c.%%%NAMESPACE%%%npe01__Check_Reference_Number__c</field>
+        <readable>false</readable>
+        <hidden>true</hidden>
+    </fieldPermissions>
     <layoutAssignments>
         <layout>Contact-Contact Lightning Layout</layout>
     </layoutAssignments>
@@ -187,6 +193,24 @@
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
         <object>%%%NAMESPACE%%%DataImportBatch__c</object>
+        <allowRead>false</allowRead>
+    </objectPermissions>
+    <objectPermissions>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <object>%%%NAMESPACE%%%npe01__OppPayment__c</object>
+        <allowRead>false</allowRead>
+    </objectPermissions>
+    <objectPermissions>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <object>%%%NAMESPACE%%%Address__c</object>
         <allowRead>false</allowRead>
     </objectPermissions>
     <tabVisibilities>
