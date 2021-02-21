@@ -3,6 +3,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 Suite Setup     Run keywords
+...             Open Test Browser
 ...             Setup Test Data
 ...             API Check And Enable Gift Entry
 Suite Teardown  Run Keywords
@@ -75,17 +76,20 @@ Verify Permissions Error When DI Batch Description Field Access is Revoked
   Close All Browsers
 
 
-# Verify Permissions Error When Form Template Description Field Access is Revoked
-#   ${obj}  Set Variable  Form_Template__c
-#   ${field}  Set Variable   Description__c
-#   Change Field Permissions   remove  ${obj}  ${field}  ${perm_set_name}
-#   Open Test Browser           useralias=${user_alias}                     
-#   Go to Page                  Landing    ${NS}GE_Gift_Entry
-#   Current Page Should Be      Landing    ${NS}GE_Gift_Entry
-#   Click Link                  Templates
-#   Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})      
-#   Change Field Permissions   add  ${obj}  ${field}  ${perm_set_name}
-#   Close All Browsers
+Verify Permissions Error When Form Template Description Field Access is Revoked
+  ${obj}  Set Variable  Form_Template__c
+  ${field}  Set Variable   Description__c
+  Change Field Permissions   remove  ${obj}  ${field}  ${perm_set_name}
+  Open Test Browser           useralias=${user_alias}                     
+  Go to Page                  Landing    ${NS}GE_Gift_Entry
+  Current Page Should Be      Landing    ${NS}GE_Gift_Entry
+  Click Link                  Templates
+  Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})      
+  Change Field Permissions   add  ${obj}  ${field}  ${perm_set_name}
+  Reload Page
+  Click Link                  Templates
+  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field}) 
+  Close All Browsers
 
 # Verify Field Without Access Does Not Render in GE Form
 #   ${obj}  Set Variable  
