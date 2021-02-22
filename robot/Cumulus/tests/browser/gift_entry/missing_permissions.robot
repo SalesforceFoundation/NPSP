@@ -37,7 +37,6 @@ Verify Permissions Error When Missing Form Template Object Access
   Change Object Permissions   add  ${obj}  ${perm_set_name}
   Reload Page
   Page Should Not Contain     You must have permission to edit the following fields: ${NS}DataImportBatch__c: (${NS}${obj})
-  # Sleep  100000
   Delete All Cookies
   Close All Browsers
 
