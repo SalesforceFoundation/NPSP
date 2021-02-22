@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import { isNotEmpty, isUndefined } from 'c/utilCommon';
+import {isNull, isNotEmpty, isUndefined, isEmptyObject} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
@@ -44,7 +44,7 @@ const columnTypeByDescribeType = {
 };
 
 const COLUMNS = [
-    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text', editable: true },
     { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
     {
         label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
@@ -74,15 +74,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this._columnsLoaded && this._dataImportModel;
     }
 
-    _batchLoaded = false;
-    data = [];
-    get hasData() {
-        return this.data.length > 0;
-    }
-
     _columnsLoaded = false;
     _columnsBySourceFieldApiName = {};
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    _batchLoaded = false;
 
     @api title;
     @api total;
@@ -91,6 +86,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     isLoaded = true;
+
 
     constructor() {
         super();
@@ -101,6 +97,37 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     connectedCallback() {
         this.loadBatch();
+    }
+
+    get hasData() {
+        return this.data.length > 0;
+    }
+
+    _data = [];
+    tableRowErrors = {};
+    get data() {
+        return this._data;
+    }
+    set data(dataImportRows) {
+        this.assignDataImportErrorsToTableRows(dataImportRows);
+        this._data = dataImportRows;
+    }
+
+    assignDataImportErrorsToTableRows(dataImportRows) {
+        let errors = {rows: {}};
+        this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
+            Object.assign(errors.rows,  {
+                [row.Id] : {
+                    title: 'Process Error',
+                    messages: row.errors
+                }
+            });
+        });
+        this.tableRowErrors = errors;
+    }
+
+    getDataImportRowsWithErrors(dataImportRows) {
+        return dataImportRows.filter(row => row.hasOwnProperty('errors') && row.errors.length > 0)
     }
 
     @api
