@@ -71,15 +71,15 @@ Verify Permissions Error When DI Batch Description Field Access is Revoked
   Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})      
   Change Field Permissions    add  ${obj}  ${field}  ${perm_set_name}
   Reload Page
-  Page Should Not Contain     You must have permission to edit the following objects: ${NS}${obj}
+  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})
   Close All Browsers
-
 
 Verify Permissions Error When Form Template Description Field Access is Revoked
   [Documentation]          Disables field permissions for the Description field of the Form Template Object in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
   ...                      permissions and reloads the Gift Entry app to verify the permissions error no longer displays.
   [tags]                   unstable      feature:GE        W-8279499
+
   ${obj}    Set Variable     Form_Template__c
   ${field}  Set Variable      Description__c
   Change Field Permissions   remove  ${obj}  ${field}  ${perm_set_name}
@@ -110,6 +110,7 @@ Verify Target Object Field Without Access Does Not Render in GE Form
   Click Gift Entry Button      New Single Gift
   Run Keyword And Continue On Failure    Page Should Contain  You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})
   Go to Page                   Landing    GE_Gift_Entry
+  Current Page Should Be       Landing    GE_Gift_Entry
   Click Link                   Templates
   Select Template Action       Default Gift Entry Template   Edit
   Current Page Should Be       Template                      GE_Gift_Entry
@@ -119,9 +120,11 @@ Verify Target Object Field Without Access Does Not Render in GE Form
   Page Should Contain Element  npsp:gift_entry.field_error:Check/Reference Number,Field not found
   Change Field Permissions     add  ${obj}  ${field}  ${perm_set_name}
   Go to Page                   Landing    GE_Gift_Entry
+  Current Page Should Be       Landing    GE_Gift_Entry
   Click Gift Entry Button      New Single Gift
   Page Should Not Contain      You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})     
   Go to Page                   Landing    GE_Gift_Entry
+  Current Page Should Be      Landing    GE_Gift_Entry
   Click Link                   Templates
   Select Template Action       Default Gift Entry Template   Edit
   Current Page Should Be       Template                      GE_Gift_Entry
