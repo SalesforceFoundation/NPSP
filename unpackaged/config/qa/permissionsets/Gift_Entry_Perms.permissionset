@@ -923,6 +923,16 @@
         <field>%%%NAMESPACE%%%npe01__OppPayment__c.%%%NAMESPACE%%%npe01__Check_Reference_Number__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Number__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Gift Entry Perms</label>
     <objectPermissions>
