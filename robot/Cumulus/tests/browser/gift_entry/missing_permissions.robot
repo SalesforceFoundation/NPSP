@@ -30,13 +30,15 @@ Verify Permissions Error When Missing Form Template Object Access
 
   ${obj}    Set Variable   Form_Template__c
   Change Object Permissions   remove  ${obj}  ${perm_set_name}
-  Open Test Browser           wait=False  useralias=${user_alias}          
+  Open Test Browser           useralias=${user_alias}          
   Go to Page                  Landing    GE_Gift_Entry  default=permissions_error
   Current Page Should Be      Landing    GE_Gift_Entry  default=permissions_error
   Run Keyword And Continue On Failure   Page Should Contain  You must have permission to edit the following fields: ${NS}DataImportBatch__c: (${NS}${obj})
   Change Object Permissions   add  ${obj}  ${perm_set_name}
   Reload Page
   Page Should Not Contain     You must have permission to edit the following fields: ${NS}DataImportBatch__c: (${NS}${obj})
+  # Sleep  100000
+  Delete All Cookies
   Close All Browsers
 
 Verify Permissions Error When Missing NPSP DI Batch Object Access
@@ -54,6 +56,7 @@ Verify Permissions Error When Missing NPSP DI Batch Object Access
   Change Object Permissions   add  ${obj}  ${perm_set_name}
   Reload Page
   Page Should Not Contain     You must have permission to edit the following objects: ${NS}${obj}
+  Delete All Cookies
   Close All Browsers
 
 Verify Permissions Error When DI Batch Description Field Access is Revoked
@@ -72,6 +75,7 @@ Verify Permissions Error When DI Batch Description Field Access is Revoked
   Change Field Permissions    add  ${obj}  ${field}  ${perm_set_name}
   Reload Page
   Page Should Not Contain     You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})
+  Delete All Cookies
   Close All Browsers
 
 Verify Permissions Error When Form Template Description Field Access is Revoked
@@ -91,7 +95,8 @@ Verify Permissions Error When Form Template Description Field Access is Revoked
   Change Field Permissions   add  ${obj}  ${field}  ${perm_set_name}
   Reload Page
   Click Link                  Templates
-  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field}) 
+  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${obj}: (${NS}${field})
+  Delete All Cookies 
   Close All Browsers
 
 Verify Target Object Field Without Access Does Not Render in GE Form
@@ -131,5 +136,6 @@ Verify Target Object Field Without Access Does Not Render in GE Form
   Click Gift Entry Button      Next: Form Fields
   Page Should Not Contain          This form contains fields that can't be found. Please check with your administrator.
   Page Should Not Contain Element  npsp:gift_entry.field_error:Check/Reference Number,Field not found
+  Delete All Cookies
   Close All Browsers
 
