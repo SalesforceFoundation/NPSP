@@ -597,7 +597,7 @@ Verify No Errors Displayed on AM Page And Object Group
     Wait For Locator Is Not Visible     npsp_settings.field_error   ${field}__c
 
 Change Object Permissions
-    [Documentation]  Allows the user to add or remove all object permissions for the specified permission set.
+    [Documentation]  Adds or removes the Create, Read, Edit and Delete permissions for the specified object on the specified permission set..
     [Arguments]  ${action}  ${objectapiname}  ${permset}
 
     ${ns} =  Get NPSP Namespace Prefix
@@ -628,7 +628,7 @@ Change Object Permissions
     ...             apex= ${addobjperms}
 
 Change Field Permissions
-    [Documentation]  Allows the user to add or remove field permissions for the specified permission set.
+    [Documentation]  Adds or removes the Create, Read, Edit and Delete permissions for the specified object field on the specified permission set.
     [Arguments]  ${action}  ${objectapiname}  ${fieldapiname}  ${permset}
 
     ${ns} =  Get NPSP Namespace Prefix
