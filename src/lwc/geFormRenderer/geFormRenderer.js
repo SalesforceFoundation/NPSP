@@ -1120,6 +1120,9 @@ export default class GeFormRenderer extends LightningElement{
 
         this.selectedDonationOrPaymentRecord =
             this.selectedDonationCopyForReviewDonationsModal;
+        if (!this.isSingleGiftEntry) {
+            this.expandForm();
+        }
     }
 
     hasSelectedDonationOrPayment() {
