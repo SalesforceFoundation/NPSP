@@ -39,7 +39,7 @@
                 </template>
             </template>
 
-            <template if:true={permissions.hasAccess}>
+            <template if:true={permissions.hasKeyFieldsAccess}>
 
                 <template if:false={isElevateRecord}>
                     <div class="slds-p-around_medium slds-illustration slds-illustration_small"
@@ -102,6 +102,31 @@
                                 </div>
                             </template>
                         </lightning-layout-item>
+
+                        <template if:true={isElevateConnected}>
+                            <lightning-layout-item size="12"
+                                class="slds-form-element slds-form-element_horizontal slds-m-around_none slds-p-top_none">
+                                <template if:true={showACHLastFour}>
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                            for="last4" id="achlast4Label">{fields.ach_last_four.label}</label>
+                                    <div data-qa-locator="last four digits" aria-labelledby="achlast4Label">{fields.ach_last_four.value}</div>
+                                </template>
+                                <template if:true={showCreditCardLastFour}>
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                           for="last4" id="cclast4Label">{fields.ach_last_four.label}</label>
+                                    <div data-qa-locator="last four digits" aria-labelledby="cclast4Label">{fields.credit_last_four.value}</div>
+                                </template>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12"
+                                class="slds-form-element slds-form-element_horizontal slds-m-around_none slds-p-top_none">
+                                <template if:true={showExpirationDate}>
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                           for="expirationDate" id="expirationDateLabel">{labels.commonExpirationDate}</label>
+                                    <div data-qa-locator="expiration date" aria-labelledby="expirationDateLabel">{expirationDate}</div>
+                                </template>
+                            </lightning-layout-item>
+                        </template>
 
                     </lightning-layout>
 
