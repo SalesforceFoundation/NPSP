@@ -37,7 +37,7 @@
 @IsTest(IsParallel=false)
 private with sharing class RD2_ElevateInformation_TEST {
 
-    
+
     /****
     * @description Verifies required data is returned to the Elevate widget
     */
@@ -55,7 +55,11 @@ private with sharing class RD2_ElevateInformation_TEST {
         System.assertEquals(null, ((String) data.get('alert')),
             'No alert should be returned for the RD record');
         System.assertEquals(true, ((Boolean) data.get('hasFieldPermissions')),
-            'User should have field permissions');
+            'User should have required field permissions');
+        System.assertEquals(true, ((Boolean) data.get('showLastFourDigits')),
+            'User should have perms to show the last 4 of credit card');
+        System.assertEquals(true, ((Boolean) data.get('showExpirationDate')),
+            'User should have perms to show expiration date');
         System.assertEquals(null, ((String) data.get('errorMessage')),
             'No error should be returned for the RD record');
     }
@@ -88,7 +92,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when Enhanced Recurring Donations are not enabled
     */
     @isTest
-    private static void shouldReturnAlertWhenRD2IsNotEnabled() {        
+    private static void shouldReturnAlertWhenRD2IsNotEnabled() {
         enableElevate();
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
@@ -104,7 +108,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when Enhanced Recurring Donations are not enabled
     */
     @isTest
-    private static void shouldReturnAlertWhenIdIsNotRecurringDonationId() { 
+    private static void shouldReturnAlertWhenIdIsNotRecurringDonationId() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevate();
 
@@ -121,8 +125,8 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when an error record is created for the Recurring Donation
     */
     @isTest
-    private static void shouldReturnErrorMessageWhenRecurringDonationHasAnError() { 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();       
+    private static void shouldReturnErrorMessageWhenRecurringDonationHasAnError() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevate();
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
