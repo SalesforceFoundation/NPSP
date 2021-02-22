@@ -15,7 +15,6 @@
                                 <lightning-layout-item size='6'>
                                     <template if:false={isDisabled}>
                                         <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
-                                            alternative-text={labels.elevateDisableButtonLabel}
                                             icon-name='utility:close' icon-position="right"
                                             onclick={handleUserDisabledWidget}
                                             class='slds-button slds-button_base slds-float_right hide-card-button'
@@ -28,7 +27,7 @@
                     </lightning-layout-item>
 
 
-                    <lightning-layout-item size="12" multiple-rows="true" class='slds-p-horizontal_small slds-p-top_small'>
+                    <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
 
                         <template if:true={isDisabled}>
                             <p class='fade-in'>
