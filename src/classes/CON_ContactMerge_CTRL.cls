@@ -1112,7 +1112,7 @@ public with sharing class CON_ContactMerge_CTRL {
         String duplicateRecordSetsQuery =  new UTIL_Query()
             .withFrom(DuplicateRecordSet.sObjectType)
             .withSelectFields(forDuplicateRecordSet)
-            .withWhere(forDuplicateRecordSetsRelatedToAtleastOneContact)
+            .withWhere(forDuplicateRecordSetsRelatedToAtLeastOneContact)
             .withOrderBy('LastModifiedDate DESC ')
             .withLimit(SOQL_LIMIT)
             .build();
