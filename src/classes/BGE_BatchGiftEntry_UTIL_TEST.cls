@@ -138,4 +138,9 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                         String.valueOf(DataImport__c.Account2_City__c).toLowerCase()));
     }
 
+    @isTest
+    static void shouldReturnElevateFieldsForElevateCustomer() {
+
+    }
+
 }

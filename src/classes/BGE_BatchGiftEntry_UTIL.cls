@@ -94,6 +94,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 fieldApiNames.add(field.toLowerCase());
             }
 
+            fieldApiNames.addAll(getDataImportElevateFields());
+
             // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
             // BDI_DataImportService.getDefaultMappingService()) because of the need
             // to reference the fieldMappingByDevName property.
@@ -161,6 +163,18 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             }
         }
         return fieldApiNames;
+    }
+
+    private static List<String> getDataImportElevateFields() {
+        List<String> elevateFieldApiNames = new List<String>();
+        if (GE_PaymentServices.isElevateCustomer) {
+            elevateFieldApiNames = new List<String>{
+                    DataImport__c.Payment_Declined_Reason__c.getDescribe().getName(),
+
+            };
+        }
+
+        return elevateFieldApiNames;
     }
 
     /*******************************************************************************************************
