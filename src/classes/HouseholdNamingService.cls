@@ -418,10 +418,10 @@ public without sharing class HouseholdNamingService {
     }
 
     public HouseholdNamingOverrides getCustomNamingString(SObject household, SObject oldRecord) {
-        HouseholdNamingOverrides customNamingString = new HouseholdNamingOverrides
+        HouseholdNamingOverrides namingOverrides = new HouseholdNamingOverrides
                 (namingOverridesFor(household));
-        processHouseholdCustomNamingStringAdjustments(customNamingString, household, oldRecord);
-        return customNamingString;
+        processHouseholdCustomNamingStringAdjustments(namingOverrides, household, oldRecord);
+        return namingOverrides;
     }
 
     public void processHouseholdCustomNamingStringAdjustments(
