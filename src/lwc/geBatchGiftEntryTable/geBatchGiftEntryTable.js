@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNull, isNotEmpty, isUndefined, isEmptyObject} from 'c/utilCommon';
+import {isNull, isNotEmpty, isUndefined, isEmptyObject, apiNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
@@ -24,6 +24,7 @@ import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
@@ -116,10 +117,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     assignDataImportErrorsToTableRows(dataImportRows) {
         let errors = {rows: {}};
         this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
+            let declinedReason = isNotEmpty(row[apiNameFor(PAYMENT_DECLINED_REASON)]) ?
+                row[apiNameFor(PAYMENT_DECLINED_REASON)] : []
             Object.assign(errors.rows,  {
                 [row.Id] : {
                     title: 'Process Error',
-                    messages: row.errors
+                    messages: row.errors.concat(declinedReason)
                 }
             });
         });
@@ -127,7 +130,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getDataImportRowsWithErrors(dataImportRows) {
-        return dataImportRows.filter(row => (row.hasOwnProperty('errors') && row.errors.length > 0));
+        let rowsWithErrors = dataImportRows.filter(row => {
+            return this.hasDataImportRowError(row);
+        });
+        return rowsWithErrors;
+    }
+
+
+    getErrorPropertiesToDisplayInRow() {
+        return [apiNameFor(FAILURE_INFORMATION_FIELD),
+                apiNameFor(PAYMENT_DECLINED_REASON)];
+    }
+
+    hasDataImportRowError(row) {
+        let hasFound = this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
+                    row.record.hasOwnProperty(errorProperty))
+        return hasFound;
+    }
+
+    combineTableRowErrorMessages(dataImportRows) {
+        dataImportRows().forEach(row => {
+
+        });
     }
 
     @api

@@ -169,8 +169,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         List<String> elevateFieldApiNames = new List<String>();
         if (GE_PaymentServices.isElevateCustomer) {
             elevateFieldApiNames = new List<String>{
-                    DataImport__c.Payment_Declined_Reason__c.getDescribe().getName(),
-
+                DataImport__c.Payment_Declined_Reason__c.getDescribe().getName()
             };
         }
 
