@@ -102,6 +102,19 @@
                         </div>
                     </template>
                     <template if:true={isSingleGiftEntry}>
+                        <template if:true={showElevateTransactionWarning}>
+                            <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                                <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                <lightning-icon
+                                        variant="warning"
+                                        icon-name="utility:warning"
+                                        size="small">
+                                </lightning-icon>
+                            </span>
+                                <div class="slds-text-heading_small">{elevateTransactionWarning}</div>
+                            </div>
+                        </template>
                         <template if:false={isPermissionError}
                                   for:each={sections}
                                   for:item='section'>
