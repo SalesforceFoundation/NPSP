@@ -395,14 +395,26 @@ public without sharing class HouseholdNamingService {
         HouseholdNamingOverrides namingOverrides =
                 new HouseholdNamingOverrides(customNamingStringFor(household));
         if (!namingOverrides.isNameOverridden()) {
-            household.put('Name', householdName.value());
+            setName(household, householdName);
         }
         if (!namingOverrides.isFormalGreetingOverridden()) {
-            household.put('npo02__Formal_Greeting__c', householdName.asFormalGreeting());
+            setFormalGreeting(household, householdName);
         }
         if (!namingOverrides.isInformalGreetingOverridden()) {
-            household.put('npo02__Informal_Greeting__c', householdName.asInformalGreeting());
+            setInformalGreeting(household, householdName);
         }
+    }
+
+    private void setInformalGreeting(SObject household, HouseholdName householdName) {
+        household.put('npo02__Informal_Greeting__c', householdName.asInformalGreeting());
+    }
+
+    private void setFormalGreeting(SObject household, HouseholdName householdName) {
+        household.put('npo02__Formal_Greeting__c', householdName.asFormalGreeting());
+    }
+
+    private void setName(SObject household, HouseholdName householdName) {
+        household.put('Name', householdName.value());
     }
 
     public HouseholdNamingOverrides getCustomNamingString(SObject household, SObject oldRecord) {
