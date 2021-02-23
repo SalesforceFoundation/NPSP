@@ -392,28 +392,28 @@ public without sharing class HouseholdNamingService {
     }
 
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
-        HouseholdNamingOverrides customNamingString =
+        HouseholdNamingOverrides namingOverrides =
                 new HouseholdNamingOverrides(customNamingStringFor(household));
-        if (!nameUsesCustomOverride(customNamingString)) {
+        if (!isNameOverridden(namingOverrides)) {
             household.put('Name', householdName.value());
         }
-        if (!formalGreetingUsesCustomOverride(customNamingString)) {
+        if (!isFormalGreetingOverridden(namingOverrides)) {
             household.put('npo02__Formal_Greeting__c', householdName.asFormalGreeting());
         }
-        if (!informalGreetingUsesCustomOverride(customNamingString)) {
+        if (!isInformalGreetingOverridden(namingOverrides)) {
             household.put('npo02__Informal_Greeting__c', householdName.asInformalGreeting());
         }
     }
 
-    private Boolean informalGreetingUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
+    private Boolean isInformalGreetingOverridden(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Informal_Greeting__c');
     }
 
-    private Boolean formalGreetingUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
+    private Boolean isFormalGreetingOverridden(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Formal_Greeting__c');
     }
 
-    private Boolean nameUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
+    private Boolean isNameOverridden(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Name');
     }
 
