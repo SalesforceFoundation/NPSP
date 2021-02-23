@@ -73,7 +73,7 @@ describe('c-rd2-elevate-credit-card-form', () => {
     });
 
     it('should allow disabling and enabling of widget', async () => {
-        let element = createWidget();
+        const element = createWidget();
         document.body.appendChild(element);
 
         return Promise.resolve()
