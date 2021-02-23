@@ -88,4 +88,16 @@ public inherited sharing class HouseholdNamingOverrides {
     public void appendName() {
         append('Name');
     }
+
+    public Boolean isInformalGreetingOverridden() {
+        return contains('Informal_Greeting__c');
+    }
+
+    public Boolean isFormalGreetingOverridden() {
+        return contains('Formal_Greeting__c');
+    }
+
+    public Boolean isNameOverridden() {
+        return contains('Name');
+    }
 }
