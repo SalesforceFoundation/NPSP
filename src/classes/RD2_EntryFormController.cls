@@ -87,7 +87,8 @@ public with sharing class RD2_EntryFormController {
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields()
+            'customFieldSets' => getCustomFieldSectionFields(),
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
         };
 
         Boolean isElevateCustomer = RD2_ElevateIntegrationService.isElevateCreateEnabled();

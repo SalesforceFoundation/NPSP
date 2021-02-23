@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Opportunity Naming Settings --></value>
+        <value>Instellingen voor opportunitynamen</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Opportunity Naming Settings --></value>
+        <value>Instellingen voor opportunitynamen</value>
     </caseValues>
     <fields>
         <help>Of deze instelling geldt voor individuele opportunities, organisatie-opportunities, of beide.</help>
@@ -28,5 +28,5 @@
         <label>Typen Opportunityrecords</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

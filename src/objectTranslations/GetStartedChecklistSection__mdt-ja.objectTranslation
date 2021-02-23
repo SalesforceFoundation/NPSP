@@ -2,34 +2,41 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Section --></value>
+        <value>NPSP 使用開始チェックリストセクション</value>
     </caseValues>
     <fields>
-        <help><!-- The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Description Label Name --></label>
+        <help>[使用開始] ページでのセクション項目の [説明] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>説明表示ラベル名</label>
         <name>Description_Label__c</name>
     </fields>
     <fields>
-        <help><!-- Determines which checklist will display this section --></help>
-        <label><!-- Page Type --></label>
+        <help>このセクションが表示される [使用開始] ページの種別 (管理者またはエンドユーザ)。</help>
+        <label>ページ種別</label>
         <name>Page_Type__c</name>
         <picklistValues>
             <masterLabel>Admin</masterLabel>
-            <translation><!-- Admin --></translation>
+            <translation>管理者</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>End User</masterLabel>
-            <translation><!-- End User --></translation>
+            <translation>エンドユーザ</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The position of this section on the Get Started page. --></help>
-        <label><!-- Position --></label>
+        <help>[使用開始] ページでのこのセクションの位置。</help>
+        <label>位置</label>
         <name>Position__c</name>
     </fields>
     <fields>
-        <help><!-- The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC. --></help>
-        <label><!-- Title Label Name --></label>
+        <help>[使用開始] ページでのセクション項目の [タイトル] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+        <label>タイトル表示ラベル名</label>
         <name>Title_Label__c</name>
     </fields>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>

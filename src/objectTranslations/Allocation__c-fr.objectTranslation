@@ -8,6 +8,10 @@
         <plural>true</plural>
         <value>Allocations UCG</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help>Montant de l’opportunité alloué à cette unité comptable générale. Laissez vide pour des allocations par pourcentages.</help>
         <label>Montant</label>

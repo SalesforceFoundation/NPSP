@@ -40,6 +40,10 @@
         <plural>true</plural>
         <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help>Der Betrag der Opportunity, der diesem Verwendungszweck zugewiesen ist. Lassen Sie das Feld bei prozentualen Zuweisungen leer.</help>
         <label>Betrag</label>
