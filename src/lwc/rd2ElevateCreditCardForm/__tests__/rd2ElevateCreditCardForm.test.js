@@ -1,6 +1,6 @@
 import { createElement } from 'lwc';
 import rd2ElevateCreditCardForm from 'c/rd2ElevateCreditCardForm';
-import { registerSa11yMatcher } from "@sa11y/jest";
+import { registerSa11yMatcher } from '@sa11y/jest';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 const PATH_GE_TOKENIZE_CARD = '/apex/GE_TokenizeCard';
@@ -32,10 +32,6 @@ const GET_ORG_DOMAIN_ERROR = {
     statusText: 'Bad Request'
 };
 
-function flushPromises() {
-    return new Promise((resolve) => setImmediate(resolve));
-}
-
 describe('c-rd2-elevate-credit-card-form', () => {
 
     beforeAll(() => {
@@ -66,7 +62,7 @@ describe('c-rd2-elevate-credit-card-form', () => {
         const element = createWidget();
         document.body.appendChild(element);
 
-        return flushPromises()
+        return global.flushPromises()
             .then(() => {
                 expect(isLoadingSpinner(element)).toBeTruthy();
             });
