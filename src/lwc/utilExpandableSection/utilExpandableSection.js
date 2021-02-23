@@ -55,7 +55,7 @@ export default class utilExpandableSection extends LightningElement {
 
     toggleSection() {
         this.isCollapsed = !this.isCollapsed;
-        if (this.shouldInformParent) {
+        if (this.shouldInformParent === true) {
             this.informParent();
         }
     }
@@ -71,6 +71,7 @@ export default class utilExpandableSection extends LightningElement {
     /*******************************************************************************
      * End getters for data-qa-locator attributes
      */
+
     informParent () {
         const collapseEvent = new CustomEvent('sectioncollapse', {
             detail: {

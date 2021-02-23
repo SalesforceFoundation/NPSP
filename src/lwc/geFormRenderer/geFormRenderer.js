@@ -167,6 +167,7 @@ export default class GeFormRenderer extends LightningElement{
     @track isAccessible = true;
 
     _isFormCollapsed = false;
+    _shouldInformParent = true;
 
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {

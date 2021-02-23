@@ -151,7 +151,7 @@
                                                    label={CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName}
                                                    body-class='slds-m-left_medium'
                                                    onsectioncollapse={handleCollapse}
-                                                   should-inform-parent='true'>
+                                                   should-inform-parent={_shouldInformParent}>
                             <template if:false={isPermissionError}
                                       for:each={sections}
                                       for:item='section'>
