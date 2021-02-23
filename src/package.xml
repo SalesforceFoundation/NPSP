@@ -1728,6 +1728,7 @@
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
+        <members>NextPaymentDonationDateInfo</members>
         <members>OCRRemovePrimaryDuplicateBatchErrorText</members>
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
@@ -1736,6 +1737,7 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
+        <members>PaymentInformation</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_ContactChangeIsRestricted</members>
@@ -1919,6 +1921,7 @@
         <members>SmartyStreets_Help_Text</members>
         <members>UTIL_InputFormFormFieldAltLabelDate</members>
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
+        <members>UpdatePaymentInformation</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>accordionSection_ToggleInstructionsWhenClosed</members>
@@ -2465,8 +2468,8 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
-        <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessError</members>
+        <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
@@ -4211,6 +4214,7 @@
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EditPaymentInformationModal</members>
         <members>rd2ElevateCreditCardForm</members>
         <members>rd2ElevateInformation</members>
         <members>rd2EntryForm</members>
