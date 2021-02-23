@@ -49,7 +49,7 @@ describe('c-rd2-elevate-credit-card-form', () => {
         const element = createWidget();
         document.body.appendChild(element);
 
-        return flushPromises()
+        return global.flushPromises()
             .then(() => {
                 expect(alertMessage(element)).toBeTruthy();
                 expect(alertMessage(element).message).toBe(ALERT_MESSAGE);
