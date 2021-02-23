@@ -82,7 +82,7 @@
 
                         <template if:true={isElevateConnected}>
                             <lightning-layout-item size="4" flexibility="auto"
-                                                   class="slds-dl_horizontal__label slds-text-color_weak">
+                                                   class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
                                 <label
                                     class="slds-nowrap slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                     for="commitmentId" id="commitmentIdLabel">{fields.commitmentId.label}</label>
@@ -108,7 +108,7 @@
 
                         <template if:true={showLastFourACH}>
                             <lightning-layout-item size="4" flexibility="auto"
-                                                   class="slds-dl_horizontal__label slds-text-color_weak">
+                                                   class="slds-dl_horizontal__label slds-text-color_weak" slds-m-bottom_x-small>
                                 <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                         for="last4ach" id="achlast4Label">{fields.ach_last_four.label}</label>
                             </lightning-layout-item>
@@ -124,7 +124,7 @@
 
                         <template if:true={showLastFourCreditCard}>
                             <lightning-layout-item size="4" flexibility="auto"
-                                                   class="slds-dl_horizontal__label slds-text-color_weak">
+                                                   class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
                                 <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                         for="last4cc" id="cclast4Label">{fields.credit_last_four.label}</label>
                             </lightning-layout-item>
@@ -140,7 +140,7 @@
 
                         <template if:true={showExpirationDate}>
                             <lightning-layout-item size="4" flexibility="auto"
-                                               class="slds-dl_horizontal__label slds-text-color_weak">
+                                               class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
                                 <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                        for="expirationDate" id="expirationDateLabel">{labels.commonExpirationDate}</label>
                             </lightning-layout-item>
