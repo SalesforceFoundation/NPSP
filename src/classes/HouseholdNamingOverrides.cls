@@ -32,10 +32,10 @@
 * @date 2021
 * @description Household Custom Naming String value object in NPSP.
 */
-public inherited sharing class HouseholdCustomNamingString {
+public inherited sharing class HouseholdNamingOverrides {
     private String value;
 
-    public HouseholdCustomNamingString(String str) {
+    public HouseholdNamingOverrides(String str) {
         this.value = str == null ? ';' : str + ';';
     }
 

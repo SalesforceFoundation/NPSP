@@ -392,8 +392,8 @@ public without sharing class HouseholdNamingService {
     }
 
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
-        HouseholdCustomNamingString customNamingString =
-                new HouseholdCustomNamingString(customNamingStringFor(household));
+        HouseholdNamingOverrides customNamingString =
+                new HouseholdNamingOverrides(customNamingStringFor(household));
         if (!nameUsesCustomOverride(customNamingString)) {
             household.put('Name', householdName.value());
         }
@@ -405,20 +405,20 @@ public without sharing class HouseholdNamingService {
         }
     }
 
-    private Boolean informalGreetingUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+    private Boolean informalGreetingUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Informal_Greeting__c');
     }
 
-    private Boolean formalGreetingUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+    private Boolean formalGreetingUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Formal_Greeting__c');
     }
 
-    private Boolean nameUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+    private Boolean nameUsesCustomOverride(HouseholdNamingOverrides customNamingString) {
         return customNamingString.contains('Name');
     }
 
-    public HouseholdCustomNamingString getCustomNamingString(SObject household, SObject oldRecord) {
-        HouseholdCustomNamingString customNamingString = new HouseholdCustomNamingString
+    public HouseholdNamingOverrides getCustomNamingString(SObject household, SObject oldRecord) {
+        HouseholdNamingOverrides customNamingString = new HouseholdNamingOverrides
                 (customNamingStringFor(household));
         processHouseholdCustomNamingStringAdjustments(customNamingString, household, oldRecord);
         return customNamingString;
@@ -426,7 +426,7 @@ public without sharing class HouseholdNamingService {
 
     //todo: needs further refactor
     public void processHouseholdCustomNamingStringAdjustments(
-            HouseholdCustomNamingString customNamingString,
+            HouseholdNamingOverrides customNamingString,
             SObject household,
             SObject oldRecord) {
         if (isNameReplaceable(household)) {
