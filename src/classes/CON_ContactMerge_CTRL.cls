@@ -1107,7 +1107,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public String constructDRSSOQL() {
         //build the SOQL query and execute
         List<String> forDuplicateRecordSet = getDuplicateRuleSetQuerySelectClause();
-        String forDuplicateRecordSetsRelatedToAtleastOneContact = getDuplicateRuleSetQueryWhereClause();
+        String forDuplicateRecordSetsRelatedToAtLeastOneContact = getDuplicateRuleSetQueryWhereClause();
 
         String duplicateRecordSetsQuery =  new UTIL_Query()
             .withFrom(DuplicateRecordSet.sObjectType)
