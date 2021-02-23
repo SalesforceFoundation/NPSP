@@ -412,7 +412,6 @@ public without sharing class HouseholdNamingService {
         return customNamingString;
     }
 
-    //todo: needs further refactor
     public void processHouseholdCustomNamingStringAdjustments(
             HouseholdNamingOverrides customNamingString,
             SObject household,
