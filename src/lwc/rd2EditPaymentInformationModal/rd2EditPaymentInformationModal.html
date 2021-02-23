@@ -1,0 +1,46 @@
+<template>
+    <div>
+        <section 
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-clearfix">
+                    <lightning-button-icon
+                        class="slds-modal__close"
+                        title="Close"
+                        icon-name="utility:close"
+                        icon-class="slds-button_icon-inverse"
+                        onclick={handleClose}
+                        onkeydown={handleClosedButtonTrapFocus}
+                        data-id="closeButton">
+                    </lightning-button-icon>
+                    <h2
+                        class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                        {labels.PaymentInformationTitle}
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                        data-qa-locator='widget Elevate'
+                        payment-method='Credit Card'>
+                </c-rd2-elevate-credit-card-form>
+                </div>
+                <footer class="slds-modal__footer slds-clearfix">
+                    <div class="slds-float_right">
+                        <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
+                            variant="neutral" class="slds-m-right_small" onclick={handleClose}>
+                        </lightning-button>
+                        <lightning-button label={labels.saveButtonLabel} title={labels.saveButtonLabel}
+                            variant="brand" onclick={handleClose} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton">
+                        </lightning-button>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>
