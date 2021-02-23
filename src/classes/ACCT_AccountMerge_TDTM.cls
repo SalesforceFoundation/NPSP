@@ -106,9 +106,6 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
                 listOrgId.add(acc.Id);            
         }
         
-        if (listHHId.size() > 0) 
-            HH_HouseholdNaming.renameHHAccounts(listHHId);
-
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);
         if (listTemp.size() > 0) { 
