@@ -8,6 +8,7 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import NextPaymentDonationDateMessage from '@salesforce/label/c.NextPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
@@ -30,7 +31,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateDisableButtonLabel,
         elevateDisabledMessage,
         elevateEnableButtonLabel,
-        cardholderNameLabel
+        cardholderNameLabel,
+        NextPaymentDonationDateMessage
     };
 
     @track isLoading = true;
@@ -38,6 +40,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @track alert = {};
 
     _paymentMethod = undefined;
+    _isEditPayment = false;
+    @api nextDonationDate;
 
     @api
     get paymentMethod() {
@@ -46,6 +50,21 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     set paymentMethod(value) {
         this._paymentMethod = value;
+    }
+
+    @api
+    get isEditPayment() {
+        return this._isEditPayment;
+    }
+
+    set isEditPayment(value) {
+        this._isEditPayment = value;
+    }
+
+    get nextPaymentDonationDateMessage() {
+        return '<b>'
+            + this.labels.NextPaymentDonationDateMessage.replace('{{DATE}}', this.nextDonationDate.replace(/(\d{4})\-(\d{2})\-(\d{2})/, '$2/$3/$1'))
+            + '</b>';
     }
 
     /***

@@ -1,10 +1,10 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import PaymentInformationTitle from '@salesforce/label/c.PaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 
 export default class Rd2EditCreditCardModal extends LightningElement {
-    @track nextDonationDate;
+    @api nextDonationDate;
 
 
 
@@ -21,6 +21,6 @@ export default class Rd2EditCreditCardModal extends LightningElement {
 
     }
     handleSaveButtonTrapFocus() {
-        
+
     }
 }
