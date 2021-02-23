@@ -106,6 +106,12 @@
                     </lightning-layout>
 
                     <div class="slds-card__footer slds-m-top_none slds-p-around_none slds-m-horizontal--medium">
+                        <template if:true={permissions.hasRDUpdateAccess}>
+                            <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small slds-p-right_medium"
+                                label={labels.UpdatePaymentInformation} onclick={openUpdatePaymentInformationModal}
+                                data-qa-locator={qaLocatorUpdatePaymentInformation}>
+                            </lightning-button>
+                        </template>
                         <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small"
                             label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}
                             data-qa-locator={qaLocatorViewErrorLog}>
@@ -116,4 +122,10 @@
         </template>
 
     </lightning-card>
+    <template if:true={displayEditModal}>
+        <c-rd2-edit-payment-information-modal
+            next-donation-date={nextDonationDate}
+            onclose={closeUpdatePaymentInformationModal}>
+        </c-rd2-edit-payment-information-modal>
+    </template>
 </template>

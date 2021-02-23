@@ -9,6 +9,7 @@ import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
@@ -29,6 +30,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
+import UpdatePaymentInformation from '@salesforce/label/c.UpdatePaymentInformation';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
 
@@ -36,7 +38,9 @@ const FIELDS = [
     FIELD_NAME,
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
-    FIELD_STATUS_REASON
+    FIELD_STATUS_REASON,
+    FIELD_NEXT_DONATION_DATE
+    
 ];
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
@@ -61,7 +65,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         elevateDisabledMessage,
         elevateRecordCreateFailed,
         commonUnknownError,
-        viewErrorLogLabel
+        viewErrorLogLabel,
+        UpdatePaymentInformation
     });
 
     @api recordId;
@@ -81,9 +86,11 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @track isElevateConnected = false;
     @track permissions = {
         hasAccess: null,
+        hasRDUpdateAccess : null,
         alert: ''
     };
     @track error = {};
+    @track displayEditModal = false;
     commitmentURLPrefix;
 
     get commitmentId() {
@@ -92,6 +99,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get commitmentURL() {
         return this.commitmentURLPrefix + this.commitmentId;
+    }
+
+    get nextDonationDate() {
+        return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
     }
 
     /***
@@ -104,6 +115,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
+                    this.permissions.hasRDUpdateAccess = response.hasRDUpdatePermissions;
 
                     this.permissions.hasAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
@@ -186,6 +198,17 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         return this.isTrue(this.permissions.isElevateCustomer)
             && this.isTrue(this.permissions.hasAccess);
     }
+
+    /**
+    * @desciprtion launch Update Payment Information Modal
+    */
+    openUpdatePaymentInformationModal() {
+        this.displayEditModal = true;
+    }
+
+    closeUpdatePaymentInformationModal() {
+        this.displayEditModal = false;
+      }
 
     /***
      * @description Generates URL for Elevate commitment
@@ -396,6 +419,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get qaLocatorViewErrorLog() {
         return `link ${this.labels.viewErrorLogLabel}`;
+    }
+
+    get qaLocatorUpdatePaymentInformation() {
+        return `link ${this.labels.UpdatePaymentInformation}`;
     }
 
 }
