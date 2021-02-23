@@ -43,7 +43,9 @@ const FIELDS = [
     FIELD_PAYMENT_METHOD,
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
-    FIELD_STATUS_REASON,
+    FIELD_STATUS_REASON
+];
+const OPTIONAL_FIELDS = [
     FIELD_CC_LAST_4,
     FIELD_ACH_LAST_4,
     FIELD_CC_EXP_MONTH,
@@ -93,6 +95,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @track isElevateCustomer;
     @track isElevateRecord = false;
     @track isElevateConnected = false;
+    @track showLastFourACH = false;
+    @track showLastFourCreditCard = false;
+    @track showExpirationDate = false;
     @track permissions = {
         hasKeyFieldsAccess: null,
         showLastFourDigits: null,
@@ -128,6 +133,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
                         && isNull(this.permissions.alert);
+
+                    this.permissions.showExpirationDate = response.showExpirationDate;
+                    this.permissions.showLastFourDigits = response.showLastFourDigits;
 
                     if (this.isElevateCustomer === true) {
                         if (!isNull(this.permissions.alert)) {
@@ -179,7 +187,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: FIELDS
+        fields: FIELDS,
+        optionalFields: OPTIONAL_FIELDS
     })
     wiredRecurringDonation(response) {
         if (response.data) {
@@ -200,7 +209,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     /***
-     * @description Checks if record detail page or user has access to the Elevate Information data
+     * @description Checks if record detail page or user has access to the Elevate Information data fields
      */
     hasKeyFieldsAccess() {
         return this.isTrue(this.permissions.isElevateCustomer)
@@ -208,25 +217,27 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     /***
-     * @description Is the payment type ACH and the user has read perms to the field?
+     * @description Is the payment type ACH and the user has read perms to the two last4 fields?
      */
-    showACHLastFour() {
+    shouldShowLastFourACH() {
         return this.paymentMethod === PAYMENT_METHOD_ACH
+            && this.isTrue(this.isElevateCustomer)
             && this.isTrue(this.permissions.showLastFourDigits);
     }
 
     /***
-     * @description Is the payment type CreditCard and the user has read perms to the field?
+     * @description Is the payment type CreditCard and the user has read perms to the last4 fields?
      */
-    showCreditCardLastFour() {
+    shouldShowLastFourCreditCard() {
         return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+            && this.isTrue(this.isElevateCustomer)
             && this.isTrue(this.permissions.showLastFourDigits);
     }
 
     /***
-     * @description Does the user have perms to show the Expiration Date field?
+     * @description Does the user have perms to show the Expiration Date fields?
      */
-    showExpirationDate() {
+    shouldShowExpirationDate() {
         return this.isTrue(this.permissions.showExpirationDate);
     }
 
@@ -235,6 +246,20 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     get expirationDate() {
         return this.getValue(FIELD_CC_EXP_MONTH.fieldApiName) + '/' + this.getValue(FIELD_CC_EXP_YEAR.fieldApiName);
+    }
+
+    /***
+     * @description Returns the last 4 digits from the ACH account
+     */
+    get lastFourDigitsAch() {
+        return this.getValue(FIELD_ACH_LAST_4.fieldApiName);
+    }
+
+    /***
+     * @description Returns the last 4 digits for a credit card
+     */
+    get lastFourDigitsCreditCard() {
+        return this.getValue(FIELD_CC_LAST_4.fieldApiName);
     }
 
     /***
@@ -266,9 +291,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         }
 
         this.checkElevateStatus();
-        console.log('IsLoading=' + this.isLoading);
-        console.log('permissions.hasKeyFieldsAccess=' + this.permissions.hasKeyFieldsAccess);
-        console.log('isElevateRecord=' + this.isElevateRecord);
     }
 
     /**
@@ -280,6 +302,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
         this.isElevateRecord = !isNull(commitmentId);
         this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith(TEMP_PREFIX);
+
+        this.showLastFourACH = this.shouldShowLastFourACH();
+        this.showLastFourCreditCard = this.shouldShowLastFourCreditCard();
+        this.showExpirationDate = this.shouldShowExpirationDate();
 
         if (this.isElevateCustomer === true
             && this.isElevateRecord
@@ -448,6 +474,14 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get qaLocatorCommitmentId() {
         return `text ${this.fields.commitmentId.label}`;
+    }
+
+    get qaLocatorLastFourDigits() {
+        return `text Last Four Digits`;
+    }
+
+    get qaLocatorExpirationDate() {
+        return `text Expiration Date`;
     }
 
     get qaLocatorNewWindow() {
