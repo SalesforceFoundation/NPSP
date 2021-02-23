@@ -104,7 +104,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     _data = [];
-    tableRowErrors = {};
     get data() {
         return this._data;
     }
@@ -113,6 +112,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this._data = dataImportRows;
     }
 
+    tableRowErrors;
     assignDataImportErrorsToTableRows(dataImportRows) {
         let errors = {rows: {}};
         this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
@@ -127,7 +127,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getDataImportRowsWithErrors(dataImportRows) {
-        return dataImportRows.filter(row => row.hasOwnProperty('errors') && row.errors.length > 0)
+        return dataImportRows.filter(row => (row.hasOwnProperty('errors') && row.errors.length > 0));
     }
 
     @api
