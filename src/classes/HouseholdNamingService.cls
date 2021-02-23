@@ -394,15 +394,27 @@ public without sharing class HouseholdNamingService {
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
         HouseholdCustomNamingString customNamingString =
                 new HouseholdCustomNamingString(customNamingStringFor(household));
-        if (!customNamingString.contains('Name')) {
+        if (!nameUsesCustomOverride(customNamingString)) {
             household.put('Name', householdName.value());
         }
-        if (!customNamingString.contains('Formal_Greeting__c')) {
+        if (!formalGreetingUsesCustomOverride(customNamingString)) {
             household.put('npo02__Formal_Greeting__c', householdName.asFormalGreeting());
         }
-        if (!customNamingString.contains('Informal_Greeting__c')) {
+        if (!informalGreetingUsesCustomOverride(customNamingString)) {
             household.put('npo02__Informal_Greeting__c', householdName.asInformalGreeting());
         }
+    }
+
+    private Boolean informalGreetingUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+        return customNamingString.contains('Informal_Greeting__c');
+    }
+
+    private Boolean formalGreetingUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+        return customNamingString.contains('Formal_Greeting__c');
+    }
+
+    private Boolean nameUsesCustomOverride(HouseholdCustomNamingString customNamingString) {
+        return customNamingString.contains('Name');
     }
 
     public HouseholdCustomNamingString getCustomNamingString(SObject household, SObject oldRecord) {
@@ -412,6 +424,7 @@ public without sharing class HouseholdNamingService {
         return customNamingString;
     }
 
+    //todo: needs further refactor
     public void processHouseholdCustomNamingStringAdjustments(
             HouseholdCustomNamingString customNamingString,
             SObject household,
