@@ -658,29 +658,40 @@ Change Field Permissions
     ...             apex= ${addfieldperms}
 
 Object Permissions Cleanup
-  [Documentation]  Resets all object permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
-  [Arguments]  ${objectapiname}  ${permset}
-
-  ${ns} =  Get NPSP Namespace Prefix
-
-  ${addobjback} =  Catenate  SEPARATOR=\n
-  ...  List<ObjectPermissions> checkperms = [SELECT PermissionsRead FROM ObjectPermissions 
-  ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') AND
-  ...  SobjectType = '${ns}${objectapiname}'];
-  ...  if (checkperms.isEmpty()) {
-  ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
-  ...  ObjectPermissions objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
-  ...  PermissionsDelete = true, ParentId = permid, SobjectType = '${ns}${objectapiname}');
-  ...  insert objperm; }
-  ...  else { System.debug('Permissions Exist, skipping.'); }
-
-  Run Task  execute_anon  apex=${addobjback}
+   [Documentation]  Resets all object permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
+   [Arguments]  ${objectapiname}  ${permset}
+ 
+   ${ns} =  Get NPSP Namespace Prefix
+ 
+   ${addobjback} =  Catenate  SEPARATOR=\n
+   ...  List<ObjectPermissions> checkperms = [SELECT PermissionsRead FROM ObjectPermissions 
+   ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') AND
+   ...  SobjectType = '${ns}${objectapiname}'];
+   ...  if (checkperms.isEmpty()) {
+   ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+   ...  ObjectPermissions objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
+   ...  PermissionsDelete = true, ParentId = permid, SobjectType = '${ns}${objectapiname}');
+   ...  insert objperm; }
+   ...  else { System.debug('Permissions Exist, skipping.'); }
+ 
+   Run Task  execute_anon  apex=${addobjback}
 
 
 Field Permissions Cleanup
-  [Documentation]  Resets all field permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
-  [Arguments]  ${objectapiname}  ${field}  ${permset}
-
-  ${ns} =  Get NPSP Namespace Prefix
-
-  ${addfieldbackback}
+   [Documentation]  Resets all field permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
+   [Arguments]  ${objectapiname}  ${fieldapiname}  ${permset}
+ 
+   ${ns} =  Get NPSP Namespace Prefix
+ 
+   ${addfieldback} =  Catenate  SEPARATOR=\n
+   ...  List<FieldPermissions> checkperms = [SELECT PermissionsRead FROM FieldPermissions 
+   ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') AND
+   ...  SobjectType = '${ns}${objectapiname}' AND Field = '${ns}${objectapiname}.${ns}${fieldapiname}'];
+   ...  if (checkperms.isEmpty()) {
+   ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+   ...  FieldPermissions fldperm = New FieldPermissions(PermissionsRead = true, PermissionsEdit = true, 
+   ...  ParentId = permid, Field = '${ns}${objectapiname}.${ns}${fieldapiname}', SobjectType = '${ns}${objectapiname}');
+   ...  insert fldperm; }
+   ...  else { System.debug('Permissions Exist, skipping.'); }
+ 
+   Run Task  execute_anon  apex=${addfieldback}

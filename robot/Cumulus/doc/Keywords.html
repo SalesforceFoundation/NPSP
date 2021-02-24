@@ -2585,7 +2585,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 
                   <i>objectapiname</i>,
 
-                  <i>fieldname</i>,
+                  <i>fieldapiname</i>,
 
                   <i>permset</i>
                   
@@ -2723,6 +2723,46 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Enables Enhanced Recurring donations (RD2) settings and deploys the metadata</p></td>
+              </tr>
+
+
+              <tr class="kwrow" id="NPSP.robot.Field Permissions Cleanup">
+                <td class="kwname">
+                  Field Permissions Cleanup
+                </td>
+                <td class="kwargs">
+
+                  <i>objectapiname</i>,
+
+                  <i>fieldapiname</i>,
+
+                  <i>permset</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Resets the read and edit permissions for the specified field in a permission set. If permissions already exist, the operation is skipped.</p>
+                  <p><i>objectapiname</i>: API name of object</p>
+                  <p><i>fieldname</i>: API name of field</p>
+                  <p><i>permset</i>: Name of permission set to modify</p>
+                  <p>Example: <i>Field Permissions Cleanup    Account   Description__c  Gift Entry</i></p></p>
+                </td>
+              </tr>
+
+              <tr class="kwrow" id="NPSP.robot.Object Permissions Cleanup">
+                <td class="kwname">
+                  Field Permissions Cleanup
+                </td>
+                <td class="kwargs">
+
+                  <i>objectapiname</i>,
+
+                  <i>permset</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Resets the read, edit, create, and delete permissions for the specified object in a permission set. If permissions already exist, the operation is skipped.</p>
+                  <p><i>objectapiname</i>: API name of object</p>
+                  <p><i>permset</i>: Name of permission set to modify</p>
+                  <p>Example: <i>Objecy Permissions Cleanup    Account   Gift Entry</i></p></p>
+                </td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Open NPSP Settings">
