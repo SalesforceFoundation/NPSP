@@ -124,8 +124,8 @@
     </lightning-card>
     <template if:true={displayEditModal}>
         <c-rd2-edit-payment-information-modal
-            next-donation-date={nextDonationDate}
-            onclose={closeUpdatePaymentInformationModal}>
+            onclose={closeUpdatePaymentInformationModal}
+            rd-record={rdRecord}>
         </c-rd2-edit-payment-information-modal>
     </template>
 </template>

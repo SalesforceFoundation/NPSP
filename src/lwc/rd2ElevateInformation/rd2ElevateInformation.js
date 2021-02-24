@@ -8,6 +8,7 @@ import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donat
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
+import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
@@ -36,6 +37,7 @@ import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
 
 const FIELDS = [
     FIELD_NAME,
+    FIELD_PAYMENT_METHOD,
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
     FIELD_STATUS_REASON,
@@ -103,6 +105,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get nextDonationDate() {
         return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
+    }
+
+    get paymentMethod() {
+        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
     }
 
     /***
