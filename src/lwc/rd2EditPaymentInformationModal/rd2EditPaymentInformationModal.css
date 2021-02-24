@@ -1,3 +1,14 @@
+/***
+* @description Displays a custom informative text for the loading spinner
+*/
+.loading-spinner::after {
+    position: absolute;
+    content: attr(data-text);
+    width: 100%;
+    text-align: center;
+    top: calc(50% + 3em);
+}
+
 /**
 * @description Override modal size to mimic the standard modal size
 */
