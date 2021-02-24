@@ -54,8 +54,14 @@
                             </div>
                             <template if:true={isEditPayment}>
                                 <div class="slds-p-bottom_medium">
-                                    <lightning-formatted-rich-text value={nextPaymentDonationDateMessage} >
-                                    </lightning-formatted-rich-text>
+                                    <lightning-formatted-text class="slds-text-title_bold" value={nextPaymentDonationDateMessage} >
+                                    </lightning-formatted-text>
+                                    <lightning-formatted-date-time class="slds-text-title_bold" 
+                                        year="numeric"
+                                        month="2-digit"
+                                        day="2-digit"
+                                        value={nextDonationDate}>
+                                    </lightning-formatted-date-time>
                                 </div>
                             </template>
                             <div class="slds-col slds-size_1-of-2">

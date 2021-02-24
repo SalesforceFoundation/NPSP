@@ -40,8 +40,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @track alert = {};
 
     _paymentMethod = undefined;
+    _nextDonationDate = undefined;
     _isEditPayment = false;
-    @api nextDonationDate;
 
     @api
     get paymentMethod() {
@@ -64,9 +64,17 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     get nextPaymentDonationDateMessage() {
         return (this.nextDonationDate == null)
         ? ''
-        : '<b>'
-            + this.labels.NextPaymentDonationDateMessage.replace('{{DATE}}', this.nextDonationDate.replace(/(\d{4})\-(\d{2})\-(\d{2})/, '$2/$3/$1'))
-            + '</b>';
+        : this.labels.NextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
+    }
+
+    @api 
+    get nextDonationDate() {
+        const localDate = new Date(this._nextDonationDate);
+        return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+    }
+
+    set nextDonationDate(value) {
+        this._nextDonationDate = value;
     }
 
     /***
