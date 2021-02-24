@@ -80,7 +80,7 @@ public inherited sharing class HouseholdNamingExclusions {
         }
     }
 
-    public Boolean isEqualTo(String str) {
+    private Boolean isEqualTo(String str) {
         return value == str;
     }
 
