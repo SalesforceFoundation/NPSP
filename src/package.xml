@@ -336,7 +336,7 @@
         <members>HH_OppContactRoles_TEST</members>
         <members>HouseholdNamingOverrides</members>
         <members>HouseholdName</members>
-        <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingExclusions</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>LD_LeadConvertOverride_CTRL</members>

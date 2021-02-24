@@ -32,10 +32,10 @@
 * @date 2021
 * @description Domain class for HouseholdNamingExclusions in NPSP.
 */
-public inherited sharing class HouseholdNamingExclusionsString {
+public inherited sharing class HouseholdNamingExclusions {
     private String value;
 
-    public HouseholdNamingExclusionsString(String namingExclusionsString) {
+    public HouseholdNamingExclusions(String namingExclusionsString) {
         this.value = namingExclusionsString == null ? '' : namingExclusionsString;
     }
 

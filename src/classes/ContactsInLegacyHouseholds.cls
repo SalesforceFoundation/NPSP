@@ -569,8 +569,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Boolean isNamingExclusionsChanged(Contact con) {
-        HouseholdNamingExclusionsString exclusions =
-                new HouseholdNamingExclusionsString(namingExclusionsFor(con));
+        HouseholdNamingExclusions exclusions =
+                new HouseholdNamingExclusions(namingExclusionsFor(con));
         return exclusions.isNotEqualTo(namingExclusionsFor(oldVersionOf(con)));
     }
 
