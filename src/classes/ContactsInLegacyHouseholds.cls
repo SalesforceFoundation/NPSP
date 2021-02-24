@@ -38,16 +38,21 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private Map<Id, Contact> oldMap;
     private final String RECORD_TYPE_ID = 'RecordTypeId';
 
-    public ContactsInLegacyHouseholds(List<Contact> records, HouseholdSettings settings) {
-        this(records, null, settings);
+    public ContactsInLegacyHouseholds(List<Contact> records) {
+        this(records, null, new HouseholdSettings());
     }
 
-    public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap,
+    public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap) {
+        this(records, oldMap, new HouseholdSettings());
+    }
+
+    @TestVisible
+    private ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap,
             HouseholdSettings settings) {
         super(records, Contact.SObjectType);
         this.oldMap = oldMap != null ?
                 new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
-        this.settings = settings == null ? new HouseholdSettings() : settings;
+        this.settings = settings;
     }
 
     public void onAfterDelete() {

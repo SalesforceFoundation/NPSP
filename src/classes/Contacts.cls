@@ -65,10 +65,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void onAfterInsert() {
         if (orgUsesLegacyHouseholds()) {
             ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(
-                            getRecords(),
-                            this.settings
-                    );
+                    new ContactsInLegacyHouseholds(getRecords());
             contactsInLegacyHouseholds.onAfterInsert();
         }
     }
@@ -180,7 +177,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
 
     public void onAfterUpdate() {
-        new ContactsInLegacyHouseholds(getRecords(), oldMap, this.settings)
+        new ContactsInLegacyHouseholds(getRecords(), oldMap)
                 .onAfterUpdate();
     }
 
@@ -188,7 +185,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         fireRollupsForMergedContacts();
         List<Contact> contactsInHouseholds = contactsInHouseholds();
         if (!contactsInHouseholds.isEmpty()) {
-            new ContactsInLegacyHouseholds(contactsInHouseholds, this.settings)
+            new ContactsInLegacyHouseholds(contactsInHouseholds)
                     .onAfterDelete();
         }
     }
