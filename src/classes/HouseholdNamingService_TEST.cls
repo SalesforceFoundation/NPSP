@@ -34,7 +34,7 @@
 * @description test class for Household naming functionality.
 */
 @isTest
-public class HH_HouseholdNaming_TEST {
+public class HouseholdNamingService_TEST {
 
     /*********************************************************************************************************
     * @description Test method for batch
