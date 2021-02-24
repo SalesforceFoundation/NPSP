@@ -42,8 +42,6 @@ private class CON_DeleteContactOverride_TEST {
     private static final String LEX_BACK = 'back';
     /** @description LEx navigation value to go to Contact Home. */
     private static final String LEX_HOME = 'home';
-    /** @description LEx RetURL parameter. */
-    private static final String PARAM_RETURL_LEX = 'vfRetURLInSFX';
     /** @description RetURL parameter. */
     private static final String PARAM_RETURL = 'retURL';
     /** @description Cancel RetURL parameter. */
@@ -162,16 +160,12 @@ private class CON_DeleteContactOverride_TEST {
         String retUrl = 'foo/o';
         ApexPages.currentPage().getParameters().put(PARAM_RETURL, retUrl);
 
-        String vfRetURLInSFX = 'test/o';
-        ApexPages.currentPage().getParameters().put(PARAM_RETURL_LEX, vfRetURLInSFX);
-
         String failRetUrl = 'bar/o';
         ApexPages.currentPage().getParameters().put(PARAM_RETURL_FAIL, failRetUrl);
 
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
-        String expectedRetUrl = ctrl.lexOrSF1User ? vfRetURLInSFX : retUrl;
-        System.assertEquals(expectedRetUrl, ctrl.retUrl, 'Return URL should be set');
+        System.assertEquals(retUrl, ctrl.retUrl, 'Return URL should be set');
         System.assertEquals(failRetUrl, ctrl.failRetUrl, 'Cancel URL should be set');
     }
 
@@ -201,7 +195,6 @@ private class CON_DeleteContactOverride_TEST {
         Test RetURL
     verify:
         Controller retUrl is retURL page param for Classic.
-        Controller retUrl is vfRetURLInSFX page param for LEx.
     **********************************************************************************************************/
     private static testMethod void testRetUrlForClassicAndLex() {
         Contact con = new Contact(LastName = 'foo');
@@ -273,16 +266,12 @@ private class CON_DeleteContactOverride_TEST {
         con = getContactList(con.Id)[0];
         System.assertNotEquals(null, con.AccountId, 'The Contact should have an auto-created household.');
 
-        Map<String, String> params = new Map<String, String>{
-            PARAM_RETURL_LEX => '/' + con.Id
-        };
         ctrl.lexOrSF1User = true;
-        ctrl.setNavigationParams(params);
         System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null before an action');
 
         PageReference retPage = ctrl.deleteContactOnly();
         System.assertEquals(null, retPage, 'Return page should be null for LEx');
-        System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact home when retUrl contains Contact Id');
+        System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact Home in LEX');
 
         List<Account> accounts = getAccountListAllRows(con.AccountId);
         System.assertEquals(1, accounts.size(), 'The Account should be retrieved from DB.');
