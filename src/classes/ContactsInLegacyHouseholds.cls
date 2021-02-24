@@ -184,7 +184,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
         if (settings.isAllIndividualsProcessor()) {
             contactsNeedingHouseholds.addAll(
-                    contactsInIndividualAccounts(
+                    getContactsInIndividualAccounts(
                             contactsThatDoNotHaveAHousehold));
         }
         insertHouseholdsForContacts(contactsNeedingHouseholds, false);
@@ -222,7 +222,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return selectByFieldValue(Contact.npo02__Household__c, null);
     }
 
-    private List<Contact> contactsInIndividualAccounts(List<Contact> contacts) {
+    private List<Contact> getContactsInIndividualAccounts(List<Contact> contacts) {
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
         List<Contact> contactsInIndividualAccounts = new List<Contact>();
         for (Contact con : contacts) {
@@ -320,7 +320,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
                 contactsThatDoNotHaveAHousehold().getRecords();
         if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
             insertHouseholdsForContacts(
-                    contactsInIndividualAccounts(
+                    getContactsInIndividualAccounts(
                             contactsThatDoNotHaveAHouseholdRecord),
                     true);
         }
