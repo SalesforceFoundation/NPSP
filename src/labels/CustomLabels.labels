@@ -1458,14 +1458,6 @@
         <value>Subject is a required field.</value>
     </labels>
     <labels>
-        <fullName>NextPaymentDonationDateInfo</fullName>
-        <categories>Recurring Donation Elevate</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Detail for the next payment charging date</shortDescription>
-        <value>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</value>
-    </labels>
-    <labels>
         <fullName>OCRRemovePrimaryDuplicateBatchErrorText</fullName>
         <categories>Opportunity</categories>
         <language>en_US</language>
@@ -1528,14 +1520,6 @@
         <protected>true</protected>
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
-    </labels>
-    <labels>
-        <fullName>PaymentInformation</fullName>
-        <categories>RD2 Elevate</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Elevate Payment Information Title</shortDescription>
-        <value>Payment Information</value>
     </labels>
     <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
@@ -2341,6 +2325,14 @@
         <value>Paused</value>
     </labels>
     <labels>
+        <fullName>RD2_NextPaymentDonationDateInfo</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Detail for the next payment charging date</shortDescription>
+        <value>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</value>
+    </labels>
+    <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2475,6 +2467,14 @@
         <protected>true</protected>
         <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
         <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
+    </labels>
+        <labels>
+        <fullName>RD2_PaymentInformation</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Payment Information Title</shortDescription>
+        <value>Payment Information</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -2646,6 +2646,14 @@
         <protected>true</protected>
         <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_UpdatePaymentInformation</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to update evelate payment information</shortDescription>
+        <value>Update Payment Information</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
@@ -2973,14 +2981,6 @@
         <protected>true</protected>
         <shortDescription>SmartyStreets Help Test</shortDescription>
         <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
-    </labels>
-    <labels>
-     <fullName>UpdatePaymentInformation</fullName>
-        <categories>Elevate Information</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text to update evelate payment information</shortDescription>
-        <value>Update Payment Information</value>
     </labels>
     <labels>
         <fullName>UTIL_InputFormFormFieldAltLabelDate</fullName>

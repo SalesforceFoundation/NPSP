@@ -1728,7 +1728,6 @@
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
-        <members>NextPaymentDonationDateInfo</members>
         <members>OCRRemovePrimaryDuplicateBatchErrorText</members>
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
@@ -1737,7 +1736,6 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
-        <members>PaymentInformation</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_ContactChangeIsRestricted</members>
@@ -1837,6 +1835,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
@@ -1854,6 +1853,7 @@
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
         <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
+        <members>RD2_PaymentInformation</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -1875,6 +1875,7 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
+        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -1921,7 +1922,6 @@
         <members>SmartyStreets_Help_Text</members>
         <members>UTIL_InputFormFormFieldAltLabelDate</members>
         <members>UTIL_InputFormFormFieldAltLabelLookup</members>
-        <members>UpdatePaymentInformation</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>accordionSection_ToggleInstructionsWhenClosed</members>
