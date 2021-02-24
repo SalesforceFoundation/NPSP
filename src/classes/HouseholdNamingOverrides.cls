@@ -59,55 +59,65 @@ public inherited sharing class HouseholdNamingOverrides {
     }
 
     private void processHouseholdCustomNamingStringAdjustments() {
-        if (isNameReplaceable(household)) {
-            removeName();
-        } else if (isNameChanged(household, oldRecord)) {
-            appendName();
-        }
+        removeOrAppendName();
+        removeOrAppendInformalGreeting();
+        removeOrAppendFormalGreeting();
+    }
 
-        if (isInformalGreetingReplaceable(household)) {
-            removeInformalGreeting();
-        } else if (isInformalGreetingChanged(household, oldRecord)) {
-            appendInformalGreeting();
-        }
-
-        if (isFormalGreetingReplaceable(household)) {
+    private void removeOrAppendFormalGreeting() {
+        if (isFormalGreetingReplaceable()) {
             removeFormalGreeting();
-        } else if (isFormalGreetingChanged(household, oldRecord)) {
+        } else if (isFormalGreetingChanged()) {
             appendFormalGreeting();
         }
     }
 
-    private Boolean isReplaceable(SObject household, String fieldApiName) {
+    private void removeOrAppendInformalGreeting() {
+        if (isInformalGreetingReplaceable()) {
+            removeInformalGreeting();
+        } else if (isInformalGreetingChanged()) {
+            appendInformalGreeting();
+        }
+    }
+
+    private void removeOrAppendName() {
+        if (isNameReplaceable()) {
+            removeName();
+        } else if (isNameChanged()) {
+            appendName();
+        }
+    }
+
+    private Boolean isReplaceable(String fieldApiName) {
         String fieldValue = (String) household.get(fieldApiName);
         return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText();
     }
 
-    private Boolean isFormalGreetingChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
+    private Boolean isFormalGreetingChanged() {
+        return isFieldValueChanged('npo02__Formal_Greeting__c');
     }
 
-    private Boolean isInformalGreetingChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
+    private Boolean isInformalGreetingChanged() {
+        return isFieldValueChanged('npo02__Informal_Greeting__c');
     }
 
-    private Boolean isNameChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'Name', oldRecord);
+    private Boolean isNameChanged() {
+        return isFieldValueChanged('Name');
     }
 
-    private Boolean isFormalGreetingReplaceable(SObject household) {
-        return isReplaceable(household, 'npo02__Formal_Greeting__c');
+    private Boolean isFormalGreetingReplaceable() {
+        return isReplaceable('npo02__Formal_Greeting__c');
     }
 
-    private Boolean isInformalGreetingReplaceable(SObject household) {
-        return isReplaceable(household, 'npo02__Informal_Greeting__c');
+    private Boolean isInformalGreetingReplaceable() {
+        return isReplaceable('npo02__Informal_Greeting__c');
     }
 
-    private Boolean isNameReplaceable(SObject household) {
-        return isReplaceable(household, 'Name');
+    private Boolean isNameReplaceable() {
+        return isReplaceable('Name');
     }
 
-    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
+    private Boolean isFieldValueChanged(String fieldApiName) {
         return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
     }
 
