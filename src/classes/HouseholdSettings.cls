@@ -38,16 +38,12 @@ public inherited sharing class HouseholdSettings {
     private static final String defaultNamingService = 'HH_NameSpec';
 
     public HouseholdSettings() {
-        this(null);
+        this(UTIL_CustomSettingsFacade.getHouseholdsSettings());
     }
 
     @TestVisible
     private HouseholdSettings(npo02__Households_Settings__c settings) {
-        if (settings == null) {
-            this.settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        } else {
-            this.settings = settings;
-        }
+        this.settings = settings;
     }
 
     public Boolean isAsyncEnabled() {
