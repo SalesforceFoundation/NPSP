@@ -180,7 +180,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
 
-    public void handleAfterUpdate() {
+    public void onAfterUpdate() {
         new ContactsInLegacyHouseholds(getRecords(), oldMap, this.settings)
                 .onAfterUpdate();
     }
