@@ -196,7 +196,7 @@ private class CON_DeleteContactOverride_TEST {
     verify:
         Controller retUrl is retURL page param for Classic.
     **********************************************************************************************************/
-    private static testMethod void testRetUrlForClassicAndLex() {
+    private static testMethod void testRetUrlForClassic() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
 
