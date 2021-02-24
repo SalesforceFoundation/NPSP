@@ -55,6 +55,23 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         this.settings = settings;
     }
 
+    public void onAfterInsert() {
+        updateHouseholdsNamesForContactsInHouseholds();
+        if (allContactsGetHouseholds()) {
+            insertHouseholdsForContactsThatDoNotHaveOne();
+        }
+        if (allIndividualContactsGetHouseholds()) {
+            insertHouseholdsForContactsInIndividualAccounts();
+        }
+    }
+
+    public void onAfterUpdate() {
+        insertHouseholds();
+        fireRollups();
+        updateHouseholdNames();
+        deleteOldEmptyHouseholds();
+    }
+
     public void onAfterDelete() {
         Map<Id, Integer> householdCountMap = getHouseholdCountMap(getRecords());
         deleteEmptyHouseholds(getRecords(), householdCountMap);
@@ -139,13 +156,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
                 && !System.isFuture() && !System.isBatch();
-    }
-
-    public void onAfterUpdate() {
-        insertHouseholds();
-        fireRollups();
-        updateHouseholdNames();
-        deleteOldEmptyHouseholds();
     }
 
     private void deleteOldEmptyHouseholds() {
@@ -323,17 +333,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
                     getContactsInIndividualAccounts(
                             contactsThatDoNotHaveAHouseholdRecord),
                     true);
-        }
-    }
-
-    public void onAfterInsert() {
-
-        updateHouseholdsNamesForContactsInHouseholds();
-        if (allContactsGetHouseholds()) {
-            insertHouseholdsForContactsThatDoNotHaveOne();
-        }
-        if (allIndividualContactsGetHouseholds()) {
-            insertHouseholdsForContactsInIndividualAccounts();
         }
     }
 
