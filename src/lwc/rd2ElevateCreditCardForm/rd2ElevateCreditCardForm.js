@@ -62,7 +62,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get nextPaymentDonationDateMessage() {
-        return '<b>'
+        return (this.nextDonationDate == null)
+        ? ''
+        : '<b>'
             + this.labels.NextPaymentDonationDateMessage.replace('{{DATE}}', this.nextDonationDate.replace(/(\d{4})\-(\d{2})\-(\d{2})/, '$2/$3/$1'))
             + '</b>';
     }
