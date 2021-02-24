@@ -429,8 +429,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private List<Id> getHouseholdIdsNeedingNamesUpdated(Database.SaveResult[] lsr) {
         List<Id> householdIdsNeedingNamesUpdated = new List<Id>();
         for (Database.SaveResult sr : lsr) {
-            if (sr.isSuccess())
+            if (sr.isSuccess()) {
                 householdIdsNeedingNamesUpdated.add(sr.getID());
+            }
         }
         return householdIdsNeedingNamesUpdated;
     }
