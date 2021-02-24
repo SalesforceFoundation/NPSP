@@ -80,8 +80,9 @@ public inherited sharing class HouseholdName {
     private List<Contact> getContactsForInformalName() {
         List<Contact> listCon = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (isIncludedInInformalGreeting(con))
+            if (isIncludedInInformalGreeting(con)) {
                 listCon.add(con);
+            }
         }
         return listCon;
     }
@@ -102,8 +103,9 @@ public inherited sharing class HouseholdName {
     private List<Contact> getContactsForFormalName() {
         List<Contact> contactsForFormalName = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (isIncludedInFormalGreeting(con))
+            if (isIncludedInFormalGreeting(con)) {
                 contactsForFormalName.add(con);
+            }
         }
         return contactsForFormalName;
     }
