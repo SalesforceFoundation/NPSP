@@ -72,7 +72,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (!isHouseholdTriggerContext() && householdSettings.isAdvancedHouseholdNaming()) {
+        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
             renameHouseholdAccountsNeedingNameUpdates();
         }
     }
