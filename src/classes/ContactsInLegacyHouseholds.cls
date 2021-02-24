@@ -166,7 +166,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         householdIdsNeedingRollup.addAll(householdIdsFor(contactsThatChangedHouseholds()));
         householdIdsNeedingRollup.addAll(getOldNonEmptyHouseholdIds());
         if (householdIdsNeedingRollup.size() > 0) {
-            calculateRollups(householdIdsNeedingRollup);
+            calculateLegacyHouseholdRollups(householdIdsNeedingRollup);
         }
     }
 
@@ -502,7 +502,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdIdFor(con) != null;
     }
 
-    private void calculateRollups(Set<Id> householdIds) {
+    private void calculateLegacyHouseholdRollups(Set<Id> householdIds) {
         if (rollupsShouldRunSynchronously(householdIds)) {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupHouseholds(getHouseholdMap(householdIds));
