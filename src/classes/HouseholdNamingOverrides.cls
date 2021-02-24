@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household Custom Naming String value object in NPSP.
+* @description Value object for the String used to signify which Household Name / Greeting fields are overridden.
 */
 public inherited sharing class HouseholdNamingOverrides {
     private String value;
