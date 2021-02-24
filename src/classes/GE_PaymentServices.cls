@@ -50,6 +50,8 @@ public with sharing class GE_PaymentServices {
         SUBMITTED
     }
 
+    private static GE_PaymentServices paymentServicesInstance;
+
     /***
      * @description Payment Services configuration
      */
@@ -65,17 +67,38 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
+    * @description Returns static instance of this class. Primarily used to facilitate
+    * dependency injection in tests.
+    * @return Instance of GE_PaymentServices class.
+    */
+    public static GE_PaymentServices getInstance(){
+        if (paymentServicesInstance == null) {
+            paymentServicesInstance = new GE_PaymentServices();
+        }
+        return paymentServicesInstance;
+    }
+
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param paymentServicesInstance An instance of the GE_PaymentServices class.
+    */
+    @TestVisible
+    private static void setInstance(GE_PaymentServices instance){
+        paymentServicesInstance = instance;
+    }
+
+    /**
      * @description Checks whether an org is a customer of Elevate Payment Services.
      *              After onboarding within Elevate, these configuration key-value
      *              pairs should exist in the org.  If this required set of keys is not
      *              in the org, NPSP cannot load the Elevate SDK or successfully make
      *              callouts to Elevate services.
+     * @return Boolean
      */
-    public static Boolean isElevateCustomer {
-        get {
-            PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-            return ps.isIntegrationEnabled();
-        }
+    public Boolean isElevateCustomer() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        return ps.isIntegrationEnabled();
     }
 
     /**
