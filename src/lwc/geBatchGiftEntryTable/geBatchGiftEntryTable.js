@@ -117,12 +117,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     assignDataImportErrorsToTableRows(dataImportRows) {
         let errors = {rows: {}};
         this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
-            let declinedReason = isNotEmpty(row[apiNameFor(PAYMENT_DECLINED_REASON)]) ?
-                row[apiNameFor(PAYMENT_DECLINED_REASON)] : []
             Object.assign(errors.rows,  {
                 [row.Id] : {
                     title: 'Process Error',
-                    messages: row.errors.concat(declinedReason)
+                    messages: this.getTableRowErrorMessages(row)
                 }
             });
         });
@@ -130,10 +128,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getDataImportRowsWithErrors(dataImportRows) {
-        let rowsWithErrors = dataImportRows.filter(row => {
-            return this.hasDataImportRowError(row);
-        });
-        return rowsWithErrors;
+        return dataImportRows.filter(row => {
+                    return this.hasDataImportRowError(row);
+                });
     }
 
 
@@ -143,15 +140,19 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     hasDataImportRowError(row) {
-        let hasFound = this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
+        return this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
                     row.record.hasOwnProperty(errorProperty))
-        return hasFound;
+
     }
 
-    combineTableRowErrorMessages(dataImportRows) {
-        dataImportRows().forEach(row => {
-
+    getTableRowErrorMessages(dataImportRow) {
+        let errorMessages = [];
+        this.getErrorPropertiesToDisplayInRow().forEach(errorProperty => {
+            if (dataImportRow.record.hasOwnProperty(errorProperty)) {
+                errorMessages.push(dataImportRow.record[errorProperty]);
+            }
         });
+        return errorMessages;
     }
 
     @api
