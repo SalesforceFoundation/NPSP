@@ -37,10 +37,6 @@
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
-    List<Contact> contacts;
-    List<Contact> oldContacts;
-    DmlWrapper dmlWrapper = new DmlWrapper();
-
     /*******************************************************************************************************
     * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
     * on contact.
@@ -53,18 +49,17 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        contacts = (List<Contact>) newlist;
-        oldContacts = (List<Contact>) oldlist;
+        DmlWrapper dmlWrapper = new DmlWrapper();
 
         switch on triggerAction {
             when BeforeInsert {
                 //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
-                Contacts contacts = new Contacts(contacts);
+                Contacts contacts = new Contacts(newlist);
                 contacts.onBeforeInsert();
             }
             when BeforeUpdate {
-                Contacts contacts = new Contacts(contacts, oldContacts);
+                Contacts contacts = new Contacts(newlist, oldlist);
                 contacts.onBeforeUpdate();
             }
             when AfterInsert {
@@ -72,15 +67,15 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
                 //since we don't have the contact's household ids until after the insert
                 //we'll check the trigger action again there to make sure it doesn't run twice
-                Contacts contacts = new Contacts(contacts);
+                Contacts contacts = new Contacts(newlist);
                 contacts.onAfterInsert();
             }
             when AfterDelete {
-                Contacts contacts = new Contacts(oldContacts);
+                Contacts contacts = new Contacts(oldlist);
                 contacts.onAfterDelete();
             }
             when AfterUpdate {
-                Contacts contacts = new Contacts(contacts, oldContacts);
+                Contacts contacts = new Contacts(newlist, oldlist);
                 contacts.onAfterUpdate();
             }
         }

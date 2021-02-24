@@ -40,7 +40,6 @@
 */
 public class ACCT_Accounts_TDTM extends TDTM_Runnable {
 
-
     /*******************************************************************************************************
     * @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
     * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
@@ -54,22 +53,19 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        List<Account> newAccounts = (List<Account>) listNew;
-        List<Account> oldAccounts = (List<Account>) listOld;
-
         switch on triggerAction {
             when BeforeInsert {
-                Accounts accounts = new Accounts(newAccounts);
+                Accounts accounts = new Accounts(listNew);
                 accounts.onBeforeInsert();
             }
             when BeforeUpdate {
                 if (!isContactBeforeInsertContext()) {
-                    Accounts accounts = new Accounts(newAccounts, oldAccounts);
+                    Accounts accounts = new Accounts(listNew, listOld);
                     accounts.onBeforeUpdate();
                 }
             }
             when AfterUpdate {
-                Accounts accounts = new Accounts(newAccounts, oldAccounts);
+                Accounts accounts = new Accounts(listNew, listOld);
                 accounts.onAfterUpdate();
             }
         }
