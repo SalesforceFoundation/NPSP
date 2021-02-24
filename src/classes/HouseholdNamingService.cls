@@ -73,7 +73,7 @@ public without sharing class HouseholdNamingService {
     * @param householdOrAccountIds the list of household Id's (either Household__c or Account Id's)
     * @return void
     */
-    public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds){
+    public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
         if (isHouseholdNamingDisabled) {
             return;
         }
@@ -275,7 +275,7 @@ public without sharing class HouseholdNamingService {
                     .withToLabelSalutation()
                     .withFrom('Contact')
                     .build();
-            }
+        }
         return queryForContactNamingFields;
     }
 
@@ -346,17 +346,16 @@ public without sharing class HouseholdNamingService {
         return hhList;
     }
 
-    public void setHouseholdNameFields(List<SObject> records, Map<Id, SObject> oldMap) {
-        List<Id> ids = new List<Id>();
-        for (SObject sobj : records) {
-            ids.add(sobj.Id);
-        }
-        Map<Id, List<Contact>> contactsByHouseholdId =
-                getHouseholdMembersByHouseholdId(ids);
-
+    public void setCustomNamingField(List<SObject> records, Map<Id, SObject> oldMap) {
         for (SObject household : records) {
             SObject oldRecord = oldMap.get(household.Id);
             setCustomNamingStringValue(household, oldRecord);
+        }
+    }
+
+    public void setNameAndGreetingsToReplacementText(List<SObject> records) {
+        for (SObject household : records) {
+            setNameAndGreetingsToReplacementText(household);
         }
     }
 
@@ -417,62 +416,6 @@ public without sharing class HouseholdNamingService {
         household.put('Name', householdName.value());
     }
 
-    public HouseholdNamingOverrides getCustomNamingString(SObject household, SObject oldRecord) {
-        HouseholdNamingOverrides namingOverrides = new HouseholdNamingOverrides
-                (namingOverridesFor(household));
-        processHouseholdCustomNamingStringAdjustments(namingOverrides, household, oldRecord);
-        return namingOverrides;
-    }
-
-    public void processHouseholdCustomNamingStringAdjustments(
-            HouseholdNamingOverrides customNamingString,
-            SObject household,
-            SObject oldRecord) {
-        if (isNameReplaceable(household)) {
-            customNamingString.removeName();
-        } else if (isNameChanged(household, oldRecord)) {
-            customNamingString.appendName();
-        }
-
-        if (isInformalGreetingReplaceable(household)) {
-            customNamingString.removeInformalGreeting();
-        } else if (isInformalGreetingChanged(household, oldRecord)) {
-            customNamingString.appendInformalGreeting();
-        }
-
-        if (isFormalGreetingReplaceable(household)) {
-            customNamingString.removeFormalGreeting();
-        } else if (isFormalGreetingChanged(household, oldRecord)) {
-            customNamingString.appendFormalGreeting();
-        }
-
-        setGreetingFieldsToReplacementValue(household);
-    }
-
-    private Boolean isFormalGreetingChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
-    }
-
-    private Boolean isInformalGreetingChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
-    }
-
-    private Boolean isNameChanged(SObject household, SObject oldRecord) {
-        return isFieldValueChanged(household, 'Name', oldRecord);
-    }
-
-    private Boolean isFormalGreetingReplaceable(SObject household) {
-        return isReplaceable(household, 'npo02__Formal_Greeting__c');
-    }
-
-    private Boolean isInformalGreetingReplaceable(SObject household) {
-        return isReplaceable(household, 'npo02__Informal_Greeting__c');
-    }
-
-    private Boolean isNameReplaceable(SObject household) {
-        return isReplaceable(household, 'Name');
-    }
-
     private void replaceHouseholdFormalGreeting(SObject household) {
         household.put('npo02__Formal_Greeting__c', nameReplacementText());
     }
@@ -485,7 +428,7 @@ public without sharing class HouseholdNamingService {
         household.put('Name', nameReplacementText());
     }
 
-    private void setGreetingFieldsToReplacementValue(SObject household) {
+    private void setNameAndGreetingsToReplacementText(SObject household) {
         if (isNameReplaceable(household)) {
             replaceHouseholdName(household);
         }
@@ -499,8 +442,16 @@ public without sharing class HouseholdNamingService {
         }
     }
 
-    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
-        return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
+    private Boolean isNameReplaceable(SObject household) {
+        return isReplaceable(household, 'Name');
+    }
+
+    private Boolean isFormalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Formal_Greeting__c');
+    }
+
+    private Boolean isInformalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Informal_Greeting__c');
     }
 
     private Boolean isReplaceable(SObject household, String fieldApiName) {
@@ -508,9 +459,9 @@ public without sharing class HouseholdNamingService {
         return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText();
     }
 
-    public void setCustomNamingStringValue(SObject household, SObject oldRecord) {
+    private void setCustomNamingStringValue(SObject household, SObject oldRecord) {
         household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
-                getCustomNamingString(household, oldRecord).value());
+                new HouseholdNamingOverrides(household, oldRecord).value());
     }
 
     private String namingOverridesFor(SObject household) {

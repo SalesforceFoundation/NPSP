@@ -54,7 +54,8 @@ public inherited sharing class Households extends fflib_SObjects {
 
     public void onBeforeUpdate() {
         if (!isHouseholdTriggerContext() && householdSettings.isAdvancedHouseholdNaming()) {
-            householdNamingService.setHouseholdNameFields(getRecords(), oldMap);
+            householdNamingService.setCustomNamingField(getRecords(), oldMap);
+            householdNamingService.setNameAndGreetingsToReplacementText(getRecords());
         }
     }
 

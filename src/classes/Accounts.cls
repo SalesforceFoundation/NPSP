@@ -63,9 +63,14 @@ public inherited sharing class Accounts extends fflib_SObjects {
     public void onBeforeUpdate() {
         setAccountTypeAndIndividualFieldValues();
         setSystemAccountTypeAndIndividualFieldValues();
-        if (shouldSetHouseholdNameFields()) {
-            setHouseholdNameFields();
+        if (shouldSetCustomNamingFieldAndReplaceGreetings()) {
+            setCustomNamingField();
+            setNameAndGreetingsToReplacementText();
         }
+    }
+
+    private void setNameAndGreetingsToReplacementText() {
+        householdNamingService.setNameAndGreetingsToReplacementText(householdAccounts());
     }
 
     public void onAfterUpdate() {
@@ -74,12 +79,12 @@ public inherited sharing class Accounts extends fflib_SObjects {
         }
     }
 
-    private Boolean shouldSetHouseholdNameFields() {
+    private Boolean shouldSetCustomNamingFieldAndReplaceGreetings() {
         return !isHouseholdTriggerContext() && settings.isAdvancedHouseholdNaming();
     }
 
-    private void setHouseholdNameFields() {
-        householdNamingService.setHouseholdNameFields(householdAccounts(), oldMap);
+    private void setCustomNamingField() {
+        householdNamingService.setCustomNamingField(householdAccounts(), oldMap);
     }
 
     private void renameHouseholdsNeedingNameUpdate() {
@@ -206,7 +211,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         if (individualRecordTypeId != null) {
             Schema.RecordTypeInfo recordTypeInfo = null;
             Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
-            Map<Id,Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
+            Map<Id, Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
             recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
             return recordTypeInfo == null
                     ? null

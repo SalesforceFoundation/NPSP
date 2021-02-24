@@ -34,13 +34,81 @@
 */
 public inherited sharing class HouseholdNamingOverrides {
     private String value;
+    private SObject household;
+    private SObject oldRecord;
 
     public HouseholdNamingOverrides(String str) {
         this.value = str == null ? ';' : str + ';';
     }
 
+    public HouseholdNamingOverrides(SObject household, SObject oldRecord) {
+        this.value = namingOverridesFor(household) == null ? ';' :
+                namingOverridesFor(household) + ';';
+        this.household = household;
+        this.oldRecord = oldRecord;
+        processHouseholdCustomNamingStringAdjustments();
+    }
+
+    private String namingOverridesFor(SObject household) {
+        return (String) household.get
+                ('npo02__SYSTEM_CUSTOM_NAMING__c');
+    }
+
     public String value() {
         return this.value;
+    }
+
+    private void processHouseholdCustomNamingStringAdjustments() {
+        if (isNameReplaceable(household)) {
+            removeName();
+        } else if (isNameChanged(household, oldRecord)) {
+            appendName();
+        }
+
+        if (isInformalGreetingReplaceable(household)) {
+            removeInformalGreeting();
+        } else if (isInformalGreetingChanged(household, oldRecord)) {
+            appendInformalGreeting();
+        }
+
+        if (isFormalGreetingReplaceable(household)) {
+            removeFormalGreeting();
+        } else if (isFormalGreetingChanged(household, oldRecord)) {
+            appendFormalGreeting();
+        }
+    }
+
+    private Boolean isReplaceable(SObject household, String fieldApiName) {
+        String fieldValue = (String) household.get(fieldApiName);
+        return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText();
+    }
+
+    private Boolean isFormalGreetingChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'npo02__Formal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isInformalGreetingChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'npo02__Informal_Greeting__c', oldRecord);
+    }
+
+    private Boolean isNameChanged(SObject household, SObject oldRecord) {
+        return isFieldValueChanged(household, 'Name', oldRecord);
+    }
+
+    private Boolean isFormalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Formal_Greeting__c');
+    }
+
+    private Boolean isInformalGreetingReplaceable(SObject household) {
+        return isReplaceable(household, 'npo02__Informal_Greeting__c');
+    }
+
+    private Boolean isNameReplaceable(SObject household) {
+        return isReplaceable(household, 'Name');
+    }
+
+    private Boolean isFieldValueChanged(SObject household, String fieldApiName, SObject oldRecord) {
+        return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
     }
 
     private Set<String> customNameSet() {
@@ -49,43 +117,43 @@ public inherited sharing class HouseholdNamingOverrides {
                         value.split(';')));
     }
 
-    public void replace(String searchVal, String newVal) {
+    private void replace(String searchVal, String newVal) {
         if (customNameSet().contains(searchVal)) {
             value = value.replace(searchVal, newVal);
         }
     }
 
-    public void append(String val) {
+    private void append(String val) {
         if (!customNameSet().contains(val)) {
             value += val + ';';
         }
     }
 
-    public Boolean contains(String val) {
+    private Boolean contains(String val) {
         return customNameSet().contains(val);
     }
 
-    public void removeName() {
+    private void removeName() {
         replace('Name;', ';');
     }
 
-    public void removeFormalGreeting() {
+    private void removeFormalGreeting() {
         replace('Formal_Greeting__c;', ';');
     }
 
-    public void removeInformalGreeting() {
+    private void removeInformalGreeting() {
         replace('Informal_Greeting__c;', ';');
     }
 
-    public void appendFormalGreeting() {
+    private void appendFormalGreeting() {
         append('Formal_Greeting__c');
     }
 
-    public void appendInformalGreeting() {
+    private void appendInformalGreeting() {
         append('Informal_Greeting__c');
     }
 
-    public void appendName() {
+    private void appendName() {
         append('Name');
     }
 
@@ -99,5 +167,9 @@ public inherited sharing class HouseholdNamingOverrides {
 
     public Boolean isNameOverridden() {
         return contains('Name');
+    }
+
+    private String nameReplacementText() {
+        return System.Label.npo02.NameReplacementText;
     }
 }
