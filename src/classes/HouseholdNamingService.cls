@@ -127,33 +127,25 @@ public without sharing class HouseholdNamingService {
 
     private List<SObject> householdsOrAccountsFor(List<Id> householdOrAccountIds) {
         List<SObject> hhupdatelist = new List<SObject>();
-        hhupdatelist.addAll(householdsFor(householdOrAccountIds));
-        hhupdatelist.addAll(accountsFor(householdOrAccountIds));
+        hhupdatelist.addAll(getHouseholdsFor(householdOrAccountIds));
+        hhupdatelist.addAll(getAccountsFor(householdOrAccountIds));
         return hhupdatelist;
     }
 
-    private List<Account> accounts;
-    private List<SObject> accountsFor(List<Id> hhids) {
-        if (accounts == null) {
-            accounts = [
-                    SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
-                    FROM Account
-                    WHERE Id IN :hhids
-            ];
-        }
-        return accounts;
+    private List<SObject> getAccountsFor(List<Id> hhids) {
+        return [
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                FROM Account
+                WHERE Id IN :hhids
+        ];
     }
 
-    private List<npo02__Household__c> households;
-    private List<SObject> householdsFor(List<Id> hhids) {
-        if (households == null) {
-            households = [
-                    SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
-                    FROM Npo02__Household__c
-                    WHERE Id IN :hhids
-            ];
-        }
-        return households;
+    private List<SObject> getHouseholdsFor(List<Id> hhids) {
+        return [
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                FROM Npo02__Household__c
+                WHERE Id IN :hhids
+        ];
     }
 
     private Id idFor(SObject household) {
