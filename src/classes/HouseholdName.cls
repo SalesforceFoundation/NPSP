@@ -57,8 +57,9 @@ public inherited sharing class HouseholdName {
     private List<Contact> getContactsForHouseholdNameGeneration() {
         List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
         for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (contactShouldBeUsedForHouseholdNameGeneration(con))
+            if (contactShouldBeUsedForHouseholdNameGeneration(con)) {
                 contactsForHouseholdNameGeneration.add(con);
+            }
         }
         return contactsForHouseholdNameGeneration;
     }
