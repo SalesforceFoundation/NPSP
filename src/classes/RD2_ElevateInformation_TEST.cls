@@ -58,8 +58,10 @@ private with sharing class RD2_ElevateInformation_TEST {
             'User should have field permissions');
         System.assertEquals(null, ((String) data.get('errorMessage')),
             'No error should be returned for the RD record');
-        System.assertEquals(true, (Boolean) data.get('hasRDUpdatePermissions'),
-            'The user should be able to modify RD');
+        System.assertEquals(true, (Boolean) data.get('hasFieldUpdatePermission'),
+            'The user should have RD field update permission');
+        System.assertEquals(true, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            'The user should have RD record update permission');
     }
 
     /****
@@ -76,8 +78,10 @@ private with sharing class RD2_ElevateInformation_TEST {
 
             Map<String, Object> data = RD2_ElevateInformation_CTRL.getData(recordId);
 
-            System.assertEquals(false, (Boolean) data.get('hasRDUpdatePermissions'),
-            'Ready only user should be not be able to modify RD');
+            System.assertEquals(false, (Boolean) data.get('hasFieldUpdatePermission'),
+                'The user should not have RD fields update permission');
+            System.assertEquals(false, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            '   The user should not have RD record update permission');
         }
     }
 
