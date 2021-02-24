@@ -31,7 +31,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
-import UpdatePaymentInformation from '@salesforce/label/c.UpdatePaymentInformation';
+import UpdatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
 
@@ -41,9 +41,9 @@ const FIELDS = [
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
     FIELD_STATUS_REASON,
-    FIELD_NEXT_DONATION_DATE
-    
+    FIELD_NEXT_DONATION_DATE  
 ];
+
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
 
@@ -88,7 +88,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @track isElevateConnected = false;
     @track permissions = {
         hasAccess: null,
-        hasRDUpdateAccess : null,
+        hasKeyFieldsUpdateAccess : null,
         alert: ''
     };
     @track error = {};
@@ -121,11 +121,13 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
-                    this.permissions.hasRDUpdateAccess = response.hasRDUpdatePermissions;
 
                     this.permissions.hasAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
                         && isNull(this.permissions.alert);
+
+                    this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
+                         && response.hasFieldUpdatePermission;
 
                     if (this.isElevateCustomer === true) {
                         if (!isNull(this.permissions.alert)) {

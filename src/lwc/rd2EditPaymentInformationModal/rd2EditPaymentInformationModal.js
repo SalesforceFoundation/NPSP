@@ -2,7 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import { isNull, showToast, constructErrorMessage, format, isUndefined } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 import { updateRecord } from 'lightning/uiRecordApi';
-import PaymentInformationTitle from '@salesforce/label/c.PaymentInformation';
+import PaymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
