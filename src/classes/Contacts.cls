@@ -237,10 +237,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     @TestVisible
     private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
 
-        npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings =
-                UTIL_CustomSettingsFacade.getContactsSettings();
-        if (contactsAndOrgsSettings.npe01__Account_Processor__c ==
-                CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+        ContactAndOrgSettings contactAndOrgSettings = new ContactAndOrgSettings();
+        if (contactAndOrgSettings.isHouseholdAccountModel()) {
             return;
         }
 
@@ -266,5 +264,4 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         return oppIds;
     }
-
 }
