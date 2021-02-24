@@ -35,25 +35,35 @@
 public inherited sharing class Accounts extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
-    private HouseholdNamingService householdNamingService;
-    private HouseholdSettings settings;
+    @TestVisible
+    private HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+    @TestVisible
+    private HouseholdSettings settings {
+        get {
+            if (settings == null) {
+                settings = new HouseholdSettings();
+            }
+            return settings;
+        }
+        set;
+    }
 
     public Accounts(List<Account> records) {
-        this(records, null, null, null);
+        this(records, null);
     }
 
     public Accounts(List<Account> records, List<Account> oldlist) {
-        this(records, oldlist, null, null);
-    }
-
-    @TestVisible
-    private Accounts(List<Account> records, List<Account> oldlist, HouseholdNamingService
-            service, HouseholdSettings settings) {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
-        this.householdNamingService = service == null ? new HouseholdNamingService() : service;
-        this.settings = settings == null ? new HouseholdSettings() : settings;
     }
 
     public void onBeforeInsert() {

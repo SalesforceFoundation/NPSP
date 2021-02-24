@@ -34,24 +34,26 @@
 */
 public inherited sharing class Contacts extends fflib_SObjects {
 
-    private HouseholdSettings settings;
     private Map<Id, Contact> oldMap;
+    @TestVisible
+    private HouseholdSettings settings {
+        get {
+            if (settings == null) {
+                settings = new HouseholdSettings();
+            }
+            return settings;
+        }
+        set;
+    }
 
     public Contacts(List<Contact> records) {
-        this(records, null, new HouseholdSettings());
+        this(records, null);
     }
 
     public Contacts(List<Contact> records, List<Contact> oldList) {
-        this(records, oldList, new HouseholdSettings());
-    }
-
-    @TestVisible
-    private Contacts(List<Contact> records, List<Contact> oldList, HouseholdSettings
-            settings) {
         super(records, Contact.SObjectType);
         this.oldMap = oldList != null ?
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
-        this.settings = settings;
     }
 
     public void onBeforeInsert() {

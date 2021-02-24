@@ -35,21 +35,31 @@
 public inherited sharing class Households extends fflib_SObjects {
 
     private Map<Id, npo02__Household__c> oldMap;
-    private HouseholdNamingService householdNamingService;
-    private HouseholdSettings householdSettings;
-
-    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
-        this(records, oldlist, null, null);
+    @TestVisible
+    private HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+    @TestVisible
+    private HouseholdSettings settings {
+        get {
+            if (settings == null) {
+                settings = new HouseholdSettings();
+            }
+            return settings;
+        }
+        set;
     }
 
-    @TestVisible
-    private Households(List<npo02__Household__c> records, List<npo02__Household__c>
-            oldlist, HouseholdNamingService service, HouseholdSettings settings) {
+    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
         super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
-        this.householdNamingService = service == null ? new HouseholdNamingService() : service;
-        this.householdSettings = settings == null ? new HouseholdSettings() : settings;
     }
 
     public void onBeforeUpdate() {
@@ -68,7 +78,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private Boolean isAdvancedHouseholdNamingEnabled() {
-        return householdSettings.isAdvancedHouseholdNaming();
+        return settings.isAdvancedHouseholdNaming();
     }
 
     public void onAfterUpdate() {
