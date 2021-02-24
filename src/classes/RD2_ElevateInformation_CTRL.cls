@@ -59,13 +59,15 @@ public with sharing class RD2_ElevateInformation_CTRL {
     public static Map<String, Object> getData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
 
+        Boolean hasRDUpdatePermissions = UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', false)
+            && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardLast4__c), false)
+            && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c), false)
+            && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c), false);
+
         try {
             data = new Map<String, Object> {
                 'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
-                'hasRDUpdatePermissions' => UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', false)
-                    && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardLast4__c), false)
-                    && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c), false)
-                    && UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c), false)
+                'hasRDUpdatePermissions' => hasRDUpdatePermissions
             };
 
             Boolean hasPermissions = hasFieldPermissions();
