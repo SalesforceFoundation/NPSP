@@ -420,13 +420,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
-        List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdated(lsr);
+        List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
             updateHouseholdNameAndMemberCount(householdIdsNeedingNamesUpdated);
         }
     }
 
-    private List<Id> getHouseholdIdsNeedingNamesUpdated(Database.SaveResult[] lsr) {
+    private List<Id> getHouseholdIdsNeedingNamesUpdatedFromSaveResult(Database.SaveResult[] lsr) {
         List<Id> householdIdsNeedingNamesUpdated = new List<Id>();
         for (Database.SaveResult sr : lsr) {
             if (sr.isSuccess()) {
