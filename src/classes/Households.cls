@@ -53,10 +53,22 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     public void onBeforeUpdate() {
-        if (!isHouseholdTriggerContext() && householdSettings.isAdvancedHouseholdNaming()) {
-            householdNamingService.setCustomNamingField(getRecords(), oldMap);
-            householdNamingService.setNameAndGreetingsToReplacementText(getRecords());
+        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
+            setCustomNamingField();
+            setNameAndGreetingsToReplacementText();
         }
+    }
+
+    private void setNameAndGreetingsToReplacementText() {
+        householdNamingService.setNameAndGreetingsToReplacementText(getRecords());
+    }
+
+    private void setCustomNamingField() {
+        householdNamingService.setCustomNamingField(getRecords(), oldMap);
+    }
+
+    private Boolean isAdvancedHouseholdNamingEnabled() {
+        return householdSettings.isAdvancedHouseholdNaming();
     }
 
     public void onAfterUpdate() {
