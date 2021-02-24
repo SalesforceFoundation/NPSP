@@ -425,14 +425,14 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
             // fix the account that lead conversion created
             if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
-                string strSoql = 'select id, firstname, lastname, accountId,';
+                string strSoql = 'SELECT Id, Firstname, Lastname, AccountId,';
                 if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
-                   strSoql += ' recordtypeId,';
+                   strSoql += ' RecordTypeId,';
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
                 strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
-                strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
+                strSoql += ' FROM Contact WHERE Id= \'' + lcr.getContactId() + '\'';
                 Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
                 npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
