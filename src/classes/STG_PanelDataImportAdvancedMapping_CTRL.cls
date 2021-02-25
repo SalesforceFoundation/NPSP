@@ -35,16 +35,6 @@
 * @description Controller extension for the Data Import Fied Mapping settings panel.
 */
 public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
-
-    /*********************************************************************************************************
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) return 'c';
-        return namespace;
-    }
-
     /*********************************************************************************************************
     * @description URL of the Advanced Mapping Custom UI aura component container
     */

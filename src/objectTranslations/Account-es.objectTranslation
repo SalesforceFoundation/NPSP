@@ -58,7 +58,7 @@
     </fields>
     <fields>
         <help>El nombre del administrador del regalo que iguala en la empresa.</help>
-        <label>Nombre administrador regalo que iguala</label>
+        <label>Nombre administrador del regalo igualado</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
@@ -73,7 +73,7 @@
     </fields>
     <fields>
         <help>El importe máximo que la empresa igualará cada año por empleado.</help>
-        <label>Máximo por empleado de regalo que iguala</label>
+        <label>Máximo por empleado de regalo igualado</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>

@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>世帯命名設定</value>
     </caseValues>
     <fields>
         <help>明示的にリストする取引先責任者の名前の数を指定します。この数を超えると、[超過時の名前] が使用されます。</help>

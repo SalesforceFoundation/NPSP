@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+        <label>ACH の最後の 4 桁</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を月末日に設定します。間隔は [毎月] または [毎四半期] にするか、月を使用するカスタム間隔にする必要があります。</help>
         <label>常に末日を使用</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援で使用されたカードの有効期限 (月)。</help>
+        <label>カードの有効期限 (月)</label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援で使用されたカードの有効期限 (年)。</help>
+        <label>カードの有効期限 (年)</label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援で使用されたカードの最後の 4 桁。</help>
+        <label>カードの最後の 4 桁</label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help>この継続支援が現在の状況値になっている理由。</help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help>この継続支援が更新される最終再生 Elevate イベント。</help>
+        <label>最終再生 Elevate イベント</label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
         <label>来年の金額</label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation>失効</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>一時停止</translation>
         </picklistValues>
     </fields>
     <quickActions>

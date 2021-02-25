@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Instellingen voor giftopgave</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Gift Entry Settings --></value>
+        <value>Instellingen voor giftopgave</value>
     </caseValues>
     <fields>
         <help>Dit is een voor Opgave van gift gebruikte startsjabloon voor het opgeven van enkelvoudige giften of batches van giften. Dit is de standaardsjabloon voor het opgeven van enkelvoudige giften.</help>
@@ -18,5 +18,5 @@
         <label>Opgave van gift inschakelen</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>
