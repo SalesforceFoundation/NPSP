@@ -64,13 +64,26 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
             };
 
-            Boolean hasPermissions = hasFieldPermissions();
-            data.put('hasFieldPermissions', hasPermissions);
+            Boolean hasKeyRequiredFieldPermissions = hasPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('Status__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
+            });
+            data.put('hasFieldPermissions', hasKeyRequiredFieldPermissions);
 
-            if (hasPermissions) {
+            if (hasKeyRequiredFieldPermissions) {
                 data.put('alert', RD2_VisualizeScheduleController.getValidationAlert(recordId));
                 data.put('errorMessage', getLatestErrorMessage(recordId));
             }
+
+            data.put('showLastFourDigits', hasPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardLast4__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ACH_Last_4__c') }
+            ));
+            data.put('showExpirationDate', hasPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationMonth__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationYear__c') }
+            ));
 
             if (RD2_ElevateIntegrationService.isIntegrationEnabled()) {
                 PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
@@ -88,15 +101,8 @@ public with sharing class RD2_ElevateInformation_CTRL {
      * @description Checks if the user has access for fields retrieved by the Elevate information widget
      * @return Boolean
      */
-    private static Boolean hasFieldPermissions() {
-        Set<String> requiredFields = new Set<String>{
-            UTIL_Namespace.StrTokenNSPrefix('Status__c'),
-            UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
-            UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
-        };
-
+    private static Boolean hasPermissionsToFields(Set<String> requiredFields) {
         Boolean hasPermissions = true;
-
         for (String fld : requiredFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
             if (!dfr.isAccessible()) {
@@ -104,7 +110,6 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 break;
             }
         }
-
         return hasPermissions;
     }
 
