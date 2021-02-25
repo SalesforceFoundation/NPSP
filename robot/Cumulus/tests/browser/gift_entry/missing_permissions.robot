@@ -26,6 +26,10 @@ Setup Test Data
 
 *** Test Cases ***
 
+#   Note: This test uses the 'sysadmin_test' profile, the 'permtest' user,
+#   and the 'Gift_Entry_Perms' permission set that is created during org setup. 
+#   These are only used in this test to ensure self-containment of the data changes.
+
 Verify Permissions Error When Missing Form Template Object Access
   [Documentation]          Disables object permissions for the Form Template Object in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
