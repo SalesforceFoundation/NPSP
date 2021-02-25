@@ -35,7 +35,7 @@
 */
 
 @isTest
-private with sharing class HH_NameSpec_TEST {
+private with sharing class HH_INamingImpl_TEST {
 
     /*********************************************************************************************************
     @description
