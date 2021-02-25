@@ -26,6 +26,8 @@ const mockGetRecord = require('./data/getRecord.json');
 const mockGetData = require('./data/getData.json');
 
 const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
+const CC_LAST_4_FIELD_NAME = 'CardLast4__c';
+const EXPIRATION_YEAR_FIELD_NAME = 'CardExpirationYear__c';
 const STATUS_REASON_FIELD_NAME = 'ClosedReason__c';
 const ICON_NAME_ERROR = 'utility:error';
 const ICON_NAME_SUCCESS = 'utility:success';
@@ -89,6 +91,18 @@ describe('c-rd2-elevate-information', () => {
         it('should display Elevate Recurring Id', async () => {
             return global.flushPromises().then(async () => {
                 assertElevateRecurringIdIsPopulated(component, mockGetRecord);
+            });
+        });
+
+        it('should display Credit Card Last 4', async () => {
+            return global.flushPromises().then(async () => {
+                assertLastFourDigitsIsPopulated(component, mockGetRecord);
+            });
+        });
+
+        it('should display Expiration Date', async () => {
+            return global.flushPromises().then(async () => {
+                assertExpirationDateIsPopulated(component, mockGetRecord);
             });
         });
 
@@ -462,6 +476,46 @@ describe('c-rd2-elevate-information', () => {
 
 // Helpers
 //////////////
+
+/***
+* @description Verifies the Last Four Digits value displayed on the widget
+* and has the same value as the Recurring Donation record
+*/
+const assertLastFourDigitsIsPopulated = (component, mockRecord) => {
+    const last4Digits = getLastFourDigits(component);
+    expect(last4Digits).not.toBeNull();
+    expect(last4Digits.value).toBe(mockRecord.fields[CC_LAST_4_FIELD_NAME].value);
+}
+
+/***
+ * @description Finds and returns the Last 4 digits value as displayed in the widget
+ */
+const getLastFourDigits = (component) => {
+    const last4Digits = component.shadowRoot.querySelector('[data-qa-locator="text Last Four Digits"]');
+
+    return last4Digits;
+}
+
+/***
+* @description Verifies the Expiration Date value displayed on the UI contains the year from the field
+* on the Recurring Donation record
+*/
+const assertExpirationDateIsPopulated = (component, mockRecord) => {
+    const expDate = getExpirationDate(component);
+    const fieldValue = mockRecord.fields[EXPIRATION_YEAR_FIELD_NAME].value;
+    expect(expDate).not.toBeNull();
+    expect(fieldValue).not.toBeNull();
+    expect(expDate.value).toContain(fieldValue)
+}
+
+/***
+ * @description Finds and returns the expiration date from the widget UI
+ */
+const getExpirationDate = (component) => {
+    const expDate = component.shadowRoot.querySelector('[data-qa-locator="text Expiration Date"]');
+
+    return expDate;
+}
 
 /***
 * @description Verifies the Elevate Recurring Id is displayed on the widget
