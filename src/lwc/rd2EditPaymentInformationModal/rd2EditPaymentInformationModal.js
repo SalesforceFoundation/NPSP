@@ -103,7 +103,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     /**
     * @description Process new payment information
     */
-    async hadnleProcessCommitment() {
+    async handleProcessCommitment() {
         this.clearError();
         this.isSaving = true;
         this.isSaveButtonDisabled = true;
@@ -202,7 +202,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     }
 
      /**
-     * @description Displayes errors extracted from the error response
+     * @description Displays errors extracted from the error response
      * returned from the Elevate API when the Commitment cannot be created
      */
     getCommitmentError(response) {
