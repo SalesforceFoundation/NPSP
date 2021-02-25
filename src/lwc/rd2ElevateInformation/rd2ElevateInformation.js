@@ -14,6 +14,7 @@ import FIELD_CC_EXP_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.C
 import FIELD_CC_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
 import FIELD_ACH_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
@@ -34,6 +35,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
+import UpdatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
@@ -43,8 +45,10 @@ const FIELDS = [
     FIELD_PAYMENT_METHOD,
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
-    FIELD_STATUS_REASON
+    FIELD_STATUS_REASON,
+    FIELD_NEXT_DONATION_DATE  
 ];
+
 const OPTIONAL_FIELDS = [
     FIELD_CC_LAST_4,
     FIELD_ACH_LAST_4,
@@ -77,6 +81,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         elevateRecordCreateFailed,
         commonUnknownError,
         viewErrorLogLabel,
+        UpdatePaymentInformation,
         commonExpirationDate
     });
 
@@ -99,12 +104,15 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @track showLastFourCreditCard = false;
     @track showExpirationDate = false;
     @track permissions = {
+        hasAccess: null,
+        hasKeyFieldsUpdateAccess : null,
         hasKeyFieldsAccess: null,
         showLastFourDigits: null,
         showExpirationDate: null,
         alert: ''
     };
     @track error = {};
+    @track displayEditModal = false;
     commitmentURLPrefix;
 
     get paymentMethod() {
@@ -117,6 +125,14 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get commitmentURL() {
         return this.commitmentURLPrefix + this.commitmentId;
+    }
+
+    get nextDonationDate() {
+        return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
+    }
+
+    get paymentMethod() {
+        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
     }
 
     /***
@@ -134,6 +150,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                         && response.hasFieldPermissions === true
                         && isNull(this.permissions.alert);
 
+                    this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
+                         && response.hasFieldUpdatePermission;
                     this.permissions.showExpirationDate = response.showExpirationDate;
                     this.permissions.showLastFourDigits = response.showLastFourDigits;
 
@@ -261,6 +279,17 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     get lastFourDigitsCreditCard() {
         return this.getValue(FIELD_CC_LAST_4.fieldApiName);
     }
+
+    /**
+    * @desciprtion launch Update Payment Information Modal
+    */
+    openUpdatePaymentInformationModal() {
+        this.displayEditModal = true;
+    }
+
+    closeUpdatePaymentInformationModal() {
+        this.displayEditModal = false;
+      }
 
     /***
      * @description Generates URL for Elevate commitment
@@ -490,6 +519,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get qaLocatorViewErrorLog() {
         return `link ${this.labels.viewErrorLogLabel}`;
+    }
+
+    get qaLocatorUpdatePaymentInformation() {
+        return `link ${this.labels.UpdatePaymentInformation}`;
     }
 
 }

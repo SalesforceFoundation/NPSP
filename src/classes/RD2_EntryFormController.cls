@@ -409,9 +409,11 @@ public with sharing class RD2_EntryFormController {
                 return;
             }
 
-            Id recordId = rd.npe03__Contact__c != null
-                ? rd.npe03__Contact__c
-                : rd.npe03__Organization__c;
+            Id recordId = rd.Id != null
+                ? rd.Id
+                : rd.npe03__Contact__c != null
+                    ? rd.npe03__Contact__c
+                    : rd.npe03__Organization__c;
 
             logError(recordId, response.getErrorMessages());
         }
@@ -438,7 +440,9 @@ public with sharing class RD2_EntryFormController {
                 npe03__Recurring_Donation__c.SObjectType
             );
 
-            String errorType = RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE;
+            String errorType = (recordId.getSobjectType() == Schema.npe03__Recurring_Donation__c.getSObjectType())
+                ? RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_EDIT
+                : RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE;
 
             logger.addError(recordId, errorMessage, errorType);
 
