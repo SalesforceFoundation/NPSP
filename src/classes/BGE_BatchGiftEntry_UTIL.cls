@@ -73,84 +73,89 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         // Batches created using BGE_DataImportBatchEntry store fields used by its Data
         // Import records in Active_Fields__c, while Batches created in GE_GiftEntry
         // use fields included in the Form_Template__c record related to the Batch.
-        DataImportBatch__c batch = getDataImportBatch(batchId);
-        List<String> dataImportCoreFields = getCoreDataImportFields(includeRelationshipFields);
+        DataImportBatch__c batch = [
+                SELECT Batch_Gift_Entry_Version__c,
+                        Form_Template__r.Template_JSON__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+        ];
 
-        if (!isNewBatchGiftEntryVersion(batch)) {
-            fieldApiNames.addAll(dataImportCoreFields);
+        if (batch.Batch_Gift_Entry_Version__c == null ||
+                batch.Batch_Gift_Entry_Version__c < 2.0) {
+
+            fieldApiNames = getCoreDataImportFields(includeRelationshipFields);
             fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
 
-            return fieldApiNames;
-        }
+        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
 
-        fieldApiNames.addAll(getDataImportElevateFields());
-        fieldApiNames.add(getNewBatchGiftEntryVersionFields());
+            fieldApiNames.add(DataImport__c.Additional_Object_JSON__c.getDescribe().getName());
 
-        for (String field : dataImportCoreFields) {
-            fieldApiNames.add(field.toLowerCase());
-        }
+            for (String field : getCoreDataImportFields(includeRelationshipFields)) {
+                fieldApiNames.add(field.toLowerCase());
+            }
 
-        // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
-        // BDI_DataImportService.getDefaultMappingService()) because of the need
-        // to reference the fieldMappingByDevName property.
-        fieldApiNames.addAll(getTemplateFields(batch));
-        return fieldApiNames;
-    }
+            fieldApiNames.addAll(getDataImportElevateFields());
 
-    private static List<String> getTemplateFields(DataImportBatch__c batch) {
-        List<String> fieldApiNames = new List<String>();
+            // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
+            // BDI_DataImportService.getDefaultMappingService()) because of the need
+            // to reference the fieldMappingByDevName property.
+            BDI_MappingServiceAdvanced mappingService =
+                    BDI_MappingServiceAdvanced.getInstance();
 
-        BDI_MappingServiceAdvanced mappingService =
-                BDI_MappingServiceAdvanced.getInstance();
+            Map<String, BDI_FieldMapping> fieldMappingByDevName =
+                    mappingService.fieldMappingByDevName;
 
-        Map<String, BDI_FieldMapping> fieldMappingByDevName =
-                mappingService.fieldMappingByDevName;
+            GE_Template.Template template = (GE_Template.Template) JSON.deserialize(
+                    batch.Form_Template__r.Template_JSON__c,
+                    GE_Template.Template.class
+            );
 
-        for (GE_Template.Section formSection : deserializeTemplate(batch).layout.sections) {
-            for (GE_Template.Element formElement : formSection.elements) {
-                if (formElement.dataImportFieldMappingDevNames == null) {
-                    continue;
-                }
-                // Get the field mappings, used to reference the source fields
-                for (String fieldMappingName :
-                        formElement.dataImportFieldMappingDevNames) {
-
-                    BDI_FieldMapping fieldMapping =
-                            fieldMappingByDevName.get(fieldMappingName);
-
-                    Boolean isObjectMappedLookup = mappingService
-                            .importedRecordFieldNames.contains(
-                            fieldMappingName.toLowerCase());
-
-                    if (fieldMapping == null && !isObjectMappedLookup) {
+            for (GE_Template.Section formSection : template.layout.sections) {
+                for (GE_Template.Element formElement : formSection.elements) {
+                    if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;
                     }
-                    String sourceFieldName = fieldMapping != null ?
-                            fieldMapping.Source_Field_API_Name :
-                            isObjectMappedLookup ?
-                                    fieldMappingName : null;
-                    SObjectField field = DataImport__c.SObjectType.getDescribe()
-                            .fields.getMap().get(sourceFieldName);
+                    // Get the field mappings, used to reference the source fields
+                    for (String fieldMappingName :
+                            formElement.dataImportFieldMappingDevNames) {
 
-                    // Add the source fields used in the Template but only if the source field name is valid
-                    if (!fieldApiNames.contains(sourceFieldName.toLowerCase()) && field != null) {
-                        fieldApiNames.add(sourceFieldName.toLowerCase());
-                    }
+                        BDI_FieldMapping fieldMapping =
+                                fieldMappingByDevName.get(fieldMappingName);
 
-                    // Add the Name fields on the related object(s) for all Lookup fields,
-                    // used as display value(s) for Lookup fields loaded in the Form UI
-                    if ((fieldMapping != null &&
-                            fieldMapping.Source_Field_Data_Type == 'REFERENCE')
-                            || isObjectMappedLookup) {
+                        Boolean isObjectMappedLookup = mappingService
+                                .importedRecordFieldNames.contains(
+                                fieldMappingName.toLowerCase());
 
-                        if (field != null) {
-                            String relatedObjNameField =
-                                    UTIL_Describe.getReferenceObjectNameField(field);
+                        if (fieldMapping == null && !isObjectMappedLookup) {
+                            continue;
+                        }
+                        String sourceFieldName = fieldMapping != null ?
+                                fieldMapping.Source_Field_API_Name :
+                                isObjectMappedLookup ?
+                                        fieldMappingName : null;
+                        SObjectField field = DataImport__c.SObjectType.getDescribe()
+                                .fields.getMap().get(sourceFieldName);
 
-                            if (relatedObjNameField != null &&
-                                    !fieldApiNames.contains(
-                                            relatedObjNameField.toLowerCase())) {
-                                fieldApiNames.add(relatedObjNameField.toLowerCase());
+                        // Add the source fields used in the Template but only if the source field name is valid
+                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase()) && field != null) {
+                            fieldApiNames.add(sourceFieldName.toLowerCase());
+                        }
+
+                        // Add the Name fields on the related object(s) for all Lookup fields,
+                        // used as display value(s) for Lookup fields loaded in the Form UI
+                        if ((fieldMapping != null &&
+                                fieldMapping.Source_Field_Data_Type == 'REFERENCE')
+                                || isObjectMappedLookup) {
+
+                            if (field != null) {
+                                String relatedObjNameField =
+                                        UTIL_Describe.getReferenceObjectNameField(field);
+
+                                if (relatedObjNameField != null &&
+                                        !fieldApiNames.contains(
+                                                relatedObjNameField.toLowerCase())) {
+                                    fieldApiNames.add(relatedObjNameField.toLowerCase());
+                                }
                             }
                         }
                     }
@@ -158,32 +163,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             }
         }
         return fieldApiNames;
-    }
-
-    private static GE_Template.Template deserializeTemplate(DataImportBatch__c batch) {
-        GE_Template.Template template = (GE_Template.Template) JSON.deserialize(
-                batch.Form_Template__r.Template_JSON__c,
-                GE_Template.Template.class
-        );
-        return template;
-    }
-
-    private static String getNewBatchGiftEntryVersionFields() {
-        return DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
-    }
-
-    private static Boolean isNewBatchGiftEntryVersion(DataImportBatch__c batch) {
-        return batch.Batch_Gift_Entry_Version__c >= 2.0;
-    }
-
-    private static DataImportBatch__c getDataImportBatch(Id batchId) {
-        DataImportBatch__c batch = [
-                SELECT Batch_Gift_Entry_Version__c,
-                        Form_Template__r.Template_JSON__c
-                FROM DataImportBatch__c
-                WHERE Id = :batchId
-        ];
-        return batch;
     }
 
     @TestVisible
@@ -201,7 +180,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     /*******************************************************************************************************
     * @description Returns the subset of DataImport__c fields that are part of every batch
     * @param includeRelationshipFields whether to include relationship fields in the returned list
-    * @return List<String>
+    * @return list of DataImport__c field api names
     */
     private static List<String> getCoreDataImportFields(Boolean includeRelationshipFields) {
         List<String> fields = new List<String> {
