@@ -125,7 +125,7 @@ public with sharing class HH_Households_TEST {
         		Name_Connector__c = label.npo02.HouseholdNameConnector,
        			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
         		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_NameSpec'
+        		Implementing_Class__c = 'HH_INamingImpl'
             )
         );
 

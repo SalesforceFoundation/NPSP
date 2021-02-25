@@ -685,7 +685,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hns.Name_Connector__c = label.npo02.HouseholdNameConnector;
         hns.Name_Overrun__c = label.npo02.HouseholdNameOverrun;
         hns.Contact_Overrun_Count__c = 9;
-        hns.Implementing_Class__c = 'HH_NameSpec';
+        hns.Implementing_Class__c = 'HH_INamingImpl';
     }
 
     public static void configAllocationsSettings(Allocations_Settings__c allosettings) {
