@@ -9,7 +9,7 @@
         <value>Objecttoewijzingen voor gegevensimport</value>
     </caseValues>
     <fields>
-        <help>Als aangepaste Apex-logica moet worden gebruikt voor het toewijzen van de velden toe voor dit object, moet dit veld worden ingevuld met de naam van een klasse (inclusief naamruimte, indien benodigd), die de klasse BDI_ObjectMappingLogic uitbreidt en de methode populateObject overschrijft.</help>
+        <help>Als u aangepaste Apex-logica moet gebruiken voor het toewijzen van velden voor dit object, vult u dit veld in met een klassenaam (incl. naamruimte, indien nodig), die de klasse BDI_ObjectMappingLogic uitbreidt en de methode populateObject overschrijft.</help>
         <label>Logische klasse voor aangepast toewijzen</label>
         <name>Custom_Mapping_Logic_Class__c</name>
     </fields>
@@ -26,7 +26,7 @@
     </fields>
     <fields>
         <help>De veld-API-naam waarin het slagen of mislukken van de import wordt vastgelegd voor een record NPSP-gegevensimport.</help>
-        <label>Veldnaam voor status van geïmporteerde record</label>
+        <label>Veldnaam status geïmporteerde record</label>
         <name>Imported_Record_Status_Field_Name__c</name>
     </fields>
     <fields>

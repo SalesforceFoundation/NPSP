@@ -1,51 +1,76 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" docType="html-5.0" standardStylesheets="false" >
+    <apex:includeLightning/>
+    <script>
+        if ({!NOT(hasAccess)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {   title : "{!$Label.commonAdminPermissionErrorTitle}",
+                        message : "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelRecurringDonationBatchIllustration",
+                    function () { }
+                );
+            });
+        }
+    </script>
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
-        <div class="slds-text-body_small slds-m-around_medium">
-            <apex:outputText value="{!pageDescription}" escape="false" />
-        </div>
-        <c:UTIL_PageMessages />
-        <apex:outputPanel rendered="{!and(isReadOnlyMode, not(isRunningBatch))}">
-            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                <apex:commandButton id="runRDBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-            </div>
-        </apex:outputPanel>
-        <apex:outputPanel rendered="{!isRunningBatch}">
-            <c:UTIL_JobProgressLightning id="jobProgress"
-                eventTargetId="{!$Component.jobProgress}"
-                strBatchComponentLabel="{!$Label.stgLabelRDStatus}"
-                cNumberOfJobs="1"
-                startPolling="True"
-                stopPollingOnComplete="True"
-                pollingDelay="1000"/>
 
-            <!--  bRerenderOnComplete doesn't actually work, so we have to refresh our page ourselves -->
-            <apex:actionPoller rerender="panelStats" interval="5" />
+        <apex:outputPanel rendered="{!NOT(hasAccess)}">
+            <div id="stgPanelRecurringDonationBatchIllustration" />
         </apex:outputPanel>
-        <apex:outputPanel id="panelStats">
-            <div class="slds-form_horizontal slds-m-around_medium">
-                <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}" styleClass="col-md-4 slds-form-element__label" />
-                    <div class="slds-form-element__control">
-                        <apex:outputField value="{!stgService.stgRD.npe03__Last_Batch_Run__c}" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDLastRun}"  />
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.Label}" styleClass="col-md-4 slds-form-element__label" />
-                    <div class="slds-form-element__control">
-                        <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Failures__c}" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDFailures}"  />
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.Label}" styleClass="col-md-4 slds-form-element__label" />
-                    <div class="slds-form-element__control">
-                        <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Successes__c}" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDSuccesses}"  />
-                    </div>
-                </div>
+
+        <apex:outputPanel rendered="{!hasAccess}">
+            <div class="slds-text-body_small slds-m-around_medium">
+                <apex:outputText value="{!pageDescription}" escape="false" />
             </div>
+            <c:UTIL_PageMessages />
+            <apex:outputPanel rendered="{!and(isReadOnlyMode, not(isRunningBatch))}">
+                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+                    <apex:commandButton id="runRDBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isRunningBatch}">
+                <c:UTIL_JobProgressLightning id="jobProgress"
+                    eventTargetId="{!$Component.jobProgress}"
+                    strBatchComponentLabel="{!$Label.stgLabelRDStatus}"
+                    cNumberOfJobs="1"
+                    startPolling="True"
+                    stopPollingOnComplete="True"
+                    pollingDelay="1000"/>
+
+                <!--  bRerenderOnComplete doesn't actually work, so we have to refresh our page ourselves -->
+                <apex:actionPoller rerender="panelStats" interval="5" />
+            </apex:outputPanel>
+            <apex:outputPanel id="panelStats">
+                <div class="slds-form_horizontal slds-m-around_medium">
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}" styleClass="col-md-4 slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:outputField value="{!stgService.stgRD.npe03__Last_Batch_Run__c}" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDLastRun}"  />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.Label}" styleClass="col-md-4 slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Failures__c}" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDFailures}"  />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.Label}" styleClass="col-md-4 slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Successes__c}" />
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDSuccesses}"  />
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
         </apex:outputPanel>
+
     </apex:form>
 </apex:page>

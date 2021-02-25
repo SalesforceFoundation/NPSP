@@ -54,7 +54,7 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
-        <help>Die Standardwerte für einen Batch in der Schenkungseingabe. Bearbeiten Sie diese nicht direkt. Diese Werte sollten über die Benutzeroberfläche aktualisiert werden, auf der Sie Ihren Batch bearbeiten.</help>
+        <help>Die Standardwerte für einen Batch im Spendeneintrag. Bearbeiten Sie diese nicht direkt. Diese Werte sollten über die Benutzeroberfläche aktualisiert werden, auf der Sie Ihren Batch bearbeiten.</help>
         <label>Batch-Standardwerte</label>
         <name>Batch_Defaults__c</name>
     </fields>
@@ -64,9 +64,14 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <help>Die Version des Batch-Schenkungseingabe-Features, das zum Erstellen dieses Batch verwendet wird.</help>
-        <label>Version der Batch-Schenkungseingabe</label>
+        <help>Die Version des Batch-Spendeneintrags-Features, das zum Erstellen dieses Batch verwendet wird.</help>
+        <label>Version des Batch-Spendeneintrags</label>
         <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
+        <help>Der eindeutige, automatisch nummerierte Bezeichner für diesen Batch.</help>
+        <label>Batch-Nummer</label>
+        <name>Batch_Number__c</name>
     </fields>
     <fields>
         <help>Die Anzahl der jeweils in jedem Batch zu verarbeitenden Datensätze.</help>
@@ -91,7 +96,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Liste der API-Namen für die in der Schenkungs-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
+        <help>Liste der API-Namen für die in der Spenden-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
         <label>Spalten der Batchtabelle</label>
         <name>Batch_Table_Columns__c</name>
     </fields>
@@ -150,24 +155,24 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>Die Zahl der Schenkungen, die in diesen Batch einzugeben erwartet wird.</help>
-        <label>Erwartete Anzahl an Schenkungen</label>
+        <help>Die Zahl der Spenden, die in diesen Batch einzugeben erwartet wird.</help>
+        <label>Erwartete Anzahl an Spenden</label>
         <name>Expected_Count_of_Gifts__c</name>
     </fields>
     <fields>
-        <help>Die erwartete Summe aller in diesen Batch eingetragenen Schenkungen.</help>
+        <help>Die erwartete Summe aller in diesen Batch eingetragenen Spenden.</help>
         <label>Erwarteter Batch-Betrag insgesamt</label>
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
-        <help>Die Vorlage, die für die Schenkungseingabe aus diesem Batch verwendet werden soll.</help>
+        <help>Die Vorlage, die für den Spendeneintrag aus diesem Batch verwendet werden soll.</help>
         <label>Formularvorlage</label>
         <name>Form_Template__c</name>
         <relationshipLabel>NPSP-Datenimportbatches</relationshipLabel>
     </fields>
     <fields>
-        <help>Dieser Batch ist zur Verw. mit Batch-Schenkungseingabe vorges. Batches werden autom. als Schenkungs-Batches gekennz., wenn sie über eine Batch-Schenkungseingabe-Registerkarte einger. werden. Manuelles Ändern dieses Felds kann unerwünschte Folgen haben.</help>
-        <label>Schenkungs-Batch</label>
+        <help>Dieser Batch ist zur Verw. mit Batch-Spendeneintrag vorgesehen. Batches werden autom. als Spenden-Batches gekennz., wenn sie über eine Batch-Spendeneintrags-Registerkarte eingereicht werden. Manuelles Ändern dieses Felds kann unerwünschte Folgen haben.</help>
+        <label>Spenden-Batch</label>
         <name>GiftBatch__c</name>
     </fields>
     <fields>
@@ -196,7 +201,7 @@
         <name>Records_Successfully_Processed__c</name>
     </fields>
     <fields>
-        <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Schenkungen und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
+        <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Spenden und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
         <label>Übereinstimmung der Summen erforderlich</label>
         <name>RequireTotalMatch__c</name>
     </fields>

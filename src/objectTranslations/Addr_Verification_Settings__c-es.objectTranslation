@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Configuración de Verificación de dirección</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Address Verification Settings --></value>
+        <value>Configuraciones de Verificación de dirección</value>
     </caseValues>
     <fields>
         <help>URL utilizada para la verificación de la dirección.</help>
@@ -58,5 +58,5 @@
         <label>Extremo de verificación de código postal</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

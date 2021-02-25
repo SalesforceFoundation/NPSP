@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Configuración de nomenclatura de hogares</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Configuraciones de nomenclatura de hogares</value>
     </caseValues>
     <fields>
         <help>Especifica la cantidad de contactos a listar explícitamente en un nombre. Después de esa cantidad, se utilizará la sustitución de nombres.</help>
@@ -43,5 +43,5 @@
         <label>Sustitución de nombres</label>
         <name>Name_Overrun__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

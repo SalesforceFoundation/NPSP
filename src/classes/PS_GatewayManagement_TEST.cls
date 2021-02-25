@@ -69,7 +69,7 @@ private with sharing class PS_GatewayManagement_TEST {
 
     @isTest
     private static void shouldReturnAsAdmin() {
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
         System.runAs(adminUser) {
             System.assertEquals(true, PS_GatewayManagement.isSystemAdmin(), 'If the user has a system admin profile ' +
