@@ -43,7 +43,11 @@ public inherited sharing class HouseholdName {
     
     public HouseholdName(Contacts contacts, HH_INaming service) {
         this.contacts = contacts;
-        this.service = service == null ? new HH_NameSpec() : service;
+        this.service = service == null ? defaultHH_INamingImplementation() : service;
+    }
+
+    private HH_INamingImpl defaultHH_INamingImplementation() {
+        return new HH_INamingImpl();
     }
 
     /*******************************************************************************************************

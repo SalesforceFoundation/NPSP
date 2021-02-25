@@ -33,7 +33,7 @@
 * @group Households
 * @description HH_NameSpec class that implements template based naming for Households.
 */
-public with sharing class HH_NameSpec implements HH_INaming {
+public with sharing class HH_INamingImpl implements HH_INaming {
 
     /*******************************************************************************************************
     * @description Get the Household name for the list of Contacts from a single Household.
