@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2013
 * @group Households
-* @description tests specific to the HH_NameSpec custom household naming class
+* @description Tests specific to NPSPs default household naming class, HH_INamingImpl.
 */
 
 @isTest
