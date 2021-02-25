@@ -62,6 +62,31 @@ private with sharing class RD2_ElevateInformation_TEST {
             'User should have perms to show expiration date');
         System.assertEquals(null, ((String) data.get('errorMessage')),
             'No error should be returned for the RD record');
+        System.assertEquals(true, (Boolean) data.get('hasFieldUpdatePermission'),
+            'The user should have RD field update permission');
+        System.assertEquals(true, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            'The user should have RD record update permission');
+    }
+
+    /****
+    * @description Verifies read only user does not have the permission to modify elevate RD
+    */
+    @isTest
+    private static void shouldReturnFalseWhenUserCannotModifyRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevate();
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+            Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
+
+            Map<String, Object> data = RD2_ElevateInformation_CTRL.getData(recordId);
+
+            System.assertEquals(false, (Boolean) data.get('hasFieldUpdatePermission'),
+                'The user should not have RD fields update permission');
+            System.assertEquals(false, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            '   The user should not have RD record update permission');
+        }
     }
 
     /****
