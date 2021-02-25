@@ -116,7 +116,7 @@ public without sharing class HouseholdNamingService {
                         household,
                         new HouseholdName(
                                 new Contacts(householdMembers),
-                                namingService));
+                                householdNamingImpl));
             }
         }
     }
@@ -203,30 +203,30 @@ public without sharing class HouseholdNamingService {
     */
     public Set<String> getHouseholdNamingContactFields() {
         if (!settings.isAdvancedHouseholdNaming()
-                || namingService.setHouseholdNameFieldsOnContact() == null) {
+                || householdNamingImpl.setHouseholdNameFieldsOnContact() == null) {
             return new Set<String>();
         } else {
-            return namingService.setHouseholdNameFieldsOnContact();
+            return householdNamingImpl.setHouseholdNameFieldsOnContact();
         }
     }
 
     /*******************************************************************************************************
     * @description the class object that supports the HH_INaming interface
     */
-    HH_INaming namingService {
+    HH_INaming householdNamingImpl {
         get {
-            if (namingService == null) {
+            if (householdNamingImpl == null) {
                 String implementingClass = new HouseholdSettings().getImplementingClass();
 
                 Type classType = Type.forName(implementingClass);
                 if (classType != null) {
                     Object classInstance = classType.newInstance();
                     if (classInstance instanceof HH_INaming) {
-                        namingService = (HH_INaming) classInstance;
+                        householdNamingImpl = (HH_INaming) classInstance;
                     }
                 }
             }
-            return namingService;
+            return householdNamingImpl;
         }
         set;
     }
