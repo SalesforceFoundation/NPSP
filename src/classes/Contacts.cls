@@ -94,8 +94,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con) {
-        HouseholdNamingExclusions consHouseholdNamingExclusions =
-                new HouseholdNamingExclusions(namingExclusionsFor(con));
+        HouseholdNamingExclusionsString consHouseholdNamingExclusions =
+                new HouseholdNamingExclusionsString(namingExclusionsFor(con));
         return consHouseholdNamingExclusions.isNotEqualTo(
                 namingExclusionsFor(oldVersionOf(con)));
     }
@@ -120,8 +120,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void synchronizeNamingExclusions() {
         for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusions exclusions =
-                    new HouseholdNamingExclusions(namingExclusionsFor(con));
+            HouseholdNamingExclusionsString exclusions =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
             if (exclusions.hasNamingExclusions()) {
                 synchronizeNamingExclusionStringToCheckboxes(con);
             }
@@ -138,7 +138,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void synchronizeNamingExclusionStringToCheckboxes(Contact con) {
-        HouseholdNamingExclusions exclusions = new HouseholdNamingExclusions(namingExclusionsFor(con));
+        HouseholdNamingExclusionsString exclusions = new HouseholdNamingExclusionsString(namingExclusionsFor(con));
         con.Exclude_from_Household_Name__c = exclusions.isNameExcluded();
         con.Exclude_from_Household_Formal_Greeting__c = exclusions.isFormalGreetingExcluded();
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isInformalGreetingExcluded();
@@ -159,12 +159,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void copyNamingExclusionsFromCheckboxes(Contact con) {
-        HouseholdNamingExclusions exclusions = buildNamingExclusionsFromCheckboxesFor(con);
+        HouseholdNamingExclusionsString exclusions = buildNamingExclusionsFromCheckboxesFor(con);
         con.npo02__Naming_Exclusions__c = exclusions.getDisplayValue();
     }
 
-    private HouseholdNamingExclusions buildNamingExclusionsFromCheckboxesFor(Contact con) {
-        HouseholdNamingExclusions exclusions = new HouseholdNamingExclusions(null);
+    private HouseholdNamingExclusionsString buildNamingExclusionsFromCheckboxesFor(Contact con) {
+        HouseholdNamingExclusionsString exclusions = new HouseholdNamingExclusionsString(null);
         if (isExcludedFromHouseholdName(con)) {
             exclusions.excludeName();
         }
