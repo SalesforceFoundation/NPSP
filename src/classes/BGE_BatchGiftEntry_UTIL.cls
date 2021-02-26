@@ -74,10 +74,9 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         // Import records in Active_Fields__c, while Batches created in GE_GiftEntry
         // use fields included in the Form_Template__c record related to the Batch.
         DataImportBatch__c batch = getDataImportBatch(batchId);
-        List<String> dataImportCoreFields = getCoreDataImportFields(includeRelationshipFields);
 
         if (!isNewBatchGiftEntryVersion(batch)) {
-            fieldApiNames.addAll(dataImportCoreFields);
+            fieldApiNames.addAll(getCoreDataImportFields(includeRelationshipFields));
             fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
 
             return fieldApiNames;
@@ -86,19 +85,19 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         fieldApiNames.addAll(getDataImportElevateFields());
         fieldApiNames.add(getNewBatchGiftEntryVersionFields());
 
-        for (String field : dataImportCoreFields) {
+        for (String field : getCoreDataImportFields(includeRelationshipFields)) {
             fieldApiNames.add(field.toLowerCase());
         }
 
         // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
         // BDI_DataImportService.getDefaultMappingService()) because of the need
         // to reference the fieldMappingByDevName property.
-        fieldApiNames.addAll(getTemplateFields(batch));
+        fieldApiNames.addAll(getTemplateFields(batch, fieldApiNames));
         return fieldApiNames;
     }
 
-    private static List<String> getTemplateFields(DataImportBatch__c batch) {
-        List<String> fieldApiNames = new List<String>();
+    private static List<String> getTemplateFields(DataImportBatch__c batch, List<String> fieldApiNames) {
+        List<String> templateFields = new List<String>();
 
         BDI_MappingServiceAdvanced mappingService =
                 BDI_MappingServiceAdvanced.getInstance();
@@ -134,7 +133,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
                     // Add the source fields used in the Template but only if the source field name is valid
                     if (!fieldApiNames.contains(sourceFieldName.toLowerCase()) && field != null) {
-                        fieldApiNames.add(sourceFieldName.toLowerCase());
+                        templateFields.add(sourceFieldName.toLowerCase());
                     }
 
                     // Add the Name fields on the related object(s) for all Lookup fields,
@@ -150,14 +149,14 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                             if (relatedObjNameField != null &&
                                     !fieldApiNames.contains(
                                             relatedObjNameField.toLowerCase())) {
-                                fieldApiNames.add(relatedObjNameField.toLowerCase());
+                                templateFields.add(relatedObjNameField.toLowerCase());
                             }
                         }
                     }
                 }
             }
         }
-        return fieldApiNames;
+        return templateFields;
     }
 
     private static GE_Template.Template deserializeTemplate(DataImportBatch__c batch) {
@@ -191,7 +190,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         List<String> elevateFieldApiNames = new List<String>();
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             elevateFieldApiNames = new List<String>{
-                DataImport__c.Payment_Declined_Reason__c.getDescribe().getName()
+                String.valueOf(DataImport__c.Payment_Declined_Reason__c)
             };
         }
 
