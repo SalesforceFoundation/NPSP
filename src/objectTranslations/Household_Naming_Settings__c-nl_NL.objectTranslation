@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Naaminstellingen voor huishoudens</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Household Naming Settings --></value>
+        <value>Naaminstellingen voor huishoudens</value>
     </caseValues>
     <fields>
         <help>Specificeert het aantal Contactpersonen die expliciet moeten worden opgenomen in een naam. Na dat aantal wordt de Naamoverschrijding gebruikt.</help>
@@ -43,5 +43,5 @@
         <label>Naamoverschrijding</label>
         <name>Name_Overrun__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>

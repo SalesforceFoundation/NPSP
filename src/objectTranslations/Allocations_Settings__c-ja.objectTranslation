@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Allocations Settings --></value>
+        <value>割り当て設定</value>
     </caseValues>
     <fields>
         <help>デフォルト割り当てを有効にすると、各商談に割り当てオブジェクトが作成されます。これにより、デフォルト一般会計単位への割り当てに関するレポート作成が可能になりますが、より多くのデータストレージが使用されます。</help>

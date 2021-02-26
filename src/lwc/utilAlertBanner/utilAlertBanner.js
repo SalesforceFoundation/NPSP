@@ -15,6 +15,9 @@ export default class AlertBanner extends LightningElement {
     @api icon;
     @api size;
     @api message;
+    @api isDismissable = false;
+
+    _isVisible = true;
 
     get alertTheme() {
         const warningThemeDefault = 'warning';
@@ -24,6 +27,13 @@ export default class AlertBanner extends LightningElement {
         }
 
         return defaultClass.concat(this.theme);
+    }
+
+    get isVisible() {
+        return this._isVisible;
+    }
+    set isVisible(value) {
+        this._isVisible = value;
     }
 
     get alertVariant() {
@@ -74,5 +84,9 @@ export default class AlertBanner extends LightningElement {
         }
 
         return this.message;
+    }
+
+    hideAlert() {
+        this.isVisible = false;
     }
 }
