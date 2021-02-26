@@ -138,4 +138,52 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                         String.valueOf(DataImport__c.Account2_City__c).toLowerCase()));
     }
 
+    @isTest
+    static void shouldReturnElevateFieldsForElevateCustomer() {
+        ElevateConfigMock mockInstance = new ElevateConfigMock();
+        mockInstance.isElevateCustomer = true;
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+            GE_PaymentServices.class,
+            mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+        Test.startTest();
+            List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields();
+            System.assert(!elevateFields.isEmpty(), 'Elevate fields should be returned for an Elevate customer.');
+        Test.stopTest();
+    }
+
+    @isTest
+    static void shouldReturnNoElevateFieldsForNonElevateCustomer() {
+        ElevateConfigMock mockInstance = new ElevateConfigMock();
+        mockInstance.isElevateCustomer = false;
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+                GE_PaymentServices.class,
+                mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+        Test.startTest();
+            List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields();
+            System.assert(elevateFields.isEmpty(), 'Elevate fields should not returned when the user is not an ' +
+                'Elevate customer.');
+        Test.stopTest();
+    }
+
+    private class ElevateConfigMock implements System.StubProvider {
+        Boolean isElevateCustomer;
+        public Object handleMethodCall(Object stubbedObject,
+                                        String stubbedMethodName,
+                                        Type returnType,
+                                        List<Type> listOfParamTypes,
+                                        List<String> listOfParamNames,
+                                        List<Object> listOfArgs) {
+            switch on stubbedMethodName {
+                when 'isElevateCustomer' {
+                    return isElevateCustomer;
+                }
+            }
+            return null;
+        }
+    }
+
 }
