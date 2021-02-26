@@ -342,6 +342,7 @@
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>INamingExclusions</members>
+        <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
