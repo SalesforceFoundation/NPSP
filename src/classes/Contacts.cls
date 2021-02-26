@@ -57,7 +57,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onBeforeInsert() {
-        synchronizeNamingExclusionsFieldsBeforeInsert();
+        synchronizeNamingExclusions();
     }
 
     public void onBeforeUpdate() {
@@ -118,7 +118,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return con.Exclude_from_Household_Name__c;
     }
 
-    private void synchronizeNamingExclusionsFieldsBeforeInsert() {
+    private void synchronizeNamingExclusions() {
         for (Contact con : (List<Contact>) getRecords()) {
             HouseholdNamingExclusions exclusions =
                     new HouseholdNamingExclusions(namingExclusionsFor(con));
