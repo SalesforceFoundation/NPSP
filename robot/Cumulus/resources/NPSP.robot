@@ -595,3 +595,103 @@ Verify No Errors Displayed on AM Page And Object Group
     View Field Mappings Of The Object   Account 1
     Page Should Not Contain Locator     npsp_settings.page_error    warning     ${object_group} : ${field} (${field}__c)
     Wait For Locator Is Not Visible     npsp_settings.field_error   ${field}__c
+
+Change Object Permissions
+    [Documentation]  Adds or removes the Create, Read, Edit and Delete permissions for the specified object on the specified permission set..
+    [Arguments]  ${action}  ${objectapiname}  ${permset}
+
+    ${ns} =  Get NPSP Namespace Prefix
+
+    ${removeobjperms} =  Catenate  SEPARATOR=\n
+    ...  ObjectPermissions objperm;
+    ...  objperm = [SELECT Id, PermissionsRead, PermissionsEdit, PermissionsCreate, PermissionsDelete FROM ObjectPermissions 
+    ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') 
+    ...  AND SobjectType='${ns}${objectapiname}']; 
+    ...  objperm.PermissionsRead = false; 
+    ...  objperm.PermissionsEdit = false; 
+    ...  objperm.PermissionsCreate = false; 
+    ...  objperm.PermissionsDelete = false; 
+    ...  update objperm; 
+
+    ${addobjperms} =  Catenate  SEPARATOR=\n
+    ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+    ...  ObjectPermissions objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
+    ...  PermissionsDelete = true, ParentId = permid, SobjectType='${ns}${objectapiname}');
+    ...  insert objperm;
+
+    Run Keyword if  "${action}" == "remove"
+    ...             Run Task  execute_anon
+    ...             apex= ${removeobjperms}
+
+    Run Keyword if  "${action}" == "add"
+    ...             Run Task  execute_anon
+    ...             apex= ${addobjperms}
+
+Change Field Permissions
+    [Documentation]  Adds or removes the Create, Read, Edit and Delete permissions for the specified object field on the specified permission set.
+    [Arguments]  ${action}  ${objectapiname}  ${fieldapiname}  ${permset}
+
+    ${ns} =  Get NPSP Namespace Prefix
+
+    ${removefieldperms} =  Catenate  SEPARATOR=\n
+    ...  FieldPermissions fldperm;
+    ...  fldperm = [SELECT Id, Field, PermissionsRead, PermissionsEdit FROM FieldPermissions 
+    ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}')
+    ...  AND SobjectType='${ns}${objectapiname}'
+    ...  AND Field='${ns}${objectapiname}.${ns}${fieldapiname}'];        
+    ...  fldperm.PermissionsRead = false;
+    ...  fldperm.PermissionsEdit = false;
+    ...  update fldperm;
+
+    ${addfieldperms} =  Catenate  SEPARATOR=\n
+    ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+    ...  FieldPermissions fldperm = New FieldPermissions(PermissionsRead = true, PermissionsEdit = true,
+    ...  ParentId = permid, Field = '${ns}${objectapiname}.${ns}${fieldapiname}', SobjectType='${ns}${objectapiname}');
+    ...  insert fldperm;
+
+    Run Keyword if  "${action}" == "remove"
+    ...             Run Task  execute_anon
+    ...             apex= ${removefieldperms}
+
+    Run Keyword if  "${action}" == "add"
+    ...             Run Task  execute_anon
+    ...             apex= ${addfieldperms}
+
+Object Permissions Cleanup
+   [Documentation]  Resets all object permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
+   [Arguments]  ${objectapiname}  ${permset}
+ 
+   ${ns} =  Get NPSP Namespace Prefix
+ 
+   ${addobjback} =  Catenate  SEPARATOR=\n
+   ...  List<ObjectPermissions> checkperms = [SELECT PermissionsRead FROM ObjectPermissions 
+   ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') AND
+   ...  SobjectType = '${ns}${objectapiname}'];
+   ...  if (checkperms.isEmpty()) {
+   ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+   ...  ObjectPermissions objperm = New ObjectPermissions(PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, 
+   ...  PermissionsDelete = true, ParentId = permid, SobjectType = '${ns}${objectapiname}');
+   ...  insert objperm; }
+   ...  else { System.debug('Permissions Exist, skipping.'); }
+ 
+   Run Task  execute_anon  apex=${addobjback}
+
+
+Field Permissions Cleanup
+   [Documentation]  Resets all field permissions in case a test fails before they are restored. Skips the reset if the permissions have already been added back.
+   [Arguments]  ${objectapiname}  ${fieldapiname}  ${permset}
+ 
+   ${ns} =  Get NPSP Namespace Prefix
+ 
+   ${addfieldback} =  Catenate  SEPARATOR=\n
+   ...  List<FieldPermissions> checkperms = [SELECT PermissionsRead FROM FieldPermissions 
+   ...  WHERE parentId IN ( SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}') AND
+   ...  SobjectType = '${ns}${objectapiname}' AND Field = '${ns}${objectapiname}.${ns}${fieldapiname}'];
+   ...  if (checkperms.isEmpty()) {
+   ...  String permid = [SELECT id FROM permissionset WHERE PermissionSet.Name = '${permset}'].id;
+   ...  FieldPermissions fldperm = New FieldPermissions(PermissionsRead = true, PermissionsEdit = true, 
+   ...  ParentId = permid, Field = '${ns}${objectapiname}.${ns}${fieldapiname}', SobjectType = '${ns}${objectapiname}');
+   ...  insert fldperm; }
+   ...  else { System.debug('Permissions Exist, skipping.'); }
+ 
+   Run Task  execute_anon  apex=${addfieldback}
