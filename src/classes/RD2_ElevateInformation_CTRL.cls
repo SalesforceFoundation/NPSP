@@ -59,18 +59,43 @@ public with sharing class RD2_ElevateInformation_CTRL {
     public static Map<String, Object> getData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
 
+
         try {
             data = new Map<String, Object> {
                 'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
             };
 
-            Boolean hasPermissions = hasFieldPermissions();
-            data.put('hasFieldPermissions', hasPermissions);
+            Boolean hasRDUpdatePermission = UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', false);
 
-            if (hasPermissions) {
+            Boolean hasKeyRequiredFieldReadPermissions = hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('Status__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
+            });
+
+            Boolean hasKeyFieldsUpdatePermissions = hasUpdatePermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardLast4__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationMonth__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationYear__c')
+            });
+
+            data.put('hasFieldPermissions', hasKeyRequiredFieldReadPermissions);
+            data.put('hasFieldUpdatePermission', hasKeyFieldsUpdatePermissions);
+            data.put('hasRDSObjectUpdatePermission', hasRDUpdatePermission);
+
+            if (hasKeyRequiredFieldReadPermissions) {
                 data.put('alert', RD2_VisualizeScheduleController.getValidationAlert(recordId));
                 data.put('errorMessage', getLatestErrorMessage(recordId));
             }
+
+            data.put('showLastFourDigits', hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardLast4__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ACH_Last_4__c') }
+            ));
+            data.put('showExpirationDate', hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationMonth__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationYear__c') }
+            ));
 
             if (RD2_ElevateIntegrationService.isIntegrationEnabled()) {
                 PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
@@ -85,18 +110,11 @@ public with sharing class RD2_ElevateInformation_CTRL {
     }
 
     /**
-     * @description Checks if the user has access for fields retrieved by the Elevate information widget
+     * @description Checks if the user has read access for fields retrieved by the Elevate information widget
      * @return Boolean
      */
-    private static Boolean hasFieldPermissions() {
-        Set<String> requiredFields = new Set<String>{
-            UTIL_Namespace.StrTokenNSPrefix('Status__c'),
-            UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
-            UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
-        };
-
+    private static Boolean hasReadPermissionsToFields(Set<String> requiredFields) {
         Boolean hasPermissions = true;
-
         for (String fld : requiredFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
             if (!dfr.isAccessible()) {
@@ -104,7 +122,22 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 break;
             }
         }
+        return hasPermissions;
+    }
 
+    /**
+     * @description Checks if the user has update access for fields retrieved by the Elevate information widget
+     * @return Boolean
+     */
+    private static Boolean hasUpdatePermissionsToFields(Set<String> requiredFields) {
+        Boolean hasPermissions = true;
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isUpdateable()) {
+                hasPermissions = false;
+                break;
+            }
+        }
         return hasPermissions;
     }
 

@@ -37,7 +37,7 @@
 @IsTest(IsParallel=false)
 private with sharing class RD2_ElevateInformation_TEST {
 
-    
+
     /****
     * @description Verifies required data is returned to the Elevate widget
     */
@@ -55,9 +55,38 @@ private with sharing class RD2_ElevateInformation_TEST {
         System.assertEquals(null, ((String) data.get('alert')),
             'No alert should be returned for the RD record');
         System.assertEquals(true, ((Boolean) data.get('hasFieldPermissions')),
-            'User should have field permissions');
+            'User should have required field permissions');
+        System.assertEquals(true, ((Boolean) data.get('showLastFourDigits')),
+            'User should have perms to show the last 4 of credit card');
+        System.assertEquals(true, ((Boolean) data.get('showExpirationDate')),
+            'User should have perms to show expiration date');
         System.assertEquals(null, ((String) data.get('errorMessage')),
             'No error should be returned for the RD record');
+        System.assertEquals(true, (Boolean) data.get('hasFieldUpdatePermission'),
+            'The user should have RD field update permission');
+        System.assertEquals(true, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            'The user should have RD record update permission');
+    }
+
+    /****
+    * @description Verifies read only user does not have the permission to modify elevate RD
+    */
+    @isTest
+    private static void shouldReturnFalseWhenUserCannotModifyRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevate();
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+            Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
+
+            Map<String, Object> data = RD2_ElevateInformation_CTRL.getData(recordId);
+
+            System.assertEquals(false, (Boolean) data.get('hasFieldUpdatePermission'),
+                'The user should not have RD fields update permission');
+            System.assertEquals(false, (Boolean) data.get('hasRDSObjectUpdatePermission'),
+            '   The user should not have RD record update permission');
+        }
     }
 
     /****
@@ -88,7 +117,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when Enhanced Recurring Donations are not enabled
     */
     @isTest
-    private static void shouldReturnAlertWhenRD2IsNotEnabled() {        
+    private static void shouldReturnAlertWhenRD2IsNotEnabled() {
         enableElevate();
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
@@ -104,7 +133,7 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when Enhanced Recurring Donations are not enabled
     */
     @isTest
-    private static void shouldReturnAlertWhenIdIsNotRecurringDonationId() { 
+    private static void shouldReturnAlertWhenIdIsNotRecurringDonationId() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevate();
 
@@ -121,8 +150,8 @@ private with sharing class RD2_ElevateInformation_TEST {
     * when an error record is created for the Recurring Donation
     */
     @isTest
-    private static void shouldReturnErrorMessageWhenRecurringDonationHasAnError() { 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();       
+    private static void shouldReturnErrorMessageWhenRecurringDonationHasAnError() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevate();
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
@@ -145,6 +174,36 @@ private with sharing class RD2_ElevateInformation_TEST {
         );
         System.assertEquals(expectedMessage, ((String) data.get('errorMessage')),
             'An error message should match');
+    }
+
+    /****
+    * @description Verifies that the show date/last4 perms are accurate for a user without access to these fields
+    */
+    @isTest
+    private static void shouldReturnCorrectPermsForLimitedAccessUser() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevate();
+        Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
+
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+
+            Map<String, Object> data = RD2_ElevateInformation_CTRL.getData(recordId);
+
+            System.assertEquals(true, ((Boolean) data.get('isElevateCustomer')),
+                'The org should be Elevate customer');
+            System.assertEquals(null, ((String) data.get('alert')),
+                'No alert should be returned for the RD record');
+            System.assertEquals(false, ((Boolean) data.get('hasFieldPermissions')),
+                'User should not have required field permissions');
+            System.assertEquals(false, ((Boolean) data.get('showLastFourDigits')),
+                'User should not have perms to show the last 4 of credit card');
+            System.assertEquals(false, ((Boolean) data.get('showExpirationDate')),
+                'User should not have perms to show expiration date');
+            System.assertEquals(null, ((String) data.get('errorMessage')),
+                'No error should be returned for the RD record');
+        }
     }
 
 
