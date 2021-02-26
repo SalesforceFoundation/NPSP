@@ -30,7 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Domain class for HouseholdNamingExclusions in NPSP.
+* @description Represents household naming exclusions as a set of name/greeting fields from which the Contact should
+* be excluded from.
 */
 public inherited sharing class HouseholdNamingExclusionsString implements INamingExclusionsString {
     private String value;
