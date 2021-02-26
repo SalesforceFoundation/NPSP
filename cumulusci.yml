@@ -43,6 +43,12 @@ tasks:
         group: Salesforce Metadata
         class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
 
+    create_perms_testing_user:
+        description: Creates a test user for testing permissions.
+        class_path: cumulusci.tasks.sfdx.SFDXOrgTask
+        options:
+            command: "force:user:create -a permtest --definitionfile datasets/qa_org/users/perms_test_user.json"
+
     delete_files:
         description: Delete the specified files from the current working folder
         group: Salesforce Metadata
@@ -486,7 +492,7 @@ tasks:
                 User sunil = [SELECT Id FROM User WHERE LastName = 'Divani'];
                 sunil.IsActive = false;
                 update sunil;
-
+          
     dx:
         group: "Salesforce DX"
         description: "Calls a sfdx task with the cci Org User specified.  Enter the sfdx task with the command option"
@@ -754,6 +760,8 @@ flows:
             10:
                 task: deploy_reports
             11:
+                task: create_perms_testing_user
+            12:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
@@ -785,7 +793,9 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
-            12:
+            12: 
+                task: create_perms_testing_user
+            13:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
@@ -1050,6 +1060,8 @@ flows:
             8:
                 task: deploy_regression_bdi_metadata_config
             9:
+                task: create_perms_testing_user
+            10:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
