@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNull, isNotEmpty, isUndefined, isEmptyObject, apiNameFor} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
@@ -119,7 +119,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
             Object.assign(errors.rows,  {
                 [row.Id] : {
-                    title: 'Process Error',
+                    title: this.CUSTOM_LABELS.geProcessingErrors,
                     messages: this.getTableRowErrorMessages(row)
                 }
             });

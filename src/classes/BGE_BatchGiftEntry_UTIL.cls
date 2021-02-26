@@ -68,6 +68,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     */
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
         List<String> fieldApiNames = new List<String>();
+        List<String> dataImportCoreFields = getCoreDataImportFields(includeRelationshipFields);
 
         // Query the Batch to determine which set of fields will be needed.
         // Batches created using BGE_DataImportBatchEntry store fields used by its Data
@@ -76,8 +77,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         DataImportBatch__c batch = getDataImportBatch(batchId);
 
         if (!isNewBatchGiftEntryVersion(batch)) {
-            fieldApiNames.addAll(getCoreDataImportFields(includeRelationshipFields));
             fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
+            fieldApiNames.addAll(dataImportCoreFields);
 
             return fieldApiNames;
         }
@@ -85,7 +86,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         fieldApiNames.addAll(getDataImportElevateFields());
         fieldApiNames.add(getNewBatchGiftEntryVersionFields());
 
-        for (String field : getCoreDataImportFields(includeRelationshipFields)) {
+        for (String field : dataImportCoreFields) {
             fieldApiNames.add(field.toLowerCase());
         }
 

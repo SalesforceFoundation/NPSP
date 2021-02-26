@@ -204,6 +204,7 @@ import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
+import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
 import geTextPaymentsSaveNotice from '@salesforce/label/c.geTextPaymentsSaveNotice';
 import geTextProcessing from '@salesforce/label/c.geTextProcessing';
@@ -308,6 +309,7 @@ class GeLabelService {
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
         geBodyFormFieldsRightCol,
+        geProcessingErrors,
         geBodyMatchingApplyNewPayment,
         geBodyMatchingNewOpportunity,
         geBodyMatchingNoPayments,
