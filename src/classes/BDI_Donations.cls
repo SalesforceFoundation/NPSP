@@ -313,25 +313,31 @@ public class BDI_Donations {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
         for (DataImport__c dataImport : bdi.listDI) {
 
+            Boolean anyDonationFieldsPopulated =
+                    BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
+                            dataImportFieldToOpportunityField);
+            Boolean anyPaymentFieldsPopulated =
+                    BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToPaymentField);
+
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
             }
 
-            //If there are no Donation Fields populated and no donation amount populated then
+            //If there are no Donation Fields or Payment Fields populated and no donation amount populated then
             //do not continue with donation processing.
-            if (dataImport.Donation_Amount__c == null &&
-                !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
-                                                                        dataImportFieldToOpportunityField)) {
+            if (dataImport.Donation_Amount__c == null && !anyDonationFieldsPopulated && !anyPaymentFieldsPopulated) {
                 continue;
             }
 
 
-            // If the donation was created or matched on a previous run, consider the
-            // donation validated for this Data Import record.
+            // If the donation was created / matched / updated on a previous run, and there aren't any payment fields
+            // that may need to populated then skip over this DI record.
             if (dataImport.DonationImported__c != null
+                    && !anyPaymentFieldsPopulated
                     && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
-                    || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
+                    || dataImport.DonationImportStatus__c == System.Label.bdiMatched
+                    || dataImport.DonationImportStatus__c == System.Label.bdiUpdated)) {
                 continue;
             }
 
@@ -488,6 +494,19 @@ public class BDI_Donations {
                                     : '')
                                     + con.LastName;
             }
+        } else if (
+            !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToOpportunityField)
+            && dataImport.DonationImported__c != null) {
+            // If the opportunity doesn't have any fields mapped, but has a DonationImported Id, then no update on the
+            // oppt is necessary, and it is likely here to serve as parent to a payment.  Return a null oppt so no DML
+            // happens for it, and set the DonationImportStatus to matched by Id if it isn't already.
+            opp = null;
+
+            if (dataImport.DonationImportStatus__c == null) {
+                dataImport.DonationImportStatus__c = System.label.bdiMatchedId;
+            }
+
+            return opp;
         }
 
         if (dataImport.Donation_Record_Type_Name__c != null) {
