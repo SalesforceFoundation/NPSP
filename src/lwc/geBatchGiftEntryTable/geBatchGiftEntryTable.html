@@ -59,8 +59,9 @@
 
                 <div style="height: 20rem;">
                     <lightning-datatable
-                            key-field="uid"
+                            key-field="Id"
                             data={data}
+                            errors={tableRowErrors}
                             columns={columns}
                             show-row-number-column="true"
                             onrowaction={handleRowActions}

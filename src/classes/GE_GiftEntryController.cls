@@ -48,7 +48,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled(cacheable=true)
     public static Boolean isElevateCustomer() {
         try {
-            return GE_PaymentServices.isElevateCustomer;
+            return new GE_PaymentServices().isElevateCustomer();
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

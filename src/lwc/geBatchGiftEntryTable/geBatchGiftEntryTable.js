@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import { isNotEmpty, isUndefined } from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
@@ -24,6 +24,7 @@ import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
@@ -44,7 +45,7 @@ const columnTypeByDescribeType = {
 };
 
 const COLUMNS = [
-    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text', editable: true },
     { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
     {
         label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
@@ -74,15 +75,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this._columnsLoaded && this._dataImportModel;
     }
 
-    _batchLoaded = false;
-    data = [];
-    get hasData() {
-        return this.data.length > 0;
-    }
-
     _columnsLoaded = false;
     _columnsBySourceFieldApiName = {};
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    _batchLoaded = false;
 
     @api title;
     @api total;
@@ -91,6 +87,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     isLoaded = true;
+
 
     constructor() {
         super();
@@ -101,6 +98,61 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     connectedCallback() {
         this.loadBatch();
+    }
+
+    get hasData() {
+        return this.data.length > 0;
+    }
+
+    _data = [];
+    get data() {
+        return this._data;
+    }
+    set data(dataImportRows) {
+        this.assignDataImportErrorsToTableRows(dataImportRows);
+        this._data = dataImportRows;
+    }
+
+    tableRowErrors;
+    assignDataImportErrorsToTableRows(dataImportRows) {
+        let errors = {rows: {}};
+        this.getDataImportRowsWithErrors(dataImportRows).forEach(row => {
+            Object.assign(errors.rows,  {
+                [row.Id] : {
+                    title: this.CUSTOM_LABELS.geProcessingErrors,
+                    messages: this.getTableRowErrorMessages(row)
+                }
+            });
+        });
+        this.tableRowErrors = errors;
+    }
+
+    getDataImportRowsWithErrors(dataImportRows) {
+        return dataImportRows.filter(row => {
+                    return this.hasDataImportRowError(row);
+                });
+    }
+
+
+    getErrorPropertiesToDisplayInRow() {
+        return [apiNameFor(FAILURE_INFORMATION_FIELD),
+                apiNameFor(PAYMENT_DECLINED_REASON)];
+    }
+
+    hasDataImportRowError(row) {
+        return this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
+                    row.record.hasOwnProperty(errorProperty))
+
+    }
+
+    getTableRowErrorMessages(dataImportRow) {
+        let errorMessages = [];
+        this.getErrorPropertiesToDisplayInRow().forEach(errorProperty => {
+            if (dataImportRow.record.hasOwnProperty(errorProperty)) {
+                errorMessages.push(dataImportRow.record[errorProperty]);
+            }
+        });
+        return errorMessages;
     }
 
     @api
