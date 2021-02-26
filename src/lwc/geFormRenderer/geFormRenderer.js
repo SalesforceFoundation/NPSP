@@ -128,6 +128,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
 });
 const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 const ACH_CONSENT_MESSAGE = 'true';
+const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -165,6 +166,9 @@ export default class GeFormRenderer extends LightningElement{
 
     @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
     @track isAccessible = true;
+
+    _isFormCollapsed = false;
+    _shouldInformParent = true;
 
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
@@ -916,6 +920,7 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     loadDataImportRecord(dataImport) {
+        this.expandForm();
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
 
@@ -1117,6 +1122,9 @@ export default class GeFormRenderer extends LightningElement{
 
         this.selectedDonationOrPaymentRecord =
             this.selectedDonationCopyForReviewDonationsModal;
+        if (!this.isSingleGiftEntry) {
+            this.expandForm();
+        }
     }
 
     hasSelectedDonationOrPayment() {
@@ -2403,4 +2411,26 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    get isFormCollapsed() {
+        return this._isFormCollapsed;
+    }
+
+    get altTextLabel() {
+        return 'Toggle '
+            + this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName;
+    }
+
+    expandForm() {
+        if (this.isFormCollapsed) {
+            this._isFormCollapsed = false;
+        }
+    }
+
+    get expandableContainerId() {
+        return EXPANDABLE_SECTION_CONTAINER;
+    }
+
+    handleCollapse(event) {
+        this._isFormCollapsed = event.detail.isCollapsed;
+    }
 }
