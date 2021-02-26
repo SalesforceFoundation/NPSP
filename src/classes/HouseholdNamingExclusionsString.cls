@@ -32,52 +32,45 @@
 * @date 2021
 * @description Domain class for HouseholdNamingExclusions in NPSP.
 */
-public inherited sharing class HouseholdNamingExclusionsString {
+public inherited sharing class HouseholdNamingExclusionsString implements INamingExclusionsString {
     private String value;
 
     public HouseholdNamingExclusionsString(String namingExclusionsString) {
         this.value = namingExclusionsString == null ? '' : namingExclusionsString;
     }
 
-    public Boolean isNameExcluded() {
+    public String value() {
+        return value.removeEnd(';');
+    }
+
+    public Boolean isExcludedFromName() {
         return value.contains('Household__c.Name');
     }
 
-    public Boolean isFormalGreetingExcluded() {
+    public Boolean isExcludedFromFormalGreeting() {
         return value.contains('Household__c.Formal_Greeting__c');
     }
 
-    public Boolean isInformalGreetingExcluded() {
+    public Boolean isExcludedFromInformalGreeting() {
         return value.contains('Household__c.Informal_Greeting__c');
     }
 
     public Boolean hasNamingExclusions() {
-        return isNameExcluded()
-                || isFormalGreetingExcluded()
-                || isInformalGreetingExcluded();
+        return isExcludedFromName()
+                || isExcludedFromFormalGreeting()
+                || isExcludedFromInformalGreeting();
     }
 
-    public void excludeName() {
+    private void excludeFromName() {
         value += 'Household__c.Name;';
     }
 
-    public void excludeFormalGreeting() {
+    private void excludeFormalGreeting() {
         value += 'Household__c.Formal_Greeting__c;';
     }
 
-    public void excludeInformalGreeting() {
+    private void excludeInformalGreeting() {
         value += 'Household__c.Informal_Greeting__c;';
-    }
-
-    public String getDisplayValue() {
-        prepareFinalValue();
-        return value;
-    }
-
-    private void prepareFinalValue() {
-        if (value.endsWith(';')) {
-            value = value.subString(0, value.length() - 1);
-        }
     }
 
     private Boolean isEqualTo(String str) {
@@ -86,5 +79,24 @@ public inherited sharing class HouseholdNamingExclusionsString {
 
     public Boolean isNotEqualTo(String str) {
         return !isEqualTo(str);
+    }
+
+    public Boolean equals(INamingExclusions other) {
+        return isExcludedFromName() == other.isExcludedFromName()
+                && isExcludedFromFormalGreeting() == other.isExcludedFromFormalGreeting()
+                && isExcludedFromInformalGreeting() == other.isExcludedFromInformalGreeting();
+    }
+
+    public void synchronizeFrom(INamingExclusions other) {
+        this.value = '';
+        if (other.isExcludedFromName()) {
+            excludeFromName();
+        }
+        if (other.isExcludedFromFormalGreeting()) {
+            excludeFormalGreeting();
+        }
+        if (other.isExcludedFromInformalGreeting()) {
+            excludeInformalGreeting();
+        }
     }
 }

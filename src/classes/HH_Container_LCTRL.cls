@@ -519,7 +519,7 @@ public with sharing class HH_Container_LCTRL {
         try {
             // update naming exclusions field based on exclusion checkboxes
             Contacts contacts = new Contacts(listCon);
-            contacts.copyNamingExclusionsFromCheckboxes();
+            contacts.synchronizeNamingExclusions();
 
             HouseholdSettings householdSettings = new HouseholdSettings();
             if (!householdSettings.isAdvancedHouseholdNaming()) {

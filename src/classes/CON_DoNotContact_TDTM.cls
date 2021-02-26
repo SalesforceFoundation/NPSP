@@ -141,7 +141,7 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         con.Exclude_from_Household_Informal_Greeting__c = con.Deceased__c;
 
         Contacts contacts = new Contacts(new List<Contact> {con});
-        contacts.copyNamingExclusionsFromCheckboxes();
+        contacts.synchronizeNamingExclusions();
     }
 
 

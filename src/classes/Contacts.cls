@@ -61,7 +61,21 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onBeforeUpdate() {
-        synchronizeNamingExclusionsFieldsBeforeUpdate();
+        applyExclusionsStringChangesToCheckboxes();
+    }
+
+    private void applyExclusionsStringChangesToCheckboxes() {
+        for (Contact con : (List<Contact>) getRecords()) {
+            HouseholdNamingExclusionsString namingExclusionsString =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
+            HouseholdNamingExclusionsString oldNamingExclusionsString =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(oldVersionOf(con)));
+            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
+                HouseholdNamingExclusions exclusionsAsCheckboxes = new HouseholdNamingExclusions(con);
+                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
+                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
+            }
+        }
     }
 
     public void onAfterInsert() {
@@ -71,112 +85,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             contactsInLegacyHouseholds.onAfterInsert();
         }
     }
-
-    private Boolean orgUsesLegacyHouseholds() {
-        return settings.isAllProcessor() || settings.isAllIndividualsProcessor();
-    }
-
-    private Id householdIdFor(Contact con) {
-        return con.npo02__Household__c;
-    }
-
-    private void synchronizeNamingExclusionsFieldsBeforeUpdate() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
-            //then, copy from multiselect to checkboxes if multiselect has changed
-            //if both have changed, prefers checkboxes
-            if (shouldCopyNamingExclusionsFromCheckboxes(con)) {
-                copyNamingExclusionsFromCheckboxes(con);
-            } else if (shouldCopyNamingExclusionsFromMultiSelectPicklist(con)) {
-                synchronizeNamingExclusionStringToCheckboxes(con);
-            }
-        }
-    }
-
-    private Boolean shouldCopyNamingExclusionsFromMultiSelectPicklist(Contact con) {
-        HouseholdNamingExclusionsString consHouseholdNamingExclusions =
-                new HouseholdNamingExclusionsString(namingExclusionsFor(con));
-        return consHouseholdNamingExclusions.isNotEqualTo(
-                namingExclusionsFor(oldVersionOf(con)));
-    }
-
-    private Boolean shouldCopyNamingExclusionsFromCheckboxes(Contact con) {
-        return isExcludedFromHouseholdName(con) != isExcludedFromHouseholdName(oldVersionOf(con)) ||
-                isExcludedFromInformalGreeting(con) != isExcludedFromInformalGreeting(oldVersionOf(con)) ||
-                isExcludedFromFormalGreeting(con) != isExcludedFromFormalGreeting(oldVersionOf(con));
-    }
-
-    private Boolean isExcludedFromFormalGreeting(Contact con) {
-        return con.Exclude_from_Household_Formal_Greeting__c;
-    }
-
-    private Boolean isExcludedFromInformalGreeting(Contact con) {
-        return con.Exclude_from_Household_Informal_Greeting__c;
-    }
-
-    private Boolean isExcludedFromHouseholdName(Contact con) {
-        return con.Exclude_from_Household_Name__c;
-    }
-
-    private void synchronizeNamingExclusions() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsString exclusions =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
-            if (exclusions.hasNamingExclusions()) {
-                synchronizeNamingExclusionStringToCheckboxes(con);
-            }
-            if (hasExclusionCheckboxesChecked(con)) {
-                copyNamingExclusionsFromCheckboxes(con);
-            }
-        }
-    }
-
-    private Boolean hasExclusionCheckboxesChecked(Contact con) {
-        return isExcludedFromHouseholdName(con)
-                || isExcludedFromInformalGreeting(con)
-                || isExcludedFromFormalGreeting(con);
-    }
-
-    private void synchronizeNamingExclusionStringToCheckboxes(Contact con) {
-        HouseholdNamingExclusionsString exclusions = new HouseholdNamingExclusionsString(namingExclusionsFor(con));
-        con.Exclude_from_Household_Name__c = exclusions.isNameExcluded();
-        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isFormalGreetingExcluded();
-        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isInformalGreetingExcluded();
-    }
-
-    private String namingExclusionsFor(Contact con) {
-        return con.npo02__Naming_Exclusions__c;
-    }
-
-    /*******************************************************************************************************
-    * @description Copies the values from the naming exclusions checkboxes to the multiselect picklist.
-    ********************************************************************************************************/
-    public void copyNamingExclusionsFromCheckboxes() {
-        for (SObject sobj : getRecords()) {
-            Contact con = (Contact) sobj;
-            copyNamingExclusionsFromCheckboxes(con);
-        }
-    }
-
-    private void copyNamingExclusionsFromCheckboxes(Contact con) {
-        HouseholdNamingExclusionsString exclusions = buildNamingExclusionsFromCheckboxesFor(con);
-        con.npo02__Naming_Exclusions__c = exclusions.getDisplayValue();
-    }
-
-    private HouseholdNamingExclusionsString buildNamingExclusionsFromCheckboxesFor(Contact con) {
-        HouseholdNamingExclusionsString exclusions = new HouseholdNamingExclusionsString(null);
-        if (isExcludedFromHouseholdName(con)) {
-            exclusions.excludeName();
-        }
-        if (isExcludedFromFormalGreeting(con)) {
-            exclusions.excludeFormalGreeting();
-        }
-        if (isExcludedFromInformalGreeting(con)) {
-            exclusions.excludeInformalGreeting();
-        }
-        return exclusions;
-    }
-
 
     public void onAfterUpdate() {
         new ContactsInLegacyHouseholds(getRecords(), oldMap)
@@ -190,6 +98,48 @@ public inherited sharing class Contacts extends fflib_SObjects {
             new ContactsInLegacyHouseholds(contactsInHouseholds)
                     .onAfterDelete();
         }
+    }
+
+    private Boolean orgUsesLegacyHouseholds() {
+        return settings.isAllProcessor() || settings.isAllIndividualsProcessor();
+    }
+
+    private Id householdIdFor(Contact con) {
+        return con.npo02__Household__c;
+    }
+
+    public void synchronizeNamingExclusions() {
+        for (Contact con : (List<Contact>) getRecords()) {
+            INamingExclusionsString exclusionsAsString =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
+            INamingExclusions exclusionsAsBooleans =
+                    new HouseholdNamingExclusions(con);
+            if (!exclusionsAsString.equals(exclusionsAsBooleans)) {
+                mergeExclusions(exclusionsAsBooleans, exclusionsAsString);
+                setExclusionsStringFor(con, exclusionsAsString.value());
+                setExclusionsCheckboxes(con, exclusionsAsBooleans);
+            }
+        }
+    }
+
+    private void setExclusionsStringFor(Contact contact, String val) {
+        contact.npo02__Naming_Exclusions__c = val;
+    }
+
+    private String namingExclusionsFor(Contact con) {
+        return con.npo02__Naming_Exclusions__c;
+    }
+
+    private void mergeExclusions(INamingExclusions exclusionsAsBooleans, INamingExclusions exclusionsAsString) {
+        // Prioritize booleans by syncing from picklists first
+        exclusionsAsBooleans.synchronizeFrom(exclusionsAsString);
+        exclusionsAsString.synchronizeFrom(exclusionsAsBooleans);
+    }
+
+    private void setExclusionsCheckboxes(Contact con, INamingExclusions exclusions) {
+        con.Exclude_from_Household_Name__c = exclusions.isExcludedFromName();
+        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isExcludedFromFormalGreeting();
+        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
     }
 
     private void fireRollupsForMergedContacts() {

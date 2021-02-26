@@ -1,7 +1,9 @@
 public interface INamingExclusions {
 
-    Boolean isExcludedFromName(SObject sobj);
-    Boolean isExcludedFromFormalGreeting(SObject sobj);
-    Boolean isExcludedFromInformalGreeting(SObject sobj);
-
+    Boolean isExcludedFromName();
+    Boolean isExcludedFromFormalGreeting();
+    Boolean isExcludedFromInformalGreeting();
+    Boolean equals(INamingExclusions other);
+    void synchronizeFrom(INamingExclusions other);
+    boolean hasNamingExclusions();
 }
