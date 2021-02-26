@@ -2478,6 +2478,7 @@
         <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
+        <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
