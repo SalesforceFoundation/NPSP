@@ -532,7 +532,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private List<Id> householdsWithNamingFieldChanges() {
         List<Id> householdsWithNamingFieldChanges = new List<Id>();
-        for (Contact con : (List<Contact>) getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholds()) {
             if (isHouseholdNamingFieldsChanged(con)) {
                 householdsWithNamingFieldChanges.add(householdIdFor(con));
             }
@@ -540,31 +540,36 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdsWithNamingFieldChanges;
     }
 
-    private Boolean isHouseholdNamingFieldsChanged(Contact con) {
-        return namingExclusionChangedFor(con) || isNamingFieldChanged(con);
-    }
-
-    private Boolean isNamingFieldChanged(Contact con) {
-        Boolean namingFieldChanged = false;
-        if (hasHousehold(con)) {
-            for (String fieldName : getHouseholdNamingFieldsInUse()) {
-                if (isFieldChanged(con, fieldName)) {
-                    namingFieldChanged = true;
-                    break;
-                }
+    private List<Contact> contactsInHouseholds() {
+        List<Contact> contacts = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (hasHousehold(con)) {
+                contacts.add(con);
             }
         }
-        return namingFieldChanged;
+        return contacts;
     }
 
-    private Set<String> householdNamingFieldsInUse;
-    private Set<String> getHouseholdNamingFieldsInUse() {
-        if (householdNamingFieldsInUse != null) {
-            return householdNamingFieldsInUse;
+    private Boolean isHouseholdNamingFieldsChanged(Contact con) {
+        return namingExclusionsChangedFor(con) || namingFieldChangedFor(con);
+    }
+
+    private Boolean namingFieldChangedFor(Contact con) {
+        for (String fieldName : fieldsUsedForHouseholdNaming()) {
+            if (isFieldChanged(con, fieldName)) {
+                return true;
+            }
         }
-        householdNamingFieldsInUse = new HouseholdNamingService()
-                .getHouseholdNamingContactFields();
-        return householdNamingFieldsInUse;
+        return false;
+    }
+
+    private Set<String> householdNamingFields;
+    private Set<String> fieldsUsedForHouseholdNaming() {
+        if (householdNamingFields == null) {
+            householdNamingFields = new HouseholdNamingService()
+                    .getHouseholdNamingContactFields();
+        }
+        return householdNamingFields;
     }
 
     private Boolean isFieldChanged(Contact con, String fieldName) {
@@ -575,7 +580,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return isChanged;
     }
 
-    private Boolean namingExclusionChangedFor(Contact con) {
+    private Boolean namingExclusionsChangedFor(Contact con) {
         HouseholdNamingExclusionsString exclusions =
                 new HouseholdNamingExclusionsString(namingExclusionsFor(con));
         return exclusions.isNotEqualTo(namingExclusionsFor(oldVersionOf(con)));
