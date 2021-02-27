@@ -164,7 +164,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         delete getEmptyHouseholdsToDelete(contactsThatChangedHouseholds());
     }
 
-    private static Integer timesRun = 0;
+    private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     private void updateHouseholdNames() {
         List<Id> householdsNeedingNamesUpdated = new List<Id>();
         householdsNeedingNamesUpdated.addAll(
@@ -172,9 +172,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         householdsNeedingNamesUpdated.addAll(
                 getOldNonEmptyHouseholdIds());
         householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
-        if (householdsNeedingNamesUpdated.size() > 0 && timesRun < 2) {
+        if (householdsNeedingNamesUpdated.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             updateHouseholdNameAndMemberCount(householdsNeedingNamesUpdated);
-            timesRun++;
+            numberOfTimesUpdateHouseholdNamesHasRun++;
         }
     }
 
