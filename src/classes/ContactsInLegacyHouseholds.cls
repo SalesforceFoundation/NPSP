@@ -189,7 +189,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private void insertHouseholds() {
         List<Contact> contactsThatDoNotHaveAHousehold =
-                (List<Contact>) contactsThatDoNotHaveAHousehold().getRecords();
+                (List<Contact>) contactsWithoutHouseholds().getRecords();
         List<Contact> contactsNeedingHouseholds = new List<Contact>();
         if (settings.isAllProcessor()) {
             contactsNeedingHouseholds.addAll(contactsThatDoNotHaveAHousehold);
@@ -215,7 +215,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private List<Contact> contactsThatChangedHouseholds() {
         List<Contact> contactsThatChangedHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
-            if (householdChanged(con)) {
+            if (householdChangedFor(con)) {
                 contactsThatChangedHouseholds.add(con);
             }
         }
@@ -230,7 +230,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdIds;
     }
 
-    private fflib_SObjects contactsThatDoNotHaveAHousehold() {
+    private fflib_SObjects contactsWithoutHouseholds() {
         return selectByFieldValue(Contact.npo02__Household__c, null);
     }
 
@@ -269,7 +269,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
                     oldHouseholdIdFrom(aggregateResult),
                     memberCountFrom(aggregateResult));
         }
-        for (Id hhid : getOldHouseholdIds()) {
+        for (Id hhid : oldHouseholdIds()) {
             if (!oldHouseholdSizeById.containskey(hhid))
                 oldHouseholdSizeById.put(hhid, 0);
         }
@@ -292,7 +292,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldMap.get(con.Id);
     }
 
-    private List<Id> getOldHouseholdIds() {
+    private List<Id> oldHouseholdIds() {
         List<Id> oldHouseholdIds = new List<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (conWasInAHousehold(con)) {
@@ -306,7 +306,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return [
                 SELECT npo02__Household__c oldhh, count(Id) membercount
                 FROM Contact
-                WHERE npo02__Household__c IN :getOldHouseholdIds()
+                WHERE npo02__Household__c IN :oldHouseholdIds()
                 GROUP BY npo02__Household__c
         ];
     }
@@ -329,7 +329,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private void insertHouseholdsForContactsInIndividualAccounts() {
         List<SObject> contactsThatDoNotHaveAHouseholdRecord =
-                contactsThatDoNotHaveAHousehold().getRecords();
+                contactsWithoutHouseholds().getRecords();
         if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
             insertHouseholdsForContacts(
                     getContactsInIndividualAccounts(
@@ -347,7 +347,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private void insertHouseholdsForContactsThatDoNotHaveOne() {
-        List<Contact> householdInserts = contactsThatDoNotHaveAHousehold().getRecords();
+        List<Contact> householdInserts = contactsWithoutHouseholds().getRecords();
         if (householdInserts.size() > 0) {
             insertHouseholdsForContacts(householdInserts, true);
         }
@@ -541,7 +541,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Boolean isHouseholdNamingFieldsChanged(Contact con) {
-        return isNamingExclusionsChanged(con) || isNamingFieldChanged(con);
+        return namingExclusionChangedFor(con) || isNamingFieldChanged(con);
     }
 
     private Boolean isNamingFieldChanged(Contact con) {
@@ -575,13 +575,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return isChanged;
     }
 
-    private Boolean isNamingExclusionsChanged(Contact con) {
+    private Boolean namingExclusionChangedFor(Contact con) {
         HouseholdNamingExclusionsString exclusions =
                 new HouseholdNamingExclusionsString(namingExclusionsFor(con));
         return exclusions.isNotEqualTo(namingExclusionsFor(oldVersionOf(con)));
     }
 
-    private Boolean householdChanged(Contact con) {
+    private Boolean householdChangedFor(Contact con) {
         return householdIdFor(con) != oldHouseholdIdFor(con);
     }
 
