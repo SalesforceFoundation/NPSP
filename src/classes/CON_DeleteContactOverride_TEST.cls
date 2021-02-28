@@ -42,8 +42,6 @@ private class CON_DeleteContactOverride_TEST {
     private static final String LEX_BACK = 'back';
     /** @description LEx navigation value to go to Contact Home. */
     private static final String LEX_HOME = 'home';
-    /** @description LEx RetURL parameter. */
-    private static final String PARAM_RETURL_LEX = 'vfRetURLInSFX';
     /** @description RetURL parameter. */
     private static final String PARAM_RETURL = 'retURL';
     /** @description Cancel RetURL parameter. */
@@ -162,16 +160,12 @@ private class CON_DeleteContactOverride_TEST {
         String retUrl = 'foo/o';
         ApexPages.currentPage().getParameters().put(PARAM_RETURL, retUrl);
 
-        String vfRetURLInSFX = 'test/o';
-        ApexPages.currentPage().getParameters().put(PARAM_RETURL_LEX, vfRetURLInSFX);
-
         String failRetUrl = 'bar/o';
         ApexPages.currentPage().getParameters().put(PARAM_RETURL_FAIL, failRetUrl);
 
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
-        String expectedRetUrl = ctrl.sforceUser ? vfRetURLInSFX : retUrl;
-        System.assertEquals(expectedRetUrl, ctrl.retUrl, 'Return URL should be set');
+        System.assertEquals(retUrl, ctrl.retUrl, 'Return URL should be set');
         System.assertEquals(failRetUrl, ctrl.failRetUrl, 'Cancel URL should be set');
     }
 
@@ -201,26 +195,20 @@ private class CON_DeleteContactOverride_TEST {
         Test RetURL
     verify:
         Controller retUrl is retURL page param for Classic.
-        Controller retUrl is vfRetURLInSFX page param for LEx.
     **********************************************************************************************************/
-    private static testMethod void testRetUrlForClassicAndLex() {
+    private static testMethod void testRetUrlForClassic() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
 
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
         Map<String, String> params = new Map<String, String>{
-            PARAM_RETURL => 'foo/o',
-            PARAM_RETURL_LEX => 'bar/o'
+            PARAM_RETURL => 'foo/o'
         };
 
-        ctrl.sforceUser = false;
+        ctrl.lexOrSF1User = false;
         ctrl.setNavigationParams(params);
         System.assertEquals(params.get(PARAM_RETURL), ctrl.retUrl, 'Return URL should be retURL page param for Classic');
-
-        ctrl.sforceUser = true;
-        ctrl.setNavigationParams(params);
-        System.assertEquals(params.get(PARAM_RETURL_LEX), ctrl.retUrl, 'Return URL should be vfRetURLInSFX page param for LEx');
     }
 
     /*********************************************************************************************************
@@ -241,7 +229,7 @@ private class CON_DeleteContactOverride_TEST {
             PARAM_RETURL_FAIL => '001/o'
         };
 
-        ctrl.sforceUser = false;
+        ctrl.lexOrSF1User = false;
         ctrl.setNavigationParams(params);
         PageReference cancelPage = ctrl.onCancel();
         System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');
@@ -255,7 +243,7 @@ private class CON_DeleteContactOverride_TEST {
         System.assertEquals(params.get(PARAM_RETURL), cancelPage.getUrl(), 'Cancel page should be navigate retURL for Classic');
         System.assert(cancelPage.getRedirect(), 'The Cancel page should redirect');
 
-        ctrl.sforceUser = true;
+        ctrl.lexOrSF1User = true;
         ctrl.setNavigationParams(params);
         cancelPage = ctrl.onCancel();
         System.assertEquals(null, cancelPage, 'Cancel page should be null for LEx');
@@ -278,16 +266,12 @@ private class CON_DeleteContactOverride_TEST {
         con = getContactList(con.Id)[0];
         System.assertNotEquals(null, con.AccountId, 'The Contact should have an auto-created household.');
 
-        Map<String, String> params = new Map<String, String>{
-            PARAM_RETURL_LEX => '/' + con.Id
-        };
-        ctrl.sforceUser = true;
-        ctrl.setNavigationParams(params);
+        ctrl.lexOrSF1User = true;
         System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null before an action');
 
         PageReference retPage = ctrl.deleteContactOnly();
         System.assertEquals(null, retPage, 'Return page should be null for LEx');
-        System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact home when retUrl contains Contact Id');
+        System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact Home in LEX');
 
         List<Account> accounts = getAccountListAllRows(con.AccountId);
         System.assertEquals(1, accounts.size(), 'The Account should be retrieved from DB.');
