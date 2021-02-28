@@ -60,11 +60,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
     /** @description Boolean that is set to true if user theme is LEx or SF1 */
     @TestVisible 
-    private Boolean sforceUser {
+    private Boolean lexOrSF1User {
         get {
-            return sforceUser = sforceUser == null 
+            return lexOrSF1User = lexOrSF1User == null
                 ? UserInfo.getUiThemeDisplayed().contains('Theme4')
-                : sforceUser;
+                : lexOrSF1User;
         }
         set;
     }
@@ -143,9 +143,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     */
     @TestVisible
     private void setNavigationParams(Map<String, String> params) {
-        // In LEx and SF1 the returl param name differs from classic
-        String param = sforceUser ? 'vfRetURLInSFX' : 'retURL';
-        retURL = params.get(param);
+        retURL = params.get('retURL');
 
         //if we don't have a return URL, go back to Contacts home.
         if (String.isBlank(retURL)) {
@@ -211,8 +209,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
             delete queryContact;
 
-            if (sforceUser) {
-                sforceNav = retURL.contains(queryContact.Id) ? LEX_HOME : LEX_BACK;
+
+            if (lexOrSF1User) {
+                sforceNav = LEX_HOME;
                 return null;
             } else {
                 return getRedirect();
@@ -251,7 +250,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             return null;
         }
 
-        if (sforceUser) {
+        if (lexOrSF1User) {
             sforceNav = LEX_HOME;
             return null;
 
@@ -270,7 +269,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @return PageReference 
     */ 
     public PageReference onCancel() {
-        if (sforceUser) {
+        if (lexOrSF1User) {
             sforceNav = LEX_BACK;
             return null;
 
@@ -285,7 +284,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @return PageReference The PageReference with redirect enabled.
     */ 
     private PageReference getRedirect() {
-        return getRedirect(retUrl);
+        return getRedirect(retURL);
     }
 
     /*******************************************************************************************************
