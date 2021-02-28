@@ -20,6 +20,10 @@
         <plural>true</plural>
         <value><!-- הGAU Allocation --></value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <fields>
         <help>סכום ההזדמנות שיש להקצות ליחידת חשבונאות כללית זו. השאר ריק עבור הקצאות המבוססות על אחוזים.</help>
         <label>סכום</label>

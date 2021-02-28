@@ -339,6 +339,7 @@ npsp_lex_locators={
         'progress_bar':'//lightning-layout-item[.//span[text()="{}"]]//child::lightning-layout-item//*[text()="{}"]',
         'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
         'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',
+        'perms_error':'//div[@class="slds-illustration slds-illustration_large"]'
 
         },
     # Enhanced Recurring Donation (erd) related element locators

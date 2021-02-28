@@ -27,18 +27,25 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         self.salesforce.wait_until_loading_is_complete()
         if default=='error':
             self.selenium.wait_until_page_contains("Enable Advanced Mapping and Gift Entry")
+        elif default=='permissions_error':
+            locator=npsp_lex_locators["gift_entry"]["perms_error"]
+            self.selenium.wait_until_page_contains_element(locator,timeout=60,error="Gift Entry permissions error message did not load in 1 min")
         else:
             locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")
             self.selenium.wait_until_page_contains_element(locator,timeout=60,error="Gift Entry page with Batches table did not load in 1 min")
 
-    def _is_current_page(self):
+    def _is_current_page(self,default=None):
         """
         Verifies that current page is Gift Entry landing page
         """
         self.selenium.wait_until_location_contains("GE_Gift_Entry", timeout=60,
                                                    message="Current page is not Gift Entry landing page")
-        locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")
-        self.selenium.wait_until_page_contains_element(locator)
+        if default=='permissions_error':
+            locator=npsp_lex_locators["gift_entry"]["perms_error"]
+            self.selenium.wait_until_page_contains_element(locator)
+        else:
+            locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")
+            self.selenium.wait_until_page_contains_element(locator)
 
 
     def click_gift_entry_button(self,title):

@@ -18,7 +18,7 @@
                     </div>
                 </template>
                 <template if:true={shouldRender}>
-                    <div class="slds-size_5-of-12 slds-p-right_small">
+                    <div class={cssClassRenderedWidget}>
                         <template if:true={showDefaultValueInput}>
                             <c-util-input type={field.dataType}
                                           form-field-type={field.elementType}
@@ -35,9 +35,6 @@
                             </c-util-input>
                         </template>
                     </div>
-                <template if:true={isWidget}>
-                    <div class="slds-size_5-of-12 slds-p-right_small"></div>
-                </template>
                     <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
                         <template if:true={showRequiredCheckbox}>
                             <lightning-input aria-label={labelGeAssistiveRequireField}

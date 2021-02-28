@@ -57,58 +57,58 @@
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>会社のマッチング支援管理者の名前。</help>
-        <label>マッチング支援 管理者名</label>
+        <help>会社のマッチングギフト管理者の名前。</help>
+        <label>マッチングギフト 管理者名</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
         <help>会社が 1 回の支援でマッチングする最大支援金額。</help>
-        <label>マッチング支援 最大金額</label>
+        <label>マッチングギフト 最大金額</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
         <help>会社がマッチングする最小支援金額。</help>
-        <label>マッチング支援 最小金額</label>
+        <label>マッチングギフト 最小金額</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
         <help>会社が 1 年間に従業員の支援金額とマッチングする最大支援金額。</help>
-        <label>マッチング支援 年間従業員最大金額</label>
+        <label>マッチングギフト 年間従業員最大金額</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
-        <help>会社のマッチング支援プログラムに関する追加メモ。</help>
-        <label>マッチング支援 コメント</label>
+        <help>会社のマッチングギフトプログラムに関する追加メモ。</help>
+        <label>マッチングギフト コメント</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>マッチング支援を提供する会社かどうか。</help>
-        <label>マッチング支援 会社</label>
+        <help>マッチングギフトを提供する会社かどうか。</help>
+        <label>マッチングギフト 会社</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
-        <help>会社のマッチング支援管理者のメール。</help>
-        <label>マッチング支援 メール</label>
+        <help>会社のマッチングギフト管理者のメール。</help>
+        <label>マッチングギフト メール</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>マッチング支援情報が最後に更新された日付。</help>
-        <label>マッチング支援 情報更新日</label>
+        <help>マッチングギフト情報が最後に更新された日付。</help>
+        <label>マッチングギフト 情報更新日</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
         <help>会社がマッチングする支援の割合。</help>
-        <label>マッチング支援 パーセント</label>
+        <label>マッチングギフト パーセント</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>マッチング支援管理事務所の電話番号。</help>
-        <label>マッチング支援 電話</label>
+        <help>マッチングギフト管理事務所の電話番号。</help>
+        <label>マッチングギフト 電話</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>どの程度古い支援をマッチングの対象とするかの制限。</help>
-        <label>マッチング支援 要求期限</label>
+        <help>どの程度古い支援をマッチングギフトの対象とするかの制限。</help>
+        <label>マッチングギフト 要求期限</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
@@ -188,11 +188,11 @@
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label>マッチング支援 コメント</label>
+            <label>マッチングギフト コメント</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>マッチング支援情報</label>
+            <label>マッチングギフト情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>

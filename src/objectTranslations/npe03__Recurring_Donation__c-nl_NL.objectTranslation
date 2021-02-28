@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help>De laatste vier cijfers van de bankrekening die voor deze transactie wordt gebruikt.</help>
+        <label>Laatste 4 cijfers ACH</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
         <label>Altijd laatste dag van maand gebruiken</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>De maand waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
+        <label>Vervaldatum kaart</label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>Het jaar waarin de kaart vervalt die voor deze terugkerende donatie is gebruikt.</help>
+        <label>Verloopjaar kaart</label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>De laatste vier cijfers van de kaart die voor deze terugkerende donatie is gebruikt.</help>
+        <label>Laatste 4 kaart</label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help>Het laatste Elevate-event dat is afgespeeld en heeft geleid tot een update van deze terugkerende donatie.</help>
+        <label>Laatst afgespeelde Elevate-event</label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
         <label>Waarde voor volgend jaar</label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation>Verstreken</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>Onderbroken</translation>
         </picklistValues>
     </fields>
     <quickActions>

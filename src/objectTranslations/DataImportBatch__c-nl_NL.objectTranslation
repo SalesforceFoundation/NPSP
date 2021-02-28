@@ -37,6 +37,11 @@
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
+        <help>De unieke, automatisch gegenereerde aanduiding voor deze batch.</help>
+        <label>Batchnummer</label>
+        <name>Batch_Number__c</name>
+    </fields>
+    <fields>
         <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
         <label>Verwerkingsgrootte van Batch</label>
         <name>Batch_Process_Size__c</name>

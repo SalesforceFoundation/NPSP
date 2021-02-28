@@ -5,9 +5,29 @@
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <fields>
+        <help>Die letzten vier Ziffern des Bankkontos, das für diese Transaktion verwendet wird.</help>
+        <label>ACH Letzte 4</label>
+        <name>ACH_Last_4__c</name>
+    </fields>
+    <fields>
         <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum auf den letzten Tag des Monats. Die Ratenlaufzeit muss monatl. o. vierteljährl. o. eine benutzerdef. Ratenlaufzeit in Monaten sein.</help>
         <label>Immer letzten Tag des Monats verwenden</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>Der Ablaufmonat der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
+        <label>Ablaufmonat der Karte</label>
+        <name>CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>Das Ablaufjahr der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
+        <label>Ablaufjahr der Karte</label>
+        <name>CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>Die letzten vier Stellen der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
+        <label>Letzte 4 Karte</label>
+        <name>CardLast4__c</name>
     </fields>
     <fields>
         <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
@@ -193,6 +213,11 @@
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
+        <help>Das letzte Elevate-Ereignis, das zu einer Aktualisierung dieser wiederkehrenden Spende geführt hat.</help>
+        <label>Letztes verarbeitetes Elevate-Ereignis</label>
+        <name>LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
         <help>Der voraussichtliche Gesamtbetrag dieser wiederkehrenden Spende für das nächste Kalender- oder Geschäftsjahr (schreibgeschützt).</help>
         <label>Wert für nächstes Jahr</label>
         <name>NextYearValue__c</name>
@@ -247,6 +272,10 @@
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
             <translation>Erloschen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>Aufschub</translation>
         </picklistValues>
     </fields>
     <quickActions>
