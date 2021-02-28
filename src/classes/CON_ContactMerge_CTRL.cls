@@ -1105,27 +1105,53 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return String Returns the query to fetch Duplicate Record Sets
     */
     public String constructDRSSOQL() {
-        //build SOQL subquery on Duplicate Record Items
-        String subQueryOrderBy = 'CreatedDate ASC';
-        
-        String subQuery =  new UTIL_Query()
-            .withFrom('DuplicateRecordItems')
-            .withSelectFields(driFieldNames)                                  
-            .build();
-        String subQueryStr = '('+subQuery+')';
-        drsFieldNames.add(subQueryStr);
-        String setOrderBy = 'LastModifiedDate DESC ';
-        String setWhereClause = 'RecordCount > 1 AND DuplicateRule.SObjectType = \'Contact\'';
         //build the SOQL query and execute
-        String queryStr =  new UTIL_Query()
+        List<String> forDuplicateRecordSet = getDuplicateRuleSetQuerySelectClause();
+        String forDuplicateRecordSetsRelatedToAtLeastOneContact = getDuplicateRuleSetQueryWhereClause();
+
+        String duplicateRecordSetsQuery =  new UTIL_Query()
             .withFrom(DuplicateRecordSet.sObjectType)
-            .withSelectFields(drsFieldNames)
-            .withWhere(setWhereClause)
-            .withOrderBy(setOrderBy)
+            .withSelectFields(forDuplicateRecordSet)
+            .withWhere(forDuplicateRecordSetsRelatedToAtLeastOneContact)
+            .withOrderBy('LastModifiedDate DESC ')
             .withLimit(SOQL_LIMIT)
             .build();
-        drsFieldNames.remove(drsFieldNames.indexOf(subQueryStr));
-        return queryStr;
+
+        return duplicateRecordSetsQuery;
+    }
+
+    /**********************************************************************************************
+    * @description Builds a select string used to query for Duplicate Record Sets.
+    * Includes a subquery for child Duplicate Record Items.
+    * @return String Returns a select clause string
+    */
+    private List<String> getDuplicateRuleSetQuerySelectClause() {
+        List<String> selectedFields = new List<String>();
+        selectedFields.addAll(drsFieldNames);
+
+        String subquery =  new UTIL_Query()
+            .withFrom('DuplicateRecordItems')
+            .withSelectFields(driFieldNames)
+            .build();
+        String subqueryStr = '(' + subquery + ')';
+
+        selectedFields.add(subqueryStr);
+        return selectedFields;
+    }
+
+    /**********************************************************************************************
+    * @description Builds a where string used to query for Duplicate Record Sets.
+    * Limits the query to Duplicate Record Sets that have more than 1 child Duplicate Record Item
+    * and where all child Duplicate Record Items relate to a Contact.
+    * @return String Returns a where clause string
+    */
+    private String getDuplicateRuleSetQueryWhereClause() {
+        String duplicateRecordItemsForContacts = new UTIL_Query()
+            .withFrom(DuplicateRecordItem.sObjectType)
+            .withSelectFields(new List<String>{'DuplicateRecordSetId'})
+            .withWhere('Record.Type = \'Contact\'')
+            .build();
+        return 'RecordCount > 1 AND Id IN (' + duplicateRecordItemsForContacts + ')';
     }
 
     /***********************************************************************************************
