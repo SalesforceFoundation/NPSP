@@ -1698,5 +1698,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             else:
                 raise Exception(f'Table did not contain {record} with expected {key}={value}')
 
-
-
+    def run_flow(self, flow_name):
+        """
+        Runs the specified cci flow
+        """
+        from cumulusci.core.flowrunner import FlowCoordinator
+        flow_config = self.cumulusci.project_config.get_flow(flow_name)
+        flow = FlowCoordinator(self.cumulusci.project_config, flow_config, flow_name)
+        flow.run(self.cumulusci.org)
