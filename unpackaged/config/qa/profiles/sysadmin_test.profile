@@ -170,7 +170,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>npe01__OppPayment__c.%%%NAMESPACE%%%npe01__Check_Reference_Number__c</field>
+        <field>npe01__OppPayment__c.npe01__Check_Reference_Number__c</field>
         <readable>false</readable>
         <hidden>true</hidden>
     </fieldPermissions>
