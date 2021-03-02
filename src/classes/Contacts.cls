@@ -108,6 +108,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return con.npo02__Household__c;
     }
 
+    /**
+     * @description NPSP Contacts have two forms of tracking which Household Name / Greetings
+     * they should be excluded from.  Checkboxes are a newer implementation and have priority.
+     * This method aligns the concatenated String with the Checkboxes to keep them in sync.
+     */
     public void synchronizeNamingExclusions() {
         for (Contact con : (List<Contact>) getRecords()) {
             INamingExclusionsString exclusionsAsString =
