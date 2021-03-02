@@ -69,7 +69,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         npe01__OppPayment__c.sObjectType
     };
     /** @description The sObjectType of the record the button was called from */
-    private sObjectType sObjType;
+    private SObjectType parentSObjectType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
@@ -153,95 +153,175 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
-        sObjType = parentId.getSObjectType();
-        parentAmount = 0;
+        parentSObjectType = parentId.getSObjectType();
 
-        String soql = 'SELECT Id, Name ';
+        Boolean isSupportedParentSObjectType = getIsSupportedObject();
+        if (isSupportedParentSObjectType) {
+            sObject parentRecord = getParentRecord();
+            objectName = (String)parentRecord.get('Name');
+            parentAmount = 0;
+
+            setPageTitle(pageTitlesBySObjectType.get(parentSObjectType));
+            populateObjectParameters(parentSObjectType);
+            setupForMultiCurrencyOrganizations(parentRecord);
+            setParentRecordMemberVariable(parentSObjectType, parentRecord);
+            setParentAmount(parentSObjectType);
+            setupForAllocations();
+        }
+
+        isLoading = false;
+    }
+
+    /**
+     * @description Checks that current user in context has read access to the provided sObjectType.
+     * @param parentObject The allocation's parent object (Campaign, Opportunity, Payment, Recurring Donation).
+     * @return Boolean True if the user has Read access to the parent object.
+     */
+    private Boolean canUserRead(SObjectType parentObject) {
+        UTIL_Permissions permissions = UTIL_Permissions.getInstance();
+        return permissions.canRead(parentObject);
+    }
+
+    /**
+     * @description Queries for the allocation parent record
+     * @return A Campaign, opportunity, payment, or recurring donation
+     */
+    private sObject getParentRecord() {
+        String queryString = buildQueryStringFor(parentSObjectType);
+        return database.query(queryString);
+    }
+
+    /**
+     * @description Builds a query string based on the provided parent SObjectType.
+     * @param  parentSObjectType SObjectType of the allocation's parent object.
+     * @return A query string with the relevant fields selected for the parent record.
+     */
+    private String buildQueryStringFor(SObjectType parentSObjectType) {
+        String queryString = 'SELECT Id, Name ';
+
+        Boolean isMultiCurrency = UserInfo.isMultiCurrencyOrganization();
+        if (isMultiCurrency) {
+            queryString += ', CurrencyIsoCode ';
+        }
+
+        queryString += queryStringBySObjectType.get(parentSObjectType);
+        return queryString;
+    }
+
+    /**
+     * @description Map of partial query strings keyed by a supported SObjectType used to build a full
+     * query string in order to retrieve the allocation parent record.
+     */
+    private Map<SObjectType, String> queryStringBySObjectType = new Map<SObjectType, String> {
+        Opportunity.SObjectType => ', Amount FROM Opportunity WHERE Id = :parentId LIMIT 1',
+        Campaign.SObjectType => ' FROM Campaign WHERE Id = :parentId LIMIT 1',
+        npe03__Recurring_Donation__c.SObjectType => ' FROM npe03__Recurring_Donation__c WHERE Id = :parentId LIMIT 1',
+        npe01__OppPayment__c.SObjectType => ', npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :parentId LIMIT 1'
+    };
+
+    /**
+     * @description Map of custom labels keyed by a supported SObjectType used to populate the
+     * visualforce page title.
+     */
+    private Map<SObjectType, String> pageTitlesBySObjectType = new Map<SObjectType, String> {
+        Opportunity.SObjectType => System.Label.alloManageOppAllocations,
+        Campaign.SObjectType => System.Label.alloManageCampaignAllocations,
+        npe03__Recurring_Donation__c.SObjectType => System.Label.alloManageRecurringDonationAllocations,
+        npe01__OppPayment__c.SObjectType => System.Label.alloManagePaymentAllocations
+    };
+
+    /**
+     * @description Checks to see if the org has multicurrency enabled and sets a member variable to
+     * the parent record's currency.
+     * @param  parentRecord The allocation's parent record.
+     */
+    private void setupForMultiCurrencyOrganizations(sObject parentRecord) {
         if (UserInfo.isMultiCurrencyOrganization()) {
-            soql += ', CurrencyIsoCode ';
+            this.parentCurrencyCode = (String)parentRecord.get('CurrencyIsoCode');
         }
-        if (parentId.getSObjectType() == Opportunity.sObjectType) {
-            soql += ', Amount FROM Opportunity WHERE Id = :parentId LIMIT 1';
-            opp = database.query(soql);
+    }
 
-            pageTitle = System.Label.alloManageOppAllocations;
-            objectName = opp.Name;
-
-            populateObjectParameters(Opportunity.sObjectType);
-
-            //Opportunities have parent amounts and enforce being below this amount
-            if (opp.Amount!=null) {
-                parentAmount = opp.Amount;
-            }
-
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                this.parentCurrencyCode = (String)opp.get('CurrencyIsoCode');
-            }
-            if (parentAmount==0) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
-            }
-        } else if (parentId.getSObjectType() == Campaign.sObjectType) {
-            soql += ' FROM Campaign WHERE Id = :parentId LIMIT 1';
-            cam = database.query(soql);
-
-            pageTitle = System.Label.alloManageCampaignAllocations;
-            objectName = cam.Name;
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                this.parentCurrencyCode = (String)cam.get('CurrencyIsoCode');
-            }
-
-            populateObjectParameters(Campaign.sObjectType);
-
-        } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
-            soql += ' FROM npe03__Recurring_Donation__c WHERE Id = :parentId LIMIT 1';
-            rd = database.query(soql);
-
-            pageTitle = System.Label.alloManageRecurringDonationAllocations;
-            objectName = rd.Name;
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                this.parentCurrencyCode = (String)rd.get('CurrencyIsoCode');
-            }
-
-            populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
-        } else if (parentId.getSObjectType() == npe01__OppPayment__c.sObjectType) {
-            soql += ', npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :parentId LIMIT 1';
-            payment = database.query(soql);
-
-            pageTitle = System.Label.alloManagePaymentAllocations;
-            objectName = payment.Name;
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                this.parentCurrencyCode = (String)payment.get('CurrencyIsoCode');
-            }
-
-            populateObjectParameters(npe01__OppPayment__c.sObjectType);
-
-            if (payment.npe01__Payment_Amount__c!=null) {
-                parentAmount = payment.npe01__Payment_Amount__c;
-            }
-            if (parentAmount==0) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
-            }
+    /**
+     * @description Sets the parent record member variable based on the provided parent SObjectType and
+     * generic SObject record.
+     * @param  parentSObjectType SObjectType of the parent record
+     * @param  parentRecord The parent record
+     */
+    private void setParentRecordMemberVariable(SObjectType parentSObjectType, sObject parentRecord) {
+        if (parentSObjectType == Opportunity.SObjectType) {
+            opp = (Opportunity)parentRecord;
         }
 
+        if (parentSObjectType == Campaign.SObjectType) {
+            cam = (Campaign)parentRecord;
+        }
+
+        if (parentSObjectType == npe03__Recurring_Donation__c.SObjectType) {
+            rd = (npe03__Recurring_Donation__c)parentRecord;
+        }
+
+        if (parentSObjectType == npe01__OppPayment__c.SObjectType) {
+            payment = (npe01__OppPayment__c)parentRecord;
+        }
+    }
+
+    private void setPageTitle(String title) {
+        pageTitle = title;
+    }
+
+    /**
+     * @description Sets the parentAmount member variable if the parent object is an Opportunity or a Payment
+     * if the Opportunity or Payment amount field is populated.
+     * @param  parentSObjectType SObjectType of the allocation parent
+     */
+    private void setParentAmount(SObjectType parentSObjectType) {
+        Boolean shouldSetParentAmountFromPayment =
+            parentSObjectType == npe01__OppPayment__c.SObjectType
+            && payment.npe01__Payment_Amount__c != null;
+        if (shouldSetParentAmountFromPayment) {
+            parentAmount = payment.npe01__Payment_Amount__c;
+        }
+
+        Boolean shouldSetParentAmountFromOpportunity =
+            parentSObjectType == Opportunity.SObjectType
+            && opp.Amount != null;
+        if (shouldSetParentAmountFromOpportunity) {
+            parentAmount = opp.Amount;
+        }
+
+        getPageLoadValidationMessages();
+    }
+
+    /**
+     * @description Sets values for various allocation related member variables and adds a
+     * default GAU and/or a default allocation if necessary.
+     */
+    private void setupForAllocations() {
         defaultAllo = new Allocation__c();
-
         listAllo = getAllocations(parentId);
 
-        if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
-            for (integer i=0; i<listAllo.size(); i++) {
-                if (listAllo[i].General_Accounting_Unit__c == settings.Default__c) {
-                    defaultAllo = listAllo[i];
-                    listAllo.remove(i);
-                    break;
-                }
-            }
+        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null);
+        if (shouldSetDefaultGAU) {
+            setDefaultGAU();
         }
 
         if (listAllo.isEmpty()) {
             addRow();
         }
+    }
 
-        isLoading = false;
+    /**
+     * @description Finds a matching default GAU and updates relevant member variables as needed.
+     */
+    private void setDefaultGAU() {
+        for (integer i=0; i<listAllo.size(); i++) {
+            Boolean isDefaultGAU = listAllo[i].General_Accounting_Unit__c == settings.Default__c;
+            if (isDefaultGAU) {
+                defaultAllo = listAllo[i];
+                listAllo.remove(i);
+                break;
+            }
+        }
     }
 
     /**
@@ -262,7 +342,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
     */
     public void getPageLoadValidationMessages() {
-        if (parentAmount == 0 && sObjType == Opportunity.sObjectType) {
+        if (parentAmount == 0 && parentSObjectType == Opportunity.SObjectType) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
         } else if (!getIsSupportedObject()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
@@ -273,7 +353,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @description Verify the parent object is a supported sObject type for this page
     */
     public boolean getIsSupportedObject() {
-        return sObjTypesAllowed.contains(sObjType);
+        return sObjTypesAllowed.contains(parentSObjectType);
     }
 
     /**
@@ -317,7 +397,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         //add to deletion list if the allocation has an id
         if (hasId) {
-            if (!isDeletable()) {
+            if (!isAllocationDeletable()) {
                 addDelExceptionMessage();
                 return null;
             }
@@ -401,7 +481,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return (1000).format().subString(1,2);
     }
 
-    private Boolean isDeletable() {
+    private Boolean isAllocationDeletable() {
         return UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Allocation__c')).isDeletable();
     }
 
