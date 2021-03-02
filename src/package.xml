@@ -2242,6 +2242,7 @@
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
+        <members>commonErrorAccess</members>
         <members>commonErrorPrefix</members>
         <members>commonFieldLabel</members>
         <members>commonFieldNotFound</members>
