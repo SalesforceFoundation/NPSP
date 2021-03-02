@@ -70,76 +70,19 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         insertHouseholds();
         fireRollups();
         updateHouseholdNames();
-        deleteOldEmptyHouseholds();
+
+        Households oldHouseholds = new Households(new Set<Id>(oldHouseholdIds()));
+        oldHouseholds.deleteEmptyHouseholds();
     }
 
     public void onAfterDelete() {
         Households oldHouseholds = new Households(householdIds());
-        Map<Id, Integer> householdCountMap = oldHouseholds.getHouseholdCountMap();
-        deleteEmptyHouseholds(getRecords(), householdCountMap);
-        updateOldHouseholdNames(getRecords(), householdCountMap);
-    }
-
-    private void updateOldHouseholdNames(List<Contact> cons, Map<Id, Integer> householdCountMap) {
-        List<Id> nonEmptyHouseholdIds = getNonEmptyHouseholdIds(cons, householdCountMap);
-        if (nonEmptyHouseholdIds.size() > 0) {
-            updateHouseholdNameAndMemberCount(nonEmptyHouseholdIds);
-        }
-    }
-
-    private void deleteEmptyHouseholds(List<Contact> cons, Map<Id, Integer> householdCountMap) {
-        List<npo02__Household__c> emptyHouseholds = getEmptyHouseholds(cons, householdCountMap);
-        delete emptyHouseholds;
-    }
-
-    private List<Id> getNonEmptyHouseholdIds(List<Contact> cons,
-            Map<Id, Integer> householdCountMap) {
-        List<id> householdIdsNeedingNameUpdates = new List<id>();
-        for (Contact con : cons) {
-            if (!householdIsEmpty(householdCountMap, con)) {
-                householdIdsNeedingNameUpdates.add(householdIdFor(con));
-            }
-        }
-        return householdIdsNeedingNameUpdates;
-    }
-
-    private List<npo02__Household__c> getEmptyHouseholds(List<Contact> cons,
-            Map<Id, Integer> householdCountMap
-    ) {
-        List<npo02__Household__c> emptyHouseholds = new List<SObject>();
-        for (Contact con : cons) {
-            if (householdIsEmpty(householdCountMap, con)) {
-                emptyHouseholds.add(new npo02__Household__c(Id = householdIdFor(con)));
-            }
-        }
-        return emptyHouseholds;
-    }
-
-    private Boolean householdIsEmpty(Map<Id, Integer> householdCountMap, Contact con) {
-        return householdCountMap.get(householdIdFor(con)) < 1;
+        oldHouseholds.deleteEmptyHouseholds();
+        oldHouseholds.updateHouseholdNameAndMemberCount();
     }
 
     private Id householdIdFor(Contact con) {
         return con.npo02__Household__c;
-    }
-
-    private void updateHouseholdNameAndMemberCount(List<Id> contactsNeedingHouseholdNamesUpdated) {
-        if (isFutureEligible()) {
-            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
-                    contactsNeedingHouseholdNamesUpdated);
-        } else {
-            HouseholdNamingService householdNamingService = new HouseholdNamingService();
-            householdNamingService.updateHouseholdNameAndMemberCount(contactsNeedingHouseholdNamesUpdated);
-        }
-    }
-
-    private Boolean isFutureEligible() {
-        return settings.isAsyncEnabled()
-                && !System.isFuture() && !System.isBatch();
-    }
-
-    private void deleteOldEmptyHouseholds() {
-        delete getEmptyHouseholdsToDelete(contactsThatChangedHouseholds());
     }
 
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
@@ -147,11 +90,12 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         List<Id> householdsNeedingNamesUpdated = new List<Id>();
         householdsNeedingNamesUpdated.addAll(
                 householdIdsFor(contactsThatChangedHouseholds()));
-        householdsNeedingNamesUpdated.addAll(
-                getOldNonEmptyHouseholdIds());
+        householdsNeedingNamesUpdated.addAll(getOldNonEmptyHouseholdIds());
         householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
         if (householdsNeedingNamesUpdated.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
-            updateHouseholdNameAndMemberCount(householdsNeedingNamesUpdated);
+            Households households =
+                    new Households(new Set<Id>(householdsNeedingNamesUpdated));
+            households.updateHouseholdNameAndMemberCount();
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
     }
@@ -181,13 +125,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Set<Id> getOldNonEmptyHouseholdIds() {
-        Set<Id> oldNonEmptyHouseholdIds = new Set<Id>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (getOldHouseholdSizeById().get(oldHouseholdIdFor(con)) > 0) {
-                oldNonEmptyHouseholdIds.add(oldHouseholdIdFor(con));
-            }
-        }
-        return oldNonEmptyHouseholdIds;
+        Households households = new Households(new Set<Id>(oldHouseholdIds()));
+        Households emptyHouseholds =
+                new Households(households.emptyHouseholds().getRecords());
+        return emptyHouseholds.ids();
     }
 
     private List<Contact> contactsThatChangedHouseholds() {
@@ -236,32 +177,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return acc.npe01__SYSTEMIsIndividual__c == true;
     }
 
-    private Map<Id, Integer> oldHouseholdSizeById;
-    private Map<Id, Integer> getOldHouseholdSizeById() {
-        if (oldHouseholdSizeById != null) {
-            return oldHouseholdSizeById;
-        }
-        oldHouseholdSizeById = new Map<Id, Integer>();
-        for (AggregateResult aggregateResult : getMemberCountForOldHouseholds()) {
-            oldHouseholdSizeById.put(
-                    oldHouseholdIdFrom(aggregateResult),
-                    memberCountFrom(aggregateResult));
-        }
-        for (Id hhid : oldHouseholdIds()) {
-            if (!oldHouseholdSizeById.containskey(hhid))
-                oldHouseholdSizeById.put(hhid, 0);
-        }
-        return oldHouseholdSizeById;
-    }
-
-    private Integer memberCountFrom(AggregateResult a) {
-        return (Integer) a.get('membercount');
-    }
-
-    private Id oldHouseholdIdFrom(AggregateResult a) {
-        return (Id) a.get('oldhh');
-    }
-
     private Id oldHouseholdIdFor(Contact con) {
         return oldVersionOf(con).npo02__Household__c;
     }
@@ -298,18 +213,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private Boolean conWasInAHousehold(Contact con) {
         return oldHouseholdIdFor(con) != null;
-    }
-
-    private List<npo02__Household__c> getEmptyHouseholdsToDelete(
-            List<Contact> contactsThatChangedHouseholds) {
-        List<npo02__Household__c> emptyHouseholdsToDelete = new List<npo02__Household__c>();
-        for (Contact con : contactsThatChangedHouseholds) {
-            if (getOldHouseholdSizeById().get(oldHouseholdIdFor(con)) == 0) {
-                emptyHouseholdsToDelete.add(
-                        new npo02__Household__c(Id = oldHouseholdIdFor(con)));
-            }
-        }
-        return emptyHouseholdsToDelete;
     }
 
     private void insertHouseholdsForContactsInIndividualAccounts() {
@@ -392,7 +295,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
         List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
-            updateHouseholdNameAndMemberCount(householdIdsNeedingNamesUpdated);
+            Households households = new Households(new Set<Id>
+                    (householdIdsNeedingNamesUpdated));
+            households.updateHouseholdNameAndMemberCount();
         }
     }
 

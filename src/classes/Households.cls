@@ -36,12 +36,12 @@ public inherited sharing class Households extends fflib_SObjects {
 
     private Map<Id, npo02__Household__c> oldMap;
     @TestVisible
-    private HouseholdNamingService householdNamingService {
+    private HouseholdNamingService householdNamingServiceInst {
         get {
-            if (householdNamingService == null) {
-                householdNamingService = new HouseholdNamingService();
+            if (householdNamingServiceInst == null) {
+                householdNamingServiceInst = new HouseholdNamingService();
             }
-            return householdNamingService;
+            return householdNamingServiceInst;
         }
         set;
     }
@@ -71,12 +71,31 @@ public inherited sharing class Households extends fflib_SObjects {
         ];
     }
 
+    public void deleteEmptyHouseholds() {
+        delete emptyHouseholds().getRecords();
+    }
+
+
+    public Households emptyHouseholds() {
+        List<npo02__Household__c> emptyHouseholds = new List<npo02__Household__c>();
+        for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
+            if (household.npo02__Contacts__r.isEmpty()) {
+                emptyHouseholds.add(household);
+            }
+        }
+        return new Households(emptyHouseholds);
+    }
+
     public Map<Id, Integer> getHouseholdCountMap() {
         Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
             householdCountMap.put(household.Id, household.npo02__Contacts__r.size());
         }
         return householdCountMap;
+    }
+
+    public Households(List<npo02__Household__c> records) {
+        this(records, null);
     }
 
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
@@ -93,11 +112,11 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private void setNameAndGreetingsToReplacementText() {
-        householdNamingService.setNameAndGreetingsToReplacementText(getRecords());
+        householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }
 
     private void setCustomNamingField() {
-        householdNamingService.setCustomNamingField(getRecords(), oldMap);
+        householdNamingServiceInst.setCustomNamingField(getRecords(), oldMap);
     }
 
     private Boolean isAdvancedHouseholdNamingEnabled() {
@@ -111,12 +130,12 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
-        householdNamingService.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+        householdNamingServiceInst.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
         List<Id> householdsNeedingNameUpdates =
-                householdNamingService.getHouseholdsNeedingNameUpdates(
+                householdNamingServiceInst.getHouseholdsNeedingNameUpdates(
                         getRecords(), oldMap
                 );
         return householdsNeedingNameUpdates;
@@ -124,6 +143,25 @@ public inherited sharing class Households extends fflib_SObjects {
 
     private Boolean isHouseholdTriggerContext() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH);
+    }
+
+    public void updateHouseholdNameAndMemberCount() {
+        if (isFutureEligible()) {
+            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                    new List<Id>(ids()));
+        } else {
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.updateHouseholdNameAndMemberCount(new List<Id>(ids()));
+        }
+    }
+
+    public Set<Id> ids() {
+        return getIdFieldValues(npo02__Household__c.Id);
+    }
+
+    private Boolean isFutureEligible() {
+        return settings.isAsyncEnabled()
+                && !System.isFuture() && !System.isBatch();
     }
 
 }
