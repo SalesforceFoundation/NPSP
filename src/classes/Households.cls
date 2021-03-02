@@ -60,6 +60,29 @@ public inherited sharing class Households extends fflib_SObjects {
         this(getHouseholdsById(ids), null);
     }
 
+    public Households(List<npo02__Household__c> records) {
+        this(records, null);
+    }
+
+    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
+        super(records, npo02__Household__c.SObjectType);
+        oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
+                npo02__Household__c>(oldlist);
+    }
+
+    public void onBeforeUpdate() {
+        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
+            setCustomNamingField();
+            setNameAndGreetingsToReplacementText();
+        }
+    }
+
+    public void onAfterUpdate() {
+        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
+            renameHouseholdAccountsNeedingNameUpdates();
+        }
+    }
+
     private static List<npo02__Household__c> getHouseholdsById(Set<Id> ids) {
         return [
                 SELECT Id, (
@@ -102,29 +125,6 @@ public inherited sharing class Households extends fflib_SObjects {
             householdCountMap.put(household.Id, household.npo02__Contacts__r.size());
         }
         return householdCountMap;
-    }
-
-    public Households(List<npo02__Household__c> records) {
-        this(records, null);
-    }
-
-    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
-        super(records, npo02__Household__c.SObjectType);
-        oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
-                npo02__Household__c>(oldlist);
-    }
-
-    public void onBeforeUpdate() {
-        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
-            setCustomNamingField();
-            setNameAndGreetingsToReplacementText();
-        }
-    }
-
-    public void onAfterUpdate() {
-        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
-            renameHouseholdAccountsNeedingNameUpdates();
-        }
     }
 
     private void setNameAndGreetingsToReplacementText() {
