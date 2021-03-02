@@ -86,6 +86,16 @@ public inherited sharing class Households extends fflib_SObjects {
         return new Households(emptyHouseholds);
     }
 
+    public Households nonEmptyHouseholds() {
+        List<npo02__Household__c> nonEmptyHouseholds = new List<npo02__Household__c>();
+        for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
+            if (!household.npo02__Contacts__r.isEmpty()) {
+                nonEmptyHouseholds.add(household);
+            }
+        }
+        return new Households(nonEmptyHouseholds);
+    }
+
     public Map<Id, Integer> getHouseholdCountMap() {
         Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
@@ -162,6 +172,31 @@ public inherited sharing class Households extends fflib_SObjects {
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
                 && !System.isFuture() && !System.isBatch();
+    }
+
+    public void calculateLegacyHouseholdRollups() {
+        Households nonEmptyHouseholds =
+                nonEmptyHouseholds();
+        if (nonEmptyHouseholds.ids().size() > 0) {
+            if (rollupsShouldRunSynchronously(nonEmptyHouseholds.ids())) {
+                RLLP_OppRollup rg = new RLLP_OppRollup();
+                rg.rollupHouseholds(getHouseholdMap(nonEmptyHouseholds.ids()));
+            } else {
+                RLLP_OppRollup.rollupHouseholdsFuture(nonEmptyHouseholds.ids());
+            }
+        }
+    }
+
+    private Map<Id, npo02__Household__c> getHouseholdMap(Set<Id> householdIds) {
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        Map<Id, npo02__Household__c> hhmap = new Map<Id, npo02__Household__c>(
+                (List<npo02__Household__c>) Database.query(oppRollupUtil.buildHouseholdQuery() +
+                        ' WHERE Id IN :householdIds'));
+        return hhmap;
+    }
+
+    private Boolean rollupsShouldRunSynchronously(Set<Id> householdIds) {
+        return System.isFuture() || System.isBatch() || householdIds.size() <= 2;
     }
 
 }

@@ -31,6 +31,9 @@
 * @author Salesforce.org
 * @date 2021
 * @description Domain class for Contacts that use the legacy Household__c object in NPSP.
+* These Contact can use either One-To-One Accounts or the Individual "Bucket" Account. In old
+* documentation they are referred to as "Individual Contacts". They are also referred to this
+* way in Household Settings.
 */
 public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
 
@@ -90,10 +93,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     private void updateHouseholdNames() {
-        List<Id> householdsNeedingNamesUpdated = getHouseholdsWithMembershipOrNamingFieldChanges();
-        if (householdsNeedingNamesUpdated.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
+        List<Id> householdsNeedingNameAndMemberCountRefresh = getHouseholdsWithMembershipOrNamingFieldChanges();
+        if (householdsNeedingNameAndMemberCountRefresh.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             Households households =
-                    new Households(new Set<Id>(householdsNeedingNamesUpdated));
+                    new Households(new Set<Id>(householdsNeedingNameAndMemberCountRefresh));
             households.updateHouseholdNameAndMemberCount();
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
@@ -117,12 +120,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private void fireRollups() {
-        Set<Id> householdIdsNeedingRollup = new Set<Id>();
-        householdIdsNeedingRollup.addAll(householdIdsFor(contactsThatChangedHouseholds()));
-        householdIdsNeedingRollup.addAll(getOldNonEmptyHouseholdIds());
-        if (householdIdsNeedingRollup.size() > 0) {
-            calculateLegacyHouseholdRollups(householdIdsNeedingRollup);
-        }
+        Households households = new Households(householdIdsWithMembershipChanges());
+        households.calculateLegacyHouseholdRollups();
     }
 
     private void insertHouseholds() {
@@ -140,13 +139,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         insertHouseholdsForContacts(contactsNeedingHouseholds, false);
     }
 
-    private Set<Id> getOldNonEmptyHouseholdIds() {
-        Households households = new Households(new Set<Id>(oldHouseholdIds()));
-        Households emptyHouseholds =
-                new Households(households.emptyHouseholds().getRecords());
-        return emptyHouseholds.ids();
-    }
-
     private List<Contact> contactsThatChangedHouseholds() {
         List<Contact> contactsThatChangedHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
@@ -155,14 +147,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             }
         }
         return contactsThatChangedHouseholds;
-    }
-
-    private Set<Id> householdIdsFor(List<Contact> contacts) {
-        Set<Id> householdIds = new Set<Id>();
-        for (Contact con : contacts) {
-            householdIds.add(householdIdFor(con));
-        }
-        return householdIds;
     }
 
     private fflib_SObjects contactsWithoutHouseholds() {
@@ -215,16 +199,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             }
         }
         return oldHouseholdIds;
-    }
-
-    //this gets all contacts in all hhs for oldhhs, so should be fine
-    private List<AggregateResult> getMemberCountForOldHouseholds() {
-        return [
-                SELECT npo02__Household__c oldhh, count(Id) membercount
-                FROM Contact
-                WHERE npo02__Household__c IN :oldHouseholdIds()
-                GROUP BY npo02__Household__c
-        ];
     }
 
     private Boolean conWasInAHousehold(Contact con) {
@@ -396,27 +370,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private Boolean hasHousehold(Contact con) {
         return householdIdFor(con) != null;
-    }
-
-    private void calculateLegacyHouseholdRollups(Set<Id> householdIds) {
-        if (rollupsShouldRunSynchronously(householdIds)) {
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupHouseholds(getHouseholdMap(householdIds));
-        } else {
-            RLLP_OppRollup.rollupHouseholdsFuture(householdIds);
-        }
-    }
-
-    private Map<Id, npo02__Household__c> getHouseholdMap(Set<Id> householdIds) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-        Map<Id, npo02__Household__c> hhmap = new Map<Id, npo02__Household__c>(
-                (List<npo02__Household__c>) Database.query(oppRollupUtil.buildHouseholdQuery() +
-                        ' WHERE Id IN :householdIds'));
-        return hhmap;
-    }
-
-    private Boolean rollupsShouldRunSynchronously(Set<Id> householdIds) {
-        return System.isFuture() || System.isBatch() || householdIds.size() <= 2;
     }
 
     private List<Id> householdsWithNamingFieldChanges() {
