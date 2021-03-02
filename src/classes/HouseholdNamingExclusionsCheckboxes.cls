@@ -32,13 +32,13 @@
 * @date 2021
 * @description Represents household naming exclusions as a set of boolean values for Contacts in NPSP.
 */
-public with sharing class HouseholdNamingExclusions implements INamingExclusions {
+public with sharing class HouseholdNamingExclusionsCheckboxes implements INamingExclusions {
 
     private Boolean isExcludedFromName;
     private Boolean isExcludedFromFormalGreeting;
     private Boolean isExcludedFromInformalGreeting;
 
-    public HouseholdNamingExclusions(Contact con) {
+    public HouseholdNamingExclusionsCheckboxes(Contact con) {
         this.isExcludedFromName = con.Exclude_from_Household_Name__c;
         this.isExcludedFromFormalGreeting = con.Exclude_from_Household_Formal_Greeting__c;
         this.isExcludedFromInformalGreeting = con.Exclude_from_Household_Informal_Greeting__c;

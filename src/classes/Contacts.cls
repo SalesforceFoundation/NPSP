@@ -71,7 +71,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             HouseholdNamingExclusionsString oldNamingExclusionsString =
                     new HouseholdNamingExclusionsString(namingExclusionsFor(oldVersionOf(con)));
             if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
-                HouseholdNamingExclusions exclusionsAsCheckboxes = new HouseholdNamingExclusions(con);
+                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
                 exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
                 setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
             }
@@ -113,7 +113,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             INamingExclusionsString exclusionsAsString =
                     new HouseholdNamingExclusionsString(namingExclusionsFor(con));
             INamingExclusions exclusionsAsBooleans =
-                    new HouseholdNamingExclusions(con);
+                    new HouseholdNamingExclusionsCheckboxes(con);
             if (!exclusionsAsString.equals(exclusionsAsBooleans)) {
                 mergeExclusions(exclusionsAsBooleans, exclusionsAsString);
                 setExclusionsStringFor(con, exclusionsAsString.value());
