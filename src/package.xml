@@ -4115,6 +4115,14 @@
         <name>GlobalValueSet</name>
     </types>
     <types>
+        <members>Payment_ACH_Code-de</members>
+        <members>Payment_ACH_Code-es</members>
+        <members>Payment_ACH_Code-fr</members>
+        <members>Payment_ACH_Code-ja</members>
+        <members>Payment_ACH_Code-nl_NL</members>
+        <name>GlobalValueSetTranslation</name>
+    </types>
+    <types>
         <members>Account-Household Layout</members>
         <members>Account-Organization Layout</members>
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
