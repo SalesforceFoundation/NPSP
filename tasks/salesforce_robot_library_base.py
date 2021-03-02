@@ -2,11 +2,10 @@ import logging
 import os
 import pprint
 
-from cumulusci.core.config import TaskConfig
 from robot.libraries.BuiltIn import BuiltIn
-from cumulusci.tasks.apex.anon import AnonymousApexTask
 
-from cumulusci.tasks.apex.batch import BatchApexWait
+cumulusci_library = "cumulusci.robotframework.CumulusCI"
+salesforce_library = "cumulusci.robotframework.Salesforce"
 
 
 class SalesforceRobotLibraryBase(object):
@@ -19,21 +18,20 @@ class SalesforceRobotLibraryBase(object):
 
     @property
     def cumulusci(self):
-        return self.builtin.get_library_instance("cumulusci.robotframework.CumulusCI")
+        return self.builtin.get_library_instance(cumulusci_library)
 
     @property
     def salesforce(self):
-        return self.builtin.get_library_instance("cumulusci.robotframework.Salesforce")
+        return self.builtin.get_library_instance(salesforce_library)
 
-    def _run_subtask(self, taskclass, **options):
-        subtask_config = TaskConfig({"options": options})
-        return self.cumulusci._run_task(taskclass, subtask_config)
+    def _run_subtask(self, taskname, **options):
+        return self.cumulusci.run_task(taskname, **options)
 
     def _batch_apex_wait(self, class_name):
-        return self._run_subtask(BatchApexWait, class_name=class_name)
+        return self._run_subtask("batch_apex_wait", class_name=class_name)
 
     def _run_apex(self, code):
-        return self._run_subtask(AnonymousApexTask, apex=code)
+        return self._run_subtask("execute_anon", apex=code)
 
     def _python_display(self, title, *value, say=False):
         """Helper function for printing things to stdout for debugging.
