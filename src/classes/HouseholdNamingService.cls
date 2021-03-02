@@ -405,7 +405,7 @@ public without sharing class HouseholdNamingService {
     }
 
     private void setName(SObject household, HouseholdName householdName) {
-        household.put('Name', householdName.value());
+        household.put('Name', householdName.asName());
     }
 
     private void replaceHouseholdFormalGreeting(SObject household) {

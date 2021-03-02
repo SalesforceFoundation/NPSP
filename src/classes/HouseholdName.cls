@@ -54,7 +54,7 @@ public inherited sharing class HouseholdName {
     * @description returns the Household Name for the list of Contacts
     * @return String
     */
-    public String value() {
+    public String asName() {
         return service.getHouseholdName(getContactsForHouseholdNameGeneration());
     }
 
