@@ -56,7 +56,10 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     Payment Method=Credit Card
     ...                                     Day of Month=${day_of_month}
     Click Rd2 Modal Button                  Save
+
     Wait Until Modal Is Closed
+    Capture Page Screenshot
+    Sleep                                   1
     Current Page Should Be                  Details                                   npe03__Recurring_Donation__c
     Wait Until Loading Is Complete
     ${rd_id}                                Save Current Record ID For Deletion       npe03__Recurring_Donation__c
