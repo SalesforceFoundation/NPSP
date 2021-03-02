@@ -58,7 +58,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterInsert() {
-        updateHouseholdsNamesForContactsInHouseholds();
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContactsThatDoNotHaveOne();
         }
@@ -351,23 +350,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         if (householdInserts.size() > 0) {
             insertHouseholdsForContacts(householdInserts, true);
         }
-    }
-
-    private void updateHouseholdsNamesForContactsInHouseholds() {
-        List<Id> contactsThatHaveAHousehold = idsForContactsInHouseholds();
-        if (contactsThatHaveAHousehold.size() > 0) {
-            updateHouseholdNameAndMemberCount(contactsThatHaveAHousehold);
-        }
-    }
-
-    private List<Id> idsForContactsInHouseholds() {
-        List<Id> idsForContactsInHouseholds = new List<Id>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (hasHousehold(con)) {
-                idsForContactsInHouseholds.add(con.Id);
-            }
-        }
-        return idsForContactsInHouseholds;
     }
 
     private Map<Id, Account> getContactAccountMap(List<Contact> contacts) {
