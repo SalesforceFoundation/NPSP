@@ -702,6 +702,11 @@ tasks:
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 
+    set_bdi_mapping_mode:
+        description: Set the BDI Mapping mode to 'Help Text' or 'Data Import Field Mapping'
+        class_path: tasks.set_BDI_mapping_mode.SetBDIMappingMode            
+
+
 flows:
     install_regression:
         steps:
