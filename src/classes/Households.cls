@@ -56,6 +56,29 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
+    public Households(Set<Id> ids) {
+        this(getHouseholdsById(ids), null);
+    }
+
+    private static List<npo02__Household__c> getHouseholdsById(Set<Id> ids) {
+        return [
+                SELECT Id, (
+                        SELECT Id
+                        FROM npo02__Contacts__r
+                )
+                FROM npo02__Household__c
+                WHERE Id IN :ids
+        ];
+    }
+
+    public Map<Id, Integer> getHouseholdCountMap() {
+        Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
+        for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
+            householdCountMap.put(household.Id, household.npo02__Contacts__r.size());
+        }
+        return householdCountMap;
+    }
+
     public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
         super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,

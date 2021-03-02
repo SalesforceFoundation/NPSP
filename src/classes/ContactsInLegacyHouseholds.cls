@@ -74,31 +74,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterDelete() {
-        Map<Id, Integer> householdCountMap = getHouseholdCountMap(getRecords());
+        Households oldHouseholds = new Households(householdIds());
+        Map<Id, Integer> householdCountMap = oldHouseholds.getHouseholdCountMap();
         deleteEmptyHouseholds(getRecords(), householdCountMap);
         updateOldHouseholdNames(getRecords(), householdCountMap);
-    }
-
-    private Map<Id, Integer> getHouseholdCountMap(List<Contact> contacts) {
-        Map<Id, Integer> householdCountMap = new Map<Id, Integer>();
-        for (Contact con : contacts) {
-            if (householdIdFor(con) != null)
-                householdCountMap.put(householdIdFor(con), 0);
-        }
-        for (Contact con : getContactsWithHouseholdIds(householdCountMap)) {
-            Integer lastCount = householdCountMap.get(householdIdFor(con));
-            lastCount += 1;
-            householdCountMap.put(householdIdFor(con), lastCount);
-        }
-        return householdCountMap;
-    }
-
-    private List<Contact> getContactsWithHouseholdIds(Map<Id, Integer> householdCountMap) {
-        return [
-                SELECT Id, npo02__Household__c
-                FROM Contact
-                WHERE npo02__Household__c IN :householdCountMap.keyset()
-        ];
     }
 
     private void updateOldHouseholdNames(List<Contact> cons, Map<Id, Integer> householdCountMap) {
@@ -291,6 +270,12 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldMap.get(con.Id);
     }
 
+    private Set<Id> householdIds() {
+        Set<Id> householdIds = getIdFieldValues(Contact.npo02__Household__c);
+        householdIds.remove(null);
+        return new Set<Id>(householdIds);
+    }
+
     private List<Id> oldHouseholdIds() {
         List<Id> oldHouseholdIds = new List<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
@@ -301,6 +286,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldHouseholdIds;
     }
 
+    //this gets all contacts in all hhs for oldhhs, so should be fine
     private List<AggregateResult> getMemberCountForOldHouseholds() {
         return [
                 SELECT npo02__Household__c oldhh, count(Id) membercount
