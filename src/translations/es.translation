@@ -3851,7 +3851,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
-        <label><!-- Instructions to add Payment Method --></label>
+        <label>El paquete de campos de Salesforce.org Elevate incluye campos para introducir información de pago. Permita que los usuarios cambien tipos de pagos agregando Método de pago desde el objeto Pago al formulario antes de este paquete de campos.</label>
         <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
