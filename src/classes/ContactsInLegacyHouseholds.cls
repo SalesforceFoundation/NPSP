@@ -91,6 +91,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return con.npo02__Household__c;
     }
 
+    /**
+     * @description Static flag used to prevent hitting governor limits when this method
+     * runs multiple times during Contact merges.
+     */
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     private void updateHouseholdNames() {
         List<Id> householdsNeedingNameAndMemberCountRefresh = getHouseholdsWithMembershipOrNamingFieldChanges();
