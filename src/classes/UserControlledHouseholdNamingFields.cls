@@ -30,18 +30,21 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Value object for the String used to signify which Household Name / Greeting fields are overridden.
+* @description Value object for the String used to signify which Household Name / Greeting
+* fields are controlled by the User and should therefore not be overridden by NPSP custom
+* Household Naming logic. The value is the concatenated list of field names that the User is
+* controlling and is currently stored in the npo02__SYSTEM_CUSTOM_NAMING__c field.
 */
-public inherited sharing class HouseholdNamingOverrides {
+public inherited sharing class UserControlledHouseholdNamingFields {
     private String value;
     private SObject household;
     private SObject oldRecord;
 
-    public HouseholdNamingOverrides(String str) {
+    public UserControlledHouseholdNamingFields(String str) {
         this.value = str == null ? ';' : str + ';';
     }
 
-    public HouseholdNamingOverrides(SObject household, SObject oldRecord) {
+    public UserControlledHouseholdNamingFields(SObject household, SObject oldRecord) {
         this.value = namingOverridesFor(household) == null ? ';' :
                 namingOverridesFor(household) + ';';
         this.household = household;

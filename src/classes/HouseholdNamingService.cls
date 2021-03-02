@@ -383,8 +383,8 @@ public without sharing class HouseholdNamingService {
     }
 
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
-        HouseholdNamingOverrides namingOverrides =
-                new HouseholdNamingOverrides(namingOverridesFor(household));
+        UserControlledHouseholdNamingFields namingOverrides =
+                new UserControlledHouseholdNamingFields(namingOverridesFor(household));
         if (!namingOverrides.isNameOverridden()) {
             setName(household, householdName);
         }
@@ -453,7 +453,7 @@ public without sharing class HouseholdNamingService {
 
     private void setCustomNamingStringValue(SObject household, SObject oldRecord) {
         household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
-                new HouseholdNamingOverrides(household, oldRecord).value());
+                new UserControlledHouseholdNamingFields(household, oldRecord).value());
     }
 
     private String namingOverridesFor(SObject household) {
