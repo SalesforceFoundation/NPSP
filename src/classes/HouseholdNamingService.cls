@@ -385,13 +385,13 @@ public without sharing class HouseholdNamingService {
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
         UserControlledHouseholdNamingFields namingOverrides =
                 new UserControlledHouseholdNamingFields(namingOverridesFor(household));
-        if (!namingOverrides.isNameOverridden()) {
+        if (!namingOverrides.isNameControlledByUser()) {
             setName(household, householdName);
         }
-        if (!namingOverrides.isFormalGreetingOverridden()) {
+        if (!namingOverrides.isFormalGreetingControlledByUser()) {
             setFormalGreeting(household, householdName);
         }
-        if (!namingOverrides.isInformalGreetingOverridden()) {
+        if (!namingOverrides.isInformalGreetingControlledByUser()) {
             setInformalGreeting(household, householdName);
         }
     }

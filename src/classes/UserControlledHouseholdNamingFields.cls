@@ -45,14 +45,14 @@ public inherited sharing class UserControlledHouseholdNamingFields {
     }
 
     public UserControlledHouseholdNamingFields(SObject household, SObject oldRecord) {
-        this.value = namingOverridesFor(household) == null ? ';' :
-                namingOverridesFor(household) + ';';
+        this.value = userControlledNamingFieldsFor(household) == null ? ';' :
+                userControlledNamingFieldsFor(household) + ';';
         this.household = household;
         this.oldRecord = oldRecord;
-        processHouseholdCustomNamingStringAdjustments();
+        buildUserControlledNamingString();
     }
 
-    private String namingOverridesFor(SObject household) {
+    private String userControlledNamingFieldsFor(SObject household) {
         return (String) household.get
                 ('npo02__SYSTEM_CUSTOM_NAMING__c');
     }
@@ -61,7 +61,7 @@ public inherited sharing class UserControlledHouseholdNamingFields {
         return this.value;
     }
 
-    private void processHouseholdCustomNamingStringAdjustments() {
+    private void buildUserControlledNamingString() {
         removeOrAppendName();
         removeOrAppendInformalGreeting();
         removeOrAppendFormalGreeting();
@@ -124,26 +124,26 @@ public inherited sharing class UserControlledHouseholdNamingFields {
         return (String) household.get(fieldApiName) != oldRecord.get(fieldApiName);
     }
 
-    private Set<String> customNameSet() {
+    private Set<String> userControlledFieldSet() {
         return new Set<String>(
                 new List<String>(
                         value.split(';')));
     }
 
     private void replace(String searchVal, String newVal) {
-        if (customNameSet().contains(searchVal)) {
+        if (userControlledFieldSet().contains(searchVal)) {
             value = value.replace(searchVal, newVal);
         }
     }
 
     private void append(String val) {
-        if (!customNameSet().contains(val)) {
+        if (!userControlledFieldSet().contains(val)) {
             value += val + ';';
         }
     }
 
     private Boolean contains(String val) {
-        return customNameSet().contains(val);
+        return userControlledFieldSet().contains(val);
     }
 
     private void removeName() {
@@ -170,15 +170,15 @@ public inherited sharing class UserControlledHouseholdNamingFields {
         append('Name');
     }
 
-    public Boolean isInformalGreetingOverridden() {
+    public Boolean isInformalGreetingControlledByUser() {
         return contains('Informal_Greeting__c');
     }
 
-    public Boolean isFormalGreetingOverridden() {
+    public Boolean isFormalGreetingControlledByUser() {
         return contains('Formal_Greeting__c');
     }
 
-    public Boolean isNameOverridden() {
+    public Boolean isNameControlledByUser() {
         return contains('Name');
     }
 
