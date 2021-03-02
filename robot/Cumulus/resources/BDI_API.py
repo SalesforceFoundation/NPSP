@@ -1,10 +1,9 @@
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
-from tasks.set_BDI_mapping_mode import SetBDIMappingMode
 
 
 class BDI_API(SalesforceRobotLibraryBase):
     def configure_BDI(self, mode):
-        return self._run_subtask(SetBDIMappingMode, mode=mode)
+        return self._run_subtask("set_bdi_mapping_mode", mode=mode)
 
     def _get_di_mode(self):
         token = self.get_npsp_namespace_prefix()
