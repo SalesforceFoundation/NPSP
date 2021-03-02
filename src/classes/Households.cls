@@ -121,6 +121,12 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
+    public void onAfterUpdate() {
+        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
+            renameHouseholdAccountsNeedingNameUpdates();
+        }
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }
@@ -131,12 +137,6 @@ public inherited sharing class Households extends fflib_SObjects {
 
     private Boolean isAdvancedHouseholdNamingEnabled() {
         return settings.isAdvancedHouseholdNaming();
-    }
-
-    public void onAfterUpdate() {
-        if (!isHouseholdTriggerContext() && isAdvancedHouseholdNamingEnabled()) {
-            renameHouseholdAccountsNeedingNameUpdates();
-        }
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
