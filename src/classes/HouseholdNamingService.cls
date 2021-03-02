@@ -452,8 +452,10 @@ public without sharing class HouseholdNamingService {
     }
 
     private void setCustomNamingStringValue(SObject household, SObject oldRecord) {
+        UserControlledHouseholdNamingFields userControlledNamingFields =
+                new UserControlledHouseholdNamingFields(household, oldRecord);
         household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
-                new UserControlledHouseholdNamingFields(household, oldRecord).value());
+                userControlledNamingFields.asConcatenatedString());
     }
 
     private String namingOverridesFor(SObject household) {

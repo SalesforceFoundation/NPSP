@@ -57,7 +57,7 @@ public inherited sharing class UserControlledHouseholdNamingFields {
                 ('npo02__SYSTEM_CUSTOM_NAMING__c');
     }
 
-    public String value() {
+    public String asConcatenatedString() {
         return this.value;
     }
 
