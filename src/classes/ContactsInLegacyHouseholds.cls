@@ -70,7 +70,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         insertHouseholds();
         fireRollups();
         updateHouseholdNames();
+        deleteEmptyHouseholds();
+    }
 
+    private void deleteEmptyHouseholds() {
         Households oldHouseholds = new Households(new Set<Id>(oldHouseholdIds()));
         oldHouseholds.deleteEmptyHouseholds();
     }
@@ -87,17 +90,30 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     private void updateHouseholdNames() {
-        List<Id> householdsNeedingNamesUpdated = new List<Id>();
-        householdsNeedingNamesUpdated.addAll(
-                householdIdsFor(contactsThatChangedHouseholds()));
-        householdsNeedingNamesUpdated.addAll(getOldNonEmptyHouseholdIds());
-        householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
+        List<Id> householdsNeedingNamesUpdated = getHouseholdsWithMembershipOrNamingFieldChanges();
         if (householdsNeedingNamesUpdated.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             Households households =
                     new Households(new Set<Id>(householdsNeedingNamesUpdated));
             households.updateHouseholdNameAndMemberCount();
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
+    }
+
+    private List<Id> getHouseholdsWithMembershipOrNamingFieldChanges() {
+        List<Id> householdsNeedingNamesUpdated = new List<Id>();
+        householdsNeedingNamesUpdated.addAll(
+                householdIdsWithMembershipChanges());
+        householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
+        return householdsNeedingNamesUpdated;
+    }
+
+    private Set<Id> householdIdsWithMembershipChanges() {
+        Set<Id> ids = new Set<Id>();
+        for (Contact con : contactsThatChangedHouseholds()) {
+            ids.add(householdIdFor(con));
+            ids.add(oldHouseholdIdFor(con));
+        }
+        return ids;
     }
 
     private void fireRollups() {
