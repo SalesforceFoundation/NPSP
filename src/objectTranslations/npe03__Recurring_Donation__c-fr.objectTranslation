@@ -203,7 +203,7 @@
         <name>DisableFirstInstallment__c</name>
     </fields>
     <fields>
-        <help>Après cette date, NPSP ne créera plus de versements pour ce don récurrent et mettra à jour le Statut à Clôturé.</help>
+        <help>Après cette date, NPSP ne créera plus de versements pour ce don récurrent et mettra à jour le Statut sur Clôturé.</help>
         <label>Date de fin</label>
         <name>EndDate__c</name>
     </fields>
