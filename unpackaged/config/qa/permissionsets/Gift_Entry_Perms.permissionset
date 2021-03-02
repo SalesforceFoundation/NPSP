@@ -920,7 +920,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>%%%NAMESPACE%%%npe01__OppPayment__c.%%%NAMESPACE%%%npe01__Check_Reference_Number__c</field>
+        <field>npe01__OppPayment__c.npe01__Check_Reference_Number__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -968,7 +968,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>%%%NAMESPACE%%%npe01__OppPayment__c</object>
+        <object>npe01__OppPayment__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -977,7 +977,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>%%%NAMESPACE%%%Opportunity</object>
+        <object>Opportunity</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -995,7 +995,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>%%%NAMESPACE%%%Account</object>
+        <object>Account</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <pageAccesses>
