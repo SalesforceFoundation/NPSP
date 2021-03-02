@@ -64,20 +64,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         applyExclusionsStringChangesToCheckboxes();
     }
 
-    private void applyExclusionsStringChangesToCheckboxes() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsString namingExclusionsString =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
-            HouseholdNamingExclusionsString oldNamingExclusionsString =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(oldVersionOf(con)));
-            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
-                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
-                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
-                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
-            }
-        }
-    }
-
     public void onAfterInsert() {
         if (orgUsesLegacyHouseholds()) {
             ContactsInLegacyHouseholds contactsInLegacyHouseholds =
@@ -97,6 +83,20 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (!contactsInHouseholds.isEmpty()) {
             new ContactsInLegacyHouseholds(contactsInHouseholds)
                     .onAfterDelete();
+        }
+    }
+
+    private void applyExclusionsStringChangesToCheckboxes() {
+        for (Contact con : (List<Contact>) getRecords()) {
+            HouseholdNamingExclusionsString namingExclusionsString =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
+            HouseholdNamingExclusionsString oldNamingExclusionsString =
+                    new HouseholdNamingExclusionsString(namingExclusionsFor(oldVersionOf(con)));
+            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
+                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
+                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
+                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
+            }
         }
     }
 
