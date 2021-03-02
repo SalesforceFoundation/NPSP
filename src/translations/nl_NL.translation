@@ -3863,7 +3863,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
-        <label><!-- Instructions to add Payment Method --></label>
+        <label>De veldbundel van Salesforce.org Elevate bevat velden voor het invoeren van betalingsgegevens. Sta gebruikers toe om anders te betalen door Betalingswijze uit het object Betaling vóór deze veldbundel toe te voegen aan het formulier.</label>
         <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
@@ -4379,7 +4379,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>gsSubmitted</name>
     </customLabels>
     <customLabels>
-        <label>over 2 minuten</label>
+        <label>binnen 2 minuten</label>
         <name>gsVideoHeaderLength</name>
     </customLabels>
     <customLabels>
