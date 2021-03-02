@@ -156,7 +156,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         parentSObjectType = parentId.getSObjectType();
 
         Boolean isSupportedParentSObjectType = getIsSupportedObject();
-        if (isSupportedParentSObjectType) {
+        hasAccess = canUserRead(parentSObjectType);
+        if (isSupportedParentSObjectType && hasAccess) {
             sObject parentRecord = getParentRecord();
             objectName = (String)parentRecord.get('Name');
             parentAmount = 0;
@@ -174,12 +175,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /**
      * @description Checks that current user in context has read access to the provided sObjectType.
-     * @param parentObject The allocation's parent object (Campaign, Opportunity, Payment, Recurring Donation).
+     * @param parentSObjectType The allocation's parent object (Campaign, Opportunity, Payment, Recurring Donation).
      * @return Boolean True if the user has Read access to the parent object.
      */
-    private Boolean canUserRead(SObjectType parentObject) {
+    private Boolean canUserRead(SObjectType parentSObjectType) {
         UTIL_Permissions permissions = UTIL_Permissions.getInstance();
-        return permissions.canRead(parentObject);
+        return permissions.canRead(parentSObjectType);
     }
 
     /**
@@ -543,5 +544,18 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         return qualifiedFields;
+    }
+
+    /**
+     * @description True if the current user has Read access to the relevant parent object
+     * for the current allocations.
+     */
+    public Boolean hasAccess {
+        get { return hasAccess == null ? false : hasAccess; }
+        set;
+    }
+
+    public String getNamespace() {
+        return UTIL_Namespace.getComponentNamespace();
     }
 }
