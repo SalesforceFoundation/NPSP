@@ -135,7 +135,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return con.npo02__Naming_Exclusions__c;
     }
 
-    private void mergeExclusions(INamingExclusions exclusionsAsBooleans, INamingExclusions exclusionsAsString) {
+    /**
+     * @param exclusionsAsBooleans Checkbox implemenation of Household Naming Exclusions
+     * @param exclusionsAsString Concatenated string implementation of Household Naming
+     * Exclusions
+     * @description Checks any exclusions checkboxes to true that are included in the
+     * concatenated string, and then updates the string to include exclusions (field names)
+     * for any Exclusion checkboxes that are marked TRUE for the Contact.
+     */
+    private void mergeExclusions(INamingExclusions exclusionsAsBooleans,
+            INamingExclusions exclusionsAsString) {
         // Prioritize booleans by syncing from picklists first
         exclusionsAsBooleans.synchronizeFrom(exclusionsAsString);
         exclusionsAsString.synchronizeFrom(exclusionsAsBooleans);
