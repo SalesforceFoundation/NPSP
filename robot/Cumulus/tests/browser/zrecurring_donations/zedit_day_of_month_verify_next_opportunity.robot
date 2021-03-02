@@ -68,7 +68,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     ...                          a new opportunity created. Edits the day of month on
     ...                          the recurring donation and verifies the closing dates
     ...                          for both the opportunities.
-    [tags]                                            W-040346            feature:RD2
+    [tags]                             unstable               W-040346            feature:RD2
 
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
