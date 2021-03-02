@@ -3847,7 +3847,7 @@
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
-        <label><!-- Instructions to add Payment Method --></label>
+        <label>Salesforce.org Elevate 項目バンドルには、支払情報を入力するための項目が含まれています。この項目バンドルの前に、支払オブジェクトからフォームに支払方法を追加することで、ユーザが支払種別を切り替えることができるようにします。</label>
         <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>

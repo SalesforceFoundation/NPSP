@@ -3861,7 +3861,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
-        <label><!-- Instructions to add Payment Method --></label>
+        <label>Le paquet de champs Salesforce.org Elevate contient des champs de saisie d&apos;informations de paiement. Autorisez les utilisateurs à changer de type de paiement en ajoutant au formulaire Mode de paiement depuis l&apos;objet Paiement avant ce paquet de champs.</label>
         <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>
@@ -4013,7 +4013,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>gsChecklistItemCommunicateWithUserskTitle</name>
     </customLabels>
     <customLabels>
-        <label>Suivez les dons, les subventions et les autres types de revenu afin d&apos;identifier des modèles de donation et de comprendre ce qui motive le don chez l&apos;administré. Commencez par apprendre comment saisir des dons dans NPSP.</label>
+        <label>Suivez les dons, les subventions et les autres types de revenu afin d&apos;identifier des modèles de dons et de comprendre ce qui motive le don chez l&apos;administré. Commencez par apprendre comment saisir des dons dans NPSP.</label>
         <name>gsChecklistItemCreateDonationDesc</name>
     </customLabels>
     <customLabels>
@@ -4289,7 +4289,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>gsDaysAdded</name>
     </customLabels>
     <customLabels>
-        <label>Nombre de jours restants pour l&apos;évaluation gratuite</label>
+        <label>jours restants pour l&apos;essai gratuit</label>
         <name>gsDaysRemainingInFreeTrial</name>
     </customLabels>
     <customLabels>
