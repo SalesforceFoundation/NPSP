@@ -531,8 +531,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
                     if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
                        hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
-                        Contacts contacts = new Contacts(new List<Contact>{con});
-                        contacts.onAfterInsert();
+                        ContactsInLegacyHouseholds legacyHouseholdContacts =
+                                new ContactsInLegacyHouseholds(new List<Contact>{
+                                        con
+                                });
+                        legacyHouseholdContacts.onAfterInsert();
                         UTIL_DMLService.updateRecord(con);
                     }
                 }
