@@ -90,7 +90,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             }
             when AfterUpdate {
                 ContactsInLegacyHouseholds legacyHouseholdContacts =
-                        new ContactsInLegacyHouseholds(newlist, new Map<Id, Contact>(oldList))
+                        new ContactsInLegacyHouseholds(
+                                newlist, new Map<Id, Contact>((List<Contact>) oldList));
                 legacyHouseholdContacts.onAfterUpdate();
             }
         }
