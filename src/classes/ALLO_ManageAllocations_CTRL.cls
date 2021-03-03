@@ -79,7 +79,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The parent payment, if we're dealing with payment allocations.*/
     public npe01__OppPayment__c parentPayment {get;set;}
     /** @description The parent campaign, if we're dealing with campaign allocations.*/
-    public Campaign cam {get;set;}
+    public Campaign parentCampaign {get;set;}
     /** @description The parent recurring donation, if we're dealing with recurring donation allocations.*/
     public npe03__Recurring_Donation__c rd {get;set;}
     /** @description The amount of the parent opportunity, if these are opportunity allocations.*/
@@ -254,7 +254,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         if (parentSObjectType == Campaign.SObjectType) {
-            cam = (Campaign)parentRecord;
+            parentCampaign = (Campaign)parentRecord;
         }
 
         if (parentSObjectType == npe03__Recurring_Donation__c.SObjectType) {
@@ -379,7 +379,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         if (parentOpportunity!=null)
             allo.Opportunity__c = parentId;
-        else if (cam!=null)
+        else if (parentCampaign!=null)
             allo.Campaign__c = parentId;
         else if (rd!=null)
             allo.Recurring_Donation__c = parentId;
