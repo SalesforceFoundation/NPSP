@@ -38,7 +38,6 @@
 public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
 
     private Map<Id, Contact> oldMap;
-    private final String RECORD_TYPE_ID = 'RecordTypeId';
     @TestVisible
     private HouseholdSettings settings {
         get {
@@ -75,43 +74,21 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterUpdate() {
-        insertHouseholds();
-        fireRollups();
-        updateHouseholdNames();
-        deleteEmptyHouseholds();
-    }
-
-    private void deleteEmptyHouseholds() {
-        Households oldHouseholds = new Households(new Set<Id>(oldHouseholdIds()));
-        oldHouseholds.deleteEmptyHouseholds();
+        householdService.insertHouseholds(this);
+        householdService.fireRollups(this);
+        householdService.updateHouseholdNames(this);
+        householdService.deleteEmptyHouseholds(this);
     }
 
     public void onAfterDelete() {
-        Households oldHouseholds = new Households(householdIds());
-        oldHouseholds.deleteEmptyHouseholds();
-        oldHouseholds.updateHouseholdNameAndMemberCount();
+        householdService.processOldHouseholdsAfterDeletingContacts(this);
     }
 
     private Id householdIdFor(Contact con) {
         return con.npo02__Household__c;
     }
 
-    /**
-     * @description Static flag used to prevent hitting governor limits when this method
-     * runs multiple times during Contact merges.
-     */
-    private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
-    private void updateHouseholdNames() {
-        List<Id> householdsNeedingNameAndMemberCountRefresh = getHouseholdsWithMembershipOrNamingFieldChanges();
-        if (householdsNeedingNameAndMemberCountRefresh.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
-            Households households =
-                    new Households(new Set<Id>(householdsNeedingNameAndMemberCountRefresh));
-            households.updateHouseholdNameAndMemberCount();
-            numberOfTimesUpdateHouseholdNamesHasRun++;
-        }
-    }
-
-    private List<Id> getHouseholdsWithMembershipOrNamingFieldChanges() {
+    public List<Id> getHouseholdsWithMembershipOrNamingFieldChanges() {
         List<Id> householdsNeedingNamesUpdated = new List<Id>();
         householdsNeedingNamesUpdated.addAll(
                 householdIdsWithMembershipChanges());
@@ -119,34 +96,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdsNeedingNamesUpdated;
     }
 
-    private Set<Id> householdIdsWithMembershipChanges() {
+   public Set<Id> householdIdsWithMembershipChanges() {
         Set<Id> ids = new Set<Id>();
         for (Contact con : contactsThatChangedHouseholds()) {
             ids.add(householdIdFor(con));
             ids.add(oldHouseholdIdFor(con));
         }
         return ids;
-    }
-
-    private void fireRollups() {
-        Households householdsWithMembershipChanges =
-                new Households(householdIdsWithMembershipChanges());
-        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
-    }
-    
-    private void insertHouseholds() {
-        List<Contact> contactsThatDoNotHaveAHousehold =
-                (List<Contact>) contactsWithoutHouseholds().getRecords();
-        List<Contact> contactsNeedingHouseholds = new List<Contact>();
-        if (settings.isAllProcessor()) {
-            contactsNeedingHouseholds.addAll(contactsThatDoNotHaveAHousehold);
-        }
-        if (settings.isAllIndividualsProcessor()) {
-            contactsNeedingHouseholds.addAll(
-                    getContactsInIndividualAccounts(
-                            contactsThatDoNotHaveAHousehold));
-        }
-        insertHouseholdsForContacts(contactsNeedingHouseholds, false);
     }
 
     private List<Contact> contactsThatChangedHouseholds() {
@@ -159,11 +115,12 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return contactsThatChangedHouseholds;
     }
 
-    private fflib_SObjects contactsWithoutHouseholds() {
-        return selectByFieldValue(Contact.npo02__Household__c, null);
+    public List<Contact> contactsWithoutHouseholds() {
+        fflib_SObjects contacts=selectByFieldValue(Contact.npo02__Household__c, null);
+        return (List<Contact>)contacts.getRecords();
     }
 
-    private List<Contact> getContactsInIndividualAccounts(List<Contact> contacts) {
+    public List<Contact> getContactsInIndividualAccounts(List<Contact> contacts) {
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
         List<Contact> contactsInIndividualAccounts = new List<Contact>();
         for (Contact con : contacts) {
@@ -195,13 +152,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldMap.get(con.Id);
     }
 
-    private Set<Id> householdIds() {
+    public Set<Id> householdIds() {
         Set<Id> householdIds = getIdFieldValues(Contact.npo02__Household__c);
         householdIds.remove(null);
         return new Set<Id>(householdIds);
     }
 
-    private List<Id> oldHouseholdIds() {
+    public List<Id> oldHouseholdIds() {
         List<Id> oldHouseholdIds = new List<Id>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (conWasInAHousehold(con)) {
@@ -213,32 +170,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     private Boolean conWasInAHousehold(Contact con) {
         return oldHouseholdIdFor(con) != null;
-    }
-
-    public void insertHouseholdsForContactsInIndividualAccounts() {
-        List<SObject> contactsThatDoNotHaveAHouseholdRecord =
-                contactsWithoutHouseholds().getRecords();
-        if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
-            insertHouseholdsForContacts(
-                    getContactsInIndividualAccounts(
-                            contactsThatDoNotHaveAHouseholdRecord),
-                    true);
-        }
-    }
-
-    public Boolean allIndividualContactsGetHouseholds() {
-        return settings.isAllIndividualsProcessor();
-    }
-
-    public Boolean allContactsGetHouseholds() {
-        return settings.isAllProcessor();
-    }
-
-    public void insertHouseholdsForContactsThatDoNotHaveOne() {
-        List<Contact> householdInserts = contactsWithoutHouseholds().getRecords();
-        if (householdInserts.size() > 0) {
-            insertHouseholdsForContacts(householdInserts, true);
-        }
     }
 
     private Map<Id, Account> getContactAccountMap(List<Contact> contacts) {
@@ -261,122 +192,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return accountIds;
     }
 
-    /*******************************************************************************************************
-    * @description Creates a new Household Object for each contact, unless excluded by recordType
-    * @param contacts List of Contacts
-    * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
-    * @return void
-    ********************************************************************************************************/
-    private void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
-        List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
-        if (householdInserts.size() > 0) {
-            Database.SaveResult[] householdSaveResults = insertHouseholds(householdInserts);
-            putHouseholdIdOntoContacts(contacts, householdSaveResults);
-            if (isInsertTrigger) {
-                updateNamesAfterHouseholdInsert(householdSaveResults);
-            }
-        }
-    }
-
-    private Database.SaveResult[] insertHouseholds(
-            List<npo02__Household__c> householdInserts) {
-        Database.SaveResult[] householdSaveResults =
-                UTIL_DMLService.insertRecords(householdInserts, false);
-        return householdSaveResults;
-    }
-
-    private void putHouseholdIdOntoContacts(List<Contact> contacts,
-            Database.SaveResult[] householdSaveResults) {
-        List<Contact> contactsToBeUpdatedWithHouseholdId =
-                processHouseholdSaveResults(contacts, householdSaveResults);
-        update contactsToBeUpdatedWithHouseholdId;
-    }
-
-    private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
-        List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
-        if (!householdIdsNeedingNamesUpdated.isEmpty()) {
-            Households households = new Households(new Set<Id>
-                    (householdIdsNeedingNamesUpdated));
-            households.updateHouseholdNameAndMemberCount();
-        }
-    }
-
-    private List<Id> getHouseholdIdsNeedingNamesUpdatedFromSaveResult(Database.SaveResult[] lsr) {
-        List<Id> householdIdsNeedingNamesUpdated = new List<Id>();
-        for (Database.SaveResult sr : lsr) {
-            if (sr.isSuccess()) {
-                householdIdsNeedingNamesUpdated.add(sr.getID());
-            }
-        }
-        return householdIdsNeedingNamesUpdated;
-    }
-
-    private List<npo02__Household__c> getHouseholdsForInsert(List<Contact> contacts) {
-        List<npo02__household__c> households = new List<npo02__household__c>();
-        for (Contact con : contacts) {
-            if (shouldExcludeForNewHHAccount(con)) {
-                households.add(getHouseholdForInsertFromContact(con));
-            }
-        }
-        return households;
-    }
-
-    private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
-        npo02__household__c household =
-                new npo02__household__c(Name = getDefaultHouseholdName(con));
-        syncPrimaryAddressBlock(household, con);
-        return household;
-    }
-
-    private void syncPrimaryAddressBlock(npo02__Household__c household, Contact con) {
-        household.npo02__MailingStreet__c = con.MailingStreet;
-        household.npo02__MailingCity__c = con.MailingCity;
-        household.npo02__MailingState__c = con.MailingState;
-        household.npo02__MailingPostalCode__c = con.MailingPostalCode;
-        household.npo02__MailingCountry__c = con.MailingCountry;
-        household.npo02__HouseholdPhone__c = con.HomePhone;
-        household.npo02__HouseholdEmail__c = con.Email;
-    }
-
-    private String getDefaultHouseholdName(Contact con) {
-        String hName = con.LastName;
-        return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
-    }
-
-    private Boolean shouldExcludeForNewHHAccount(Contact con) {
-        return !isRecordTypesOnContacts()
-                || !settings.contactRecordTypesToExclude().contains(recordTypeIdFor(con));
-    }
-
-    private List<Contact> processHouseholdSaveResults(List<Contact> contacts,
-            Database.SaveResult[] householdSaveResults) {
-        List<Contact> contactsToBeUpdatedWithHouseholdId = new List<Contact>();
-        Integer i = 0;
-        for (Contact con : contacts) {
-            if (shouldExcludeForNewHHAccount(con)) {
-                Database.SaveResult saveResult = householdSaveResults[i];
-                if (saveResult.isSuccess() == true) {
-                    //write the new Household Ids to the Contacts
-                    Contact cloneContact = con.Clone(true, false);
-                    cloneContact.npo02__household__c = saveResult.getId();
-                    contactsToBeUpdatedWithHouseholdId.add(cloneContact);
-                } else {
-                    Database.Error err = saveResult.getErrors()[0];
-                    con.addError(err.getMessage());
-                }
-                i += 1;
-            }
-        }
-        return contactsToBeUpdatedWithHouseholdId;
-    }
-
-    private Id recordTypeIdFor(Contact con) {
-        return (Id) con.get(RECORD_TYPE_ID);
-    }
-
-    private Boolean isRecordTypesOnContacts() {
-        return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
-    }
 
     private Boolean hasHousehold(Contact con) {
         return householdIdFor(con) != null;
