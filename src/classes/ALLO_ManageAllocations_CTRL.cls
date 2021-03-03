@@ -77,7 +77,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
     public Opportunity parentOpportunity {get;set;}
     /** @description The parent payment, if we're dealing with payment allocations.*/
-    public npe01__OppPayment__c payment {get;set;}
+    public npe01__OppPayment__c parentPayment {get;set;}
     /** @description The parent campaign, if we're dealing with campaign allocations.*/
     public Campaign cam {get;set;}
     /** @description The parent recurring donation, if we're dealing with recurring donation allocations.*/
@@ -262,7 +262,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         if (parentSObjectType == npe01__OppPayment__c.SObjectType) {
-            payment = (npe01__OppPayment__c)parentRecord;
+            parentPayment = (npe01__OppPayment__c)parentRecord;
         }
     }
 
@@ -278,9 +278,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     private void setParentAmount(SObjectType parentSObjectType) {
         Boolean shouldSetParentAmountFromPayment =
             parentSObjectType == npe01__OppPayment__c.SObjectType
-            && payment.npe01__Payment_Amount__c != null;
+            && parentPayment.npe01__Payment_Amount__c != null;
         if (shouldSetParentAmountFromPayment) {
-            parentAmount = payment.npe01__Payment_Amount__c;
+            parentAmount = parentPayment.npe01__Payment_Amount__c;
         }
 
         Boolean shouldSetParentAmountFromOpportunity =
@@ -301,7 +301,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         defaultAllo = new Allocation__c();
         listAllo = getAllocations(parentId);
 
-        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parentOpportunity!=null || payment!=null);
+        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parentOpportunity!=null || parentPayment!=null);
         if (shouldSetDefaultGAU) {
             setDefaultGAU();
         }
@@ -383,7 +383,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             allo.Campaign__c = parentId;
         else if (rd!=null)
             allo.Recurring_Donation__c = parentId;
-        else if (payment!=null)
+        else if (parentPayment!=null)
             allo.Payment__c = parentId;
 
         // always add to last row
