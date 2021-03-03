@@ -50,6 +50,16 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         set;
     }
 
+    @TestVisible
+    private HouseholdService householdService {
+        get {
+            if (householdService == null) {
+                householdService = new HouseholdService();
+            }
+            return householdService;
+        }
+        set;
+    }
     public ContactsInLegacyHouseholds(List<Contact> records) {
         this(records, null);
     }
@@ -61,12 +71,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterInsert() {
-        if (allContactsGetHouseholds()) {
-            insertHouseholdsForContactsThatDoNotHaveOne();
-        }
-        if (allIndividualContactsGetHouseholds()) {
-            insertHouseholdsForContactsInIndividualAccounts();
-        }
+        householdService.createHouseholdsForContacts(this);
     }
 
     public void onAfterUpdate() {
@@ -210,7 +215,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldHouseholdIdFor(con) != null;
     }
 
-    private void insertHouseholdsForContactsInIndividualAccounts() {
+    public void insertHouseholdsForContactsInIndividualAccounts() {
         List<SObject> contactsThatDoNotHaveAHouseholdRecord =
                 contactsWithoutHouseholds().getRecords();
         if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
@@ -221,15 +226,15 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
     }
 
-    private Boolean allIndividualContactsGetHouseholds() {
+    public Boolean allIndividualContactsGetHouseholds() {
         return settings.isAllIndividualsProcessor();
     }
 
-    private Boolean allContactsGetHouseholds() {
+    public Boolean allContactsGetHouseholds() {
         return settings.isAllProcessor();
     }
 
-    private void insertHouseholdsForContactsThatDoNotHaveOne() {
+    public void insertHouseholdsForContactsThatDoNotHaveOne() {
         List<Contact> householdInserts = contactsWithoutHouseholds().getRecords();
         if (householdInserts.size() > 0) {
             insertHouseholdsForContacts(householdInserts, true);
@@ -402,21 +407,12 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Boolean namingFieldChangedFor(Contact con) {
-        for (String fieldName : fieldsUsedForHouseholdNaming()) {
+        for (String fieldName : householdService.fieldsUsedForHouseholdNaming()) {
             if (isFieldChanged(con, fieldName)) {
                 return true;
             }
         }
         return false;
-    }
-
-    private Set<String> householdNamingFields;
-    private Set<String> fieldsUsedForHouseholdNaming() {
-        if (householdNamingFields == null) {
-            householdNamingFields = new HouseholdNamingService()
-                    .getHouseholdNamingContactFields();
-        }
-        return householdNamingFields;
     }
 
     private Boolean isFieldChanged(Contact con, String fieldName) {

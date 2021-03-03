@@ -336,9 +336,9 @@
         <members>HouseholdName</members>
         <members>HouseholdNamingExclusionsCheckboxes</members>
         <members>HouseholdNamingExclusionsString</members>
-        <members>HouseholdNamingUserControlledFields</members>
         <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
+        <members>HouseholdNamingUserControlledFields</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>INamingExclusions</members>
