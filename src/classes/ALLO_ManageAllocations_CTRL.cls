@@ -75,7 +75,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
     public Id parentId {get;set;}
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
-    public Opportunity opp {get;set;}
+    public Opportunity parentOpportunity {get;set;}
     /** @description The parent payment, if we're dealing with payment allocations.*/
     public npe01__OppPayment__c payment {get;set;}
     /** @description The parent campaign, if we're dealing with campaign allocations.*/
@@ -250,7 +250,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      */
     private void setParentRecordMemberVariable(SObjectType parentSObjectType, sObject parentRecord) {
         if (parentSObjectType == Opportunity.SObjectType) {
-            opp = (Opportunity)parentRecord;
+            parentOpportunity = (Opportunity)parentRecord;
         }
 
         if (parentSObjectType == Campaign.SObjectType) {
@@ -285,9 +285,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         Boolean shouldSetParentAmountFromOpportunity =
             parentSObjectType == Opportunity.SObjectType
-            && opp.Amount != null;
+            && parentOpportunity.Amount != null;
         if (shouldSetParentAmountFromOpportunity) {
-            parentAmount = opp.Amount;
+            parentAmount = parentOpportunity.Amount;
         }
 
         getPageLoadValidationMessages();
@@ -301,7 +301,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         defaultAllo = new Allocation__c();
         listAllo = getAllocations(parentId);
 
-        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null);
+        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parentOpportunity!=null || payment!=null);
         if (shouldSetDefaultGAU) {
             setDefaultGAU();
         }
@@ -377,7 +377,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public PageReference addRow() {
         Allocation__c allo = new Allocation__c();
 
-        if (opp!=null)
+        if (parentOpportunity!=null)
             allo.Opportunity__c = parentId;
         else if (cam!=null)
             allo.Campaign__c = parentId;
