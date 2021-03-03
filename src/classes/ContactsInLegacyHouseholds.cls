@@ -124,10 +124,11 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private void fireRollups() {
-        Households households = new Households(householdIdsWithMembershipChanges());
-        households.calculateLegacyHouseholdRollups();
+        Households householdsWithMembershipChanges =
+                new Households(householdIdsWithMembershipChanges());
+        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
-
+    
     private void insertHouseholds() {
         List<Contact> contactsThatDoNotHaveAHousehold =
                 (List<Contact>) contactsWithoutHouseholds().getRecords();
