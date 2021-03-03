@@ -35,16 +35,16 @@
 * Household Naming logic. The value is the concatenated list of field names that the User is
 * controlling and is currently stored in the npo02__SYSTEM_CUSTOM_NAMING__c field.
 */
-public inherited sharing class UserControlledHouseholdNamingFields {
+public inherited sharing class HouseholdNamingUserControlledFields {
     private String value;
     private SObject household;
     private SObject oldRecord;
 
-    public UserControlledHouseholdNamingFields(String str) {
+    public HouseholdNamingUserControlledFields(String str) {
         this.value = str == null ? ';' : str + ';';
     }
 
-    public UserControlledHouseholdNamingFields(SObject household, SObject oldRecord) {
+    public HouseholdNamingUserControlledFields(SObject household, SObject oldRecord) {
         this.value = userControlledNamingFieldsFor(household) == null ? ';' :
                 userControlledNamingFieldsFor(household) + ';';
         this.household = household;
