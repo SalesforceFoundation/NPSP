@@ -35,16 +35,6 @@
 public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Contact> oldMap;
-    @TestVisible
-    private HouseholdSettings settings {
-        get {
-            if (settings == null) {
-                settings = new HouseholdSettings();
-            }
-            return settings;
-        }
-        set;
-    }
 
     public Contacts(List<Contact> records) {
         this(records, null);
@@ -64,25 +54,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         applyExclusionsStringChangesToCheckboxes();
     }
 
-    public void onAfterInsert() {
-        if (orgUsesLegacyHouseholds()) {
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(getRecords());
-            contactsInLegacyHouseholds.onAfterInsert();
-        }
-    }
-
-    public void onAfterUpdate() {
-        new ContactsInLegacyHouseholds(getRecords(), oldMap)
-                .onAfterUpdate();
-    }
-
     public void onAfterDelete() {
         fireRollupsForMergedContacts();
-        List<Contact> contactsInHouseholds = contactsInHouseholds();
-        if (!contactsInHouseholds.isEmpty()) {
-            new ContactsInLegacyHouseholds(contactsInHouseholds)
-                    .onAfterDelete();
+        if (!contactsInHouseholds().isEmpty()) {
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
+                    new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
+            contactsInLegacyHouseholds.onAfterDelete();
         }
     }
 
@@ -98,10 +75,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
             }
         }
-    }
-
-    private Boolean orgUsesLegacyHouseholds() {
-        return settings.isAllProcessor() || settings.isAllIndividualsProcessor();
     }
 
     private Id householdIdFor(Contact con) {
@@ -174,14 +147,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return mergedWinningContactIds;
     }
 
-    private List<Contact> contactsInHouseholds() {
+    private Contacts contactsInHouseholds() {
         List<Contact> consInHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (householdIdFor(con) != null) {
                 consInHouseholds.add(con);
             }
         }
-        return consInHouseholds;
+        return new Contacts(consInHouseholds);
     }
 
     private Boolean isLosingRecordInMergeOperation(Contact con) {

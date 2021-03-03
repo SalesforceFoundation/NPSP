@@ -37,6 +37,17 @@
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private HouseholdSettings settings {
+        get {
+            if (settings == null) {
+                settings = new HouseholdSettings();
+            }
+            return settings;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
     * on contact.
@@ -63,22 +74,30 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 contacts.onBeforeUpdate();
             }
             when AfterInsert {
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
-                //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
-                //since we don't have the contact's household ids until after the insert
-                //we'll check the trigger action again there to make sure it doesn't run twice
-                Contacts contacts = new Contacts(newlist);
-                contacts.onAfterInsert();
+                if (orgUsesLegacyHouseholds()) {
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
+                    //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
+                    //since we don't have the contact's household ids until after the insert
+                    //we'll check the trigger action again there to make sure it doesn't run twice
+                    ContactsInLegacyHouseholds legacyHouseholdContacts =
+                            new ContactsInLegacyHouseholds(newlist);
+                    legacyHouseholdContacts.onAfterInsert();
+                }
             }
             when AfterDelete {
                 Contacts contacts = new Contacts(oldlist);
                 contacts.onAfterDelete();
             }
             when AfterUpdate {
-                Contacts contacts = new Contacts(newlist, oldlist);
-                contacts.onAfterUpdate();
+                ContactsInLegacyHouseholds legacyHouseholdContacts =
+                        new ContactsInLegacyHouseholds(newlist, new Map<Id, Contact>(oldList))
+                legacyHouseholdContacts.onAfterUpdate();
             }
         }
         return dmlWrapper;
+    }
+
+    private Boolean orgUsesLegacyHouseholds() {
+        return settings.isAllProcessor() || settings.isAllIndividualsProcessor();
     }
 }
