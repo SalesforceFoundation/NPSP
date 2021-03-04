@@ -361,6 +361,20 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>LatestVersionPlayed__c</fullName>
+        <description>The last Elevate event version played resulting in an update to this Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last Elevate event version played resulting in an update to this Recurring Donation.</inlineHelpText>
+        <label>Latest Version Played</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>NextYearValue__c</fullName>
         <description>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</description>
         <externalId>false</externalId>
