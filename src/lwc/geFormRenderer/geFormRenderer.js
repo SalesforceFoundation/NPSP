@@ -67,6 +67,7 @@ import ExceptionDataError from './exceptionDataError';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
+import BATCH_CURRENCY_ISO_CODE from '@salesforce/schema/DataImportBatch__c.CurrencyIsoCode';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -115,6 +116,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
     CREATE: 'create',
@@ -157,6 +159,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
+    _batchCurrencyIsoCode;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -402,12 +405,13 @@ export default class GeFormRenderer extends LightningElement{
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD]
+        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD, BATCH_CURRENCY_ISO_CODE]
     })
     wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value;
             this._batchDefaults = data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
+            this._batchCurrencyIsoCode = getFieldValue(data, BATCH_CURRENCY_ISO_CODE);
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;
@@ -2384,4 +2388,11 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    get showMismatchedCurrencyWarning() {
+        if(isUndefined(this._batchCurrencyIsoCode)) {
+            return false;
+        }
+        return this._batchCurrencyIsoCode !== CURRENCY;
+
+    }
 }

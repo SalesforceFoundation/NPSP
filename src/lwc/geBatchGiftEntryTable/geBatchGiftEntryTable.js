@@ -1,6 +1,6 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { deleteRecord } from 'lightning/uiRecordApi';
+import { deleteRecord, getFieldValue, getRecord, getRecordCreateDefaults, getRecordNotifyChange } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
@@ -26,6 +26,15 @@ import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureI
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import BATCH_CURRENCY_ISO_CODE
+    from '@salesforce/schema/DataImportBatch__c.CurrencyIsoCode';
+import DATA_IMPORT_BATCH from '@salesforce/schema/DataImportBatch__c';
+import DATA_IMPORT_CURRENCY_ISO_CODE
+    from '@salesforce/schema/DataImport__c.CurrencyIsoCode';
+import DEFAULT_CURRENCY_ISO_CODE from '@salesforce/schema/User.DefaultCurrencyIsoCode';
+import USER_ID from '@salesforce/user/Id';
+import CURRENCY from '@salesforce/i18n/currency';
+import { refreshApex } from '@salesforce/apex';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -219,7 +228,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     deleteDIRow(rowToDelete) {
-        const isRowToDelete = row => row.Id == rowToDelete.Id;
+        const isRowToDelete = row => row.Id === rowToDelete.Id;
         const index = this.data.findIndex(isRowToDelete);
         this.data.splice(index, 1);
         this.data = this.data.splice(0);
@@ -388,26 +397,67 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this;
     }
 
+    @wire(getRecord, { recordId: '$batchId', fields: [BATCH_CURRENCY_ISO_CODE]})
+    batch;
+
+    get batchCurrencyISOCode() {
+        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
+    }
+
+    @wire(getRecordCreateDefaults, { objectApiName: DATA_IMPORT_OBJECT })
+    dataImportCreateDefaults;
+
+    get dataImportCurrencyISOCode () {
+        return this.dataImportCreateDefaults.
+            data.record.fields[DATA_IMPORT_CURRENCY_ISO_CODE.fieldApiName].value;
+    }
+
+    @wire(getRecord, { recordId: USER_ID, fields: [DEFAULT_CURRENCY_ISO_CODE]})
+    _user;
+
+    get userDefaultCurrency() {
+        getRecordNotifyChange([{recordId: USER_ID}]);
+        return getFieldValue(this._user.data, DEFAULT_CURRENCY_ISO_CODE);
+    }
+
     @api
     handleSubmit(event) {
-        saveAndDryRunDataImport({
-            batchId: this.batchId,
-            dataImport: event.detail.dataImportRecord
-        })
-            .then(result => {
-                let dataImportModel = JSON.parse(result);
-                let row = dataImportModel.dataImportRows[0];
-                Object.assign(row,
-                    this.appendUrlColumnProperties.call(row.record,
-                        this._dataImportObjectInfo));
-                this.upsertData(row, 'Id');
-                this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.totalRowAmount;
-                event.detail.success(); //Re-enable the Save button
-            })
-            .catch(error => {
-                event.detail.error(error);
-            });
+        console.log(JSON.stringify('@wire '+this.userDefaultCurrency));
+        console.log(JSON.stringify('@currency '+CURRENCY));
+        this.isCurrencyCompatible().then(result => {
+           saveAndDryRunDataImport({
+               batchId: this.batchId,
+               dataImport: event.detail.dataImportRecord
+           }).then(result => {
+               let dataImportModel = JSON.parse(result);
+               let row = dataImportModel.dataImportRows[0];
+               Object.assign(row,
+                   this.appendUrlColumnProperties.call(row.record,
+                       this._dataImportObjectInfo));
+               this.upsertData(row, 'Id');
+               this._count = dataImportModel.totalCountOfRows;
+               this._total = dataImportModel.totalRowAmount;
+               event.detail.success(); //Re-enable the Save button
+           }).catch(error => {
+               event.detail.error(error);
+           })
+        }).catch(err => {
+            event.detail.error(err);
+        });
+    }
+
+    isCurrencyCompatible = async () => {
+        if(this.userDefaultCurrency === this.batchCurrencyISOCode) {
+            return true;
+        } else {
+            throw this.getCurrencyMismatchError();
+        }
+    }
+
+    getCurrencyMismatchError() {
+        return GeLabelService.format(
+            'Unable to save the gift to the batch. Gifts must be in the same currency as the batch. Change your currency to {0} to save the gift.',
+            [this.batchCurrencyISOCode]);
     }
 
     _dataImportObjectInfo;
@@ -441,6 +491,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 fieldWrapper.Source_Field_API_Name,
             type: this.getColumnTypeFromFieldType(element.dataType)
         };
+
+        if (column.type === 'currency') {
+            column.typeAttributes = {
+                currencyCode: this.batchCurrencyISOCode
+            };
+        }
 
         if (isReferenceField) {
             column.type = 'url';
