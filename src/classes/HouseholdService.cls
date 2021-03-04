@@ -60,7 +60,7 @@ public inherited sharing class HouseholdService {
         return householdNamingService.getHouseholdNamingContactFields();
     }
 
-    public void createHouseholdsForContacts(
+    public void createHouseholdsFor(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContacts(
@@ -202,7 +202,7 @@ public inherited sharing class HouseholdService {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
     }
 
-    public void deleteEmptyHouseholds(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         Households oldHouseholds = new Households(new Set<Id>(contactsInLegacyHouseholds
                 .oldHouseholdIds()));
         oldHouseholds.deleteEmptyHouseholds();
@@ -213,19 +213,18 @@ public inherited sharing class HouseholdService {
      * runs multiple times during Contact merges.
      */
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
-    public void updateHouseholdNames(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        List<Id> householdsNeedingNameAndMemberCountRefresh =
-                contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges();
-        if (householdsNeedingNameAndMemberCountRefresh.size() > 0
+    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
                 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
-            Households households =
-                    new Households(new Set<Id>(householdsNeedingNameAndMemberCountRefresh));
-            households.updateHouseholdNameAndMemberCount();
+            Households householdsNeedingNameAndMemberCountRefresh =
+                    new Households(new Set<Id>(contactsInLegacyHouseholds
+                                            .householdsWithMembershipOrNamingFieldChanges()));
+            householdsNeedingNameAndMemberCountRefresh.updateHouseholdNameAndMemberCount();
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
     }
 
-    public void fireRollups(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         Households householdsWithMembershipChanges =
                 new Households(
                         contactsInLegacyHouseholds.householdsWithMembershipChanges());
