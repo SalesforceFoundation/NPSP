@@ -215,7 +215,7 @@ public inherited sharing class HouseholdService {
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     public void updateHouseholdNames(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         List<Id> householdsNeedingNameAndMemberCountRefresh =
-                contactsInLegacyHouseholds.getHouseholdsWithMembershipOrNamingFieldChanges();
+                contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges();
         if (householdsNeedingNameAndMemberCountRefresh.size() > 0
                 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             Households households =
@@ -228,7 +228,7 @@ public inherited sharing class HouseholdService {
     public void fireRollups(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         Households householdsWithMembershipChanges =
                 new Households(
-                        contactsInLegacyHouseholds.householdIdsWithMembershipChanges());
+                        contactsInLegacyHouseholds.householdsWithMembershipChanges());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
 
