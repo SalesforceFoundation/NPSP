@@ -47,6 +47,7 @@ ${METHOD}  Credit Card
     ...                                    Day of Month=${DAY_OF_MONTH}
     Click Rd2 Modal Button                 Save
     Wait Until Modal Is Closed
+    Sleep                                  1
     Current Page Should Be                 Details                                          npe03__Recurring_Donation__c
 
     ${rd_id}                               Save Current Record ID For Deletion              npe03__Recurring_Donation__c
