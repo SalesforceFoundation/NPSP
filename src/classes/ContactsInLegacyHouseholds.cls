@@ -137,14 +137,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return getContactsInIndividualAccounts(contactsWithoutHouseholds());
     }
 
-    public Boolean hasContactsNeedingHouseholds() {
-        return contactsNeedingHouseholds().size() > 0;
-    }
-
-    public List<Contact> contactsNeedingHouseholds() {
-        return contactsInIndividualAccountsWithoutHouseholds();
-    }
-
     public Set<Id> householdIds() {
         Set<Id> householdIds = getIdFieldValues(Contact.npo02__Household__c);
         householdIds.remove(null);
