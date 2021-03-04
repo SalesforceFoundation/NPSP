@@ -136,20 +136,16 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return contactsInIndividualAccounts;
     }
 
-    private Boolean hasAccount(Contact con) {
-        return con.AccountId != null;
+    public List<Contact> contactsInIndividualAccountsWithoutHouseholds() {
+        return getContactsInIndividualAccounts(contactsWithoutHouseholds());
     }
 
-    private Boolean isIndividualAccount(Account acc) {
-        return acc.npe01__SYSTEMIsIndividual__c == true;
+    public Boolean hasContactsNeedingHouseholds() {
+        return contactsNeedingHouseholds().size() > 0;
     }
 
-    private Id oldHouseholdIdFor(Contact con) {
-        return oldVersionOf(con).npo02__Household__c;
-    }
-
-    private Contact oldVersionOf(Contact con) {
-        return oldMap.get(con.Id);
+    public List<Contact> contactsNeedingHouseholds() {
+        return contactsInIndividualAccountsWithoutHouseholds();
     }
 
     public Set<Id> householdIds() {
@@ -166,6 +162,22 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             }
         }
         return oldHouseholdIds;
+    }
+
+    private Boolean hasAccount(Contact con) {
+        return con.AccountId != null;
+    }
+
+    private Boolean isIndividualAccount(Account acc) {
+        return acc.npe01__SYSTEMIsIndividual__c == true;
+    }
+
+    private Id oldHouseholdIdFor(Contact con) {
+        return oldVersionOf(con).npo02__Household__c;
+    }
+
+    private Contact oldVersionOf(Contact con) {
+        return oldMap.get(con.Id);
     }
 
     private Boolean conWasInAHousehold(Contact con) {
@@ -261,4 +273,5 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private String namingExclusionsFor(Contact con) {
         return con.npo02__Naming_Exclusions__c;
     }
+
 }

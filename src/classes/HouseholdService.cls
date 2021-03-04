@@ -72,13 +72,9 @@ public inherited sharing class HouseholdService {
 
     private void insertHouseholdsForContactsInIndividualAccounts(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        List<Contact> contactsThatDoNotHaveAHouseholdRecord =
-                contactsInLegacyHouseholds.contactsWithoutHouseholds();
-        if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
+        if (contactsInLegacyHouseholds.hasContactsNeedingHouseholds()) {
             insertHouseholdsForContacts(
-                    contactsInLegacyHouseholds.getContactsInIndividualAccounts(
-                            contactsThatDoNotHaveAHouseholdRecord),
-                    true);
+                    contactsInLegacyHouseholds.contactsNeedingHouseholds());
         }
     }
 
@@ -92,10 +88,8 @@ public inherited sharing class HouseholdService {
 
     private void insertHouseholdsForContactsThatDoNotHaveOne(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        List<Contact> contactsWithoutHouseholds =
-                contactsInLegacyHouseholds.contactsWithoutHouseholds();
-        if (contactsWithoutHouseholds.size() > 0) {
-            insertHouseholdsForContacts(contactsWithoutHouseholds, true);
+        if (contactsInLegacyHouseholds.hasContactsNeedingHouseholds()) {
+            insertHouseholdsForContacts(contactsInLegacyHouseholds.contactsNeedingHouseholds());
         }
     }
 
@@ -104,14 +98,12 @@ public inherited sharing class HouseholdService {
     * @param contacts List of Contacts
     * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
     ********************************************************************************************************/
-    private void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
-        List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
-        if (householdInserts.size() > 0) {
-            Database.SaveResult[] householdSaveResults = insertHouseholds(householdInserts);
+    private void insertHouseholdsForContacts(List<Contact> contacts) {
+        List<npo02__Household__c> households = getHouseholdsForInsert(contacts);
+        if (households.size() > 0) {
+            Database.SaveResult[] householdSaveResults = insertHouseholds(households);
             putHouseholdIdOntoContacts(contacts, householdSaveResults);
-            if (isInsertTrigger) {
-                updateNamesAfterHouseholdInsert(householdSaveResults);
-            }
+            updateNamesAfterHouseholdInsert(householdSaveResults);
         }
     }
 
