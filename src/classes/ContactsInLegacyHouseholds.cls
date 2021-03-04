@@ -47,7 +47,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
         set;
     }
-
     @TestVisible
     private HouseholdService householdService {
         get {
@@ -58,17 +57,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
         set;
     }
-
-    public ContactsInLegacyHouseholds(List<Contact> records) {
-        this(records, null);
-    }
-
     private Map<Id, Contact> oldMap;
-    public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap) {
-        super(records, Contact.SObjectType);
-        this.oldMap = oldMap != null ?
-                new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
-    }
 
     public void onAfterInsert() {
         householdService.createHouseholdsForContacts(this);
@@ -83,6 +72,16 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void onAfterDelete() {
         householdService.processOldHouseholdsAfterDeletingContacts(this);
+    }
+
+    public ContactsInLegacyHouseholds(List<Contact> records) {
+        this(records, null);
+    }
+
+    public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap) {
+        super(records, Contact.SObjectType);
+        this.oldMap = oldMap != null ?
+                new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
     }
 
     public List<Contact> contactsWithoutHouseholds() {
