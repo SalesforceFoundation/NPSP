@@ -121,7 +121,7 @@
             <chartSummary>
                 <aggregate>Sum</aggregate>
                 <axisBinding>y</axisBinding>
-                <column>Account.npo02__TotalOppAmount__c</column>
+                <column>Account.npo02__OppAmountThisYear__c</column>
             </chartSummary>
             <componentType>Funnel</componentType>
             <dashboardFilterColumns>
