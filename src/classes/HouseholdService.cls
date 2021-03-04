@@ -63,18 +63,12 @@ public inherited sharing class HouseholdService {
     public void createHouseholdsForContacts(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (allContactsGetHouseholds()) {
-            insertHouseholdsForContactsThatDoNotHaveOne(contactsInLegacyHouseholds);
+            insertHouseholdsForContacts(
+                    contactsInLegacyHouseholds.contactsWithoutHouseholds());
         }
         if (allIndividualContactsGetHouseholds()) {
-            insertHouseholdsForContactsInIndividualAccounts(contactsInLegacyHouseholds);
-        }
-    }
-
-    private void insertHouseholdsForContactsInIndividualAccounts(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.hasContactsNeedingHouseholds()) {
             insertHouseholdsForContacts(
-                    contactsInLegacyHouseholds.contactsNeedingHouseholds());
+                    contactsInLegacyHouseholds.contactsInIndividualAccountsWithoutHouseholds());
         }
     }
 
@@ -84,13 +78,6 @@ public inherited sharing class HouseholdService {
 
     private Boolean allContactsGetHouseholds() {
         return settings.isAllProcessor();
-    }
-
-    private void insertHouseholdsForContactsThatDoNotHaveOne(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.hasContactsNeedingHouseholds()) {
-            insertHouseholdsForContacts(contactsInLegacyHouseholds.contactsNeedingHouseholds());
-        }
     }
 
     /*******************************************************************************************************
@@ -220,7 +207,6 @@ public inherited sharing class HouseholdService {
                 .oldHouseholdIds()));
         oldHouseholds.deleteEmptyHouseholds();
     }
-
 
     /**
      * @description Static flag used to prevent hitting governor limits when this method
