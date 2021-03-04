@@ -72,6 +72,42 @@ public inherited sharing class HouseholdService {
         }
     }
 
+    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        Households oldHouseholds = new Households(new Set<Id>(contactsInLegacyHouseholds
+                .oldHouseholdIds()));
+        oldHouseholds.deleteEmptyHouseholds();
+    }
+
+    /**
+     * @description Static flag used to prevent hitting governor limits when this method
+     * runs multiple times during Contact merges.
+     */
+    private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
+    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
+                && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
+            Households householdsNeedingNameAndMemberCountRefresh =
+                    new Households(new Set<Id>(contactsInLegacyHouseholds
+                            .householdsWithMembershipOrNamingFieldChanges()));
+            householdsNeedingNameAndMemberCountRefresh.updateHouseholdNameAndMemberCount();
+            numberOfTimesUpdateHouseholdNamesHasRun++;
+        }
+    }
+
+    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        Households householdsWithMembershipChanges =
+                new Households(
+                        contactsInLegacyHouseholds.householdsWithMembershipChanges());
+        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
+    }
+
+    public void processOldHouseholdsAfterDeletingContacts(
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        Households oldHouseholds = new Households(contactsInLegacyHouseholds.householdIds());
+        oldHouseholds.deleteEmptyHouseholds();
+        oldHouseholds.updateHouseholdNameAndMemberCount();
+    }
+
     private Boolean allIndividualContactsGetHouseholds() {
         return settings.isAllIndividualsProcessor();
     }
@@ -202,39 +238,4 @@ public inherited sharing class HouseholdService {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
     }
 
-    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds = new Households(new Set<Id>(contactsInLegacyHouseholds
-                .oldHouseholdIds()));
-        oldHouseholds.deleteEmptyHouseholds();
-    }
-
-    /**
-     * @description Static flag used to prevent hitting governor limits when this method
-     * runs multiple times during Contact merges.
-     */
-    private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
-    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
-                && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
-            Households householdsNeedingNameAndMemberCountRefresh =
-                    new Households(new Set<Id>(contactsInLegacyHouseholds
-                                            .householdsWithMembershipOrNamingFieldChanges()));
-            householdsNeedingNameAndMemberCountRefresh.updateHouseholdNameAndMemberCount();
-            numberOfTimesUpdateHouseholdNamesHasRun++;
-        }
-    }
-
-    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households householdsWithMembershipChanges =
-                new Households(
-                        contactsInLegacyHouseholds.householdsWithMembershipChanges());
-        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
-    }
-
-    public void processOldHouseholdsAfterDeletingContacts(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds = new Households(contactsInLegacyHouseholds.householdIds());
-        oldHouseholds.deleteEmptyHouseholds();
-        oldHouseholds.updateHouseholdNameAndMemberCount();
-    }
 }
