@@ -1,3 +1,37 @@
+/*
+    Copyright (c) 2021 Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2021
+* @description Domain class for Contacts in NPSP.
+*/
 public inherited sharing class HouseholdService {
 
     @TestVisible
@@ -10,23 +44,24 @@ public inherited sharing class HouseholdService {
         }
         set;
     }
-
-    public HouseholdService(){
-
-
-    }
-
-    private Set<String> householdNamingFields;
-    public Set<String> fieldsUsedForHouseholdNaming() {
-        if (householdNamingFields == null) {
-            householdNamingFields = new HouseholdNamingService()
-                    .getHouseholdNamingContactFields();
+    @TestVisible
+    private HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
         }
-        return householdNamingFields;
+        set;
+    }
+    private final String RECORD_TYPE_ID = 'RecordTypeId';
+
+    public Set<String> fieldsUsedForHouseholdNaming() {
+        return householdNamingService.getHouseholdNamingContactFields();
     }
 
-    public void createHouseholdsForContacts(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-
+    public void createHouseholdsForContacts(
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContactsThatDoNotHaveOne(contactsInLegacyHouseholds);
         }
@@ -35,7 +70,8 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    public void insertHouseholdsForContactsInIndividualAccounts(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+    private void insertHouseholdsForContactsInIndividualAccounts(
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         List<Contact> contactsThatDoNotHaveAHouseholdRecord =
                 contactsInLegacyHouseholds.contactsWithoutHouseholds();
         if (contactsThatDoNotHaveAHouseholdRecord.size() > 0) {
@@ -46,19 +82,20 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    public Boolean allIndividualContactsGetHouseholds() {
+    private Boolean allIndividualContactsGetHouseholds() {
         return settings.isAllIndividualsProcessor();
     }
 
-    public Boolean allContactsGetHouseholds() {
+    private Boolean allContactsGetHouseholds() {
         return settings.isAllProcessor();
     }
 
-    public void insertHouseholdsForContactsThatDoNotHaveOne(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        List<Contact> householdInserts = contactsInLegacyHouseholds
-                .contactsWithoutHouseholds();
-        if (householdInserts.size() > 0) {
-            insertHouseholdsForContacts(householdInserts, true);
+    private void insertHouseholdsForContactsThatDoNotHaveOne(
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        List<Contact> contactsWithoutHouseholds =
+                contactsInLegacyHouseholds.contactsWithoutHouseholds();
+        if (contactsWithoutHouseholds.size() > 0) {
+            insertHouseholdsForContacts(contactsWithoutHouseholds, true);
         }
     }
 
@@ -66,9 +103,8 @@ public inherited sharing class HouseholdService {
     * @description Creates a new Household Object for each contact, unless excluded by recordType
     * @param contacts List of Contacts
     * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
-    * @return void
     ********************************************************************************************************/
-    public void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
+    private void insertHouseholdsForContacts(List<Contact> contacts, Boolean isInsertTrigger) {
         List<npo02__Household__c> householdInserts = getHouseholdsForInsert(contacts);
         if (householdInserts.size() > 0) {
             Database.SaveResult[] householdSaveResults = insertHouseholds(householdInserts);
@@ -89,12 +125,13 @@ public inherited sharing class HouseholdService {
     private void putHouseholdIdOntoContacts(List<Contact> contacts,
             Database.SaveResult[] householdSaveResults) {
         List<Contact> contactsToBeUpdatedWithHouseholdId =
-                processHouseholdSaveResults(contacts, householdSaveResults);
+                getContactsToBeUpdatedWithNewHouseholdId(contacts, householdSaveResults);
         update contactsToBeUpdatedWithHouseholdId;
     }
 
     private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
-        List<Id> householdIdsNeedingNamesUpdated = getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
+        List<Id> householdIdsNeedingNamesUpdated =
+                getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
             Households households = new Households(new Set<Id>
                     (householdIdsNeedingNamesUpdated));
@@ -102,7 +139,8 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    private List<Id> getHouseholdIdsNeedingNamesUpdatedFromSaveResult(Database.SaveResult[] lsr) {
+    private List<Id> getHouseholdIdsNeedingNamesUpdatedFromSaveResult(
+            Database.SaveResult[] lsr) {
         List<Id> householdIdsNeedingNamesUpdated = new List<Id>();
         for (Database.SaveResult sr : lsr) {
             if (sr.isSuccess()) {
@@ -112,36 +150,42 @@ public inherited sharing class HouseholdService {
         return householdIdsNeedingNamesUpdated;
     }
 
-    private List<Contact> processHouseholdSaveResults(List<Contact> contacts,
+    private List<Contact> getContactsToBeUpdatedWithNewHouseholdId(List<Contact> contacts,
             Database.SaveResult[] householdSaveResults) {
         List<Contact> contactsToBeUpdatedWithHouseholdId = new List<Contact>();
         Integer i = 0;
-        for (Contact con : contacts) {
-            if (shouldExcludeForNewHHAccount(con)) {
-                Database.SaveResult saveResult = householdSaveResults[i];
-                if (saveResult.isSuccess() == true) {
-                    //write the new Household Ids to the Contacts
-                    Contact cloneContact = con.Clone(true, false);
-                    cloneContact.npo02__household__c = saveResult.getId();
-                    contactsToBeUpdatedWithHouseholdId.add(cloneContact);
-                } else {
-                    Database.Error err = saveResult.getErrors()[0];
-                    con.addError(err.getMessage());
-                }
-                i += 1;
+        for (Contact con : getContactsThatAreNotExcludedByRecordType(contacts)) {
+            Database.SaveResult saveResult = householdSaveResults[i];
+            if (saveResult.isSuccess() == true) {
+                //write the new Household Ids to the Contacts
+                Contact cloneContact = con.Clone(true, false);
+                cloneContact.npo02__household__c = saveResult.getId();
+                contactsToBeUpdatedWithHouseholdId.add(cloneContact);
+            } else {
+                Database.Error err = saveResult.getErrors()[0];
+                con.addError(err.getMessage());
             }
+            i += 1;
         }
         return contactsToBeUpdatedWithHouseholdId;
     }
 
     private List<npo02__Household__c> getHouseholdsForInsert(List<Contact> contacts) {
         List<npo02__household__c> households = new List<npo02__household__c>();
-        for (Contact con : contacts) {
-            if (shouldExcludeForNewHHAccount(con)) {
-                households.add(getHouseholdForInsertFromContact(con));
-            }
+        for (Contact con : getContactsThatAreNotExcludedByRecordType(contacts)) {
+            households.add(getHouseholdForInsertFromContact(con));
         }
         return households;
+    }
+
+    private List<Contact> getContactsThatAreNotExcludedByRecordType(List<Contact> contacts) {
+        List<Contact> contactsThatAreNotExcludedByRecordType = new List<Contact>();
+        for (Contact con : contacts) {
+            if (isNotExcludedByRecordType(con)) {
+                contactsThatAreNotExcludedByRecordType.add(con);
+            }
+        }
+        return contactsThatAreNotExcludedByRecordType;
     }
 
     private npo02__Household__c getHouseholdForInsertFromContact(Contact con) {
@@ -166,33 +210,17 @@ public inherited sharing class HouseholdService {
         return hName += ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
-    private Boolean shouldExcludeForNewHHAccount(Contact con) {
+    private Boolean isNotExcludedByRecordType(Contact con) {
         return !isRecordTypesOnContacts()
                 || !settings.contactRecordTypesToExclude().contains(recordTypeIdFor(con));
     }
 
-    private final String RECORD_TYPE_ID = 'RecordTypeId';
     private Id recordTypeIdFor(Contact con) {
         return (Id) con.get(RECORD_TYPE_ID);
     }
 
     private Boolean isRecordTypesOnContacts() {
         return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
-    }
-
-    public void insertHouseholds(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        List<Contact> contactsThatDoNotHaveAHousehold = contactsInLegacyHouseholds
-                .contactsWithoutHouseholds();
-        List<Contact> contactsNeedingHouseholds = new List<Contact>();
-        if (settings.isAllProcessor()) {
-            contactsNeedingHouseholds.addAll(contactsThatDoNotHaveAHousehold);
-        }
-        if (settings.isAllIndividualsProcessor()) {
-            contactsNeedingHouseholds.addAll(
-                    contactsInLegacyHouseholds.getContactsInIndividualAccounts(
-                            contactsThatDoNotHaveAHousehold));
-        }
-        insertHouseholdsForContacts(contactsNeedingHouseholds, false);
     }
 
     public void deleteEmptyHouseholds(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
@@ -210,7 +238,8 @@ public inherited sharing class HouseholdService {
     public void updateHouseholdNames(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         List<Id> householdsNeedingNameAndMemberCountRefresh =
                 contactsInLegacyHouseholds.getHouseholdsWithMembershipOrNamingFieldChanges();
-        if (householdsNeedingNameAndMemberCountRefresh.size() > 0 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
+        if (householdsNeedingNameAndMemberCountRefresh.size() > 0
+                && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             Households households =
                     new Households(new Set<Id>(householdsNeedingNameAndMemberCountRefresh));
             households.updateHouseholdNameAndMemberCount();
@@ -220,16 +249,15 @@ public inherited sharing class HouseholdService {
 
     public void fireRollups(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         Households householdsWithMembershipChanges =
-                new Households(contactsInLegacyHouseholds.householdIdsWithMembershipChanges
-                        ());
+                new Households(
+                        contactsInLegacyHouseholds.householdIdsWithMembershipChanges());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
 
-    public void processOldHouseholdsAfterDeletingContacts(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-
+    public void processOldHouseholdsAfterDeletingContacts(
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         Households oldHouseholds = new Households(contactsInLegacyHouseholds.householdIds());
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
     }
-
 }
