@@ -37,14 +37,13 @@
 */
 public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
 
-    private Map<Id, Contact> oldMap;
     @TestVisible
-    private HouseholdSettings settings {
+    private HouseholdSettings householdSettings {
         get {
-            if (settings == null) {
-                settings = new HouseholdSettings();
+            if (householdSettings == null) {
+                householdSettings = new HouseholdSettings();
             }
-            return settings;
+            return householdSettings;
         }
         set;
     }
@@ -59,10 +58,12 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
         set;
     }
+
     public ContactsInLegacyHouseholds(List<Contact> records) {
         this(records, null);
     }
 
+    private Map<Id, Contact> oldMap;
     public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap) {
         super(records, Contact.SObjectType);
         this.oldMap = oldMap != null ?
@@ -84,8 +85,13 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         householdService.processOldHouseholdsAfterDeletingContacts(this);
     }
 
-    private Id householdIdFor(Contact con) {
-        return con.npo02__Household__c;
+    public Set<Id> householdIdsWithMembershipChanges() {
+        Set<Id> ids = new Set<Id>();
+        for (Contact con : contactsThatChangedHouseholds()) {
+            ids.add(householdIdFor(con));
+            ids.add(oldHouseholdIdFor(con));
+        }
+        return ids;
     }
 
     public List<Id> getHouseholdsWithMembershipOrNamingFieldChanges() {
@@ -94,15 +100,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
                 householdIdsWithMembershipChanges());
         householdsNeedingNamesUpdated.addAll(householdsWithNamingFieldChanges());
         return householdsNeedingNamesUpdated;
-    }
-
-   public Set<Id> householdIdsWithMembershipChanges() {
-        Set<Id> ids = new Set<Id>();
-        for (Contact con : contactsThatChangedHouseholds()) {
-            ids.add(householdIdFor(con));
-            ids.add(oldHouseholdIdFor(con));
-        }
-        return ids;
     }
 
     private List<Contact> contactsThatChangedHouseholds() {
@@ -116,8 +113,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public List<Contact> contactsWithoutHouseholds() {
-        fflib_SObjects contacts=selectByFieldValue(Contact.npo02__Household__c, null);
-        return (List<Contact>)contacts.getRecords();
+        fflib_SObjects contacts = selectByFieldValue(Contact.npo02__Household__c, null);
+        return (List<Contact>) contacts.getRecords();
     }
 
     public List<Contact> getContactsInIndividualAccounts(List<Contact> contacts) {
@@ -162,6 +159,10 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             }
         }
         return oldHouseholdIds;
+    }
+
+    private Id householdIdFor(Contact con) {
+        return con.npo02__Household__c;
     }
 
     private Boolean hasAccount(Contact con) {
