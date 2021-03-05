@@ -55,45 +55,7 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String asName() {
-        return service.getHouseholdName(getContactsForHouseholdNameGeneration());
-    }
-
-    private List<Contact> getContactsForHouseholdNameGeneration() {
-        List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
-        for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (contactShouldBeUsedForHouseholdNameGeneration(con)) {
-                contactsForHouseholdNameGeneration.add(con);
-            }
-        }
-        return contactsForHouseholdNameGeneration;
-    }
-
-    private Boolean contactShouldBeUsedForHouseholdNameGeneration(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null
-                || !con.npo02__Naming_Exclusions__c.contains('Name');
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Informal Greeting for the list of Contacts
-    * @return String
-    */
-    public String asInformalGreeting() {
-        return service.getHouseholdInformalGreeting(getContactsForInformalName());
-    }
-
-    private List<Contact> getContactsForInformalName() {
-        List<Contact> listCon = new List<Contact>();
-        for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (isIncludedInInformalGreeting(con)) {
-                listCon.add(con);
-            }
-        }
-        return listCon;
-    }
-
-    private Boolean isIncludedInInformalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null
-                || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c');
+        return service.getHouseholdName(contacts.forHouseholdName());
     }
 
     /*******************************************************************************************************
@@ -101,22 +63,15 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String asFormalGreeting() {
-        return service.getHouseholdFormalGreeting(getContactsForFormalName());
+        return service.getHouseholdFormalGreeting(contacts.forFormalGreeting());
     }
 
-    private List<Contact> getContactsForFormalName() {
-        List<Contact> contactsForFormalName = new List<Contact>();
-        for (Contact con : (List<Contact>) contacts.getRecords()) {
-            if (isIncludedInFormalGreeting(con)) {
-                contactsForFormalName.add(con);
-            }
-        }
-        return contactsForFormalName;
-    }
-
-    private Boolean isIncludedInFormalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null
-                || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
+    /*******************************************************************************************************
+    * @description returns the Informal Greeting for the list of Contacts
+    * @return String
+    */
+    public String asInformalGreeting() {
+        return service.getHouseholdInformalGreeting(contacts.forInformalGreeting());
     }
 
 }

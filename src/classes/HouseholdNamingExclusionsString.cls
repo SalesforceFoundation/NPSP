@@ -36,8 +36,13 @@
 public inherited sharing class HouseholdNamingExclusionsString implements INamingExclusionsString {
     private String value;
 
-    public HouseholdNamingExclusionsString(String namingExclusionsString) {
-        this.value = namingExclusionsString == null ? '' : namingExclusionsString;
+    public HouseholdNamingExclusionsString(Contact con) {
+        this.value = namingExclusionsStringFor(con) == null ? '' :
+                namingExclusionsStringFor(con);
+    }
+
+    private String namingExclusionsStringFor(Contact con) {
+        return con.npo02__Naming_Exclusions__c;
     }
 
     public String value() {
@@ -72,14 +77,6 @@ public inherited sharing class HouseholdNamingExclusionsString implements INamin
 
     private void excludeInformalGreeting() {
         value += 'Household__c.Informal_Greeting__c;';
-    }
-
-    private Boolean isEqualTo(String str) {
-        return value == str;
-    }
-
-    public Boolean isNotEqualTo(String str) {
-        return !isEqualTo(str);
     }
 
     public Boolean equals(INamingExclusions other) {

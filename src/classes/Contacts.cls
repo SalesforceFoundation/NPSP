@@ -63,22 +63,34 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private void applyExclusionsStringChangesToCheckboxes() {
+    public List<Contact> forHouseholdName() {
+        List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsString namingExclusionsString =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
-            HouseholdNamingExclusionsString oldNamingExclusionsString =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(oldVersionOf(con)));
-            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
-                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
-                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
-                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
+            if (isIncludedInHouseholdName(con)) {
+                contactsForHouseholdNameGeneration.add(con);
             }
         }
+        return contactsForHouseholdNameGeneration;
     }
 
-    private Id householdIdFor(Contact con) {
-        return con.npo02__Household__c;
+    public List<Contact> forFormalGreeting() {
+        List<Contact> contactsForFormalName = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (isIncludedInFormalGreeting(con)) {
+                contactsForFormalName.add(con);
+            }
+        }
+        return contactsForFormalName;
+    }
+
+    public List<Contact> forInformalGreeting() {
+        List<Contact> listCon = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (isIncludedInInformalGreeting(con)) {
+                listCon.add(con);
+            }
+        }
+        return listCon;
     }
 
     /**
@@ -89,7 +101,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void synchronizeNamingExclusions() {
         for (Contact con : (List<Contact>) getRecords()) {
             INamingExclusionsString exclusionsAsString =
-                    new HouseholdNamingExclusionsString(namingExclusionsFor(con));
+                    new HouseholdNamingExclusionsString(con);
             INamingExclusions exclusionsAsBooleans =
                     new HouseholdNamingExclusionsCheckboxes(con);
             if (!exclusionsAsString.equals(exclusionsAsBooleans)) {
@@ -100,12 +112,48 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private void setExclusionsStringFor(Contact contact, String val) {
-        contact.npo02__Naming_Exclusions__c = val;
+    private Boolean isIncludedInHouseholdName(Contact con) {
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromName();
     }
 
-    private String namingExclusionsFor(Contact con) {
-        return con.npo02__Naming_Exclusions__c;
+    private Boolean isIncludedInFormalGreeting(Contact con) {
+        return con.npo02__Naming_Exclusions__c == null
+                || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
+    }
+
+    private Boolean isIncludedInInformalGreeting(Contact con) {
+        return con.npo02__Naming_Exclusions__c == null
+                || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c');
+    }
+
+    private Contacts contactsInHouseholds() {
+        List<Contact> consInHouseholds = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (householdIdFor(con) != null) {
+                consInHouseholds.add(con);
+            }
+        }
+        return new Contacts(consInHouseholds);
+    }
+
+    private void applyExclusionsStringChangesToCheckboxes() {
+        for (Contact con : (List<Contact>) getRecords()) {
+            HouseholdNamingExclusionsString namingExclusionsString =
+                    new householdNamingExclusionsString(con);
+            HouseholdNamingExclusionsString oldNamingExclusionsString =
+                    new HouseholdNamingExclusionsString(oldVersionOf(con));
+            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
+                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
+                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
+                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
+            }
+        }
+    }
+
+    private void setExclusionsStringFor(Contact contact, String val) {
+        contact.npo02__Naming_Exclusions__c = val;
     }
 
     /**
@@ -147,14 +195,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return mergedWinningContactIds;
     }
 
-    private Contacts contactsInHouseholds() {
-        List<Contact> consInHouseholds = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (householdIdFor(con) != null) {
-                consInHouseholds.add(con);
-            }
-        }
-        return new Contacts(consInHouseholds);
+    private Id householdIdFor(Contact con) {
+        return con.npo02__Household__c;
     }
 
     private Boolean isLosingRecordInMergeOperation(Contact con) {
@@ -200,4 +242,5 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         return oppIds;
     }
+
 }
