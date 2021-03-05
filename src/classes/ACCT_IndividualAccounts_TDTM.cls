@@ -35,15 +35,22 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    HouseholdNamingService householdNamingService = new HouseholdNamingService();
+    @TestVisible
+    private HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
     private static npe01__Contacts_and_Orgs_Settings__c contactsSettings;
-    /*******************************************************************************************************************
-     * @description the set of fields used for household naming
-     */
-    private static final Set<String> HH_NAMING_FIELDS = new HouseholdNamingService().getHouseholdNamingContactFields();
+
     /*******************************************************************************************************************
      * @description a set of languages that require different naming conventions
      */
@@ -409,13 +416,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             selectFields.add('OtherStateCode');
         }
 
-        selectFields.addAll(HH_NAMING_FIELDS);
+        selectFields.addAll(fieldsUsedForHouseholdNaming());
 
         return new UTIL_Query()
             .withSelectFields(selectFields)
             .withFrom(String.valueOf(Contact.SObjectType))
             .withWhere('Id IN :contacts')
             .build();
+    }
+
+    private Set<String> fieldsUsedForHouseholdNaming() {
+       return householdNamingService.getHouseholdNamingContactFields();
     }
 
     /*******************************************************************************************************
@@ -768,7 +779,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
 
         // check all household naming fields for changes
-        for(String fieldName : HH_NAMING_FIELDS) {
+        for(String fieldName : fieldsUsedForHouseholdNaming()) {
             String currentName;
             String oldName;
 
