@@ -79,14 +79,62 @@ public inherited sharing class Accounts extends fflib_SObjects {
         }
     }
 
-    private void setNameAndGreetingsToReplacementText() {
-        householdNamingService.setNameAndGreetingsToReplacementText(householdAccounts());
-    }
-
     public void onAfterUpdate() {
         if (settings.isAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdate();
         }
+    }
+
+    public void setAccountTypeAndIndividualFieldValues() {
+        for (Account acc : (List<Account>) getRecords()) {
+            if (needsTypeAndIndividualFieldsSet(acc)) {
+                setTypeAndIndividualFields(acc);
+            }
+        }
+    }
+
+    public void setSystemAccountTypeAndIndividualFieldValues() {
+        for (Account acc : (List<Account>) getRecords()) {
+            if (shouldResetAccountTypeAndIndividualFields(acc)) {
+                resetAccountTypeAndIndividualFields(acc);
+            }
+        }
+    }
+
+    /******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model.
+    * @return Id. if none is explicitly specified, returns null.
+    */
+    public static Id rtIdForNewAccount() {
+        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
+    }
+
+    /*******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model.
+    * @param isHHAccountModel whether we are using the Household Account Model
+    * @return Id. recordtype Id to use, or null if none is specified for the account model.
+    */
+    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
+        npe01__Contacts_And_Orgs_Settings__c contactsSettings =
+                UTIL_CustomSettingsFacade.getContactsSettings();
+        // check if recordtypes are enabled, and if it matches the existing setting
+        // we go thru describe to validate that it is a valid recordType ID.
+        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
+        if (individualRecordTypeId != null) {
+            Schema.RecordTypeInfo recordTypeInfo = null;
+            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
+            Map<Id, Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
+            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
+            return recordTypeInfo == null
+                    ? null
+                    : recordTypeInfo.getRecordTypeId();
+        }
+
+        return null;
+    }
+
+    private void setNameAndGreetingsToReplacementText() {
+        householdNamingService.setNameAndGreetingsToReplacementText(householdAccounts());
     }
 
     private Boolean shouldSetCustomNamingFieldAndReplaceGreetings() {
@@ -107,14 +155,6 @@ public inherited sharing class Accounts extends fflib_SObjects {
         );
     }
 
-    public void setSystemAccountTypeAndIndividualFieldValues() {
-        for (Account acc : (List<Account>) getRecords()) {
-            if (shouldResetAccountTypeAndIndividualFields(acc)) {
-                resetAccountTypeAndIndividualFields(acc);
-            }
-        }
-    }
-
     private void resetAccountTypeAndIndividualFields(Account acc) {
         acc.npe01__SYSTEMIsIndividual__c = false;
         acc.npe01__SYSTEM_AccountType__c = null;
@@ -129,14 +169,6 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     private Boolean isRecordTypeIdChanged(Account acc) {
         return acc.RecordTypeId != oldVersionOf(acc).RecordTypeId;
-    }
-
-    public void setAccountTypeAndIndividualFieldValues() {
-        for (Account acc : (List<Account>) getRecords()) {
-            if (needsTypeAndIndividualFieldsSet(acc)) {
-                setTypeAndIndividualFields(acc);
-            }
-        }
     }
 
     private void setTypeAndIndividualFields(Account acc) {
@@ -197,38 +229,6 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     private Boolean isHouseholdTriggerContext() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH);
-    }
-
-    /******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @return Id. if none is explicitly specified, returns null.
-    */
-    public static Id rtIdForNewAccount() {
-        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @param isHHAccountModel whether we are using the Household Account Model
-    * @return Id. recordtype Id to use, or null if none is specified for the account model.
-    */
-    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
-        npe01__Contacts_And_Orgs_Settings__c contactsSettings =
-                UTIL_CustomSettingsFacade.getContactsSettings();
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (individualRecordTypeId != null) {
-            Schema.RecordTypeInfo recordTypeInfo = null;
-            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
-            Map<Id, Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
-            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
-            return recordTypeInfo == null
-                    ? null
-                    : recordTypeInfo.getRecordTypeId();
-        }
-
-        return null;
     }
 
 }
