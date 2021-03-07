@@ -55,4 +55,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
             return defaultAddressType;
         } private set;
     }
+
+    public Map<Id, Address__c> getMapAddressesByAcctId() {
+        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
+        for (Address__c address : (List<Address__c>) getRecords()) {
+            Id accId = address.Household_Account__c;
+            if (accId != null) {
+                mapAddressesByAcctId.put(accId, null);
+            }
+        }
+        return mapAddressesByAcctId;
+    }
+
 }

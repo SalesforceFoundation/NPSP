@@ -51,7 +51,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description map from Country Code to Country Name
     */
     private static Map<String, String> validCountriesByCode = new Map<String, String>();
-    
+
     /*******************************************************************************************************
     * @description Trigger Handler on Address that handles address management.  Updates the appropriate
     * Accounts and Contacts when an Address is changed.
@@ -87,12 +87,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             Addresses addresses = new Addresses(listOld);
-            for (Address__c address : (List<Address__c>) addresses.getRecords()) {
-                Id accId = address.Household_Account__c;
-                if (accId != null) {
-                    mapAddressesByAcctId.put(accId, null);
-                }
-            }
+            mapAddressesByAcctId = addresses.getMapAddressesByAcctId();
         } else {
 
             Integer i = 0;
@@ -216,10 +211,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
     }
+
     private Boolean isRecursive() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
     }
-
 
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
@@ -387,7 +382,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         return mapAccIdHHInfo;
     }
-        
+
     /*******************************************************************************************************
     * @description helper class to keep track of the default and seasonal address for a household
     */
@@ -426,7 +421,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         return (fStart ? dtStart : dtEnd);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if the address has seasonal fields set
     * @param addr the Address to look at
@@ -436,7 +431,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
     * @param addr the Address to look at
@@ -450,7 +445,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (addr.Seasonal_End_Day__c != null) cParts++;
         return (cParts > 0 && cParts < 4);
     }
-    
+
     /*******************************************************************************************************
     * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
     * @param mapAddrIdAddr a map of Address Id's to Addresses
@@ -502,7 +497,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             WHERE Id IN :acctIds
         ]);
     }
- 
+
     /*******************************************************************************************************
     * @description returns whether the Address's mailing fields are null
     * @param addr the Address
@@ -535,7 +530,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
                         addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to compare two address objects address fields
     * @param addrNew the new version of the Address
@@ -658,7 +653,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         else
                 return decimal.valueOf(m + '.' + d);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if two seasonal addresses overlap
     * @param addr1 an Address
@@ -728,7 +723,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description verify that any seasonal addresses don't overlap
     * Adds an Error to each Address object that has an illegal seasonal fields
@@ -782,7 +777,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description routine the scheduled batch job calls to update households with Seasonal addresses
     * @param listAcc a list of Accounts to see if their address needs to be updated
@@ -829,7 +824,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
     }
-    
+
     /*******************************************************************************************************
     * @description For the list of Addresses, sees if there is already an existing Address in the Account that
     * matches. Creates only unique addresses from their respective household, and mark any existing matches 
@@ -860,7 +855,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description for the given addresses, find if they have a match, and return a map that
     * has null for no match, and the matching address if there is a match.
@@ -908,7 +903,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         return mapAddrDupAddr;
     }
-    
+
     /*******************************************************************************************************
     * @description Cleanup the Addresses for the specified Accounts by removing any duplicate Addresses,
     * making sure only one is marked Default, and that the Default is propagated to the appropriate
@@ -979,8 +974,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         dmlWrapper = new TDTM_Runnable.DmlWrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDml(dmlWrapper);
-    }    
-    
+    }
+
     /*******************************************************************************************************
     * @description replaces the losing address with the winning address in any contacts referring to the 
     * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
@@ -1112,7 +1107,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy to
     * @param addrType if not null, copy to address.Address_Type__c
     * @return void
-    */ 
+    */
     public static void copyAddressStdSObjAddr(sObject sobjSrc, String fieldPrefixSrc, Address__c addr, String addrType) {
         addr.MailingStreet__c = (String)sobjSrc.get(fieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
