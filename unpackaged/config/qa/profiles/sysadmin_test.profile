@@ -163,6 +163,18 @@
         <hidden>true</hidden>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.DI_Checkbox_to_checkbox__c</field>
+        <readable>true</readable>
+        <hidden>true</hidden>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.Picklist_to_checkbox__c</field>
+        <readable>true</readable>
+        <hidden>true</hidden>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Description__c</field>
         <readable>false</readable>
@@ -172,6 +184,18 @@
         <editable>false</editable>
         <field>npe01__OppPayment__c.npe01__Check_Reference_Number__c</field>
         <readable>false</readable>
+        <hidden>true</hidden>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Contact.Checkbox_to_checkbox__c</field>
+        <readable>true</readable>
+        <hidden>true</hidden>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Contact.Checkbox_to_picklist__c</field>
+        <readable>true</readable>
         <hidden>true</hidden>
     </fieldPermissions>
     <layoutAssignments>

@@ -116,6 +116,8 @@
         <members>npsp__Data_Import_Field_Mapping.custom_url_5161e7b49</members>
         <members>npsp__Data_Import_Field_Mapping.new_lookup_campaign_28e79b438</members>
         <members>npsp__Data_Import_Field_Mapping_Set.Migrated_Custom_Field_Mapping_Set</members>
+        <members>npsp__Data_Import_Field_Mapping.Picklist_to_checkbox_6c4d96932</members>
+        <members>npsp__Data_Import_Field_Mapping.DI_Checkbox_to_checkbox_57e8f3cb8</members>
         <members>npsp__Data_Import_Object_Mapping.Account1_121e01054</members>
         <members>npsp__Data_Import_Object_Mapping.Account2_a1d4dadcd</members>
         <members>npsp__Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24_ccb69d9bb</members>
@@ -132,8 +134,6 @@
         <members>npsp__Data_Import_Object_Mapping.Opportunity_Contact_Role_2_721bcea98</members>
         <members>npsp__Data_Import_Object_Mapping.Opportunity_be8c1151a</members>
         <members>npsp__Data_Import_Object_Mapping.Payment_c68b6eb2a</members>
-        <members>npsp__Data_Import_Field_Mapping.Picklist_to_checkbox_6c4d96932</members>
-        <members>npsp__Data_Import_Field_Mapping.DI_Checkbox_to_checkbox_57e8f3cb8</members>
         <members>npsp__Data_Import_Object_Mapping_Set.Migrated_Custom_Object_Mapping_Set</members>
         <name>CustomMetadata</name>
     </types>
