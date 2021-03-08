@@ -2393,6 +2393,13 @@ export default class GeFormRenderer extends LightningElement{
             return false;
         }
         return this._batchCurrencyIsoCode !== CURRENCY;
+    }
 
+    get mismatchedCurrencyWarning() {
+        if (this.showMismatchedCurrencyWarning) {
+            return GeLabelService.format(
+                this.CUSTOM_LABELS.geWarningBatchGiftEntryCurrencyMismatch,
+                [this._batchCurrencyIsoCode]);
+        }
     }
 }

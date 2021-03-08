@@ -480,7 +480,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             type: this.getColumnTypeFromFieldType(element.dataType)
         };
 
-        if (column.type === 'currency') {
+        if (column.fieldName === DONATION_AMOUNT.fieldApiName) {
             column.typeAttributes = {
                 currencyCode: this.batchCurrencyISOCode
             };
