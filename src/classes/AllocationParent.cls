@@ -10,13 +10,18 @@ public inherited sharing class AllocationParent {
 
     private final String OPPORTUNITY_AMOUNT = String.valueOf(Opportunity.SObjectType.fields.Amount);
     private final String PAYMENT_AMOUNT = String.valueOf(npe01__OppPayment__c.SObjectType.fields.npe01__Payment_Amount__c);
+    private final String OPPORTUNITY_LOOKUP = String.valueOf(Allocation__c.SObjectType.fields.Opportunity__c);
+    private final String CAMPAIGN_LOOKUP = String.valueOf(Allocation__c.SObjectType.fields.Campaign__c);
+    private final String RECURRING_DONATION_LOOKUP = String.valueOf(Allocation__c.SObjectType.fields.Recurring_Donation__c);
+    private final String PAYMENT_LOOKUP = String.valueOf(Allocation__c.SObjectType.fields.Payment__c);
 
-    public AllocationParent() {}
+    @TestVisible
+    private AllocationParent() {}
 
     public AllocationParent(Id parentId) {
         id = parentId;
         objectType = id.getSObjectType();
-        record = getRecord(objectType);
+        record = getRecord();
         setPropertiesFromDescribe();
 
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -68,6 +73,10 @@ public inherited sharing class AllocationParent {
         return isAnOpportunity() || isAPayment();
     }
 
+    public Boolean hasAnAmountGreaterThanZero() {
+        return hasAnAmountField() && getAmount() > 0;
+    }
+
     public Decimal getAmount() {
         if (donationAmount == 0 || donationAmount == null) {
 
@@ -92,7 +101,7 @@ public inherited sharing class AllocationParent {
         objectApiName = describe.getName();
     }
 
-    private SObject getRecord(SObjectType objectType) {
+    private SObject getRecord() {
         Set<String> fields = getSelectFieldsFor(objectType);
 
         UTIL_Query soql = new UTIL_Query();
@@ -108,7 +117,10 @@ public inherited sharing class AllocationParent {
 
     private Set<String> getSelectFieldsFor(SObjectType objectType) {
         Set<String> selectFields = new Set<String>{'Id', 'Name'};
-        selectFields.addAll(selectFieldsBySObjectType.get(objectType));
+        List<String> additionalFields = selectFieldsBySObjectType.get(objectType);
+        if (additionalFields != null) {
+            selectFields.addAll(selectFieldsBySObjectType.get(objectType));
+        }
         if (currencyCode != null) {
             selectFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
         }
@@ -117,15 +129,13 @@ public inherited sharing class AllocationParent {
 
     private Map<SObjectType, List<String>> selectFieldsBySObjectType = new Map<SObjectType, List<String>> {
         Opportunity.SObjectType => new List<String>{'Amount'},
-        Campaign.SObjectType => new List<String>(),
-        npe03__Recurring_Donation__c.SObjectType => new List<String>(),
         npe01__OppPayment__c.SObjectType => new List<String>{'npe01__Payment_Amount__c'}
     };
 
     private Map<SObjectType, String> allocationLookupApiNameBySObjectType = new Map<SObjectType, String> {
-        Opportunity.SObjectType => String.valueOf(Allocation__c.SObjectType.fields.Opportunity__c),
-        Campaign.SObjectType => String.valueOf(Allocation__c.SObjectType.fields.Campaign__c),
-        npe03__Recurring_Donation__c.SObjectType => String.valueOf(Allocation__c.SObjectType.fields.Recurring_Donation__c),
-        npe01__OppPayment__c.SObjectType => String.valueOf(Allocation__c.SObjectType.fields.Payment__c)
+        Opportunity.SObjectType => OPPORTUNITY_LOOKUP,
+        Campaign.SObjectType => CAMPAIGN_LOOKUP,
+        npe03__Recurring_Donation__c.SObjectType => RECURRING_DONATION_LOOKUP,
+        npe01__OppPayment__c.SObjectType => PAYMENT_LOOKUP
     };
 }
