@@ -6,7 +6,7 @@
     showHeader="true"
     sidebar="true"
     cache="false"
-    action="{!getPageLoadValidationMessages}"
+    action="{!verifyPageLoadConditions}"
     lightningStylesheets="true">
 
     <apex:slds />
@@ -17,10 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript">
     (function($) {
-
         var sumAmount;
 
-        var parentAmount = {!parentAmount};
+        var parentAmount = {!parent.amount};
         var decimalSeparator = "{!decimalSeparator}";
         var thousandsSeparator = "{!thousandsSeparator}";
 
@@ -30,9 +29,9 @@
 
         function urlHome() {
             if (isLightningExperienceOrSalesforce1()) {
-                sforce.one.navigateToURL('one.app#/sObject/{!objectAPIName}/home');
+                sforce.one.navigateToURL('one.app#/sObject/{!parent.objectApiName}/home');
             } else {
-                window.location.assign('/{!keyPrefix}/o');
+                window.location.assign('/{!parent.keyPrefix}/o');
             }
         }
 
@@ -185,12 +184,12 @@
     <apex:outputPanel rendered="{!hasAccess}">
         <div class="slds-scope">
             <apex:form id="theForm">
-                <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
+                <c:UTIL_NavigateBack recordId="{!parent.id}" redirect="{!redirect}"/>
                     <!-- PAGE HEADER -->
-                    <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
-                        parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
+                    <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!parent.objectLabelPlural}"
+                        parentAction="javascript:window.urlHome();" parentRecordName="{!parent.recordName}" parentRecordAction="/{!parent.id}"
                         header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}" cancelReRender="cancelBTN" cancelDisabledOnClick="true"
-                        saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0),isLoading)}" saveDisabledOnClick="true"/>
+                        saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!isSaveDisabled}" saveDisabledOnClick="true"/>
 
                     <apex:outputPanel rendered="{!isLoading}" >
                         <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >

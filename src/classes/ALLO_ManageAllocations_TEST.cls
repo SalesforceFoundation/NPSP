@@ -374,7 +374,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(gau.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
@@ -400,7 +400,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
@@ -412,7 +412,7 @@ private class ALLO_ManageAllocations_TEST {
 
     /*******************************************************************************************************
     * @description Runs manage allocations page on an opportunity with no amount and verifies an
-    * error is thrown when the page action to getPageLoadValidationmessages is called.
+    * error is thrown when the page action to validatePageLoadConditions is called.
     ********************************************************************************************************/
     @isTest
     private static void testOppNoAmount() {
@@ -426,7 +426,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
