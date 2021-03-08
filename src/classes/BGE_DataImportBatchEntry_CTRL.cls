@@ -88,10 +88,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
 
         DataImportModel dataImportModel = new DataImportModel();
-        Integer rowOffset = 0;
-
         dataImportModel.id = batchId;
-        dataImportModel.dataImportRows = getDataImportRows(batchId, rowOffset);
+        dataImportModel.dataImportRows = getDataImportRows(batchId, 0);
         dataImportModel.setColumns();
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
