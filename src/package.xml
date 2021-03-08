@@ -2395,6 +2395,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorBatchGiftEntryCurrencyMismatch</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2504,6 +2505,7 @@
         <members>geUtilJWTTestInvalidKey</members>
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
+        <members>geWarningBatchGiftEntryCurrencyMismatch</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
@@ -4103,6 +4105,14 @@
     <types>
         <members>Payment_ACH_Code</members>
         <name>GlobalValueSet</name>
+    </types>
+    <types>
+        <members>Payment_ACH_Code-de</members>
+        <members>Payment_ACH_Code-es</members>
+        <members>Payment_ACH_Code-fr</members>
+        <members>Payment_ACH_Code-ja</members>
+        <members>Payment_ACH_Code-nl_NL</members>
+        <name>GlobalValueSetTranslation</name>
     </types>
     <types>
         <members>Account-Household Layout</members>
