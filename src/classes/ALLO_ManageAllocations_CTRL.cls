@@ -238,10 +238,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
     */
     public void verifyPageLoadConditions() {
-        if (!getIsSupportedObject()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
-        } else if ((parent.isAnOpportunity() || parent.isAPayment()) && parent.getAmount() == 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
+        if (hasAccess) {
+            if (!getIsSupportedObject()) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
+            } else if (!parent.hasAnAmountGreaterThanZero()) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
+            }
         }
     }
 
