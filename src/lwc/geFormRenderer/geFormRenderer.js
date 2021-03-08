@@ -3,6 +3,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
+import getBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.getBatchCurrencyIsoCode';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -67,7 +68,6 @@ import ExceptionDataError from './exceptionDataError';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
-import BATCH_CURRENCY_ISO_CODE from '@salesforce/schema/DataImportBatch__c.CurrencyIsoCode';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -258,6 +258,13 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     connectedCallback() {
+
+        if (!this.isSingleGiftEntry) {
+           getBatchCurrencyIsoCode({batchId: this.batchId}).then(response => {
+              this._batchCurrencyIsoCode = response;
+           });
+        }
+
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
@@ -405,13 +412,12 @@ export default class GeFormRenderer extends LightningElement{
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD, BATCH_CURRENCY_ISO_CODE]
+        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD]
     })
     wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value;
             this._batchDefaults = data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
-            this._batchCurrencyIsoCode = getFieldValue(data, BATCH_CURRENCY_ISO_CODE);
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;

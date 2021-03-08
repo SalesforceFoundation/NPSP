@@ -159,6 +159,11 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
+            //
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                validateCurrencies(batchId);
+            }
+
             dataImport.Additional_Object_JSON__c =
                 convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
 
@@ -170,6 +175,20 @@ public with sharing class GE_GiftEntryController {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
             throw buildDmlException(JSONExceptionData);
+        }
+    }
+
+    /**
+     * @description Validates that the currency of a batch matches the currently logged in
+     * user's currency
+     * @param batchId : ID of the NPSP_Data_Import_Batch__c
+     */
+    private static void validateCurrencies (Id batchId) {
+        String batchCurrencyIsoCode = getBatchCurrencyIsoCode(batchId);
+        if (batchCurrencyIsoCode != UserInfo.getDefaultCurrency()) {
+           throw new CurrencyMismatchException(String.format(
+               System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
+           ));
         }
     }
 
@@ -1034,6 +1053,20 @@ public with sharing class GE_GiftEntryController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled(Cacheable= true)
+    public static String getBatchCurrencyIsoCode (Id batchId) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            return [
+                SELECT CurrencyIsoCode
+                FROM DataImportBatch__c
+                WHERE Id =: batchId
+            ][0].CurrencyIsoCode;
+        }
+       return null;
+    }
+
+    private class CurrencyMismatchException extends Exception {}
 
     private class BDIException extends Exception {}
 }

@@ -1,16 +1,12 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import {
-    deleteRecord,
-    getFieldValue,
-    getRecord,
-    getRecordCreateDefaults 
-} from 'lightning/uiRecordApi';
+import { deleteRecord } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
+import getBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.getBatchCurrencyIsoCode';
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { isNotEmpty, isUndefined } from 'c/utilCommon';
@@ -31,10 +27,6 @@ import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureI
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
-import BATCH_CURRENCY_ISO_CODE
-    from '@salesforce/schema/DataImportBatch__c.CurrencyIsoCode';
-import CURRENCY from '@salesforce/i18n/currency';
-
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 const REFERENCE = 'REFERENCE';
@@ -99,6 +91,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     isLoaded = true;
+    _batchCurrencyIsoCode;
 
     constructor() {
         super();
@@ -108,6 +101,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     connectedCallback() {
+        this.getBatchCurrencyIsoCode();
         this.loadBatch();
     }
 
@@ -131,6 +125,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 }
             )
             .catch(error => handleError(error));
+    }
+
+    getBatchCurrencyIsoCode() {
+        getBatchCurrencyIsoCode({batchId: this.batchId})
+            .then(response => {
+                this._batchCurrencyIsoCode = response;
+        })
     }
 
     _propertiesSet = false;
@@ -396,56 +397,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this;
     }
 
-    @wire(getRecord, { recordId: '$batchId', fields: [BATCH_CURRENCY_ISO_CODE]})
-    batch;
-
     get batchCurrencyISOCode() {
-        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
-    }
-
-    @wire(getRecordCreateDefaults, { objectApiName: DATA_IMPORT_OBJECT })
-    dataImportCreateDefaults;
-
-    userDefaultCurrency() {
-        return CURRENCY;
+        return this._batchCurrencyIsoCode;
     }
 
     @api
     handleSubmit(event) {
-        this.isCurrencyCompatible().then(result => {
-           saveAndDryRunDataImport({
-               batchId: this.batchId,
-               dataImport: event.detail.dataImportRecord
-           }).then(result => {
-               let dataImportModel = JSON.parse(result);
-               let row = dataImportModel.dataImportRows[0];
-               Object.assign(row,
-                   this.appendUrlColumnProperties.call(row.record,
-                       this._dataImportObjectInfo));
-               this.upsertData(row, 'Id');
-               this._count = dataImportModel.totalCountOfRows;
-               this._total = dataImportModel.totalRowAmount;
-               event.detail.success(); //Re-enable the Save button
-           }).catch(error => {
-               event.detail.error(error);
-           })
-        }).catch(err => {
-            event.detail.error(err);
+        saveAndDryRunDataImport({
+            batchId: this.batchId,
+            dataImport: event.detail.dataImportRecord
+        }).then(result => {
+            let dataImportModel = JSON.parse(result);
+            let row = dataImportModel.dataImportRows[0];
+            Object.assign(row,
+                this.appendUrlColumnProperties.call(row.record,
+                    this._dataImportObjectInfo));
+            this.upsertData(row, 'Id');
+            this._count = dataImportModel.totalCountOfRows;
+            this._total = dataImportModel.totalRowAmount;
+            event.detail.success(); //Re-enable the Save button
+        }).catch(error => {
+            event.detail.error(error);
         });
-    }
-
-    isCurrencyCompatible = async () => {
-        if(this.userDefaultCurrency === this.batchCurrencyISOCode) {
-            return true;
-        } else {
-            throw this.getCurrencyMismatchError();
-        }
-    }
-
-    getCurrencyMismatchError() {
-        return GeLabelService.format(
-            this.CUSTOM_LABELS.geErrorBatchGiftEntryCurrencyMismatch,
-            [this.batchCurrencyISOCode]);
     }
 
     _dataImportObjectInfo;
