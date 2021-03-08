@@ -1057,11 +1057,13 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled(Cacheable= true)
     public static String getBatchCurrencyIsoCode (Id batchId) {
         if (UserInfo.isMultiCurrencyOrganization()) {
-            return [
-                SELECT CurrencyIsoCode
-                FROM DataImportBatch__c
-                WHERE Id =: batchId
-            ][0].CurrencyIsoCode;
+            String query = new UTIL_Query()
+                .withSelectFields(new Set<String>{'CurrencyIsoCode'})
+                .withFrom(DataImportBatch__c.SObjectType)
+                .withWhere('Id =: batchId')
+                .build();
+            List<DataImportBatch__c> batches = Database.query(query);
+            return (String)batches[0].get('CurrencyIsoCode');
         }
        return null;
     }
