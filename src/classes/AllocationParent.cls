@@ -1,6 +1,5 @@
 public inherited sharing class AllocationParent {
-    public Id id;
-
+    private Id id;
     private SObjectType objectType = null;
     private SObject record;
     private Decimal donationAmount = 0;
@@ -25,7 +24,7 @@ public inherited sharing class AllocationParent {
         }
     }
 
-    public Id getParentId() {
+    public Id getId() {
         return id;
     }
 
