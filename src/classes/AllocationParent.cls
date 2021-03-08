@@ -65,10 +65,6 @@ public inherited sharing class AllocationParent {
         return objectType == npe01__OppPayment__c.SObjectType;
     }
 
-    private Boolean isAPayment() {
-        return objectType == npe01__OppPayment__c.SObjectType;
-    }
-
     public Boolean hasAnAmountField() {
         return isAnOpportunity() || isAPayment();
     }
