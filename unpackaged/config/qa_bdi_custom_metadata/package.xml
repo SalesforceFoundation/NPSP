@@ -35,6 +35,8 @@
         <members>Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
         <members>Data_Import_Object_Mapping.CustomObject2_fe20bsyqx</members>
         <members>Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
+        <members>Data_Import_Object_Mapping.Picklist_to_checkbox_e160cbe8d</members>
+        <members>Data_Import_Object_Mapping.DI_Checkbox_to_checkbox_a613b636</members>
         <name>CustomMetadata</name>
     </types>
     <version>48.0</version>

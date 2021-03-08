@@ -15,7 +15,7 @@ Suite Teardown  Run Keywords
 
 *** Keywords ***
 Setup Test Data
-    ${ns} =  Get NPSP Namespace Prefix
+    ${NS} =  Get NPSP Namespace Prefix
     Set suite variable    ${NS}
 
     &{CONTACT}=  API Create Contact
@@ -50,9 +50,22 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   Store Template Record Id              ${template}
   Create Gift Entry Batch               ${template}  ${template} Batch
   Current Page Should Be                Form       Gift Entry
+  Save Current Record ID For Deletion   ${NS}DataImportBatch__c
   Fill Gift Entry Form
   ...                                   Donor Type=Contact1
-  ...                                   Existing Donor Contact=&{CONTACT}
+  ...                                   Existing Donor Contact=${CONTACT}[Name]
   ...                                   Donation Amount=1
   ...                                   Donation Date=Today
+  Verify Field Default Value             
+  ...                                   Checkbox To Checkbox=False
+  ...                                   Checkbox To Picklist=False
+  Fill Gift Entry Form
+  ...                                   Checkbox To Checkbox=True
+  ...                                   Checkbox To Picklist=True                                   
   Click Gift Entry Button               Save
+  Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
+  Wait For Batch To Process             BDI_DataImport_BATCH            Completed
+#   Go to Page                          Details    Contact    object_id=${CONTACT}[Id]
+#   Navigate To And Validate Field Value                         #Fields Info
+#   Go to Page                          DI Batch        Validate Fields
+#   Navigate to And Validate Field Value        #Field Info
