@@ -28,13 +28,7 @@ import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import BATCH_CURRENCY_ISO_CODE
     from '@salesforce/schema/DataImportBatch__c.CurrencyIsoCode';
-import DATA_IMPORT_BATCH from '@salesforce/schema/DataImportBatch__c';
-import DATA_IMPORT_CURRENCY_ISO_CODE
-    from '@salesforce/schema/DataImport__c.CurrencyIsoCode';
-import DEFAULT_CURRENCY_ISO_CODE from '@salesforce/schema/User.DefaultCurrencyIsoCode';
-import USER_ID from '@salesforce/user/Id';
 import CURRENCY from '@salesforce/i18n/currency';
-import { refreshApex } from '@salesforce/apex';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -407,23 +401,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @wire(getRecordCreateDefaults, { objectApiName: DATA_IMPORT_OBJECT })
     dataImportCreateDefaults;
 
-    get dataImportCurrencyISOCode () {
-        return this.dataImportCreateDefaults.
-            data.record.fields[DATA_IMPORT_CURRENCY_ISO_CODE.fieldApiName].value;
-    }
-
-    @wire(getRecord, { recordId: USER_ID, fields: [DEFAULT_CURRENCY_ISO_CODE]})
-    _user;
-
-    get userDefaultCurrency() {
-        getRecordNotifyChange([{recordId: USER_ID}]);
-        return getFieldValue(this._user.data, DEFAULT_CURRENCY_ISO_CODE);
+    userDefaultCurrency() {
+        return CURRENCY;
     }
 
     @api
     handleSubmit(event) {
-        console.log(JSON.stringify('@wire '+this.userDefaultCurrency));
-        console.log(JSON.stringify('@currency '+CURRENCY));
         this.isCurrencyCompatible().then(result => {
            saveAndDryRunDataImport({
                batchId: this.batchId,
@@ -456,7 +439,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     getCurrencyMismatchError() {
         return GeLabelService.format(
-            'Unable to save the gift to the batch. Gifts must be in the same currency as the batch. Change your currency to {0} to save the gift.',
+            this.CUSTOM_LABELS.geErrorBatchGiftEntryCurrencyMismatch,
             [this.batchCurrencyISOCode]);
     }
 

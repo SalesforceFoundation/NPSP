@@ -96,47 +96,57 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
         dataImportModel = getDataImportBatchTotals(dataImportModel);
+        checkBatchGiftEntryFieldPermissions(batchId);
 
-        DataImportBatch__c batch;
+        return JSON.serialize(dataImportModel);
+    }
+
+    private static void checkBatchGiftEntryFieldPermissions(Id batchId) {
+        Decimal batchGiftEntryVersion;
         Boolean isQueryException = false;
         try {
-            batch = [
-                    SELECT Batch_Gift_Entry_Version__c
-                    FROM DataImportBatch__c
-                    WHERE Id = :batchId
-                    WITH SECURITY_ENFORCED
-            ];
+            batchGiftEntryVersion = getBatchGiftEntryVersion(batchId);
         } catch (QueryException qe) {
             // If User doesn't have access to Version field, treat as 1.0.
             isQueryException = true;
         }
 
-        if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
+        List<String> fields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+        if (isQueryException || batchGiftEntryVersion < 2) {
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-                    String.valueOf(DataImport__c.SObjectType),
-                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+                String.valueOf(DataImport__c.SObjectType),
+                fields
             );
         } else {
-            List<String> fields =
-                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
-
-            List<String> nonNameFields = new List<String>();
-            for (String str : fields) {
-                Boolean isNameField = str.contains('.');
-                if (isNameField) {
-                    continue;
-                } else if (!nonNameFields.contains(str)) {
-                    nonNameFields.add(str);
-                }
-            }
-
+            List<String> nonNameFields = getNonNameFields(fields);
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-                    String.valueOf(DataImport__c.SObjectType),
-                    nonNameFields
+                String.valueOf(DataImport__c.SObjectType),
+                nonNameFields
             );
         }
+    }
 
-        return JSON.serialize(dataImportModel);
+    private static Decimal getBatchGiftEntryVersion(Id batchId) {
+        return [
+            SELECT Batch_Gift_Entry_Version__c
+            FROM DataImportBatch__c
+            WHERE Id = :batchId
+            WITH SECURITY_ENFORCED
+        ][0].Batch_Gift_Entry_Version__c;
+    }
+
+    private static List<String> getNonNameFields(List<String> fields) {
+        List<String> nonNameFields = new List<String>();
+        for (String str : fields) {
+            Boolean isNameField = str.contains('.');
+            if (isNameField) {
+                continue;
+            } else if (!nonNameFields.contains(str)) {
+                nonNameFields.add(str);
+            }
+        }
+        return nonNameFields;
     }
 
     /*******************************************************************************************************
