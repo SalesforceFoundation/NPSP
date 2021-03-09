@@ -14,7 +14,7 @@
     },
 
     /**
-     * @description: manages event triggered from confirm button on retirment prompt
+     * @description: manages event triggered from confirm button on retirement prompt
      */
     handleConfirmClick: function(component, event, helper) {
         helper.handleConfirmClick(component);
