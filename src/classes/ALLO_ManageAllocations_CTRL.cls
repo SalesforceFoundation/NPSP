@@ -70,7 +70,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     }
 
     /** @description List of allocations to delete when the user clicks Save.*/
-    public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
+    public list<Allocation__c> allocationsToBeDeleted = new list<Allocation__c>();
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
     public Id parentId {get;set;}
     /** @description The allocations settings object. */
@@ -265,7 +265,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 addDelExceptionMessage();
                 return null;
             }
-            listAlloForDelete.add(allocations[rowNumber]);
+            allocationsToBeDeleted.add(allocations[rowNumber]);
         }
         allocations.remove(rowNumber);
 
@@ -294,9 +294,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         Savepoint sp = Database.setSavepoint(); 
         try {
-            if (!listAlloForDelete.isEmpty()) {
+            if (!allocationsToBeDeleted.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
-                delete listAlloForDelete;
+                delete allocationsToBeDeleted;
 
                 //allow user to delete all GAUs and save with one empty GAU
                 if (allocations.size() == 1
