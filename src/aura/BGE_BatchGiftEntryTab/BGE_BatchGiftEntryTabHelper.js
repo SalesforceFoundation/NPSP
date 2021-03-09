@@ -17,7 +17,7 @@
         $A.enqueueAction(action);
 
         const modalViewedKey = 'hasViewedRetModal';
-        let sessionStorage = window.sessionStorage;
+        const sessionStorage = window.sessionStorage;
         if (!sessionStorage.getItem(modalViewedKey)) {
             sessionStorage.setItem(modalViewedKey, true);
 
