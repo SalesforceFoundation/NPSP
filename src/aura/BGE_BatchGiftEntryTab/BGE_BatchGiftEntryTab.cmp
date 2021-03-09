@@ -88,7 +88,7 @@
             id="retirementPrompt"
             headerTitle="{!$Label.c.bgeRetirementWarningHeader}"
             promptMessage="{!$Label.c.bgeRetirementWarningBody}"
-            confirmButtonTitle="Confirm" 
+            confirmButtonTitle="{!$Label.c.commonOkay}" 
             hasBackdrop="true" 
             variant="error" 
             onconfirm="{!c.handleConfirmClick}"
