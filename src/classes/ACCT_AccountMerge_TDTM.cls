@@ -56,8 +56,9 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         
             for (SObject so : listOld) {
                 Account acc = (Account)so;
-                if (acc != null && acc.MasterRecordId != null)
+                if (acc != null && acc.MasterRecordId != null) {
                     setMergeWinner.add(acc.MasterRecordId);
+                }
             }
             
             // deal with any fixups that need to occur due to Account Merges
@@ -98,14 +99,21 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         list<ID> listTemp = new list<ID>();            
         
         for (Account acc : [select Id, npe01__SYSTEM_AccountType__c from Account where Id in :listAccountId]) {
-            if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+            if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 listHHId.add(acc.Id);
-            else if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+            }
+            else if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
                 listOne2OneId.add(acc.Id);
-            else if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE)
-                listOrgId.add(acc.Id);            
+            }
+            else if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+                listOrgId.add(acc.Id);
+            }
         }
-        
+
+        if (listHHId.size() > 0 && System.isFuture()) {
+            HH_HouseholdNaming.renameHHAccounts(listHHId);
+        }
+
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);
         if (listTemp.size() > 0) { 
@@ -119,10 +127,8 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         listTemp.clear();
         listTemp.addAll(listHHId);
         listTemp.addAll(listOrgId);
-        if (listTemp.size() > 0)
+        if (listTemp.size() > 0) {
             ADDR_Addresses_TDTM.cleanupAccountAddresses(listTemp);
-        
-            
+        }
     }
-    
 }
