@@ -159,9 +159,7 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                validateCurrencies(batchId);
-            }
+            validateCurrencies(batchId);
 
             dataImport.Additional_Object_JSON__c =
                 convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
@@ -183,11 +181,12 @@ public with sharing class GE_GiftEntryController {
      * @param batchId : ID of the NPSP_Data_Import_Batch__c
      */
     private static void validateCurrencies (Id batchId) {
-        String batchCurrencyIsoCode = getBatchCurrencyIsoCode(batchId);
-        if (batchCurrencyIsoCode != UserInfo.getDefaultCurrency()) {
-           throw new CurrencyMismatchException(String.format(
-               System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
-           ));
+        String batchCurrencyIsoCode = retrieveBatchCurrencyIsoCode(batchId);
+
+        if (batchCurrencyIsoCode != null && batchCurrencyIsoCode != UserInfo.getDefaultCurrency()) {
+            throw new CurrencyMismatchException(String.format(
+                System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
+            ));
         }
     }
 
@@ -1054,17 +1053,18 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled(Cacheable= true)
-    public static String getBatchCurrencyIsoCode (Id batchId) {
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            String query = new UTIL_Query()
-                .withSelectFields(new Set<String>{'CurrencyIsoCode'})
-                .withFrom(DataImportBatch__c.SObjectType)
-                .withWhere('Id =: batchId')
-                .build();
-            List<DataImportBatch__c> batches = Database.query(query);
-            return (String)batches[0].get('CurrencyIsoCode');
+    public static String retrieveBatchCurrencyIsoCode (Id batchId) {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return null;
         }
-       return null;
+        String query = new UTIL_Query()
+            .withSelectFields(new Set<String>{'CurrencyIsoCode'})
+            .withFrom(DataImportBatch__c.SObjectType)
+            .withWhere('Id =: batchId')
+            .build();
+        List<DataImportBatch__c> batches = Database.query(query);
+        return (String)batches[0].get('CurrencyIsoCode');
+
     }
 
     private class CurrencyMismatchException extends Exception {}

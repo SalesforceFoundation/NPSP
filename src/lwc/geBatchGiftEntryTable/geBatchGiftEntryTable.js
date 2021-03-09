@@ -185,12 +185,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.sections.forEach(section => {
             section.elements.filter(e => e.elementType === 'field')
                 .forEach(fieldElement => {
-                    const fieldWrapper =
+                    const fieldMapping =
                         GeFormService.getFieldMappingWrapper(
                             fieldElement.dataImportFieldMappingDevNames[0]);
 
-                    if (isNotEmpty(fieldWrapper)) {
-                        const column = this.getColumn(fieldElement, fieldWrapper);
+                    if (isNotEmpty(fieldMapping)) {
+                        const column = this.getColumn(fieldElement, fieldMapping);
                         this._columnsBySourceFieldApiName[column.fieldName] = column;
                     }
                 });
@@ -436,20 +436,20 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
     }
 
-    getColumn(element, fieldWrapper) {
+    getColumn(element, fieldMapping) {
         const isReferenceField = element.dataType === REFERENCE &&
-            fieldWrapper.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
+            fieldMapping.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
 
         const columnFieldName =
-            fieldWrapper.Source_Field_API_Name.toLowerCase().endsWith('id') ?
-            fieldWrapper.Source_Field_API_Name.slice(0, -2) :
-            fieldWrapper.Source_Field_API_Name;
+            fieldMapping.Source_Field_API_Name.toLowerCase().endsWith('id')
+                ? fieldMapping.Source_Field_API_Name.slice(0, -2)
+                : fieldMapping.Source_Field_API_Name;
 
         let column = {
             label: element.customLabel,
             fieldName: isReferenceField ?
                 `${columnFieldName}${URL_SUFFIX}` :
-                fieldWrapper.Source_Field_API_Name,
+                fieldMapping.Source_Field_API_Name,
             type: this.getColumnTypeFromFieldType(element.dataType)
         };
 
