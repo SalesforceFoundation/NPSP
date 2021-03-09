@@ -247,10 +247,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public PageReference addRow() {
-        Allocation__c allo = new Allocation__c();
-        allo.put(parent.getAllocationLookupApiName(), parentId);
+        Allocation__c allocation = new Allocation__c();
+        allocation.put(parent.getAllocationLookupApiName(), parentId);
         // always add to last row
-        allocations.add(allo);
+        allocations.add(allocation);
         
         return null;
     }
@@ -283,12 +283,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         //split into insert and update cases so we can reset recursion flags for each operation
-        for (Allocation__c allo : allocations) {
-            if (allo.Id != null) {
-                listAlloForUpdate.add(allo);
+        for (Allocation__c allocation : allocations) {
+            if (allocation.Id != null) {
+                listAlloForUpdate.add(allocation);
             }
             else {
-                listAlloForInsert.add(allo);
+                listAlloForInsert.add(allocation);
             }
         }
 
