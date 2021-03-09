@@ -773,7 +773,7 @@ private with sharing class RD2_OpportunityService_TEST {
         try {
             rd.npe03__Amount__c = RD_NEW_AMOUNT;
             new RD2_OpportunityService(
-                TODAY, new  RD2_OpportunityEvaluationService.DatabaseService(), new RD2_CustomFieldMapper()
+                TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
             ).updateOpportunities(rds);
 
         } catch (Exception e) {

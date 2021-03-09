@@ -125,10 +125,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /***
     * @description Applies DML operations on records and keeps track of errors
     */
-    private DatabaseService dbService {
+    private RD2_DatabaseService dbService {
         get {
             if (dbService == null) {
-                dbService = new DatabaseService();
+                dbService = new RD2_DatabaseService();
             }
             return dbService;
         }
