@@ -83,21 +83,9 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
-    private static List<npo02__Household__c> getHouseholdsById(Set<Id> ids) {
-        return [
-                SELECT Id, (
-                        SELECT Id
-                        FROM npo02__Contacts__r
-                )
-                FROM npo02__Household__c
-                WHERE Id IN :ids
-        ];
-    }
-
     public void deleteEmptyHouseholds() {
         delete emptyHouseholds().getRecords();
     }
-
 
     public Households emptyHouseholds() {
         List<npo02__Household__c> emptyHouseholds = new List<npo02__Household__c>();
@@ -125,6 +113,44 @@ public inherited sharing class Households extends fflib_SObjects {
             householdCountMap.put(household.Id, household.npo02__Contacts__r.size());
         }
         return householdCountMap;
+    }
+
+    public void calculateLegacyHouseholdRollups() {
+        Households nonEmptyHouseholds =
+                nonEmptyHouseholds();
+        if (nonEmptyHouseholds.ids().size() > 0) {
+            if (rollupsShouldRunSynchronously(nonEmptyHouseholds.ids())) {
+                RLLP_OppRollup rg = new RLLP_OppRollup();
+                rg.rollupHouseholds(getHouseholdMap(nonEmptyHouseholds.ids()));
+            } else {
+                RLLP_OppRollup.rollupHouseholdsFuture(nonEmptyHouseholds.ids());
+            }
+        }
+    }
+
+    public void updateHouseholdNameAndMemberCount() {
+        if (isFutureEligible()) {
+            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                    new List<Id>(ids()));
+        } else {
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.updateHouseholdNameAndMemberCount(new List<Id>(ids()));
+        }
+    }
+
+    public Set<Id> ids() {
+        return getIdFieldValues(npo02__Household__c.Id);
+    }
+
+    private static List<npo02__Household__c> getHouseholdsById(Set<Id> ids) {
+        return [
+                SELECT Id, (
+                        SELECT Id
+                        FROM npo02__Contacts__r
+                )
+                FROM npo02__Household__c
+                WHERE Id IN :ids
+        ];
     }
 
     private void setNameAndGreetingsToReplacementText() {
@@ -155,36 +181,9 @@ public inherited sharing class Households extends fflib_SObjects {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH);
     }
 
-    public void updateHouseholdNameAndMemberCount() {
-        if (isFutureEligible()) {
-            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
-                    new List<Id>(ids()));
-        } else {
-            HouseholdNamingService householdNamingService = new HouseholdNamingService();
-            householdNamingService.updateHouseholdNameAndMemberCount(new List<Id>(ids()));
-        }
-    }
-
-    public Set<Id> ids() {
-        return getIdFieldValues(npo02__Household__c.Id);
-    }
-
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
                 && !System.isFuture() && !System.isBatch();
-    }
-
-    public void calculateLegacyHouseholdRollups() {
-        Households nonEmptyHouseholds =
-                nonEmptyHouseholds();
-        if (nonEmptyHouseholds.ids().size() > 0) {
-            if (rollupsShouldRunSynchronously(nonEmptyHouseholds.ids())) {
-                RLLP_OppRollup rg = new RLLP_OppRollup();
-                rg.rollupHouseholds(getHouseholdMap(nonEmptyHouseholds.ids()));
-            } else {
-                RLLP_OppRollup.rollupHouseholdsFuture(nonEmptyHouseholds.ids());
-            }
-        }
     }
 
     private Map<Id, npo02__Household__c> getHouseholdMap(Set<Id> householdIds) {
