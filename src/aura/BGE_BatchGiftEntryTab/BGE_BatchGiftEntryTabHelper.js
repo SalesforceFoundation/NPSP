@@ -15,6 +15,15 @@
             }
         });
         $A.enqueueAction(action);
+
+        const modalViewedKey = 'hasViewedRetModal';
+        let sessionStorage = window.sessionStorage;
+        if (!sessionStorage.getItem(modalViewedKey)) {
+            sessionStorage.setItem(modalViewedKey, true);
+
+            // Render retirement prompt modal
+            component.set('v.showRetirementPrompt', true);
+        }
     },
 
     /**

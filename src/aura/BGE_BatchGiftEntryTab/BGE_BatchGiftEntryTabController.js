@@ -14,6 +14,13 @@
     },
 
     /**
+     * @description: manages event triggered from confirm button on modal
+     */
+    handleConfirmClick: function(component, event, helper) {
+	  component.set('v.showRetirementPrompt', false);
+    },
+
+    /**
      * @description: handles selected row action in the datatable
      */
     handleRowAction: function (component, event, helper) {
