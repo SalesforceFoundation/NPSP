@@ -17,10 +17,10 @@
         $A.enqueueAction(action);
 
         // Manage retirement prompt visibility
-        const modalViewedKey = 'hasViewedRetirementPrompt';
+        const promptViewedKey = 'hasViewedRetirementPrompt';
         const sessionStorage = window.sessionStorage;
-        if (!sessionStorage.getItem(modalViewedKey)) {
-            sessionStorage.setItem(modalViewedKey, true);
+        if (!sessionStorage.getItem(promptViewedKey)) {
+            sessionStorage.setItem(promptViewedKey, true);
 
             // Render retirement prompt
             component.set('v.showRetirementPrompt', true);
