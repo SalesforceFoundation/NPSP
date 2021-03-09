@@ -54,7 +54,7 @@
     <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
-    <aura:attribute name="showRetirementPrompt" type="boolean" default="false" access="private"/>
+    <aura:attribute name="showRetirementPrompt" type="Boolean" default="false" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
