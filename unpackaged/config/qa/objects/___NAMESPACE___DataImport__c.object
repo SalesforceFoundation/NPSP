@@ -625,7 +625,7 @@
         <description>Picklist that a checkbox field from the Contact Object will be mapped to.</description>
         <externalId>false</externalId>
         <inlineHelpText>This is for testing checkbox-to-picklist field mappings.</inlineHelpText>
-        <label>Picklist to Checkbox</label>
+        <label>DI Picklist to Checkbox</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -652,7 +652,7 @@
         <description>Checkbox that will be mapped to another checkbox field on the Contact object.</description>
         <externalId>false</externalId>
         <inlineHelpText>This is for testing checkbox-to-checkbox mappings.</inlineHelpText>
-        <label>Checkbox To Checkbox</label>
+        <label>DI Checkbox To Checkbox</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>CO3 Text</label>
+    <label>Contact 1 Picklist to Checkbox</label>
     <protected>true</protected>
     <values>
         <field>Data_Import_Field_Mapping_Set__c</field>
