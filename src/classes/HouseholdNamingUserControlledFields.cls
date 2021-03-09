@@ -52,13 +52,25 @@ public inherited sharing class HouseholdNamingUserControlledFields {
         buildUserControlledNamingString();
     }
 
+    public String asConcatenatedString() {
+        return this.value;
+    }
+
+    public Boolean isInformalGreetingControlledByUser() {
+        return contains('Informal_Greeting__c');
+    }
+
+    public Boolean isFormalGreetingControlledByUser() {
+        return contains('Formal_Greeting__c');
+    }
+
+    public Boolean isNameControlledByUser() {
+        return contains('Name');
+    }
+
     private String userControlledNamingFieldsFor(SObject household) {
         return (String) household.get
                 ('npo02__SYSTEM_CUSTOM_NAMING__c');
-    }
-
-    public String asConcatenatedString() {
-        return this.value;
     }
 
     private void buildUserControlledNamingString() {
@@ -168,18 +180,6 @@ public inherited sharing class HouseholdNamingUserControlledFields {
 
     private void appendName() {
         append('Name');
-    }
-
-    public Boolean isInformalGreetingControlledByUser() {
-        return contains('Informal_Greeting__c');
-    }
-
-    public Boolean isFormalGreetingControlledByUser() {
-        return contains('Formal_Greeting__c');
-    }
-
-    public Boolean isNameControlledByUser() {
-        return contains('Name');
     }
 
     private String nameReplacementText() {
