@@ -42,13 +42,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public list<Allocation__c> allocations {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllocation {get;set;}
-    /** @description The number of allocations in listAllo. */
-    public integer listAlloSize {
-        get{
-            return allocations.size();
-        }
-        set;
-    }
 
     /**
      * @description True if the current user has Read access to the relevant parent object
