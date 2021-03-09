@@ -107,7 +107,7 @@ public with sharing class AllocationParent_TEST {
         Opportunity testOpportunity = insertOpportunity(10);
         AllocationParent parentOpportunity = new AllocationParent(testOpportunity.id);
 
-        System.assert(parentOpportunity.isAnOpportunity());
+        System.assert(parentOpportunity.isOpportunity());
     }
 
     @IsTest
@@ -115,7 +115,7 @@ public with sharing class AllocationParent_TEST {
         npe01__OppPayment__c testPayment = insertPayment(10);
         AllocationParent parentPayment = new AllocationParent(testPayment.id);
 
-        System.assert(parentPayment.isAPayment());
+        System.assert(parentPayment.isPayment());
     }
 
     @IsTest
@@ -123,12 +123,12 @@ public with sharing class AllocationParent_TEST {
         npe01__OppPayment__c testPayment = insertPayment(100);
         AllocationParent parentPayment = new AllocationParent(testPayment.id);
 
-        System.assert(parentPayment.hasAnAmountField());
+        System.assert(parentPayment.hasAmountField());
 
         Opportunity testOpportunity = insertOpportunity(10);
         AllocationParent parentOpportunity = new AllocationParent(testOpportunity.id);
 
-        System.assert(parentOpportunity.hasAnAmountField());
+        System.assert(parentOpportunity.hasAmountField());
     }
 
     @IsTest
@@ -136,12 +136,12 @@ public with sharing class AllocationParent_TEST {
         npe01__OppPayment__c testPayment = insertPayment(100);
         AllocationParent parentPayment = new AllocationParent(testPayment.id);
 
-        System.assert(parentPayment.hasAnAmountGreaterThanZero());
+        System.assert(parentPayment.hasAmountGreaterThanZero());
 
         Opportunity testOpportunity = insertOpportunity(0);
         AllocationParent parentOpportunity = new AllocationParent(testOpportunity.id);
 
-        System.assertEquals(false, parentOpportunity.hasAnAmountGreaterThanZero());
+        System.assertEquals(false, parentOpportunity.hasAmountGreaterThanZero());
     }
 
     @IsTest

@@ -94,31 +94,31 @@ public inherited sharing class AllocationParent {
         return allocationLookupApiNameBySObjectType.get(objectType);
     }
 
-    public Boolean isAnOpportunity() {
+    public Boolean isOpportunity() {
         return objectType == Opportunity.SObjectType;
     }
 
-    public Boolean isAPayment() {
+    public Boolean isPayment() {
         return objectType == npe01__OppPayment__c.SObjectType;
     }
 
-    public Boolean hasAnAmountField() {
-        return isAnOpportunity() || isAPayment();
+    public Boolean hasAmountField() {
+        return isOpportunity() || isPayment();
     }
 
-    public Boolean hasAnAmountGreaterThanZero() {
-        return hasAnAmountField() && getAmount() > 0;
+    public Boolean hasAmountGreaterThanZero() {
+        return hasAmountField() && getAmount() > 0;
     }
 
     public Decimal getAmount() {
         if (donationAmount == 0 || donationAmount == null) {
 
-            Boolean shouldBeAmountFromOpportunity = isAnOpportunity() && record?.get(OPPORTUNITY_AMOUNT) != null;
+            Boolean shouldBeAmountFromOpportunity = isOpportunity() && record?.get(OPPORTUNITY_AMOUNT) != null;
             if (shouldBeAmountFromOpportunity) {
                 donationAmount = (Decimal)record.get(OPPORTUNITY_AMOUNT);
             }
 
-            Boolean shouldBeAmountFromPayment = isAPayment() && record?.get(PAYMENT_AMOUNT) != null;
+            Boolean shouldBeAmountFromPayment = isPayment() && record?.get(PAYMENT_AMOUNT) != null;
             if (shouldBeAmountFromPayment) {
                 donationAmount = (Decimal)record.get(PAYMENT_AMOUNT);
             }

@@ -125,7 +125,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Used to disable the save button in the visualforce page */
     public Boolean getIsSaveDisabled() {
-        return !getIsSupportedObject() || (parent.isAnOpportunity() && parent.getAmount() == 0) || isLoading;
+        return !getIsSupportedObject() || (parent.isOpportunity() && parent.getAmount() == 0) || isLoading;
     }
 
     /** @description Row number sent back by page for add and delete row methods.*/
@@ -210,7 +210,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         defaultAllo = new Allocation__c();
         listAllo = getAllocations(parentId);
 
-        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parent.hasAnAmountField());
+        Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parent.hasAmountField());
         if (shouldSetDefaultGAU) {
             setDefaultGAU();
         }
@@ -240,7 +240,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public void verifyPageLoadConditions() {
         if (!getIsSupportedObject()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
-        } else if (hasAccess && !parent.hasAnAmountGreaterThanZero()) {
+        } else if (hasAccess && !parent.hasAmountGreaterThanZero()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
         }
     }
