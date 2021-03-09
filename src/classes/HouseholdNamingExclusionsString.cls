@@ -41,12 +41,14 @@ public inherited sharing class HouseholdNamingExclusionsString implements INamin
                 namingExclusionsStringFor(con);
     }
 
-    private String namingExclusionsStringFor(Contact con) {
-        return con.npo02__Naming_Exclusions__c;
-    }
-
     public String value() {
         return value.removeEnd(';');
+    }
+
+    public Boolean hasNamingExclusions() {
+        return isExcludedFromName()
+                || isExcludedFromFormalGreeting()
+                || isExcludedFromInformalGreeting();
     }
 
     public Boolean isExcludedFromName() {
@@ -59,24 +61,6 @@ public inherited sharing class HouseholdNamingExclusionsString implements INamin
 
     public Boolean isExcludedFromInformalGreeting() {
         return value.contains('Household__c.Informal_Greeting__c');
-    }
-
-    public Boolean hasNamingExclusions() {
-        return isExcludedFromName()
-                || isExcludedFromFormalGreeting()
-                || isExcludedFromInformalGreeting();
-    }
-
-    private void excludeFromName() {
-        value += 'Household__c.Name;';
-    }
-
-    private void excludeFormalGreeting() {
-        value += 'Household__c.Formal_Greeting__c;';
-    }
-
-    private void excludeInformalGreeting() {
-        value += 'Household__c.Informal_Greeting__c;';
     }
 
     public Boolean equals(INamingExclusions other) {
@@ -97,4 +81,21 @@ public inherited sharing class HouseholdNamingExclusionsString implements INamin
             excludeInformalGreeting();
         }
     }
+
+    private String namingExclusionsStringFor(Contact con) {
+        return con.npo02__Naming_Exclusions__c;
+    }
+
+    private void excludeFromName() {
+        value += 'Household__c.Name;';
+    }
+
+    private void excludeFormalGreeting() {
+        value += 'Household__c.Formal_Greeting__c;';
+    }
+
+    private void excludeInformalGreeting() {
+        value += 'Household__c.Informal_Greeting__c;';
+    }
+
 }
