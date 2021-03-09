@@ -106,8 +106,8 @@ public inherited sharing class AllocationParent {
         return isOpportunity() || isPayment();
     }
 
-    public Boolean hasAmountGreaterThanZero() {
-        return hasAmountField() && getAmount() > 0;
+    public Boolean isOpportunityWithZeroAmount() {
+        return isOpportunity() && getAmount() == 0;
     }
 
     public Decimal getAmount() {

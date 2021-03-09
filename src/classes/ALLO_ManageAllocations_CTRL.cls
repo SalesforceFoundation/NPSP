@@ -240,7 +240,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public void verifyPageLoadConditions() {
         if (!getIsSupportedObject()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
-        } else if (hasAccess && !parent.hasAmountGreaterThanZero()) {
+        } else if (hasAccess && parent.isOpportunityWithZeroAmount()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
         }
     }
