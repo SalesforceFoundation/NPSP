@@ -16,14 +16,14 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">%%%NAMESPACED_ORG%%%DI_Checkbox_to_checkbox__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACED_ORG%%%Picklist_to_checkbox__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">%%%NAMESPACED_ORG%%%Checkbox_to_checkbox__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACED_ORG%%%Checkbox_to_picklist__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
-        <value xsi:type="xsd:string">DI_Checkbox_to_checkbox_a613b636</value>
+        <value xsi:type="xsd:string">Contact1_f7fec91be</value>
     </values>
 </CustomMetadata>

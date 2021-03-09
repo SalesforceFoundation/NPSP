@@ -28,7 +28,7 @@ Setup Test Data
 
 Verify Checkbox to Checkbox Field Mappings Are Successful
   [Documentation]
-  [Tags]                                unstable        feature:GE      
+  [Tags]                                W-8789974    unstable        feature:GE      
   ${template} =                         Generate Random String
   Go to Page                            Landing     GE_Gift_Entry
   Click Link                            Templates

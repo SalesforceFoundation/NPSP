@@ -53,6 +53,8 @@
         <members>npsp__Data_Import_Field_Mapping.Contact1_Title_61b1fd1c3</members>
         <members>npsp__Data_Import_Field_Mapping.Contact1_Work_Email_a92606408</members>
         <members>npsp__Data_Import_Field_Mapping.Contact1_Work_Phone_af62af3dc</members>
+        <members>npsp__Data_Import_Field_Mapping.Contact1_Picklisttocheckbox_6c4d96932</members>
+        <members>npsp__Data_Import_Field_Mapping.Contact1_DI_Checkboxtocheckbox_57e8f3cb8</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_Alternate_Email_cde1c9606</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_Birthdate_e72ae3e8d</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_First_Name_718575e81</members>
@@ -116,8 +118,6 @@
         <members>npsp__Data_Import_Field_Mapping.custom_url_5161e7b49</members>
         <members>npsp__Data_Import_Field_Mapping.new_lookup_campaign_28e79b438</members>
         <members>npsp__Data_Import_Field_Mapping_Set.Migrated_Custom_Field_Mapping_Set</members>
-        <members>npsp__Data_Import_Field_Mapping.Picklist_to_checkbox_6c4d96932</members>
-        <members>npsp__Data_Import_Field_Mapping.DI_Checkbox_to_checkbox_57e8f3cb8</members>
         <members>npsp__Data_Import_Object_Mapping.Account1_121e01054</members>
         <members>npsp__Data_Import_Object_Mapping.Account2_a1d4dadcd</members>
         <members>npsp__Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24_ccb69d9bb</members>

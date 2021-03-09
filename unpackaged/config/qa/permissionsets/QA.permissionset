@@ -54,6 +54,16 @@
     <fieldPermissions>
         <editable>true</editable>
         <readable>true</readable>
+        <field>Contact.Checkbox_to_checkbox__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>Contact.Checkbox_to_picklist__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
         <field>Opportunity.UniqueId__c</field>
     </fieldPermissions>
     <fieldPermissions>
@@ -310,6 +320,16 @@
         <editable>true</editable>
         <readable>true</readable>
         <field>%%%NAMESPACE%%%DataImport__c.Lead_Lookup__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.DI_Checkbox_to_checkbox__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>%%%NAMESPACE%%%DataImport__c.Picklist_to_checkbox__c</field>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>

@@ -31,9 +31,10 @@
         <members>Data_Import_Field_Mapping.CO3_Picklist_445f63ff6</members>
         <members>Data_Import_Field_Mapping.CO3_Picklist_e38aa0476</members>
         <members>Data_Import_Field_Mapping.CO3_Text_3532e6023</members>
-        <members>Data_Import_Field_Mapping.Picklist_to_checkbox_e160cbe8d</members>
-        <members>Data_Import_Field_Mapping.DI_Checkbox_to_checkbox_a613b636</members>
+        <members>Data_Import_Field_Mapping.Contact1_Picklisttocheckbox_e160cbe8d</members>
+        <members>Data_Import_Field_Mapping.Contact1_DI_Checkboxtocheckbox_a613b636</members>
         <members>Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24</members>
+        <members>Data_Import_Object_Mapping.Contact1_f7fec91be</members>
         <members>Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
         <members>Data_Import_Object_Mapping.CustomObject2_fe20bsyqx</members>
         <members>Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
