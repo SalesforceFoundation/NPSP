@@ -111,21 +111,19 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The page title based on which type of allocation we're using. */
     public string pageTitle {get;set;}
 
-    public Boolean getIsSupportedObject() {
+    public Boolean isSupportedObject() {
+        Set<sObjectType> allowedParentSObjectType = new Set<sObjectType> {
+            Opportunity.sObjectType,
+            Campaign.sObjectType,
+            npe03__Recurring_Donation__c.sObjectType,
+            npe01__OppPayment__c.sObjectType
+        };
         return allowedParentSObjectType.contains(parentId.getSobjectType());
     }
 
-    /** @description The set of allowed object types this page should be used with */
-    private Set<sObjectType> allowedParentSObjectType = new Set<sObjectType> {
-        Opportunity.sObjectType,
-        Campaign.sObjectType,
-        npe03__Recurring_Donation__c.sObjectType,
-        npe01__OppPayment__c.sObjectType
-    };
-
     /** @description Used to disable the save button in the visualforce page */
     public Boolean getIsSaveDisabled() {
-        return !getIsSupportedObject() || (parent.isOpportunity() && parent.getAmount() == 0) || isLoading;
+        return !isSupportedObject() || (parent.isOpportunity() && parent.getAmount() == 0) || isLoading;
     }
 
     /** @description Row number sent back by page for add and delete row methods.*/
@@ -165,7 +163,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
 
-        if (getIsSupportedObject()) {
+        if (isSupportedObject()) {
 
             hasAccess = canUserRead(parentId.getSobjectType());
             if (hasAccess) {
@@ -238,7 +236,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered on load.
     */
     public void verifyPageLoadConditions() {
-        if (!getIsSupportedObject()) {
+        if (!isSupportedObject()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloObjectUnsupported));
         } else if (hasAccess && parent.isOpportunityWithZeroAmount()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.alloCantAllocateNothing));
