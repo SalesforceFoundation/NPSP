@@ -153,13 +153,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         'General_Accounting_Unit__c'
     };
 
-    /**
-     * @description Private default constructor
-     */
     @TestVisible
     private ALLO_ManageAllocations_CTRL() {}
 
-    /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
 
