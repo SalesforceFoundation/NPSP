@@ -2395,7 +2395,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get showMismatchedCurrencyWarning() {
-        if(isUndefined(this._batchCurrencyIsoCode)) {
+        if(isEmpty(this._batchCurrencyIsoCode)) {
             return false;
         }
         return this._batchCurrencyIsoCode !== CURRENCY;
