@@ -158,18 +158,15 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
+        hasAccess = canUserRead(parentId.getSobjectType());
 
-        if (isSupportedObject()) {
+        if (hasAccess && isSupportedObject()) {
+            parent = new AllocationParent(parentId);
+            pageTitle = pageTitlesBySObjectType.get(parent.getSObjectType());
+            parentCurrencyCode = parent.getCurrencyCode();
 
-            hasAccess = canUserRead(parentId.getSobjectType());
-            if (hasAccess) {
-                parent = new AllocationParent(parentId);
-                pageTitle = pageTitlesBySObjectType.get(parent.getSObjectType());
-                parentCurrencyCode = parent.getCurrencyCode();
-
-                setupAllocations();
-                verifyPageLoadConditions();
-            }
+            setupAllocations();
+            verifyPageLoadConditions();
         }
 
         isLoading = false;

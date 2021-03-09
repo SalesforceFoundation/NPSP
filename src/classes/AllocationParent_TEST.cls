@@ -132,16 +132,11 @@ public with sharing class AllocationParent_TEST {
     }
 
     @IsTest
-    static void shouldReturnTrueIfAmountGreaterThanZero() {
-        npe01__OppPayment__c testPayment = insertPayment(100);
-        AllocationParent parentPayment = new AllocationParent(testPayment.id);
-
-        System.assert(parentPayment.hasAmountGreaterThanZero());
-
+    static void shouldReturnTrueForOpportunityWithZeroAmount() {
         Opportunity testOpportunity = insertOpportunity(0);
         AllocationParent parentOpportunity = new AllocationParent(testOpportunity.id);
 
-        System.assertEquals(false, parentOpportunity.hasAmountGreaterThanZero());
+        System.assert(parentOpportunity.isOpportunityWithZeroAmount());
     }
 
     @IsTest
