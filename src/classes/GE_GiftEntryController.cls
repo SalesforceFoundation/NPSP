@@ -186,7 +186,7 @@ public with sharing class GE_GiftEntryController {
     private static Boolean areCurrenciesValid (Id batchId) {
         String batchCurrencyIsoCode = retrieveBatchCurrencyIsoCode(batchId);
 
-        if (batchCurrencyIsoCode != null && batchCurrencyIsoCode == UserInfo.getDefaultCurrency()) {
+        if (batchCurrencyIsoCode == null || batchCurrencyIsoCode == UserInfo.getDefaultCurrency()) {
             return true;
         }
         throw new CurrencyMismatchException(String.format(
