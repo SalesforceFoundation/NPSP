@@ -22,7 +22,7 @@
         if (!sessionStorage.getItem(modalViewedKey)) {
             sessionStorage.setItem(modalViewedKey, true);
 
-            // Render retirement prompt prompt
+            // Render retirement prompt
             component.set('v.showRetirementPrompt', true);
         }
     },
