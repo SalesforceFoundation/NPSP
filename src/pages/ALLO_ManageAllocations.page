@@ -218,7 +218,7 @@
                                 </thead>
                                 <tbody>
                                     <apex:variable var="cnt" value="{!0}" />
-                                    <apex:repeat var="allo" value="{!listAllo}" >
+                                    <apex:repeat var="allo" value="{!allocations}" >
                                         <tr>
                                             <td>
                                                 <div class="slds-form-element">
