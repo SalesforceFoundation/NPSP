@@ -87,7 +87,12 @@
             aura:id="retirementPrompt" 
             id="retirementPrompt"
             headerTitle="Batch Gift Entry is retiring"
-            promptMessage="On July 18, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of October 1st. Learn more about Gift Entry in the NPSP Documentation on the Power of Us Hub."
+            promptMessage="On July 18, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. 
+                           If you have any in-progress batches at that time, you can still access those records, but 
+                           you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and 
+                           use the newer Gift Entry in advance of October 1st. Learn more about Gift Entry in the 
+                           &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;
+                           _blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub."
             confirmButtonTitle="Confirm" 
             hasBackdrop="true" 
             variant="error" 
