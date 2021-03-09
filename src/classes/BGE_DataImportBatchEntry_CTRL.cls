@@ -425,7 +425,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         Decimal totalAmount = 0;
         Integer rowCount = 0;
         for (DataImportRow dataImportRow : importModel.dataImportRows) {
-            totalAmount+= dataImportRow?.record.Donation_Amount__c;
+            totalAmount+= dataImportRow.record.Donation_Amount__c == null ? 0 : dataImportRow.record.Donation_Amount__c;
             rowCount++;
         }
         importModel.totalRowAmount = totalAmount;
@@ -441,7 +441,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             FROM DataImport__c
             WHERE NPSP_Data_Import_Batch__c =: recordId
         ]) {
-            totalAmount+= dataImport?.Donation_Amount__c;
+            totalAmount+= dataImport.Donation_Amount__c == null ? 0 : dataImport.Donation_Amount__c;
             rowCount++;
         }
         model.totalRowAmount = totalAmount;

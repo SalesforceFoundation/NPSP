@@ -159,7 +159,6 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            //
             if (UserInfo.isMultiCurrencyOrganization()) {
                 validateCurrencies(batchId);
             }
