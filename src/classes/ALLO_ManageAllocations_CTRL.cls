@@ -39,13 +39,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Parent of the allocation. An opportunity, payment, campaign, or recurring donation. */
     public AllocationParent parent {get;set;}
     /** @description The current list of allocations we're managing, as displayed on the page.*/
-    public list<Allocation__c> listAllo {get;set;}
+    public list<Allocation__c> allocations {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
     /** @description The number of allocations in listAllo. */
     public integer listAlloSize {
         get{
-            return listAllo.size();
+            return allocations.size();
         }
         set;
     }
@@ -199,14 +199,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      */
     private void setupAllocations() {
         defaultAllo = new Allocation__c();
-        listAllo = getAllocations(parentId);
+        allocations = getAllocations(parentId);
 
         Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parent.hasAmountField());
         if (shouldSetDefaultGAU) {
             setDefaultGAU();
         }
 
-        if (listAllo.isEmpty()) {
+        if (allocations.isEmpty()) {
             addRow();
         }
     }
@@ -215,11 +215,11 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      * @description Finds a matching default GAU and updates relevant member variables as needed.
      */
     private void setDefaultGAU() {
-        for (integer i=0; i<listAllo.size(); i++) {
-            Boolean isDefaultGAU = listAllo[i].General_Accounting_Unit__c == settings.Default__c;
+        for (integer i=0; i<allocations.size(); i++) {
+            Boolean isDefaultGAU = allocations[i].General_Accounting_Unit__c == settings.Default__c;
             if (isDefaultGAU) {
-                defaultAllo = listAllo[i];
-                listAllo.remove(i);
+                defaultAllo = allocations[i];
+                allocations.remove(i);
                 break;
             }
         }
@@ -257,14 +257,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         Allocation__c allo = new Allocation__c();
         allo.put(parent.getAllocationLookupApiName(), parentId);
         // always add to last row
-        listAllo.add(allo);
+        allocations.add(allo);
         
         return null;
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
     public PageReference delRow() {
-        Boolean hasId = listAllo[rowNumber].id != null;
+        Boolean hasId = allocations[rowNumber].id != null;
 
         //add to deletion list if the allocation has an id
         if (hasId) {
@@ -272,9 +272,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 addDelExceptionMessage();
                 return null;
             }
-            listAlloForDelete.add(listAllo[rowNumber]);
+            listAlloForDelete.add(allocations[rowNumber]);
         }
-        listAllo.remove(rowNumber);
+        allocations.remove(rowNumber);
 
         return null;
     }
@@ -290,7 +290,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
         //split into insert and update cases so we can reset recursion flags for each operation
-        for (Allocation__c allo : listAllo) {
+        for (Allocation__c allo : allocations) {
             if (allo.Id != null) {
                 listAlloForUpdate.add(allo);
             }
@@ -306,10 +306,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 delete listAlloForDelete;
 
                 //allow user to delete all GAUs and save with one empty GAU
-                if (listAllo.size() == 1
-                    && listAllo[0].General_Accounting_Unit__c == null
-                    && listAllo[0].Amount__c == null
-                    && listAllo[0].Percent__c == null
+                if (allocations.size() == 1
+                    && allocations[0].General_Accounting_Unit__c == null
+                    && allocations[0].Amount__c == null
+                    && allocations[0].Percent__c == null
                 ) {
                     redirect = true;
                 }
