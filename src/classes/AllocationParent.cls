@@ -62,12 +62,16 @@ public inherited sharing class AllocationParent {
         }
     }
 
-    public Id getId() {
-        return id;
+    public SObjectType objectType() {
+        return objectType;
     }
 
-    public SObjectType getSObjectType() {
-        return objectType;
+    public String currencyCode() {
+        return currencyCode;
+    }
+
+    public Id getId() {
+        return id;
     }
 
     public String getKeyPrefix() {
@@ -84,10 +88,6 @@ public inherited sharing class AllocationParent {
 
     public String getRecordName() {
         return (String)record?.get('Name');
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
     }
 
     public String getAllocationLookupApiName() {
@@ -151,12 +151,15 @@ public inherited sharing class AllocationParent {
     private Set<String> getSelectFieldsFor(SObjectType objectType) {
         Set<String> selectFields = new Set<String>{'Id', 'Name'};
         List<String> additionalFields = selectFieldsBySObjectType.get(objectType);
+
         if (additionalFields != null) {
-            selectFields.addAll(selectFieldsBySObjectType.get(objectType));
+            selectFields.addAll(additionalFields);
         }
+
         if (currencyCode != null) {
             selectFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
         }
+
         return selectFields;
     }
 

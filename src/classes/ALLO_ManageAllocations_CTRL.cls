@@ -162,8 +162,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         if (hasAccess && isSupportedObject()) {
             parent = new AllocationParent(parentId);
-            pageTitle = pageTitlesBySObjectType.get(parent.getSObjectType());
-            parentCurrencyCode = parent.getCurrencyCode();
+            pageTitle = pageTitlesBySObjectType.get(parent.objectType());
+            parentCurrencyCode = parent.currencyCode();
 
             setupAllocations();
             verifyPageLoadConditions();
