@@ -273,7 +273,7 @@
                                     </apex:repeat>
                                     <tr class="active">
                                         <td>
-                                            <apex:outputField value="{!defaultAllo.General_Accounting_Unit__c}"/>
+                                            <apex:outputField value="{!defaultAllocation.General_Accounting_Unit__c}"/>
                                         </td>
                                         <td>
                                             <div class="slds-form-element">

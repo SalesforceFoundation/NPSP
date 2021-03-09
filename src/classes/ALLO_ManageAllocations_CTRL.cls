@@ -41,7 +41,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description The current list of allocations we're managing, as displayed on the page.*/
     public list<Allocation__c> allocations {get;set;}
     /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
-    public Allocation__c defaultAllo {get;set;}
+    public Allocation__c defaultAllocation {get;set;}
     /** @description The number of allocations in listAllo. */
     public integer listAlloSize {
         get{
@@ -198,7 +198,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      * default GAU and/or a default allocation if necessary.
      */
     private void setupAllocations() {
-        defaultAllo = new Allocation__c();
+        defaultAllocation = new Allocation__c();
         allocations = getAllocations(parentId);
 
         Boolean shouldSetDefaultGAU = settings.Default_Allocations_Enabled__c && (parent.hasAmountField());
@@ -218,7 +218,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         for (integer i=0; i<allocations.size(); i++) {
             Boolean isDefaultGAU = allocations[i].General_Accounting_Unit__c == settings.Default__c;
             if (isDefaultGAU) {
-                defaultAllo = allocations[i];
+                defaultAllocation = allocations[i];
                 allocations.remove(i);
                 break;
             }
