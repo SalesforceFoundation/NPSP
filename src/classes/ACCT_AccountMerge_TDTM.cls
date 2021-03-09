@@ -62,7 +62,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
             
             // deal with any fixups that need to occur due to Account Merges
             if (setMergeWinner.size() > 0) {
-                if(System.isFuture() || System.isBatch()) {
+                if(System.Limits.getFutureCalls() < 1) {
                     handleAccountMergeFixups(new List<Id>(setMergeWinner));
                 }
                 else {
@@ -110,7 +110,10 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         listTemp.addAll(listOne2OneId);
         if (listTemp.size() > 0) { 
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listTemp);
-            ACCT_IndividualAccounts_TDTM.rollupAccounts(listTemp);
+
+            if (System.isFuture()) {
+                ACCT_IndividualAccounts_TDTM.rollupAccounts(listTemp);
+            }
         }
         
         listTemp.clear();
