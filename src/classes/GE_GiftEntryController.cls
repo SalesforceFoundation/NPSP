@@ -159,7 +159,9 @@ public with sharing class GE_GiftEntryController {
     public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            validateCurrencies(batchId);
+            if (!areCurrenciesValid(batchId)) {
+                return null;
+            }
 
             dataImport.Additional_Object_JSON__c =
                 convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
@@ -180,14 +182,16 @@ public with sharing class GE_GiftEntryController {
      * user's currency
      * @param batchId : ID of the NPSP_Data_Import_Batch__c
      */
-    private static void validateCurrencies (Id batchId) {
+    @TestVisible
+    private static Boolean areCurrenciesValid (Id batchId) {
         String batchCurrencyIsoCode = retrieveBatchCurrencyIsoCode(batchId);
 
-        if (batchCurrencyIsoCode != null && batchCurrencyIsoCode != UserInfo.getDefaultCurrency()) {
-            throw new CurrencyMismatchException(String.format(
-                System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
-            ));
+        if (batchCurrencyIsoCode != null && batchCurrencyIsoCode == UserInfo.getDefaultCurrency()) {
+            return true;
         }
+        throw new CurrencyMismatchException(String.format(
+            System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
+        ));
     }
 
     /*******************************************************************************************************
@@ -1058,12 +1062,12 @@ public with sharing class GE_GiftEntryController {
             return null;
         }
         String query = new UTIL_Query()
-            .withSelectFields(new Set<String>{'CurrencyIsoCode'})
+            .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)
             .withWhere('Id =: batchId')
             .build();
         List<DataImportBatch__c> batches = Database.query(query);
-        return (String)batches[0].get('CurrencyIsoCode');
+        return (String)batches[0].get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
 
     }
 

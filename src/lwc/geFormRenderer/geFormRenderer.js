@@ -3,7 +3,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
-import getBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.getBatchCurrencyIsoCode';
+import retrieveBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.retrieveBatchCurrencyIsoCode';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -260,7 +260,7 @@ export default class GeFormRenderer extends LightningElement{
     connectedCallback() {
 
         if (!this.isSingleGiftEntry) {
-           getBatchCurrencyIsoCode({batchId: this.batchId}).then(response => {
+            retrieveBatchCurrencyIsoCode({batchId: this.batchId}).then(response => {
               this._batchCurrencyIsoCode = response;
            });
         }

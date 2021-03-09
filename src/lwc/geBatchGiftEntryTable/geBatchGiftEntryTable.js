@@ -6,7 +6,7 @@ import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.g
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import getBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.getBatchCurrencyIsoCode';
+import retrieveBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.retrieveBatchCurrencyIsoCode';
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { isNotEmpty, isUndefined } from 'c/utilCommon';
@@ -101,7 +101,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     connectedCallback() {
-        this.getBatchCurrencyIsoCode();
+        this.retrieveBatchCurrencyIsoCode();
         this.loadBatch();
     }
 
@@ -127,9 +127,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .catch(error => handleError(error));
     }
 
-    getBatchCurrencyIsoCode() {
-        getBatchCurrencyIsoCode({batchId: this.batchId})
+    retrieveBatchCurrencyIsoCode() {
+        retrieveBatchCurrencyIsoCode({batchId: this.batchId})
             .then(response => {
+                console.log(JSON.stringify('Response '+ response));
                 this._batchCurrencyIsoCode = response;
         })
     }
