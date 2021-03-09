@@ -128,16 +128,16 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 // AFTER UPDATE
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     // an address that is marked default needs to propagate to the household
-                    if ((addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c))
+                    if ((isNewDefault(addr, addrOld))
                         // any seasonal address also need to be considered
                         || isSeasonalChanged(addr, addrOld)
                     ) {
-                        mapAddressesByAcctId.put(addr.Household_Account__c, addr);
+                        mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                     } else if (isAddressChanged(addr, addrOld, true)) {
-                        if (addr.Default_Address__c) {
-                            mapAddressesByAcctId.put(addr.Household_Account__c, addr);
+                        if (isDefault(addr)) {
+                            mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                         } else {   // address changed, but not default, still need to update any contacts using it as an override
-                            mapAddressesById.put(addr.Id, addr);
+                            mapAddressesById.put(idOf(addr), addr);
                         }
                     }
                 }
@@ -214,6 +214,21 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     private Boolean isRecursive() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
+    }
+
+    private Id idOf(Address__c addr) {
+        return addr.Id;
+    }
+
+    private Id householdAccountIdOf(Address__c addr) {
+        return addr.Household_Account__c;
+    }
+
+    private Boolean isDefault(Address__c addr) {
+        return addr.Default_Address__c;
+    }
+    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
+        return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
     }
 
     /*******************************************************************************************************
