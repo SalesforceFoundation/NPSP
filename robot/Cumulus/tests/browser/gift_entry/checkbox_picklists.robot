@@ -22,6 +22,7 @@ Setup Test Data
     &{CONTACT}=  API Create Contact
     ...          FirstName=${faker.first_name()}
     ...          LastName=${faker.last_name()}
+    ...          Checkbox_to_picklist__c=true
     Store Session Record     Contact     ${CONTACT}[Id]
     Set Suite Variable  &{CONTACT}
 
@@ -39,9 +40,9 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   ...                                   Template Name=${template}
   ...                                   Description=This is created by automation script 
   Click Gift Entry Button               Next: Form Fields
-  Perform Action on Object Field        select   Contact 1  Contact 1 Checkbox To Checkbox
-  Perform Action on Object Field        select   Contact 1  Contact 1 Checkbox To Picklist
-  Page Should Not Contain Element       //lightning-input[@data-qa-locator="checkbox Required Contact 1: Contact 1 Checkbox To Checkbox"]
+  Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Checkbox
+  Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Picklist
+  Page Should Not Contain Element       //lightning-input[@data-qa-locator="checkbox Required Contact 1: Contact1 Checkbox To Checkbox"]
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                        GE_Gift_Entry
   Click Link                            Templates
@@ -54,18 +55,15 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   ...                                   Data Import: Donation Donor=Contact1
   ...                                   Data Import: Contact1 Imported=${CONTACT}[Name]
   Verify Field Default Value             
-  ...                                   Contact 1: Contact 1 Checkbox To Picklist=False
-  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=
+  ...                                   Contact 1: Contact1 Checkbox To Picklist=True
+  ...                                   Contact 1: Contact1 Checkbox To Checkbox=
   Fill Gift Entry Form
-  ...                                   Contact 1: Contact 1 Checkbox To Picklist=True
-  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=true
-  Sleep  10
+  ...                                   Contact 1: Contact1 Checkbox To Picklist=False
+  ...                                   Contact 1: Contact1 Checkbox To Checkbox=check
   Click Gift Entry Button               Save & Enter New Gift
   Click Gift Entry Button               Process Batch
   Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
   Wait For Batch To Process             BDI_DataImport_BATCH            Completed
-  Go to Page                            Details    Contact    object_id=${CONTACT}[Id]
-  Navigate To And Validate Field Value  Contact 1 Checkbox To Checkbox  contains  true
-#   Navigate To And Validate Field Value  
-#   Go to Page                          DI Batch        Validate Fields
-#   Navigate to And Validate Field Value        #Field Info
+  Verify Expected Values                nonns             Contact    ${CONTACT}[Id]
+  ...                                   Checkbox_to_checkbox__c=True
+  ...                                   Checkbox_to_picklist__c=False

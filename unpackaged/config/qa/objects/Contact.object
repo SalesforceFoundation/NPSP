@@ -76,7 +76,7 @@
         <description>Checkbox that will be mapped to another checkbox field on the NPSP Data Import object.</description>
         <externalId>false</externalId>
         <inlineHelpText>This is for testing checkbox-to-checkbox mappings.</inlineHelpText>
-        <label>Contact 1 Checkbox To Checkbox</label>
+        <label>Contact1 Checkbox To Checkbox</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -87,7 +87,7 @@
         <description>Checkbox that will be mapped to a picklist field on the NPSP Data Import object.</description>
         <externalId>false</externalId>
         <inlineHelpText>This is for testing checkbox-to-picklist field mappings.</inlineHelpText>
-        <label>Contact 1 Checkbox To Picklist</label>
+        <label>Contact1 Checkbox To Picklist</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
