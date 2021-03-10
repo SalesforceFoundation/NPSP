@@ -56,8 +56,8 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
-    public Households(Set<Id> ids) {
-        this(getHouseholdsById(ids), null);
+    public Households(Set<Id> ids, HouseholdSelector selector) {
+        this(selector.getHouseholdsWithMembersById(ids), null);
     }
 
     public Households(List<npo02__Household__c> records) {
@@ -140,17 +140,6 @@ public inherited sharing class Households extends fflib_SObjects {
 
     public Set<Id> ids() {
         return getIdFieldValues(npo02__Household__c.Id);
-    }
-
-    private static List<npo02__Household__c> getHouseholdsById(Set<Id> ids) {
-        return [
-                SELECT Id, (
-                        SELECT Id
-                        FROM npo02__Contacts__r
-                )
-                FROM npo02__Household__c
-                WHERE Id IN :ids
-        ];
     }
 
     private void setNameAndGreetingsToReplacementText() {

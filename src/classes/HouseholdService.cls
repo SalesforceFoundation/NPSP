@@ -73,8 +73,9 @@ public inherited sharing class HouseholdService {
     }
 
     public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds = new Households(new Set<Id>(contactsInLegacyHouseholds
-                .oldHouseholdIds()));
+        Households oldHouseholds = new Households(
+                new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
+                new HouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
     }
 
@@ -87,8 +88,10 @@ public inherited sharing class HouseholdService {
         if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
                 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
             Households householdsNeedingNameAndMemberCountRefresh =
-                    new Households(new Set<Id>(contactsInLegacyHouseholds
-                            .householdsWithMembershipOrNamingFieldChanges()));
+                    new Households(
+                            new Set<Id>(contactsInLegacyHouseholds
+                            .householdsWithMembershipOrNamingFieldChanges()),
+                            new HouseholdSelector());
             householdsNeedingNameAndMemberCountRefresh.updateHouseholdNameAndMemberCount();
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
@@ -100,13 +103,16 @@ public inherited sharing class HouseholdService {
         }
         Households householdsWithMembershipChanges =
                 new Households(
-                        contactsInLegacyHouseholds.householdsWithMembershipChanges());
+                        contactsInLegacyHouseholds.householdsWithMembershipChanges(),
+                        new HouseholdSelector());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
 
     public void processOldHouseholdsAfterDeletingContacts(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds = new Households(contactsInLegacyHouseholds.householdIds());
+        Households oldHouseholds =
+                new Households(contactsInLegacyHouseholds.householdIds(),
+                        new HouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
     }
@@ -151,8 +157,9 @@ public inherited sharing class HouseholdService {
         List<Id> householdIdsNeedingNamesUpdated =
                 getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
-            Households households = new Households(new Set<Id>
-                    (householdIdsNeedingNamesUpdated));
+            Households households = new Households(
+                    new Set<Id>(householdIdsNeedingNamesUpdated),
+                    new HouseholdSelector());
             households.updateHouseholdNameAndMemberCount();
         }
     }
