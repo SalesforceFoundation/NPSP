@@ -54,7 +54,7 @@
     <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
-    <aura:attribute name="showRetirementPrompt" type="boolean" default="false" access="private"/>
+    <aura:attribute name="showRetirementPrompt" type="Boolean" default="false" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -86,14 +86,9 @@
         <c:utilPrompt 
             aura:id="retirementPrompt" 
             id="retirementPrompt"
-            headerTitle="Batch Gift Entry is retiring"
-            promptMessage="On July 18, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. 
-                           If you have any in-progress batches at that time, you can still access those records, but 
-                           you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and 
-                           use the newer Gift Entry in advance of October 1st. Learn more about Gift Entry in the 
-                           &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;
-                           _blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub."
-            confirmButtonTitle="Confirm" 
+            headerTitle="{!$Label.c.bgeRetirementWarningHeader}"
+            promptMessage="{!$Label.c.bgeRetirementWarningBody}"
+            confirmButtonTitle="{!$Label.c.commonOkay}" 
             hasBackdrop="true" 
             variant="error" 
             onconfirm="{!c.handleConfirmClick}"

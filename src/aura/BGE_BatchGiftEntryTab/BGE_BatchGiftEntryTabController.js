@@ -14,10 +14,10 @@
     },
 
     /**
-     * @description: manages event triggered from confirm button on modal
+     * @description: manages event triggered from confirm button on retirement prompt
      */
     handleConfirmClick: function(component, event, helper) {
-	  component.set('v.showRetirementPrompt', false);
+        helper.handleConfirmClick(component);
     },
 
     /**
