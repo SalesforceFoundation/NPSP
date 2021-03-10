@@ -116,7 +116,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
 
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);
-        if (listTemp.size() > 0) { 
+        if (listTemp.size() > 0) {
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listTemp);
 
             if (System.isFuture()) {
@@ -127,7 +127,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         listTemp.clear();
         listTemp.addAll(listHHId);
         listTemp.addAll(listOrgId);
-        if (listTemp.size() > 0) {
+        if (listTemp.size() > 0 && System.isFuture()) {
             ADDR_Addresses_TDTM.cleanupAccountAddresses(listTemp);
         }
     }
