@@ -362,9 +362,9 @@
     </fields>
     <fields>
         <fullName>LastElevateVersionPlayed__c</fullName>
-        <description>An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation.</description>
+        <description>An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten.</description>
         <externalId>false</externalId>
-        <inlineHelpText>An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation.</inlineHelpText>
+        <inlineHelpText>An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten.</inlineHelpText>
         <label>Last Elevate Version Played</label>
         <precision>18</precision>
         <required>false</required>
