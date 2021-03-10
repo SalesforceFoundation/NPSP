@@ -24,6 +24,6 @@
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
-        <value xsi:type="xsd:string">Contact1_f7fec91be</value>
+        <value xsi:type="xsd:string">Contact1</value>
     </values>
 </CustomMetadata>

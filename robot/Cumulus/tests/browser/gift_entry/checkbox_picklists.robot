@@ -21,7 +21,7 @@ Setup Test Data
     &{CONTACT}=  API Create Contact
     ...          FirstName=${faker.first_name()}
     ...          LastName=${faker.last_name()}
-    Store Session Record     Contact     ${contact1}[Id]
+    Store Session Record     Contact     ${CONTACT}[Id]
     Set Suite Variable  &{CONTACT}
 
 *** Test Cases ***
@@ -38,34 +38,30 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   ...                                   Template Name=${template}
   ...                                   Description=This is created by automation script 
   Click Gift Entry Button               Next: Form Fields
-  Perform Action on Object Field        select   Contact 1  Checkbox To Checkbox
-  #Page Should Not Contain               <checkbox required checkbox>
-  Perform Action on Object Field        select   Contact 1  Checkbox To Picklist
-  Click Gift Entry Button               Save & Close
-  # deleting template
+  Perform Action on Object Field        select   Contact 1  Contact 1 Checkbox To Checkbox
+  Perform Action on Object Field        select   Contact 1  Contact 1 Checkbox To Picklist
+  Page Should Not Contain Element       //lightning-input[@data-qa-locator="checkbox Required Contact 1: Contact 1 Checkbox To Checkbox"]
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                        GE_Gift_Entry
   Click Link                            Templates
   Wait Until Page Contains              ${template}
   Store Template Record Id              ${template}
   Create Gift Entry Batch               ${template}  ${template} Batch
-  Current Page Should Be                Form       Gift Entry
+  Current Page Should Be                Form       Gift Entry   title=Gift Entry Form
   Save Current Record ID For Deletion   ${NS}DataImportBatch__c
   Fill Gift Entry Form
-  ...                                   Donor Type=Contact1
-  ...                                   Existing Donor Contact=${CONTACT}[Name]
-  ...                                   Donation Amount=1
-  ...                                   Donation Date=Today
+  ...                                   Data Import: Donation Donor=Contact1
+  ...                                   Data Import: Contact1 Imported=${CONTACT}[Name]
   Verify Field Default Value             
-  ...                                   Checkbox To Checkbox=False
-  ...                                   Checkbox To Picklist=False
+  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=False
+  ...                                   Contact 1: Contact 1 Checkbox To Picklist=False
   Fill Gift Entry Form
-  ...                                   Checkbox To Checkbox=True
-  ...                                   Checkbox To Picklist=True                                   
-  Click Gift Entry Button               Save
-  Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
-  Wait For Batch To Process             BDI_DataImport_BATCH            Completed
-#   Go to Page                          Details    Contact    object_id=${CONTACT}[Id]
+  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=True
+  ...                                   Contact 1: Contact 1 Checkbox To Picklist=True
+  Click Gift Entry Button               Save & Enter New Gift
+#   Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
+#   Wait For Batch To Process             BDI_DataImport_BATCH            Completed
+#   Go to Page                            Details    Contact    object_id=${CONTACT}[Id]
 #   Navigate To And Validate Field Value                         #Fields Info
 #   Go to Page                          DI Batch        Validate Fields
 #   Navigate to And Validate Field Value        #Field Info
