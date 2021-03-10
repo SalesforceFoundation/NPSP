@@ -170,7 +170,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>%%%NAMESPACE%%%npe01__OppPayment__c.%%%NAMESPACE%%%npe01__Check_Reference_Number__c</field>
+        <field>npe01__OppPayment__c.npe01__Check_Reference_Number__c</field>
         <readable>false</readable>
         <hidden>true</hidden>
     </fieldPermissions>
@@ -201,7 +201,7 @@
         <allowCreate>false</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>false</allowEdit>
-        <object>%%%NAMESPACE%%%npe01__OppPayment__c</object>
+        <object>npe01__OppPayment__c</object>
         <allowRead>false</allowRead>
     </objectPermissions>
     <objectPermissions>
