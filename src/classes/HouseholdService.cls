@@ -95,6 +95,9 @@ public inherited sharing class HouseholdService {
     }
 
     public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+        if (contactsInLegacyHouseholds.householdsWithMembershipChanges().isEmpty()) {
+            return; //No need to fire rollups if no Contacts changed Households
+        }
         Households householdsWithMembershipChanges =
                 new Households(
                         contactsInLegacyHouseholds.householdsWithMembershipChanges());
