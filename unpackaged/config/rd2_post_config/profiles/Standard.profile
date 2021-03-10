@@ -89,6 +89,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%LastElevateVersionPlayed__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%NextYearValue__c</field>
         <readable>true</readable>
     </fieldPermissions>
