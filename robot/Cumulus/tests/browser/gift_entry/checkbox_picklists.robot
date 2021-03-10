@@ -2,6 +2,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -53,15 +54,18 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   ...                                   Data Import: Donation Donor=Contact1
   ...                                   Data Import: Contact1 Imported=${CONTACT}[Name]
   Verify Field Default Value             
-  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=False
   ...                                   Contact 1: Contact 1 Checkbox To Picklist=False
+  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=
   Fill Gift Entry Form
-  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=True
   ...                                   Contact 1: Contact 1 Checkbox To Picklist=True
+  ...                                   Contact 1: Contact 1 Checkbox To Checkbox=true
+  Sleep  10
   Click Gift Entry Button               Save & Enter New Gift
-#   Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
-#   Wait For Batch To Process             BDI_DataImport_BATCH            Completed
-#   Go to Page                            Details    Contact    object_id=${CONTACT}[Id]
-#   Navigate To And Validate Field Value                         #Fields Info
+  Click Gift Entry Button               Process Batch
+  Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
+  Wait For Batch To Process             BDI_DataImport_BATCH            Completed
+  Go to Page                            Details    Contact    object_id=${CONTACT}[Id]
+  Navigate To And Validate Field Value  Contact 1 Checkbox To Checkbox  contains  true
+#   Navigate To And Validate Field Value  
 #   Go to Page                          DI Batch        Validate Fields
 #   Navigate to And Validate Field Value        #Field Info
