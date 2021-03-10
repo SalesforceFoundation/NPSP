@@ -63,10 +63,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
             
             // deal with any fixups that need to occur due to Account Merges
             if (setMergeWinner.size() > 0) {
-                if(System.isFuture() || System.isBatch()) {
-                    handleAccountMergeFixups(new List<Id>(setMergeWinner));
-                }
-                else {
+                if(!System.isFuture() && !System.isBatch()) {
                     handleAccountMergeFixupsFuture(new List<Id>(setMergeWinner));
                 }
             }
@@ -110,24 +107,19 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (listHHId.size() > 0 && System.isFuture()) {
-            HH_HouseholdNaming.renameHHAccounts(listHHId);
-        }
+        HH_HouseholdNaming.renameHHAccounts(listHHId);
 
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);
         if (listTemp.size() > 0) {
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listTemp);
-
-            if (System.isFuture()) {
-                ACCT_IndividualAccounts_TDTM.rollupAccounts(listTemp);
-            }
+            ACCT_IndividualAccounts_TDTM.rollupAccounts(listTemp);
         }
         
         listTemp.clear();
         listTemp.addAll(listHHId);
         listTemp.addAll(listOrgId);
-        if (listTemp.size() > 0 && System.isFuture()) {
+        if (listTemp.size() > 0) {
             ADDR_Addresses_TDTM.cleanupAccountAddresses(listTemp);
         }
     }
