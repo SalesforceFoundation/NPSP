@@ -29,9 +29,9 @@
 * @date 2021
 * @group Recurring Donations
 * @description Database DML service to insert/update/delete records and keep track of failed RD Ids.
-*   RD creation is commonly used in Community/Flows to allow customers to donate. The Winter '21
-*   enforced security policies update which locked down the Site/Community Gues User's permission.
-*   Declaring without sharing context allow Guest Site User to continue create Enhanced Recurring Dondation.
+*   RD creation is commonly used in Community/Flows to allow customers to create donations. However,
+*   the Winter '21 enforced security policies update which locked down the Site/Community Gues User's permission.
+*   Declaring without sharing context will allow Guest Site Users to continue create Enhanced Recurring Dondations.
 *   The class is specifically used and will only be used by Enhanced Recurring Donation related DML operations.
 */
 public without sharing class RD2_DatabaseService {
