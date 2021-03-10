@@ -1513,6 +1513,7 @@
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.LastElevateEventPlayed__c</members>
+        <members>npe03__Recurring_Donation__c.LastElevateVersionPlayed__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
