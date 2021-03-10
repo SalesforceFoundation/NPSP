@@ -63,7 +63,8 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
             
             // deal with any fixups that need to occur due to Account Merges
             if (setMergeWinner.size() > 0) {
-                if(System.Limits.getFutureCalls() < 1) {
+//                if(System.Limits.getFutureCalls() < 1) {
+                if(System.isFuture() || System.isBatch()) {
                     handleAccountMergeFixups(new List<Id>(setMergeWinner));
                 }
                 else {
