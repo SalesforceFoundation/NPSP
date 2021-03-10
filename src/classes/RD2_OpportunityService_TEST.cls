@@ -158,7 +158,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
     /***
      * @description Verifies an Opportunity name has the specialized format when
-     * Opportunity naming is not configured in NPSP Settings
+     * the associated Recurring Donation is Open
      */
     @isTest
     private static void shouldCreateOppsWithCorrectNameWhenRdIsOpen() {
@@ -172,10 +172,7 @@ private with sharing class RD2_OpportunityService_TEST {
         update rd;
         Test.stopTest();
 
-        Date secondCloseDate = CLOSE_DATE.addMonths(1);
-
         List<Opportunity> opps = oppGateway.getRecords(rd);
-
         System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
         Opportunity opp1 = opps[0];
         System.assertEquals(getExpectedOppName(rd, CLOSE_DATE), opp1.Name, 'Opportunity Name should match');
