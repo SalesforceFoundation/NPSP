@@ -29,7 +29,10 @@
 * @date 2021
 * @group Recurring Donations
 * @description Database DML service to insert/update/delete records and keep track of failed RD Ids.
-* Use without sharing context so Guest Site User can perform DML operation
+*   RD creation is commonly used in Community/Flows to allow customers to donate. The Winter '21
+*   enforced security policies update which locked down the Site/Community Gues User's permission.
+*   Declaring without sharing context allow Guest Site User can perform DML operations on Recurring Dondation.
+*   The class is specifically used and will only be used by Enhanced Recurring Donation related DML operations.
 */
 public without sharing class RD2_DatabaseService {
     private SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
