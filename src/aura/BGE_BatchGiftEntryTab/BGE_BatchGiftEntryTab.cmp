@@ -54,6 +54,7 @@
     <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="showRetirementPrompt" type="Boolean" default="false" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -80,6 +81,19 @@
             </div>
         </div>
     </header>
+
+    <aura:if isTrue="{!v.showRetirementPrompt}">
+        <c:utilPrompt 
+            aura:id="retirementPrompt" 
+            id="retirementPrompt"
+            headerTitle="{!$Label.c.bgeRetirementWarningHeader}"
+            promptMessage="{!$Label.c.bgeRetirementWarningBody}"
+            confirmButtonTitle="{!$Label.c.commonOkay}" 
+            hasBackdrop="true" 
+            variant="error" 
+            onconfirm="{!c.handleConfirmClick}"
+        ></c:utilPrompt>
+    </aura:if>
 
     <!--Data Table-->
     <lightning:datatable aura:id="dataTable"

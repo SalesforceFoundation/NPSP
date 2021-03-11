@@ -5094,6 +5094,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch</value>
     </labels>
     <labels>
+        <fullName>bgeRetirementWarningBody</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Gift Entry retirement &amp; recommendations</shortDescription>
+        <value>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>bgeRetirementWarningHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for warning about Batch Gift Entry retiring</shortDescription>
+        <value>Retiring Batch Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>bgeTabHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
