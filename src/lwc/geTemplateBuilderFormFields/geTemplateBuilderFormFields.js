@@ -1,5 +1,9 @@
 import { LightningElement, track, api, wire } from 'lwc';
-import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import {
+    BATCH_CURRENCY_ISO_CODE,
+    dispatch,
+    handleError,
+} from 'c/utilTemplateBuilder';
 import { mutable, findIndexByProperty, isEmpty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
@@ -57,7 +61,6 @@ const REQUIRED_FORM_FIELDS = [
 const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
 const FORM_FIELDS_SECTION_ID = 'formFields';
 const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
-const CURRENCY_ISO_CODE = 'CurrencyIsoCode';
 
 // List of object mappings to exclude from Template Builder
 const EXCLUDED_OBJECT_MAPPINGS = [
@@ -359,7 +362,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     }
 
     isCurrencyIsoCodeFieldMapping(fieldMapping) {
-        return fieldMapping.Target_Field_API_Name === CURRENCY_ISO_CODE;
+        return fieldMapping.Target_Field_API_Name === BATCH_CURRENCY_ISO_CODE;
     }
 
     /*******************************************************************************
