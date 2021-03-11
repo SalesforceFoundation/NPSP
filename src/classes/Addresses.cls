@@ -34,8 +34,17 @@
 */
 public inherited sharing class Addresses extends fflib_SObjects {
 
-    public Addresses(List<Address__c> addresses){
+    private Map<Id, Address__c> oldMap;
+
+    public Addresses(List<Address__c> addresses) {
         super(addresses, Address__c.SObjectType);
+    }
+
+    public Addresses(List<Address__c> addresses, List<Address__c> oldList) {
+        super(addresses, Address__c.SObjectType);
+        this.oldMap = oldList == NULL ?
+                new Map<Id, Address__c>() :
+                new Map<Id, Address__c>(oldList);
     }
 
     /********************************************************************************************************
@@ -71,12 +80,68 @@ public inherited sharing class Addresses extends fflib_SObjects {
         setLatestDatesOnDefaults();
     }
 
-    private void setLatestDatesOnDefaults() {
-        setFieldValueByMap(Address__c.Default_Address__c, Address__c.Latest_Start_Date__c,
-                    new Map<Object, Object>{TRUE => System.today()});
+    public void onBeforeUpdate() {
+        updateLatestDatesForDefaultChanges();
+    }
 
-        setFieldValueByMap(Address__c.Default_Address__c, Address__c.Latest_End_Date__c,
-                new Map<Object, Object>{TRUE => NULL});
+    private void setLatestDatesOnDefaults() {
+        for (Address__c addr : (List<Address__c>) defaultAddresses().getRecords()) {
+            resetLatestStartDateFor(addr);
+            resetLatestEndDateFor(addr);
+        }
+    }
+
+    private void resetLatestEndDateFor(Address__c address) {
+        address.Latest_End_Date__c = NULL;
+    }
+
+    private void resetLatestStartDateFor(Address__c address) {
+        address.Latest_Start_Date__c = system.today();
+    }
+
+    private Addresses defaultAddresses() {
+        fflib_SObjects defaultAddresses = selectByFieldValue(
+                Address__c.Default_Address__c, TRUE);
+        return new Addresses(defaultAddresses.getRecords());
+    }
+
+    private void updateLatestDatesForDefaultChanges() {
+        for (Address__c addr :
+                (List<Address__c>) addressesWithDefaultChanges().getRecords()) {
+            // when an address changes Default, we update its latest date fields
+            if (isDefault(addr)) {
+                resetLatestStartDateFor(addr);
+                resetLatestEndDateFor(addr);
+            } else {
+                setEndDateFor(addr);
+            }
+        }
+    }
+
+    private Addresses addressesWithDefaultChanges() {
+        List<Address__c> addressesWithDefaultChanges = new List<Address__c>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (isDefaultChanged(addr)) {
+                addressesWithDefaultChanges.add(addr);
+            }
+        }
+        return new Addresses(addressesWithDefaultChanges);
+    }
+
+    private void setEndDateFor(Address__c addr) {
+        addr.Latest_End_Date__c = system.today();
+    }
+
+    private Boolean isDefaultChanged(Address__c addr) {
+        return isDefault(addr) != isDefault(oldVersionOf(addr));
+    }
+
+    private Boolean isDefault(Address__c addr) {
+        return addr.Default_Address__c;
+    }
+
+    private Address__c oldVersionOf(Address__c addr) {
+        return oldMap.get(addr.Id);
     }
 
 }
