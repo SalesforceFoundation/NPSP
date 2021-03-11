@@ -15,6 +15,16 @@
             }
         });
         $A.enqueueAction(action);
+
+        // Manage retirement prompt visibility
+        const promptViewedKey = 'hasViewedRetirementPrompt';
+        const sessionStorage = window.sessionStorage;
+        if (!sessionStorage.getItem(promptViewedKey)) {
+            sessionStorage.setItem(promptViewedKey, true);
+
+            // Render retirement prompt
+            component.set('v.showRetirementPrompt', true);
+        }
     },
 
     /**
@@ -103,6 +113,13 @@
         this.checkFieldPermissions(component, function () {
             return this.openNewBatchWizard(component);
         }.bind(this));
+    },
+
+    /**
+     * @description: closes retirement warning prompt when confirm button on prompt is clicked
+     */
+    handleConfirmClick: function(component) {
+        component.set('v.showRetirementPrompt', false);
     },
 
     /**
