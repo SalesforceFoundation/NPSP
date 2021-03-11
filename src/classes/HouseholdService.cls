@@ -45,19 +45,19 @@ public inherited sharing class HouseholdService {
         set;
     }
     @TestVisible
-    private HouseholdNamingService householdNamingService {
+    private HouseholdNamingService householdNamingServiceInst {
         get {
-            if (householdNamingService == null) {
-                householdNamingService = new HouseholdNamingService();
+            if (householdNamingServiceInst == null) {
+                householdNamingServiceInst = new HouseholdNamingService();
             }
-            return householdNamingService;
+            return householdNamingServiceInst;
         }
         set;
     }
     private final String RECORD_TYPE_ID = 'RecordTypeId';
 
     public Set<String> fieldsUsedForHouseholdNaming() {
-        return householdNamingService.getHouseholdNamingContactFields();
+        return householdNamingServiceInst.getHouseholdNamingContactFields();
     }
 
     public void createHouseholdsFor(
@@ -87,14 +87,23 @@ public inherited sharing class HouseholdService {
     public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
                 && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
-            Households householdsNeedingNameAndMemberCountRefresh =
-                    new Households(
-                            new Set<Id>(contactsInLegacyHouseholds
-                            .householdsWithMembershipOrNamingFieldChanges()),
-                            new HouseholdSelector());
-            householdsNeedingNameAndMemberCountRefresh.updateHouseholdNameAndMemberCount();
+            if (isFutureEligible()) {
+                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                        contactsInLegacyHouseholds
+                                .householdsWithMembershipOrNamingFieldChanges());
+            } else {
+                HouseholdNamingService householdNamingService = new HouseholdNamingService();
+                householdNamingService.updateHouseholdNameAndMemberCount(
+                        contactsInLegacyHouseholds
+                                .householdsWithMembershipOrNamingFieldChanges());
+            }
             numberOfTimesUpdateHouseholdNamesHasRun++;
         }
+    }
+
+    private Boolean isFutureEligible() {
+        return settings.isAsyncEnabled()
+                && !System.isFuture() && !System.isBatch();
     }
 
     public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
@@ -157,10 +166,16 @@ public inherited sharing class HouseholdService {
         List<Id> householdIdsNeedingNamesUpdated =
                 getHouseholdIdsNeedingNamesUpdatedFromSaveResult(lsr);
         if (!householdIdsNeedingNamesUpdated.isEmpty()) {
-            Households households = new Households(
-                    new Set<Id>(householdIdsNeedingNamesUpdated),
-                    new HouseholdSelector());
-            households.updateHouseholdNameAndMemberCount();
+            if (isFutureEligible()) {
+                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                        householdIdsNeedingNamesUpdated
+                );
+            } else {
+                HouseholdNamingService householdNamingService = new HouseholdNamingService();
+                householdNamingService.updateHouseholdNameAndMemberCount(
+                        householdIdsNeedingNamesUpdated
+                );
+            }
         }
     }
 
