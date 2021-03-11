@@ -11,9 +11,6 @@ Suite Teardown  Run Keywords
 ...             Delete Session Records
 ...             Capture Screenshot and Delete Records and Close Browser
 
-*** Variables ***
-
-
 *** Keywords ***
 Setup Test Data
     ${NS} =  Get NPSP Namespace Prefix
@@ -42,7 +39,7 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   Click Gift Entry Button               Next: Form Fields
   Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Checkbox
   Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Picklist
-  Page Should Not Contain Element       //lightning-input[@data-qa-locator="checkbox Required Contact 1: Contact1 Checkbox To Checkbox"]
+  Page Should Not Contain Locator       gift_entry.template_required_checkbox    Contact 1: Contact1 Checkbox To Checkbox
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                        GE_Gift_Entry
   Click Link                            Templates
