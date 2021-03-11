@@ -67,4 +67,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return mapAddressesByAcctId;
     }
 
+    public void onBeforeInsert() {
+        setLatestDatesOnDefaults();
+    }
+
+    private void setLatestDatesOnDefaults() {
+        setFieldValueByMap(Address__c.Default_Address__c, Address__c.Latest_Start_Date__c,
+                    new Map<Object, Object>{TRUE => System.today()});
+
+        setFieldValueByMap(Address__c.Default_Address__c, Address__c.Latest_End_Date__c,
+                new Map<Object, Object>{TRUE => NULL});
+    }
+
 }

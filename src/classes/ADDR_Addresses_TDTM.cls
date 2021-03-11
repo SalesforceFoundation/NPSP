@@ -85,6 +85,14 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         Map<Id, Address__c> mapAddressesById = new Map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.
 
         Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
+
+        switch on triggerAction {
+            when BeforeInsert {
+                Addresses addresses = new Addresses(listNew);
+                addresses.onBeforeInsert();
+            }
+        }
+
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             Addresses addresses = new Addresses(listOld);
             mapAddressesByAcctId = addresses.getMapAddressesByAcctId();
@@ -93,15 +101,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             Integer i = 0;
             for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
                 Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
-
-                // BEFORE INSERT
-                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    // when an address is marked Default, we update its latest date fields
-                    if (addr.Default_Address__c) {
-                        addr.Latest_Start_Date__c = system.today();
-                        addr.Latest_End_Date__c = null;
-                    }
-                }
 
                 // BEFORE UPDATE
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
