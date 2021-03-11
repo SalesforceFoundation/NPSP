@@ -57,6 +57,7 @@ const REQUIRED_FORM_FIELDS = [
 const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
 const FORM_FIELDS_SECTION_ID = 'formFields';
 const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
+const CURRENCY_ISO_CODE = 'CurrencyIsoCode';
 
 // List of object mappings to exclude from Template Builder
 const EXCLUDED_OBJECT_MAPPINGS = [
@@ -347,11 +348,18 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * @param {object} fieldMapping: An instance of Data_Import_Field_Mapping__mdt
     */
     checkIfFieldMappingIsAllowed(fieldMapping) {
+        if (this.isCurrencyIsoCodeFieldMapping(fieldMapping)) {
+            return false;
+        }
         const formFieldName = fieldMapping.Element_Type === FIELD ?
             fieldMapping.Source_Field_API_Name :
             fieldMapping.DeveloperName;
 
         return !EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME.includes(formFieldName);
+    }
+
+    isCurrencyIsoCodeFieldMapping(fieldMapping) {
+        return fieldMapping.Target_Field_API_Name === CURRENCY_ISO_CODE;
     }
 
     /*******************************************************************************
