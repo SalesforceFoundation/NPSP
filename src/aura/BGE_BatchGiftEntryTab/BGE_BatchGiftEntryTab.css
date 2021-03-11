@@ -1,3 +1,11 @@
 .THIS .slds-scrollable_y {
     min-height: 200px
 }
+
+#retirementPrompt.THIS {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    max-width: 450px;
+}
