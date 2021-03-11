@@ -21,7 +21,7 @@ import {
     getNamespace,
     getNestedProperty,
     isNotEmpty,
-    isNull, isUndefined,
+    isNull,
     stripNamespace,
 } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';

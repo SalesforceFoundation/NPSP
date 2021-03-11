@@ -183,7 +183,12 @@ public with sharing class GE_GiftEntryController {
      * @param batchId : ID of the NPSP_Data_Import_Batch__c
      */
     private static Boolean areCurrenciesValid (Id batchId) {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return true;
+        }
+
         String batchCurrencyIsoCode = retrieveBatchCurrencyIsoCode(batchId);
+
         if (batchCurrencyIsoCode != null && batchCurrencyIsoCode == UserInfo.getDefaultCurrency()) {
             return true;
         }
