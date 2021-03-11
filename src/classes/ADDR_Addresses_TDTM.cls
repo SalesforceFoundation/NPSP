@@ -89,10 +89,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             Addresses addresses = new Addresses(listOld);
             mapAddressesByAcctId = addresses.getMapAddressesByAcctId();
         } else {
-
+            Addresses addresses = new Addresses(listNew);
             Integer i = 0;
-            for (SObject so : listNew) {
-                Address__c addr = (Address__c)so;
+            for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
                 Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
 
                 // BEFORE INSERT
