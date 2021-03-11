@@ -339,6 +339,8 @@
         <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
         <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdSelector</members>
+        <members>HouseholdService</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>INamingExclusions</members>
