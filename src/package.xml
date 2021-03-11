@@ -2208,6 +2208,8 @@
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
+        <members>bgeRetirementWarningBody</members>
+        <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
