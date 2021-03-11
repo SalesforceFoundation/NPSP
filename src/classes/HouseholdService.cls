@@ -259,8 +259,13 @@ public inherited sharing class HouseholdService {
         return (Id) con.get(RECORD_TYPE_ID);
     }
 
+    private Boolean isRecordTypeInUseOnContacts;
     private Boolean isRecordTypesOnContacts() {
-        return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
+        if (isRecordTypeInUseOnContacts == NULL) {
+            isRecordTypeInUseOnContacts =
+                    Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
+        }
+        return isRecordTypeInUseOnContacts;
     }
 
 }
