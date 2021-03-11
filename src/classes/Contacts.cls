@@ -119,13 +119,15 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Boolean isIncludedInFormalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null
-                || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c');
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromFormalGreeting();
     }
 
     private Boolean isIncludedInInformalGreeting(Contact con) {
-        return con.npo02__Naming_Exclusions__c == null
-                || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c');
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
     private Contacts contactsInHouseholds() {
