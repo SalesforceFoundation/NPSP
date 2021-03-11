@@ -56,6 +56,14 @@
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Do_Not_Contact__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Checkbox_to_picklist__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Checkbox_to_checkbox__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>

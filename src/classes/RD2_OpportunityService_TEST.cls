@@ -766,14 +766,14 @@ private with sharing class RD2_OpportunityService_TEST {
 
         delete new TEST_SObjectGateway.OpportunityGateway().getRecords(rd);
 
-        List<npe03__Recurring_Donation__c> rds = new RD2_OpportunityEvaluationService()
-            .getRecurringDonations(new Set<Id>{ rd.Id });
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedREcords(new Set<Id>{ rd.Id }, START_DATE);
 
         Exception actualException;
         try {
             rd.npe03__Amount__c = RD_NEW_AMOUNT;
             new RD2_OpportunityService(
-                TODAY, new  RD2_OpportunityEvaluationService.DatabaseService(), new RD2_CustomFieldMapper()
+                TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
             ).updateOpportunities(rds);
 
         } catch (Exception e) {

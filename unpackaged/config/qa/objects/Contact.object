@@ -69,5 +69,27 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
-    </fields>    
+    </fields>
+    <fields>
+        <fullName>Checkbox_to_checkbox__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox that will be mapped to another checkbox field on the NPSP Data Import object.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is for testing checkbox-to-checkbox mappings.</inlineHelpText>
+        <label>Contact1 Checkbox To Checkbox</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Checkbox_to_picklist__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox that will be mapped to a picklist field on the NPSP Data Import object.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is for testing checkbox-to-picklist field mappings.</inlineHelpText>
+        <label>Contact1 Checkbox To Picklist</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
