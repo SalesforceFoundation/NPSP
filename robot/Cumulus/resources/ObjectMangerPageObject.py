@@ -26,6 +26,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.get_webelement(search_button).send_keys(Keys.ENTER)
 		object = npsp_lex_locators['object_manager']['object_result'].format(object_name)
 		leftnavoption = npsp_lex_locators['link-text'].format("Fields & Relationships")
+		self.builtin.sleep(2,"Wait for the objects to load")
 		self.selenium.wait_until_page_contains_element(object)
 		self.selenium.click_element(object)
 		self.selenium.wait_until_location_contains("Details/view", timeout=90)
