@@ -93,10 +93,38 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.setColumns();
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
-        dataImportModel = getDataImportBatchTotals(dataImportModel);
-        checkBatchGiftEntryFieldPermissions(batchId);
-
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(dataImportModel.dataImportRows);
+        checkBatchGiftEntryFieldPermissions (batchId);
         return JSON.serialize(dataImportModel);
+    }
+
+    private static Decimal getBatchTotalRowAmount(List<DataImportRow> dataImportRows) {
+        Decimal totalAmount = 0;
+
+        for (DataImportRow dataImportRow: dataImportRows) {
+                totalAmount+= dataImportRow.record.Donation_Amount__c == null
+                    ? 0
+                    : dataImportRow.record.Donation_Amount__c;
+        }
+        return totalAmount;
+    }
+
+    private static Decimal getBatchTotalRowAmount(Id batchId) {
+        Decimal totalAmount = 0;
+
+        for (DataImport__c dataImport: [
+            SELECT Donation_Amount__c
+            FROM DataImport__c
+            WHERE NPSP_Data_Import_Batch__c =: batchId
+        ]) {
+            totalAmount+= dataImport.Donation_Amount__c == null
+                ? 0
+                : dataImport.Donation_Amount__c;
+        }
+        return totalAmount;
     }
 
     private static void checkBatchGiftEntryFieldPermissions(Id batchId) {
@@ -376,7 +404,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         DataImportModel dataImportModel = new DataImportModel();
 
         dataImportModel.id = batchId;
-        dataImportModel = getDataImportUpdatedBatchTotals(batchId, dataImportModel);
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
+        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(batchId);
+
         return dataImportModel;
     }
 
@@ -421,32 +453,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
     */
-    private static DataImportModel getDataImportBatchTotals(DataImportModel importModel) {
-        Decimal totalAmount = 0;
-        Integer rowCount = 0;
-        for (DataImportRow dataImportRow : importModel.dataImportRows) {
-            totalAmount+= dataImportRow.record.Donation_Amount__c == null ? 0 : dataImportRow.record.Donation_Amount__c;
-            rowCount++;
-        }
-        importModel.totalRowAmount = totalAmount;
-        importModel.totalCountOfRows = rowCount;
-        return importModel;
-    }
-
-    private static DataImportModel getDataImportUpdatedBatchTotals (Id recordId, DataImportModel model) {
-        Decimal totalAmount = 0;
-        Integer rowCount = 0;
-        for (DataImport__c dataImport : [
-            SELECT Donation_Amount__c
+    private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
+        return [
+            SELECT Sum(Donation_Amount__c)amount
             FROM DataImport__c
             WHERE NPSP_Data_Import_Batch__c =: recordId
-        ]) {
-            totalAmount+= dataImport.Donation_Amount__c == null ? 0 : dataImport.Donation_Amount__c;
-            rowCount++;
-        }
-        model.totalRowAmount = totalAmount;
-        model.totalCountOfRows = rowCount;
-        return model;
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the count of Data Import Batch records in a particular batch
+    * @param recordId the ID of the NPSP_Data_Import_Batch__c
+    * @return Integer count of batch records
+    */
+    private static Integer getDataImportBatchTotalCount(Id recordId) {
+        return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
     }
 
     /*******************************************************************************************************
@@ -612,6 +633,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer totalCountOfRows;
         @AuraEnabled public Decimal totalRowAmount;
+        @AuraEnabled public Decimal batchTotalRowAmount;
         @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
                 new List<UTIL_LightningComponentSupport.Notice>();
 

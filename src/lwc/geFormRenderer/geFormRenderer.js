@@ -3,7 +3,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
-import retrieveBatchCurrencyIsoCode from '@salesforce/apex/GE_GiftEntryController.retrieveBatchCurrencyIsoCode';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -144,6 +143,7 @@ export default class GeFormRenderer extends LightningElement{
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
+    @api batchCurrencyIsoCode;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -159,7 +159,6 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
-    _batchCurrencyIsoCode;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -258,13 +257,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     connectedCallback() {
-
-        if (!this.isSingleGiftEntry) {
-            retrieveBatchCurrencyIsoCode({batchId: this.batchId}).then(response => {
-              this._batchCurrencyIsoCode = response;
-           });
-        }
-
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
@@ -2395,17 +2387,17 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get showMismatchedCurrencyWarning() {
-        if(isEmpty(this._batchCurrencyIsoCode)) {
+        if(isEmpty(this.batchCurrencyIsoCode)) {
             return false;
         }
-        return this._batchCurrencyIsoCode !== CURRENCY;
+        return this.batchCurrencyIsoCode !== CURRENCY;
     }
 
     get mismatchedCurrencyWarning() {
         if (this.showMismatchedCurrencyWarning) {
             return GeLabelService.format(
                 this.CUSTOM_LABELS.geWarningBatchGiftEntryCurrencyMismatch,
-                [this._batchCurrencyIsoCode]);
+                [this.batchCurrencyIsoCode]);
         }
     }
 }
