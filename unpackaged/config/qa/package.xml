@@ -11,6 +11,8 @@
         <members>Contact.Previous_Level__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Contact.Work_Order__c</members>
+        <members>Contact.Checkbox_to_checkbox__c</members>
+        <members>Contact.Checkbox_to_picklist__c</members>
         <members>CustomObject1__c.C1_currency2__c</members>
         <members>CustomObject1__c.C1_currency__c</members>
         <members>CustomObject1__c.C1_date__c</members>
@@ -85,6 +87,8 @@
         <members>%%%NAMESPACE%%%DataImport__c.Lead_Imported_Status__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.Lead_Last_Name__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.Lead_Lookup__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.Picklist_to_checkbox__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.DI_Checkbox_to_checkbox__c</members>
         <members>Opportunity.custom_currency__c</members>
         <members>Opportunity.custom_date__c</members>
         <members>Opportunity.custom_lookup__c</members>
