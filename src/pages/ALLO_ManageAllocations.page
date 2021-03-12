@@ -6,20 +6,20 @@
     showHeader="true"
     sidebar="true"
     cache="false"
-    action="{!getPageLoadValidationMessages}"
+    action="{!verifyPageLoadConditions}"
     lightningStylesheets="true">
 
     <apex:slds />
+    <apex:includeLightning />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript">
     (function($) {
-
         var sumAmount;
 
-        var parentAmount = {!parentAmount};
+        var parentAmount = {!parent.amount};
         var decimalSeparator = "{!decimalSeparator}";
         var thousandsSeparator = "{!thousandsSeparator}";
 
@@ -29,9 +29,9 @@
 
         function urlHome() {
             if (isLightningExperienceOrSalesforce1()) {
-                sforce.one.navigateToURL('one.app#/sObject/{!objectAPIName}/home');
+                sforce.one.navigateToURL('one.app#/sObject/{!parent.objectApiName}/home');
             } else {
-                window.location.assign('/{!keyPrefix}/o');
+                window.location.assign('/{!parent.keyPrefix}/o');
             }
         }
 
@@ -157,121 +157,147 @@
     })(jQuery);
 
     </script>
-    <div class="slds-scope">
-        <apex:form id="theForm">
-            <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
-                <!-- PAGE HEADER -->
-                <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
-                    parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
-                    header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}" cancelReRender="cancelBTN" cancelDisabledOnClick="true"
-                    saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0),isLoading)}" saveDisabledOnClick="true"/>
 
-                <apex:outputPanel rendered="{!isLoading}" >
-                    <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
-                        <div role="status" class="slds-spinner slds-spinner_medium">
-                            <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
-                            <div class="slds-spinner__dot-a"></div>
-                            <div class="slds-spinner__dot-b"></div>
-                        </div>
-                    </div>
-                </apex:outputPanel>
+    <script>
+        if ({!NOT(hasAccess)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {
+                        title : "{!$Label.commonAdminPermissionErrorTitle}",
+                        message : "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "alloManageAllocationsIllustration",
+                    function () { }
+                );
+            });
+        }
+    </script>
 
-                <c:UTIL_PageMessages id="messages"/>
-                <div>
-                    <apex:outputPanel id="theTable" rendered="{!!isLoading}">
-                        <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
-                            <thead>
-                                <tr class="slds-text-heading_label">
-                                    <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
-                                    <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
-                                    <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
-                                    <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
-                                    <th scope="col"><span class="slds-truncate">{!additionalField.label}</span></th>
-                                    </apex:repeat>
-                                    <th scope="col" width="100px"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <apex:variable var="cnt" value="{!0}" />
-                                <apex:repeat var="allo" value="{!listAllo}" >
-                                    <tr>
-                                        <td>
-                                            <div class="slds-form-element">
-                                                <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
-                                                <div id="alloInputGAU{!cnt}" >
-                                                    <c:UTIL_InputField sObj="{!Allo}" sObjType="Allocation__c" field="General_Accounting_Unit__c"/>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="slds-form-element">
-                                                <label for="{!$Component.alloInputAmount}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
-                                                <div class="slds-form-element__control slds-input-has-fixed-addon">
-                                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                                    <apex:inputField id="alloInputAmount" styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="slds-form-element">
-                                                <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
-                                                <div class="slds-form-element__control slds-input-has-fixed-addon">
-                                                    <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size_2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
-                                                    <span class="slds-form-element__addon">%</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
-                                        <td>
-                                            <div class="slds-form-element">
-                                                <div id="alloInputGAU{!cnt}" >
-                                                    <c:UTIL_FormField sObj="{!Allo}"
-                                                        sObjType="Allocation__c"
-                                                        field="{!additionalField.fieldPath}"
-                                                        required="{!additionalField.DBRequired || additionalField.Required}"
-                                                        showLabel="false"
-                                                        labelOverride="{!additionalField.label} {!cnt}"/>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        </apex:repeat>
-                                        <td>
-                                            <apex:commandButton
-                                                styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}"
-                                                action="{!delRow}" reRender="theTable,messages" immediate="false">
-                                                <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
-                                                <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
-                                            </apex:commandButton>
-                                        </td>
-                                    </tr>
-                                    <apex:variable var="cnt" value="{!cnt+1}"/>
-                                </apex:repeat>
-                                <tr class="active">
-                                    <td>
-                                        <apex:outputField value="{!defaultAllo.General_Accounting_Unit__c}"/>
-                                    </td>
-                                    <td>
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                                <span class="slds-form-element__static" id="totalAmount"></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td colspan="2"></td>
-                                </tr>
-                        </tbody>
-                        </table>
-                        <!-- Add Row -->
-                        <div class="slds-p-around_medium">
-                                <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages"
-                                    value="{!$Label.alloAddRow}" title="{!$Label.alloAddRow}" />
+    <apex:outputPanel rendered="{!NOT(hasAccess)}">
+        <c:UTIL_PageMessages id="messages"/>
+        <div id='alloManageAllocationsIllustration' />
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!hasAccess}">
+        <div class="slds-scope">
+            <apex:form id="theForm">
+                <c:UTIL_NavigateBack recordId="{!parent.id}" redirect="{!redirect}"/>
+                    <!-- PAGE HEADER -->
+                    <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!parent.objectLabelPlural}"
+                        parentAction="javascript:window.urlHome();" parentRecordName="{!parent.recordName}" parentRecordAction="/{!parent.id}"
+                        header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}" cancelReRender="cancelBTN" cancelDisabledOnClick="true"
+                        saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!isSaveDisabled}" saveDisabledOnClick="true"/>
+
+                    <apex:outputPanel rendered="{!isLoading}" >
+                        <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
+                            <div role="status" class="slds-spinner slds-spinner_medium">
+                                <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
                         </div>
-                        <script>
-                            window.initOrReload();
-                        </script>
                     </apex:outputPanel>
-            </div>
-        </apex:form>
-    </div>
+
+                    <c:UTIL_PageMessages id="messages"/>
+                    <div>
+                        <apex:outputPanel id="theTable" rendered="{!!isLoading}">
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
+                                <thead>
+                                    <tr class="slds-text-heading_label">
+                                        <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
+                                        <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
+                                        <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                                        <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
+                                        <th scope="col"><span class="slds-truncate">{!additionalField.label}</span></th>
+                                        </apex:repeat>
+                                        <th scope="col" width="100px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:variable var="cnt" value="{!0}" />
+                                    <apex:repeat var="allo" value="{!allocations}" >
+                                        <tr>
+                                            <td>
+                                                <div class="slds-form-element">
+                                                    <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
+                                                    <div id="alloInputGAU{!cnt}" >
+                                                        <c:UTIL_InputField sObj="{!Allo}" sObjType="Allocation__c" field="General_Accounting_Unit__c"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-form-element">
+                                                    <label for="{!$Component.alloInputAmount}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
+                                                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                                        <apex:inputField id="alloInputAmount" styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-form-element">
+                                                    <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
+                                                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                                        <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size_2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                                        <span class="slds-form-element__addon">%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <apex:repeat var="additionalField" value="{!additionalAllocationFields}">
+                                            <td>
+                                                <div class="slds-form-element">
+                                                    <div id="alloInputGAU{!cnt}" >
+                                                        <c:UTIL_FormField sObj="{!Allo}"
+                                                            sObjType="Allocation__c"
+                                                            field="{!additionalField.fieldPath}"
+                                                            required="{!additionalField.DBRequired || additionalField.Required}"
+                                                            showLabel="false"
+                                                            labelOverride="{!additionalField.label} {!cnt}"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            </apex:repeat>
+                                            <td>
+                                                <apex:commandButton
+                                                    styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}"
+                                                    action="{!delRow}" reRender="theTable,messages" immediate="false">
+                                                    <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
+                                                    <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                                </apex:commandButton>
+                                            </td>
+                                        </tr>
+                                        <apex:variable var="cnt" value="{!cnt+1}"/>
+                                    </apex:repeat>
+                                    <tr class="active">
+                                        <td>
+                                            <apex:outputField value="{!defaultAllocation.General_Accounting_Unit__c}"/>
+                                        </td>
+                                        <td>
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                                    <span class="slds-form-element__static" id="totalAmount"></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                            </tbody>
+                            </table>
+                            <!-- Add Row -->
+                            <div class="slds-p-around_medium">
+                                    <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages"
+                                        value="{!$Label.alloAddRow}" title="{!$Label.alloAddRow}" />
+                            </div>
+                            <script>
+                                window.initOrReload();
+                            </script>
+                        </apex:outputPanel>
+                </div>
+            </apex:form>
+        </div>
+    </apex:outputPanel>
 </apex:page>
