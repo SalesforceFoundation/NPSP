@@ -205,7 +205,7 @@ public with sharing class RD2_OpportunityService {
 
         customFieldMapper.populateOpportunityFields(opp, rd);
 
-        opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
+        opp.Name = buildOpportunityName(rd, opp);
 
         return opp;
     }
@@ -214,12 +214,15 @@ public with sharing class RD2_OpportunityService {
     * @description Constructs the opportunity name in a specific format.
     * @return String The Opportunity Name
     */
-    private String buildOpportunityName(String donorName, Opportunity opp) {
-        return
-            donorName + ' '
-                + System.Label.npe03.RecurringDonationPrefix
-                + ' (' + opp.Recurring_Donation_Installment_Number__c +  ') '
-                + opp.CloseDate.format();
+    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Opportunity opp) {
+        String oppName = rd.npe03__Donor_Name__c + ' '
+            + System.Label.npe03.RecurringDonationPrefix;
+
+        if (new RD2_RecurringDonation(rd).isFixedLength()) {
+            oppName += ' (' + opp.Recurring_Donation_Installment_Number__c +  ')';
+        }
+        oppName += ' ' + opp.CloseDate.format();        
+        return oppName;
     }
 
     /***
@@ -349,7 +352,7 @@ public with sharing class RD2_OpportunityService {
         isChanged = syncOppWithInstallment(opp, installment) || isChanged;
 
         if (isChanged) {
-            opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
+            opp.Name = buildOpportunityName(rd, opp);
             return opp;
         }
         return null;
