@@ -411,6 +411,7 @@
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_DataRegulationService</members>
+        <members>RD2_DatabaseService</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_ElevateInformation_CTRL</members>
@@ -435,6 +436,7 @@
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_PauseForm_CTRL</members>
         <members>RD2_PauseForm_TEST</members>
+        <members>RD2_QueryService</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
