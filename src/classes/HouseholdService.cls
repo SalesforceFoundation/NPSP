@@ -54,7 +54,7 @@ public inherited sharing class HouseholdService {
         }
         set;
     }
-    private final String RECORD_TYPE_ID = 'RecordTypeId';
+    private static final String RECORD_TYPE_ID = 'RecordTypeId';
 
     public Set<String> fieldsUsedForHouseholdNaming() {
         return householdNamingServiceInst.getHouseholdNamingContactFields();
@@ -251,7 +251,7 @@ public inherited sharing class HouseholdService {
     }
 
     private Boolean isNotExcludedByRecordType(Contact con) {
-        return !isRecordTypesOnContacts()
+        return !isRecordTypeInUseOnContacts
                 || !settings.contactRecordTypesToExclude().contains(recordTypeIdFor(con));
     }
 
@@ -259,8 +259,15 @@ public inherited sharing class HouseholdService {
         return (Id) con.get(RECORD_TYPE_ID);
     }
 
-    private Boolean isRecordTypesOnContacts() {
-        return Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
+    private static Boolean isRecordTypeInUseOnContacts {
+        get {
+            if (isRecordTypeInUseOnContacts == NULL) {
+                isRecordTypeInUseOnContacts =
+                        Schema.sObjectType.Contact.fields.getMap().get(RECORD_TYPE_ID) != null;
+            }
+            return isRecordTypeInUseOnContacts;
+        }
+        set;
     }
 
 }
