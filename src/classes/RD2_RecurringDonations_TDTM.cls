@@ -107,8 +107,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeValidation(rds, oldRds, triggerAction);
-        validate(rds, oldRds, triggerAction);
+        adjustDataAndValidate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
 
@@ -251,8 +250,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    @TestVisible
-    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+    public void adjustDataAndValidate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
@@ -260,26 +258,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        RD2_DataRegulationService dataService = new RD2_DataRegulationService(currentDate);        
-        dataService.adjust(rds, oldRds);
-    }
+        new RD2_DataRegulationService(currentDate)
+            .adjust(rds, oldRds);
 
-    /***
-    * @description Validates Recurring Donations data
-    * @param rds Trigger.new records
-    * @param oldRds Trigger.old records
-    * @param triggerAction BeforeInsert, AfterInsert, etc.
-    */
-    public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
-        RD2_ValidationService validationService = new RD2_ValidationService(rds);
+        List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
+            .validate();
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            validationService.validate();
-
-        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            validationService
-                .withOldRecurringDonations(oldRds)
-                .validateOnChange();
+        for (RD2_ValidationService.ErrorRecord errorRd : errorRds) {
+            errorRd.getRecord().addError(errorRd.getFirstError());
         }
     }
 
