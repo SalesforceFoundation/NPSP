@@ -339,7 +339,6 @@
         <members>HouseholdNamingExclusionsCheckboxes</members>
         <members>HouseholdNamingExclusionsString</members>
         <members>HouseholdNamingService</members>
-        <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
         <members>HouseholdNamingUserControlledFields</members>
         <members>HouseholdSelector</members>
@@ -428,6 +427,7 @@
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_DataRegulationService</members>
+        <members>RD2_DatabaseService</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_ElevateInformation_CTRL</members>
@@ -452,6 +452,7 @@
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_PauseForm_CTRL</members>
         <members>RD2_PauseForm_TEST</members>
+        <members>RD2_QueryService</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
@@ -2228,6 +2229,8 @@
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
+        <members>bgeRetirementWarningBody</members>
+        <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
