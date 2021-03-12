@@ -53,6 +53,8 @@
         <members>npsp__Data_Import_Field_Mapping.Contact1_Title_61b1fd1c3</members>
         <members>npsp__Data_Import_Field_Mapping.Contact1_Work_Email_a92606408</members>
         <members>npsp__Data_Import_Field_Mapping.Contact1_Work_Phone_af62af3dc</members>
+        <members>npsp__Data_Import_Field_Mapping.Contact1_Picklisttocheckbox_6c4d96932</members>
+        <members>npsp__Data_Import_Field_Mapping.Contact1_DI_Checkboxtocheckbox_57e8f3cb8</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_Alternate_Email_cde1c9606</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_Birthdate_e72ae3e8d</members>
         <members>npsp__Data_Import_Field_Mapping.Contact2_First_Name_718575e81</members>
