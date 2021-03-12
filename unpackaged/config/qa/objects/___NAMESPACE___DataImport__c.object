@@ -620,4 +620,41 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
+    <fields>
+        <fullName>Picklist_to_checkbox__c</fullName>
+        <description>Picklist that a checkbox field from the Contact Object will be mapped to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is for testing checkbox-to-picklist field mappings.</inlineHelpText>
+        <label>DI Picklist to Checkbox</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>True</fullName>
+                    <default>false</default>
+                    <label>True</label>
+                </value>
+                <value>
+                    <fullName>False</fullName>
+                    <default>false</default>
+                    <label>False</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>DI_Checkbox_to_checkbox__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox that will be mapped to another checkbox field on the Contact object.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is for testing checkbox-to-checkbox mappings.</inlineHelpText>
+        <label>DI Checkbox To Checkbox</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
