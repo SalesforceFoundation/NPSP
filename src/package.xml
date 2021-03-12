@@ -73,6 +73,8 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>AllocationParent</members>
+        <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
