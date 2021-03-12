@@ -38,6 +38,7 @@ Create Clone and Delete Template
     #Clone Template
     Select Template Action                    ${template}                   Clone
     Click Gift Entry Button                   Save & Close
+    Sleep                                     1
     Wait Until Page Contains                  This name has been used by another template. Please enter a unique name.
     Enter Value In Field                      Template Name=${new_template}
     Click Gift Entry Button                   Save & Close
