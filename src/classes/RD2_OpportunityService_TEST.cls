@@ -157,6 +157,28 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
+     * @description Verifies an Opportunity name has the specialized format when
+     * the associated Recurring Donation is Open
+     */
+    @isTest
+    private static void shouldCreateOppsWithCorrectNameWhenRdIsOpen() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
+        Opportunity opp1 = opps[0];
+        System.assertEquals(getExpectedOppName(rd, CLOSE_DATE), opp1.Name, 'Opportunity Name should match');
+    }
+
+    /***
      * @description Verifies an Opportunity name is set as configured in NPSP Settings Opportunity naming
      */
     @isTest
@@ -1405,11 +1427,14 @@ private with sharing class RD2_OpportunityService_TEST {
     * @return String Expected Opportunity name
     */
     public static String getExpectedOppName(npe03__Recurring_Donation__c rd, Date closeDate) {
-        return
-            rd.npe03__Donor_Name__c +  ' ' +
-            System.Label.npe03.RecurringDonationPrefix + ' (' +
-            (rd.npe03__Total_Paid_Installments__c != null ? rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
-            closeDate.format();
+        String oppName = rd.npe03__Donor_Name__c + ' '
+            + System.Label.npe03.RecurringDonationPrefix;
+
+        if (new RD2_RecurringDonation(rd).isFixedLength()) {
+            oppName += ' (' + (rd.npe03__Total_Paid_Installments__c != null ? rd.npe03__Total_Paid_Installments__c + 1 : 1) +  ')';
+        }
+        oppName += ' ' + closeDate.format();
+        return oppName;
     }
 
     /***
