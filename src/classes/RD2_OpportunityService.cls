@@ -84,10 +84,10 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Applies DML operations on records and keeps track of errors
     */
-    public RD2_OpportunityEvaluationService.DatabaseService dbService {
+    public RD2_DatabaseService dbService {
         get {
             if (dbService == null) {
-                dbService = new RD2_OpportunityEvaluationService.DatabaseService();
+                dbService = new RD2_DatabaseService();
             }
             return dbService;
         }
@@ -123,7 +123,7 @@ public with sharing class RD2_OpportunityService {
     * @param customFieldMapper Custom field mapper containing RD -> Opportunity field mapping
     */
     public RD2_OpportunityService(Date currentDate,
-        RD2_OpportunityEvaluationService.DatabaseService dbService,
+        RD2_DatabaseService dbService,
         RD2_CustomFieldMapper customFieldMapper
     ) {
         this.currentDate = currentDate;
