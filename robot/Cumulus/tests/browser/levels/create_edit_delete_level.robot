@@ -25,7 +25,7 @@ Create and edit level to verify fields
     [Documentation]                      Create a level and verify the fields on the created level details page
     ...                                  Edit the level details and update the fields. Verify the updated fields
     ...                                  are persisted on the details page.
-    [tags]                               W-038641                 feature:Levels
+    [tags]                               W-038641                 feature:Levels             unstable
 
     Go To Page                                       Listing                            Level__c
     Navigate To Level Page                           create
