@@ -341,9 +341,9 @@ public with sharing class RD2_VisualizeScheduleController {
                 queryFields.add('CurrencyIsoCode');
             }
 
-            RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
-            queryFields.add(oppEvalService.getScheduleSubQuery());
-            queryFields.add(oppEvalService.getOpportunitySubQuery());
+            RD2_QueryService queryService = new RD2_QueryService();
+            queryFields.add(queryService.getScheduleSubQuery());
+            queryFields.add(queryService.getOpportunitySubQuery());
 
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
