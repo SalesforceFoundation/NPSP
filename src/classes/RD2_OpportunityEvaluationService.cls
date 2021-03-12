@@ -125,10 +125,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /***
     * @description Applies DML operations on records and keeps track of errors
     */
-    public DatabaseService dbService {
+    public RD2_DatabaseService dbService {
         get {
             if (dbService == null) {
-                dbService = new DatabaseService();
+                dbService = new RD2_DatabaseService();
             }
             return dbService;
         }
@@ -175,6 +175,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         set;
     }
 
+    /***
+    * @description Helps building a query for Recurring Donations and their child records
+    */
+    private RD2_QueryService queryService {
+        get {
+            if (queryService == null) {
+                queryService = new RD2_QueryService();
+            }
+            return queryService;
+        }
+        set;
+    }
+
     /**
      * @description Recurring Donation Id's to be processed
      */
@@ -194,7 +207,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> rds {
         get {
             if (rds == null && rdIds != null) {
-                rds = getRecurringDonations(this.rdIds);
+                rds = queryService.getRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate);
             }
             return rds;
         } set;
@@ -212,44 +225,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return newRDIds;
         } set;
     }
-
-    /**
-    * @description Contains all mandatory Recurring Donation fields required for the Opportunity Evaluation Service
-    */
-    private Set<String> rdFields = new Set<String> {
-        'CreatedDate',
-        'CreatedById',
-        'Id',
-        'LastModifiedDate',
-        'LastModifiedById',
-        'Name',
-        'OwnerId',
-        'npe03__Organization__c',
-        'npe03__Amount__c',
-        'npe03__Contact__c',
-        'npe03__Contact__r.AccountId',
-        'npe03__Date_Established__c',
-        'npe03__Donor_Name__c',
-        'npe03__Installments__c',
-        'npe03__Installment_Period__c',
-        'npe03__Last_Payment_Date__c',
-        'npe03__Next_Payment_Date__c',
-        'npe03__Paid_Amount__c',
-        'npe03__Recurring_Donation_Campaign__c',
-        'npe03__Total_Paid_Installments__c',
-        String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
-        String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
-        String.valueOf(npe03__Recurring_Donation__c.CurrentYearValue__c),
-        String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
-        String.valueOf(npe03__Recurring_Donation__c.DisableFirstInstallment__c),
-        String.valueOf(npe03__Recurring_Donation__c.EndDate__c),
-        String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
-        String.valueOf(npe03__Recurring_Donation__c.NextYearValue__c),
-        String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c),
-        String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
-        String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
-        String.valueOf(npe03__Recurring_Donation__c.Status__c)
-    };
 
     /**
     * @description Recurring Donation Ids for which schedule has been changed
@@ -514,36 +489,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             && rd.hasOpenOpportunity();
     }
 
-    /**
-     * @description Populate the collection of Recurring Donation records, querying ALL fields,
-     * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
-     * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
-     * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
-     * @param rdIds Recurring Donation Ids
-     * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
-     */
-    public List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
-        Set<String> queryFields = new Set<String>();
-
-        queryFields.addAll(rdFields);
-        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
-        queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
-        queryFields.add(getOpportunitySubQuery());
-        queryFields.add(getScheduleSubQuery());
-
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            queryFields.add('CurrencyIsoCode');
-        }
-
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id IN :rdIds')
-            .build();
-
-        return Database.query(soql);
-    }
-
     /***
     * @description Retrieves Recurring Donation current and future closed and open Opportunities
     * required to calculate Next Donation Date
@@ -554,7 +499,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
 
         Set<String> queryFields = new Set<String>{ 'Id' };
-        queryFields.add(getOpportunitySubQuery());
+        queryFields.add(queryService.getOpportunitySubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -567,54 +512,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
     
         return oppsByRDId;
-    }
-
-    /**
-     * @description Returns query on Recurring Donation Schedule
-     * Return all schedules for the RD Schedule visualization.
-     * The Schedule Service will filter them out if not applicable within the time period.
-     * @return String RD Schedule subquery used in the Recurring Donation SOQL
-     */
-    public String getScheduleSubQuery() {
-        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
-
-        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
-    }
-
-    /**
-     * @description Returns query on Opportunity required to verify, create or update the Opportunity record
-     * @return String Opportunity subquery used in the Recurring Donation SOQL
-     */
-    public String getOpportunitySubQuery() {
-        //Return Recurring Donations'
-        //open Opps regardless of the Close Date
-        //and Opps with Close Date >= current date regardless if closed or open
-        //and all Opps with Close Date in this current year
-        Set<String> oppSubqueryFields = new Set<String>{
-            'Id', 'Name', 'AccountId', 'Primary_Contact__c',
-            'npe03__Recurring_Donation__c',
-            'Amount', 'CloseDate',
-            'StageName', 'IsClosed', 'IsWon',
-            'CampaignId', 'Recurring_Donation_Installment_Number__c'
-        };
-
-        if (isMultiCurrencyEnabled) {
-            oppSubqueryFields.add(CURRENCY_ISO_CODE_FIELD);
-        }
-
-        oppSubqueryFields.addAll(customFieldMapper.getOpportunityFieldNames());
-
-        String oppSubquery = new UTIL_Query()
-            .withSelectFields(oppSubqueryFields)
-            .withFrom('npe03__Donations__r')
-            .withWhere(
-                'IsClosed = false ' +
-                    'OR CloseDate >= :startDate '
-            )
-            .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
-            .build();
-
-        return '(' + oppSubquery + ')';
     }
 
     /**

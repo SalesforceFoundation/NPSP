@@ -192,9 +192,9 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         // The Opportunity Service does not expose details on the exact number of RDs & Opps modified
         // so have to use the simple getDmlRows() method to retrieve.
-        this.totalApexDmlRows += Limits.getDmlRows();
-        this.totalCommits += evalService.dbService.getDmlCount();
-        this.totalRecordsModified += evalService.dbService.getUpdatedCount() + evalService.dbService.getInsertedCount();
+        // this.totalApexDmlRows += Limits.getDmlRows();
+        // this.totalCommits += evalService.dbService.getDmlCount();
+        // this.totalRecordsModified += evalService.dbService.getUpdatedCount() + evalService.dbService.getInsertedCount();
     }
 
     /**
