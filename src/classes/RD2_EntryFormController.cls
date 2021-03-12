@@ -68,7 +68,6 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
-
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
@@ -305,6 +304,19 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
+        * Used to adjust and validate Recurring Donation data 
+        */
+        private RD2_DataRegulationService dataService {
+            get {
+                if (dataService == null) {
+                    dataService = new RD2_DataRegulationService();
+                }
+                return dataService;
+            }
+            set;
+        }
+
+        /**
         * @description Handles validation and Elevate recurring commitment creation
         * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
         * @param paymentMethodToken Payment Method Token
@@ -312,7 +324,11 @@ public with sharing class RD2_EntryFormController {
         */
         public UTIL_Http.Response handleCommitment(String jsonRecord, String paymentMethodToken) {
             UTIL_Http.Response response;
-            npe03__Recurring_Donation__c rd = constructRecurringDonation(jsonRecord);
+            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+
+            adjustAndValidateRD(rd);
 
             if (shouldSendToElevate(rd, paymentMethodToken)) {
                 PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, paymentMethodToken);
@@ -326,15 +342,13 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
-        * @description Constructs Recurring Donation record from received fields specified in the JSON string
-        * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
-        * @return npe03__Recurring_Donation__c Recurring Donation SObject
+        * @description Constructs Recurring Donation record from received fields specified in the JSON string,
+        * updates defaults that are otherwise updated in the trigger context, and
+        * validates user entered values for a new or existing RD record.
+        * @param rd Modified Recurring Donation record that is not created/updated in DB yet
+        * @return void
         */
-        private npe03__Recurring_Donation__c constructRecurringDonation(String jsonRecord) {
-            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
-                jsonRecord, npe03__Recurring_Donation__c.class
-            );
-
+        private void adjustAndValidateRD(npe03__Recurring_Donation__c rd) {
             // Populate defaults otherwise applied by the DML operation and available in the trigger context
             if (String.isBlank(rd.Status__c)) {
                 rd.Status__c = UTIL_Describe.getDefaultSelectOption(
@@ -342,12 +356,43 @@ public with sharing class RD2_EntryFormController {
                 );
             }
 
-            RD2_DataRegulationService dataService = new RD2_DataRegulationService();
-            dataService.adjust(new List<npe03__Recurring_Donation__c>{ rd }, null);
+            List<npe03__Recurring_Donation__c> newRds = new List<npe03__Recurring_Donation__c>{rd};
+            List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
+            if (rd.Id != null) {
+                oldRds.add(getOldRecurringDonation(rd.Id));
+            }
 
-            return rd;
+            new RD2_DataRegulationService()
+                .adjust(newRds, oldRds);
+            
+            List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
+                .validate();
+            
+            if (!errorRds.isEmpty()) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(
+                    errorRds[0].getFirstError()
+                );
+            }
         }
 
+        /**
+        * @description Retrives Recurring Donation from database
+        * @param recordId Recurring Donation Id
+        * @return npe03__Recurring_Donation__c
+        */
+        private npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
+            npe03__Recurring_Donation__c oldRd = null;
+
+            if (recordId != null) {
+                List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
+                if (oldRds != null && !oldRds.isEmpty()) {
+                    oldRd = oldRds[0];
+                }
+            }
+
+            return oldRd;
+
+        }
 
         /**
         * @description Checks if the commitment record should be sent to Elevate
