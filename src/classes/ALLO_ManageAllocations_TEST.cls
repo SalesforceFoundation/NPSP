@@ -71,16 +71,16 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
 
-        system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
-        system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
-        system.assertEquals(opp.Id,ctrl.listAllo[0].Opportunity__c,'The allocation should be attributed to current opportunity.');
+        system.assertEquals(1,ctrl.allocations.size(),'The list of allocations should have a single empty allocation.');
+        system.assertEquals(null,ctrl.allocations[0].id,'The allocation should have no Id.');
+        system.assertEquals(opp.Id,ctrl.allocations[0].Opportunity__c,'The allocation should be attributed to current opportunity.');
 
         ctrl.rowNumber = 0;
         ctrl.addRow();
-        system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+        system.assertEquals(2,ctrl.allocations.size(),'Adding a row increases the size of the allocation list.');
 
-        ctrl.listAllo[0].Percent__c = 50;
-        ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
+        ctrl.allocations[0].Percent__c = 50;
+        ctrl.allocations[0].General_Accounting_Unit__c = gau.id;
         ctrl.rowNumber = 1;
         ctrl.delRow();
         Test.startTest();
@@ -119,16 +119,16 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(payment.Id);
 
-        system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
-        system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
-        system.assertEquals(payment.Id,ctrl.listAllo[0].Payment__c,'The allocation should be attributed to current payment.');
+        system.assertEquals(1,ctrl.allocations.size(),'The list of allocations should have a single empty allocation.');
+        system.assertEquals(null,ctrl.allocations[0].id,'The allocation should have no Id.');
+        system.assertEquals(payment.Id,ctrl.allocations[0].Payment__c,'The allocation should be attributed to current payment.');
 
         ctrl.rowNumber = 0;
         ctrl.addRow();
-        system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+        system.assertEquals(2,ctrl.allocations.size(),'Adding a row increases the size of the allocation list.');
 
-        ctrl.listAllo[0].Percent__c = 25;
-        ctrl.listAllo[0].General_Accounting_Unit__c = gau.Id;
+        ctrl.allocations[0].Percent__c = 25;
+        ctrl.allocations[0].General_Accounting_Unit__c = gau.Id;
         ctrl.rowNumber = 1;
         ctrl.delRow();
         Test.startTest();
@@ -169,17 +169,17 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(cam.Id);
 
-        system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
+        system.assertEquals(2,ctrl.allocations.size(),'The list of allocations should have two current campaign allocations.');
 
         ctrl.addRow();
-        system.assertEquals(3,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+        system.assertEquals(3,ctrl.allocations.size(),'Adding a row increases the size of the allocation list.');
 
         //delete the first allocation on the list
         ctrl.rowNumber = 0;
         ctrl.delRow();
 
-        ctrl.listAllo[1].Amount__c = 5;
-        ctrl.listAllo[1].General_Accounting_Unit__c = campaigngau.id;
+        ctrl.allocations[1].Amount__c = 5;
+        ctrl.allocations[1].General_Accounting_Unit__c = campaigngau.id;
         Test.startTest();
         ctrl.saveClose();
         Test.stopTest();
@@ -224,17 +224,17 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(rd.Id);
 
-        system.assertEquals(2,ctrl.listAllo.size(),'The list of allocations should have two current campaign allocations.');
+        system.assertEquals(2,ctrl.allocations.size(),'The list of allocations should have two current campaign allocations.');
 
         ctrl.addRow();
-        system.assertEquals(3,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+        system.assertEquals(3,ctrl.allocations.size(),'Adding a row increases the size of the allocation list.');
 
         //delete the first allocation on the list
         ctrl.rowNumber = 0;
         ctrl.delRow();
 
-        ctrl.listAllo[1].Amount__c = 5;
-        ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+        ctrl.allocations[1].Amount__c = 5;
+        ctrl.allocations[1].General_Accounting_Unit__c = gau.id;
         Test.startTest();
         ctrl.saveClose();
         Test.stopTest();
@@ -269,22 +269,22 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(campaign.Id);
 
-        System.assertEquals(allocations.size(), ctrl.listAllo.size(), 'Allocations in the controller should match existing records: ' + ctrl.listAllo);
+        System.assertEquals(allocations.size(), ctrl.allocations.size(), 'Allocations in the controller should match existing records: ' + ctrl.allocations);
 
         //delete two Allocations
         ctrl.rowNumber = 0;
         ctrl.delRow();
         ctrl.delRow();
-        System.assertEquals(1, ctrl.listAllo.size(), 'Two Allocations should be deleted: ' + ctrl.listAllo);
+        System.assertEquals(1, ctrl.allocations.size(), 'Two Allocations should be deleted: ' + ctrl.allocations);
 
         //update an Allocation
-        ctrl.listAllo[0].Amount__c = 1000;
+        ctrl.allocations[0].Amount__c = 1000;
 
         //add a new Allocation
         ctrl.rowNumber = 1;
         ctrl.addRow();        
-        ctrl.listAllo[1].Percent__c = 200; //cause the Allocation insert to fail
-        ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+        ctrl.allocations[1].Percent__c = 200; //cause the Allocation insert to fail
+        ctrl.allocations[1].General_Accounting_Unit__c = gau.id;
 
         Test.startTest();
         PageReference retPage = ctrl.saveClose();
@@ -323,19 +323,19 @@ private class ALLO_ManageAllocations_TEST {
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(campaign.Id);
 
-        System.assertEquals(allocations.size(), ctrl.listAllo.size(), 'Allocations in the controller should match existing records: ' + ctrl.listAllo);
+        System.assertEquals(allocations.size(), ctrl.allocations.size(), 'Allocations in the controller should match existing records: ' + ctrl.allocations);
 
-        ctrl.listAllo[0].Amount__c = 1000;
+        ctrl.allocations[0].Amount__c = 1000;
 
         ctrl.rowNumber = 0;
         ctrl.addRow();   
-        ctrl.listAllo[1].Amount__c = 2000; 
-        ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;
+        ctrl.allocations[1].Amount__c = 2000; 
+        ctrl.allocations[1].General_Accounting_Unit__c = gau.id;
 
         ctrl.rowNumber = 1;
         ctrl.addRow();        
-        ctrl.listAllo[2].Percent__c = 200; //cause the Allocation insert to fail
-        ctrl.listAllo[2].General_Accounting_Unit__c = gau.id;
+        ctrl.allocations[2].Percent__c = 200; //cause the Allocation insert to fail
+        ctrl.allocations[2].General_Accounting_Unit__c = gau.id;
 
         PageReference retPage = ctrl.saveClose();        
         System.assertEquals(null, retPage, 'The return page on the error should be null');
@@ -347,7 +347,7 @@ private class ALLO_ManageAllocations_TEST {
             'isLoading should be set back to false when there is an error');
 
         //fix the error
-        ctrl.listAllo[2].Percent__c = 20; 
+        ctrl.allocations[2].Percent__c = 20; 
 
         Test.startTest();
         retPage = ctrl.saveClose();
@@ -374,7 +374,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(gau.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
@@ -400,7 +400,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
@@ -412,7 +412,7 @@ private class ALLO_ManageAllocations_TEST {
 
     /*******************************************************************************************************
     * @description Runs manage allocations page on an opportunity with no amount and verifies an
-    * error is thrown when the page action to getPageLoadValidationmessages is called.
+    * error is thrown when the page action to validatePageLoadConditions is called.
     ********************************************************************************************************/
     @isTest
     private static void testOppNoAmount() {
@@ -426,7 +426,7 @@ private class ALLO_ManageAllocations_TEST {
         insert gau;
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(opp.Id);
-        ctrl.getPageLoadValidationMessages();
+        ctrl.verifyPageLoadConditions();
 
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         Boolean errorFound = false;
