@@ -231,6 +231,7 @@ public class BDI_RecurringDonations {
             if (dataImport.Donation_Amount__c != null) {
                 rd.DisableFirstInstallment__c = true;
             }
+
         } else {
             // If the recurring donation imported field is populated, but there are no fields being mapped for the
             // RD then it is just being provided as an existing parent of a new Opportunity, and doesn't need to be
