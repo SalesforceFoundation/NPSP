@@ -337,6 +337,7 @@ public class BDI_Donations {
 
             // If the donation was created / matched / updated on a previous run, and there aren't any payment fields
             // that may need to populated then skip over this DI record.
+
             if (dataImport.DonationImported__c != null
                     && !anyPaymentFieldsPopulated
                     && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
