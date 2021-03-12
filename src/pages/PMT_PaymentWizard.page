@@ -264,13 +264,13 @@
 
                         <div class="slds-section slds-is-open" id="pmtsToCreateTitle">
                             <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardToBeCreated}">
+                                <span class="slds-truncate slds-p-horizontal_small" id="pmtTableLabel">
                                     {!$Label.pmtWizardToBeCreated}
                                 </span>
                             </h3>
                         </div>
                         <div class="slds-form">
-                            <table class="slds-table" id="pmtTable">
+                            <table class="slds-table" id="pmtTable" aria-labelledby="pmtTableLabel">
                                 <thead>
                                     <tr class="slds-text-heading_label">
                                         <th scope="col" class="slds-cell-wrap">
