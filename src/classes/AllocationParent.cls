@@ -141,6 +141,7 @@ public inherited sharing class AllocationParent {
         String queryString = soql
             .withFrom(objectType)
             .withSelectFields(fields)
+            .withMultiCurrencyField()
             .withWhere('Id = :id')
             .withLimit(1)
             .build();
