@@ -658,30 +658,6 @@ private with sharing class GE_GiftEntryController_TEST {
         return template;
     }
 
-    //Utility method for creating sample column headers.
-    public static Custom_Column_Header__c[] createSampleColumnHeaders () {
-
-        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
-        columnHeader.Name = 'sampleColumnHeader';
-        columnHeader.List_Name__c = 'Sample List';
-        columnHeader.Index__c = 0;
-        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
-
-        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
-        columnHeader2.Name = 'sampleColumnHeader2';
-        columnHeader2.List_Name__c = 'Sample List 2';
-        columnHeader2.Index__c = 0;
-        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
-
-        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
-        columnHeader3.Name = 'sampleColumnHeader3';
-        columnHeader3.List_Name__c = 'Sample List 2';
-        columnHeader3.Index__c = 1;
-        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
-
-        return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
-    }
-
     /***
      * @description Utility method that creates an NPSP Data Import Batch
      *
