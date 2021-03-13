@@ -107,17 +107,20 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
 
                 Addresses addresses = new Addresses(listNew);
-                Integer i = 0;
-                for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
-                    Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
 
+                for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
                     // AFTER INSERT
-                    if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+                    if (isAfterInsert(triggerAction)) {
                         // a new address that is marked default or seasonal needs to propagate to the household
-                        if (addr.Default_Address__c || isSeasonalAddr(addr)) {
+                        if (isDefault(addr) || isSeasonalAddr(addr)) {
                             mapAddressesByAcctId.put(addr.Household_Account__c, addr);
                         }
                     }
+                }
+
+                Integer i = 0;
+                for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
+                    Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
 
                     // AFTER UPDATE
                     if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -205,6 +208,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private Boolean isAfterInsert(Action triggerAction) {
+        return triggerAction == TDTM_Runnable.Action.AfterInsert;
     }
 
     private Boolean isRecursive() {
