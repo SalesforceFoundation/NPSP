@@ -75,6 +75,7 @@
         <members>AN_AutoNumber_TDTM</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
+        <members>Accounts</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -261,6 +262,9 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>ContactAndOrgSettings</members>
+        <members>Contacts</members>
+        <members>ContactsInLegacyHouseholds</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -317,22 +321,32 @@
         <members>HH_Container_LCTRL</members>
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
-        <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNamingSettingValidator</members>
         <members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_HouseholdNaming_BATCH</members>
-        <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
+        <members>HH_INamingImpl</members>
+        <members>HH_INamingImpl_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
-        <members>HH_NameSpec</members>
-        <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
+        <members>HouseholdName</members>
+        <members>HouseholdNamingExclusionsCheckboxes</members>
+        <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingService</members>
+        <members>HouseholdNamingService_TEST</members>
+        <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdSelector</members>
+        <members>HouseholdService</members>
+        <members>HouseholdSettings</members>
+        <members>Households</members>
+        <members>INamingExclusions</members>
+        <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -681,6 +695,9 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>fflib_Domain</members>
+        <members>fflib_Objects</members>
+        <members>fflib_SObjects</members>
         <name>ApexClass</name>
     </types>
     <types>

@@ -246,7 +246,7 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(new HH_HouseholdNaming().getHouseholdNamingContactFields());
+            setContactFields.addAll(new HouseholdNamingService().getHouseholdNamingContactFields());
 
             return setContactFields;
         } catch (Exception ex) {
@@ -518,26 +518,18 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            for (Contact con : listCon) {
-                HH_Households_TDTM.copyNamingExclusionsFromCheckboxes(con);
-            }
+            Contacts contacts = new Contacts(listCon);
+            contacts.synchronizeNamingExclusions();
 
-            HH_HouseholdNaming hhNaming = new HH_HouseholdNaming();
-
-            if (!hhNaming.isAutomaticNaming()) {
+            HouseholdSettings householdSettings = new HouseholdSettings();
+            if (!householdSettings.isAdvancedHouseholdNaming()) {
                 return hh;
             }
 
-            String strExclusions = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
-            if (strExclusions == null)
-                strExclusions = '';
-                
-            if (!strExclusions.contains('Name'))
-                hh.put('Name', hhNaming.getHHName(listCon));
-            if (!strExclusions.contains('Formal_Greeting__c'))
-                hh.put('npo02__Formal_Greeting__c', hhNaming.getFormalName(listCon));
-            if (!strExclusions.contains('Informal_Greeting__c'))
-                hh.put('npo02__Informal_Greeting__c', hhNaming.getInformalName(listCon));
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            householdNamingService.setNameFieldValuesOnHousehold(
+                    hh,
+                    new HouseholdName(contacts));
 
             return hh;
         } catch (Exception ex) {

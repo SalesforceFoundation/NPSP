@@ -35,14 +35,22 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
     private static npe01__Contacts_and_Orgs_Settings__c contactsSettings;
-    /*******************************************************************************************************************
-     * @description the set of fields used for household naming
-     */
-    private static final Set<String> HH_NAMING_FIELDS = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+
     /*******************************************************************************************************************
      * @description a set of languages that require different naming conventions
      */
@@ -241,7 +249,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         updatePrimaryContactOnAccount(primaryContactByAccountId);
-        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
+        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
     }
 
     /**
@@ -280,7 +288,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         updateOneToOneAccounts(oneToOneContactsToUpdate);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         updateHouseholds(householdIdsToUpdate);
-        HH_HouseholdNaming.renameHHAccounts(householdIdsToRename);
+        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(newOwnerContactById);
     }
 
@@ -346,7 +354,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         resetPrimaryContactForAccount(accountIds);
-        HH_HouseholdNaming.renameHHAccounts(accountIds);
+        householdNamingService.renameHouseholdAccounts(accountIds);
         rollupAccounts(accountIds);
     }
 
@@ -408,13 +416,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             selectFields.add('OtherStateCode');
         }
 
-        selectFields.addAll(HH_NAMING_FIELDS);
+        selectFields.addAll(fieldsUsedForHouseholdNaming());
 
         return new UTIL_Query()
             .withSelectFields(selectFields)
             .withFrom(String.valueOf(Contact.SObjectType))
             .withWhere('Id IN :contacts')
             .build();
+    }
+
+    private Set<String> fieldsUsedForHouseholdNaming() {
+       return householdNamingService.getHouseholdNamingContactFields();
     }
 
     /*******************************************************************************************************
@@ -507,7 +519,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = rtIdForNewAccount();
+        Id individualRecordTypeId = Accounts.rtIdForNewAccount();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
@@ -767,7 +779,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
 
         // check all household naming fields for changes
-        for(String fieldName : HH_NAMING_FIELDS) {
+        for(String fieldName : fieldsUsedForHouseholdNaming()) {
             String currentName;
             String oldName;
 
@@ -918,37 +930,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             UTIL_DMLService.updateRecords(opportunities);
         }
 
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @return Id. if none is explicitly specified, returns null.
-    */
-    public static Id rtIdForNewAccount() {
-        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @param isHHAccountModel whether we are using the Household Account Model
-    * @return Id. recordtype Id to use, or null if none is specified for the account model.
-    */
-    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
-        contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (individualRecordTypeId != null) {
-            Schema.RecordTypeInfo recordTypeInfo = null;
-            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
-            Map<Id,Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
-            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
-            return recordTypeInfo == null
-                ? null
-                : recordTypeInfo.getRecordTypeId();
-        }
-
-        return null;
     }
 
     /*******************************************************************************************************

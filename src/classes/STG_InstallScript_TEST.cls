@@ -282,7 +282,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
 
-        System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
+        System.assertEquals('HH_INamingImpl',householdNamingSettings.Implementing_Class__c);
         System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
 
         System.assertEquals(50,dataImportSettings.Batch_Size__c);

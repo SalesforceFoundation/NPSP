@@ -31,9 +31,9 @@
 * @author Salesforce.org
 * @date 2014
 * @group Households
-* @description HH_NameSpec class that implements template based naming for Households.
+* @description NPSPs default implementation of the HH_INaming interface used to generate household names.
 */
-public with sharing class HH_NameSpec implements HH_INaming {
+public with sharing class HH_INamingImpl implements HH_INaming {
 
     /*******************************************************************************************************
     * @description Get the Household name for the list of Contacts from a single Household.

@@ -125,7 +125,7 @@ public with sharing class HH_Households_TEST {
         		Name_Connector__c = label.npo02.HouseholdNameConnector,
        			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
         		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_NameSpec'
+        		Implementing_Class__c = 'HH_INamingImpl'
             )
         );
 
@@ -618,7 +618,7 @@ public with sharing class HH_Households_TEST {
         System.assertEquals(1, [SELECT Count() FROM OpportunityContactRole WHERE IsPrimary = True AND ContactId = :c1.Id]);
 
         Test.startTest();
-        HH_Households_TDTM.contactMergeUpdate(new Set<Id>{c1.Id});
+        Contacts.rollupContactsAndHouseholdsAfterMerge(new Set<Id>{c1.Id});
         Test.stopTest();
 
         c1 = [SELECT npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c FROM Contact WHERE Id = :c1.Id];
@@ -766,14 +766,6 @@ public with sharing class HH_Households_TEST {
 
     // Helpers
     ////////////
-
-    /*********************************************************************************************************
-    * @description Turns on Automatic Household Naming
-    * @return void
-    **********************************************************************************************************/
-    private static void turnOnAutomaticHHNamingForAllHouseholdProcessor() {
-        setupAutomaticHHNamingForAllHouseholdProcessor(true);
-    }
 
     /*********************************************************************************************************
     * @description Turns off Automatic Household Naming
