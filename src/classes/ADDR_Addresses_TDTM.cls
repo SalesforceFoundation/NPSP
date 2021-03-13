@@ -123,12 +123,11 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
 
                     // AFTER UPDATE
-                    if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                    if (isAfterUpdate(triggerAction)) {
                         // an address that is marked default needs to propagate to the household
                         if ((isNewDefault(addr, addrOld))
                                 // any seasonal address also need to be considered
-                                || isSeasonalChanged(addr, addrOld)
-                                ) {
+                                || isSeasonalChanged(addr, addrOld)) {
                             mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                         } else if (isAddressChanged(addr, addrOld, true)) {
                             if (isDefault(addr)) {
@@ -208,6 +207,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private Boolean isAfterUpdate(Action triggerAction) {
+        return triggerAction == TDTM_Runnable.Action.AfterUpdate;
     }
 
     private Boolean isAfterInsert(Action triggerAction) {
