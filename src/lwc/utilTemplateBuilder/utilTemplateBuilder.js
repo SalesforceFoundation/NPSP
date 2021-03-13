@@ -86,6 +86,8 @@ const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
+const BATCH_CURRENCY_ISO_CODE = 'CurrencyIsoCode';
+
 // relevant Donation_Donor custom validation fields
 const DONATION_DONOR_FIELDS = {
     account1ImportedField:  DI_ACCOUNT1_IMPORTED_INFO.fieldApiName,
@@ -149,7 +151,8 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_LAST_MODIFIED_DATE.fieldApiName,
     DI_BATCH_LAST_REFERENCED_DATE.fieldApiName,
     DI_BATCH_LAST_VIEWED_DATE.fieldApiName,
-    DI_BATCH_SYSTEM_MODSTAMP.fieldApiName
+    DI_BATCH_SYSTEM_MODSTAMP.fieldApiName,
+    BATCH_CURRENCY_ISO_CODE
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
@@ -578,5 +581,6 @@ export {
     setRecordValuesOnTemplate,
     trueFalsePicklistOptions,
     getPageAccess,
-    addKeyToCollectionItems
+    addKeyToCollectionItems,
+    BATCH_CURRENCY_ISO_CODE
 }
