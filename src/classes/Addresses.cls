@@ -68,12 +68,19 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public Map<Id, Address__c> getMapAddressesByAcctId() {
         Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
         for (Address__c address : (List<Address__c>) getRecords()) {
-            Id accId = address.Household_Account__c;
-            if (accId != null) {
-                mapAddressesByAcctId.put(accId, null);
+            if (hasHouseholdAccount(address)) {
+                mapAddressesByAcctId.put(householdAccountIdFor(address), null);
             }
         }
         return mapAddressesByAcctId;
+    }
+
+    private Boolean hasHouseholdAccount(Address__c address) {
+        return householdAccountIdFor(address) != null;
+    }
+
+    private Id householdAccountIdFor(Address__c address) {
+        return address.Household_Account__c;
     }
 
     public void onBeforeInsert() {
