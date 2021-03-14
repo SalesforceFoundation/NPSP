@@ -151,16 +151,16 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            return false;
         
         boolean isChanged = 
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
+           !Addresses.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
+           !Addresses.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
+           !Addresses.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
+           !Addresses.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
+           !Addresses.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
 
         if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             isChanged = 
-	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) || 
-	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));
+	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) ||
+	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));
         }    
         return isChanged;   
 

@@ -129,7 +129,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                                 // any seasonal address also need to be considered
                                 || isSeasonalChanged(addr, addrOld)) {
                             mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
-                        } else if (isAddressChanged(addr, addrOld, true)) {
+                        } else if (isAddressChanged(addr, addrOld)) {
                             if (isDefault(addr)) {
                                 mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                             } else {   // address changed, but not default, still need to update any contacts using it as an override
@@ -207,6 +207,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private Boolean isAddressChanged(Address__c addr, Address__c addrOld) {
+        return Addresses.isAddressChanged(addr, addrOld, true);
     }
 
     private Boolean isAfterUpdate(Action triggerAction) {
@@ -352,7 +356,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            if (shouldUpdateAddress(accountsById.get(accId), addr)) {
+            if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
                 copyAddressAddrSObj(addr, acc, 'Billing', null);
                 listAccUpdate.add(acc);
             }
@@ -380,7 +384,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         con.is_Address_Override__c = false;
                     }
                     if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-                        if (shouldUpdateAddress(con, addr)) {
+                        if (Addresses.shouldUpdateAddress(con, addr)) {
                             con.Current_Address__c = addr.Id;
                             copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
                             listConUpdate.add(con);
@@ -549,71 +553,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
                         addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
                         addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two address objects address fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean. true if any of the fields fields have changed on the Address
-    */
-    public static Boolean isAddressChanged(Address__c addrNew, Address__c addrOld, Boolean includeAddressType) {
-        if (addrNew == null || addrOld == null) {
-            return false;
-        }
-        return (!equalsCaseSensitive(addrNew.MailingStreet__c, addrOld.MailingStreet__c) ||
-                !equalsCaseSensitive(addrNew.MailingStreet2__c, addrOld.MailingStreet2__c) ||
-                !equalsCaseSensitive(addrNew.MailingCity__c, addrOld.MailingCity__c) ||
-                !equalsCaseSensitive(addrNew.MailingState__c, addrOld.MailingState__c) ||
-                !equalsCaseSensitive(addrNew.MailingPostalCode__c, addrOld.MailingPostalCode__c) ||
-                !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
-                (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare a Contact or Account address to the Address record
-    * @param sObj Account or Contact
-    * @param addr Address
-    * @return boolean. true if any of the Address fields on the Contact are different from this Address record
-    */
-    public static Boolean shouldUpdateAddress(SObject sObj, Address__c addr) {
-        if (sObj == null || addr == null) {
-            return false;
-        }
-        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
-        String prefix = (isContact ? 'Mailing' : 'Billing');
-
-        Boolean isDifferent = (
-            !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
-            !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
-            !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
-            !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
-            !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
-            (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
-            (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
-            (isContact &&
-                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
-                !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
-            )
-        );
-        return isDifferent;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns whether two strings are equal, using a case sensitve comparison
-    * @param str1 The first string
-    * @param str2 The second string
-    * @return boolean 
-    ********************************************************************************************************/
-    public static Boolean equalsCaseSensitive(String str1, String str2) {
-        if (str1 == null) {
-            return str2 == null;
-        }
-        if (str2 == null) {
-            return false;
-        }
-        return str1.equals(str2);
     }
 
     /*******************************************************************************************************
@@ -825,7 +764,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     Address__c addrCurrent = new Address__c();
                     ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
                     // now see if the address has changed, and if not, we don't need to process it anymore
-                    if (!isAddressChanged(addr, addrCurrent, false)) {
+                    if (!Addresses.isAddressChanged(addr, addrCurrent, false)) {
                         mapAccIdAddr.remove(acc.Id);
                     }
 
@@ -861,7 +800,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (isAddressChanged(addrNew, addrDup, includeAddressType)) {
+                if (Addresses.isAddressChanged(addrNew, addrDup, includeAddressType)) {
                     copyAddressObj(addrNew, addrDup);
                     if (addrNew.Default_Address__c)
                         addrDup.Default_Address__c = true;
@@ -901,7 +840,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
                     // only include address type in the test if the new one isn't empty.
-                    if (!isAddressChanged(addr, addrHH, addr.Address_Type__c != null)) {
+                    if (!Addresses.isAddressChanged(addr, addrHH, addr.Address_Type__c != null)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
@@ -1226,7 +1165,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to 
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
     * @return void
     */
     public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {

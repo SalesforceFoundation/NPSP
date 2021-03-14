@@ -151,4 +151,70 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return oldMap.get(addr.Id);
     }
 
+    /*******************************************************************************************************
+    * @description utility to compare a Contact or Account address to the Address record
+    * @param sObj Account or Contact
+    * @param addr Address
+    * @return boolean. true if any of the Address fields on the Contact are different from this Address record
+    */
+    public static Boolean shouldUpdateAddress(SObject sObj, Address__c addr) {
+        if (sObj == null || addr == null) {
+            return false;
+        }
+        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
+        String prefix = (isContact ? 'Mailing' : 'Billing');
+
+        Boolean isDifferent = (
+                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'),
+                        ADDR_Addresses_TDTM.getMultilineStreet(addr)) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
+                        (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
+                        (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
+                        (isContact &&
+                                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
+                                        !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
+                        )
+        );
+        return isDifferent;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether two strings are equal, using a case sensitve comparison
+    * @param str1 The first string
+    * @param str2 The second string
+    * @return boolean
+    ********************************************************************************************************/
+    public static Boolean equalsCaseSensitive(String str1, String str2) {
+        if (str1 == null) {
+            return str2 == null;
+        }
+        if (str2 == null) {
+            return false;
+        }
+        return str1.equals(str2);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to compare two address objects address fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @param includeAddressType whether to include comparing the AddressType field
+    * @return boolean. true if any of the fields fields have changed on the Address
+    */
+    public static Boolean isAddressChanged(Address__c addrNew, Address__c addrOld, Boolean includeAddressType) {
+        if (addrNew == null || addrOld == null) {
+            return false;
+        }
+        return (!equalsCaseSensitive(addrNew.MailingStreet__c, addrOld.MailingStreet__c) ||
+                !equalsCaseSensitive(addrNew.MailingStreet2__c, addrOld.MailingStreet2__c) ||
+                !equalsCaseSensitive(addrNew.MailingCity__c, addrOld.MailingCity__c) ||
+                !equalsCaseSensitive(addrNew.MailingState__c, addrOld.MailingState__c) ||
+                !equalsCaseSensitive(addrNew.MailingPostalCode__c, addrOld.MailingPostalCode__c) ||
+                !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
+                (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
+    }
+
 }

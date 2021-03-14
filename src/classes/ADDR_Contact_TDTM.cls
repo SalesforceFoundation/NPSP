@@ -299,7 +299,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            if (ADDR_Addresses_TDTM.shouldUpdateAddress(con, addr)) {
+            if (Addresses.shouldUpdateAddress(con, addr)) {
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 
                 // deal with any address coming from a different account,
@@ -337,17 +337,17 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // both provided, so look for at least one change between address fields
         boolean isChanged = 
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
+           !Addresses.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
+           !Addresses.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
+           !Addresses.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
+           !Addresses.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
+           !Addresses.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
+           !Addresses.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
            
         if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             isChanged = 
-                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) || 
-                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
+                !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) ||
+                !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
         }    
         return isChanged;   
     }
@@ -444,7 +444,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // a second time by the AfterInsert trigger.
                 } else {
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
-	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, true)) {
+	                if (Addresses.isAddressChanged(addrNew, addrDup, true)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
 	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
                             addrDup.Default_Address__c = true;
