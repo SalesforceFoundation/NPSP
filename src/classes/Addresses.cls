@@ -598,4 +598,158 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
 
+    /*******************************************************************************************************
+    * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
+    * Adds an Error to each Address object that has an illegal account.
+    * @param listAddr a list of Addresses to verify
+    * @return void.
+    */
+    public void verifyAddrHHAccOnly() {
+        set<Id> setAccId = new set<Id>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (addr.Household_Account__c != null) {
+                setAccId.add(addr.Household_Account__c);
+            }
+        }
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([
+                select Id, npe01__SYSTEM_AccountType__c, npe01__SYSTEMIsIndividual__c
+                from Account
+                where Id in :setAccId
+        ]);
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (addr.Household_Account__c == null) {
+                // with TDTM, have to use addError, not throw an exception, or the error will just get logged but not passed to Salesforce to stop its DML.
+                addr.addError(Label.addrHHAccountOnly);
+            } else {
+                Account acc = mapAccIdAcc.get(addr.Household_Account__c);
+                if ((acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) &&
+                        (acc.npe01__SYSTEMIsIndividual__c || !UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
+                    // with TDTM, have to use addError, not throw an exception, or the error will just get logged but not passed to Salesforce to stop its DML.
+                    addr.addError(Label.addrHHAccountOnly);
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description verify that any seasonal addresses don't overlap
+    * Adds an Error to each Address object that has an illegal seasonal fields
+    * @param listAddr a list of Addresses to verify
+    * @return void.
+    */
+    public void verifyAddrSeasonalNoOverlap() {
+
+        // first get just the seasonal addresses
+        list<Address__c> listAddrS = new list<Address__c>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (Addresses.isSeasonalAddr(addr)) {
+                listAddrS.add(addr);
+            } else if (isPartialSeasonalAddr(addr)) {
+                addr.addError(Label.addrSeasonalPartial);
+            }
+        }
+
+        // if none are seasonal, we can bail out
+        if (listAddrS.size() == 0)
+            return;
+
+        // protect against overlaps within the set being inserted or updated
+        for (Address__c addr : listAddrS) {
+            for (Address__c addr2 : listAddrS) {
+                if (addr == addr2)
+                    continue;
+                if (addr.Household_Account__c != addr2.Household_Account__c)
+                    continue;
+                if (isSeasonalOverlap(addr, addr2)) {
+                    addr.addError(Label.addrSeasonalOverlap);
+                }
+            }
+        }
+
+        // now check for overlaps within each household's saved addresses
+        list<Id> listAccId = new list<Id>();
+        for (Address__c addr : listAddrS) {
+            listAccId.add(addr.Household_Account__c);
+        }
+        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
+                (listAccId);
+
+        for (Address__c addr : listAddrS) {
+            for (Address__c addr2 : mapAccIdListAddrHH.get(addr.Household_Account__c)) {
+                if (addr.id == addr2.id)
+                    continue;
+                if (isSeasonalOverlap(addr, addr2)) {
+                    addr.addError(Label.addrSeasonalOverlap);
+                    break;
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    private static boolean isPartialSeasonalAddr(Address__c addr) {
+        integer cParts = 0;
+        if (addr.Seasonal_Start_Month__c != null) cParts++;
+        if (addr.Seasonal_Start_Day__c != null) cParts++;
+        if (addr.Seasonal_End_Month__c != null) cParts++;
+        if (addr.Seasonal_End_Day__c != null) cParts++;
+        return (cParts > 0 && cParts < 4);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if two seasonal addresses overlap
+    * @param addr1 an Address
+    * @param addr2 an Address
+    * @return boolean. true if the seasonal fields of the two addresses overlap
+    */
+    public static boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
+        if (addr1 == null || addr2 == null)
+            return false;
+        if (!Addresses.isSeasonalAddr(addr1) || !Addresses.isSeasonalAddr(addr2))
+            return false;
+
+        // we don't need to know what year or month we are currently in, but
+        // we need to take into account days (since we could be in the same month).
+        // to make this easy to compare, we convert month & day to be a decimal of month.day.
+        // eg., 3.01 for Feb 1st and 3.28 for Feb 28th.
+        decimal start1 = decimalOfMonthDay(addr1.Seasonal_Start_Month__c, addr1.Seasonal_Start_Day__c);
+        decimal end1 = decimalOfMonthDay(addr1.Seasonal_End_Month__c, addr1.Seasonal_End_Day__c);
+        decimal start2 = decimalOfMonthDay(addr2.Seasonal_Start_Month__c, addr2.Seasonal_Start_Day__c);
+        decimal end2 = decimalOfMonthDay(addr2.Seasonal_End_Month__c, addr2.Seasonal_End_Day__c);
+
+        // now we see if the ranges are increasing (Jan '14 - March '14), or decreasing (Nov 14' - Feb '15),
+        boolean range1Increases = start1 < end1;
+        boolean range2Increases = start2 < end2;
+
+        // we can now tell if there is overlap simply by looking at three scenarios:
+        // 1. both ranges increase, make sure start1 not in range2, and start2 not in range1.
+        if (range1Increases && range2Increases) {
+            return (start1 >= start2 && start1 <= end2) || (start2 >= start1 && start2 <= end1);
+        }
+        // 2. one range increases, one range decreases, make sure end1 not in range2, and end2 not in range1.
+        else if (range1Increases != range2Increases) {
+            return (end1 >= start2 && end1 <= end2) || (end2 >= start1 && end2 <= end1);
+        }
+        // 3. both ranges decrease, always implies an overlap of the new year!
+        else {
+            return true;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description utility to create the month and day strings to a decimal we can use in comparisons.
+    * @param m the month ordinal as a string
+    * @param d the day ordinal as a string
+    * @return decimal
+    */
+    private static decimal decimalOfMonthDay(string m, string d) {
+        if (integer.valueOf(d) < 10)
+            return decimal.valueOf(m + '.0' + d); else
+                return decimal.valueOf(m + '.' + d);
+    }
+
 }

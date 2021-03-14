@@ -264,14 +264,14 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '1';
         a2.Seasonal_End_Month__c = '6';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a2, a1));
         
         // test both increasing ranges, with overlap
         a2.Seasonal_Start_Month__c = '2';
         a2.Seasonal_End_Month__c = '6';
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a2, a1));
         
         // test one increasing range, one decreasing range, no overlap
         a1.Seasonal_Start_Month__c = '3';
@@ -282,16 +282,16 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '1';
         a2.Seasonal_End_Month__c = '2';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a2, a1));
 
         // test one increasing range, one decreasing range, with overlap
         a2.Seasonal_Start_Month__c = '11';
         a2.Seasonal_Start_Day__c = '1';
         a2.Seasonal_End_Month__c = '4';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a2, a1));
 
         // test both decreasing ranges, always overlap
         a1.Seasonal_Start_Month__c = '9';
@@ -302,8 +302,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '1';
         a2.Seasonal_End_Month__c = '3';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a2, a1));
         
         // test both increasing ranges in the same month, no overlap
         a1.Seasonal_Start_Month__c = '2';
@@ -314,8 +314,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '11';
         a2.Seasonal_End_Month__c = '2';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a2, a1));
 
         // test both increasing ranges in the same month, with overlap
         a1.Seasonal_Start_Month__c = '2';
@@ -326,8 +326,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '10';
         a2.Seasonal_End_Month__c = '2';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a2, a1));
 
         // test one increasing range, one decreasing range in the same month, no overlap
         a1.Seasonal_Start_Month__c = '2';
@@ -338,8 +338,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '11';
         a2.Seasonal_End_Month__c = '1';
         a2.Seasonal_End_Day__c = '28';
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, Addresses.isSeasonalOverlap(a2, a1));
 
         // test one increasing range, one decreasing range in the same month, with overlap
         a1.Seasonal_Start_Month__c = '2';
@@ -350,8 +350,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         a2.Seasonal_Start_Day__c = '11';
         a2.Seasonal_End_Month__c = '2';
         a2.Seasonal_End_Day__c = '1';
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
-        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, Addresses.isSeasonalOverlap(a2, a1));
     }
 
     /*********************************************************************************************************
