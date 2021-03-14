@@ -101,7 +101,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
             when else {
                 // BEFORE UPDATE
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (isBeforeUpdate(triggerAction)) {
                     Addresses addresses2 = new Addresses(listNew, listOld);
                     addresses2.onBeforeUpdate();
                 }
@@ -113,7 +113,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     if (isAfterInsert(triggerAction)) {
                         // a new address that is marked default or seasonal needs to propagate to the household
                         if (isDefault(addr) || isSeasonalAddr(addr)) {
-                            mapAddressesByAcctId.put(addr.Household_Account__c, addr);
+                            mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                         }
                     }
                 }
@@ -143,7 +143,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
 
                 // BEFORE INSERT & BEFORE UPDATE
-                if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (isBeforeInsert(triggerAction) || isBeforeUpdate(triggerAction)) {
                     // enforce only HH Accounts are being used
                     verifyAddrHHAccOnly((list<Address__c>)listNew);
 
@@ -207,6 +207,14 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private Boolean isBeforeInsert(Action triggerAction) {
+        return triggerAction == TDTM_Runnable.Action.BeforeInsert;
+    }
+
+    private Boolean isBeforeUpdate(Action triggerAction) {
+        return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
     }
 
     private Boolean isAddressChanged(Address__c addr, Address__c addrOld) {
