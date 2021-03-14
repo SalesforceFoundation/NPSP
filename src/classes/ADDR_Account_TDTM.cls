@@ -133,9 +133,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingState != null ||
            acc1.BillingPostalCode != null ||
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-           (acc1.BillingCountry != null && !ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) ||
+           (acc1.BillingCountry != null && !Addresses.isStateCountryPicklistsEnabled) ||
            // only test StateCode if picklists enabled.
-           (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
+           (Addresses.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
 
         return isSpecified;   
     }
@@ -157,7 +157,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            !Addresses.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
            !Addresses.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
 
-        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+        if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
             isChanged = 
 	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) ||
 	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));

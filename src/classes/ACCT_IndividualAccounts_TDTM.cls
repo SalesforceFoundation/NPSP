@@ -409,7 +409,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             'Phone', 'Fax'
         };
 
-        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+        if (Addresses.isStateCountryPicklistsEnabled) {
             selectFields.add('MailingCountryCode');
             selectFields.add('MailingStateCode');
             selectFields.add('OtherCountryCode');

@@ -1777,21 +1777,21 @@ global with sharing class BDI_DataImportService {
                 addr.Address_Type__c = 'Home';
 
                 if (con1 != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con1, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    Addresses.copyAddressAddrSObj(addr, con1, 'Mailing', 'npe01__Primary_Address_Type__c');
                     if (setIdUpdate.add(con1.Id)) {
                         listCon1Update.add(con1);
                         listCon1Di.add(dataImport);
                     }
                 }
                 if (con2 != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con2, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    Addresses.copyAddressAddrSObj(addr, con2, 'Mailing', 'npe01__Primary_Address_Type__c');
                     if (setIdUpdate.add(con2.Id)) {
                         listCon2Update.add(con2);
                         listCon2Di.add(dataImport);
                     }
                 }
                 if (accHH != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, accHH, 'Billing', null);
+                    Addresses.copyAddressAddrSObj(addr, accHH, 'Billing', null);
                     if (setIdUpdate.add(accHH.Id)) {
                         listAccUpdate.add(accHH);
                         listAccDi.add(dataImport);

@@ -492,7 +492,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
                         'MailingState, MailingPostalCode, MailingCountry, ';
-                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+                if (Addresses.isStateCountryPicklistsEnabled) {
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
                 }
                 strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
@@ -609,7 +609,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(
+                Addresses.copyAddressAddrSObj(
                         tempAddr, acc, 'Billing', null);
                 UTIL_DMLService.updateRecord(acc);
             }
@@ -621,7 +621,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(
+                Addresses.copyAddressAddrSObj(
                         tempAddr, acc, 'Billing', null);
                 UTIL_DMLService.insertRecord(acc);
                 afflAccId = acc.Id;

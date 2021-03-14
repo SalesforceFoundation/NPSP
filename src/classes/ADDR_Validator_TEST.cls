@@ -79,7 +79,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+        if (Addresses.isStateCountryPicklistsEnabled) {
             System.assertEquals('California', contact.MailingState);
         } else {
             System.assertEquals('CA', contact.MailingState);

@@ -300,7 +300,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (Addresses.shouldUpdateAddress(con, addr)) {
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                Addresses.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
@@ -344,7 +344,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
            !Addresses.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
            !Addresses.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
            
-        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+        if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
             isChanged = 
                 !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) ||
                 !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
@@ -364,9 +364,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             con1.MailingState == null &&
             con1.MailingPostalCode == null &&
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-            (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
+            (con1.MailingCountry == null || Addresses.isStateCountryPicklistsEnabled) &&
             // only test StateCode if picklists enabled.
-            (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
+            (!Addresses.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
         return isEmpty;
            
     }
@@ -528,18 +528,18 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             mapAccIdAddr.put(con.AccountId, null);
             
         // get the default and seasonal address for each HH
-        map<Id, ADDR_Addresses_TDTM.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
         
         // reset the Contact's address fields with the appropriate address
         for (Contact con : listCon) {
-        	ADDR_Addresses_TDTM.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
+        	Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
         	if (hhinfo != null) {
         		Address__c addr = hhinfo.addrSeasonal;
         		if (addr == null)
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
                 	con.Current_Address__c = addr.Id;
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    Addresses.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
                 }
         	}
         }         

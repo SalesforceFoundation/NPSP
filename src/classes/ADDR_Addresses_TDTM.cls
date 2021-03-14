@@ -38,21 +38,6 @@
 public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description map from Country name (UPPER CASE) to Country Code
-    */
-    private static Map<String, String> validCountriesByLabel = new Map<String, String>();
-
-    /*******************************************************************************************************
-    * @description map from State name (UPPER CASE) to State Code
-    */
-    private static Map<String, String> validStatesByLabel = new Map<String, String>();
-
-    /*******************************************************************************************************
-    * @description map from Country Code to Country Name
-    */
-    private static Map<String, String> validCountriesByCode = new Map<String, String>();
-
-    /*******************************************************************************************************
     * @description Trigger Handler on Address that handles address management.  Updates the appropriate
     * Accounts and Contacts when an Address is changed.
     * @param listNew the list of Addresses from trigger new. 
@@ -214,11 +199,15 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // AFTER INSERT
             if (isAfterInsert(triggerAction)) {
                 // a new address that is marked default or seasonal needs to propagate to the household
-                if (isDefault(addr) || isSeasonalAddr(addr)) {
+                if (isDefault(addr) || isSeasonal(addr)) {
                     mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
                 }
             }
         }
+    }
+
+    private Boolean isSeasonal(Address__c addr) {
+        return Addresses.isSeasonalAddr(addr);
     }
 
     private Boolean isBeforeInsert(Action triggerAction) {
@@ -270,210 +259,11 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * and not do any changes to dmlWrapper. 
     * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account  
     ********************************************************************************************************/
-    public static Map<Id, HHInfo> refreshCurrentHHAddress(Map<Id, Address__c> mapAccIdAddr, DmlWrapper dmlWrapper, Boolean isCalcHHInfoOnly) {
+    public static Map<Id, Addresses.HHInfo> refreshCurrentHHAddress(Map<Id, Address__c>
+            mapAccIdAddr, DmlWrapper dmlWrapper, Boolean isCalcHHInfoOnly) {
 
-        // assumptions:
-        // called after all modifications saved to db
-        // so either from a scheduled job,
-        // or in the Address AfterUpdate trigger, AFTER any related objects updated
-        //
-        // strategy:
-        // for each hh, get all its addresses (query)
-        // for each hh, find all its contacts (query)
-        // for each hh, find its current seasonal or default address (loop calculation)
-        // for each hh, update its billing fields with seasonal current/default
-        // for each hh addr, clear its Default field if it isn't default
-        // for each hh contact, if no override, update mailing fields with seasonal current/default
-        //
-
-        // get all Addresses by HH, that might need updating
-        list<Id> listAccId = new list<Id>(mapAccIdAddr.keySet());
-        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
-
-        // for each hh, find the current address to use (seasonal vs default)
-        map<Id, HHInfo> mapAccIdHHInfo = new map<Id, HHInfo>();
-        for (Id accId : listAccId) {
-            // create a HHInfo for each household        
-            HHInfo hhinfo = new HHInfo();
-            hhinfo.accId = accId;
-            mapAccIdHHInfo.put(accId, hhinfo);
-
-            // if there is a provided Default address, use it over all other defaults.
-            Address__c addr = mapAccIdAddr.get(accId);
-            if (addr != null && addr.Default_Address__c) {
-                hhinfo.addrDefault = addr;
-            }
-
-            // go through the hh addresses storing the default and any seasonal  
-            if (mapAccIdListAddrHH.get(accId) != null) {
-                for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
-
-                    if (hhinfo.addrDefault == null && addrHH.Default_Address__c) {
-                        hhinfo.addrDefault = addrHH;
-                    }
-                    if (isSeasonalAddr(addrHH)) {
-                        Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
-                        Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
-                        Date dtToday = system.today();
-                        if (dtToday >= dtStart && dtToday < dtEnd) {
-                            hhinfo.addrSeasonal = addrHH;
-                        }
-                    }
-                }
-            }
-
-            // finally, if no default found, create an empty default
-            if (hhinfo.addrDefault == null) {
-                Address__c addrEmpty = new Address__c();
-                addrEmpty.Household_Account__c = accId;
-                hhinfo.addrDefault = addrEmpty;
-            }
-        }
-
-        // some callers just need the HHInfo for each HH Account.
-        if (isCalcHHInfoOnly) {
-            return mapAccIdHHInfo;
-        }
-
-        // get all Contacts by HH, that might need updating
-        // note that if we have an organizational account, our query will not pick up any contacts (by design!)
-        Map<Id, List<Contact>> mapAccIdListCon = new Map<Id, List<Contact>>();
-        Map<Id, Account> accountsById = getAccountsByIds(mapAccIdAddr.keySet());
-        Set<Id> setHHId =  mapAccIdAddr.keySet();
-
-        for (Contact con : [SELECT Id, is_Address_Override__c, Current_Address__c, AccountId,
-                                MailingStreet, MailingCity, MailingState,
-                                MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude,
-                                npe01__Primary_Address_Type__c
-                            FROM Contact
-                            WHERE Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
-                                AND AccountId != Null
-                                AND AccountId IN :setHHId]
-        ) {
-            List<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
-            if (listConHH == null) {
-                listConHH = new List<Contact>();
-                mapAccIdListCon.put(con.AccountId, listConHH);
-            }
-            listConHH.add(con);
-        }
-
-        // lists of objects to update
-        List<Account> listAccUpdate = new List<Account>();
-        List<Address__c> listAddrUpdate = new List<Address__c>();
-        List<Contact> listConUpdate = new List<Contact>();
-
-        // now go through each HH, and do all the work!
-        for (Id accId : listAccId) {
-
-            // pick the address to use
-            HHInfo hhinfo = mapAccIdHHInfo.get(accId);
-            Address__c addrDefault = hhinfo.addrDefault;
-            Address__c addr = hhinfo.addrSeasonal;
-            if (addr == null) {
-                addr = addrDefault;
-            }
-
-            // update HH Account's Billing address fields
-            Account acc = new Account(Id = accId);
-            if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
-                copyAddressAddrSObj(addr, acc, 'Billing', null);
-                listAccUpdate.add(acc);
-            }
-
-            // check other addresses on this household that are no longer the default
-            if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
-                for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
-                    if (addrHH.Id == addrDefault.Id) {
-                        continue;
-                    }
-                    if (addrHH.Default_Address__c) {
-                        addrHH.Default_Address__c = false;
-                        addrHH.Latest_End_Date__c = System.today();
-                        listAddrUpdate.add(addrHH);
-                    }
-                }
-            }
-
-            // check the Contacts on this household
-            if (mapAccIdListCon != null && mapAccIdListCon.containsKey(accId)) {
-                for (Contact con : mapAccIdListCon.get(accId)) {
-                    // detect that the contact's current address was deleted.
-                    // and if so clear any override flag so it will get the default address.
-                    if (con.Current_Address__c == null) {
-                        con.is_Address_Override__c = false;
-                    }
-                    if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-                        if (Addresses.shouldUpdateAddress(con, addr)) {
-                            con.Current_Address__c = addr.Id;
-                            copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
-                            listConUpdate.add(con);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (listAccUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
-        }
-        if (listAddrUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
-        }
-        if (listConUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
-        }
-
-        return mapAccIdHHInfo;
-    }
-
-    /*******************************************************************************************************
-    * @description helper class to keep track of the default and seasonal address for a household
-    */
-    public class HHInfo {
-        public Id accId;
-        public Address__c addrDefault;
-        public Address__c addrSeasonal;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the current StartDate or EndDate of a Seasonal Address
-    * @param addr the Address to look at
-    * @param fStart whether to return the StartDate or EndDate
-    * @return Date
-    */
-    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {
-        integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
-        integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
-        integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
-        integer endDay = integer.valueOf(addr.Seasonal_End_Day__c);
-        Date dtStart;
-        Date dtEnd;
-        Date dtToday = system.today();
-        //seasonal address is contained within a single year
-        if (startMonth <= endMonth) {
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-            //seasonal address overlaps the year, and this month is past the start month
-        } else if (startMonth <= dtToday.month()){
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
-            //seasonal address overlaps the year, and this month is before the start month
-        } else {
-            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-        }
-        return (fStart ? dtStart : dtEnd);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to see if the address has seasonal fields set
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    private static boolean isSeasonalAddr(Address__c addr) {
-        return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
-                addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+        return (Map<Id, Addresses.HHInfo>) Addresses.refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper,
+                isCalcHHInfoOnly);
     }
 
     /*******************************************************************************************************
@@ -500,47 +290,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+            Addresses.copyAddressAddrSObj(addr, con, 'Mailing',
+            'npe01__Primary_Address_Type__c');
             dmlWrapper.objectsToUpdate.add(con);
         }
     }
 
-    /*******************************************************************************************************
-    * @description utility to create a map of HH Account Id to a list of Addresses in that HH, given a list of HH Account Id.
-    * @param acctIds the list of Account Id's
-    * @return map<Id, list<Address__c>> map that contains the Addresses for each HH Account Id
-    */
-    private static Map<Id, List<Address__c>> getMapAccIdListAddrHH(List<Id> acctIds) {
-        Map<Id, List<Address__c>> mapAccIdListAddrHH = new Map<Id, List<Address__c>>();
-        List<Address__c> listAddrOther = [
-            SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
-                MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c,
-                MailingPostalCode__c, MailingCountry__c,
-                Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c,
-                Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s
-            FROM Address__c
-            WHERE Household_Account__c IN :acctIds
-            ORDER BY Default_Address__c DESC, LastModifiedDate ASC
-        ]; // ordering needed by cleanupAccountAddresses().
-        for (Address__c addr : listAddrOther) {
-            List<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
-            if (listAddrHH == null) {
-                listAddrHH = new List<Address__c>();
-                mapAccIdListAddrHH.put(addr.Household_Account__c, listAddrHH);
-            }
-            listAddrHH.add(addr);
-        }
-        return mapAccIdListAddrHH;
-    }
-
-    private static Map<Id, Account> getAccountsByIds(Set<Id> acctIds) {
-        return new Map<Id, Account>([
-            SELECT Id, BillingStreet, BillingCity, BillingState,
-                    BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude
-            FROM Account
-            WHERE Id IN :acctIds
-        ]);
-    }
 
     /*******************************************************************************************************
     * @description returns whether the Address's mailing fields are null
@@ -642,7 +397,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     public static boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
         if (addr1 == null || addr2 == null)
             return false;
-        if (!isSeasonalAddr(addr1) || !isSeasonalAddr(addr2))
+        if (!Addresses.isSeasonalAddr(addr1) || !Addresses.isSeasonalAddr(addr2))
             return false;
 
         // we don't need to know what year or month we are currently in, but
@@ -714,7 +469,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // first get just the seasonal addresses
         list<Address__c> listAddrS = new list<Address__c>();
         for (Address__c addr : listAddr) {
-            if (isSeasonalAddr(addr)) {
+            if (Addresses.isSeasonalAddr(addr)) {
                 listAddrS.add(addr);
             } else if (isPartialSeasonalAddr(addr)) {
                 addr.addError(Label.addrSeasonalPartial);
@@ -743,7 +498,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         for (Address__c addr : listAddrS) {
             listAccId.add(addr.Household_Account__c);
         }
-        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
+                (listAccId);
 
         for (Address__c addr : listAddrS) {
             for (Address__c addr2 : mapAccIdListAddrHH.get(addr.Household_Account__c)) {
@@ -771,11 +527,11 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             mapAccIdAddr.put(acc.Id, null);
 
         // get the default and seasonal address for each HH
-        map<Id, ADDR_Addresses_TDTM.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
 
         // now see which accounts actually had their address change, so we only update them.
         for (Account acc : listAcc) {
-            ADDR_Addresses_TDTM.HHInfo hhinfo = mapAccIdHHInfo.get(acc.Id);
+            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(acc.Id);
             if (hhinfo != null) {
                 Address__c addr = hhinfo.addrSeasonal;
                 if (addr == null)
@@ -846,7 +602,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         list<Id> listAccId = new list<Id>();
         for (Address__c addr : listAddr)
             listAccId.add(addr.Household_Account__c);
-        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
+                (listAccId);
         boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
 
         // create our map for returning information in
@@ -900,7 +657,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
 
         // for each Account, get its list of Addresses in oldest to newest order (of LastModifiedDate)
-        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH(listAccId);
 
         // Construct Contact repository for Accounts having Addresses
         ContactRepository contactRepo = new ContactRepository(mapAccIdListAddrHH.keySet());
@@ -1023,19 +780,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description utility to combine mailing street fields into a single string with embedded CR LF
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static String getMultilineStreet(Address__c addr) {
-        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
-        if (isOneLineStreetAddress) {
-            return addr.MailingStreet__c;
-        }
-        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
-    }
-
-    /*******************************************************************************************************
     * @description Utility to copy Address fields between two Address objects.
     * @param addrSrc the source Address
     * @param addrDst the destination Address
@@ -1072,7 +816,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
         sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
 
-        if (isStateCountryPicklistsEnabled) {
+        if (Addresses.isStateCountryPicklistsEnabled) {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }
@@ -1097,7 +841,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addr.Geolocation__Latitude__s = (Decimal)sobjSrc.get(fieldPrefixSrc + 'Latitude');
         addr.Geolocation__Longitude__s = (Decimal)sobjSrc.get(fieldPrefixSrc + 'Longitude');
 
-        if (isStateCountryPicklistsEnabled) {
+        if (Addresses.isStateCountryPicklistsEnabled) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
             populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
         }
@@ -1130,7 +874,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         if (String.isEmpty(addr.MailingCountry__c)) {
-            addr.MailingCountry__c = validCountriesByCode.get(countryCode.toUpperCase());
+            addr.MailingCountry__c = Addresses.validCountriesByCode.get(countryCode
+                    .toUpperCase());
         }
     }
 
@@ -1171,111 +916,13 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return false;
         }
 
-        String mappedMailingState = (validStatesByLabel == null)
+        String mappedMailingState = (Addresses.validStatesByLabel == null)
             ? ''
-            : validStatesByLabel.get(addressMailingState.toUpperCase());
+            : Addresses.validStatesByLabel.get(addressMailingState.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
 
 
-    /*******************************************************************************************************
-    * @description Utility to copy Address fields from an Address object to a Contact or Account.
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param addr the Address object to copy from
-    * @param sobjDst the destination Contact or Account
-    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
-    * @return void
-    */
-    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
-        sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
-        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
-        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
-        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
-        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-
-        if (!isStateCountryPicklistsEnabled) {
-            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-        } else {
-            if (addr.MailingCountry__c != null) {
-                if (validCountriesByLabel.containsKey(addr.MailingCountry__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                    sobjDst.put(strFieldPrefix + 'CountryCode', validCountriesByLabel.get(addr.MailingCountry__c.toUpperCase()));
-                } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
-                    sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
-                } else {
-                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                }
-            } else { // MailingCountry = null
-                sobjDst.put(strFieldPrefix + 'CountryCode', null);
-                sobjDst.put(strFieldPrefix + 'Country', null);
-            }
-            if (addr.MailingState__c != null) {
-                if (validStatesByLabel.containsKey(addr.MailingState__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c.toUpperCase()));
-                } else {
-                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
-                    // so we will just try to save any state that isn't a label as a code.
-                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
-                }
-            } else { // MailingState = null
-                sobjDst.put(strFieldPrefix + 'StateCode', null);
-                sobjDst.put(strFieldPrefix + 'State', null);
-            }
-        }
-
-        if (strFieldAddrType != null)
-            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
-    }
-
-    /*******************************************************************************************************
-    * @description specifies whether state and country picklists are enabled in this org.
-    * @return true if enabled
-    */
-    public static Boolean isStateCountryPicklistsEnabled {
-        get {
-            if (isStateCountryPicklistsEnabled == null)
-                isStateCountryPicklistsEnabled = initValidStateCountryCodes();
-            return isStateCountryPicklistsEnabled;
-        }
-        private set;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
-    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
-    */
-    private static Boolean initValidStateCountryCodes() {
-
-        // If State & Country Picklists are enabled in the org, build maps of the
-        // valid Labels and Codes for each field to use for validation
-        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
-        boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
-        if (isCodesEnabled) {
-            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : countryPLValues) {
-                if (p.isActive()) {
-                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    validCountriesByCode.put(p.getValue(), p.getLabel());
-                }
-            }
-            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : statePLValues) {
-                if (p.isActive()) {
-                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    // we can't have a map of valid StateCodes, because they are not unique.
-                    // ideally we would have a map of CountryCode + StateCode -> StateLabel
-                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently. 
-                }
-            }
-        }
-        return isCodesEnabled;
-    }
 
 }
