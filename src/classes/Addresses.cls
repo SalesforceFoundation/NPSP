@@ -752,4 +752,63 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 return decimal.valueOf(m + '.' + d);
     }
 
+    public Map<Id, Address__c> defaultAndSeasonalWithChanges() {
+        Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
+        Integer i = 0;
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            Address__c addrOld = oldVersionOf(addr);
+            // an address that is marked default needs to propagate to the household
+            if ((isNewDefault(addr, addrOld))
+                    // any seasonal address also need to be considered
+                    || isSeasonalChanged(addr, addrOld)) {
+                defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
+            } else if (isAddressChanged(addr, addrOld, TRUE)) {
+                if (isDefault(addr)) {
+                    defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
+                }
+            }
+            i++;
+        }
+        return defaultAndSeasonalWithChanges;
+    }
+
+    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
+        return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to compare two address objects seasonal fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @return boolean. true if any of the seasonal fields have changed on the Address
+    */
+    private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
+        if (addrNew == null || addrOld == null)
+            return false;
+        return (
+                addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
+                        addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
+                        addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
+                        addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
+    }
+
+    public Map<Id, Address__c> nonDefaultsWithChanges() {
+        Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
+        Integer i = 0;
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            Address__c addrOld = oldVersionOf(addr);
+            if (isAddressChanged(addr, addrOld, TRUE)) {
+                if (!isDefault(addr)) {
+                    nonDefaultsWithChanges.put(idOf(addr), addr);
+                }
+            }
+            i++;
+        }
+        return nonDefaultsWithChanges;
+    }
+
+    private Id idOf(Address__c addr) {
+        return addr.Id;
+    }
+
 }

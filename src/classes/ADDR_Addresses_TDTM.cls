@@ -90,14 +90,15 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     addresses2.onBeforeUpdate();
                 }
 
-                Addresses addresses = new Addresses(listNew);
                 if (isAfterInsert(triggerAction)) {
+                    Addresses addresses = new Addresses(listNew);
                     mapAddressesByAcctId = defaultAndSeasonalAddresses(addresses);
                 }
 
                 if (isAfterUpdate(triggerAction)) {
-                    mapAddressesByAcctId = defaultAndSeasonalWithChanges(addresses, listOld);
-                    mapAddressesById = nonDefaultsWithChanges(addresses, listOld);
+                    Addresses addresses = new Addresses(listNew, listOld);
+                    mapAddressesByAcctId = addresses.defaultAndSeasonalWithChanges();
+                    mapAddressesById = addresses.nonDefaultsWithChanges();
                 }
 
                 // BEFORE INSERT & BEFORE UPDATE
@@ -172,43 +173,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addresses.verifyAddrSeasonalNoOverlap();
     }
 
-    private Map<Id, Address__c> defaultAndSeasonalWithChanges(Addresses addresses,
-            List<SObject> listOld) {
-        Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
-        Integer i = 0;
-        for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
-            Address__c addrOld = (listOld != null) ? (Address__c) listOld[i] : null;
-            // an address that is marked default needs to propagate to the household
-            if ((isNewDefault(addr, addrOld))
-                    // any seasonal address also need to be considered
-                    || isSeasonalChanged(addr, addrOld)) {
-                defaultAndSeasonalWithChanges.put(householdAccountIdOf(addr), addr);
-            } else if (isAddressChanged(addr, addrOld)) {
-                if (isDefault(addr)) {
-                    defaultAndSeasonalWithChanges.put(householdAccountIdOf(addr), addr);
-                }
-            }
-            i++;
-        }
-        return defaultAndSeasonalWithChanges;
-    }
-
-    private Map<Id, Address__c> nonDefaultsWithChanges(Addresses addresses,
-            List<SObject> listOld) {
-        Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
-        Integer i = 0;
-        for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
-            Address__c addrOld = (listOld != null) ? (Address__c) listOld[i] : null;
-            if (isAddressChanged(addr, addrOld)) {
-                if (!isDefault(addr)) {
-                    nonDefaultsWithChanges.put(idOf(addr), addr);
-                }
-            }
-            i++;
-        }
-        return nonDefaultsWithChanges;
-    }
-
     private Map<Id, Address__c> defaultAndSeasonalAddresses(Addresses addresses) {
         Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
         for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
@@ -231,10 +195,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
     }
 
-    private Boolean isAddressChanged(Address__c addr, Address__c addrOld) {
-        return Addresses.isAddressChanged(addr, addrOld, true);
-    }
-
     private Boolean isAfterUpdate(Action triggerAction) {
         return triggerAction == TDTM_Runnable.Action.AfterUpdate;
     }
@@ -247,19 +207,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
     }
 
-    private Id idOf(Address__c addr) {
-        return addr.Id;
-    }
-
     private Id householdAccountIdOf(Address__c addr) {
         return addr.Household_Account__c;
     }
 
     private Boolean isDefault(Address__c addr) {
         return addr.Default_Address__c;
-    }
-    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
-        return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
     }
 
     /*******************************************************************************************************
@@ -311,22 +264,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         addr.MailingState__c == Null &&
                         addr.MailingPostalCode__c == Null &&
                         addr.MailingCountry__c == Null);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two address objects seasonal fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @return boolean. true if any of the seasonal fields have changed on the Address
-    */
-    private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
-        if (addrNew == null || addrOld == null)
-            return false;
-        return (
-                addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
-                        addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
-                        addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
-                        addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
     }
 
     /*******************************************************************************************************
