@@ -3854,7 +3854,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
-        <label><!-- Instructions to add Payment Method --></label>
+        <label>Das Salesforce.org Elevate-Feldpaket enthält Felder für die Eingabe von Zahlungsinformationen. Ermöglichen Sie den Benutzern den Wechsel der Zahlungsart, indem Sie dem Formular vor diesem Feldpaket &quot;Zahlungsmethode&quot; aus dem Objekt &quot;Zahlung&quot; hinzufügen.</label>
         <name>geTextFieldBundlePaymentMethod</name>
     </customLabels>
     <customLabels>

@@ -44,3 +44,14 @@ p.critical-error-text {
         opacity: 1;
     }
 }
+
+.payment-warn {
+    --sds-c-alert-image-background: none;
+    --sds-c-alert-color-background: transparent;
+    --sds-c-alert-text-color: var(--lwc-colorTextDefault);
+    justify-content: start;
+}
+
+.payment-warn h2 {
+    font-weight: 400;
+}

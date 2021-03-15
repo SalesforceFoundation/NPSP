@@ -73,6 +73,8 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>AllocationParent</members>
+        <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -411,6 +413,7 @@
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_DataRegulationService</members>
+        <members>RD2_DatabaseService</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_ElevateInformation_CTRL</members>
@@ -435,6 +438,7 @@
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_PauseForm_CTRL</members>
         <members>RD2_PauseForm_TEST</members>
+        <members>RD2_QueryService</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
@@ -1513,6 +1517,7 @@
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.LastElevateEventPlayed__c</members>
+        <members>npe03__Recurring_Donation__c.LastElevateVersionPlayed__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
@@ -2204,6 +2209,8 @@
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
+        <members>bgeRetirementWarningBody</members>
+        <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
@@ -2395,6 +2402,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorBatchGiftEntryCurrencyMismatch</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2504,6 +2512,7 @@
         <members>geUtilJWTTestInvalidKey</members>
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
+        <members>geWarningBatchGiftEntryCurrencyMismatch</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
@@ -4103,6 +4112,14 @@
     <types>
         <members>Payment_ACH_Code</members>
         <name>GlobalValueSet</name>
+    </types>
+    <types>
+        <members>Payment_ACH_Code-de</members>
+        <members>Payment_ACH_Code-es</members>
+        <members>Payment_ACH_Code-fr</members>
+        <members>Payment_ACH_Code-ja</members>
+        <members>Payment_ACH_Code-nl_NL</members>
+        <name>GlobalValueSetTranslation</name>
     </types>
     <types>
         <members>Account-Household Layout</members>
