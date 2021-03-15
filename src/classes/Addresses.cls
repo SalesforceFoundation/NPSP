@@ -815,4 +815,18 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return addr.Id;
     }
 
+    public Map<Id, Address__c> defaultAndSeasonalAddresses() {
+        Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (isDefault(addr) || isSeasonal(addr)) {
+                defaultAndSeasonalAddressesByAcctId.put(householdAccountIdFor(addr), addr);
+            }
+        }
+        return defaultAndSeasonalAddressesByAcctId;
+    }
+
+    private Boolean isSeasonal(Address__c addr) {
+        return Addresses.isSeasonalAddr(addr);
+    }
+
 }

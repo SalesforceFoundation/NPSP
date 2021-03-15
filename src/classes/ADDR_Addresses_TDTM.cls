@@ -92,7 +92,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
                 if (isAfterInsert(triggerAction)) {
                     Addresses addresses = new Addresses(listNew);
-                    mapAddressesByAcctId = defaultAndSeasonalAddresses(addresses);
+                    mapAddressesByAcctId = addresses.defaultAndSeasonalAddresses();
                 }
 
                 if (isAfterUpdate(triggerAction)) {
@@ -162,20 +162,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    private Map<Id, Address__c> defaultAndSeasonalAddresses(Addresses addresses) {
-        Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
-        for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
-            if (isDefault(addr) || isSeasonal(addr)) {
-                defaultAndSeasonalAddressesByAcctId.put(householdAccountIdOf(addr), addr);
-            }
-        }
-        return defaultAndSeasonalAddressesByAcctId;
-    }
-
-    private Boolean isSeasonal(Address__c addr) {
-        return Addresses.isSeasonalAddr(addr);
-    }
-
     private Boolean isBeforeInsert(Action triggerAction) {
         return triggerAction == TDTM_Runnable.Action.BeforeInsert;
     }
@@ -194,14 +180,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     private Boolean isRecursive() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
-    }
-
-    private Id householdAccountIdOf(Address__c addr) {
-        return addr.Household_Account__c;
-    }
-
-    private Boolean isDefault(Address__c addr) {
-        return addr.Default_Address__c;
     }
 
     /*******************************************************************************************************
