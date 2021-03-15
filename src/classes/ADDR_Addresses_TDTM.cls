@@ -85,17 +85,20 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 mapAddressesByAcctId = addresses.getMapAddressesByAcctId();
             }
             when else {
-                // BEFORE UPDATE
                 if (isBeforeUpdate(triggerAction)) {
                     Addresses addresses2 = new Addresses(listNew, listOld);
                     addresses2.onBeforeUpdate();
                 }
 
                 Addresses addresses = new Addresses(listNew);
+                if (isAfterInsert(triggerAction)) {
+                    mapAddressesByAcctId = defaultAndSeasonalAddresses(addresses);
+                }
 
-                buildMapAfterInsert(addresses, triggerAction, mapAddressesByAcctId);
-
-                buildMapAfterUpdate(addresses, listOld, triggerAction, mapAddressesByAcctId, mapAddressesById);
+                if (isAfterUpdate(triggerAction)) {
+                    mapAddressesByAcctId = defaultAndSeasonalWithChanges(addresses, listOld);
+                    mapAddressesById = nonDefaultsWithChanges(addresses, listOld);
+                }
 
                 // BEFORE INSERT & BEFORE UPDATE
                 if (isBeforeInsert(triggerAction) || isBeforeUpdate(triggerAction)) {
@@ -169,42 +172,51 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addresses.verifyAddrSeasonalNoOverlap();
     }
 
-    private void buildMapAfterUpdate(Addresses addresses, List<SObject> listOld, Action triggerAction, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
+    private Map<Id, Address__c> defaultAndSeasonalWithChanges(Addresses addresses,
+            List<SObject> listOld) {
+        Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
         for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
             Address__c addrOld = (listOld != null) ? (Address__c) listOld[i] : null;
-
-            // AFTER UPDATE
-            if (isAfterUpdate(triggerAction)) {
-                // an address that is marked default needs to propagate to the household
-                if ((isNewDefault(addr, addrOld))
-                        // any seasonal address also need to be considered
-                        || isSeasonalChanged(addr, addrOld)) {
-                    mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
-                } else if (isAddressChanged(addr, addrOld)) {
-                    if (isDefault(addr)) {
-                        mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
-                    } else {   // address changed, but not default, still need to update any contacts using it as an override
-                        mapAddressesById.put(idOf(addr), addr);
-                    }
+            // an address that is marked default needs to propagate to the household
+            if ((isNewDefault(addr, addrOld))
+                    // any seasonal address also need to be considered
+                    || isSeasonalChanged(addr, addrOld)) {
+                defaultAndSeasonalWithChanges.put(householdAccountIdOf(addr), addr);
+            } else if (isAddressChanged(addr, addrOld)) {
+                if (isDefault(addr)) {
+                    defaultAndSeasonalWithChanges.put(householdAccountIdOf(addr), addr);
                 }
             }
-
-            // moving to the next item
             i++;
         }
+        return defaultAndSeasonalWithChanges;
     }
 
-    private void buildMapAfterInsert(Addresses addresses, Action triggerAction, Map<Id, Address__c> mapAddressesByAcctId) {
+    private Map<Id, Address__c> nonDefaultsWithChanges(Addresses addresses,
+            List<SObject> listOld) {
+        Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
+        Integer i = 0;
         for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
-            // AFTER INSERT
-            if (isAfterInsert(triggerAction)) {
-                // a new address that is marked default or seasonal needs to propagate to the household
-                if (isDefault(addr) || isSeasonal(addr)) {
-                    mapAddressesByAcctId.put(householdAccountIdOf(addr), addr);
+            Address__c addrOld = (listOld != null) ? (Address__c) listOld[i] : null;
+            if (isAddressChanged(addr, addrOld)) {
+                if (!isDefault(addr)) {
+                    nonDefaultsWithChanges.put(idOf(addr), addr);
                 }
             }
+            i++;
         }
+        return nonDefaultsWithChanges;
+    }
+
+    private Map<Id, Address__c> defaultAndSeasonalAddresses(Addresses addresses) {
+        Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
+        for (Address__c addr : (List<Address__c>) addresses.getRecords()) {
+            if (isDefault(addr) || isSeasonal(addr)) {
+                defaultAndSeasonalAddressesByAcctId.put(householdAccountIdOf(addr), addr);
+            }
+        }
+        return defaultAndSeasonalAddressesByAcctId;
     }
 
     private Boolean isSeasonal(Address__c addr) {
