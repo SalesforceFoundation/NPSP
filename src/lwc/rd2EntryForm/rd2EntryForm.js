@@ -114,6 +114,7 @@ export default class rd2EntryForm extends LightningElement {
     @track isSaveButtonDisabled = true;
 
     @track isElevateWidgetEnabled = false;
+    @track isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
     commitmentId = null;
@@ -157,6 +158,8 @@ export default class rd2EntryForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
+                console.log('connected, finally'); 
+                this.handleElevateWidgetDisplay();
             });
 
         /*
@@ -306,13 +309,15 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && !this.isEdit
+        let rdIsCompatible = this.isElevateCustomer === true
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
+        this.isElevateWidgetEnabled = rdIsCompatible && !this.isEdit;
+        this.isElevateEditWidgetEnabled = rdIsCompatible && this.isEdit;
+        
         this.populateCardHolderName();
     }
 

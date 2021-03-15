@@ -141,6 +141,14 @@
                                             payment-method={paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>
+
+                                    <lightning-layout-item size="12" class="slds-p-bottom_small"
+                                        if:true={isElevateEditWidgetEnabled}>
+                                        <c-rd2-elevate-information data-id='elevateEditWidget'
+                                            data-qa-locator='edit widget Elevate'
+                                            record-id={recordId}>
+                                        </c-rd2-elevate-information>
+                                    </lightning-layout-item>
                                 </lightning-layout>
 
                             </div>
