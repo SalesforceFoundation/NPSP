@@ -103,9 +103,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
                 // BEFORE INSERT & BEFORE UPDATE
                 if (isBeforeInsert(triggerAction) || isBeforeUpdate(triggerAction)) {
-                    // enforce only HH Accounts are being used
-                    validate(listNew);
-
                     return null;
                 }
             }
@@ -163,14 +160,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
-    }
-
-    private void validate(List<SObject> listNew) {
-        Addresses addresses = new Addresses(listNew);
-        addresses.verifyAddrHHAccOnly();
-
-        // enforce Seasonal Addresses don't overlap
-        addresses.verifyAddrSeasonalNoOverlap();
     }
 
     private Map<Id, Address__c> defaultAndSeasonalAddresses(Addresses addresses) {

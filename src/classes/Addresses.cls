@@ -100,10 +100,14 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
     public void onBeforeInsert() {
         setLatestDatesOnDefaults();
+        verifyAddrHHAccOnly();
+        verifyAddrSeasonalNoOverlap();
     }
 
     public void onBeforeUpdate() {
         updateLatestDatesForDefaultChanges();
+        verifyAddrHHAccOnly();
+        verifyAddrSeasonalNoOverlap();
     }
 
     private void setLatestDatesOnDefaults() {
