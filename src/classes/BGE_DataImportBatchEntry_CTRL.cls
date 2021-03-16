@@ -88,58 +88,91 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
 
         DataImportModel dataImportModel = new DataImportModel();
-        Integer rowOffset = 0;
-
         dataImportModel.id = batchId;
-        dataImportModel.dataImportRows = getDataImportRows(batchId, rowOffset);
+        dataImportModel.dataImportRows = getDataImportRows(batchId, 0);
         dataImportModel.setColumns();
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
-
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(dataImportModel.dataImportRows);
+        checkBatchGiftEntryFieldPermissions (batchId);
+        return JSON.serialize(dataImportModel);
+    }
 
-        DataImportBatch__c batch;
+    private static Decimal getBatchTotalRowAmount(List<DataImportRow> dataImportRows) {
+        Decimal totalAmount = 0;
+
+        for (DataImportRow dataImportRow: dataImportRows) {
+                totalAmount+= dataImportRow.record.Donation_Amount__c == null
+                    ? 0
+                    : dataImportRow.record.Donation_Amount__c;
+        }
+        return totalAmount;
+    }
+
+    private static Decimal getBatchTotalRowAmount(Id batchId) {
+        Decimal totalAmount = 0;
+
+        for (DataImport__c dataImport: [
+            SELECT Donation_Amount__c
+            FROM DataImport__c
+            WHERE NPSP_Data_Import_Batch__c =: batchId
+        ]) {
+            totalAmount+= dataImport.Donation_Amount__c == null
+                ? 0
+                : dataImport.Donation_Amount__c;
+        }
+        return totalAmount;
+    }
+
+    private static void checkBatchGiftEntryFieldPermissions(Id batchId) {
+        Decimal batchGiftEntryVersion;
         Boolean isQueryException = false;
         try {
-            batch = [
-                    SELECT Batch_Gift_Entry_Version__c
-                    FROM DataImportBatch__c
-                    WHERE Id = :batchId
-                    WITH SECURITY_ENFORCED
-            ];
+            batchGiftEntryVersion = getBatchGiftEntryVersion(batchId);
         } catch (QueryException qe) {
             // If User doesn't have access to Version field, treat as 1.0.
             isQueryException = true;
         }
 
-        if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
+        List<String> fields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+        if (isQueryException || batchGiftEntryVersion < 2) {
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-                    String.valueOf(DataImport__c.SObjectType),
-                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+                String.valueOf(DataImport__c.SObjectType),
+                fields
             );
         } else {
-            List<String> fields =
-                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
-
-            List<String> nonNameFields = new List<String>();
-            for (String str : fields) {
-                Boolean isNameField = str.contains('.');
-                if (isNameField) {
-                    continue;
-                } else if (!nonNameFields.contains(str)) {
-                    nonNameFields.add(str);
-                }
-            }
-
+            List<String> nonNameFields = getNonNameFields(fields);
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-                    String.valueOf(DataImport__c.SObjectType),
-                    nonNameFields
+                String.valueOf(DataImport__c.SObjectType),
+                nonNameFields
             );
         }
+    }
 
-        return JSON.serialize(dataImportModel);
+    private static Decimal getBatchGiftEntryVersion(Id batchId) {
+        return [
+            SELECT Batch_Gift_Entry_Version__c
+            FROM DataImportBatch__c
+            WHERE Id = :batchId
+            WITH SECURITY_ENFORCED
+        ][0].Batch_Gift_Entry_Version__c;
+    }
+
+    private static List<String> getNonNameFields(List<String> fields) {
+        List<String> nonNameFields = new List<String>();
+        for (String str : fields) {
+            Boolean isNameField = str.contains('.');
+            if (isNameField) {
+                continue;
+            } else if (!nonNameFields.contains(str)) {
+                nonNameFields.add(str);
+            }
+        }
+        return nonNameFields;
     }
 
     /*******************************************************************************************************
@@ -374,6 +407,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
+        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(batchId);
 
         return dataImportModel;
     }
@@ -421,8 +455,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
         return [
-            SELECT Sum(Donation_Amount__c)amount 
-            FROM DataImport__c 
+            SELECT Sum(Donation_Amount__c)amount
+            FROM DataImport__c
             WHERE NPSP_Data_Import_Batch__c =: recordId
         ];
     }
@@ -599,6 +633,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer totalCountOfRows;
         @AuraEnabled public Decimal totalRowAmount;
+        @AuraEnabled public Decimal batchTotalRowAmount;
         @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
                 new List<UTIL_LightningComponentSupport.Notice>();
 
