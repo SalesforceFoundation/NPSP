@@ -32,7 +32,7 @@ Progress Bar and Totals in Batch
     ...                      Verify I should not be able to process batch until total git amount and count of gifts matches.    
     ...                      Verify the progress bar get updated after deleting one of the saved gifts. 
 
-    [tags]                                 unstable      feature:GE        W-8279400
+    [tags]                                 feature:GE        W-8279400
 
     Go To Page                             Landing                         GE_Gift_Entry
     Click Gift Entry Button                New Batch

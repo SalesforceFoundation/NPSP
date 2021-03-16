@@ -38,6 +38,7 @@ Setup Test Data
 Edit Default Template To Add Batch Table Columns
     [Documentation]     Edit the default template fields and ensure the status and the right
     ...                 required fields are displayed.
+    [tags]                           unstable               W-043100            feature:GE
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
     Select Template Action           Default Gift Entry Template   Edit
@@ -52,6 +53,7 @@ Process And Validate Batch
     [Documentation]     Process Batch , wait for the data import process is completed
     ...                 Validate the Batch data import status based on the status parameter
     [Arguments]                          ${status}
+    [tags]                           unstable               W-043100            feature:GE
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
     Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
