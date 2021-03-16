@@ -70,15 +70,16 @@ Validate Errors When Field Is Renamed
     Set Suite Variable                  ${BATCH1_Id}
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
+    Scroll Page To Location             10     10
     # Temporarily slows down Selenium to prevent the component error when filling the form
-    Set Selenium Speed                  1
+    # Set Selenium Speed                  0.5
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=5
     # Returns Selenium back to full speed
-    Set Selenium Speed                  0
+    # Set Selenium Speed                  0
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -104,13 +105,13 @@ Validate Errors When Field Is Renamed
     Set Suite Variable                  ${BATCH2_Id}
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Contain Element         npsp:label:Account 1: custom_acc_text
-    Set Selenium Speed                  1
+    # Set Selenium Speed                  0.5
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=10
-    Set Selenium Speed                  0
+    # Set Selenium Speed                  0
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
