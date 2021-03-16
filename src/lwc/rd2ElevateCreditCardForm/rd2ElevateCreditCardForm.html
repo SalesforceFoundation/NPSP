@@ -13,6 +13,16 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
+
+                                    <template if:true={editMode}>
+                                        <lightning-button variant="base" label={labels.updatePaymentButtonLabel}
+                                            icon-name='utility:close' icon-position="right"
+                                            onclick={handleUpdatePayment}
+                                            class='slds-button slds-button_base slds-float_right hide-card-button'
+                                            data-qa-locator='button Update Payment Information'>
+                                        </lightning-button>
+                                    </template>
+
                                     <template if:false={isEditPayment}>
                                         <template if:false={isDisabled}>
                                             <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
@@ -22,7 +32,9 @@
                                                 data-qa-locator='button Do Not Use Elevate'>
                                             </lightning-button>
                                         </template>
+
                                     </template>
+
                                 </lightning-layout-item>
                             </lightning-layout>
                         </div>
@@ -30,6 +42,38 @@
 
 
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
+
+                        <template if:true={editMode}>
+                        <lightning-layout vertical-align='center' multiple-rows='true'>
+
+                            <lightning-layout-item size="4" class=" slds-text-color_weak" slds-m-bottom_x-small>
+                                <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                        for="last4ach" id="achlast4Label">Card Last 4</label>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" class="slds-text-color_weak slds-m-bottom_x-small">
+                                <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                    for="expirationDate" id="expirationDateLabel">Exp. Date</label>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="4"></lightning-layout-item>
+
+                            <lightning-layout-item size="4">
+                                <lightning-formatted-text id="last4ach"
+                                                          value={cardLastFour}
+                                                          data-qa-locator={qaLocatorLastFourDigits}
+                                                          aria-labelledby="achlast4Label">
+                                </lightning-formatted-text>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4" class="">
+                                <lightning-formatted-text id="expirationDate"
+                                                          value={cardExpDate}
+                                                          data-qa-locator={qaLocatorExpirationDate}
+                                                          aria-labelledby="expirationDateLabel">
+                                </lightning-formatted-text>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                        </template>
+
 
                         <template if:true={isDisabled}>
                             <p class='fade-in'>
@@ -45,12 +89,13 @@
                             </p>
                         </template>
 
-                        <template if:false={isDisabled}>
+                        <template if:true={showForm}>
                             <div if:true={alert.show} class='slds-p-bottom_medium'>
                                 <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
                                                      icon={alert.icon} message={alert.message} data-qa-locator='alert Message'>
                                 </c-util-alert-banner>
                             </div>
+
                             <template if:true={isEditPayment}>
                                 <div class="slds-p-bottom_medium">
                                     <lightning-formatted-text class="slds-text-title_bold" value={nextPaymentDonationDateMessage} >
@@ -63,6 +108,8 @@
                                     </lightning-formatted-date-time>
                                 </div>
                             </template>
+
+
                             <div class="slds-col slds-size_1-of-2">
                                 <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
                                                  data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">

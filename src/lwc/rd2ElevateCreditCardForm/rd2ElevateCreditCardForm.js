@@ -11,6 +11,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import NextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
+import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -32,7 +33,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateDisabledMessage,
         elevateEnableButtonLabel,
         cardholderNameLabel,
-        NextPaymentDonationDateMessage
+        NextPaymentDonationDateMessage,
+        updatePaymentButtonLabel
     };
 
     @track isLoading = true;
@@ -42,6 +44,12 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _paymentMethod = undefined;
     _nextDonationDate = undefined;
     _isEditPayment = false;
+
+    @track showLastFourACH = true;
+    
+    @api editMode;
+    @api cardLastFour;
+    @api cardExpDate;
 
     @api
     get paymentMethod() {
@@ -75,6 +83,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     set nextDonationDate(value) {
         this._nextDonationDate = value;
+    }
+
+    @api
+    get showForm() {
+        return !this.isDisabled && !this.editMode;
     }
 
     /***
@@ -172,6 +185,16 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
+    * @description Handles user onclick event for updating payment information
+    */
+    handleUpdatePayment(){
+        this.editMode = false;
+        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
+            isDisabled: false
+        });
+    }
+
+    /***
     * @description Enables or disables the widget based on provided args.
     */
     displayWidget() {
@@ -263,4 +286,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             payload: this.requestToken()
         };
     }
+
+    get qaLocatorLastFourDigits() {
+        return `text Last Four Digits`;
+    }
+
+    get qaLocatorExpirationDate() {
+        return `text Expiration Date`;
+    }
+
 }
