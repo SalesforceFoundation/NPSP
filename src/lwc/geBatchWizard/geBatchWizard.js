@@ -8,7 +8,7 @@ import {
     updateRecord,
     getRecord,
     getRecordCreateDefaults,
-    generateRecordInputForCreate
+    generateRecordInputForCreate, generateRecordInputForUpdate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -22,8 +22,8 @@ import {
     getNestedProperty,
     isNotEmpty,
     isNull,
-    stripNamespace
-} from 'c/utilCommon'
+    stripNamespace,
+} from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
@@ -342,18 +342,37 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     */
     handleSave() {
         this.isLoading = true;
-        const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.data.objectInfos[
-            this.dataImportBatchName
-        ];
-        const recordDefaults = this.dataImportBatchCreateDefaults.data.record;
-        let recordObject = generateRecordInputForCreate(recordDefaults, dataImportBatchObjectInfo);
-        recordObject = this.setFieldValues(recordObject);
-
         if (this.recordId) {
-            this.handleRecordUpdate(recordObject);
+            this.handleRecordUpdate(this.buildUpdateRecord());
         } else {
-            this.handleRecordCreate(recordObject);
+            this.handleRecordCreate(this.buildCreateRecord());
         }
+    }
+
+    /**
+     * @description Builds a new data import batch record to be saved
+     * @returns {DataImportBatch record}
+     */
+    buildCreateRecord() {
+        const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.
+            data.objectInfos[this.dataImportBatchName];
+        const createRecord = generateRecordInputForCreate(
+            this.dataImportBatchCreateDefaults.data.record,
+            dataImportBatchObjectInfo);
+        return this.setFieldValues(createRecord);
+    }
+
+    /**
+     * @description Builds a data import batch record to be updated
+     * @returns {DataImportBatch record}
+     */
+    buildUpdateRecord() {
+        const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.
+            data.objectInfos[this.dataImportBatchName];
+        let updateRecord = generateRecordInputForUpdate(
+            this.dataImportBatchRecord, dataImportBatchObjectInfo);
+        updateRecord.apiName = this.dataImportBatchRecord.apiName;
+        return this.setFieldValues(updateRecord);
     }
 
     setFieldValues(dataImportBatch) {

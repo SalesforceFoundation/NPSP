@@ -34,6 +34,7 @@ import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTo
 */
 const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
+const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -168,6 +169,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this[NavigationMixin.Navigate](pageReference, true);
     }
 
+    get batchCurrencyIsoCode() {
+        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
+    }
+
     get expectedCountOfGifts() {
         return getFieldValue(this.batch.data, EXPECTED_COUNT_OF_GIFTS);
     }
@@ -199,6 +204,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             BATCH_NAME
         ],
         optionalFields: [
+            BATCH_CURRENCY_ISO_CODE,
             EXPECTED_COUNT_OF_GIFTS,
             EXPECTED_TOTAL_BATCH_AMOUNT,
             REQUIRE_TOTAL_MATCH,
