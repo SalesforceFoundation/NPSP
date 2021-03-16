@@ -129,20 +129,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // the correct addresses.
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapper, false);
         if (errors.errorsExist) {
-            for (Error__c error : errors.errorRecords) {
-                ID objId = ERR_Handler.getErrorObjectId(error);
-                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
-                if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
-                    Address__c addr = mapAddressesByAcctId.get(objId);
-                    addr.addError(error.Full_Message__c);
-                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
-                }
-                else if (UTIL_Describe.isObjectIdThisType(objId, UTIL_Namespace.StrTokenNSPrefix('Address__c'))) {
-                    Address__c addr = mapAddressesById.get(objId);
-                    addr.addError(error.Full_Message__c);
-                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
-                }
-            }
+            putErrorsOnAddresses(errors, mapAddressesByAcctId, mapAddressesById);
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
             return null;
         }
@@ -154,6 +141,22 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
+        for (Error__c error : errors.errorRecords) {
+            ID objId = ERR_Handler.getErrorObjectId(error);
+            UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
+            if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
+                Address__c addr = mapAddressesByAcctId.get(objId);
+                addr.addError(error.Full_Message__c);
+                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+            } else if (UTIL_Describe.isObjectIdThisType(objId, UTIL_Namespace.StrTokenNSPrefix('Address__c'))) {
+                Address__c addr = mapAddressesById.get(objId);
+                addr.addError(error.Full_Message__c);
+                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+            }
+        }
     }
 
     private Boolean isBeforeInsert(Action triggerAction) {
