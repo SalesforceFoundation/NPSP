@@ -77,6 +77,11 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return config.isIntegrationEnabled();
     }
 
+    public static Boolean isEditEnabled() {
+        return config.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled(); 
+    }
+
     /***
     * @description Determines whether a Recurring Donation event is from the Elevate integration
     * @param rd Changed Recurring Donation
