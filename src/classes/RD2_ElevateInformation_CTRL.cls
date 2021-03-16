@@ -59,7 +59,8 @@ public with sharing class RD2_ElevateInformation_CTRL {
 
         try {
             data = new Map<String, Object> {
-                'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
+                'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+                'isEditEnabled' => RD2_ElevateIntegrationService.isEditEnabled()
             };
 
             Boolean hasRDUpdatePermission = UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', false);

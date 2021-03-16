@@ -98,6 +98,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     @track isLoading = true;
     @track isElevateCustomer;
+    @track isEditEnabled = false;
     @track isElevateRecord = false;
     @track isElevateConnected = false;
     @track showLastFourACH = false;
@@ -145,13 +146,16 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
+                    this.isEditEnabled = response.isEditEnabled;
 
                     this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
                         && isNull(this.permissions.alert);
 
                     this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
-                         && response.hasFieldUpdatePermission;
+                         && response.hasFieldUpdatePermission
+                         && this.isEditEnabled;
+
                     this.permissions.showExpirationDate = response.showExpirationDate;
                     this.permissions.showLastFourDigits = response.showLastFourDigits;
 
@@ -240,7 +244,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     shouldShowLastFourACH() {
         return this.paymentMethod === PAYMENT_METHOD_ACH
             && this.isTrue(this.isElevateCustomer)
-            && this.isTrue(this.permissions.showLastFourDigits);
+            && this.isTrue(this.permissions.showLastFourDigits)
+            && this.isEditEnabled;
     }
 
     /***
@@ -249,14 +254,16 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     shouldShowLastFourCreditCard() {
         return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && this.isTrue(this.isElevateCustomer)
-            && this.isTrue(this.permissions.showLastFourDigits);
+            && this.isTrue(this.permissions.showLastFourDigits)
+            && this.isEditEnabled;
     }
 
     /***
      * @description Does the user have perms to show the Expiration Date fields?
      */
     shouldShowExpirationDate() {
-        return this.isTrue(this.permissions.showExpirationDate);
+        return this.isTrue(this.permissions.showExpirationDate)
+            && this.isEditEnabled;
     }
 
     /***
