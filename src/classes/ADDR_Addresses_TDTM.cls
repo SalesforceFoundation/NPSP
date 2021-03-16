@@ -148,15 +148,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            list<Address__c> listAddr = new list<Address__c>();
-            for (SObject so : listNew) {
-                Address__c addr = (Address__c)so;
-                if (isAddressEmpty(addr))
-                    listAddr.add(new Address__c(Id = addr.Id));
-            }
-            if (listAddr.size() > 0)
-                delete listAddr;
+        if (isAfterInsert(triggerAction)) {
+            Addresses addresses = new Addresses(listNew);
+            addresses.deleteEmptyAddresses();
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
@@ -215,23 +209,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
     }
 
-
-    /*******************************************************************************************************
-    * @description returns whether the Address's mailing fields are null
-    * @param addr the Address
-    * @return boolean. true if all of the Mailing fields are empty
-    */
-    public static Boolean isAddressEmpty(Address__c addr) {
-        if (addr == null)
-            return false;
-        return (
-                addr.MailingStreet__c == Null &&
-                        addr.MailingStreet2__c == Null &&
-                        addr.MailingCity__c == Null &&
-                        addr.MailingState__c == Null &&
-                        addr.MailingPostalCode__c == Null &&
-                        addr.MailingCountry__c == Null);
-    }
 
     /*******************************************************************************************************
     * @description Compare two address objects address fields and support fuzzy matching; our definition of 

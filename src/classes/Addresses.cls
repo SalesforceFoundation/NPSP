@@ -829,4 +829,33 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return Addresses.isSeasonalAddr(addr);
     }
 
+    public void deleteEmptyAddresses() {
+        list<Address__c> listAddr = new list<Address__c>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (isAddressEmpty(addr)) {
+                listAddr.add(new Address__c(Id = addr.Id));
+            }
+        }
+        if (listAddr.size() > 0) {
+            delete listAddr;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description returns whether the Address's mailing fields are null
+    * @param addr the Address
+    * @return boolean. true if all of the Mailing fields are empty
+    */
+    private static Boolean isAddressEmpty(Address__c addr) {
+        if (addr == null)
+            return false;
+        return (
+                addr.MailingStreet__c == Null &&
+                        addr.MailingStreet2__c == Null &&
+                        addr.MailingCity__c == Null &&
+                        addr.MailingState__c == Null &&
+                        addr.MailingPostalCode__c == Null &&
+                        addr.MailingCountry__c == Null);
+    }
+
 }
