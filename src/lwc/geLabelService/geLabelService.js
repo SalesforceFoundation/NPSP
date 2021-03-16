@@ -115,6 +115,7 @@ import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemp
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
+import geErrorBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geErrorBatchGiftEntryCurrencyMismatch';
 import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
@@ -216,6 +217,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import geWarningBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geWarningBatchGiftEntryCurrencyMismatch';
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
@@ -343,6 +345,7 @@ class GeLabelService {
         geDonationColumnLabel,
         geDonorColumnLabel,
         geErrorAmountDoesNotMatch,
+        geErrorBatchGiftEntryCurrencyMismatch,
         geErrorCardChargedBDIFailed,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,
@@ -444,6 +447,7 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
+        geWarningBatchGiftEntryCurrencyMismatch,
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
