@@ -26,4 +26,6 @@ User on a RD2 enbaled Org should See Status Mappings Option along with default m
     ...                          Lapsed=Lapsed
     ...                          Closed=Closed
     ...                          Paused=Active
+    # Edit button should be disabled. But currently there is a bug and this test will fail
+    # until the bug gets resolved.
     Verify Button Disabled       Edit
