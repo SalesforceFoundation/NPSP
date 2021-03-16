@@ -24,10 +24,10 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.navigate_to_and_validate_field_value("Opportunity Name", "contains", value)
 
     def navigate_to_matching_gifts_page(self):
-        # if self.npsp.latest_api_version == 50.0:
+        # if self.npsp.latest_api_version == 51.0:
         locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
-        self.selenium.wait_until_element_is_visible(locator)
-        self.salesforce._jsclick(locator)
+        self.selenium.wait_until_element_is_visible(locator,60)
+        self.selenium.click_element(locator)
         time.sleep(2)
         self.selenium.click_link('Find Matched Gifts')
         self.npsp.choose_frame("vfFrameId")
