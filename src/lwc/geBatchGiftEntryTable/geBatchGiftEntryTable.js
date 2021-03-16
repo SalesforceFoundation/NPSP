@@ -27,7 +27,6 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
-
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 const REFERENCE = 'REFERENCE';
@@ -86,6 +85,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api count;
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
+    @api batchCurrencyIsoCode;
     isLoaded = true;
 
 
@@ -177,6 +177,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .catch(error => handleError(error));
     }
 
+
     _propertiesSet = false;
     setTableProperties() {
         if (this._propertiesSet) {
@@ -189,7 +190,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             return;
         }
         this._count = this._dataImportModel.totalCountOfRows;
-        this._total = this._dataImportModel.totalRowAmount;
+        this._total = this._dataImportModel.batchTotalRowAmount;
         this._dataImportModel.dataImportRows.forEach(row => {
             this.data.push(Object.assign(row,
                 this.appendUrlColumnProperties.call(row.record,
@@ -228,12 +229,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.sections.forEach(section => {
             section.elements.filter(e => e.elementType === 'field')
                 .forEach(fieldElement => {
-                    const fieldWrapper =
+                    const fieldMapping =
                         GeFormService.getFieldMappingWrapper(
                             fieldElement.dataImportFieldMappingDevNames[0]);
 
-                    if (isNotEmpty(fieldWrapper)) {
-                        const column = this.getColumn(fieldElement, fieldWrapper);
+                    if (isNotEmpty(fieldMapping)) {
+                        const column = this.getColumn(fieldElement, fieldMapping);
                         this._columnsBySourceFieldApiName[column.fieldName] = column;
                     }
                 });
@@ -271,7 +272,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     deleteDIRow(rowToDelete) {
-        const isRowToDelete = row => row.Id == rowToDelete.Id;
+        const isRowToDelete = row => row.Id === rowToDelete.Id;
         const index = this.data.findIndex(isRowToDelete);
         this.data.splice(index, 1);
         this.data = this.data.splice(0);
@@ -320,7 +321,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(result => {
                 const dataImportModel = JSON.parse(result);
                 this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.totalRowAmount;
+                this._total = dataImportModel.batchTotalRowAmount;
                 dataImportModel.dataImportRows.forEach(row => {
                     this.upsertData(
                         Object.assign(row,
@@ -440,26 +441,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this;
     }
 
+    get batchCurrencyISOCode() {
+        return this.batchCurrencyIsoCode;
+    }
+
     @api
     handleSubmit(event) {
         saveAndDryRunDataImport({
             batchId: this.batchId,
             dataImport: event.detail.dataImportRecord
-        })
-            .then(result => {
-                let dataImportModel = JSON.parse(result);
-                let row = dataImportModel.dataImportRows[0];
-                Object.assign(row,
-                    this.appendUrlColumnProperties.call(row.record,
-                        this._dataImportObjectInfo));
-                this.upsertData(row, 'Id');
-                this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.totalRowAmount;
-                event.detail.success(); //Re-enable the Save button
-            })
-            .catch(error => {
-                event.detail.error(error);
-            });
+        }).then(result => {
+            let dataImportModel = JSON.parse(result);
+            let row = dataImportModel.dataImportRows[0];
+            Object.assign(row,
+                this.appendUrlColumnProperties.call(row.record,
+                    this._dataImportObjectInfo));
+            this.upsertData(row, 'Id');
+            this._count = dataImportModel.totalCountOfRows;
+            this._total = dataImportModel.batchTotalRowAmount;
+            event.detail.success(); //Re-enable the Save button
+        }).catch(error => {
+            event.detail.error(error);
+        });
     }
 
     _dataImportObjectInfo;
@@ -477,22 +480,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
     }
 
-    getColumn(element, fieldWrapper) {
+    getColumn(element, fieldMapping) {
         const isReferenceField = element.dataType === REFERENCE &&
-            fieldWrapper.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
+            fieldMapping.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
 
         const columnFieldName =
-            fieldWrapper.Source_Field_API_Name.toLowerCase().endsWith('id') ?
-            fieldWrapper.Source_Field_API_Name.slice(0, -2) :
-            fieldWrapper.Source_Field_API_Name;
+            fieldMapping.Source_Field_API_Name.toLowerCase().endsWith('id')
+                ? fieldMapping.Source_Field_API_Name.slice(0, -2)
+                : fieldMapping.Source_Field_API_Name;
 
         let column = {
             label: element.customLabel,
             fieldName: isReferenceField ?
                 `${columnFieldName}${URL_SUFFIX}` :
-                fieldWrapper.Source_Field_API_Name,
+                fieldMapping.Source_Field_API_Name,
             type: this.getColumnTypeFromFieldType(element.dataType)
         };
+
+        if (column.fieldName === DONATION_AMOUNT.fieldApiName) {
+            column.typeAttributes = {
+                currencyCode: this.batchCurrencyISOCode
+            };
+        }
 
         if (isReferenceField) {
             column.type = 'url';

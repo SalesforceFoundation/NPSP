@@ -6757,6 +6757,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Total amount doesn't match the {0}</value>
     </labels>
     <labels>
+        <fullName>geErrorBatchGiftEntryCurrencyMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when currency for gift doesn&apos;t match batch.</shortDescription>
+        <value>Unable to save the gift to the batch. Gifts must be in the same currency as the batch. Change your currency to {0} to save the gift.</value>
+    </labels>
+    <labels>
         <fullName>geErrorCardChargedBDIFailed</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8934,6 +8942,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Unit test error: An invalid string was provided but no exception was thrown</shortDescription>
         <value>An invalid string was provided but no exception was thrown</value>
+    </labels>
+    <labels>
+        <fullName>geWarningBatchGiftEntryCurrencyMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning when currency for gift doesn&apos;t match batch.</shortDescription>
+        <value>The currency for this batch is {0}. Gifts must be in the same currency as the batch. Change your currency to {0} to save a new gift to the batch.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>

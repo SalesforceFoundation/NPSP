@@ -117,6 +117,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
     CREATE: 'create',
@@ -145,6 +146,7 @@ export default class GeFormRenderer extends LightningElement{
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
+    @api batchCurrencyIsoCode;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -2432,5 +2434,20 @@ export default class GeFormRenderer extends LightningElement{
 
     handleCollapse(event) {
         this._isFormCollapsed = event.detail.isCollapsed;
+    }
+
+    get showMismatchedCurrencyWarning() {
+        if (isEmpty(this.batchCurrencyIsoCode)) {
+            return false;
+        }
+        return this.batchCurrencyIsoCode !== CURRENCY;
+    }
+
+    get mismatchedCurrencyWarning() {
+        if (this.showMismatchedCurrencyWarning) {
+            return GeLabelService.format(
+                this.CUSTOM_LABELS.geWarningBatchGiftEntryCurrencyMismatch,
+                [this.batchCurrencyIsoCode]);
+        }
     }
 }

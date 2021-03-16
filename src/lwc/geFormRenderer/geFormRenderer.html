@@ -106,12 +106,12 @@
                             <div class="slds-notify slds-notify_alert payment-warn" role="alert">
                                 <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
                                 <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
-                                <lightning-icon
-                                        variant="warning"
-                                        icon-name="utility:warning"
-                                        size="small">
-                                </lightning-icon>
-                            </span>
+                                    <lightning-icon
+                                            variant="warning"
+                                            icon-name="utility:warning"
+                                            size="small">
+                                    </lightning-icon>
+                                </span>
                                 <div class="slds-text-heading_small">{elevateTransactionWarning}</div>
                             </div>
                         </template>
@@ -165,6 +165,7 @@
                                                    body-class='slds-m-left_medium'
                                                    onsectioncollapse={handleCollapse}
                                                    should-inform-parent={_shouldInformParent}>
+                            
                             <template if:false={isPermissionError}
                                       for:each={sections}
                                       for:item='section'>
@@ -177,6 +178,23 @@
                                                    form-state={formState}>
                                 </c-ge-form-section>
                             </template>
+
+                            <template if:true={showMismatchedCurrencyWarning}>
+                                <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                                    <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                        <lightning-icon
+                                                variant="warning"
+                                                icon-name="utility:warning"
+                                                size="small">
+                                        </lightning-icon>
+                                    </span>
+                                    <div class="slds-text-heading_small">
+                                        {mismatchedCurrencyWarning}
+                                    </div>
+                                </div>
+                            </template>
+
                             <lightning-layout multiple-rows='true'
                                               horizontal-align='center'
                                               if:false={isPermissionError}>
