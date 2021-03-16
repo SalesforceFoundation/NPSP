@@ -15,7 +15,6 @@ Suite Teardown  Run Keywords
 ...             Rename Object Field                     Account              custom_acc1_text     custom_acc_text
 ...  AND        Query And Store Records To Delete       ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${BATCH1_Id}
 ...  AND        Query And Store Records To Delete       ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${BATCH2_Id}
-...  AND        Delete Session Records
 ...  AND        Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
@@ -72,12 +71,12 @@ Validate Errors When Field Is Renamed
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
     # Temporarily slows down Selenium to prevent the component error when filling the form
-    Set Selenium Speed                  0.5
+    Set Selenium Speed                  1
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    ...                                 Opportunity: Amount=5
     ...                                 Opportunity: Close Date=Today
+    ...                                 Opportunity: Amount=5
     # Returns Selenium back to full speed
     Set Selenium Speed                  0
     Click Gift Entry Button             Save & Enter New Gift
@@ -105,12 +104,12 @@ Validate Errors When Field Is Renamed
     Set Suite Variable                  ${BATCH2_Id}
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Contain Element         npsp:label:Account 1: custom_acc_text
-    Set Selenium Speed                  0.5
+    Set Selenium Speed                  1
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    ...                                 Opportunity: Amount=10
     ...                                 Opportunity: Close Date=Today
+    ...                                 Opportunity: Amount=10
     Set Selenium Speed                  0
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
