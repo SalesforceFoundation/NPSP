@@ -2424,6 +2424,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorBatchGiftEntryCurrencyMismatch</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2535,6 +2536,7 @@
         <members>geUtilJWTTestInvalidKey</members>
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
+        <members>geWarningBatchGiftEntryCurrencyMismatch</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
