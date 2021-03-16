@@ -68,7 +68,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     rdObjectInfo;
     defaultDayOfMonthValue;
     defaultInstallmentPeriodValue;
-    recurringType;
 
     @track disablePeriodPicklistField;
     @track disableInstallmentFrequencyField;
@@ -111,10 +110,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                     }
                     this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
                     this.updatePlannedInstallmentsVisibility(response.RecurringType);
-                    
-                    // Set the recurring type and dispatch an event so Schedule Section can show the Elevate widget
-                    this.recurringType = response.RecurringType;
-                    this.recurringTypeChangeHandler(this.recurringType);
                 })
                 .catch((error) => {
                     this.hasError = true;
@@ -310,16 +305,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleRecurringTypeChange(event) {
         let recurringType = event.target.value;
-        this.recurringTypeChangeHandler(recurringType);
-    }
-
-    /**
-     * @description Helper function for onHandleRecurringTypeChange allowing us to call it directly
-     * @param recurringType Open or Fixed
-     */
-    recurringTypeChangeHandler(recurringType){
-        console.log('Change!'); 
-        console.log(recurringType); 
         this.updatePlannedInstallmentsVisibility(recurringType);
 
         // Notify the main entry form about the Recurring Type value change
@@ -505,9 +490,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     getRecurringType() {
         const recurringType = this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`)
         
-        // Use the value that came in on init if the field can't be found
-        let fieldNotFoundVal = this.recurringType ? this.recurringType : null;
-        return recurringType ? recurringType.value : fieldNotFoundVal;
+        return recurringType ? recurringType.value : null;
     }
 
     /**

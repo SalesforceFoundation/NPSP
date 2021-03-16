@@ -13,6 +13,7 @@ import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
+import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
@@ -158,8 +159,8 @@ export default class rd2EntryForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
-                console.log('connected, finally'); 
-                this.handleElevateWidgetDisplay();
+                this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD),
+                    getFieldValue(this.record, FIELD_RECURRING_TYPE));
             });
 
         /*
@@ -304,20 +305,29 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
+    * @description Checks if the Elevate Information widget should be displayed on Edit
+    */
+    evaluateElevateEditWidget(paymentMethod, recurringType) {
+        this.isElevateEditWidgetEnabled = this.isElevateCustomer === true    
+            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+            && recurringType === RECURRING_TYPE_OPEN
+            && this.isCurrencySupported()
+            && this.isCountrySupported();
+    }
+
+    /***
     * @description Checks if the credit card widget should be displayed.
     * The Elevate widget is applicable to new RDs only for now.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        let rdIsCompatible = this.isElevateCustomer === true
+        this.isElevateWidgetEnabled = this.isElevateCustomer === true
+            && !this.isEdit
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
-        this.isElevateWidgetEnabled = rdIsCompatible && !this.isEdit;
-        this.isElevateEditWidgetEnabled = rdIsCompatible && this.isEdit;
-        
         this.populateCardHolderName();
     }
 
