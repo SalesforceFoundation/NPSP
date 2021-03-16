@@ -120,7 +120,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         listTemp.addAll(listHHId);
         listTemp.addAll(listOrgId);
         if (listTemp.size() > 0) {
-            ADDR_Addresses_TDTM.cleanupAccountAddresses(listTemp);
+            Addresses.cleanupAccountAddresses(listTemp);
         }
     }
 }

@@ -491,7 +491,7 @@ public with sharing class HH_Container_LCTRL {
             }           
         }
 
-        ADDR_Addresses_TDTM.cleanupAccountAddresses(cleanupAccountIds);
+        Addresses.cleanupAccountAddresses(cleanupAccountIds);
     }
 
     /*******************************************************************************************************
@@ -559,7 +559,7 @@ public with sharing class HH_Container_LCTRL {
             if (listAddrExisting != null) {
                 for (Address__c addr : listAddrExisting) {
                     listAddr.add(addr);
-                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                    setAddrKey.add(Addresses.getAddrKey(addr));
                 }
             }
 
@@ -593,7 +593,7 @@ public with sharing class HH_Container_LCTRL {
             }
             if (listAddrExisting == null || listAddrExisting.size() == 0)
                 addr.Default_Address__c = true;  // the HH address is the default.
-            String strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+            String strKey = Addresses.getAddrKey(addr);
             if (setAddrKey.add(strKey))
                 listAddr.add(addr);
 
@@ -609,7 +609,7 @@ public with sharing class HH_Container_LCTRL {
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
                 addr.MailingCountry__c = con.MailingCountry;
-                strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+                strKey = Addresses.getAddrKey(addr);
                 if (setAddrKey.add(strKey))
                     listAddr.add(addr);
             }
@@ -640,7 +640,7 @@ public with sharing class HH_Container_LCTRL {
                     addrT.Seasonal_End_Day__c = null;
                     addrT.Seasonal_End_Month__c = null;
                     addrT.Address_Type__c = null;
-                    strKey = ADDR_Addresses_TDTM.getAddrKey(addrT);
+                    strKey = Addresses.getAddrKey(addrT);
                     if (setAddrKey.add(strKey))
                         listAddr.add(addrT);
                 }
@@ -676,7 +676,7 @@ public with sharing class HH_Container_LCTRL {
             if (listAddrExisting != null) {
                 for (Address__c addr : listAddrExisting) {
                     listAddr.add(addr);
-                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                    setAddrKey.add(Addresses.getAddrKey(addr));
                 }
             }
 
@@ -692,7 +692,7 @@ public with sharing class HH_Container_LCTRL {
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
                 addr.MailingCountry__c = con.MailingCountry;
-                string strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
+                string strKey = Addresses.getAddrKey(addr);
                 if (setAddrKey.add(strKey))
                     listAddr.add(addr);
             }

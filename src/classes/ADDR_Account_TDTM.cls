@@ -184,6 +184,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             listAddr.add(addr);         
         }
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.
-        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
+        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 }

@@ -418,7 +418,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         // look for duplicates for our proposed new addresses        
-        map<Address__c, Address__c> mapAddrDupAddr = ADDR_Addresses_TDTM.findDuplicateAddresses(mapConAddr.values());
+        map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+                .values());
         
         // maps & lists to keep track of the addresses we must insert or update
         map<Contact, Address__c> mapConAddrInsertNow = new map<Contact, Address__c>();
@@ -445,7 +446,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 } else {
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (Addresses.isAddressChanged(addrNew, addrDup, true)) {
-	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
+	                    Addresses.copyAddressObj(addrNew, addrDup);
 	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
                             addrDup.Default_Address__c = true;
                         }
