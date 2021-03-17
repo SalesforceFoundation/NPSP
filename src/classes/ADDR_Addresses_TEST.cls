@@ -1033,11 +1033,11 @@ public with sharing class ADDR_Addresses_TEST {
         String countryCode = 'US';
         String country = 'United States';
 
-        ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
+        Addresses.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
         System.assertEquals(null, addressEmptyCountry.MailingCountry__c);
 
         con.put('MailingCountryCode', countryCode);
-        ADDR_Addresses_TDTM.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
+        Addresses.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
         System.assertEquals(country, addressEmptyCountry.MailingCountry__c);
 
         Test.stopTest();
@@ -1067,15 +1067,15 @@ public with sharing class ADDR_Addresses_TEST {
 
         String stateCode = 'CA';
 
-        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        Addresses.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
         System.assertEquals(null, addressEmptyState.MailingState__c);
 
         con.put('MailingStateCode', stateCode);
-        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        Addresses.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
         System.assertEquals(stateCode, addressEmptyState.MailingState__c);
 
         addressEmptyState.MailingState__c = 'NY';
-        ADDR_Addresses_TDTM.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
+        Addresses.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
         System.assertEquals(stateCode, addressEmptyState.MailingState__c);
 
         Test.stopTest();
@@ -1103,13 +1103,13 @@ public with sharing class ADDR_Addresses_TEST {
         String stateCode = 'CA';
 
         addressMatch.MailingState__c = null;
-        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        System.assertEquals(false, Addresses.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
         addressMatch.MailingState__c = 'Hawaii';
-        System.assertEquals(false, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        System.assertEquals(false, Addresses.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
         addressMatch.MailingState__c = 'California';
-        System.assertEquals(true, ADDR_Addresses_TDTM.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        System.assertEquals(true, Addresses.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
 
         Test.stopTest();
     }

@@ -1143,7 +1143,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     addr = hhinfo.addrDefault;
                 if (addr != null) {
                     Address__c addrCurrent = new Address__c();
-                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
+                    copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
                     // now see if the address has changed, and if not, we don't need to process it anymore
                     if (!isAddressChanged(addr, addrCurrent, false)) {
                         mapAccIdAddr.remove(acc.Id);
@@ -1163,5 +1163,133 @@ public inherited sharing class Addresses extends fflib_SObjects {
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to copy Address fields from a Contact or Account to an Address object.
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @param sobjSrc the source Contact or Account
+    * @param fieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
+    * @param addr the Address object to copy to
+    * @param addrType if not null, copy to address.Address_Type__c
+    * @return void
+    */
+    public static void copyAddressStdSObjAddr(sObject sobjSrc, String fieldPrefixSrc, Address__c addr, String addrType) {
+        addr.MailingStreet__c = (String)sobjSrc.get(fieldPrefixSrc + 'Street');
+        handleMultilineStreet(addr);
+        addr.MailingCity__c = (String)sobjSrc.get(fieldPrefixSrc + 'City');
+        addr.MailingPostalCode__c = (String)sobjSrc.get(fieldPrefixSrc + 'PostalCode');
+        addr.MailingState__c = (String)sobjSrc.get(fieldPrefixSrc + 'State');
+        addr.MailingCountry__c = (String)sobjSrc.get(fieldPrefixSrc + 'Country');
+        addr.Geolocation__Latitude__s = (Decimal)sobjSrc.get(fieldPrefixSrc + 'Latitude');
+        addr.Geolocation__Longitude__s = (Decimal)sobjSrc.get(fieldPrefixSrc + 'Longitude');
+
+        if (Addresses.isStateCountryPicklistsEnabled) {
+            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
+            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
+        }
+
+        // if specified, also include Address Type
+        if (addrType != null) {
+            addr.Address_Type__c = addrType;
+        } else {
+            // A null value will force a newly created Address record to use its defined default value for
+            // the picklist, which if not reflected here could cause isAddressChanged() to return true
+            // in cases when it should not.
+            addr.Address_Type__c = Addresses.defaultAddressType;
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Updates the Address record's MailingCountry field when it is empty
+    *              with the Account's BillingCountryCode or Contact's MailingCountryCode value.
+    * @param sobjSrc the source Account or Contact
+    * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static void populateAddressCountryFromCountryCode(sObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+        String countryCode = (String)sobjSrc.get(fieldPrefixSrc + 'CountryCode');
+        if (String.isBlank(countryCode)) {
+            return;
+        }
+
+        if (String.isEmpty(addr.MailingCountry__c)) {
+            addr.MailingCountry__c = Addresses.validCountriesByCode.get(countryCode
+                    .toUpperCase());
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Updates the Address record's MailingState field when it is empty
+    *              or does not match the Account's BillingStateCode or Contact's MailingStateCode value.
+    * @param sobjSrc the source Account or Contact
+    * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
+    * @param addr the Address object to update accordingly
+    * @return void
+    */
+    @testVisible
+    private static void populateAddressStateFromStateCode(sObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+        String stateCode = (String)sobjSrc.get(fieldPrefixSrc + 'StateCode');
+        if (String.isBlank(stateCode)) {
+            return;
+        }
+
+        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode, addr.MailingState__c)) {
+
+            // Assume it's a valid statecode
+            addr.MailingState__c = stateCode;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the
+    *              Address record's Mailing State.
+    * @param stateCode the BillingStateCode or MailingStateCode
+    * @param addressMailingState the Address Mailing State
+    * @return void
+    */
+    @testVisible
+    private static Boolean isMatchingStateCode(String stateCode, String addressMailingState) {
+        if (String.isBlank(addressMailingState)) {
+            return false;
+        }
+
+        String mappedMailingState = (Addresses.validStatesByLabel == null)
+                ? ''
+                : Addresses.validStatesByLabel.get(addressMailingState.toUpperCase());
+
+        return stateCode.equalsIgnoreCase(mappedMailingState);
+    }
+
+
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public static void handleMultilineStreet(Address__c addr) {
+
+        if (addr.MailingStreet__c == null)
+            return;
+
+        // handle CR NL
+        integer ich = addr.MailingStreet__c.indexOf('\r\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
+
+        // handle just NL
+        ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
     }
 }

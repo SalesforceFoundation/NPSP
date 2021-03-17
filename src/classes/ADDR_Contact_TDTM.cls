@@ -413,7 +413,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         	addr.Default_Address__c = !con.is_Address_Override__c;
         	addr.Latest_Start_Date__c = system.today();
         	addr.Latest_End_Date__c = null;        	
-        	ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, con.npe01__Primary_Address_Type__c);
+        	Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, con.npe01__Primary_Address_Type__c);
             mapConAddr.put(con, addr);
         }
 

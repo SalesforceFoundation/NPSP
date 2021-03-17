@@ -547,7 +547,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     addr.Default_Address__c = true;
                     addr.Latest_Start_Date__c = System.today();
                     addr.Latest_End_Date__c = null;
-                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(
+                    Addresses.copyAddressStdSObjAddr(
                             con, 'Mailing', addr, null);
                     UTIL_DMLService.insertRecord(addr);
                 }
