@@ -153,8 +153,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                         && isNull(this.permissions.alert);
 
                     this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
-                         && response.hasFieldUpdatePermission
-                         && this.isEditEnabled;
+                         && response.hasFieldUpdatePermission;
 
                     this.permissions.showExpirationDate = response.showExpirationDate;
                     this.permissions.showLastFourDigits = response.showLastFourDigits;
@@ -244,8 +243,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     shouldShowLastFourACH() {
         return this.paymentMethod === PAYMENT_METHOD_ACH
             && this.isTrue(this.isElevateCustomer)
-            && this.isTrue(this.permissions.showLastFourDigits)
-            && this.isEditEnabled;
+            && this.isTrue(this.permissions.showLastFourDigits);
     }
 
     /***
@@ -254,16 +252,14 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     shouldShowLastFourCreditCard() {
         return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && this.isTrue(this.isElevateCustomer)
-            && this.isTrue(this.permissions.showLastFourDigits)
-            && this.isEditEnabled;
+            && this.isTrue(this.permissions.showLastFourDigits);
     }
 
     /***
      * @description Does the user have perms to show the Expiration Date fields?
      */
     shouldShowExpirationDate() {
-        return this.isTrue(this.permissions.showExpirationDate)
-            && this.isEditEnabled;
+        return this.isTrue(this.permissions.showExpirationDate);
     }
 
     /***
