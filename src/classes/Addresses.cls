@@ -1117,4 +1117,51 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
+
+    /*******************************************************************************************************
+    * @description routine the scheduled batch job calls to update households with Seasonal addresses
+    * @param listAcc a list of Accounts to see if their address needs to be updated
+    * @return void
+    */
+    public static void batchSeasonalUpdate(list<Account> listAcc) {
+        if (listAcc == null || listAcc.size() == 0)
+            return;
+
+        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        for (Account acc : listAcc)
+            mapAccIdAddr.put(acc.Id, null);
+
+        // get the default and seasonal address for each HH
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+
+        // now see which accounts actually had their address change, so we only update them.
+        for (Account acc : listAcc) {
+            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(acc.Id);
+            if (hhinfo != null) {
+                Address__c addr = hhinfo.addrSeasonal;
+                if (addr == null)
+                    addr = hhinfo.addrDefault;
+                if (addr != null) {
+                    Address__c addrCurrent = new Address__c();
+                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
+                    // now see if the address has changed, and if not, we don't need to process it anymore
+                    if (!isAddressChanged(addr, addrCurrent, false)) {
+                        mapAccIdAddr.remove(acc.Id);
+                    }
+
+                }
+            }
+        }
+
+        // now mapAccIdAddr only contains those Accounts (and Contacts) who need updating.
+        // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates
+
+        // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+
+        TDTM_Runnable.Dmlwrapper dmlWrapper = new TDTM_Runnable.Dmlwrapper();
+        refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+    }
 }

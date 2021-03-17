@@ -92,7 +92,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, List<Account> scope) {
-        ADDR_Addresses_TDTM.batchSeasonalUpdate(scope);
+        Addresses.batchSeasonalUpdate(scope);
     }
 
     /*******************************************************************************************************
