@@ -503,7 +503,8 @@ public inherited sharing class CRLP_RollupProcessor {
 
         // Set skew mode flag on skew mode records not currently set
         String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
-        if (rollupType != CRLP_RollupProcessingOptions.RollupType.GAU
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
+            && rollupType != CRLP_RollupProcessingOptions.RollupType.GAU
             && rollupType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
             && updatedRecord.isSet(qualifiedSkewField)
             && !(Boolean) updatedRecord.get(qualifiedSkewField)

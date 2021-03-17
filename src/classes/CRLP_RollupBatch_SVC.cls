@@ -132,7 +132,7 @@ public class CRLP_RollupBatch_SVC {
             String objName = recordId.getSobjectType().getDescribe().getName();
             String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID AND ('
                 + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c')
-                + ' = true ';
+                + ' = true';
             String filter = getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(filter)) {
                 soql += ' OR ' + filter + ')';
