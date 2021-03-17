@@ -14,25 +14,37 @@
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
 
-                                    <template if:true={editMode}>
-                                        <lightning-button variant="base" label={labels.updatePaymentButtonLabel}
-                                            icon-name='utility:close' icon-position="right"
+                                    <template if:true={readOnlyMode}>
+                                        <lightning-button variant="base" 
+                                            label={labels.updatePaymentButtonLabel}
                                             onclick={handleUpdatePayment}
                                             class='slds-button slds-button_base slds-float_right hide-card-button'
                                             data-qa-locator='button Update Payment Information'>
                                         </lightning-button>
                                     </template>
 
+                                    <template if:true={showCancel}>
+                                        <lightning-button variant="base" 
+                                            label={labels.cancelButtonLabel}
+                                            icon-name='utility:close' 
+                                            icon-position="right"
+                                            onclick={handleCancelUpdate}
+                                            class='slds-button slds-button_base slds-float_right hide-card-button'
+                                            data-qa-locator='button Cancel Update Payment Information'>
+                                        </lightning-button>
+                                    </template>
+
                                     <template if:false={isEditPayment}>
                                         <template if:false={isDisabled}>
-                                            <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
-                                                icon-name='utility:close' icon-position="right"
+                                            <lightning-button variant="base" 
+                                                label={labels.elevateDisableButtonLabel}
+                                                icon-name='utility:close' 
+                                                icon-position="right"
                                                 onclick={handleUserDisabledWidget}
                                                 class='slds-button slds-button_base slds-float_right hide-card-button'
                                                 data-qa-locator='button Do Not Use Elevate'>
                                             </lightning-button>
                                         </template>
-
                                     </template>
 
                                 </lightning-layout-item>
@@ -40,40 +52,34 @@
                         </div>
                     </lightning-layout-item>
 
-
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
-
-                        <template if:true={editMode}>
-                        <lightning-layout vertical-align='center' multiple-rows='true'>
-
-                            <lightning-layout-item size="4" class=" slds-text-color_weak" slds-m-bottom_x-small>
-                                <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
-                                        for="last4ach" id="achlast4Label">Card Last 4</label>
-                            </lightning-layout-item>
-                            <lightning-layout-item size="4" class="slds-text-color_weak slds-m-bottom_x-small">
-                                <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
-                                    for="expirationDate" id="expirationDateLabel">Exp. Date</label>
-                            </lightning-layout-item>
-                            
-                            <lightning-layout-item size="4"></lightning-layout-item>
-
-                            <lightning-layout-item size="4">
-                                <lightning-formatted-text id="last4ach"
-                                                          value={cardLastFour}
-                                                          data-qa-locator={qaLocatorLastFourDigits}
-                                                          aria-labelledby="achlast4Label">
-                                </lightning-formatted-text>
-                            </lightning-layout-item>
-                            <lightning-layout-item size="4" class="">
-                                <lightning-formatted-text id="expirationDate"
-                                                          value={cardExpDate}
-                                                          data-qa-locator={qaLocatorExpirationDate}
-                                                          aria-labelledby="expirationDateLabel">
-                                </lightning-formatted-text>
-                            </lightning-layout-item>
-                        </lightning-layout>
+                        
+                        <template if:true={readOnlyMode}>
+                            <lightning-layout vertical-align='center' multiple-rows='true'>
+                                <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                    <label for="last4ach" id="achlast4Label"
+                                        class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                        Card Last 4
+                                    </label><br/>
+                                    <lightning-formatted-text id="last4ach"
+                                        value={cardLastFour}
+                                        data-qa-locator={qaLocatorLastFourDigits}
+                                        aria-labelledby="achlast4Label">
+                                    </lightning-formatted-text>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="4" class="slds-text-color_weak slds-p-bottom_small">
+                                    <label for="expirationDate" id="expirationDateLabel"
+                                        class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                        Exp. Date
+                                    </label><br/>
+                                    <lightning-formatted-text id="expirationDate"
+                                        value={cardExpDate}
+                                        data-qa-locator={qaLocatorExpirationDate}
+                                        aria-labelledby="expirationDateLabel">
+                                    </lightning-formatted-text>
+                                </lightning-layout-item>
+                            </lightning-layout>
                         </template>
-
 
                         <template if:true={isDisabled}>
                             <p class='fade-in'>

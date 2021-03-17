@@ -132,7 +132,7 @@ export default class rd2EntryForm extends LightningElement {
 
     @api 
     get nextDonationDate() {
-        const localDate = new Date(this.nextDonationDate);
+        const localDate = new Date(this._nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
@@ -167,12 +167,11 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
 
-                if(this.isEdit){
-                    
+                if(this.isEdit){                    
                     // Since this requires interaction to Edit, this should start as true
                     this.hasUserDisabledElevateWidget = true;
 
-                    this.nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
+                    this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
                     this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
                     this.cardExpDate = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + '/'
                         + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
@@ -333,8 +332,6 @@ export default class rd2EntryForm extends LightningElement {
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
-        console.log(this.isElevateEditWidgetEnabled); 
-
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
     }
 
@@ -429,9 +426,6 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
 
-            console.log('Saving'); 
-            console.log(this.isCommitment()); 
-
             if (this.isCommitment()) {
                 this.processCommitmentSubmit(allFields);
 
@@ -468,10 +462,6 @@ export default class rd2EntryForm extends LightningElement {
 
         try {//ensure all errors are handled and displayed to the user
             const rd = this.constructRecurringDonation(allFields);
-
-            console.log('handleCommitment'); 
-            console.log(JSON.parse(JSON.stringify(rd))); 
-
             handleCommitment({
                 jsonRecord: JSON.stringify(rd),
                 paymentMethodToken: this.paymentMethodToken
@@ -509,13 +499,9 @@ export default class rd2EntryForm extends LightningElement {
             return false;
         }
 
-        // if (!this.isEdit) {
-            // A new Recurring Donation will be a new Elevate recurring commitment
-            // when the Elevate widget is displayed on the entry form.
+        // A new Recurring Donation will be a new Elevate recurring commitment
+        // when the Elevate widget is displayed on the entry form.
         return this.isElevateWidgetDisplayed();
-        // }
-
-        //return false;
     }
 
     /***

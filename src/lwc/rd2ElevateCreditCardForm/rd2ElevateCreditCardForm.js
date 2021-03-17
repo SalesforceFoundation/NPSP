@@ -12,6 +12,7 @@ import NextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentD
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -34,7 +35,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateEnableButtonLabel,
         cardholderNameLabel,
         NextPaymentDonationDateMessage,
-        updatePaymentButtonLabel
+        updatePaymentButtonLabel,
+        cancelButtonLabel
     };
 
     @track isLoading = true;
@@ -47,9 +49,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     @track showLastFourACH = true;
     
-    @api editMode;
+    @api readOnlyMode;
     @api cardLastFour;
     @api cardExpDate;
+    showCancel = false;
 
     @api
     get paymentMethod() {
@@ -87,7 +90,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     @api
     get showForm() {
-        return !this.isDisabled && !this.editMode;
+        return !this.isDisabled && !this.readOnlyMode;
     }
 
     /***
@@ -188,9 +191,21 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * @description Handles user onclick event for updating payment information
     */
     handleUpdatePayment(){
-        this.editMode = false;
+        this.readOnlyMode = false;
+        this.showCancel = true;
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
             isDisabled: false
+        });
+    }
+
+    /***
+    * @description Handles user onclick event for cancel payment update
+    */
+    handleCancelUpdate(){
+        this.readOnlyMode = true;
+        this.showCancel = false;
+        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
+            isDisabled: true
         });
     }
 
