@@ -22,7 +22,7 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 
-import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
+import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 export default class Rd2EditCreditCardModal extends LightningElement {
@@ -124,7 +124,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         this.loadingText = this.labels.savingCommitmentMessage;
 
         try {
-            handleCommitment({
+            handleUpdatePaymentCommitment({
                 jsonRecord: JSON.stringify(this.constructRecurringDonation()),
                 paymentMethodToken: this.paymentMethodToken
             })
