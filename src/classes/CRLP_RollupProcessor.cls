@@ -499,8 +499,20 @@ public inherited sharing class CRLP_RollupProcessor {
         SObject updatedRecord = handler.getPopulatedSObject();
 
         // Determine if the updated SObject record is different than the parent.
-        // If not, set it to null
-        if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs) == false) {
+        Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
+
+        // Set skew mode flag on skew mode records not currently set
+        String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
+        if (rollupType != CRLP_RollupProcessingOptions.RollupType.GAU
+            && rollupType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
+            && updatedRecord.isSet(qualifiedSkewField)
+            && !(Boolean) updatedRecord.get(qualifiedSkewField)
+        ) {
+            updatedRecord.put(qualifiedSkewField, true);
+        }
+
+        // Respect the value of needsUpdate for all other records
+        else if (!needsUpdate) {
             updatedRecord = null;
         }
 
