@@ -17,7 +17,8 @@
                         icon-class="slds-button_icon-inverse"
                         onclick={handleClose}
                         onkeydown={handleClosedButtonTrapFocus}
-                        data-id="closeButton">
+                        data-id="closeButton"
+                        disabled={isSaveButtonDisabled}>
                     </lightning-button-icon>
                     <h2
                         class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
@@ -62,7 +63,7 @@
                 <footer class="slds-modal__footer slds-clearfix">
                     <div class="slds-float_right">
                         <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
-                            variant="neutral" class="slds-m-right_small" onclick={handleClose}>
+                            variant="neutral" class="slds-m-right_small" onclick={handleClose} disabled={isSaveButtonDisabled}>
                         </lightning-button>
                         <lightning-button label={labels.saveButtonLabel} title={labels.saveButtonLabel} disabled={isSaveButtonDisabled}
                             variant="brand" onclick={handleProcessCommitment} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton">
