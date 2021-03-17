@@ -55,6 +55,7 @@ import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
+const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
@@ -166,18 +167,7 @@ export default class rd2EntryForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
-
-                if(this.isEdit){                    
-                    // Since this requires interaction to Edit, this should start as true
-                    this.hasUserDisabledElevateWidget = true;
-
-                    this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
-                    this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-                    this.cardExpDate = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + '/'
-                        + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
-                    this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD),
-                        getFieldValue(this.record, FIELD_RECURRING_TYPE));
-                }
+                this.evaluateElevateEditWidget();
             });
 
         /*
@@ -322,17 +312,32 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if the Elevate Information widget should be displayed on Edit
+    * @description Checks if the Credit Card widget should be displayed on Edit
     */
-    evaluateElevateEditWidget(paymentMethod, recurringType) {
-        this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
-            && this.isEdit 
-            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
-            && recurringType === RECURRING_TYPE_OPEN
-            && this.isCurrencySupported()
-            && this.isCountrySupported();
+    evaluateElevateEditWidget() {
+        let statusField = getFieldValue(this.record, FIELD_STATUS);
 
-        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
+        if(this.isEdit && statusField != STATUS_CLOSED){
+            let paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
+
+            // Since the widget requires interaction to Edit, this should start as true
+            this.hasUserDisabledElevateWidget = true;
+
+            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
+            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
+            this.cardExpDate = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + '/'
+                + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+
+            this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
+                && this.isEdit 
+                && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+                && recurringType === RECURRING_TYPE_OPEN
+                && this.isCurrencySupported()
+                && this.isCountrySupported();
+
+            this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
+        }
     }
 
     /***
@@ -341,12 +346,13 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && (!this.isEdit || this.isElevateEditWidgetEnabled)
+        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
+            || (this.isElevateCustomer === true
+            && !this.isEdit
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
-            && this.isCountrySupported();
+            && this.isCountrySupported());
 
         this.populateCardHolderName();
     }
