@@ -71,6 +71,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
 
+        DmlWrapper dmlWrapper = new DmlWrapper();
+
         switch on triggerAction {
             when BeforeInsert {
                 Addresses addresses = new Addresses(listNew);
@@ -125,8 +127,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
             }
         }
-
-        DmlWrapper dmlWrapper = new DmlWrapper();
 
         if (mapAddressesByAcctId.size() > 0) {
             refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapper, false);
