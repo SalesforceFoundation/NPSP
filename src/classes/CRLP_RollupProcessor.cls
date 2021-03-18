@@ -488,6 +488,15 @@ public inherited sharing class CRLP_RollupProcessor {
         // has changed or not.
         Id parentId = parent.Id;
 
+        Boolean hasSkewFlag = parent.getSObjectType() == Account.SObjectType || parent.getSObjectType() == Contact.SObjectType;
+        Boolean forceSkew = false;
+        String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
+
+        // Save the skew flag setting
+        if (hasSkewFlag && parent.isSet(qualifiedSkewField)) {
+            forceSkew = (Boolean) parent.get(qualifiedSkewField);
+        }
+
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
         List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
@@ -501,19 +510,18 @@ public inherited sharing class CRLP_RollupProcessor {
         // Determine if the updated SObject record is different than the parent.
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
-        // Set skew mode flag on skew mode records not currently set
-        String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
-            && rollupType != CRLP_RollupProcessingOptions.RollupType.GAU
-            && rollupType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
-            && updatedRecord.isSet(qualifiedSkewField)
-            && !(Boolean) updatedRecord.get(qualifiedSkewField)
-        ) {
+        // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && hasSkewFlag) {
             updatedRecord.put(qualifiedSkewField, true);
+
+            // If force skew flag was not initially true, return for update unconditionally
+            if (!forceSkew) {
+                return updatedRecord;
+            }
         }
 
         // Respect the value of needsUpdate for all other records
-        else if (!needsUpdate) {
+        if (!needsUpdate) {
             updatedRecord = null;
         }
 
