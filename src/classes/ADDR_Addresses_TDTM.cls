@@ -91,6 +91,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                 }
 
+                if (mapAddressesByAcctId.size() > 0) {
+                    refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapper, false);
+                }
             }
             when else {
                 if (isBeforeUpdate(triggerAction)) {
@@ -107,6 +110,9 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                     }
 
+                    if (mapAddressesByAcctId.size() > 0) {
+                        refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapper, false);
+                    }
                 }
 
                 if (isAfterUpdate(triggerAction)) {
@@ -119,6 +125,13 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                     }
 
+                    if (mapAddressesByAcctId.size() > 0) {
+                        refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapper, false);
+                    }
+
+                    if (mapAddressesById.size() > 0) {
+                        updateAddrOverrides(mapAddressesById, dmlWrapper);
+                    }
                 }
 
                 // BEFORE INSERT & BEFORE UPDATE
@@ -128,13 +141,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (mapAddressesByAcctId.size() > 0) {
-            refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapper, false);
-        }
-
-        if (mapAddressesById.size() > 0) {
-            updateAddrOverrides(mapAddressesById, dmlWrapper);
-        }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
         // that might occur updating contacts and accounts, and associating those errors with 
