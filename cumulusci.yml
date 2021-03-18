@@ -1073,8 +1073,10 @@ flows:
             8:
                 task: deploy_regression_bdi_metadata_config
             9:
-                task: create_perms_testing_user
+                task: update_admin_profile
             10:
+                task: create_perms_testing_user
+            11:
                 task: assign_permission_sets
                 options:
                     api_names: QA,Gift_Entry
