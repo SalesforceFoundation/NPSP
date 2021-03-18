@@ -70,7 +70,7 @@ Validate Errors When Field Is Renamed
     Set Suite Variable                  ${BATCH1_Id}
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
-    Scroll Page To Location             10     10
+    SeleniumLibrary.Scroll Element into View            npsp:gift_entry.datepicker:datetime Opportunity
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
