@@ -8,6 +8,7 @@
             aria-describedby="modal-content-id-1"
             class="slds-modal slds-fade-in-open slds-modal_small"
             onkeyup={handleKeyUp}>
+
             <div class="slds-modal__container">
                 <header class="slds-modal__header slds-clearfix">
                     <lightning-button-icon
@@ -25,8 +26,8 @@
                         {labels.PaymentInformationTitle}
                     </h2>
                 </header>
-                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
 
+                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isSaving}>
                         <div class="slds-grid slds-grid_align-center">
                             <div class="slds-is-relative slds-size_1-of-1">
@@ -37,6 +38,7 @@
                             </div>
                         </div>
                     </template>
+
                     <div class="error-container">
                         <template if:true={error.detail}>
                             <c-util-page-level-message title={error.header}
@@ -60,6 +62,7 @@
                         </c-rd2-elevate-credit-card-form>
                     </div>
                 </div>
+
                 <footer class="slds-modal__footer slds-clearfix">
                     <div class="slds-float_right">
                         <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
@@ -71,6 +74,7 @@
                     </div>
                 </footer>
             </div>
+
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </div>

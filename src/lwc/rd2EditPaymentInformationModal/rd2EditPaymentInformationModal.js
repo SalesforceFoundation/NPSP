@@ -74,18 +74,18 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     }
 
     /**
-     * @description Returns the Recurring Donation field value if the field is set and populated
-     */
+    * @description Returns the Recurring Donation field value if the field is set and populated
+    */
     getValue(fieldName) {
         return this.hasValue(fieldName)
             ? this.rdRecord.fields[fieldName].value
             : null;
     }
 
-     /**
-     * @description Determines if the Recurring Donation record is retrieved and
-     * its fields defined and populated
-     */
+    /**
+    * @description Determines if the Recurring Donation record is retrieved and
+    * its fields defined and populated
+    */
     hasValue(fieldName) {
         return this.rdRecord
             && this.rdRecord.fields
@@ -171,7 +171,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     /**
     * @description Launch a succeed toast message and closed the modal
     */
-   handleSuccess() {
+    handleSuccess() {
         const message = this.labels.updateSuccessMessage.replace("{0}", this.rdName);
         showToast(message, '', 'success');
         this.handleClose();
@@ -201,10 +201,10 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         return rd;
     }
 
-     /**
-     * @description Displays errors extracted from the error response
-     * returned from the Elevate API when the Commitment cannot be created
-     */
+    /**
+    * @description Displays errors extracted from the error response
+    * returned from the Elevate API when the Commitment cannot be created
+    */
     getCommitmentError(response) {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
@@ -229,9 +229,9 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     }
 
     /***
-     * @description Handle component display when an error on the save action occurs.
-     * Keep Save button enabled so user can correct a value and save again.
-     */
+    * @description Handle component display when an error on the save action occurs.
+    * Keep Save button enabled so user can correct a value and save again.
+    */
     handleSaveError(error) {
         try {
             this.error = constructErrorMessage(error); 
@@ -245,8 +245,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     */
     handleLogError() {
         logError({ recordId: this.rdRecord.id, errorMessage: this.error.detail })
-                .catch((error) => { });
-
+            .catch((error) => { });
     }
 
     /***
@@ -254,7 +253,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     * @param {object} response: Http response object
     * @return {string}: Message from a failed API call response
     */
-   getErrors(response) {
+    getErrors(response) {
         if (response.body && response.body.errors) {
             return response.body.errors.map(error => error.message).join('\n ');
         }
@@ -271,7 +270,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     /**
     * @description Clears the error notification
     */
-   clearError() {
+    clearError() {
         this.error = {};
     }
 
@@ -314,4 +313,4 @@ export default class Rd2EditCreditCardModal extends LightningElement {
             this.handleCancel();
         }
     }
-} 
+}
