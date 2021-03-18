@@ -161,13 +161,16 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.isPilotEnabled = response.isPilotEnabled;
             })
             .catch((error) => {
                 this.handleError(error);
             })
             .finally(() => {
                 this.isLoading = false;
-                this.evaluateElevateEditWidget();
+                if(this.isPilotEnabled){
+                    this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+                }
             });
 
         /*
@@ -314,12 +317,15 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Checks if the Credit Card widget should be displayed on Edit
     */
-    evaluateElevateEditWidget() {
+    evaluateElevateEditWidget(paymentMethod) {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
 
         if(this.isEdit && statusField != STATUS_CLOSED){
-            let paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
+            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
+                recurringType = this.scheduleComponent.getRecurringType();
+            }
 
             // Since the widget requires interaction to Edit, this should start as true
             this.hasUserDisabledElevateWidget = true;
@@ -346,6 +352,11 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
+
+        if(this.isPilotEnabled){
+            this.evaluateElevateEditWidget(paymentMethod);
+        }
+
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && !this.isEdit
