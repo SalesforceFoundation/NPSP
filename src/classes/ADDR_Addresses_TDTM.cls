@@ -82,7 +82,13 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             when AfterDelete {
                 Addresses addresses = new Addresses(listOld);
-                mapAddressesByAcctId = addresses.getMapAddressesByAcctId();
+                mapAddressesByAcctId = addresses.addressesByHouseholdAccountId();
+                // AFTER INSERT & AFTER UPDATE & AFTER DELETE
+                // now we have which HH Accounts to consider, and which to only use for Address Override updates.
+                if (!mapAddressesByAcctId.isEmpty()){
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                }
+
             }
             when else {
                 if (isBeforeUpdate(triggerAction)) {
@@ -92,13 +98,25 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
                 if (isAfterInsert(triggerAction)) {
                     Addresses addresses = new Addresses(listNew);
-                    mapAddressesByAcctId = addresses.defaultAndSeasonalAddresses();
+                    mapAddressesByAcctId = addresses.defaultAndSeasonalAddressesByHouseholdAccountId();
+                    // AFTER INSERT & AFTER UPDATE & AFTER DELETE
+                    // now we have which HH Accounts to consider, and which to only use for Address Override updates.
+                    if (!mapAddressesByAcctId.isEmpty()) {
+                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                    }
+
                 }
 
                 if (isAfterUpdate(triggerAction)) {
                     Addresses addresses = new Addresses(listNew, listOld);
                     mapAddressesByAcctId = addresses.defaultAndSeasonalWithChanges();
                     mapAddressesById = addresses.nonDefaultsWithChanges();
+                    // AFTER INSERT & AFTER UPDATE & AFTER DELETE
+                    // now we have which HH Accounts to consider, and which to only use for Address Override updates.
+                    if (!mapAddressesByAcctId.isEmpty() || !mapAddressesById.isEmpty()) {
+                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                    }
+
                 }
 
                 // BEFORE INSERT & BEFORE UPDATE
@@ -106,12 +124,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     return null;
                 }
             }
-        }
-
-        // AFTER INSERT & AFTER UPDATE & AFTER DELETE
-        // now we have which HH Accounts to consider, and which to only use for Address Override updates.
-        if (!mapAddressesByAcctId.isEmpty() || !mapAddressesById.isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
         }
 
         DmlWrapper dmlWrapper = new DmlWrapper();

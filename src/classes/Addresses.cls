@@ -80,7 +80,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         } private set;
     }
 
-    public Map<Id, Address__c> getMapAddressesByAcctId() {
+    public Map<Id, Address__c> addressesByHouseholdAccountId() {
         Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
         for (Address__c address : (List<Address__c>) getRecords()) {
             if (hasHouseholdAccount(address)) {
@@ -815,7 +815,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return addr.Id;
     }
 
-    public Map<Id, Address__c> defaultAndSeasonalAddresses() {
+    public Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId() {
         Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
             if (isDefault(addr) || isSeasonal(addr)) {
