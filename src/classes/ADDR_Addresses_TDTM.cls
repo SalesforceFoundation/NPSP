@@ -84,8 +84,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             when AfterInsert {
                 Addresses addresses = new Addresses(listNew);
                 addresses.onAfterInsert();
-                // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
-                addresses.deleteEmptyAddresses();
             }
             when AfterUpdate {
                 Addresses addresses2 = new Addresses(listNew, listOld);

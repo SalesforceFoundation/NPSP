@@ -1330,6 +1330,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
         if (errors.errorsExist) {
             putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
         }
+
+        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
+        deleteEmptyAddresses();
     }
 
     public void onAfterUpdate() {
