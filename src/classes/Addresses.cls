@@ -50,6 +50,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public static Map<String, String> validCountriesByCode = new Map<String, String>();
 
     private Map<Id, Address__c> oldMap;
+    @TestVisible
+    private TDTM_Runnable.DmlWrapper dmlWrapperLocal {
+        get {
+            if (dmlWrapperLocal == null) {
+                dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
+            }
+            return dmlWrapperLocal;
+        }
+        set;
+    }
 
     public Addresses(List<Address__c> addresses) {
         super(addresses, Address__c.SObjectType);
@@ -1295,7 +1305,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterDelete() {
-        TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
         if (!addressesByHouseholdAccountId().isEmpty()) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
             refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
@@ -1313,7 +1322,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
         if (!defaultAndSeasonalAddressesByHouseholdAccountId().isEmpty()) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
         }
@@ -1337,7 +1345,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
         if (!defaultAndSeasonalWithChanges().isEmpty() || !nonDefaultsWithChanges().isEmpty()) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);

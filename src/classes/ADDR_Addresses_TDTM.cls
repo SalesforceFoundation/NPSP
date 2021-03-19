@@ -98,8 +98,4 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     private Boolean isRecursive() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
     }
-
-
-
-
 }
