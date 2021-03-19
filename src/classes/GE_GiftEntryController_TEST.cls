@@ -60,6 +60,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(5, batchTotals.get('failedGifts'));
         System.assertEquals(3, batchTotals.get('processedGifts'));
         System.assertEquals(8, batchTotals.get('failedPayments'));
+        System.assertEquals((5 + 3 + 8), batchTotals.get('totalGifts'));
     }
 
     private static DataImport__c createDataImportTemp(String status, String paymentStatus, Id batchId) {
