@@ -70,6 +70,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             when BeforeInsert {
                 Addresses addresses = new Addresses(listNew);
                 addresses.onBeforeInsert();
+                return null;
             }
         }
 
@@ -83,6 +84,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 if (isBeforeUpdate(triggerAction)) {
                     Addresses addresses2 = new Addresses(listNew, listOld);
                     addresses2.onBeforeUpdate();
+                    return null;
                 }
 
                 if (isAfterInsert(triggerAction)) {
@@ -93,11 +95,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 if (isAfterUpdate(triggerAction)) {
                     onAfterUpdate(listNew, listOld);
 
-                }
-
-                // BEFORE INSERT & BEFORE UPDATE
-                if (isBeforeInsert(triggerAction) || isBeforeUpdate(triggerAction)) {
-                    return null;
                 }
             }
         }
