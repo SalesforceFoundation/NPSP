@@ -37,6 +37,9 @@
 */
 public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
+    private final TDTM_ProcessControl.flag recursionFlag =
+            TDTM_ProcessControl.flag.ADDR_hasRunTrigger;
+
     /*******************************************************************************************************
     * @description Trigger Handler on Address that handles address management.  Updates the appropriate
     * Accounts and Contacts when an Address is changed.
@@ -74,7 +77,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 return null;
             }
             when AfterInsert {
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                activateRecursionFlag();
                 addresses = new Addresses(listNew);
                 addresses.onAfterInsert();
             }
@@ -84,22 +87,31 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 return null;
             }
             when AfterUpdate {
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                activateRecursionFlag();
                 addresses = new Addresses(listNew, listOld);
                 addresses.onAfterUpdate();
             }
             when AfterDelete {
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                activateRecursionFlag();
                 addresses = new Addresses(listOld);
                 addresses.onAfterDelete();
             }
         }
 
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+        deactivateRecursionFlag();
         return null;
     }
 
     private Boolean isRecursive() {
-        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
+        return TDTM_ProcessControl.isRecursive(recursionFlag);
     }
+
+    private void activateRecursionFlag() {
+        TDTM_ProcessControl.setRecursionFlag(recursionFlag, true);
+    }
+
+    private void deactivateRecursionFlag() {
+        TDTM_ProcessControl.setRecursionFlag(recursionFlag, false);
+    }
+
 }
