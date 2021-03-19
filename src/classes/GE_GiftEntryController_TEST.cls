@@ -39,19 +39,27 @@ private with sharing class GE_GiftEntryController_TEST {
 
     @isTest
     private static void shouldReturnMapOfBatchTotals() {
-        Map<String, Integer> expectedBatchTotals = new Map<String, Integer> {
-            'processedGifts' => 10,
-            'failedGifts' => 5,
-            'failedPayments' => 1,
-            'totalGifts' => 20
-        };
-        Map<String, Integer> batchTotals =
-            GE_GiftEntryController.getGiftBatchTotalsBy(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
+        DataImportBatch__c batch = new DataImportBatch__c();
+        insert batch;
 
-        System.assertEquals(batchTotals.get('processedGifts'), expectedBatchTotals.get('processedGifts'));
-        System.assertEquals(batchTotals.get('failedGifts'), expectedBatchTotals.get('failedGifts'));
-        System.assertEquals(batchTotals.get('failedPayments'), expectedBatchTotals.get('failedPayments'));
-        System.assertEquals(batchTotals.get('totalGifts'), expectedBatchTotals.get('totalGifts'));
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        for (Integer i = 0; i < 8; i++) {
+            dataImports.add(createDataImportTemp('DUMMY_STATUS', 'DECLINED', batch.Id));
+        }
+        insert dataImports;
+
+        Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
+
+        System.assertEquals(8, batchTotals.get('failedPayments'));
+    }
+
+    private static DataImport__c createDataImportTemp(String status, String paymentStatus, Id batchId) {
+        DataImport__c dataImport = new DataImport__c(
+            Status__c = status,
+            Payment_Status__c = paymentStatus,
+            NPSP_Data_Import_Batch__c = batchId
+        );
+        return dataImport;
     }
 
     /***

@@ -42,11 +42,30 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
+        AggregateResult[] results = [
+            SELECT
+                COUNT(Id)recordCount,
+                Status__c,
+                Payment_Status__c
+            FROM DataImport__c
+            WHERE NPSP_Data_Import_Batch__c = :batchId
+            GROUP BY
+                Status__c,
+                Payment_Status__c
+        ];
+
+        Integer processedGifts = 0;
+        Integer failedPayments = 0;
+
+        for (AggregateResult result : results) {
+            String paymentStatus = (String) result.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
+            if (paymentStatus == 'DECLINED') {
+                failedPayments = (Integer) result.get('recordCount');
+            }
+        }
+
         return new Map<String, Integer> {
-            'processedGifts' => 10,
-            'failedGifts' => 5,
-            'failedPayments' => 1,
-            'totalGifts' => 20
+            'failedPayments' => failedPayments
         };
     }
 
