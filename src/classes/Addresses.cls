@@ -114,70 +114,75 @@ public inherited sharing class Addresses extends fflib_SObjects {
         verifyAddrSeasonalNoOverlap();
     }
 
+    public void onAfterInsert() {
+        if (!defaultAndSeasonalAddressesByHouseholdAccountId().isEmpty()) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+        }
+
+        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
+            refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
+        }
+
+        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
+        // errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
+                (dmlWrapperLocal, false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
+        }
+
+        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
+        deleteEmptyAddresses();
+    }
+
     public void onBeforeUpdate() {
         updateLatestDatesForDefaultChanges();
         verifyAddrHHAccOnly();
         verifyAddrSeasonalNoOverlap();
     }
 
-    private void setLatestDatesOnDefaults() {
-        for (Address__c addr : (List<Address__c>) defaultAddresses().getRecords()) {
-            resetLatestStartDateFor(addr);
-            resetLatestEndDateFor(addr);
+    public void onAfterUpdate() {
+        // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
+        if (!defaultAndSeasonalWithChanges().isEmpty() || !nonDefaultsWithChanges().isEmpty()) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+        }
+
+        if (defaultAndSeasonalWithChanges().size() > 0) {
+            refreshCurrentHHAddress(defaultAndSeasonalWithChanges(), dmlWrapperLocal, false);
+        }
+
+        if (nonDefaultsWithChanges().size() > 0) {
+            updateAddrOverrides(nonDefaultsWithChanges(), dmlWrapperLocal);
+        }
+
+        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors =
+                TDTM_TriggerHandler.processDMLAllOrNothing(
+                        dmlWrapperLocal, false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, defaultAndSeasonalWithChanges(), nonDefaultsWithChanges());
         }
     }
 
-    private void resetLatestEndDateFor(Address__c address) {
-        address.Latest_End_Date__c = NULL;
-    }
-
-    private void resetLatestStartDateFor(Address__c address) {
-        address.Latest_Start_Date__c = system.today();
-    }
-
-    private Addresses defaultAddresses() {
-        fflib_SObjects defaultAddresses = selectByFieldValue(
-                Address__c.Default_Address__c, TRUE);
-        return new Addresses(defaultAddresses.getRecords());
-    }
-
-    private void updateLatestDatesForDefaultChanges() {
-        for (Address__c addr :
-                (List<Address__c>) addressesWithDefaultChanges().getRecords()) {
-            // when an address changes Default, we update its latest date fields
-            if (isDefault(addr)) {
-                resetLatestStartDateFor(addr);
-                resetLatestEndDateFor(addr);
-            } else {
-                setEndDateFor(addr);
-            }
+    public void onAfterDelete() {
+        if (!addressesByHouseholdAccountId().isEmpty()) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
+                    false);
         }
-    }
 
-    private Addresses addressesWithDefaultChanges() {
-        List<Address__c> addressesWithDefaultChanges = new List<Address__c>();
-        for (Address__c addr : (List<Address__c>) getRecords()) {
-            if (isDefaultChanged(addr)) {
-                addressesWithDefaultChanges.add(addr);
-            }
+        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
+                false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, addressesByHouseholdAccountId(), new Map<Id, Address__c>());
         }
-        return new Addresses(addressesWithDefaultChanges);
-    }
-
-    private void setEndDateFor(Address__c addr) {
-        addr.Latest_End_Date__c = system.today();
-    }
-
-    private Boolean isDefaultChanged(Address__c addr) {
-        return isDefault(addr) != isDefault(oldVersionOf(addr));
-    }
-
-    private Boolean isDefault(Address__c addr) {
-        return addr.Default_Address__c;
-    }
-
-    private Address__c oldVersionOf(Address__c addr) {
-        return oldMap.get(addr.Id);
     }
 
     /*******************************************************************************************************
@@ -244,7 +249,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
                 (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
     }
-
 
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
@@ -451,16 +455,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return mapAccIdListAddrHH;
     }
 
-    private static Map<Id, Account> getAccountsByIds(Set<Id> acctIds) {
-        return new Map<Id, Account>([
-                SELECT Id, BillingStreet, BillingCity, BillingState,
-                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude
-                FROM Account
-                WHERE Id IN :acctIds
-        ]);
-    }
-
-
     /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.
@@ -540,66 +534,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             return isStateCountryPicklistsEnabled;
         }
         private set;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
-    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
-    */
-    private static Boolean initValidStateCountryCodes() {
-
-        // If State & Country Picklists are enabled in the org, build maps of the
-        // valid Labels and Codes for each field to use for validation
-        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
-        boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
-        if (isCodesEnabled) {
-            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : countryPLValues) {
-                if (p.isActive()) {
-                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    validCountriesByCode.put(p.getValue(), p.getLabel());
-                }
-            }
-            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : statePLValues) {
-                if (p.isActive()) {
-                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    // we can't have a map of valid StateCodes, because they are not unique.
-                    // ideally we would have a map of CountryCode + StateCode -> StateLabel
-                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently.
-                }
-            }
-        }
-        return isCodesEnabled;
-    }
-    /*******************************************************************************************************
-    * @description utility to return the current StartDate or EndDate of a Seasonal Address
-    * @param addr the Address to look at
-    * @param fStart whether to return the StartDate or EndDate
-    * @return Date
-    */
-    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {
-        integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
-        integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
-        integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
-        integer endDay = integer.valueOf(addr.Seasonal_End_Day__c);
-        Date dtStart;
-        Date dtEnd;
-        Date dtToday = system.today();
-        //seasonal address is contained within a single year
-        if (startMonth <= endMonth) {
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-            //seasonal address overlaps the year, and this month is past the start month
-        } else if (startMonth <= dtToday.month()){
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
-            //seasonal address overlaps the year, and this month is before the start month
-        } else {
-            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-        }
-        return (fStart ? dtStart : dtEnd);
     }
 
     /*******************************************************************************************************
@@ -701,20 +635,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description utility to see if the address has only a subset of its seasonal fields set
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    private static boolean isPartialSeasonalAddr(Address__c addr) {
-        integer cParts = 0;
-        if (addr.Seasonal_Start_Month__c != null) cParts++;
-        if (addr.Seasonal_Start_Day__c != null) cParts++;
-        if (addr.Seasonal_End_Month__c != null) cParts++;
-        if (addr.Seasonal_End_Day__c != null) cParts++;
-        return (cParts > 0 && cParts < 4);
-    }
-
-    /*******************************************************************************************************
     * @description utility to see if two seasonal addresses overlap
     * @param addr1 an Address
     * @param addr2 an Address
@@ -754,18 +674,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-    /*******************************************************************************************************
-    * @description utility to create the month and day strings to a decimal we can use in comparisons.
-    * @param m the month ordinal as a string
-    * @param d the day ordinal as a string
-    * @return decimal
-    */
-    private static decimal decimalOfMonthDay(string m, string d) {
-        if (integer.valueOf(d) < 10)
-            return decimal.valueOf(m + '.0' + d); else
-                return decimal.valueOf(m + '.' + d);
-    }
-
     public Map<Id, Address__c> defaultAndSeasonalWithChanges() {
         Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
@@ -786,26 +694,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return defaultAndSeasonalWithChanges;
     }
 
-    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
-        return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two address objects seasonal fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @return boolean. true if any of the seasonal fields have changed on the Address
-    */
-    private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
-        if (addrNew == null || addrOld == null)
-            return false;
-        return (
-                addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
-                        addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
-                        addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
-                        addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
-    }
-
     public Map<Id, Address__c> nonDefaultsWithChanges() {
         Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
@@ -821,10 +709,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return nonDefaultsWithChanges;
     }
 
-    private Id idOf(Address__c addr) {
-        return addr.Id;
-    }
-
     public Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId() {
         Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
@@ -833,10 +717,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
         }
         return defaultAndSeasonalAddressesByAcctId;
-    }
-
-    private Boolean isSeasonal(Address__c addr) {
-        return Addresses.isSeasonalAddr(addr);
     }
 
     public void deleteEmptyAddresses() {
@@ -850,24 +730,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             delete listAddr;
         }
     }
-
-    /*******************************************************************************************************
-    * @description returns whether the Address's mailing fields are null
-    * @param addr the Address
-    * @return boolean. true if all of the Mailing fields are empty
-    */
-    private static Boolean isAddressEmpty(Address__c addr) {
-        if (addr == null)
-            return false;
-        return (
-                addr.MailingStreet__c == Null &&
-                        addr.MailingStreet2__c == Null &&
-                        addr.MailingCity__c == Null &&
-                        addr.MailingState__c == Null &&
-                        addr.MailingPostalCode__c == Null &&
-                        addr.MailingCountry__c == Null);
-    }
-
 
     /*******************************************************************************************************
     * @description For the list of Addresses, sees if there is already an existing Address in the Account that
@@ -969,51 +831,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             addrDst.Address_Type__c = addrSrc.Address_Type__c;
     }
 
-
-    /*******************************************************************************************************
-    * @description Compare two address objects address fields and support fuzzy matching; our definition of
-    * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
-    */
-    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
-        if (addrNew == null || addrOld == null)
-            return false;
-
-        integer cChange = 0;
-        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null)
-            cChange++;
-        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
-            cChange++;
-        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
-            cChange++;
-        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null)
-            cChange++;
-        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
-            cChange++;
-        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
-            cChange++;
-        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null)
-            cChange++;
-        return cChange <= 1;
-    }
-    /*******************************************************************************************************
-    * @description utility to remove all whitespace and to lowercase the string
-    * @param str the string to clean up
-    * @return string
-    */
-    private static string strCleanup(string str) {
-        if (str != null) {
-            str = str.replace(' ', '');
-            str = str.toLowerCase();
-        } else {
-            str = '';
-        }
-        return str;
-    }
-
     /*******************************************************************************************************
     * @description returns a unique key the represents the address object for address matching
     * @param addr the Address to look at
@@ -1034,7 +851,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         (addr.Seasonal_End_Month__c != null ? addr.Seasonal_End_Month__c : '');
         return strKey;
     }
-
 
     /*******************************************************************************************************
     * @description Cleanup the Addresses for the specified Accounts by removing any duplicate Addresses,
@@ -1107,26 +923,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDml(dmlWrapper);
     }
-
-    /*******************************************************************************************************
-    * @description replaces the losing address with the winning address in any contacts referring to the
-    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
-    * Any Contacts that are modified are put on dmlWrapper for later updating.
-    * @param addrLoser the Address to look for
-    * @param addrWinner the Address to replace with
-    * @param listCon the list of Contacts to evaluate
-    * @param dmlWrapper to hold any Contacts that need updating
-    * @return null
-    */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, list<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        for (Contact con : listCon) {
-            if (con.Current_Address__c == addrLoser.Id) {
-                con.Current_Address__c = addrWinner.Id;
-                dmlWrapper.objectsToUpdate.add(con);
-            }
-        }
-    }
-
 
     /*******************************************************************************************************
     * @description routine the scheduled batch job calls to update households with Seasonal addresses
@@ -1211,6 +1007,321 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public static void handleMultilineStreet(Address__c addr) {
+
+        if (addr.MailingStreet__c == null)
+            return;
+
+        // handle CR NL
+        integer ich = addr.MailingStreet__c.indexOf('\r\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
+
+        // handle just NL
+        ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @param sobjSrc the source Contact or Account
+    * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
+    * @param sobjDst the destination Contact or Account
+    * @param strFieldPrefixDst the address fields to copy to, ie., Mailing, Other, Shipping, Billing
+    * @return void
+    */
+    public static void copyAddressStdSObj(sobject sobjSrc, string strFieldPrefixSrc, sobject sobjDst, string strFieldPrefixDst) {
+        sobjDst.put(strFieldPrefixDst + 'Street', sobjSrc.get(strFieldPrefixSrc + 'Street'));
+        sobjDst.put(strFieldPrefixDst + 'City', sobjSrc.get(strFieldPrefixSrc + 'City'));
+        sobjDst.put(strFieldPrefixDst + 'PostalCode', sobjSrc.get(strFieldPrefixSrc + 'PostalCode'));
+        sobjDst.put(strFieldPrefixDst + 'State', sobjSrc.get(strFieldPrefixSrc + 'State'));
+        sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
+        sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
+        sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
+
+        if (Addresses.isStateCountryPicklistsEnabled) {
+            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
+            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description utility to create the month and day strings to a decimal we can use in comparisons.
+    * @param m the month ordinal as a string
+    * @param d the day ordinal as a string
+    * @return decimal
+    */
+    private static decimal decimalOfMonthDay(string m, string d) {
+        if (integer.valueOf(d) < 10)
+            return decimal.valueOf(m + '.0' + d); else
+                return decimal.valueOf(m + '.' + d);
+    }
+
+    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
+        return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to compare two address objects seasonal fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @return boolean. true if any of the seasonal fields have changed on the Address
+    */
+    private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
+        if (addrNew == null || addrOld == null)
+            return false;
+        return (
+                addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
+                        addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
+                        addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
+                        addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
+    }
+
+    private Id idOf(Address__c addr) {
+        return addr.Id;
+    }
+
+    private Boolean isSeasonal(Address__c addr) {
+        return Addresses.isSeasonalAddr(addr);
+    }
+
+    private void setLatestDatesOnDefaults() {
+        for (Address__c addr : (List<Address__c>) defaultAddresses().getRecords()) {
+            resetLatestStartDateFor(addr);
+            resetLatestEndDateFor(addr);
+        }
+    }
+
+    private void resetLatestEndDateFor(Address__c address) {
+        address.Latest_End_Date__c = NULL;
+    }
+
+    private void resetLatestStartDateFor(Address__c address) {
+        address.Latest_Start_Date__c = system.today();
+    }
+
+    private Addresses defaultAddresses() {
+        fflib_SObjects defaultAddresses = selectByFieldValue(
+                Address__c.Default_Address__c, TRUE);
+        return new Addresses(defaultAddresses.getRecords());
+    }
+
+    private void updateLatestDatesForDefaultChanges() {
+        for (Address__c addr :
+                (List<Address__c>) addressesWithDefaultChanges().getRecords()) {
+            // when an address changes Default, we update its latest date fields
+            if (isDefault(addr)) {
+                resetLatestStartDateFor(addr);
+                resetLatestEndDateFor(addr);
+            } else {
+                setEndDateFor(addr);
+            }
+        }
+    }
+
+    private Addresses addressesWithDefaultChanges() {
+        List<Address__c> addressesWithDefaultChanges = new List<Address__c>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            if (isDefaultChanged(addr)) {
+                addressesWithDefaultChanges.add(addr);
+            }
+        }
+        return new Addresses(addressesWithDefaultChanges);
+    }
+
+    private void setEndDateFor(Address__c addr) {
+        addr.Latest_End_Date__c = system.today();
+    }
+
+    private Boolean isDefaultChanged(Address__c addr) {
+        return isDefault(addr) != isDefault(oldVersionOf(addr));
+    }
+
+    private Boolean isDefault(Address__c addr) {
+        return addr.Default_Address__c;
+    }
+
+    private Address__c oldVersionOf(Address__c addr) {
+        return oldMap.get(addr.Id);
+    }
+
+    private static Map<Id, Account> getAccountsByIds(Set<Id> acctIds) {
+        return new Map<Id, Account>([
+                SELECT Id, BillingStreet, BillingCity, BillingState,
+                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude
+                FROM Account
+                WHERE Id IN :acctIds
+        ]);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
+    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
+    */
+    private static Boolean initValidStateCountryCodes() {
+
+        // If State & Country Picklists are enabled in the org, build maps of the
+        // valid Labels and Codes for each field to use for validation
+        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
+        boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
+        if (isCodesEnabled) {
+            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
+            for (Schema.Picklistentry p : countryPLValues) {
+                if (p.isActive()) {
+                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
+                    validCountriesByCode.put(p.getValue(), p.getLabel());
+                }
+            }
+            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
+            for (Schema.Picklistentry p : statePLValues) {
+                if (p.isActive()) {
+                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
+                    // we can't have a map of valid StateCodes, because they are not unique.
+                    // ideally we would have a map of CountryCode + StateCode -> StateLabel
+                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently.
+                }
+            }
+        }
+        return isCodesEnabled;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to return the current StartDate or EndDate of a Seasonal Address
+    * @param addr the Address to look at
+    * @param fStart whether to return the StartDate or EndDate
+    * @return Date
+    */
+    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {
+        integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
+        integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
+        integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
+        integer endDay = integer.valueOf(addr.Seasonal_End_Day__c);
+        Date dtStart;
+        Date dtEnd;
+        Date dtToday = system.today();
+        //seasonal address is contained within a single year
+        if (startMonth <= endMonth) {
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
+            //seasonal address overlaps the year, and this month is past the start month
+        } else if (startMonth <= dtToday.month()){
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
+            //seasonal address overlaps the year, and this month is before the start month
+        } else {
+            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
+        }
+        return (fStart ? dtStart : dtEnd);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    private static boolean isPartialSeasonalAddr(Address__c addr) {
+        integer cParts = 0;
+        if (addr.Seasonal_Start_Month__c != null) cParts++;
+        if (addr.Seasonal_Start_Day__c != null) cParts++;
+        if (addr.Seasonal_End_Month__c != null) cParts++;
+        if (addr.Seasonal_End_Day__c != null) cParts++;
+        return (cParts > 0 && cParts < 4);
+    }
+
+    /*******************************************************************************************************
+    * @description returns whether the Address's mailing fields are null
+    * @param addr the Address
+    * @return boolean. true if all of the Mailing fields are empty
+    */
+    private static Boolean isAddressEmpty(Address__c addr) {
+        if (addr == null)
+            return false;
+        return (
+                addr.MailingStreet__c == Null &&
+                        addr.MailingStreet2__c == Null &&
+                        addr.MailingCity__c == Null &&
+                        addr.MailingState__c == Null &&
+                        addr.MailingPostalCode__c == Null &&
+                        addr.MailingCountry__c == Null);
+    }
+
+    /*******************************************************************************************************
+    * @description replaces the losing address with the winning address in any contacts referring to the
+    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
+    * Any Contacts that are modified are put on dmlWrapper for later updating.
+    * @param addrLoser the Address to look for
+    * @param addrWinner the Address to replace with
+    * @param listCon the list of Contacts to evaluate
+    * @param dmlWrapper to hold any Contacts that need updating
+    * @return null
+    */
+    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, list<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        for (Contact con : listCon) {
+            if (con.Current_Address__c == addrLoser.Id) {
+                con.Current_Address__c = addrWinner.Id;
+                dmlWrapper.objectsToUpdate.add(con);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Compare two address objects address fields and support fuzzy matching; our definition of
+    * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @param includeAddressType whether to include comparing the AddressType field
+    * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
+    */
+    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
+        if (addrNew == null || addrOld == null)
+            return false;
+
+        integer cChange = 0;
+        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+            cChange++;
+        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null)
+            cChange++;
+        return cChange <= 1;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to remove all whitespace and to lowercase the string
+    * @param str the string to clean up
+    * @return string
+    */
+    private static string strCleanup(string str) {
+        if (str != null) {
+            str = str.replace(' ', '');
+            str = str.toLowerCase();
+        } else {
+            str = '';
+        }
+        return str;
+    }
 
     /*******************************************************************************************************
     * @description Updates the Address record's MailingCountry field when it is empty
@@ -1232,7 +1343,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     .toUpperCase());
         }
     }
-
 
     /*******************************************************************************************************
     * @description Updates the Address record's MailingState field when it is empty
@@ -1276,99 +1386,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
 
-
-    /*******************************************************************************************************
-    * @description utility to see if the address has only a subset of its seasonal fields set
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static void handleMultilineStreet(Address__c addr) {
-
-        if (addr.MailingStreet__c == null)
-            return;
-
-        // handle CR NL
-        integer ich = addr.MailingStreet__c.indexOf('\r\n');
-        if (ich > -1) {
-            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
-            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
-            return;
-        }
-
-        // handle just NL
-        ich = addr.MailingStreet__c.indexOf('\n');
-        if (ich > -1) {
-            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
-            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
-            return;
-        }
-    }
-
-    public void onAfterDelete() {
-        if (!addressesByHouseholdAccountId().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-            refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
-                    false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
-                false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addressesByHouseholdAccountId(), new Map<Id, Address__c>());
-        }
-    }
-
-    public void onAfterInsert() {
-        if (!defaultAndSeasonalAddressesByHouseholdAccountId().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
-        // errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
-                (dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
-        }
-
-        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
-        deleteEmptyAddresses();
-    }
-
-    public void onAfterUpdate() {
-        // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
-        if (!defaultAndSeasonalWithChanges().isEmpty() || !nonDefaultsWithChanges().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (defaultAndSeasonalWithChanges().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalWithChanges(), dmlWrapperLocal, false);
-        }
-
-        if (nonDefaultsWithChanges().size() > 0) {
-            updateAddrOverrides(nonDefaultsWithChanges(), dmlWrapperLocal);
-        }
-
-        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors =
-                TDTM_TriggerHandler.processDMLAllOrNothing(
-                        dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalWithChanges(), nonDefaultsWithChanges());
-        }
-    }
-
     /*******************************************************************************************************
     * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
     * @param mapAddrIdAddr a map of Address Id's to Addresses
@@ -1386,8 +1403,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-
-
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
         for (Error__c error : errors.errorRecords) {
             ID objId = ERR_Handler.getErrorObjectId(error);
@@ -1401,30 +1416,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 addr.addError(error.Full_Message__c);
                 UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
             }
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param sobjSrc the source Contact or Account
-    * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
-    * @param sobjDst the destination Contact or Account
-    * @param strFieldPrefixDst the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @return void
-    */
-    public static void copyAddressStdSObj(sobject sobjSrc, string strFieldPrefixSrc, sobject sobjDst, string strFieldPrefixDst) {
-        sobjDst.put(strFieldPrefixDst + 'Street', sobjSrc.get(strFieldPrefixSrc + 'Street'));
-        sobjDst.put(strFieldPrefixDst + 'City', sobjSrc.get(strFieldPrefixSrc + 'City'));
-        sobjDst.put(strFieldPrefixDst + 'PostalCode', sobjSrc.get(strFieldPrefixSrc + 'PostalCode'));
-        sobjDst.put(strFieldPrefixDst + 'State', sobjSrc.get(strFieldPrefixSrc + 'State'));
-        sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
-        sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
-        sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
-
-        if (Addresses.isStateCountryPicklistsEnabled) {
-            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
-            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }
     }
 
