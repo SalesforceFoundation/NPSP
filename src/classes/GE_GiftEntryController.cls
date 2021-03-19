@@ -42,37 +42,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
-        AggregateResult[] results =
-            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchId);
-
-        Integer totalGifts = 0;
-        Integer processedGifts = 0;
-        Integer failedPayments = 0;
-        Integer failedGifts = 0;
-
-        for (AggregateResult result : results) {
-            totalGifts += (Integer) result.get('recordCount');
-
-            String paymentStatus = (String) result.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
-            if (paymentStatus == 'DECLINED') {
-                failedPayments = (Integer) result.get('recordCount');
-            }
-
-            String status = (String) result.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
-            if (status == 'Imported') {
-                processedGifts = (Integer) result.get('recordCount');
-            }
-            if (status == 'Failed') {
-                failedGifts = (Integer) result.get('recordCount');
-            }
-        }
-
-        return new Map<String, Integer> {
-            'totalGifts' => totalGifts,
-            'processedGifts' => processedGifts,
-            'failedPayments' => failedPayments,
-            'failedGifts'=> failedGifts
-        };
+        return new GiftBatchService().getGiftBatchTotalsMapFor(batchId);
     }
 
     /*******************************************************************************************************
