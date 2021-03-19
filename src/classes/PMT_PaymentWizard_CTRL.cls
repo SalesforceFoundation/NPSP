@@ -149,7 +149,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
 
     /*******************************************************************************************************
-    * @description Returns true if the user has access to the payment SObject
+    * @description Returns true if the user has access to the Payment Wizard feature
     */
     public Boolean hasFeatureAccess {
         get {
@@ -185,7 +185,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description gets the payment related settings
     * @return npe01__Contacts_and_Orgs_Settings__c the settings object
     */
-    public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
+    @TestVisible
+    private npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (paymentsSettings == null) {
            paymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         }
@@ -337,7 +338,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Creates an opportunity query with payment mapping and currency fields, filtered on id paramter.
     * @return string An opportunity query string.
     */
-    public string makeOppQuery() {
+    private String makeOppQuery() {
         // requery the Opportunity for all fields that we need.
         String query = 'SELECT name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
 
@@ -365,7 +366,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * creates the specified new payments to cover the amount.
     * @return PageReference null
     */
-    public pageReference calculate() {
+    public PageReference calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
