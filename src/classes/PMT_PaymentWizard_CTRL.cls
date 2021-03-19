@@ -167,6 +167,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
         set;
     }
 
+    public String getNamespace() {
+        return UTIL_Namespace.getComponentNamespace();
+    }
+
     /*******************************************************************************************************
     * @description decimal for amount already written off
     */
@@ -558,27 +562,40 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return Boolean
     */
     private Boolean hasPaymentAccess() {
-        Boolean accessResult = false;
-
-        SObjectType pmt = npe01__OppPayment__c.getSObjectType();
-        if (perms.canCreate(pmt) && UTIL_Permissions.canDelete(Schema.SObjectType.npe01__oppPayment__c.getName(), false)) {
-            Set<SObjectField> sObjectFields = new Set<SObjectField>{
-                npe01__oppPayment__c.fields.npe01__check_reference_number__c,
-                npe01__oppPayment__c.fields.npe01__paid__c,
-                npe01__oppPayment__c.fields.npe01__payment_amount__c,
-                npe01__oppPayment__c.fields.npe01__payment_date__c,
-                npe01__oppPayment__c.fields.npe01__payment_method__c,
-                npe01__oppPayment__c.fields.npe01__scheduled_date__c,
-                npe01__oppPayment__c.fields.npe01__written_off__c
-            };
-            if (!(perms.canRead(pmt, sObjectFields) && perms.canUpdate(pmt, sObjectFields))) {
-                return accessResult;
-            }
-            accessResult = true;
+        SObjectType payment = npe01__OppPayment__c.getSObjectType();
+        SObjectType opportunity = Opportunity.getSObjectType();
+        if (canCheckPermissionsFor(payment)) {
+            return hasAccessTo(payment, paymentFields())
+                && hasAccessTo(opportunity, opportunityFields());
         }
-
-        return accessResult;
+        return false;
     }
+
+    private Boolean canCheckPermissionsFor(SObjectType objectType) {
+        return perms.canCreate(objectType) && perms.canDelete(objectType);
+    }
+
+    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        return perms.canRead(sObjectType, sObjectFields) && perms.canUpdate(sObjectType, sObjectFields);
+    }
+
+    private Set<SObjectField> paymentFields() {
+        Set<SObjectField> sObjectFields = new Set<SObjectField>{
+            npe01__OppPayment__c.fields.npe01__Check_Reference_Number__c,
+            npe01__OppPayment__c.fields.npe01__Paid__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Amount__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Date__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Method__c,
+            npe01__OppPayment__c.fields.npe01__Scheduled_Date__c,
+            npe01__OppPayment__c.fields.npe01__Written_Off__c
+        };
+        return sObjectFields;
+    }
+
+    private Set<SObjectField> opportunityFields () {
+        return new Set<SObjectField>{Opportunity.fields.Amount};
+    }
+
 
     /*******************************************************************************************************
     * @description list of items for picklist of the number of payments to be created
