@@ -66,28 +66,29 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return null;
         }
 
+        Addresses addresses;
         switch on triggerAction {
             when BeforeInsert {
-                Addresses addresses = new Addresses(listNew);
+                addresses = new Addresses(listNew);
                 addresses.onBeforeInsert();
                 return null;
             }
             when AfterDelete {
-                Addresses addresses = new Addresses(listOld);
+                addresses = new Addresses(listOld);
                 addresses.onAfterDelete();
             }
             when BeforeUpdate {
-                Addresses addresses2 = new Addresses(listNew, listOld);
-                addresses2.onBeforeUpdate();
+                addresses = new Addresses(listNew, listOld);
+                addresses.onBeforeUpdate();
                 return null;
             }
             when AfterInsert {
-                Addresses addresses = new Addresses(listNew);
+                addresses = new Addresses(listNew);
                 addresses.onAfterInsert();
             }
             when AfterUpdate {
-                Addresses addresses2 = new Addresses(listNew, listOld);
-                addresses2.onAfterUpdate();
+                addresses = new Addresses(listNew, listOld);
+                addresses.onAfterUpdate();
             }
         }
 
