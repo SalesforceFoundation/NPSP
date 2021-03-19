@@ -27,6 +27,10 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
+    get shouldDisplayDetail() {
+        return true;
+    }
+
     handleClick(event) {
         switch (event.target.label) {
             case BATCH_DRY_RUN_LABEL:
@@ -47,10 +51,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         ));
     }
 
-    /*******************************************************************************
-     * Start getters for data-qa-locator attributes
-     */
-
     get qaLocatorBatchDryRun() {
         return `button ${this.batchDryRunLabel}`;
     }
@@ -60,8 +60,4 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorEditBatchInfo() {
         return `button ${this.editButtonLabel}`;
     }
-
-    /*******************************************************************************
-     * End getters for data-qa-locator attributes
-     */
 }
