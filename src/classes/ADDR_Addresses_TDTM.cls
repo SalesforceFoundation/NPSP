@@ -84,6 +84,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             when AfterInsert {
                 Addresses addresses = new Addresses(listNew);
                 addresses.onAfterInsert();
+                // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
+                addresses.deleteEmptyAddresses();
             }
             when AfterUpdate {
                 Addresses addresses2 = new Addresses(listNew, listOld);
@@ -91,18 +93,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
 
-        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
-        if (isAfterInsert(triggerAction)) {
-            Addresses addresses = new Addresses(listNew);
-            addresses.deleteEmptyAddresses();
-        }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
-    }
-
-
-    private Boolean isAfterInsert(Action triggerAction) {
-        return triggerAction == TDTM_Runnable.Action.AfterInsert;
     }
 
     private Boolean isRecursive() {
