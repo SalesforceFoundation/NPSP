@@ -73,22 +73,25 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 addresses.onBeforeInsert();
                 return null;
             }
-            when AfterDelete {
-                addresses = new Addresses(listOld);
-                addresses.onAfterDelete();
+            when AfterInsert {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                addresses = new Addresses(listNew);
+                addresses.onAfterInsert();
             }
             when BeforeUpdate {
                 addresses = new Addresses(listNew, listOld);
                 addresses.onBeforeUpdate();
                 return null;
             }
-            when AfterInsert {
-                addresses = new Addresses(listNew);
-                addresses.onAfterInsert();
-            }
             when AfterUpdate {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                 addresses = new Addresses(listNew, listOld);
                 addresses.onAfterUpdate();
+            }
+            when AfterDelete {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+                addresses = new Addresses(listOld);
+                addresses.onAfterDelete();
             }
         }
 

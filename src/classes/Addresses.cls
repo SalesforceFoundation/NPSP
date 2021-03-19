@@ -50,6 +50,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public static Map<String, String> validCountriesByCode = new Map<String, String>();
 
     private Map<Id, Address__c> oldMap;
+
     @TestVisible
     private TDTM_Runnable.DmlWrapper dmlWrapperLocal {
         get {
@@ -70,6 +71,73 @@ public inherited sharing class Addresses extends fflib_SObjects {
         this.oldMap = oldList == NULL ?
                 new Map<Id, Address__c>() :
                 new Map<Id, Address__c>(oldList);
+    }
+
+    public void onBeforeInsert() {
+        setLatestDatesOnDefaults();
+        verifyAddrHHAccOnly();
+        verifyAddrSeasonalNoOverlap();
+    }
+
+    public void onAfterInsert() {
+        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
+            refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
+        }
+
+        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
+        // errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
+                (dmlWrapperLocal, false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
+        }
+
+        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
+        deleteEmptyAddresses();
+    }
+
+    public void onBeforeUpdate() {
+        updateLatestDatesForDefaultChanges();
+        verifyAddrHHAccOnly();
+        verifyAddrSeasonalNoOverlap();
+    }
+
+    public void onAfterUpdate() {
+        if (defaultAndSeasonalWithChanges().size() > 0) {
+            refreshCurrentHHAddress(defaultAndSeasonalWithChanges(), dmlWrapperLocal, false);
+        }
+
+        if (nonDefaultsWithChanges().size() > 0) {
+            updateAddrOverrides(nonDefaultsWithChanges(), dmlWrapperLocal);
+        }
+
+        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors =
+                TDTM_TriggerHandler.processDMLAllOrNothing(
+                        dmlWrapperLocal, false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, defaultAndSeasonalWithChanges(), nonDefaultsWithChanges());
+        }
+    }
+
+    public void onAfterDelete() {
+        if (!addressesByHouseholdAccountId().isEmpty()) {
+            refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
+                    false);
+        }
+
+        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
+                false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, addressesByHouseholdAccountId(), new Map<Id, Address__c>());
+        }
     }
 
     /********************************************************************************************************
@@ -98,91 +166,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
         }
         return mapAddressesByAcctId;
-    }
-
-    private Boolean hasHouseholdAccount(Address__c address) {
-        return householdAccountIdFor(address) != null;
-    }
-
-    private Id householdAccountIdFor(Address__c address) {
-        return address.Household_Account__c;
-    }
-
-    public void onBeforeInsert() {
-        setLatestDatesOnDefaults();
-        verifyAddrHHAccOnly();
-        verifyAddrSeasonalNoOverlap();
-    }
-
-    public void onAfterInsert() {
-        if (!defaultAndSeasonalAddressesByHouseholdAccountId().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
-        // errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
-                (dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
-        }
-
-        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
-        deleteEmptyAddresses();
-    }
-
-    public void onBeforeUpdate() {
-        updateLatestDatesForDefaultChanges();
-        verifyAddrHHAccOnly();
-        verifyAddrSeasonalNoOverlap();
-    }
-
-    public void onAfterUpdate() {
-        // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
-        if (!defaultAndSeasonalWithChanges().isEmpty() || !nonDefaultsWithChanges().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (defaultAndSeasonalWithChanges().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalWithChanges(), dmlWrapperLocal, false);
-        }
-
-        if (nonDefaultsWithChanges().size() > 0) {
-            updateAddrOverrides(nonDefaultsWithChanges(), dmlWrapperLocal);
-        }
-
-        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors =
-                TDTM_TriggerHandler.processDMLAllOrNothing(
-                        dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalWithChanges(), nonDefaultsWithChanges());
-        }
-    }
-
-    public void onAfterDelete() {
-        if (!addressesByHouseholdAccountId().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-            refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
-                    false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
-                false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addressesByHouseholdAccountId(), new Map<Id, Address__c>());
-        }
     }
 
     /*******************************************************************************************************
@@ -1056,6 +1039,14 @@ public inherited sharing class Addresses extends fflib_SObjects {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }
+    }
+
+    private Boolean hasHouseholdAccount(Address__c address) {
+        return householdAccountIdFor(address) != null;
+    }
+
+    private Id householdAccountIdFor(Address__c address) {
+        return address.Household_Account__c;
     }
 
     /*******************************************************************************************************
