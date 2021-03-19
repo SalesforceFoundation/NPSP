@@ -73,7 +73,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 return null;
             }
             when AfterDelete {
-                onAfterDelete(listOld);
+                Addresses addresses = new Addresses(listOld);
+                addresses.onAfterDelete();
             }
             when BeforeUpdate {
                 Addresses addresses2 = new Addresses(listNew, listOld);
@@ -81,10 +82,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 return null;
             }
             when AfterInsert {
-                onAfterInsert(listNew);
+                Addresses addresses = new Addresses(listNew);
+                addresses.onAfterInsert();
             }
             when AfterUpdate {
-                onAfterUpdate(listNew, listOld);
+                Addresses addresses2 = new Addresses(listNew, listOld);
+                addresses2.onAfterUpdate();
             }
         }
 
@@ -97,113 +100,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    private void onAfterUpdate(List<SObject> listNew, List<SObject> listOld) {
-        DmlWrapper dmlWrapperLocal = new DmlWrapper();
-        // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
-        Map<Id, Address__c> mapAddressesById = new Map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.
-
-        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
-
-        Addresses addresses = new Addresses(listNew, listOld);
-        mapAddressesByAcctId = addresses.defaultAndSeasonalWithChanges();
-        mapAddressesById = addresses.nonDefaultsWithChanges();
-        if (!mapAddressesByAcctId.isEmpty() || !mapAddressesById.isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (mapAddressesByAcctId.size() > 0) {
-            refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapperLocal, false);
-        }
-
-        if (mapAddressesById.size() > 0) {
-            updateAddrOverrides(mapAddressesById, dmlWrapperLocal);
-        }
-
-        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors =
-                TDTM_TriggerHandler.processDMLAllOrNothing(
-                        dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, mapAddressesByAcctId, mapAddressesById);
-        }
-    }
-
-    private void onAfterInsert(List<SObject> listNew) {
-        DmlWrapper dmlWrapperLocal = new DmlWrapper();
-        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
-
-        Addresses addresses = new Addresses(listNew);
-        mapAddressesByAcctId = addresses.defaultAndSeasonalAddressesByHouseholdAccountId();
-        if (!mapAddressesByAcctId.isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        }
-
-        if (mapAddressesByAcctId.size() > 0) {
-            refreshCurrentHHAddress(mapAddressesByAcctId, dmlWrapperLocal, false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
-        // errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
-                (dmlWrapperLocal, false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, mapAddressesByAcctId, new Map<Id, Address__c>());
-        }
-    }
-
-    private void onAfterDelete(List<SObject> listOld) {
-        DmlWrapper dmlWrapperLocal = new DmlWrapper();
-        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
-
-        Addresses addresses = new Addresses(listOld);
-        mapAddressesByAcctId = addresses.addressesByHouseholdAccountId();
-        if (!addresses.addressesByHouseholdAccountId().isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-            refreshCurrentHHAddress(addresses.addressesByHouseholdAccountId(), dmlWrapperLocal,
-                    false);
-        }
-
-        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with
-        // the correct addresses.
-        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
-                false);
-        if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addresses.addressesByHouseholdAccountId(), new Map<Id, Address__c>());
-        }
-    }
-
-    private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
-        for (Error__c error : errors.errorRecords) {
-            ID objId = ERR_Handler.getErrorObjectId(error);
-            UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
-            if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
-                Address__c addr = mapAddressesByAcctId.get(objId);
-                addr.addError(error.Full_Message__c);
-                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
-            } else if (UTIL_Describe.isObjectIdThisType(objId, UTIL_Namespace.StrTokenNSPrefix('Address__c'))) {
-                Address__c addr = mapAddressesById.get(objId);
-                addr.addError(error.Full_Message__c);
-                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
-            }
-        }
-    }
-
-    private Boolean isBeforeInsert(Action triggerAction) {
-        return triggerAction == TDTM_Runnable.Action.BeforeInsert;
-    }
-
-    private Boolean isBeforeUpdate(Action triggerAction) {
-        return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
-    }
-
-    private Boolean isAfterUpdate(Action triggerAction) {
-        return triggerAction == TDTM_Runnable.Action.AfterUpdate;
-    }
 
     private Boolean isAfterInsert(Action triggerAction) {
         return triggerAction == TDTM_Runnable.Action.AfterInsert;
@@ -229,24 +125,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return (Map<Id, Addresses.HHInfo>) Addresses.refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper,
                 isCalcHHInfoOnly);
     }
-
-    /*******************************************************************************************************
-    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
-    * @param mapAddrIdAddr a map of Address Id's to Addresses
-    * @dmlWrapper to hold the Contacts to update
-    * @return void
-    */
-    private void updateAddrOverrides(map<Id, Address__c> mapAddrIdAddr, DmlWrapper dmlWrapper) {
-        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
-        for (Contact con : listCon) {
-            Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            Addresses.copyAddressAddrSObj(addr, con, 'Mailing',
-            'npe01__Primary_Address_Type__c');
-            dmlWrapper.objectsToUpdate.add(con);
-        }
-    }
-
-
 
     /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
