@@ -42,17 +42,8 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
-        AggregateResult[] results = [
-            SELECT
-                COUNT(Id)recordCount,
-                Status__c,
-                Payment_Status__c
-            FROM DataImport__c
-            WHERE NPSP_Data_Import_Batch__c = :batchId
-            GROUP BY
-                Status__c,
-                Payment_Status__c
-        ];
+        AggregateResult[] results =
+            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchId);
 
         Integer totalGifts = 0;
         Integer processedGifts = 0;
