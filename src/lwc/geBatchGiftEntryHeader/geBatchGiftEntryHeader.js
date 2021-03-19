@@ -1,5 +1,5 @@
-import {LightningElement, api, wire} from 'lwc';
-import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
+import { LightningElement, api, wire } from 'lwc';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
@@ -47,7 +47,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     editBatch() {
         this.dispatchEvent(new CustomEvent(
-            'edit', {detail: this.batchId}
+            'edit', { detail: this.batchId }
         ));
     }
 
