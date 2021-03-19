@@ -37,6 +37,22 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
+    @isTest
+    private static void shouldReturnMapOfBatchTotals() {
+        Map<String, Integer> expectedBatchTotals = new Map<String, Integer> {
+            'processedGifts' => 10,
+            'failedGifts' => 5,
+            'failedPayments' => 1,
+            'totalGifts' => 20
+        };
+        Map<String, Integer> batchTotals =
+            GE_GiftEntryController.getGiftBatchTotalsBy(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
+
+        System.assertEquals(batchTotals.get('processedGifts'), expectedBatchTotals.get('processedGifts'));
+        System.assertEquals(batchTotals.get('failedGifts'), expectedBatchTotals.get('failedGifts'));
+        System.assertEquals(batchTotals.get('failedPayments'), expectedBatchTotals.get('failedPayments'));
+        System.assertEquals(batchTotals.get('totalGifts'), expectedBatchTotals.get('totalGifts'));
+    }
 
     /***
      * @description Verifies the purchase request response contains status code created
