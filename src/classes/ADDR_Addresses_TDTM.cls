@@ -100,23 +100,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description The main routine for finding the appropriate address to currently use for the
-    * household and its contacts.  Prioritizes the Optional mapped Address as the Default
-    * address, as well as checking to see if there is a seasonal address that should be used instead.
-    * @param mapAccIdAddr a map of Account Id to the Account's default Address.
-    * @param dmlWrapper to hold the objects that get updated
-    * @param isCalcHHInfoOnly if set, then this routine will return the map of HHId to HHInfo,
-    * and not do any changes to dmlWrapper. 
-    * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account  
-    ********************************************************************************************************/
-    public static Map<Id, Addresses.HHInfo> refreshCurrentHHAddress(Map<Id, Address__c>
-            mapAccIdAddr, DmlWrapper dmlWrapper, Boolean isCalcHHInfoOnly) {
-
-        return (Map<Id, Addresses.HHInfo>) Addresses.refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper,
-                isCalcHHInfoOnly);
-    }
-
-    /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.
     * @param sobjSrc the source Contact or Account

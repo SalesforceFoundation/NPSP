@@ -1132,7 +1132,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
             mapAccIdAddr.put(acc.Id, null);
 
         // get the default and seasonal address for each HH
-        map<Id, Addresses.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+                refreshCurrentHHAddress(mapAccIdAddr, null, true);
 
         // now see which accounts actually had their address change, so we only update them.
         for (Account acc : listAcc) {

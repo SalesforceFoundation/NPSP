@@ -529,7 +529,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             mapAccIdAddr.put(con.AccountId, null);
             
         // get the default and seasonal address for each HH
-        map<Id, Addresses.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
         
         // reset the Contact's address fields with the appropriate address
         for (Contact con : listCon) {
