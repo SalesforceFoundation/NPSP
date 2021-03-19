@@ -40,6 +40,15 @@ public with sharing class GE_GiftEntryController {
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
+        return new Map<String, Integer> {
+            'processedGifts' => 10,
+            'failedGifts' => 5,
+            'failedPayments' => 1,
+            'totalGifts' => 20
+        };
+    }
 
     /*******************************************************************************************************
     * @description Indicates if the org is connected to Elevate

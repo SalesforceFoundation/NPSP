@@ -1,5 +1,6 @@
-import {LightningElement, api, wire} from 'lwc';
-import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
+import { LightningElement, api, wire } from 'lwc';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import getBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
@@ -27,6 +28,29 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
+    @wire(getBatchTotalsBy, { batchId: '$batchId' })
+    batchTotals;
+
+    get shouldDisplayDetail() {
+        return this.batchTotals.data ? true : false;
+    }
+
+    get processedGiftsCount() {
+        return this.batchTotals.data?.processedGifts;
+    }
+
+    get failedGiftsCount(){
+        return this.batchTotals.data?.failedGifts;
+    }
+
+    get failedPaymentsCount() {
+        return this.batchTotals.data?.failedPayments;
+    }
+
+    get totalGiftsCount() {
+        return this.batchTotals.data?.totalGifts;
+    }
+
     handleClick(event) {
         switch (event.target.label) {
             case BATCH_DRY_RUN_LABEL:
@@ -43,13 +67,9 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     editBatch() {
         this.dispatchEvent(new CustomEvent(
-            'edit', {detail: this.batchId}
+            'edit', { detail: this.batchId }
         ));
     }
-
-    /*******************************************************************************
-     * Start getters for data-qa-locator attributes
-     */
 
     get qaLocatorBatchDryRun() {
         return `button ${this.batchDryRunLabel}`;
@@ -60,8 +80,4 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorEditBatchInfo() {
         return `button ${this.editButtonLabel}`;
     }
-
-    /*******************************************************************************
-     * End getters for data-qa-locator attributes
-     */
 }

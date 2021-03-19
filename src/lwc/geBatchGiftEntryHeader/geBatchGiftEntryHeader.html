@@ -1,37 +1,50 @@
 <template>
-    <header role="banner" class="header">
-        <div class="slds-page-header">
-            <div class="slds-grid">
-                <div class="slds-col slds-has-flexi-truncate headerText">
-                    <div class="slds-media slds-no-space slds-grow">
-                        <div class="slds-media__figure">
-                            <lightning-icon icon-name="standard:contract"
-                                            alternative-text={tabHeaderLabel}
-                            ></lightning-icon>
-                        </div>
-                        <div class="slds-media__body">
-                            <p class="slds-breadcrumb__item slds-line-height_reset">
-                                {tabHeaderLabel}</p>
-                            <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
-                                {batchName}
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-                <div if:false={isPermissionError} class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
-                    <lightning-button-group>
-                        <lightning-button label={batchDryRunLabel}
-                                          onclick={handleClick}
-                                          data-qa-locator={qaLocatorBatchDryRun}></lightning-button>
-                        <lightning-button label={processBatchLabel}
-                                          onclick={handleClick}
-                                          data-qa-locator={qaLocatorProcessBatch}></lightning-button>
-                        <lightning-button label={editButtonLabel}
-                                          onclick={handleClick}
-                                          data-qa-locator={qaLocatorEditBatchInfo}></lightning-button>
-                    </lightning-button-group>
-                </div>
-            </div>
+    <c-util-page-header title={batchName}
+                        pretext={tabHeaderLabel}
+                        icon-name="standard:contract">
+
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button label={batchDryRunLabel}
+                                  onclick={handleClick}
+                                  data-qa-locator={qaLocatorBatchDryRun}>
+                </lightning-button>
+                <lightning-button label={processBatchLabel}
+                                  onclick={handleClick}
+                                  data-qa-locator={qaLocatorProcessBatch}>
+                </lightning-button>
+                <lightning-button label={editButtonLabel}
+                                  onclick={handleClick}
+                                  data-qa-locator={qaLocatorEditBatchInfo}>
+                </lightning-button>
+            </lightning-button-group>
         </div>
-    </header>
+
+        <c-util-page-header-detail-row if:true={shouldDisplayDetail}>
+            <c-util-page-header-detail-block class="first-child">
+                <p class="slds-text-title">
+                    Records Processed
+                </p>
+                <p class="slds-text-body_regular">
+                    {processedGiftsCount} / {totalGiftsCount}
+                </p>
+            </c-util-page-header-detail-block>
+            <c-util-page-header-detail-block>
+                <p class="slds-text-title">
+                    Records Failed
+                </p>
+                <p class="slds-text-body_regular">
+                    {failedGiftsCount}
+                </p>
+            </c-util-page-header-detail-block>
+            <c-util-page-header-detail-block>
+                <p class="slds-text-title">
+                    Payment Processing Errors
+                </p>
+                <p class="slds-text-body_regular">
+                    {failedPaymentsCount}
+                </p>
+            </c-util-page-header-detail-block>
+        </c-util-page-header-detail-row>
+    </c-util-page-header>
 </template>

@@ -4277,6 +4277,8 @@
         <members>utilInput</members>
         <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
+        <members>utilPageHeaderDetailBlock</members>
+        <members>utilPageHeaderDetailRow</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>
