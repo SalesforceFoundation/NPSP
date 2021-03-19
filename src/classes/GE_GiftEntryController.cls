@@ -56,6 +56,7 @@ public with sharing class GE_GiftEntryController {
 
         Integer processedGifts = 0;
         Integer failedPayments = 0;
+        Integer failedGifts = 0;
 
         for (AggregateResult result : results) {
             String paymentStatus = (String) result.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
@@ -67,11 +68,15 @@ public with sharing class GE_GiftEntryController {
             if (status == 'Imported') {
                 processedGifts = (Integer) result.get('recordCount');
             }
+            if (status == 'Failed') {
+                failedGifts = (Integer) result.get('recordCount');
+            }
         }
 
         return new Map<String, Integer> {
             'processedGifts' => processedGifts,
-            'failedPayments' => failedPayments
+            'failedPayments' => failedPayments,
+            'failedGifts'=> failedGifts
         };
     }
 

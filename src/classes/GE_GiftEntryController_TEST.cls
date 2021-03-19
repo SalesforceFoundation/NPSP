@@ -43,6 +43,9 @@ private with sharing class GE_GiftEntryController_TEST {
         insert batch;
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
+        for (Integer i = 0; i < 5; i++) {
+            dataImports.add(createDataImportTemp('Failed', 'DUMMY_STATUS', batch.Id));
+        }
         for (Integer i = 0; i < 3; i++) {
             dataImports.add(createDataImportTemp('Imported', 'DUMMY_STATUS', batch.Id));
         }
@@ -54,6 +57,7 @@ private with sharing class GE_GiftEntryController_TEST {
 
         Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
 
+        System.assertEquals(5, batchTotals.get('failedGifts'));
         System.assertEquals(3, batchTotals.get('processedGifts'));
         System.assertEquals(8, batchTotals.get('failedPayments'));
     }
