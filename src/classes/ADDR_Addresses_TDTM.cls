@@ -94,8 +94,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         false);
                 if (errors.errorsExist) {
                     putErrorsOnAddresses(errors, addresses.addressesByHouseholdAccountId(), new Map<Id, Address__c>());
-                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-                    return null;
                 }
 
             }
@@ -127,8 +125,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                             (dmlWrapperLocal, false);
                     if (errors.errorsExist) {
                         putErrorsOnAddresses(errors, mapAddressesByAcctId, new Map<Id, Address__c>());
-                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-                        return null;
                     }
 
                 }
@@ -163,8 +159,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                                     dmlWrapperLocal, false);
                     if (errors.errorsExist) {
                         putErrorsOnAddresses(errors, mapAddressesByAcctId, mapAddressesById);
-                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-                        return null;
                     }
 
                 }
