@@ -553,8 +553,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 // Always copy the Contact's Mailing & Others address to the new Account's
                 // Billing & Shipping address.
                 if (contactRecord.is_Address_Override__c != true) {
-                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+                    Addresses.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+                    Addresses.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
 
                 accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
@@ -623,8 +623,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             WHERE Id IN :contactByAccountId.keyset()
         ]) {
             Contact contactRecord = contactByAccountId.get(accountRecord.Id);
-            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+            Addresses.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+            Addresses.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
                 accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);

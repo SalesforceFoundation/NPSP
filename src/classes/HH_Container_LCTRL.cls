@@ -577,7 +577,7 @@ public with sharing class HH_Container_LCTRL {
                 addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
                 addr.MailingStreet__c = (String)hh.get('BillingStreet');
                 Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = (String)hh.get('BillingCity');
@@ -602,7 +602,7 @@ public with sharing class HH_Container_LCTRL {
                 addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
                 Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
@@ -685,7 +685,7 @@ public with sharing class HH_Container_LCTRL {
                 Address__c addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
                 Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
