@@ -43,13 +43,18 @@ private with sharing class GE_GiftEntryController_TEST {
         insert batch;
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
+        for (Integer i = 0; i < 3; i++) {
+            dataImports.add(createDataImportTemp('Imported', 'DUMMY_STATUS', batch.Id));
+        }
         for (Integer i = 0; i < 8; i++) {
             dataImports.add(createDataImportTemp('DUMMY_STATUS', 'DECLINED', batch.Id));
         }
+
         insert dataImports;
 
         Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
 
+        System.assertEquals(3, batchTotals.get('processedGifts'));
         System.assertEquals(8, batchTotals.get('failedPayments'));
     }
 

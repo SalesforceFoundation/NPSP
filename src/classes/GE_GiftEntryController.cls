@@ -62,9 +62,15 @@ public with sharing class GE_GiftEntryController {
             if (paymentStatus == 'DECLINED') {
                 failedPayments = (Integer) result.get('recordCount');
             }
+
+            String status = (String) result.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
+            if (status == 'Imported') {
+                processedGifts = (Integer) result.get('recordCount');
+            }
         }
 
         return new Map<String, Integer> {
+            'processedGifts' => processedGifts,
             'failedPayments' => failedPayments
         };
     }
