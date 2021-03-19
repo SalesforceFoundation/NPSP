@@ -1,6 +1,6 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import getBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
@@ -28,13 +28,13 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
-    @wire(getBatchTotalsBy, { batchId: '$batchId' })
+    @wire(getGiftBatchTotalsBy, { batchId: '$batchId' })
     batchTotals;
 
     get shouldDisplayDetail() {
-        if (this.batchTotals.data?.processedGifts > 0
-            || this.batchTotals.data?.failedGifts > 0)
-        return true;
+        if (Number(this.batchTotals.data?.processedGifts) > 0 || Number(this.batchTotals.data?.failedGifts) > 0) {
+            return true;
+        }
         return false;
     }
 
@@ -42,7 +42,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return this.batchTotals.data?.processedGifts;
     }
 
-    get failedGiftsCount(){
+    get failedGiftsCount() {
         return this.batchTotals.data?.failedGifts;
     }
 
