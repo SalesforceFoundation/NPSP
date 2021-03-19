@@ -129,11 +129,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public Integer writeoffPaymentCount { get; set; }
 
     /*******************************************************************************************************
-    * @description decimal for amount float
-    */
-    public Decimal oppAmountFloat { get; set; }
-
-    /*******************************************************************************************************
     * @description integer for the number of installments to create
     */
     public Integer numberOfPayments { get; set; }
@@ -156,13 +151,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description Returns true if the user has access to the payment SObject
     */
-    public Boolean hasPaymentAccess {
+    public Boolean hasFeatureAccess {
         get {
-            if (hasPaymentAccess == null) {
-                hasPaymentAccess = hasPaymentAccess();
+            if (hasFeatureAccess == null) {
+                hasFeatureAccess = hasFeatureAccess();
             }
-
-            return hasPaymentAccess;
+            return hasFeatureAccess;
         }
         set;
     }
@@ -489,46 +483,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered.
     */
     public void getPageValidationMessages() {
-        if (!hasPaymentAccess) {
-            displayNoAccessMessage();
-            return;
-        }
-
-        if (!getIsPaymentsEnabled()) {
-            ApexPages.addMessage(new ApexPages.Message(
-                ApexPages.Severity.WARNING,
-                System.Label.pmtWizardPaymentsDisabledTitle,
-                System.Label.pmtWizardPaymentsDisabled)
-            );
-            return;
-        }
-
-        if (currentOpp == null) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
-            return;
-        }
-
-        if (currentOpp.Amount == null || currentOpp.Amount == 0) {
-            if (isScheduleWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
-            } else if (isWriteoffWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardWriteOffNoAmount));
-            }
-            return;
-        }
-
-        if (invalidPaymentRecordCount > 0) {
-            if (isScheduleWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardScheduleInvalidRecords));
-            } else if (isWriteoffWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardWriteOffInvalidRecords));
-            }
-            return;
-        }
-
-        if (isClosedLost == true) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
-        }
+        requirePaymentsEnabled();
+        requireValidOpportunity();
+        requireSufficientOpportunityAmount();
+        requirePaymentRecords();
+        requireOpenOpportunity();
 
         if (!removePaidPayments && isScheduleWizard == true && haveAmount == false && isClosedLost == false) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
@@ -538,22 +497,50 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     }
 
-    /*******************************************************************************************************
-    * @description Displays an error message when then user has no permission to modify payments
-    * @return void
-    */
-    private void displayNoAccessMessage() {
-        String errorMsg;
-
-        if (isWriteoffWizard == true) {
-            errorMsg = System.Label.pmtWizardWriteoffNoAccessMessage;
-        } else if (isScheduleWizard == true) {
-            errorMsg = System.Label.pmtWizardPaymentsNoAccessMessage;
-        } else {
-            errorMsg = System.Label.pmtWizardMsgNoOppFound;
+    private void requirePaymentsEnabled() {
+        if (!getIsPaymentsEnabled()) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.WARNING,
+                System.Label.pmtWizardPaymentsDisabledTitle,
+                System.Label.pmtWizardPaymentsDisabled)
+            );
+            return;
         }
+    }
 
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMsg));
+    private void requirePaymentRecords() {
+        if (invalidPaymentRecordCount > 0) {
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardScheduleInvalidRecords));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardWriteOffInvalidRecords));
+            }
+            return;
+        }
+    }
+
+    private void requireOpenOpportunity() {
+        if (isClosedLost == true) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
+        }
+    }
+
+    private void requireSufficientOpportunityAmount() {
+        if (currentOpp.Amount == null || currentOpp.Amount == 0) {
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardWriteOffNoAmount));
+            }
+            return;
+        }
+    }
+
+    private void requireValidOpportunity() {
+        if (currentOpp == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
+            return;
+        }
     }
 
     /*******************************************************************************************************
@@ -561,7 +548,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * and all relevant fields are both readable and modifiable
     * @return Boolean
     */
-    private Boolean hasPaymentAccess() {
+    private Boolean hasFeatureAccess() {
         SObjectType payment = npe01__OppPayment__c.getSObjectType();
         SObjectType opportunity = Opportunity.getSObjectType();
         if (canCheckPermissionsFor(payment)) {

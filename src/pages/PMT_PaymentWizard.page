@@ -6,6 +6,7 @@
     docType="html-5.0">
 
     <apex:slds />
+    <apex:includeLightning />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <!--
@@ -26,7 +27,7 @@
         function setFocusOnLoad() {}
         // For some reason, VF will not render the page messages without this onLoad function in place, even if it doesn't actually do anything.
         window.onload = function () { };
-        if ({!NOT(hasPaymentAccess)}) {
+        if ({!NOT(hasFeatureAccess)}) {
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
                 $Lightning.createComponent("{!namespace}" + ":utilIllustration",
                     {
@@ -36,20 +37,19 @@
                         variant: 'no-access',
                         illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
                     },
-                    "alloManageAllocationsIllustration",
+                    "paymentWizardIllustration",
                     function () { }
                 );
             });
         }
-        console.log('Payment Access: '+ {!hasPaymentAccess});
     </script>
 
-    <apex:outputPanel rendered="{!NOT(hasPaymentAccess)}">
+    <apex:outputPanel rendered="{!NOT(hasFeatureAccess)}">
         <c:UTIL_PageMessages id="messages"/>
-        <div id='alloManageAllocationsIllustration' />
+        <div id='paymentWizardIllustration' />
     </apex:outputPanel>
 
-    <apex:outputPanel rendered="{!hasPaymentAccess}">
+    <apex:outputPanel rendered="{!hasFeatureAccess}">
         <apex:form id="vfForm">
             <div class="slds-scope">
                 <!-- Nav -->
@@ -69,7 +69,7 @@
                 </apex:outputPanel>
 
                 <!--Custom buttons/links depending on specific page conditions-->
-                <apex:outputPanel rendered="{!AND(hasPaymentAccess, NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), isPaymentsEnabled, NOT(removePaidPayments), isScheduleWizard, isWizardEnabled)}">
+                <apex:outputPanel rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), isPaymentsEnabled, NOT(removePaidPayments), isScheduleWizard, isWizardEnabled)}">
                     <div class="slds-grid">
                         <div class="slds-col slds-m-top_medium slds-m-left_small">
                             <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}"
@@ -78,7 +78,7 @@
                     </div>
                 </apex:outputPanel>
 
-                <apex:outputPanel rendered="{!AND(hasPaymentAccess, !isPaymentsEnabled)}">
+                <apex:outputPanel rendered="{!!isPaymentsEnabled}">
                     <div class="slds-grid slds-grid_align-center">
                         <div class="slds-col">
                             <apex:outputLink value="{!URLFOR($Page.STG_SettingsManager)}" styleClass="slds-button slds-button_neutral">
@@ -92,14 +92,12 @@
                 <div class="container slds-p-around_medium">
 
                     <!-- Opportunity Info -->
-                    <apex:outputPanel rendered="{!hasPaymentAccess}">
-                        <div class="slds-section slds-is-open" id="pmtWizardTitle">
+                    <div class="slds-section slds-is-open" id="pmtWizardTitle">
                             <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
+                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
                             {!$Label.pmtWizardSectionTitle}</span>
                             </h3>
-                        </div>
-                    </apex:outputPanel>
+                    </div>
 
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap">
@@ -198,13 +196,13 @@
                         </div>
                     </apex:outputText>
 
-                    <apex:outputText rendered="{!AND(hasPaymentAccess, isPaymentsEnabled, isScheduleWizard == true)}">
+                    <apex:outputText rendered="{!AND(isPaymentsEnabled, isScheduleWizard == true)}">
 
                         <apex:outputText value="{!$Label.pmtWizardMsgNoOppFound}"  rendered="{!ISNULL(currentOpp)}"
                                          styleClass="slds-notify slds-notify_alert slds-theme_inverse-text slds-theme_alert-texture"/>
 
                         <!-- Create payment schedule -->
-                        <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
+                        <apex:outputText rendered="{!AND(NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                             <div class="slds-section slds-is-open" id="pmtCreateTitle">
                                 <h3 class="slds-section__title slds-theme_shade">
                                 <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardCreateSchedule}">
@@ -277,7 +275,7 @@
                             <div class="slds-col">
                                 <apex:commandButton action="{!calculate}"
                                                     value="{!$Label.pmtWizardBtnCalcPayments}"
-                                                    rendered="{!AND(hasPaymentAccess, isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
+                                                    rendered="{!AND(isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
                                                     styleClass="slds-button slds-button_brand slds-m-around_medium"
                                                     reRender="vfForm"/>
                             </div>
@@ -348,7 +346,7 @@
                     </div>
 
                     <!-- START PAYMENT WRITEOFF  -->
-                    <apex:outputText rendered="{!AND(hasPaymentAccess, isPaymentsEnabled, isWriteoffWizard == true, isWizardEnabled)}">
+                    <apex:outputText rendered="{!AND(isPaymentsEnabled, isWriteoffWizard == true, isWizardEnabled)}">
 
                         <apex:outputText rendered="{!AND(NOT(ISNULL(currentOpp)), haveAmount, isPaymentsEnabled)}"
                                          styleClass="slds-p-around_medium">
