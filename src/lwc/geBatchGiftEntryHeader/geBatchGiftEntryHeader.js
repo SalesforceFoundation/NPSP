@@ -32,7 +32,10 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     batchTotals;
 
     get shouldDisplayDetail() {
-        return this.batchTotals.data ? true : false;
+        if (this.batchTotals.data?.processedGifts > 0
+            || this.batchTotals.data?.failedGifts > 0)
+        return true;
+        return false;
     }
 
     get processedGiftsCount() {
