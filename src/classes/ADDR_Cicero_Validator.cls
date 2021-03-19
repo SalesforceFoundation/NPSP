@@ -206,7 +206,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
-                        ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                        Addresses.handleMultilineStreet(addr);
 
                         // save location
                         addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);

@@ -579,7 +579,7 @@ public with sharing class HH_Container_LCTRL {
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
                 //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
                 addr.MailingStreet__c = (String)hh.get('BillingStreet');
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = (String)hh.get('BillingCity');
                 addr.MailingState__c = (String)hh.get('BillingState');
                 addr.MailingPostalCode__c = (String)hh.get('BillingPostalCode');
@@ -604,7 +604,7 @@ public with sharing class HH_Container_LCTRL {
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
                 //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
@@ -687,7 +687,7 @@ public with sharing class HH_Container_LCTRL {
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
                 //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
