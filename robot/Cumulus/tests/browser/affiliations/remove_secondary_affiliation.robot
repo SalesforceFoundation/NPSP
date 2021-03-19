@@ -8,7 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 Setup Test Data
@@ -30,7 +30,7 @@ Remove Secondary Affiliation for Contact
     Select Tab                        Related
     Click Related Item Popup Link     Organization Affiliations    ${account}[Name]        Delete
     Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation
-    Click Element                    //button/span[contains(text(),'Delete')]
+    Click Span Button                 Delete
     Wait Until Modal Is Closed
     Go To Page                        Details                      Account                 object_id=${account}[Id]
     Select Tab                        Related
