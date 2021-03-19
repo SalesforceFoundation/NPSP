@@ -76,25 +76,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         switch on triggerAction {
 
             when AfterDelete {
-                DmlWrapper dmlWrapperLocal = new DmlWrapper();
-                Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
-
-                Addresses addresses = new Addresses(listOld);
-                mapAddressesByAcctId = addresses.addressesByHouseholdAccountId();
-                if (!addresses.addressesByHouseholdAccountId().isEmpty()){
-                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-                    refreshCurrentHHAddress(addresses.addressesByHouseholdAccountId(), dmlWrapperLocal,
-                            false);
-                }
-
-                // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
-                // that might occur updating contacts and accounts, and associating those errors with
-                // the correct addresses.
-                ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
-                        false);
-                if (errors.errorsExist) {
-                    putErrorsOnAddresses(errors, addresses.addressesByHouseholdAccountId(), new Map<Id, Address__c>());
-                }
+                onAfterDelete(listOld);
 
             }
             when else {
@@ -177,6 +159,28 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
+    }
+
+    private void onAfterDelete(List<SObject> listOld) {
+        DmlWrapper dmlWrapperLocal = new DmlWrapper();
+        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
+
+        Addresses addresses = new Addresses(listOld);
+        mapAddressesByAcctId = addresses.addressesByHouseholdAccountId();
+        if (!addresses.addressesByHouseholdAccountId().isEmpty()) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            refreshCurrentHHAddress(addresses.addressesByHouseholdAccountId(), dmlWrapperLocal,
+                    false);
+        }
+
+        // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
+                false);
+        if (errors.errorsExist) {
+            putErrorsOnAddresses(errors, addresses.addressesByHouseholdAccountId(), new Map<Id, Address__c>());
+        }
     }
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
