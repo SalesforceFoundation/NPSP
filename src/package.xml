@@ -73,9 +73,9 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>Accounts</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
-        <members>Accounts</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -314,6 +314,9 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>GiftBatchAggregateResults</members>
+        <members>GiftBatchSelector</members>
+        <members>GiftBatchService</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
