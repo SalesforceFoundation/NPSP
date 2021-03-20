@@ -35,18 +35,20 @@
 public inherited sharing class GiftBatchSelector {
     public GiftBatchSelector() {}
 
-    public GiftBatchAggregateResults selectBatchGiftsGroupedByStatusBy(Id batchId) {
-        List<AggregateResult> results = [
-            SELECT
-                COUNT(Id)recordCount,
-                Status__c,
-                Payment_Status__c
-            FROM DataImport__c
-            WHERE NPSP_Data_Import_Batch__c = :batchId
-            GROUP BY
-                Status__c,
-                Payment_Status__c
-        ];
-        return new GiftBatchAggregateResults(results);
+    public List<AggregateResultProxy> selectBatchGiftsGroupedByStatusBy(Id batchId) {
+        List<AggregateResultProxy> groupedResults = new List<AggregateResultProxy>();
+        for (AggregateResult result : [SELECT COUNT(Id)recordCount,
+                                            Status__c,
+                                            Payment_Status__c
+                                        FROM DataImport__c
+                                        WHERE NPSP_Data_Import_Batch__c = :batchId
+                                        GROUP BY
+                                            Status__c,
+                                            Payment_Status__c
+        ]) {
+            groupedResults.add(new AggregateResultProxy().withAggregateResult(result));
+        }
+
+        return groupedResults;
     }
 }

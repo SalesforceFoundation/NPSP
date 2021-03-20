@@ -36,8 +36,7 @@ public with sharing class GiftBatchService {
     public GiftBatchService() {}
 
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatchAggregateResults results =
-            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchId);
-        return results.toMap();
+        List<AggregateResultProxy> results = new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchId);
+        return new GiftBatchAggregateResults(results).toMap();
     }
 }
