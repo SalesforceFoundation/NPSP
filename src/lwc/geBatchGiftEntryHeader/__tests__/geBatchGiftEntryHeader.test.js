@@ -3,11 +3,11 @@ import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
 import { getRecord } from 'lightning/uiRecordApi';
 import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
-import getBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
 const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-const getBatchTotalsByAdapter = registerApexTestWireAdapter(getBatchTotalsBy);
+const getGiftBatchTotalsByAdapter = registerApexTestWireAdapter(getGiftBatchTotalsBy);
 
 const APEX_BATCH_TOTALS_BY_SUCCESS = {
     'processedGifts': 10,
@@ -50,7 +50,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('renders detail row', async () => {
             const element = setup();
 
-            getBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
+            getGiftBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -68,7 +68,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('renders detail blocks with correct record counts', async () => {
             const element = setup();
 
-            getBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
+            getGiftBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
 
             await flushPromises();
             const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
