@@ -23,7 +23,7 @@ Create Secondary Affiliation for Contact
     [Documentation]                      Creates a contact and organization account via API and open contact
     ...                                  Create affiliation to organization account from Organization Affiliations related list New button.
     ...                                  Verifies that affiliation to account shows under organization affiliation related list as current
-    [tags]                               W-037651    feature:Affiliations
+    [tags]                               W-037651    feature:Affiliations           unstable         notonfeaturebranch
     Go To Page                           Details                          Contact                    object_id=${contact}[Id]
     Select Tab                           Related
     Click Related List Button            Organization Affiliations        New
