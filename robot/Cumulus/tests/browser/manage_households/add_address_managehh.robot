@@ -35,7 +35,7 @@ Add New Address to Household
     ...                                  Verify the new address persists under both Mailing and Billing address details
     ...                                  Verify Same address should be present on Account and Contacts
 
-    [tags]                               unstable             W-038348             feature: Manage Households
+    [tags]                               unstable             W-038348             feature: Manage Households           notonfeaturebranch
 
     Go To Page                           Details
     ...                                  Account
