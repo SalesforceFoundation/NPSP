@@ -11,7 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 Make Changes to Settings and Verify Changes
     [Documentation]            Go to NPSP Settings>People>Account Model. Edit Household Account Record Type seeing to Organization and Save.
     ...                        Verify that the change is saved and revert the change and Save again. Verify change reverted.
-    [tags]                     feature:NPSP Settings           W-039822
+    [tags]                     feature:NPSP Settings           W-039822          unstable            notonfeaturebranch
     Open NPSP Settings         People                          Account Model             
     Click Settings Button      idPanelCon                      Edit
     Edit Selection             Household Account Record Type   Organization
