@@ -36,7 +36,7 @@ Setup Test Data
 *** Test Cases ***
 
 Find Matching Gifts
-    [Tags]                                 unstable
+
     Go To Page                             Details
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
