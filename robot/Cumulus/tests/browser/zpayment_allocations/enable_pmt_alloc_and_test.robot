@@ -27,7 +27,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     ...                                    Open Opportunity and open payments from the related tab. Verify that total payment is assigned to Default GAU
     ...                                    Add a new Allocation to another GAU and verify that the Allocation is split between default and new GAUs.
     ...                                    Go to Opportunity and verify that same allocation is reflected under GAU allocations related list.
-    [tags]                                 W-039821            feature:Payment Allocations
+    [tags]                                 W-039821            feature:Payment Allocations            unstable          notonfeaturebranch
     Go To Page                             Details
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
@@ -62,7 +62,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...                                    Open Opportunity and Manage Allocations from GAU Allocations related list.
     ...                                    Add a new Allocation to another GAU and verify that the Allocation is split between default and new GAU.
     ...                                    Open Payments from related list and verify that same allocation is reflected under Payment Allocations related list.
-    [tags]                                 W-039821                   feature:Payment Allocations
+    [tags]                                 W-039821                   feature:Payment Allocations               unstable           notonfeaturebranch
     Go To Page                             Detail
     ...                                    Opportunity
     ...                                    object_id=${data}[contact2_opportunity][Id]
