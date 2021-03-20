@@ -22,7 +22,7 @@ Create Engagement Plan Template And verify save
     [Documentation]                      Create an engagement plan from the ui. Navigate to engagementplans listings view
     ...                                  View the details of the engagement plan created.
 
-    [tags]                                             W-038641                 feature:Engagements
+    [tags]                                             W-038641                 feature:Engagements         unstable           notonfeaturebranch
 
       Go To Page                                       Listing                            Engagement_Plan_Template__c
       Click Special Object Button                      New

@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Data Imports
-    [tags]                     unstable
+
     ${first_name1} =           Generate Random String
     ${last_name1} =            Generate Random String
     ${acc1}=                   Generate Random String
