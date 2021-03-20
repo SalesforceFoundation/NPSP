@@ -32,26 +32,26 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     batchTotals;
 
     get shouldDisplayDetail() {
-        if (Number(this.batchTotals.data?.processedGifts) > 0 || Number(this.batchTotals.data?.failedGifts) > 0) {
+        if (Number(this.batchTotals.data?.TOTAL) > 0 || Number(this.batchTotals.data?.FAILED) > 0) {
             return true;
         }
         return false;
     }
 
     get processedGiftsCount() {
-        return this.batchTotals.data?.processedGifts;
+        return this.batchTotals.data?.PROCESSED;
     }
 
     get failedGiftsCount() {
-        return this.batchTotals.data?.failedGifts;
+        return this.batchTotals.data?.FAILED;
     }
 
     get failedPaymentsCount() {
-        return this.batchTotals.data?.failedPayments;
+        return this.batchTotals.data?.FAILED_PAYMENT;
     }
 
     get totalGiftsCount() {
-        return this.batchTotals.data?.totalGifts;
+        return this.batchTotals.data?.TOTAL;
     }
 
     handleClick(event) {

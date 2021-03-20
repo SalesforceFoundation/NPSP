@@ -14,6 +14,15 @@ public inherited sharing class GiftBatchAggregateResults {
         }
     }
 
+    public Map<String, Integer> toMap() {
+        return new Map<String, Integer> {
+            GiftBatchAggregateGroupName.TOTAL.name() => this.totalGifts,
+            GiftBatchAggregateGroupName.PROCESSED.name() => this.processedGifts,
+            GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts,
+            GiftBatchAggregateGroupName.FAILED_PAYMENT.name() => this.failedPayments
+        };
+    }
+
     private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         totalGifts += statusGroup.count();
     }
@@ -34,14 +43,5 @@ public inherited sharing class GiftBatchAggregateResults {
         if (statusGroup.isPaymentFailed()) {
             failedPayments += statusGroup.count();
         }
-    }
-
-    public Map<String, Integer> toMap() {
-        return new Map<String, Integer> {
-            'totalGifts' => this.totalGifts,
-            'processedGifts' => this.processedGifts,
-            'failedPayments' => this.failedPayments,
-            'failedGifts'=> this.failedGifts
-        };
     }
 }

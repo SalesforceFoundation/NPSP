@@ -60,10 +60,10 @@ private with sharing class GE_GiftEntryController_TEST {
 
         Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
 
-        System.assertEquals(5 + 4, batchTotals.get('failedGifts'));
-        System.assertEquals(3, batchTotals.get('processedGifts'));
-        System.assertEquals(8 + 4, batchTotals.get('failedPayments'));
-        System.assertEquals((5 + 3 + 8 + 4), batchTotals.get('totalGifts'));
+        System.assertEquals(3, batchTotals.get(GiftBatchAggregateGroupName.PROCESSED.name()));
+        System.assertEquals(5 + 4, batchTotals.get(GiftBatchAggregateGroupName.FAILED.name()));
+        System.assertEquals(8 + 4, batchTotals.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
+        System.assertEquals((5 + 3 + 8 + 4), batchTotals.get(GiftBatchAggregateGroupName.TOTAL.name()));
     }
 
     // TODO: Temporary delete later

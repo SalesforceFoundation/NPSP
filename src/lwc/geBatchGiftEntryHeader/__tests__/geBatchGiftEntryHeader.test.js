@@ -10,10 +10,10 @@ const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
 const getGiftBatchTotalsByAdapter = registerApexTestWireAdapter(getGiftBatchTotalsBy);
 
 const APEX_BATCH_TOTALS_BY_SUCCESS = {
-    'processedGifts': 10,
-    'failedGifts': 5,
-    'failedPayments': 1,
-    'totalGifts': 20
+    'PROCESSED': 10,
+    'FAILED': 5,
+    'FAILED_PAYMENT': 1,
+    'TOTAL': 20
 };
 
 describe('c-ge-batch-gift-entry-header', () => {

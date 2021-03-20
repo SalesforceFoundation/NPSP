@@ -25,10 +25,10 @@ private with sharing class GiftBatchAggregateResults_TEST {
         GiftBatchAggregateResults batchTotals = new GiftBatchAggregateResults(resultProxies);
         Map<String, Integer> mappedTotals = batchTotals.toMap();
 
-        System.assertEquals(1 + 2 + 3 + 4 + 5, mappedTotals.get('totalGifts'));
-        System.assertEquals(1, mappedTotals.get('processedGifts'));
-        System.assertEquals(7, mappedTotals.get('failedGifts'));
-        System.assertEquals(9, mappedTotals.get('failedPayments'));
+        System.assertEquals(1, mappedTotals.get(GiftBatchAggregateGroupName.PROCESSED.name()));
+        System.assertEquals(7, mappedTotals.get(GiftBatchAggregateGroupName.FAILED.name()));
+        System.assertEquals(9, mappedTotals.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
+        System.assertEquals(1 + 2 + 3 + 4 + 5, mappedTotals.get(GiftBatchAggregateGroupName.TOTAL.name()));
     }
 }
 
