@@ -24,7 +24,7 @@ Remove Secondary Affiliation for Contact
     [Documentation]                   Creates a contact, organization account and secondary affiliation via API
     ...                               Open contact and delete affiliation from organization affiliation related list
     ...                               Verifies that contact does not show under affiliated contacts in the account page
-    [tags]                            W-037651                feature:Affiliations
+    [tags]                            W-037651                feature:Affiliations          unstable             notonfeaturebranch
     Go To Page                        Details                      Contact                 object_id=${contact}[Id]
     Current Page Should Be            Details                      Contact
     Select Tab                        Related

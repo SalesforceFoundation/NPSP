@@ -92,6 +92,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
+    def _loop_is_text_present(self,text, max_attempts=3):
+        """This is a fix to handle staleelementreference exception. Waits for the text to be present and loops through till the text appears"""
+        attempt = 1
+        while True:
+            try:
+                return self.selenium.page_should_contain(text)
+            except StaleElementReferenceException:
+                if attempt == max_attempts:
+                    raise
+                attempt += 1
+
 
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
