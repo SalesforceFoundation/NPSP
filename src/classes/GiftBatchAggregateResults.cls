@@ -7,20 +7,32 @@ public inherited sharing class GiftBatchAggregateResults {
     public GiftBatchAggregateResults(List<AggregateResultProxy> results) {
         for (AggregateResultProxy result : results) {
             GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
+            addToTotalGiftsCountFor(statusGroup);
+            countProcessedGiftsFor(statusGroup);
+            addToFailedGiftsCountFor(statusGroup);
+            addToFailedPaymentGiftsCountFor(statusGroup);
+        }
+    }
 
-            if (statusGroup.isImported()) {
-                processedGifts = statusGroup.count();
-            }
+    private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        totalGifts += statusGroup.count();
+    }
 
-            if (statusGroup.isProcessingFailed()) {
-                failedGifts += statusGroup.count();
-            }
+    private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isImported()) {
+            processedGifts = statusGroup.count();
+        }
+    }
 
-            if (statusGroup.isPaymentFailed()) {
-                failedPayments += statusGroup.count();
-            }
+    private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isProcessingFailed()) {
+            failedGifts += statusGroup.count();
+        }
+    }
 
-            // totalGifts += (Integer) result.get('recordCount');
+    private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isPaymentFailed()) {
+            failedPayments += statusGroup.count();
         }
     }
 

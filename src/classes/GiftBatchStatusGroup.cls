@@ -1,5 +1,4 @@
 public inherited sharing class GiftBatchStatusGroup {
-
     final private String status;
     final private String paymentStatus;
     private Integer count;
