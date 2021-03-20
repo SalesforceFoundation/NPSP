@@ -6,17 +6,8 @@ public inherited sharing class GiftBatchStatusGroup {
     public GiftBatchStatusGroup(AggregateResultProxy result) {
         Map<String,Object> resultProxy = result.getValuesByAlias();
         paymentStatus = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
-        if (paymentStatus == 'DECLINED') {
-            count = (Integer) resultProxy.get('recordCount');
-        }
-
         status = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
-        if (status == 'Imported') {
-            count = (Integer) resultProxy.get('recordCount');
-        }
-        if (status == 'Failed') {
-            count = (Integer) resultProxy.get('recordCount');
-        }
+        count = (Integer) resultProxy.get('recordCount');
     }
 
     public Integer count() {
