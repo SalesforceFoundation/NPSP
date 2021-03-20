@@ -2,14 +2,13 @@ public inherited sharing class GiftBatchStatusGroup {
 
     final private String status;
     final private String paymentStatus;
-    final private Integer count;
+    private Integer count;
 
     public GiftBatchStatusGroup(AggregateResultProxy result) {
         Map<String,Object> resultProxy = result.getValuesByAlias();
         paymentStatus = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
         if (paymentStatus == 'DECLINED') {
             count = (Integer) resultProxy.get('recordCount');
-            return;
         }
 
         status = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());

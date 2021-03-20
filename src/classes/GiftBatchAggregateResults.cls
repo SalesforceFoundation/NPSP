@@ -12,21 +12,15 @@ public inherited sharing class GiftBatchAggregateResults {
                 processedGifts = statusGroup.count();
             }
 
+            if (statusGroup.isProcessingFailed()) {
+                failedGifts += statusGroup.count();
+            }
+
+            if (statusGroup.isPaymentFailed()) {
+                failedPayments += statusGroup.count();
+            }
+
             // totalGifts += (Integer) result.get('recordCount');
-
-            // String status = (String) result.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
-            // if (status == 'Imported') {
-            //     processedGifts = (Integer) result.get('recordCount');
-            //     continue;
-            // }
-
-            // String paymentStatus = (String) result.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
-            // if (paymentStatus == 'DECLINED') {
-            //     failedPayments += (Integer) result.get('recordCount');
-            // }
-            // if (status == 'Failed') {
-            //     failedGifts += (Integer) result.get('recordCount');
-            // }
         }
     }
 
