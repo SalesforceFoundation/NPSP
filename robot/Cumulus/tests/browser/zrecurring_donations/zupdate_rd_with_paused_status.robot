@@ -51,7 +51,7 @@ Edit An Enhanced Recurring donation record of type open
     ...                           Status of the RD changes to Paused from Active and When the user decides to
     ...                           Unpause the paused installment then the status on the RD changes back to Active
 
-    [tags]                                                   W-8237882          feature:RD2
+    [tags]                                                   W-8237882          feature:RD2         unstable
 
     Go To Page                                Listing                                   npe03__Recurring_Donation__c
 
