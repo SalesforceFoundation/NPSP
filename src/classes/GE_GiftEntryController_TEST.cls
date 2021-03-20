@@ -37,6 +37,7 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
+    // TODO: Potentially temporary delete, move, or split later
     @isTest
     private static void shouldReturnMapOfBatchTotals() {
         DataImportBatch__c batch = new DataImportBatch__c();
@@ -52,17 +53,20 @@ private with sharing class GE_GiftEntryController_TEST {
         for (Integer i = 0; i < 8; i++) {
             dataImports.add(createDataImportTemp('DUMMY_STATUS', 'DECLINED', batch.Id));
         }
-
+        for (Integer i = 0; i < 4; i++) {
+            dataImports.add(createDataImportTemp('Failed', 'DECLINED', batch.Id));
+        }
         insert dataImports;
 
         Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
 
-        System.assertEquals(5, batchTotals.get('failedGifts'));
+        System.assertEquals(5 + 4, batchTotals.get('failedGifts'));
         System.assertEquals(3, batchTotals.get('processedGifts'));
-        System.assertEquals(8, batchTotals.get('failedPayments'));
-        System.assertEquals((5 + 3 + 8), batchTotals.get('totalGifts'));
+        System.assertEquals(8 + 4, batchTotals.get('failedPayments'));
+        System.assertEquals((5 + 3 + 8 + 4), batchTotals.get('totalGifts'));
     }
 
+    // TODO: Temporary delete later
     private static DataImport__c createDataImportTemp(String status, String paymentStatus, Id batchId) {
         DataImport__c dataImport = new DataImport__c(
             Status__c = status,
