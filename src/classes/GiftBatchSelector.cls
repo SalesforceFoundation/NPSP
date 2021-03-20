@@ -35,7 +35,7 @@
 public inherited sharing class GiftBatchSelector {
     public GiftBatchSelector() {}
 
-    public List<AggregateResult> selectBatchGiftsGroupedByStatusBy(Id batchId) {
+    public GiftBatchAggregateResults selectBatchGiftsGroupedByStatusBy(Id batchId) {
         List<AggregateResult> results = [
             SELECT
                 COUNT(Id)recordCount,
@@ -47,6 +47,6 @@ public inherited sharing class GiftBatchSelector {
                 Status__c,
                 Payment_Status__c
         ];
-        return results;
+        return new GiftBatchAggregateResults(results);
     }
 }
