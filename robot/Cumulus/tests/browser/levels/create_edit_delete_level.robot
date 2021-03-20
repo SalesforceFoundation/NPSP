@@ -25,7 +25,7 @@ Create and edit level to verify fields
     [Documentation]                      Create a level and verify the fields on the created level details page
     ...                                  Edit the level details and update the fields. Verify the updated fields
     ...                                  are persisted on the details page.
-    [tags]                               W-038641                 feature:Levels
+    [tags]                               W-038641                 feature:Levels             unstable       notonfeaturebranch
 
     Go To Page                                       Listing                            Level__c
     Navigate To Level Page                           create
@@ -77,7 +77,7 @@ Create and edit level to verify fields
     ...                                  Edit the smallestAmount value to a value greater than the limit threshold
     ...                                  Run the batch job and verify the correct levels are applied.
 
-    [tags]                                  W-038641                 feature:Level
+    [tags]                                  W-038641                 feature:Level              unstable            notonfeaturebranch
     # --------------------------------
     # update the SmallestGift field value to allow the level to be applied
     # --------------------------------
@@ -131,7 +131,7 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  W-038641                 feature:Level
+    [tags]                                  W-038641                 feature:Level         unstable             notonfeaturebranch
 
     Go To Page                              Details
     ...                                     Level__c
