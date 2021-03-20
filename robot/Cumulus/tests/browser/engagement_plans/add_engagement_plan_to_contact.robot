@@ -52,6 +52,7 @@ Create a Contact and Add Engagement Plan
     Select Tab                                       Related
     Click Related List Button                        Engagement Plans               New
     Wait Until Modal Is Open
+    Sleep                                            1
     Populate Lookup Field                            Engagement Plan Template       Automation_Plan
     Click Button                                     Save
     Wait Until Modal Is Closed
