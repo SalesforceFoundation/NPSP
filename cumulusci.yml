@@ -236,6 +236,14 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/Insert_Tests.robot
 
+    test_rd_batch_performance:
+        description: Runs Robot Framework performance tests for Enhanced Recurring Donations Batch Job
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/RD_Batch_Tests.robot
+            vars: persistent_org:True
+
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Org Config
@@ -1179,6 +1187,52 @@ flows:
                 options:
                     include: ultra-long
                     vars: persistent_org:True
+
+    test_rd_performance_LDV:
+        description: Run Enhanced Recurring Donations nightly batch job performance test against a pre-existing Sandbox org
+        group: Performance Tests
+        steps:
+            1:
+                flow: max_feature_parameter_limit_work_around
+                ## This is required because it's a sandbox
+            2:
+                flow: dependencies
+            2.5:
+                flow: deploy_unmanaged_ee
+                ## Deploy the latest unmanaged code into the Sandbox org before running any tests
+                options:
+                    uninstall_packaged_incremental:
+                        ignore:
+                            QuickAction:
+                                - NewEvent
+                                - NewCase
+                                - SendEmail
+                            FlexiPage:
+                                - NPSP_Address_Record_Page
+                                - NPSP_Deliverable
+                                - NPSP_Engagement_Plan_Record_Page
+                                - NPSP_GAU_Allocation
+                                - NPSP_General_Accounting_Unit
+                            Object:
+                                - BatchResultLog__c
+                            CompactLayout:
+                                - Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template
+                                - Engagement_Plan__c.NPSP_Engagement_Plan
+                                - General_Accounting_Unit__c.NPSP_General_Accounting_Unit
+                                - Grant_Deadline__c.Deliverable_Layout
+                                - Allocation__c.NPSP_GAU_Allocation
+                            Layout:
+                                - Grant_Deadline__c-Deliverable
+                            ListView:
+                                - Error__c.All
+                                - Grant_Deadline__c.All
+                                - Trigger_Handler__c.All_Triggers
+            2.7:
+                task: deploy_rd2_config
+                ## It's necessary to redeploy the RD2 config after deploying the "packaged" unmanaged code to
+                ## ensure that the RecurringDonation.DayOfMonth picklist field has the proper active values.
+            3:
+                task: test_rd_batch_performance
 
     beta_dependencies:
         steps:

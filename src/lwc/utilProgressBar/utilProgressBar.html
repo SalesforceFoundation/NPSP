@@ -12,7 +12,7 @@
                     <template if:true={isCurrency}>
                         <lightning-formatted-number value={actualValue}
                                                     format-style="currency"
-                                                    currency-code="USD">
+                                                    currency-code={currencyCode}>
                         </lightning-formatted-number>
                     </template>
                     <template if:false={isCurrency}>
@@ -23,7 +23,7 @@
                         <template if:true={isCurrency}>
                             <lightning-formatted-number value={expectedValue}
                                                         format-style="currency"
-                                                        currency-code="USD">
+                                                        currency-code={currencyCode}>
                             </lightning-formatted-number>
                         </template>
                         <template if:false={isCurrency}>

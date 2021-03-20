@@ -2220,7 +2220,7 @@
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
+        <shortDescription>Spinner text when Elevate Commitment is being created or updated</shortDescription>
         <value>Saving Elevate recurring payment...This may take a few minutes.</value>
     </labels>
     <labels>
@@ -5070,6 +5070,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch</value>
     </labels>
     <labels>
+        <fullName>bgeRetirementWarningBody</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Gift Entry retirement &amp; recommendations</shortDescription>
+        <value>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>bgeRetirementWarningHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for warning about Batch Gift Entry retiring</shortDescription>
+        <value>Retiring Batch Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>bgeTabHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -6715,6 +6731,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Common error when a total doesn't match Donation Amount.</shortDescription>
         <value>Total amount doesn't match the {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorBatchGiftEntryCurrencyMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when currency for gift doesn&apos;t match batch.</shortDescription>
+        <value>Unable to save the gift to the batch. Gifts must be in the same currency as the batch. Change your currency to {0} to save the gift.</value>
     </labels>
     <labels>
         <fullName>geErrorCardChargedBDIFailed</fullName>
@@ -8878,6 +8902,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Unit test error: An invalid string was provided but no exception was thrown</shortDescription>
         <value>An invalid string was provided but no exception was thrown</value>
+    </labels>
+    <labels>
+        <fullName>geWarningBatchGiftEntryCurrencyMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning when currency for gift doesn&apos;t match batch.</shortDescription>
+        <value>The currency for this batch is {0}. Gifts must be in the same currency as the batch. Change your currency to {0} to save a new gift to the batch.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>

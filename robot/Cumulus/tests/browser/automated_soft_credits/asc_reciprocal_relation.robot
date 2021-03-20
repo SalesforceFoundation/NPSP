@@ -37,7 +37,7 @@ ASC Reciprocal Relationship Test Case 1
     [Documentation]            Create 2 contacts on same household and Create relationship with contact2 and Related OCR as Soft Credit via API.
     ...                        Create an opp with contact2 as primary.Verify contact2 is Donor, contact1 is HH member(as no RelatedOCR set on reciprocal relation)
     ...                        After running donations batch job verify contact1 gets soft credits and contact2 gets only hard credits (no soft credits)
-    [tags]                     feature:Automated Soft Credits       W-039819
+    [tags]                     feature:Automated Soft Credits       W-039819        unstable               notonfeaturebranch
     Go To Page                              Details                              Opportunity
     ...                                     object_id=${data}[contact2_opportunity][Id]
     Select Tab                              Related

@@ -11,7 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 Verify Payment Allocations is Disabled by Default
     [Documentation]                 Go to Custom Settings and Manage Allocations Settings and 
     ...                             verify that Payment Allcocations Enabled checkbox is unchecked by default
-    [tags]                          feature:NPSP Settings                   W-039822
+    [tags]                          feature:NPSP Settings                   W-039822             unstable            notonfeaturebranch
     Go To Page                      Custom                                  CustomSettings
     Select Settings Option          Allocations Settings                    Manage
     Verify Page And Select Frame    Allocations Settings

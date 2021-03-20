@@ -810,8 +810,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
             List<npe03__Recurring_Donation__c> oldRds = null;
 
-            tdtm.transformDataBeforeValidation(rds, oldRds, triggerAction);
-            tdtm.validate(rds, oldRds, triggerAction);
+            tdtm.adjustDataAndValidate(rds, oldRds, triggerAction);
             tdtm.transformDataInBeforeContext(rds, oldRds, triggerAction);
 
         } catch (Exception e) {
