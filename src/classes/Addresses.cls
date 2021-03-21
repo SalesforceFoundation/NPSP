@@ -571,50 +571,55 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public void verifyAddrSeasonalNoOverlap() {
 
         // first get just the seasonal addresses
-        list<Address__c> listAddrS = new list<Address__c>();
-        for (Address__c addr : (List<Address__c>) getRecords()) {
-            if (Addresses.isSeasonalAddr(addr)) {
-                listAddrS.add(addr);
-            } else if (isPartialSeasonalAddr(addr)) {
-                addr.addError(Label.addrSeasonalPartial);
-            }
-        }
+        List<NPSP_Address> seasonalAddresses = seasonalAddresses();
 
         // if none are seasonal, we can bail out
-        if (listAddrS.size() == 0)
+        if (seasonalAddresses.size() == 0)
             return;
 
         // protect against overlaps within the set being inserted or updated
-        for (Address__c addr : listAddrS) {
-            for (Address__c addr2 : listAddrS) {
-                if (addr == addr2)
+        for (NPSP_Address addr : seasonalAddresses) {
+            for (NPSP_Address addr2 : seasonalAddresses) {
+                if (addr.getRecord() == addr2.getRecord())
                     continue;
-                if (addr.Household_Account__c != addr2.Household_Account__c)
+                if (addr.householdId() != addr2.householdId())
                     continue;
-                if (isSeasonalOverlap(addr, addr2)) {
-                    addr.addError(Label.addrSeasonalOverlap);
+                if (addr.overlapsWith(addr2)) {
+                    addr.getRecord().addError(Label.addrSeasonalOverlap);
                 }
             }
         }
 
         // now check for overlaps within each household's saved addresses
         list<Id> listAccId = new list<Id>();
-        for (Address__c addr : listAddrS) {
-            listAccId.add(addr.Household_Account__c);
+        for (NPSP_Address addr : seasonalAddresses) {
+            listAccId.add(addr.householdId());
         }
         map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
                 (listAccId);
 
-        for (Address__c addr : listAddrS) {
-            for (Address__c addr2 : mapAccIdListAddrHH.get(addr.Household_Account__c)) {
-                if (addr.id == addr2.id)
+        for (NPSP_Address addr : seasonalAddresses) {
+            for (Address__c addr2 : mapAccIdListAddrHH.get(addr.householdId())) {
+                NPSP_Address npspAddress2 = new NPSP_Address(addr2);
+                if (addr.getRecord().id == addr2.id)
                     continue;
-                if (isSeasonalOverlap(addr, addr2)) {
-                    addr.addError(Label.addrSeasonalOverlap);
+                if (addr.overlapsWith(npspAddress2)) {
+                    addr.getRecord().addError(Label.addrSeasonalOverlap);
                     break;
                 }
             }
         }
+    }
+
+    private List<NPSP_Address> seasonalAddresses() {
+        list<NPSP_Address> listAddrS = new list<NPSP_Address>();
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            if (npspAddress.isSeasonal()) {
+                listAddrS.add(npspAddress);
+            }
+        }
+        return listAddrS;
     }
 
     /*******************************************************************************************************
