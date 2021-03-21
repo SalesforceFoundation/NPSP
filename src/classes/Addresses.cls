@@ -578,6 +578,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
             return;
 
         // protect against overlaps within the set being inserted or updated
+        checkForOverlaps(seasonalAddresses);
+
+        // now check for overlaps within each household's saved addresses
+        checkForOverlapsAgainstHouseholdAddresses(seasonalAddresses);
+    }
+
+    private void checkForOverlaps(List<NPSP_Address> seasonalAddresses) {
         for (NPSP_Address addr : seasonalAddresses) {
             for (NPSP_Address addr2 : seasonalAddresses) {
                 if (addr.getRecord() == addr2.getRecord())
@@ -589,8 +596,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 }
             }
         }
+    }
 
-        // now check for overlaps within each household's saved addresses
+    private void checkForOverlapsAgainstHouseholdAddresses(List<NPSP_Address> seasonalAddresses) {
         list<Id> listAccId = new list<Id>();
         for (NPSP_Address addr : seasonalAddresses) {
             listAccId.add(addr.householdId());
