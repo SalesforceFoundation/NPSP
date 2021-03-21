@@ -630,46 +630,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return listAddrS;
     }
 
-    /*******************************************************************************************************
-    * @description utility to see if two seasonal addresses overlap
-    * @param addr1 an Address
-    * @param addr2 an Address
-    * @return boolean. true if the seasonal fields of the two addresses overlap
-    */
-    public static boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
-        if (addr1 == null || addr2 == null)
-            return false;
-        if (!Addresses.isSeasonalAddr(addr1) || !Addresses.isSeasonalAddr(addr2))
-            return false;
-
-        // we don't need to know what year or month we are currently in, but
-        // we need to take into account days (since we could be in the same month).
-        // to make this easy to compare, we convert month & day to be a decimal of month.day.
-        // eg., 3.01 for Feb 1st and 3.28 for Feb 28th.
-        decimal start1 = decimalOfMonthDay(addr1.Seasonal_Start_Month__c, addr1.Seasonal_Start_Day__c);
-        decimal end1 = decimalOfMonthDay(addr1.Seasonal_End_Month__c, addr1.Seasonal_End_Day__c);
-        decimal start2 = decimalOfMonthDay(addr2.Seasonal_Start_Month__c, addr2.Seasonal_Start_Day__c);
-        decimal end2 = decimalOfMonthDay(addr2.Seasonal_End_Month__c, addr2.Seasonal_End_Day__c);
-
-        // now we see if the ranges are increasing (Jan '14 - March '14), or decreasing (Nov 14' - Feb '15),
-        boolean range1Increases = start1 < end1;
-        boolean range2Increases = start2 < end2;
-
-        // we can now tell if there is overlap simply by looking at three scenarios:
-        // 1. both ranges increase, make sure start1 not in range2, and start2 not in range1.
-        if (range1Increases && range2Increases) {
-            return (start1 >= start2 && start1 <= end2) || (start2 >= start1 && start2 <= end1);
-        }
-        // 2. one range increases, one range decreases, make sure end1 not in range2, and end2 not in range1.
-        else if (range1Increases != range2Increases) {
-            return (end1 >= start2 && end1 <= end2) || (end2 >= start1 && end2 <= end1);
-        }
-        // 3. both ranges decrease, always implies an overlap of the new year!
-        else {
-            return true;
-        }
-    }
-
     public Map<Id, Address__c> defaultAndSeasonalWithChanges() {
         Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
