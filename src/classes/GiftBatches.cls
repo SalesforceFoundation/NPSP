@@ -42,14 +42,20 @@ public inherited sharing class GiftBatches extends fflib_SObjects {
         super(records, DataImportBatch__c.SObjectType);
     }
 
-    public Map<Id, Map<String, Integer>> getTotalsMap() {
-        Map<Id, Map<String, Integer>> totalsByBatchId = new Map<Id, Map<String, Integer>>();
-
+    public Map<Id, GiftBatchAggregateResults> getTotalsMap() {
+        Set<Id> batchIds = new Set<Id>();
         for (SObject batch : getRecords()) {
-            List<AggregateResultProxy> totals = new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batch.Id);
-            totalsByBatchId.put(batch.Id, new GiftBatchAggregateResults(totals).toMap());
+            batchids.add(batch.Id);
         }
 
-        return totalsByBatchId;
+        Map<Id, GiftBatchAggregateResults> groupedTotalsByBatchId = new Map<Id, GiftBatchAggregateResults>();
+
+        Map<Id, List<AggregateResultProxy>> resultProxiesByBatchId =
+            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchIds);
+        for (Id batchId : resultProxiesByBatchId.keySet()) {
+            groupedTotalsByBatchId.put(batchId, new GiftBatchAggregateResults(resultProxiesByBatchId.get(batchId)));
+        }
+
+        return groupedTotalsByBatchId;
     }
 }

@@ -38,7 +38,7 @@ public with sharing class GiftBatchService {
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
         GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
         // TODO: Value object for this map? Too much?
-        Map<Id, Map<String, Integer>> totals = batches.getTotalsMap();
-        return totals.get(batchId);
+        Map<Id, GiftBatchAggregateResults> totals = batches.getTotalsMap();
+        return totals.get(batchId).toMap();
     }
 }

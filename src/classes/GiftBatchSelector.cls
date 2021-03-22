@@ -43,20 +43,27 @@ public inherited sharing class GiftBatchSelector {
         ];
     }
 
-    public List<AggregateResultProxy> selectBatchGiftsGroupedByStatusBy(Id batchId) {
-        List<AggregateResultProxy> groupedResults = new List<AggregateResultProxy>();
-        for (AggregateResult result : [SELECT COUNT(Id)recordCount,
-                                            Status__c,
-                                            Payment_Status__c
-                                        FROM DataImport__c
-                                        WHERE NPSP_Data_Import_Batch__c = :batchId
-                                        GROUP BY
-                                            Status__c,
-                                            Payment_Status__c
-        ]) {
-            groupedResults.add(new AggregateResultProxy().withAggregateResult(result));
+    public Map<Id, List<AggregateResultProxy>> selectBatchGiftsGroupedByStatusBy(Set<Id> ids) {
+        Map<Id, List<AggregateResultProxy>> groupedResultsByBatchId = new Map<Id, List<AggregateResultProxy>>();
+
+        for (Id batchId : ids) {
+            List<AggregateResultProxy> groupedResults = new List<AggregateResultProxy>();
+
+            for (AggregateResult result : [SELECT COUNT(Id)recordCount,
+                                                Status__c,
+                                                Payment_Status__c
+                                            FROM DataImport__c
+                                            WHERE NPSP_Data_Import_Batch__c = :batchId
+                                            GROUP BY
+                                                Status__c,
+                                                Payment_Status__c
+            ]) {
+                groupedResults.add(new AggregateResultProxy().withAggregateResult(result));
+            }
+
+            groupedResultsByBatchId.put(batchId, groupedResults);
         }
 
-        return groupedResults;
+        return groupedResultsByBatchId;
     }
 }
