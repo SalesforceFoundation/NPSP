@@ -170,7 +170,7 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
                 if(this.isPilotEnabled){
-                    this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+                    this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
                 }
             });
 
@@ -356,11 +356,6 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-
-        if(this.isPilotEnabled){
-            this.evaluateElevateEditWidget(paymentMethod);
-        }
-
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && !this.isEdit
