@@ -489,12 +489,12 @@ public inherited sharing class CRLP_RollupProcessor {
         Id parentId = parent.Id;
 
         Boolean hasSkewFlag = parent.getSObjectType() == Account.SObjectType || parent.getSObjectType() == Contact.SObjectType;
-        Boolean forceSkew = false;
+        Boolean isForceSkewModeSet = false;
         String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
 
         // Save the skew flag setting
         if (hasSkewFlag && parent.isSet(qualifiedSkewField)) {
-            forceSkew = (Boolean) parent.get(qualifiedSkewField);
+            isForceSkewModeSet = (Boolean) parent.get(qualifiedSkewField);
         }
 
         CRLP_VRollupHandler handler = initHandlerClass(parent);
@@ -511,13 +511,9 @@ public inherited sharing class CRLP_RollupProcessor {
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
         // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && hasSkewFlag) {
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && hasSkewFlag && !isForceSkewModeSet) {
             updatedRecord.put(qualifiedSkewField, true);
-
-            // If force skew flag was not initially true, return for update unconditionally
-            if (!forceSkew) {
-                return updatedRecord;
-            }
+            needsUpdate = true;
         }
 
         // Respect the value of needsUpdate for all other records
