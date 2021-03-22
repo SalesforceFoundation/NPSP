@@ -573,6 +573,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         // first get just the seasonal addresses
         List<NPSP_Address> seasonalAddresses = seasonalAddresses();
 
+        addErrorsToPartialSeasonalAddresses();
+
         // if none are seasonal, we can bail out
         if (seasonalAddresses.size() == 0)
             return;
@@ -582,6 +584,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // now check for overlaps within each household's saved addresses
         checkForOverlapsAgainstHouseholdAddresses(seasonalAddresses);
+    }
+
+    private void addErrorsToPartialSeasonalAddresses() {
+        for (Address__c addr : (List<Address__c>) getRecords()) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            npspAddress.checkForPartialSeasonalErrors();
+        }
     }
 
     private void checkForOverlaps(List<NPSP_Address> seasonalAddresses) {

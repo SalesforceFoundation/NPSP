@@ -14,6 +14,11 @@ public inherited sharing class NPSP_Address implements anAddress {
                 this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
     }
 
+    public void checkForPartialSeasonalErrors(){
+        if (isPartialSeasonalAddr()) {
+            this.addr.addError(Label.addrSeasonalPartial);
+        }
+    }
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
     * @param addr the Address to look at
