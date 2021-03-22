@@ -484,21 +484,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered.
     */
     public void getPageValidationMessages() {
-        requirePaymentsEnabled();
-        requireValidOpportunity();
-        requireSufficientOpportunityAmount();
-        requirePaymentRecords();
-        requireOpenOpportunity();
 
-        if (!removePaidPayments && isScheduleWizard == true && haveAmount == false && isClosedLost == false) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
-        } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
-        }
-
-    }
-
-    private void requirePaymentsEnabled() {
         if (!getIsPaymentsEnabled()) {
             ApexPages.addMessage(new ApexPages.Message(
                 ApexPages.Severity.WARNING,
@@ -507,26 +493,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
             );
             return;
         }
-    }
 
-    private void requirePaymentRecords() {
-        if (invalidPaymentRecordCount > 0) {
-            if (isScheduleWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardScheduleInvalidRecords));
-            } else if (isWriteoffWizard) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardWriteOffInvalidRecords));
-            }
+        if (currentOpp == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
             return;
         }
-    }
 
-    private void requireOpenOpportunity() {
-        if (isClosedLost == true) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
-        }
-    }
-
-    private void requireSufficientOpportunityAmount() {
         if (currentOpp.Amount == null || currentOpp.Amount == 0) {
             if (isScheduleWizard) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
@@ -535,13 +507,26 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             return;
         }
-    }
 
-    private void requireValidOpportunity() {
-        if (currentOpp == null) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
+        if (invalidPaymentRecordCount > 0) {
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardScheduleInvalidRecords));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardWriteOffInvalidRecords));
+            }
             return;
         }
+
+        if (isClosedLost == true) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
+        }
+
+        if (!removePaidPayments && isScheduleWizard == true && haveAmount == false && isClosedLost == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
+        } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
+        }
+
     }
 
     /*******************************************************************************************************
