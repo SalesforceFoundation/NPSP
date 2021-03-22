@@ -507,7 +507,8 @@ private class CRLP_RollupProcessor_TEST {
     }
 
     /**
-     * @description Verify that skew mode flag is set true when running in skew mode
+     * @description Verify that skew mode flag is set true when running in skew mode. Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
      */
     @IsTest
     static void shouldSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
@@ -527,7 +528,8 @@ private class CRLP_RollupProcessor_TEST {
     }
 
     /**
-     * @description Verify that skew mode flag is not updated if already set true
+     * @description Verify that skew mode flag is not updated if already set true.  Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
      */
     @IsTest
     static void shouldNotUpdateUpdateRecordWhenSkewModeFlagIsAlreadyTrue() {
@@ -547,7 +549,8 @@ private class CRLP_RollupProcessor_TEST {
     }
 
     /**
-     * @description Verify that skew mode flag is not updated if running in non skew mode
+     * @description Verify that skew mode flag is not updated if running in non skew mode.  Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
      */
     @IsTest
     static void shouldNotSetSkewModeFlagTrueWhenInNonSkewMode() {

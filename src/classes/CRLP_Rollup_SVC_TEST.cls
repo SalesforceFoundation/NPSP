@@ -134,7 +134,8 @@ private class CRLP_Rollup_SVC_TEST {
     }
 
     /**
-     * @description Verify that records identified as skew mode needed when force skew flag is set true
+     * @description Verify that records identified as skew mode needed when force skew flag is set true. Test only
+     * validates whether CustomizableRollups_UseSkewMode__c is honored appropriately.
      */
     @IsTest
     static void shouldShowRecordsNeedSkewRollupMethodWhenSkewModeFlagIsTrue() {
@@ -156,7 +157,8 @@ private class CRLP_Rollup_SVC_TEST {
     }
 
     /**
-     * @description Verify that records not identified as skew mode needed when force skew flag is set false
+     * @description Verify that records not identified as skew mode needed when force skew flag is set false.  Test only
+     * validates whether CustomizableRollups_UseSkewMode__c is honored appropriately.
      */
     @IsTest
     static void shouldShowRecordsDoNotNeedSkewRollupMethodWhenSkewModeFlagIsFalse() {

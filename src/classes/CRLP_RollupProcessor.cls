@@ -106,6 +106,21 @@ public inherited sharing class CRLP_RollupProcessor {
         set;
     }
 
+    /**
+     * @description API name for force skew mode field, including namespace prefix
+     */
+    private String qualifiedSkewField;
+
+    /**
+     * @description Boolean set true if parent record should use the force skew mode field on Account & Contact
+     */
+    private Boolean useForceSkewModeField;
+
+    /**
+     * @description Boolean set true if parent record includes the force skew mode field on Account & Contact
+     */
+    private Boolean isSetSkewModeField;
+
     /** *************************************************************************************************************
     * @description Constructor
     */
@@ -488,14 +503,7 @@ public inherited sharing class CRLP_RollupProcessor {
         // has changed or not.
         Id parentId = parent.Id;
 
-        Boolean hasSkewFlag = parent.getSObjectType() == Account.SObjectType || parent.getSObjectType() == Contact.SObjectType;
-        Boolean isForceSkewModeSet = false;
-        String qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
-
-        // Save the skew flag setting
-        if (hasSkewFlag && parent.isSet(qualifiedSkewField)) {
-            isForceSkewModeSet = (Boolean) parent.get(qualifiedSkewField);
-        }
+        getSkewModeValues(parent);
 
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
@@ -511,17 +519,32 @@ public inherited sharing class CRLP_RollupProcessor {
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
         // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && hasSkewFlag && !isForceSkewModeSet) {
-            updatedRecord.put(qualifiedSkewField, true);
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !this.isSetSkewModeField) {
+            updatedRecord.put(this.qualifiedSkewField, true);
             needsUpdate = true;
         }
 
-        // Respect the value of needsUpdate for all other records
         if (!needsUpdate) {
             updatedRecord = null;
         }
 
         return updatedRecord;
+    }
+
+    /**
+     * @description Set variables associated with handling force skew mode checkbox on Account and Contact
+     * @param parent Base SObject for the dynamically generated query
+     */
+    private void getSkewModeValues(SObject parent) {
+        if (this.qualifiedSkewField == null) {
+            this.isSetSkewModeField = false;
+            this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
+            this.useForceSkewModeField = (parent.getSObjectType() == Account.SObjectType || parent.getSObjectType() == Contact.SObjectType);
+            if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField))
+            {
+                this.isSetSkewModeField = (Boolean) parent.get(this.qualifiedSkewField);
+            }
+        }
     }
 
     /**
