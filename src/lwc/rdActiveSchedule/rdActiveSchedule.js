@@ -87,7 +87,7 @@ export default class RdActiveSchedule extends LightningElement {
                         schedule.field.push(field);
                     }
                 });
-
+                schedule.scheduleNumber = record.scheduleNumber;
                 filteredRows.push(schedule);
             });
             this.schedules = filteredRows;
