@@ -24,24 +24,24 @@ public inherited sharing class GiftBatchAggregateResults {
     }
 
     private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-        totalGifts += statusGroup.count();
+        totalGifts += statusGroup.recordCount();
     }
 
     private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isImported()) {
-            processedGifts = statusGroup.count();
+            processedGifts = statusGroup.recordCount();
         }
     }
 
     private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isProcessingFailed()) {
-            failedGifts += statusGroup.count();
+            failedGifts += statusGroup.recordCount();
         }
     }
 
     private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isPaymentFailed()) {
-            failedPayments += statusGroup.count();
+            failedPayments += statusGroup.recordCount();
         }
     }
 }

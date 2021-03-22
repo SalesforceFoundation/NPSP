@@ -1,17 +1,17 @@
 public inherited sharing class GiftBatchStatusGroup {
     final private String status;
     final private String paymentStatus;
-    private Integer count;
+    private Integer recordCount;
 
     public GiftBatchStatusGroup(AggregateResultProxy result) {
         Map<String,Object> resultProxy = result.getValuesByAlias();
         paymentStatus = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
         status = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
-        count = (Integer) resultProxy.get('recordCount');
+        recordCount = (Integer) resultProxy.get('recordCount');
     }
 
-    public Integer count() {
-        return this.count;
+    public Integer recordCount() {
+        return this.recordCount;
     }
 
     public Boolean isImported() {

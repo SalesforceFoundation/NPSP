@@ -9,7 +9,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(statusGroup.isImported());
-        System.assertEquals(10, statusGroup.count());
+        System.assertEquals(10, statusGroup.recordCount());
     }
 
     @isTest
@@ -29,7 +29,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(statusGroup.isProcessingFailed());
-        System.assertEquals(5, statusGroup.count());
+        System.assertEquals(5, statusGroup.recordCount());
     }
 
     @isTest
@@ -49,7 +49,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(statusGroup.isPaymentFailed());
-        System.assertEquals(7, statusGroup.count());
+        System.assertEquals(7, statusGroup.recordCount());
     }
 
     @isTest
