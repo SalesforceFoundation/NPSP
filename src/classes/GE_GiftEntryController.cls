@@ -42,7 +42,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
-        return new GiftBatchService().getGiftBatchTotalsMapFor(batchId);
+        return new GiftBatchService().getGiftBatchTotalsMapFor((Id) batchId);
     }
 
     /*******************************************************************************************************
