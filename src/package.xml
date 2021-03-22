@@ -265,6 +265,7 @@
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
+        <members>CreditCardCaptureGroup</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -299,6 +300,9 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>ElevateAuthorizedGift</members>
+        <members>ElevateCaptureGroup</members>
+        <members>ElevateTokenizedGift</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_GiftEntryController</members>
