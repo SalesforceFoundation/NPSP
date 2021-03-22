@@ -36,7 +36,9 @@ public with sharing class GiftBatchService {
     public GiftBatchService() {}
 
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        List<AggregateResultProxy> results = new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(batchId);
-        return new GiftBatchAggregateResults(results).toMap();
+        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
+        // TODO: Value object for this map? Too much?
+        Map<Id, Map<String, Integer>> totals = batches.getTotalsMap();
+        return totals.get(batchId);
     }
 }
