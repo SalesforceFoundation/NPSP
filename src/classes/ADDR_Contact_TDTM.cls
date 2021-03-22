@@ -300,7 +300,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (Addresses.shouldUpdateAddress(con, addr)) {
-                Addresses.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                NPSP_Address address = new NPSP_Address(addr);
+                address.copyOntoSObject(con, 'Mailing','npe01__Primary_Address_Type__c');
 
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
@@ -541,7 +542,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
                 	con.Current_Address__c = addr.Id;
-                    Addresses.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    NPSP_Address address = new NPSP_Address(addr);
+                    address.copyOntoSObject(con, 'Mailing','npe01__Primary_Address_Type__c');
                 }
         	}
         }         

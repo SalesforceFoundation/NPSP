@@ -73,10 +73,10 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
-        <members>AllocationParent</members>
-        <members>AllocationParent_TEST</members>
         <members>Accounts</members>
         <members>Addresses</members>
+        <members>AllocationParent</members>
+        <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -263,8 +263,8 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
-        <members>ContactRepository</members>
         <members>ContactAndOrgSettings</members>
+        <members>ContactRepository</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -361,6 +361,7 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>NPSP_Address</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
@@ -697,6 +698,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>anAddress</members>
         <members>fflib_Domain</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>

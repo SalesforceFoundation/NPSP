@@ -609,8 +609,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                Addresses.copyAddressAddrSObj(
-                        tempAddr, acc, 'Billing', null);
+                NPSP_Address address = new NPSP_Address(tempAddr);
+                address.copyOntoSObject(acc, 'Billing', null);
                 UTIL_DMLService.updateRecord(acc);
             }
             // handle the optional Affiliation to a new or existing Account.
@@ -621,8 +621,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                Addresses.copyAddressAddrSObj(
-                        tempAddr, acc, 'Billing', null);
+                NPSP_Address address = new NPSP_Address(tempAddr);
+                address.copyOntoSObject(acc, 'Billing', null);
                 UTIL_DMLService.insertRecord(acc);
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {

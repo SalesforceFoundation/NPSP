@@ -351,7 +351,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
             if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
-                copyAddressAddrSObj(addr, acc, 'Billing', null);
+                NPSP_Address address = new NPSP_Address(addr);
+                address.copyOntoSObject(acc, 'Billing', null);
                 listAccUpdate.add(acc);
             }
 
@@ -380,7 +381,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
                         if (Addresses.shouldUpdateAddress(con, addr)) {
                             con.Current_Address__c = addr.Id;
-                            copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                            NPSP_Address address = new NPSP_Address(addr);
+                            address.copyOntoSObject(con, 'Mailing', 'npe01__Primary_Address_Type__c');
                             listConUpdate.add(con);
                         }
                     }
@@ -436,61 +438,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             listAddrHH.add(addr);
         }
         return mapAccIdListAddrHH;
-    }
-
-    /*******************************************************************************************************
-    * @description Utility to copy Address fields from an Address object to a Contact or Account.
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param addr the Address object to copy from
-    * @param sobjDst the destination Contact or Account
-    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
-    * @return void
-    */
-    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
-        sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
-        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
-        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
-        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
-        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-
-        if (!isStateCountryPicklistsEnabled) {
-            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-        } else {
-            if (addr.MailingCountry__c != null) {
-                if (validCountriesByLabel.containsKey(addr.MailingCountry__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                    sobjDst.put(strFieldPrefix + 'CountryCode', validCountriesByLabel.get(addr.MailingCountry__c.toUpperCase()));
-                } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
-                    sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
-                } else {
-                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                }
-            } else { // MailingCountry = null
-                sobjDst.put(strFieldPrefix + 'CountryCode', null);
-                sobjDst.put(strFieldPrefix + 'Country', null);
-            }
-            if (addr.MailingState__c != null) {
-                if (validStatesByLabel.containsKey(addr.MailingState__c.toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c.toUpperCase()));
-                } else {
-                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
-                    // so we will just try to save any state that isn't a label as a code.
-                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
-                }
-            } else { // MailingState = null
-                sobjDst.put(strFieldPrefix + 'StateCode', null);
-                sobjDst.put(strFieldPrefix + 'State', null);
-            }
-        }
-
-        if (strFieldAddrType != null)
-            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
     }
 
     /*******************************************************************************************************
@@ -1370,8 +1317,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            Addresses.copyAddressAddrSObj(addr, con, 'Mailing',
-                    'npe01__Primary_Address_Type__c');
+            NPSP_Address address = new NPSP_Address(addr);
+            address.copyOntoSObject(con, 'Mailing', 'npe01__Primary_Address_Type__c');
             dmlWrapper.objectsToUpdate.add(con);
         }
     }

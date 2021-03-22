@@ -4,9 +4,6 @@ public inherited sharing class NPSP_Address implements anAddress {
 
     public NPSP_Address(Address__c address) {
         this.addr = address;
-        if (isPartialSeasonalAddr(this.addr)) {
-            this.addr.addError(Label.addrSeasonalPartial);
-        }
     }
 
     public Boolean isSeasonal() {
@@ -24,7 +21,7 @@ public inherited sharing class NPSP_Address implements anAddress {
     * @param addr the Address to look at
     * @return boolean
     */
-    private static boolean isPartialSeasonalAddr(Address__c addr) {
+    private boolean isPartialSeasonalAddr() {
         integer cParts = 0;
         if (addr.Seasonal_Start_Month__c != null) cParts++;
         if (addr.Seasonal_Start_Day__c != null) cParts++;
@@ -106,6 +103,71 @@ public inherited sharing class NPSP_Address implements anAddress {
         if (integer.valueOf(d) < 10)
             return decimal.valueOf(m + '.0' + d); else
                 return decimal.valueOf(m + '.' + d);
+    }
+
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields from an Address object to a Contact or Account.
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @param addr the Address object to copy from
+    * @param sobjDst the destination Contact or Account
+    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
+    * @return void
+    */
+    public void copyOntoSObject(sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
+        sobjDst.put(strFieldPrefix + 'Street', Addresses.getMultilineStreet(addr));
+        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
+        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
+        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
+        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
+
+        if (!Addresses.isStateCountryPicklistsEnabled) {
+            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+        } else {
+            if (addr.MailingCountry__c != null) {
+                if (Addresses.validCountriesByLabel.containsKey(addr.MailingCountry__c
+                        .toUpperCase()
+                )) {
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                    sobjDst.put(strFieldPrefix + 'CountryCode',
+                            Addresses.validCountriesByLabel.get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else if (Addresses.validCountriesByCode.containsKey(addr.MailingCountry__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
+                    sobjDst.put(strFieldPrefix + 'Country',
+                            Addresses.validCountriesByCode.get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else {
+                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                }
+            } else { // MailingCountry = null
+                sobjDst.put(strFieldPrefix + 'CountryCode', null);
+                sobjDst.put(strFieldPrefix + 'Country', null);
+            }
+            if (addr.MailingState__c != null) {
+                if (Addresses.validStatesByLabel.containsKey(addr.MailingState__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+                    sobjDst.put(strFieldPrefix + 'StateCode', Addresses.validStatesByLabel
+                            .get(addr
+                            .MailingState__c.toUpperCase()));
+                } else {
+                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
+                    // so we will just try to save any state that isn't a label as a code.
+                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
+                }
+            } else { // MailingState = null
+                sobjDst.put(strFieldPrefix + 'StateCode', null);
+                sobjDst.put(strFieldPrefix + 'State', null);
+            }
+        }
+
+        if (strFieldAddrType != null)
+            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
+
     }
 
 }
