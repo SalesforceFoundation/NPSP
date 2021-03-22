@@ -6,11 +6,15 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
+...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
-*** Variables ***
-${template}       Robot Template
-${new_template}   Robot Copy Template
+*** Keywords ***
+Setup Test Data
+    ${template} =           Generate Random String
+    Set Suite Variable      ${template}
+    ${new_template} =       Generate Random String
+    Set Suite Variable      ${new_template}
 
 *** Test Cases ***
 
@@ -41,11 +45,13 @@ Create Clone and Delete Template
     Sleep                                     3
     Wait Until Page Contains                  This name has been used by another template. Please enter a unique name.
     Enter Value In Field                      Template Name=${new_template}
+    Click Gift Entry Button                   Next: Form Fields
+    Click Gift Entry Button                   Next: Batch Settings
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                        GE_Gift_Entry
     Click Link                                Templates
     Wait Until Page Contains                  ${new_template}
-    
+    Store Template Record Id                  ${new_template}
     #Delete Template
     Select Template Action                    ${new_template}               Delete
     Click Button                              New Batch
