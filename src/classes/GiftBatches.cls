@@ -30,33 +30,15 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Selector class for Gift Batches in NPSP.
+* @description Domain class for Gift Batches in NPSP.
 */
-public inherited sharing class GiftBatchSelector {
-    public GiftBatchSelector() {}
+public inherited sharing class GiftBatches extends fflib_SObjects {
 
-    public List<DataImportBatch__c> selectGiftBatchesById(Set<Id> ids) {
-        return [
-            SELECT Id
-            FROM DataImportBatch__c
-            WHERE Id IN :ids
-        ];
+    public GiftBatches(Set<Id> ids, GiftBatchSelector selector) {
+        this(selector.selectGiftBatchesById(ids));
     }
 
-    public List<AggregateResultProxy> selectBatchGiftsGroupedByStatusBy(Id batchId) {
-        List<AggregateResultProxy> groupedResults = new List<AggregateResultProxy>();
-        for (AggregateResult result : [SELECT COUNT(Id)recordCount,
-                                            Status__c,
-                                            Payment_Status__c
-                                        FROM DataImport__c
-                                        WHERE NPSP_Data_Import_Batch__c = :batchId
-                                        GROUP BY
-                                            Status__c,
-                                            Payment_Status__c
-        ]) {
-            groupedResults.add(new AggregateResultProxy().withAggregateResult(result));
-        }
-
-        return groupedResults;
+    public GiftBatches(List<DataImportBatch__c> records) {
+        super(records, DataImportBatch__c.SObjectType);
     }
 }
