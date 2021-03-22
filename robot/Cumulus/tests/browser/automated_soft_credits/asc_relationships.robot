@@ -29,7 +29,7 @@ Create ASC for Related Contact
     [Documentation]                Create three contacts. From contact1, create a relation with contact2 with type Employer and Related OCR as Soft Credit.
     ...                            Create a relation with contact3 with type as Coworker and Related OCR as solicitor. From Contact1 create an opp
     ...                            verify contact roles. Run donations batch and verify contact2 has soft credits and contact3 does not have soft credits
-    [tags]                         feature:Automated Soft Credits       W-039819
+    [tags]                         feature:Automated Soft Credits       W-039819            unstable             notonfeaturebranch
     Go To Page                              Details                              Contact
     ...                                     object_id=${data}[contact1][Id]
     Select Tab                              Related

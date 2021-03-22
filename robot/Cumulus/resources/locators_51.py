@@ -339,8 +339,8 @@ npsp_lex_locators={
         'progress_bar':'//lightning-layout-item[.//span[text()="{}"]]//child::lightning-layout-item//*[text()="{}"]',
         'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
         'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',
-        'perms_error':'//div[@class="slds-illustration slds-illustration_large"]'
-
+        'perms_error':'//div[@class="slds-illustration slds-illustration_large"]',
+        'template_required_checkbox':'//lightning-input[@data-qa-locator="checkbox Required {}"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
