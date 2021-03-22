@@ -110,6 +110,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         print(self.latest_api_version)
         self.selenium.click_link(value)
 
+    def verify_button_disabled(self,loc):
+        """Verifies the specified button is disabled"""
+        locator = npsp_lex_locators["lightning-button"].format(loc)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.element_should_be_disabled(element)
+
 
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
