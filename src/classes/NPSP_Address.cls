@@ -170,4 +170,28 @@ public inherited sharing class NPSP_Address implements anAddress {
 
     }
 
+    public Boolean equals(anAddress other, Boolean includeAddressType) {
+        Address__c addrOld = other.getRecord();
+        if (addr == null || addrOld == null) {
+            return false;
+        }
+        if (includeAddressType) {
+            if (!Addresses.equalsCaseSensitive(
+                    addr.Address_Type__c, addrOld.Address_Type__c)) {
+                return false;
+            }
+        }
+        return (Addresses.equalsCaseSensitive(
+                addr.MailingStreet__c, addrOld.MailingStreet__c) &&
+                Addresses.equalsCaseSensitive(
+                        addr.MailingStreet2__c, addrOld.MailingStreet2__c) &&
+                Addresses.equalsCaseSensitive(
+                        addr.MailingCity__c, addrOld.MailingCity__c) &&
+                Addresses.equalsCaseSensitive(
+                        addr.MailingState__c, addrOld.MailingState__c) &&
+                Addresses.equalsCaseSensitive(
+                        addr.MailingPostalCode__c, addrOld.MailingPostalCode__c) &&
+                Addresses.equalsCaseSensitive(
+                        addr.MailingCountry__c, addrOld.MailingCountry__c));
+    }
 }

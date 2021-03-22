@@ -590,13 +590,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
         for (Address__c addr : (List<Address__c>) getRecords()) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
             Address__c addrOld = oldVersionOf(addr);
+            NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
             // an address that is marked default needs to propagate to the household
             if ((isNewDefault(addr, addrOld))
                     // any seasonal address also need to be considered
                     || isSeasonalChanged(addr, addrOld)) {
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
-            } else if (isAddressChanged(addr, addrOld, TRUE)) {
+            } else if (!npspAddress.equals(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
                     defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
                 }

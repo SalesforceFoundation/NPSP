@@ -12,4 +12,7 @@ public interface anAddress {
 
     String endMonth() ;
 
+    Boolean equals(anAddress other, Boolean includeAddressType);
+
+    Address__c getRecord();
 }
