@@ -43,6 +43,7 @@ Create Fixed Recurring Donation With Monthly Installment
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
     Reload Page
+    Sleep                                   2
     Click Link                              New
     Wait For Rd2 Modal
     # Create Enhanced recurring donation of type Fixed
