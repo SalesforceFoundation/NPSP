@@ -51,7 +51,6 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
-import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
@@ -238,6 +237,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.paymentMethod = extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
         this.fields.status = extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
         this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
+        this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
@@ -483,20 +483,10 @@ export default class rd2EntryForm extends LightningElement {
         try {//ensure all errors are handled and displayed to the user
             const rd = this.constructRecurringDonation(allFields);
 
-            // If editing, we need to call a different apex method
-            let handleCommitmentFunction = function(jsonRecord, paymentMethodToken, isEdit){
-                let params = {
-                    jsonRecord: jsonRecord,
-                    paymentMethodToken: paymentMethodToken
-                };
-                if(isEdit){
-                    return handleUpdatePaymentCommitment(params);
-                } else {
-                    return handleCommitment(params);
-                }
-            }
-
-            handleCommitmentFunction(JSON.stringify(rd), this.paymentMethodToken, this.isEdit)
+            handleCommitment({
+                jsonRecord: JSON.stringify(rd),
+                paymentMethodToken: this.paymentMethodToken
+            })
                 .then(jsonResponse => {
                     let response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
                     let isSuccess = isNull(response)

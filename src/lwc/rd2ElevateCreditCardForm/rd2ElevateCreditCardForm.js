@@ -13,6 +13,7 @@ import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
+import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -36,7 +37,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         cardholderNameLabel,
         updatePaymentButtonLabel,
         cancelButtonLabel,
-        nextPaymentDonationDateMessage
+        nextPaymentDonationDateMessage,
+        commonExpirationDate
     };
 
     @track isLoading = true;
@@ -46,11 +48,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _paymentMethod = undefined;
     _nextDonationDate = undefined;
     _isEditPayment = false;
-
-    @track showLastFourACH = true;
     
     @api isEditMode;
     @api cardLastFour;
+    @api cardLastFourLabel;
     @api cardExpDate;
 
     @api

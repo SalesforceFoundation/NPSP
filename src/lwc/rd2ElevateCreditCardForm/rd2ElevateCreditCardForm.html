@@ -58,20 +58,20 @@
                             <template if:true={isEditMode}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
-                                        <label for="last4ach" id="achlast4Label"
+                                        <label for="last4CreditCard" id="creditCardLast4Label"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
-                                            Card Last 4
+                                            {cardLastFourLabel}
                                         </label><br/>
-                                        <lightning-formatted-text id="last4ach"
+                                        <lightning-formatted-text id="last4CreditCard"
                                             value={cardLastFour}
                                             data-qa-locator={qaLocatorLastFourDigits}
-                                            aria-labelledby="achlast4Label">
+                                            aria-labelledby="creditCardLast4Label">
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="4" class="slds-text-color_weak slds-p-bottom_small">
                                         <label for="expirationDate" id="expirationDateLabel"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
-                                            Exp. Date
+                                            {labels.commonExpirationDate}
                                         </label><br/>
                                         <lightning-formatted-text id="expirationDate"
                                             value={cardExpDate}
