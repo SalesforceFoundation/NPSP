@@ -39,10 +39,11 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    private static GiftBatchService giftBatchService = new GiftBatchService();
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
-        return new GiftBatchService().getGiftBatchTotalsMapFor((Id) batchId);
+        return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
 
     /*******************************************************************************************************
