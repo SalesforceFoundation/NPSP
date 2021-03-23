@@ -33,13 +33,13 @@
 * @description Selector class for Gift Batches in NPSP.
 */
 public inherited sharing class GiftBatchSelector {
-    public GiftBatchSelector() {}
 
     public List<DataImportBatch__c> selectGiftBatchesById(Set<Id> ids) {
         return [
             SELECT Id
             FROM DataImportBatch__c
             WHERE Id IN :ids
+            WITH SECURITY_ENFORCED
         ];
     }
 
