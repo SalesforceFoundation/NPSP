@@ -1,0 +1,48 @@
+
+public inherited sharing class GiftBatchTotals {
+    private Integer totalGifts = 0;
+    private Integer processedGifts = 0;
+    private Integer failedPayments = 0;
+    private Integer failedGifts = 0;
+
+    public GiftBatchTotals(List<AggregateResultProxy> results) {
+        for (AggregateResultProxy result : results) {
+            GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
+            addToTotalGiftsCountFor(statusGroup);
+            countProcessedGiftsFor(statusGroup);
+            addToFailedGiftsCountFor(statusGroup);
+            addToFailedPaymentGiftsCountFor(statusGroup);
+        }
+    }
+
+    public Map<String, Integer> toMap() {
+        return new Map<String, Integer> {
+            GiftBatchAggregateGroupName.TOTAL.name() => this.totalGifts,
+            GiftBatchAggregateGroupName.PROCESSED.name() => this.processedGifts,
+            GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts,
+            GiftBatchAggregateGroupName.FAILED_PAYMENT.name() => this.failedPayments
+        };
+    }
+
+    private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        totalGifts += statusGroup.recordCount();
+    }
+
+    private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isImported()) {
+            processedGifts = statusGroup.recordCount();
+        }
+    }
+
+    private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isProcessingFailed()) {
+            failedGifts += statusGroup.recordCount();
+        }
+    }
+
+    private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isPaymentFailed()) {
+            failedPayments += statusGroup.recordCount();
+        }
+    }
+}
