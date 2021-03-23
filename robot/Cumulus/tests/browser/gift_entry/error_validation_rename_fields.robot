@@ -74,9 +74,10 @@ Validate Errors When Field Is Renamed
     SeleniumLibrary.Scroll Element into View            npsp:gift_entry.datepicker:datetime Opportunity
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
-    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=5
+    Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -104,9 +105,10 @@ Validate Errors When Field Is Renamed
     Page Should Contain Element         npsp:label:Account 1: custom_acc_text
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
-    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=10
+    Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
