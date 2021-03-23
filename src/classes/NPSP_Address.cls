@@ -170,7 +170,7 @@ public inherited sharing class NPSP_Address implements anAddress {
 
     }
 
-    public Boolean equals(anAddress other, Boolean includeAddressType) {
+    public Boolean isEqualTo(anAddress other, Boolean includeAddressType) {
         Address__c addrOld = other.getRecord();
         if (addr == null || addrOld == null) {
             return false;
@@ -212,6 +212,18 @@ public inherited sharing class NPSP_Address implements anAddress {
         addr.Geolocation__Longitude__s = other.getRecord().Geolocation__Longitude__s;
         if (other.getRecord().Address_Type__c != null)
             addr.Address_Type__c = other.getRecord().Address_Type__c;
+    }
+
+    public Boolean isDefault() {
+        return addr.Default_Address__c;
+    }
+
+    public void setAsDefault() {
+        addr.Default_Address__c = true;
+    }
+
+    public String getType() {
+        return addr.Address_Type__c;
     }
 
 }

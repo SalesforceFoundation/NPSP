@@ -214,26 +214,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description utility to compare two address objects address fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean. true if any of the fields fields have changed on the Address
-    */
-    public static Boolean isAddressChanged(Address__c addrNew, Address__c addrOld, Boolean includeAddressType) {
-        if (addrNew == null || addrOld == null) {
-            return false;
-        }
-        return (!equalsCaseSensitive(addrNew.MailingStreet__c, addrOld.MailingStreet__c) ||
-                !equalsCaseSensitive(addrNew.MailingStreet2__c, addrOld.MailingStreet2__c) ||
-                !equalsCaseSensitive(addrNew.MailingCity__c, addrOld.MailingCity__c) ||
-                !equalsCaseSensitive(addrNew.MailingState__c, addrOld.MailingState__c) ||
-                !equalsCaseSensitive(addrNew.MailingPostalCode__c, addrOld.MailingPostalCode__c) ||
-                !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
-                (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
-    }
-
-    /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default
     * address, as well as checking to see if there is a seasonal address that should be used instead.
@@ -598,7 +578,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     // any seasonal address also need to be considered
                     || isSeasonalChanged(addr, addrOld)) {
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
-            } else if (!npspAddress.equals(npspAddressOld, TRUE)) {
+            } else if (!npspAddress.isEqualTo(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
                     defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
                 }
@@ -612,8 +592,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
         for (Address__c addr : (List<Address__c>) getRecords()) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
             Address__c addrOld = oldVersionOf(addr);
-            if (isAddressChanged(addr, addrOld, TRUE)) {
+            NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
+            if (!npspAddress.isEqualTo(npspAddressOld, TRUE)) {
                 if (!isDefault(addr)) {
                     nonDefaultsWithChanges.put(idOf(addr), addr);
                 }
@@ -659,22 +641,22 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
         for (Address__c addrNew : listAddr) {
+            NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
+            NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (Addresses.isAddressChanged(addrNew, addrDup, includeAddressType)) {
-                    NPSP_Address npspAddress = new NPSP_Address(addrNew);
-                    NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
-                    npspAddressDup.copyFrom(npspAddress);
-                    if (addrNew.Default_Address__c)
-                        addrDup.Default_Address__c = true;
-                    dmlWrapper.objectsToUpdate.add(addrDup);
-                } else if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
-                    addrDup.Default_Address__c = true;
-                    dmlWrapper.objectsToUpdate.add(addrDup);
+                if (!npspAddressNew.isEqualTo(npspAddressDup, includeAddressType)) {
+                    npspAddressDup.copyFrom(npspAddressNew);
+                    if (npspAddressNew.isDefault())
+                        npspAddressDup.setAsDefault();
+                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
+                } else if (npspAddressNew.isDefault() && !npspAddressDup.isDefault()) {
+                    npspAddressDup.setAsDefault();
+                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
                 }
             } else {
-                dmlWrapper.objectsToInsert.add(addrNew);
+                dmlWrapper.objectsToInsert.add(npspAddressNew.getRecord());
             }
         }
     }
@@ -699,13 +681,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // now compare our Addresses to the existing Addresses
         for (Address__c addr : listAddr) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             boolean hasMatch = false;
             if (listAddrHH != null) {
                 Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
+                    NPSP_Address npspAddressHH = new NPSP_Address(addrHH);
                     // only include address type in the test if the new one isn't empty.
-                    if (!Addresses.isAddressChanged(addr, addrHH, addr.Address_Type__c != null)) {
+                    if (npspAddress.isEqualTo(npspAddressHH, npspAddress.getType() != null)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
@@ -846,10 +830,11 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 if (addr == null)
                     addr = hhinfo.addrDefault;
                 if (addr != null) {
-                    Address__c addrCurrent = new Address__c();
-                    copyAddressStdSObjAddr(acc, 'Billing', addrCurrent, null);
+                    NPSP_Address npspAddr = new NPSP_Address(addr);
+                    NPSP_Address npspAddressCurrent = new NPSP_Address(new Address__c());
+                    copyAddressStdSObjAddr(acc, 'Billing', npspAddressCurrent.getRecord(), null);
                     // now see if the address has changed, and if not, we don't need to process it anymore
-                    if (!isAddressChanged(addr, addrCurrent, false)) {
+                    if (npspAddr.isEqualTo(npspAddressCurrent, false)) {
                         mapAccIdAddr.remove(acc.Id);
                     }
 

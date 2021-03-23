@@ -12,9 +12,16 @@ public interface anAddress {
 
     String endMonth() ;
 
-    Boolean equals(anAddress other, Boolean includeAddressType);
+    Boolean isEqualTo(anAddress other, Boolean includeAddressType);
 
     Address__c getRecord();
 
     void copyFrom(anAddress other);
+
+    String getType();
+
+    Boolean isDefault();
+
+    void setAsDefault();
+
 }
