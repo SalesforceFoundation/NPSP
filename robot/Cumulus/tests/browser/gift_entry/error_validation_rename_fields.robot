@@ -76,9 +76,9 @@ Validate Errors When Field Is Renamed
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    # Fill Gift Entry Form
-    # ...                                 Opportunity: Close Date=Today
-    # ...                                 Opportunity: Amount=5
+    Fill Gift Entry Form
+    ...                                 Opportunity: Amount=5
+    ...                                 Opportunity: Close Date=Today
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
