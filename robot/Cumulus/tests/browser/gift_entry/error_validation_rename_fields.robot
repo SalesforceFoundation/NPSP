@@ -67,11 +67,9 @@ Validate Errors When Field Is Renamed
     Create Gift Entry Batch             ${TEMPLATE}                   ${ACCOUNT}[Name] first batch
     Current Page Should Be              Form                          Gift Entry        title=Gift Entry Form
     ${BATCH1_Id} =   Save Current Record ID For Deletion              ${NS}DataImportBatch__c
-    Wait Until Loading is Complete      npsp:gift_entry.datepicker:datetime Opportunity
     Set Suite Variable                  ${BATCH1_Id}
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
-    SeleniumLibrary.Scroll Element into View            npsp:gift_entry.datepicker:datetime Opportunity
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Opportunity: Close Date=Today
