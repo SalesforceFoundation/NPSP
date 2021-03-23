@@ -46,6 +46,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         set;
     }
 
+    @TestVisible
+    private AddressService AddressService {
+        get {
+            if (AddressService == null) {
+                AddressService = new AddressService();
+            }
+            return AddressService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -623,8 +634,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             WHERE Id IN :contactByAccountId.keyset()
         ]) {
             Contact contactRecord = contactByAccountId.get(accountRecord.Id);
-            Addresses.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-            Addresses.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+            addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord,
+                    'Billing');
+            addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord,
+                    'Shipping');
 
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
                 accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
