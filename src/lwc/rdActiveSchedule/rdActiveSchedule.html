@@ -32,7 +32,8 @@
                                     <template for:each={schedule.field} for:item="field">
                                         <lightning-layout-item key={field.column.fieldName} size="5" flexibility="auto"
                                             class="slds-dl_horizontal__label slds-text-color_weak">
-                                            <lightning-formatted-text value={field.column.label}>
+                                            <lightning-formatted-text value={field.column.label}
+                                            data-qa-locator={qaLocatorScheduleFieldLabel}>
                                             </lightning-formatted-text>
                                         </lightning-layout-item>
 

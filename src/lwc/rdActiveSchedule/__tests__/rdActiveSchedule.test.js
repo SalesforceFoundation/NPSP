@@ -56,7 +56,7 @@ describe('c-rd-active-schedule', () => {
     * @description Verifies the schedules information are properly displayed
     *  when there is no error
     */
-    describe('with 1 schedule record', () => {
+    describe('on data load with 1 schedule record', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
             getSchedules.mockResolvedValue(mockGetSchedule);
@@ -73,9 +73,25 @@ describe('c-rd-active-schedule', () => {
             });
         });
 
+        it('should display every field specific in the predefined schedule table column', async () => {
+            return global.flushPromises().then(async () => {
+                assertNoErrorText(component);
+
+                const displayedFields = getScheduleRecordDisplayFields(component);
+                expect(displayedFields.length).toBe(8);
+                assertAllFieldsAreDisplayed(displayedFields);
+            });
+        });
+
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
+        });
+
     });
 
-    describe('with 2 scehdule records', () => {
+    describe('on data load with 2 scehdule records', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
             getSchedules.mockResolvedValue(mockGetSchedules);
@@ -91,12 +107,28 @@ describe('c-rd-active-schedule', () => {
                 
             });
         });
-    });
 
-   
+        it('should display every field specific in the predefined schedule table column', async () => {
+            return global.flushPromises().then(async () => {
+                assertNoErrorText(component);
+
+                const displayedFields = getScheduleRecordDisplayFields(component);
+                expect(displayedFields.length).toBe(16);
+                assertAllFieldsAreDisplayed(displayedFields);
+            });
+        });
+
+        it("should be accessible", async () => {
+            return global.flushPromises().then(async () => {
+                await expect(component).toBeAccessible();
+            });
+        });
+    });
 });
 
-
+/**
+* @description Verifies The schedule record icons are display on the component.
+*/
 const assertScheduleRecordIcons = (component, iconCount) => {
     const iconList = component.shadowRoot.querySelectorAll('[data-qa-locator="icon Record Icon"]');
     expect(iconList).not.toBeNull();
@@ -104,18 +136,52 @@ const assertScheduleRecordIcons = (component, iconCount) => {
 }
 
 /***
-* @description Verifies no error notification is displayed on the widget
+* @description Verifies no error errors is displayed on the widget
 */
 const assertNoErrorText = (component) => {
-    const notification = getErrorText(component);
-    expect(notification).toBeNull();
+    const errors = getErrorText(component);
+    expect(errors).toBeNull();
 }
 
 /***
-* @description Finds and returns unexpected error message notification if it is displayed on the widget
+* @description Finds and returns unexpected error message errors if it is displayed on the widget
 */
 const getErrorText = (component) => {
-    const notification = component.shadowRoot.querySelector('[data-qa-locator="text Error"]');
+    const errors = component.shadowRoot.querySelector('[data-qa-locator="text Error"]');
 
-    return notification;
+    return errors;
+}
+
+/**
+* @description Verifies all schedule fields are displayed
+*/
+const assertAllFieldsAreDisplayed = (displayedFields) => {
+    getExpectedFieldLabels().forEach(expectedField => {
+        expect(displayedFields).toContain(expectedField);
+    });
+}
+
+/**
+* @description Get all the displayed field labels on the component
+*/
+const getScheduleRecordDisplayFields = (component) => {
+    const displayedFields = [];
+    component.shadowRoot.querySelectorAll('[data-qa-locator="text Field Label"]').forEach(field => {
+        displayedFields.push(field.value);
+    });
+
+    return displayedFields;
+}
+
+/**
+* @description Constrcut the expected field labels from mockGetSchedule json
+*/
+const getExpectedFieldLabels = () => {
+    const expectedLabels = mockGetSchedule.dataTable.columns.map(column => {
+       return column.label;
+    }).filter (label => {
+        return label !== undefined;
+    });
+
+    return expectedLabels;
 }

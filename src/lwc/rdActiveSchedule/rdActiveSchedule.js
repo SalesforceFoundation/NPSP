@@ -120,4 +120,8 @@ export default class RdActiveSchedule extends LightningElement {
     get qaLocatorRecordIcon() {
         return `icon Record Icon`;
     }
+
+    get qaLocatorScheduleFieldLabel() {
+        return `text Field Label`;
+    }
 }
