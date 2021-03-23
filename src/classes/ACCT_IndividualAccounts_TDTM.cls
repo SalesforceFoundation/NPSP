@@ -564,8 +564,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 // Always copy the Contact's Mailing & Others address to the new Account's
                 // Billing & Shipping address.
                 if (contactRecord.is_Address_Override__c != true) {
-                    Addresses.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    Addresses.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+                    addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+                    addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
 
                 accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
