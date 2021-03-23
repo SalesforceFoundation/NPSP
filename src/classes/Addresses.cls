@@ -626,7 +626,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId() {
         Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
-            if (isDefault(addr) || isSeasonal(addr)) {
+            if (isDefault(addr) || isSeasonalAddr(addr)) {
                 defaultAndSeasonalAddressesByAcctId.put(householdAccountIdFor(addr), addr);
             }
         }
@@ -997,10 +997,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
     private Id idOf(Address__c addr) {
         return addr.Id;
-    }
-
-    private Boolean isSeasonal(Address__c addr) {
-        return Addresses.isSeasonalAddr(addr);
     }
 
     private void setLatestDatesOnDefaults() {
