@@ -4694,6 +4694,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>View</value>
     </labels>
     <labels>
+        <fullName>bgeAuthorizingCreditCard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed under spinner during BGE credit card authorization</shortDescription>
+        <value>Authorizing Credit Card...</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchSelectedFields</fullName>
         <language>en_US</language>
         <protected>true</protected>

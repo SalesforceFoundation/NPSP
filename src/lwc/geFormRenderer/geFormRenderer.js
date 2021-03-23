@@ -1,3 +1,6 @@
+
+     
+
 import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
@@ -7,6 +10,7 @@ import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServic
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Capture_Group_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
@@ -64,6 +68,8 @@ import {
     isString
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
+import TokenizedGift from './tokenizedGift';
+import AuthorizedGift from './authorizedGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
@@ -162,6 +168,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
+    latestCaptureGroupId = null;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -633,9 +640,11 @@ export default class GeFormRenderer extends LightningElement{
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
+            const isCardTokenizable = this.shouldTokenizeCard();
+
             try {
-                if (this.shouldTokenizeCard()) {
-                    await this.tokenizeCard(sectionsList)
+                if (isCardTokenizable) {
+                    await this.tokenizeCard(sectionsList);
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
@@ -647,11 +656,70 @@ export default class GeFormRenderer extends LightningElement{
 
             // handle save depending mode
             if (this.batchId) {
+                if (isCardTokenizable) {
+                    this.loadingText = 'Authorizing Credit Card...';
+                    this.authorizeCard(true);
+                    dataImportFromFormState = this.saveableFormState();
+                }
+                
                 this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
             } else {
                 await this.submitSingleGift(dataImportFromFormState);
             }
         }
+    }
+
+    authorizeCard(retryOnError) {  
+        if (!this.latestCaptureGroupId || !retryOnError) {
+            try {
+                this.latestCaptureGroupId = this.createCaptureGroup();
+            } catch (ex) {
+                return; // rethrow?
+            }
+        }
+        
+        try {
+            this.addToCaptureGroup();
+            //authorizedGift = new AuthorizedGift(await this.addToCaptureGroup());
+        } catch (ex) {
+            if (retryOnError) {
+                this.authorizeCard(false); 
+            } else {
+                return; // rethrow?
+            }
+        }
+
+        // Update DI record on form state
+        this.updateFormState({
+            [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+            [apiNameFor(PAYMENT_ELEVATE_ID)]: '1234567',
+            [apiNameFor(PAYMENT_STATUS)]: 'Authorized'
+        });
+    }
+
+    addToCaptureGroup() {
+        console.log('in add to capture group');
+        const tokenizedGift = new TokenizedGift(
+            this.getFieldValueFromFormState('Donation_Amount__c'),
+            this.cardholderNames.firstName,
+            this.cardholderNames.lastName,
+            this.batchCurrencyIsoCode,
+            this.getFieldValueFromFormState('Payment_Authorization_Token__c')
+        );
+
+        console.log(tokenizedGift);
+
+        //let responseBody = await this.doCallout(tokenizedGift);
+
+        //processPurchaseResponse();
+    }
+
+    createCaptureGroup() {
+        console.log('in create capture group');
+
+        // this.doCallout();
+
+        return '12345';
     }
 
     tokenizeCard = async (sections) => {
@@ -1159,8 +1227,8 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 batchDefaultsObject = JSON.parse(this._batchDefaults);
                 sections.forEach(section => {
-                    section.elements = section.elements.filter(element =>
-                        element.componentName !== CREDIT_CARD_WIDGET_NAME);
+                    /*section.elements = section.elements.filter(element =>
+                        element.componentName !== CREDIT_CARD_WIDGET_NAME);*/
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
                             if (batchDefaultsObject.hasOwnProperty(key)) {
