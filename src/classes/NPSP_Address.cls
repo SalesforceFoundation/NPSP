@@ -194,4 +194,24 @@ public inherited sharing class NPSP_Address implements anAddress {
                 Addresses.equalsCaseSensitive(
                         addr.MailingCountry__c, addrOld.MailingCountry__c));
     }
+
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields between two Address objects.
+    * @param addrSrc the source Address
+    * @param addrDst the destination Address
+    * @return void
+    */
+    public void copyFrom(anAddress other) {
+        addr.MailingStreet__c = other.getRecord().MailingStreet__c;
+        addr.MailingStreet2__c = other.getRecord().MailingStreet2__c;
+        addr.MailingCity__c = other.getRecord().MailingCity__c;
+        addr.MailingState__c = other.getRecord().MailingState__c;
+        addr.MailingPostalCode__c = other.getRecord().MailingPostalCode__c;
+        addr.MailingCountry__c = other.getRecord().MailingCountry__c;
+        addr.Geolocation__Latitude__s = other.getRecord().Geolocation__Latitude__s;
+        addr.Geolocation__Longitude__s = other.getRecord().Geolocation__Longitude__s;
+        if (other.getRecord().Address_Type__c != null)
+            addr.Address_Type__c = other.getRecord().Address_Type__c;
+    }
+
 }

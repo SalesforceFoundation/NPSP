@@ -663,7 +663,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
                 if (Addresses.isAddressChanged(addrNew, addrDup, includeAddressType)) {
-                    copyAddressObj(addrNew, addrDup);
+                    NPSP_Address npspAddress = new NPSP_Address(addrNew);
+                    NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
+                    npspAddressDup.copyFrom(npspAddress);
                     if (addrNew.Default_Address__c)
                         addrDup.Default_Address__c = true;
                     dmlWrapper.objectsToUpdate.add(addrDup);
@@ -724,25 +726,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         return mapAddrDupAddr;
-    }
-
-    /*******************************************************************************************************
-    * @description Utility to copy Address fields between two Address objects.
-    * @param addrSrc the source Address
-    * @param addrDst the destination Address
-    * @return void
-    */
-    public static void copyAddressObj(Address__c addrSrc, Address__c addrDst) {
-        addrDst.MailingStreet__c = addrSrc.MailingStreet__c;
-        addrDst.MailingStreet2__c = addrSrc.MailingStreet2__c;
-        addrDst.MailingCity__c = addrSrc.MailingCity__c;
-        addrDst.MailingState__c = addrSrc.MailingState__c;
-        addrDst.MailingPostalCode__c = addrSrc.MailingPostalCode__c;
-        addrDst.MailingCountry__c = addrSrc.MailingCountry__c;
-        addrDst.Geolocation__Latitude__s = addrSrc.Geolocation__Latitude__s;
-        addrDst.Geolocation__Longitude__s = addrSrc.Geolocation__Longitude__s;
-        if (addrSrc.Address_Type__c != null)
-            addrDst.Address_Type__c = addrSrc.Address_Type__c;
     }
 
     /*******************************************************************************************************

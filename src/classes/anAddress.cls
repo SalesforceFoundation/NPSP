@@ -15,4 +15,6 @@ public interface anAddress {
     Boolean equals(anAddress other, Boolean includeAddressType);
 
     Address__c getRecord();
+
+    void copyFrom(anAddress other);
 }

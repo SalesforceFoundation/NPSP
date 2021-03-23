@@ -446,8 +446,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // a second time by the AfterInsert trigger.
                 } else {
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
-	                if (Addresses.isAddressChanged(addrNew, addrDup, true)) {
-	                    Addresses.copyAddressObj(addrNew, addrDup);
+                    NPSP_Address npspAddress = new NPSP_Address(addrNew);
+                    NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
+
+	                if (!npspAddress.equals(npspAddressDup)) {
+                        npspAddressDup.copyFrom(npspAddress);
 	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
                             addrDup.Default_Address__c = true;
                         }
