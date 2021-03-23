@@ -26,6 +26,8 @@ Setup Test Data
     [Documentation]     creates a test organization account
     &{ACCOUNT} =    API Create Organization Account    Name=${faker.company()}
     Set suite variable    &{ACCOUNT}
+    ${DATE} =          Get Current Date      result_format=%b %-d, %Y
+    Set suite variable    ${DATE}
     ${NS} =         Get NPSP Namespace Prefix
     Set suite variable    ${NS}
 
@@ -78,7 +80,7 @@ Validate Errors When Field Is Renamed
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Fill Gift Entry Form
     ...                                 Opportunity: Amount=5
-    ...                                 Opportunity: Close Date=Today
+    ...                                 Opportunity: Close Date=${DATE}
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
