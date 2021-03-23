@@ -7,8 +7,9 @@ public class AggregateResultProxy {
         return this;
     }
 
-    public AggregateResultProxy withAliasAndValue(String alias, Object val) {
-        this.valuesByAlias.put(alias,val);
+    @TestVisible
+    private AggregateResultProxy withAliasAndValue(String alias, Object value) {
+        this.valuesByAlias.put(alias, value);
         return this;
     }
 
