@@ -499,11 +499,11 @@ public inherited sharing class CRLP_RollupProcessor {
         Id parentId = parent.Id;
 
         // Determine status of force skew mode field
-        getSkewModeValues(parent);
-        Boolean isSetSkewModeField = false;
+        initForceSkewModeValues(parent.getSObjectType());
+        Boolean isForceSkewModeTrue = false;
         if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField))
         {
-            isSetSkewModeField = (Boolean) parent.get(this.qualifiedSkewField);
+            isForceSkewModeTrue = (Boolean) parent.get(this.qualifiedSkewField);
         }
 
         CRLP_VRollupHandler handler = initHandlerClass(parent);
@@ -520,7 +520,7 @@ public inherited sharing class CRLP_RollupProcessor {
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
         // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isSetSkewModeField) {
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
             updatedRecord.put(this.qualifiedSkewField, true);
             needsUpdate = true;
         }
@@ -534,12 +534,12 @@ public inherited sharing class CRLP_RollupProcessor {
 
     /**
      * @description Set variables associated with handling force skew mode checkbox on Account and Contact
-     * @param parent Base SObject for the dynamically generated query
+     * @param parentObjType Base SObject type for the dynamically generated query
      */
-    private void getSkewModeValues(SObject parent) {
+    private void initForceSkewModeValues(SObjectType parentObjType) {
         if (this.qualifiedSkewField == null) {
             this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
-            this.useForceSkewModeField = (parent.getSObjectType() == Account.SObjectType || parent.getSObjectType() == Contact.SObjectType);
+            this.useForceSkewModeField = (parentObjType == Account.SObjectType || parentObjType == Contact.SObjectType);
         }
     }
 
