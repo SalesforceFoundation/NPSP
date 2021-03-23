@@ -74,6 +74,7 @@ Validate Errors When Field Is Renamed
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=5
+    # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
@@ -105,6 +106,7 @@ Validate Errors When Field Is Renamed
     ...                                 Data Import: Donation Donor=Account1
     ...                                 Opportunity: Close Date=Today
     ...                                 Opportunity: Amount=10
+    # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
