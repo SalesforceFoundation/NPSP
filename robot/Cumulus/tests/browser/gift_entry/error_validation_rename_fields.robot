@@ -36,7 +36,7 @@ Validate Errors When Field Is Renamed
     ...                     status is dry run error. Rename the field to correct it and verify no errors or warnings are thrown on AM, object group,
     ...                     and template builder. Creates a batch and verifys field is back on form and on saving gift its status is dry run validated.
 
-    [tags]                              unstable                      feature:GE        W-8292840
+    [tags]                              feature:GE        W-8292840
     Go To Page                          Landing                       GE_Gift_Entry
     Click Link                          Templates
     Click Gift Entry Button             Create Template
