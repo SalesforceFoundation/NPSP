@@ -73,7 +73,7 @@ describe('c-rd-active-schedule', () => {
             });
         });
 
-        it('should display every field specific in the predefined schedule table column', async () => {
+        it('should display every field specified in the predefined schedule table column', async () => {
             return global.flushPromises().then(async () => {
                 assertNoErrorText(component);
 
@@ -108,7 +108,7 @@ describe('c-rd-active-schedule', () => {
             });
         });
 
-        it('should display every field specific in the predefined schedule table column', async () => {
+        it('should display every field specified in the predefined schedule table column', async () => {
             return global.flushPromises().then(async () => {
                 assertNoErrorText(component);
 
