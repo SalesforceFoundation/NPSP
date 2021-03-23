@@ -26,8 +26,8 @@ Setup Test Data
     [Documentation]     creates a test organization account
     &{ACCOUNT} =    API Create Organization Account    Name=${faker.company()}
     Set suite variable    &{ACCOUNT}
-    ${DATE} =          Get Current Date      result_format=datetime
-    Set suite variable    ${DATE}
+    # ${DATE} =          Get Current Date      result_format=datetime
+    # Set suite variable    ${DATE}
     ${NS} =         Get NPSP Namespace Prefix
     Set suite variable    ${NS}
 
@@ -76,11 +76,11 @@ Validate Errors When Field Is Renamed
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
     SeleniumLibrary.Scroll Element into View            npsp:gift_entry.datepicker:datetime Opportunity
     Fill Gift Entry Form
-    ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    Fill Gift Entry Form
+    ...                                 Data Import: Donation Donor=Account1
     ...                                 Opportunity: Amount=5
-    ...                                 Opportunity: Close Date=${DATE.day}
+    Fill Gift Entry Form
+    ...                                 Opportunity: Close Date=Today
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -107,8 +107,8 @@ Validate Errors When Field Is Renamed
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Contain Element         npsp:label:Account 1: custom_acc_text
     Fill Gift Entry Form
-    ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
+    ...                                 Data Import: Donation Donor=Account1
     ...                                 Opportunity: Amount=10
     Fill Gift Entry Form
     ...                                 Opportunity: Close Date=Today
