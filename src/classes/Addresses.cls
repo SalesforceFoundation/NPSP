@@ -1134,20 +1134,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description utility to see if the address has only a subset of its seasonal fields set
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    private static boolean isPartialSeasonalAddr(Address__c addr) {
-        integer cParts = 0;
-        if (addr.Seasonal_Start_Month__c != null) cParts++;
-        if (addr.Seasonal_Start_Day__c != null) cParts++;
-        if (addr.Seasonal_End_Month__c != null) cParts++;
-        if (addr.Seasonal_End_Day__c != null) cParts++;
-        return (cParts > 0 && cParts < 4);
-    }
-
-    /*******************************************************************************************************
     * @description returns whether the Address's mailing fields are null
     * @param addr the Address
     * @return boolean. true if all of the Mailing fields are empty
