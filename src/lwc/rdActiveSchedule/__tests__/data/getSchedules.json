@@ -29,7 +29,8 @@
                 "paymentMethod":"ACH",
                 "period":"Monthly",
                 "scheduleNumber":2,
-                "startDate":"2021-04-08"}
+                "startDate":"2021-04-08"
+            }
         ]
     }
 }
