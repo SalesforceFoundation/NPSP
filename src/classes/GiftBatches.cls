@@ -43,8 +43,8 @@ public inherited sharing class GiftBatches extends fflib_SObjects {
     }
 
     public GiftBatchGroupedTotals getGroupedTotals() {
-        List<AggregateResultProxy> resultProxies =
-            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(giftBatchIds());
+        List<AggregateResultProxy> resultProxies = new GiftBatchSelector()
+            .selectBatchGiftsGroupedByStatusBy(giftBatchIds());
         return new GiftBatchGroupedTotals(resultProxies);
     }
 
