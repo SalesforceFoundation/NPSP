@@ -1,6 +1,5 @@
 public inherited sharing class GiftBatchGroupedTotals {
-    private final String NPSP_DATA_IMPORT_BATCH =
-        Schema.SObjectType.DataImport__c.fields.NPSP_Data_Import_Batch__c.getName();
+
     private Map<Id, GiftBatchTotals> giftBatchTotalsByBatchId = new Map<Id, GiftBatchTotals>();
 
     public Map<String, Integer> totalsFor(Id batchId) {
@@ -29,7 +28,9 @@ public inherited sharing class GiftBatchGroupedTotals {
         Map<Id, List<AggregateResultProxy>> queryResultsByBatchId,
         AggregateResultProxy queryResultProxy) {
 
-        Id batchId = (Id) queryResultProxy.getValuesByAlias().get(NPSP_DATA_IMPORT_BATCH);
+        Id batchId = (Id) queryResultProxy
+            .getValuesByAlias()
+            .get(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c));
         List<AggregateResultProxy> queryResultProxies = queryResultsByBatchId.get(batchId);
         if (queryResultProxies == null) {
             queryResultsByBatchId.put(batchId, new List<AggregateResultProxy> { queryResultProxy });

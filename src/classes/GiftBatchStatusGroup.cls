@@ -5,8 +5,8 @@ public inherited sharing class GiftBatchStatusGroup {
 
     public GiftBatchStatusGroup(AggregateResultProxy result) {
         Map<String,Object> resultProxy = result.getValuesByAlias();
-        paymentStatus = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Payment_Status__c.getName());
-        status = (String) resultProxy.get(Schema.SObjectType.DataImport__c.fields.Status__c.getName());
+        paymentStatus = (String) resultProxy.get(String.valueOf(DataImport__c.fields.Payment_Status__c));
+        status = (String) resultProxy.get(String.valueOf(DataImport__c.fields.Status__c));
         recordCount = (Integer) resultProxy.get('recordCount');
     }
 
