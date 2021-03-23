@@ -75,6 +75,7 @@
         <members>AN_AutoNumber_TDTM</members>
         <members>Accounts</members>
         <members>AggregateResultProxy</members>
+        <members>AggregateResultProxy_TEST</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -322,6 +323,7 @@
         <members>GiftBatchService</members>
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
+        <members>GiftBatchTotals</members>
         <members>GiftBatches</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
