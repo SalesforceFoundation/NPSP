@@ -199,9 +199,9 @@ tasks:
 
     robot:
         options:
+            test: Validate Errors When Field Is Renamed
             suites: robot/Cumulus/tests
             options:
-                test: Validate Errors When Field Is Renamed
                 outputdir: robot/Cumulus/results
                 tagstatlink: W-*:https://foundation.my.salesforce.com/search/SearchResults?asPhrase=1&searchType=1&sen=a2x&str=%1&search=Search:work item
 
