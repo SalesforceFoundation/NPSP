@@ -83,9 +83,10 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         for i in range(3):
+            print(f"attempt to load page {i}")
             time.sleep(2)
             self.selenium.location_should_contain(
-                "/lightning/r/npe03__Recurring_Donation__c/",
+                "view",
                 message="Current page is not a Recurring Donations record view",
             )
             locator = npsp_lex_locators["bge"]["button"].format("Edit")
