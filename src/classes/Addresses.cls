@@ -914,18 +914,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return address.Household_Account__c;
     }
 
-    /*******************************************************************************************************
-    * @description utility to create the month and day strings to a decimal we can use in comparisons.
-    * @param m the month ordinal as a string
-    * @param d the day ordinal as a string
-    * @return decimal
-    */
-    private static decimal decimalOfMonthDay(string m, string d) {
-        if (integer.valueOf(d) < 10)
-            return decimal.valueOf(m + '.0' + d); else
-                return decimal.valueOf(m + '.' + d);
-    }
-
     private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
         return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
     }
