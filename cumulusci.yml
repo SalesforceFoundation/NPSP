@@ -142,6 +142,14 @@ tasks:
             path: unpackaged/config/rd2_post_config
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_rd2_elevate_config:
+        description: Deploys updates to enable Elevate for Enhanced Recurring Donations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
+        options:
+            path: unpackaged/config/rd2_elevate_post_config
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
