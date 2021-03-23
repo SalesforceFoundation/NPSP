@@ -47,12 +47,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     @TestVisible
-    private AddressService AddressService {
+    private AddressService addressService {
         get {
-            if (AddressService == null) {
-                AddressService = new AddressService();
+            if (addressService == null) {
+                addressService = new AddressService();
             }
-            return AddressService;
+            return addressService;
         }
         set;
     }
