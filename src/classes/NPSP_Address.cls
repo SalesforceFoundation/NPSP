@@ -40,6 +40,15 @@ public inherited sharing class NPSP_Address implements anAddress {
         this.addr = address;
     }
 
+    public NPSP_Address(Contact con) {
+        this.addr = new Address__c();
+        addr.Household_Account__c = con.AccountId;
+        addr.Default_Address__c = !con.is_Address_Override__c;
+        addr.Latest_Start_Date__c = system.today();
+        addr.Latest_End_Date__c = null;
+        copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+    }
+
     public Boolean isSeasonal() {
         return (this.addr.Seasonal_Start_Month__c != null && this.addr.Seasonal_Start_Day__c != null &&
                 this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
