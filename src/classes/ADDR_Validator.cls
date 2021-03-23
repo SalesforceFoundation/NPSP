@@ -39,6 +39,27 @@ public with sharing class ADDR_Validator {
     /** @description Gets verification settings.*/
     private static Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
+    /**
+    * @description Implementation of the appropriate database actions inner class depending on the user type/context.
+    * This is needed because this particular class is a VF page controller as well as an entry point for an exposed
+    * global api - both of which just use "with sharing". However, when a "Guest Site User" creates a new Contact
+    * through an exposed (and unauthenticated) Sites Page, we still want address verification work through the triggers
+    * even if the current user context (Guest User) doesn't technically have perms to query/update the Address records.
+    */
+    @TestVisible
+    private static PermissionController dbActions {
+        get {
+            if (dbActions == null) {
+                if (UserInfo.getUserType() == USER_UserService.USER_TYPE_GUEST_SITE_USER) {
+                    dbActions = new EscalatedPermissions();
+                } else {
+                    dbActions = new StandardPermissions();
+                }
+            }
+            return dbActions;
+        } set;
+    }
+
     /** @description Controller for verify address button, does nothing.*/
     public ADDR_Validator(ApexPages.StandardController standardController) {}
 
@@ -89,7 +110,8 @@ public with sharing class ADDR_Validator {
             queryBuilder.withWhere('Verified__c = false');
         }
 
-        verifyAddressRecords(Database.query(queryBuilder.build()));
+        String soql = queryBuilder.build();
+        verifyAddressRecords(dbActions.queryRows(soql, recordIds));
     }
 
     private class ValidationException extends Exception {}
@@ -100,7 +122,7 @@ public with sharing class ADDR_Validator {
     * @param avList The list of address records to verify.
     */
     public static void verifyAddressRecords(List<Address__c> avList) {
-    	if (avList.isEmpty()) {
+        if (avList.isEmpty()) {
             return;
         }
 
@@ -133,9 +155,51 @@ public with sharing class ADDR_Validator {
         // Updating the addresses with the verified version
         UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying records');
         ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-        update validator.verifyRecords(avList, settings);
+
+        dbActions.updateRows(validator.verifyRecords(avList, settings));
 
         // Reset the recursion flag when done
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunValidation, false);
     }
+
+    /**
+     * @description Interface to define the database actions class that will be dynamically instantiated
+     * based on the type of User.
+     */
+    @TestVisible
+    private interface PermissionController {
+        List<Address__c> queryRows(String soql, Set<Id> recordIds);
+        List<Database.SaveResult> updateRows(List<Address__c> rows);
+    }
+
+    /**
+     * @description Support Query and Update operations for the Guest Site User - using "without sharing"
+     */
+    @TestVisible
+    private without sharing class EscalatedPermissions implements ADDR_Validator.PermissionController {
+
+        public List<Address__c> queryRows(String soql, Set<Id> recordIds) {
+            return Database.query(soql);
+        }
+
+        public List<Database.SaveResult> updateRows(List<Address__c> rows) {
+            return Database.update(rows);
+        }
+    }
+
+    /**
+     * @description For other User Type, use the default context sharing permissions Query and Update operations
+     */
+    @TestVisible
+    private inherited sharing class StandardPermissions implements ADDR_Validator.PermissionController {
+
+        public List<Address__c> queryRows(String soql, Set<Id> recordIds) {
+            return Database.query(soql);
+        }
+
+        public List<Database.SaveResult> updateRows(List<Address__c> rows) {
+            return Database.update(rows);
+        }
+    }
+
 }
