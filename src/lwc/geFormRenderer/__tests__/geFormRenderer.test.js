@@ -5,7 +5,7 @@ import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryContro
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 
 const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
-const mockPaymentTransactionStatusValues = require('./data/paymentTransactionStatusValues.js');
+const mockPaymentTransactionStatusValues = JSON.stringify(require('./data/paymentTransactionStatusValues.json'));
 
 jest.mock('@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper', () => {
     return { default: jest.fn() };
