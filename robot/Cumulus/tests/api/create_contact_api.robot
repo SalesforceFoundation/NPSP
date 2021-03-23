@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create via API
+    [tags]                            unstable
     &{contact} =  API Create Contact
     Go To Record Home  ${contact}[Id]
     Page Should Contain  ${contact}[FirstName] ${contact}[LastName]
