@@ -410,12 +410,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (Contact con : listConAll) {
             listCon.add(con);
         	Address__c addr = new Address__c();
-        	addr.Household_Account__c = con.AccountId;
-        	addr.Default_Address__c = !con.is_Address_Override__c;
-        	addr.Latest_Start_Date__c = system.today();
-        	addr.Latest_End_Date__c = null;        	
-        	Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, con.npe01__Primary_Address_Type__c);
-            mapConAddr.put(con, addr);
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+        	npspAddress.getRecord().Household_Account__c = con.AccountId;
+        	npspAddress.getRecord().Default_Address__c = !con.is_Address_Override__c;
+        	npspAddress.getRecord().Latest_Start_Date__c = system.today();
+        	npspAddress.getRecord().Latest_End_Date__c = null;
+            npspAddress.copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+            mapConAddr.put(con, npspAddress.getRecord());
         }
 
         // look for duplicates for our proposed new addresses        

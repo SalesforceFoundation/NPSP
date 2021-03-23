@@ -176,12 +176,13 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {
             Address__c addr = new Address__c();
-            addr.Household_Account__c = acc.Id;
-            addr.Default_Address__c = true;
-            addr.Latest_Start_Date__c = system.today();
-            addr.Latest_End_Date__c = null;
-            Addresses.copyAddressStdSObjAddr(acc, 'Billing', addr, null);
-            listAddr.add(addr);         
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            npspAddress.getRecord().Household_Account__c = acc.Id;
+            npspAddress.getRecord().Default_Address__c = true;
+            npspAddress.getRecord().Latest_Start_Date__c = system.today();
+            npspAddress.getRecord().Latest_End_Date__c = null;
+            npspAddress.copyFromSObject(acc, 'Billing', null);
+            listAddr.add(npspAddress.getRecord());
         }
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.
         Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);

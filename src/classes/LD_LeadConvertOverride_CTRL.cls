@@ -543,13 +543,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // now create the address object if appropriate
                 if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
                     Address__c addr = new Address__c();
-                    addr.Household_Account__c = myAccount.Id;
-                    addr.Default_Address__c = true;
-                    addr.Latest_Start_Date__c = System.today();
-                    addr.Latest_End_Date__c = null;
-                    Addresses.copyAddressStdSObjAddr(
-                            con, 'Mailing', addr, null);
-                    UTIL_DMLService.insertRecord(addr);
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    npspAddress.getRecord().Household_Account__c = myAccount.Id;
+                    npspAddress.getRecord().Default_Address__c = true;
+                    npspAddress.getRecord().Latest_Start_Date__c = System.today();
+                    npspAddress.getRecord().Latest_End_Date__c = null;
+                    npspAddress.copyFromSObject(con, 'Mailing', null);
+                    UTIL_DMLService.insertRecord(npspAddress.getRecord());
                 }
             }
 
