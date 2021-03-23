@@ -92,12 +92,29 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
+    def _loop_is_text_present(self,text, max_attempts=3):
+        """This is a fix to handle staleelementreference exception. Waits for the text to be present and loops through till the text appears"""
+        attempt = 1
+        while True:
+            try:
+                return self.selenium.page_should_contain(text)
+            except StaleElementReferenceException:
+                if attempt == max_attempts:
+                    raise
+                attempt += 1
+
 
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
         self.search_field_by_value(loc, value)
         print(self.latest_api_version)
         self.selenium.click_link(value)
+
+    def verify_button_disabled(self,loc):
+        """Verifies the specified button is disabled"""
+        locator = npsp_lex_locators["lightning-button"].format(loc)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.element_should_be_disabled(element)
 
 
     def click_record_button(self, title):
