@@ -9,8 +9,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             API Check And Enable Gift Entry
-...             Setup Test Data
+...             Open NPSP Settings    Bulk Data Processes         Level Assignment Batch
+...             AND  API Check And Enable Gift Entry
+...             AND  Setup Test Data
 Suite Teardown  Run Keywords
 ...             Rename Object Field                     Account              custom_acc1_text     custom_acc_text
 ...  AND        Query And Store Records To Delete       ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${BATCH1_Id}
