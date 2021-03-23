@@ -1,6 +1,7 @@
 import { createElement } from 'lwc';
 import GeFormRenderer from 'c/geFormRenderer';
-import { mockCheckValidity } from 'lightning/input';
+import { mockCheckInputValidity } from 'lightning/input';
+import { mockCheckComboboxValidity } from 'lightning/combobox';
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 
@@ -57,10 +58,16 @@ describe('c-ge-form-renderer', () => {
         });
     });
 
-    it('does not save because of an error with an element', () => {
+
+    it('saving without filling anything in should result in a page level error for missing fields', () => {
         getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
-        mockCheckValidity.mockReturnValue(true);
+        // This error is specific to this mockRenderWrapperWithNoNames
+        // Donor Type, Contact Preferred Email, Donation Date, Donation Amount, Payment Method appear as required
+
+        mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
+        mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
+
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
         const mockSubmit = jest.fn();
@@ -68,6 +75,7 @@ describe('c-ge-form-renderer', () => {
 
         return flushPromises().then(() => {
             const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
+            // for this template, the account1 billing city field is the second field in the second section
             const account1BillingCity = sections[1].shadowRoot.querySelectorAll('c-ge-form-field')[1];
             const changeEvent = new CustomEvent('formfieldchange', {
                 detail: {
@@ -95,7 +103,6 @@ describe('c-ge-form-renderer', () => {
 
     });
 })
-
 
 
 
