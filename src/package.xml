@@ -316,12 +316,13 @@
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>GiftBatchAggregateGroupName</members>
-        <members>GiftBatchAggregateResults</members>
-        <members>GiftBatchAggregateResults_TEST</members>
+        <members>GiftBatchGroupedTotals</members>
+        <members>GiftBatchGroupedTotals_TEST</members>
         <members>GiftBatchSelector</members>
         <members>GiftBatchService</members>
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
+        <members>GiftBatches</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>

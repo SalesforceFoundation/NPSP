@@ -42,31 +42,17 @@ public inherited sharing class GiftBatches extends fflib_SObjects {
         super(records, DataImportBatch__c.SObjectType);
     }
 
-    public Map<Id, GiftBatchAggregateResults> getTotalsMap() {
-        Set<Id> batchIds = giftBatchIds();
-        Map<Id, GiftBatchAggregateResults> groupedTotalsByBatchId = new Map<Id, GiftBatchAggregateResults>();
-        Map<Id, List<AggregateResultProxy>> resultProxiesByBatchId = aggregateResultProxiesById();
-
-        for (Id batchId : resultProxiesByBatchId.keySet()) {
-            List<AggregateResultProxy> resultProxies = resultProxiesByBatchId.get(batchId);
-            GiftBatchAggregateResults groupedTotals = buildGroupedTotalsFor(resultProxies);
-            groupedTotalsByBatchId.put(batchId, groupedTotals);
-        }
-
-        return groupedTotalsByBatchId;
-    }
-
-    private Map<Id, List<AggregateResultProxy>> aggregateResultProxiesById() {
-        return new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(giftBatchIds());
-    }
-
-    private GiftBatchAggregateResults buildGroupedTotalsFor(List<AggregateResultProxy> resultProxies) {
-        return new GiftBatchAggregateResults(resultProxies);
+    public GiftBatchGroupedTotals getGroupedTotals() {
+        List<AggregateResultProxy> resultProxies =
+            new GiftBatchSelector().selectBatchGiftsGroupedByStatusBy(giftBatchIds());
+        return new GiftBatchGroupedTotals(resultProxies);
     }
 
     private Set<Id> giftBatchIds() {
         Set<Id> batchIds = new Set<Id>();
-        for (SObject batch : getRecords()) batchids.add(batch.Id);
+        for (SObject batch : getRecords()) {
+            batchids.add(batch.Id);
+        }
         return batchIds;
     }
 }

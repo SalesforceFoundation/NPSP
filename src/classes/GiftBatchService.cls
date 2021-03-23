@@ -33,12 +33,10 @@
 * @description Service class for Gift Batches in NPSP.
 */
 public with sharing class GiftBatchService {
-    public GiftBatchService() {}
 
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
         GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        // TODO: Value object for this map? Too much?
-        Map<Id, GiftBatchAggregateResults> totals = batches.getTotalsMap();
-        return totals.get(batchId).toMap();
+        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
+        return groupedTotals.totalsFor(batchId);
     }
 }
