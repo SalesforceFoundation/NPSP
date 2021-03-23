@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             Open NPSP Settings    Bulk Data Processes         Level Assignment Batch
+...             AND  Open NPSP Settings    Bulk Data Processes         Level Assignment Batch
 ...             AND  API Check And Enable Gift Entry
 ...             AND  Setup Test Data
 Suite Teardown  Run Keywords
