@@ -545,9 +545,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         		if (addr == null)
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
-                	con.Current_Address__c = addr.Id;
-                    NPSP_Address address = new NPSP_Address(addr);
-                    address.copyOntoSObject(con, 'Mailing','npe01__Primary_Address_Type__c');
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_Contact npspContact = new NPSP_Contact(con);
+                    npspContact.currentAddress(npspAddress);
                 }
         	}
         }         
