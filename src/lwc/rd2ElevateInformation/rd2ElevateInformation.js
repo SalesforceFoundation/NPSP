@@ -38,7 +38,8 @@ import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 import UpdatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
 const FIELDS = [
     FIELD_NAME,
@@ -170,8 +171,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                                 detail: this.labels.flsErrorDetail
                             });
 
-                        } else if (!isNull(response.errorMessage)) {
-                            this.setErrorStatus(response.errorMessage);
+                        } else {
+                            this.getLatestErrorMessage();
                         }
                     }
                 })
@@ -229,6 +230,23 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         }
     }
 
+    /**
+    * @description Get the lateset relevant error message for the Elevate Recurring Donation 
+    */
+    getLatestErrorMessage() {
+        getError({recordId: this.recordId})
+            .then(response => {
+                if (!isNull(response)) {
+                    this.setErrorStatus(response);
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            })
+            .finally(() => {
+                this.checkLoading();
+            });
+    }
     /***
      * @description Checks if record detail page or user has access to the Elevate Information data fields
      */
