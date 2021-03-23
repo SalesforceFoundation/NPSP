@@ -40,6 +40,7 @@ public with sharing class USER_UserService {
     public static final String JOB_TYPE_SCHEDULED_APEX = '7';
     public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
     public static final String OBJECT_TYPE_USER = 'User';
+    public static final String USER_TYPE_GUEST_SITE_USER = 'Guest';
 
     /*********************************************************************************************************
     * @description Determines if the Users in the List are "System Administrator" based on assigned permissions;
