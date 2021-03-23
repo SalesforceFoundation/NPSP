@@ -49,10 +49,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     @track showLastFourACH = true;
     
-    @api readOnlyMode;
+    @api isEditMode;
     @api cardLastFour;
     @api cardExpDate;
-    showCancel = false;
 
     @api
     get paymentMethod() {
@@ -88,16 +87,15 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this._nextDonationDate = value;
     }
 
-    @api
-    get showForm() {
-        return !this.isDisabled && !this.readOnlyMode;
-    }
-
     /***
     * @description Get the organization domain information such as domain and the pod name
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
+        if(this.isEditMode){
+            this.isDisabled = true;
+        }
+
         const domainInfo = await getOrgDomainInfo()
             .catch(error => {
                 this.handleError(error);

@@ -138,6 +138,13 @@ export default class rd2EntryForm extends LightningElement {
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
+    @api 
+    get cardExpDate(){
+        let cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+        let cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+        return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
+    }
+
     /***
     * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
     * callouts to retrieve RD settings and other required data.
@@ -168,8 +175,9 @@ export default class rd2EntryForm extends LightningElement {
                 this.handleError(error);
             })
             .finally(() => {
+                this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
                 this.isLoading = false;
-                if(this.isPilotEnabled){
+                if(this.isPilotEnabled && this.commitmentId !== null){
                     this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
                 }
             });
@@ -328,16 +336,12 @@ export default class rd2EntryForm extends LightningElement {
                 recurringType = this.scheduleComponent.getRecurringType();
             }
 
-            // Need to set the commitmentId to perform an update
-            this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
-
             // Since the widget requires interaction to Edit, this should start as true
+            this.isDisabled = true;
             this.hasUserDisabledElevateWidget = true;
 
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-            this.cardExpDate = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH) + '/'
-                + getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
 
             this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
                 && this.isEdit 
