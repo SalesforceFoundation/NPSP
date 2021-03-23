@@ -3,82 +3,46 @@ public inherited sharing class GiftBatchGroupedTotals {
         Schema.SObjectType.DataImport__c.fields.NPSP_Data_Import_Batch__c.getName();
     private Map<Id, GiftBatchTotals> giftBatchTotalsByBatchId = new Map<Id, GiftBatchTotals>();
 
-    public GiftBatchGroupedTotals(List<AggregateResultProxy> results) {
-        Map<Id, List<AggregateResultProxy>> groupedTotals = new Map<Id, List<AggregateResultProxy>>();
-        groupResultProxiesByBatchId(results, groupedTotals);
-
-        for (Id batchId : groupedTotals.keySet()) {
-            giftBatchTotalsByBatchId.put(batchid, new GiftBatchTotals(groupedTotals.get(batchId)));
-        }
-    }
-
     public Map<String, Integer> totalsFor(Id batchId) {
+        guardNoBatchTotalsFor(batchId);
         return giftBatchTotalsByBatchId.get(batchId).toMap();
     }
 
-    private void groupResultProxiesByBatchId(
-        List<AggregateResultProxy> results,
-        Map<Id, List<AggregateResultProxy>> groupedTotals) {
+    public GiftBatchGroupedTotals(List<AggregateResultProxy> results) {
+        Map<Id, List<AggregateResultProxy>> queryResultsByBatchId = groupQueryResultsByBatchId(results);
 
-        for (AggregateResultProxy resultProxy : results) {
-            Id batchId = (Id) resultProxy.getValuesByAlias().get(NPSP_DATA_IMPORT_BATCH);
-            List<AggregateResultProxy> collectedResults = groupedTotals.get(batchId);
-
-            if (collectedResults != null) {
-                collectedResults.add(resultProxy);
-            } else {
-                collectedResults = new List<AggregateResultProxy> {resultProxy};
-            }
-
-            groupedTotals.put(batchId, collectedResults);
+        for (Id batchId : queryResultsByBatchId.keySet()) {
+            List<AggregateResultProxy> queryResults = queryResultsByBatchId.get(batchId);
+            giftBatchTotalsByBatchId.put(batchId, new GiftBatchTotals(queryResults));
         }
     }
 
-    private class GiftBatchTotals {
-        private Integer totalGifts = 0;
-        private Integer processedGifts = 0;
-        private Integer failedPayments = 0;
-        private Integer failedGifts = 0;
+    private Map<Id, List<AggregateResultProxy>> groupQueryResultsByBatchId(List<AggregateResultProxy> results) {
+        Map<Id, List<AggregateResultProxy>> queryResultsByBatchId = new Map<Id, List<AggregateResultProxy>>();
+        for(AggregateResultProxy queryResultProxy : results) {
+            addTo(queryResultsByBatchId, queryResultProxy);
+        }
+        return queryResultsByBatchId;
+    }
 
-        private GiftBatchTotals(List<AggregateResultProxy> results) {
-            for (AggregateResultProxy result : results) {
-                GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
-                addToTotalGiftsCountFor(statusGroup);
-                countProcessedGiftsFor(statusGroup);
-                addToFailedGiftsCountFor(statusGroup);
-                addToFailedPaymentGiftsCountFor(statusGroup);
-            }
-        }
-    
-        private Map<String, Integer> toMap() {
-            return new Map<String, Integer> {
-                GiftBatchAggregateGroupName.TOTAL.name() => this.totalGifts,
-                GiftBatchAggregateGroupName.PROCESSED.name() => this.processedGifts,
-                GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts,
-                GiftBatchAggregateGroupName.FAILED_PAYMENT.name() => this.failedPayments
-            };
-        }
-    
-        private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-            totalGifts += statusGroup.recordCount();
-        }
-    
-        private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
-            if (statusGroup.isImported()) {
-                processedGifts = statusGroup.recordCount();
-            }
-        }
-    
-        private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-            if (statusGroup.isProcessingFailed()) {
-                failedGifts += statusGroup.recordCount();
-            }
-        }
-    
-        private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-            if (statusGroup.isPaymentFailed()) {
-                failedPayments += statusGroup.recordCount();
-            }
+    private void addTo(
+        Map<Id, List<AggregateResultProxy>> queryResultsByBatchId,
+        AggregateResultProxy queryResultProxy) {
+
+        Id batchId = (Id) queryResultProxy.getValuesByAlias().get(NPSP_DATA_IMPORT_BATCH);
+        List<AggregateResultProxy> queryResultProxies = queryResultsByBatchId.get(batchId);
+        if (queryResultProxies == null) {
+            queryResultsByBatchId.put(batchId, new List<AggregateResultProxy> { queryResultProxy });
+        } else {
+            queryResultProxies.add(queryResultProxy);
         }
     }
+
+    private void guardNoBatchTotalsFor(Id batchId) {
+        if (giftBatchTotalsByBatchId.get(batchId) == null) {
+            throw new GiftBatchGroupedTotalsException('No gift batch totals found for ' + batchId);
+        }
+    }
+
+    public class GiftBatchGroupedTotalsException extends Exception {}
 }
