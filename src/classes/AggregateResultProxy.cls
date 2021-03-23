@@ -12,5 +12,5 @@ public class AggregateResultProxy {
         return this;
     }
 
-    public Map<String,Object> getValuesByAlias() {return this.valuesByAlias;}
+    public Map<String,Object> getValuesByAlias() { return this.valuesByAlias; }
 }
