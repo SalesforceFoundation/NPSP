@@ -246,7 +246,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // reset the mailing address for contacts who no longer have an address override
         if (listConAddrReset.size() > 0) {
-            resetConAddr(listConAddrReset);
+            Contacts contacts = new Contacts(listConAddrReset);
+            contacts.resetAddresses();
         }
         
         // update the Latest date fields on any address overrides
@@ -518,38 +519,5 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             dmlWrapper.objectsToUpdate.add(addr);
         }        
-    }
-
-    /*******************************************************************************************************
-    * @description Finds each Contact's HH current address (either Default or Seasonal) and updates 
-    * the contact's address fields
-    * @param listCon list of Contacts 
-    * @return void  
-    ********************************************************************************************************/
-    private static void resetConAddr(list<Contact> listCon) {
-        if (listCon == null || listCon.size() == 0) return;
-        
-        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
-        for (Contact con : listCon) 
-            mapAccIdAddr.put(con.AccountId, null);
-            
-        // get the default and seasonal address for each HH
-        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
-                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
-        
-        // reset the Contact's address fields with the appropriate address
-        for (Contact con : listCon) {
-        	Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
-        	if (hhinfo != null) {
-        		Address__c addr = hhinfo.addrSeasonal;
-        		if (addr == null)
-        		  addr = hhinfo.addrDefault;
-                if (addr != null) {
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
-                    NPSP_Contact npspContact = new NPSP_Contact(con);
-                    npspContact.currentAddress(npspAddress);
-                }
-        	}
-        }         
     }
 }

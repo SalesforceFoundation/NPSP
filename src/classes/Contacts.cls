@@ -245,4 +245,28 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return oppIds;
     }
 
+    public void resetAddresses() {
+        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        for (Contact con : (List<Contact>) getRecords())
+            mapAccIdAddr.put(con.AccountId, null);
+
+        // get the default and seasonal address for each HH
+        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+
+        // reset the Contact's address fields with the appropriate address
+        for (Contact con : (List<Contact>) getRecords()) {
+            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
+            if (hhinfo != null) {
+                Address__c addr = hhinfo.addrSeasonal;
+                if (addr == null)
+                    addr = hhinfo.addrDefault;
+                if (addr != null) {
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_Contact npspContact = new NPSP_Contact(con);
+                    npspContact.currentAddress(npspAddress);
+                }
+            }
+        }
+    }
 }
