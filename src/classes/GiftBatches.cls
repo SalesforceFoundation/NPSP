@@ -34,8 +34,11 @@
 */
 public inherited sharing class GiftBatches extends fflib_SObjects {
 
+    private GiftBatchSelector selector;
+
     public GiftBatches(Set<Id> ids, GiftBatchSelector selector) {
         this(selector.selectGiftBatchesById(ids));
+        this.selector = selector;
     }
 
     public GiftBatches(List<DataImportBatch__c> records) {
