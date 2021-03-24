@@ -13,13 +13,15 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:false={isDisabled}>
-                                        <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
-                                            icon-name='utility:close' icon-position="right"
-                                            onclick={handleUserDisabledWidget}
-                                            class='slds-button slds-button_base slds-float_right hide-card-button'
-                                            data-qa-locator='button Do Not Use Elevate'>
-                                        </lightning-button>
+                                    <template if:false={isEditPayment}>
+                                        <template if:false={isDisabled}>
+                                            <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
+                                                icon-name='utility:close' icon-position="right"
+                                                onclick={handleUserDisabledWidget}
+                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                data-qa-locator='button Do Not Use Elevate'>
+                                            </lightning-button>
+                                        </template>
                                     </template>
                                 </lightning-layout-item>
                             </lightning-layout>
@@ -49,7 +51,18 @@
                                                      icon={alert.icon} message={alert.message} data-qa-locator='alert Message'>
                                 </c-util-alert-banner>
                             </div>
-
+                            <template if:true={isEditPayment}>
+                                <div class="slds-p-bottom_medium">
+                                    <lightning-formatted-text class="slds-text-title_bold" value={nextPaymentDonationDateMessage} >
+                                    </lightning-formatted-text>
+                                    <lightning-formatted-date-time class="slds-text-title_bold" 
+                                        year="numeric"
+                                        month="2-digit"
+                                        day="2-digit"
+                                        value={nextDonationDate}>
+                                    </lightning-formatted-date-time>
+                                </div>
+                            </template>
                             <div class="slds-col slds-size_1-of-2">
                                 <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
                                                  data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
