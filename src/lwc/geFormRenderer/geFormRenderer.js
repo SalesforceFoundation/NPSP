@@ -5,6 +5,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
+import sendAuthorizationRequest from '@salesforce/apex/GE_GiftEntryController.sendAuthorizationRequest';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -657,9 +658,14 @@ export default class GeFormRenderer extends LightningElement{
             // handle save depending mode
             if (this.batchId) {
                 if (isCardTokenizable) {
-                    this.loadingText = 'Authorizing Credit Card...';
-                    this.authorizeCard(true);
-                    dataImportFromFormState = this.saveableFormState();
+                    try {
+                        this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
+                        await this.authorizeCard(true);
+                        dataImportFromFormState = this.saveableFormState();
+                    } catch (ex) {
+                        this.handleAsyncWidgetError(ex);
+                        return;
+                    }
                 }
                 
                 this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
@@ -669,27 +675,23 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    authorizeCard(retryOnError) {  
+    async authorizedCard(retryOnError) {  
+        console.log(`Capture group Id = ${this.captureGroupId}`);
         if (!this.latestCaptureGroupId || !retryOnError) {
-            try {
-                this.latestCaptureGroupId = this.createCaptureGroup();
-            } catch (ex) {
-                return; // rethrow?
-            }
+            this.latestCaptureGroupId = await this.createCaptureGroup();
         }
         
         try {
-            this.addToCaptureGroup();
-            //authorizedGift = new AuthorizedGift(await this.addToCaptureGroup());
+            let authorizedGift = await this.addToCaptureGroup(latestCaptureGroupId);
         } catch (ex) {
             if (retryOnError) {
                 this.authorizeCard(false); 
             } else {
-                return; // rethrow?
+                throw 'Authorization failed after retry';
             }
         }
 
-        // Update DI record on form state
+        // Update form state to push values to DI record
         this.updateFormState({
             [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
             [apiNameFor(PAYMENT_ELEVATE_ID)]: '1234567',
@@ -697,24 +699,33 @@ export default class GeFormRenderer extends LightningElement{
         });
     }
 
-    addToCaptureGroup() {
+    addToCaptureGroup = async (captureGroupId) => {
         console.log('in add to capture group');
         const tokenizedGift = new TokenizedGift(
             this.getFieldValueFromFormState('Donation_Amount__c'),
             this.cardholderNames.firstName,
             this.cardholderNames.lastName,
-            this.batchCurrencyIsoCode,
+            CURRENCY,
             this.getFieldValueFromFormState('Payment_Authorization_Token__c')
         );
 
         console.log(tokenizedGift);
 
-        //let responseBody = await this.doCallout(tokenizedGift);
+        let authorizedGift;
+        await sendAuthorizationRequest(tokenizedGift).then(response => {
+            console.log('apex callout');
+            console.log(response);
+            authorizedGift = response;
+        }).catch(err => {
+            throw 'Authorization failed';
+        });
 
-        //processPurchaseResponse();
+        console.log('after callout');
+
+        return authorizedGift;
     }
 
-    createCaptureGroup() {
+    createCaptureGroup = async () => {
         console.log('in create capture group');
 
         // this.doCallout();
