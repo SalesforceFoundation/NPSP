@@ -13,8 +13,8 @@ Suite Setup     Run keywords
 ...             Setup Test Data
 Suite Teardown  Run Keywords
 ...             Rename Object Field                     Account              custom_acc1_text     custom_acc_text
-...  AND        Query And Store Records To Delete       ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${BATCH1_Id}
-...  AND        Query And Store Records To Delete       ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${BATCH2_Id}
+...  AND        Query And Store Records To Delete       ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${BATCH1_Id}
+...  AND        Query And Store Records To Delete       ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${BATCH2_Id}
 ...  AND        Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
@@ -72,9 +72,11 @@ Validate Errors When Field Is Renamed
     Page Should Not Contain Locator     label                         Account 1: custom_acc_text
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
-    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    ...                                 Opportunity: Amount=5
     ...                                 Opportunity: Close Date=Today
+    ...                                 Opportunity: Amount=5
+    # This is separate from the other Fill Gift Entry keyword to prevent timing issues
+    Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -83,6 +85,8 @@ Validate Errors When Field Is Renamed
     Rename Object Field                 Account                       custom_acc1_text     custom_acc_text
     Verify No Errors Displayed on AM Page And Object Group            Account 1            custom_acc_text
     Go To Page                          Landing                       GE_Gift_Entry
+    Reload Page
+    Current Page Should Be              Landing                       GE_Gift_Entry
     Click Link                          Templates
     Select Template Action              ${TEMPLATE}                   Edit
     Current Page Should Be              Template                      GE_Gift_Entry
@@ -100,9 +104,11 @@ Validate Errors When Field Is Renamed
     Page Should Contain Element         npsp:label:Account 1: custom_acc_text
     Fill Gift Entry Form
     ...                                 Data Import: Donation Donor=Account1
-    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
-    ...                                 Opportunity: Amount=10
     ...                                 Opportunity: Close Date=Today
+    ...                                 Opportunity: Amount=10
+    # This is separate from the other Fill Gift Entry keyword to prevent timing issues
+    Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
