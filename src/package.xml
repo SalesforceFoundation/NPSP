@@ -75,7 +75,6 @@
         <members>AN_AutoNumber_TDTM</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
-        <members>Accounts</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -302,6 +301,7 @@
         <members>ERR_RecordError_TEST</members>
         <members>ElevateAuthorizedGift</members>
         <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupMockHttpResponse</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
