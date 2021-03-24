@@ -302,6 +302,7 @@
         <members>ElevateAuthorizedGift</members>
         <members>ElevateCaptureGroup</members>
         <members>ElevateCaptureGroupMockHttpResponse</members>
+        <members>ElevateConfigMock</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
