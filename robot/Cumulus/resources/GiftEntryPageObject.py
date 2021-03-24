@@ -339,6 +339,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             default_value=element.get_attribute("value")
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
 
+    @capture_screenshot_on_error
     def fill_gift_entry_form(self,**kwargs):
         """Fill the gift entry form fields with specified values.
         Key is field name and value is value to be entered for field """
