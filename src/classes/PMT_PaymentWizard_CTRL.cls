@@ -61,13 +61,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Permissions class used to determine if the running user has permissions
     */
     @TestVisible
-    private UTIL_Permissions perms {
+    private UTIL_Permissions permissions {
         get {
-            if (perms == null) {
-                perms = new UTIL_Permissions();
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
             }
 
-            return perms;
+            return permissions;
         }
         set;
     }
@@ -277,7 +277,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     @TestVisible
     private void setupPaymentWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
-        Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
+        Opportunity[] o = Database.query(buildOpportunityQuery() + ' WHERE Id = :id');
 
         isWriteoffWizard = false;
         isScheduleWizard = true;
@@ -308,7 +308,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     @TestVisible
     private void setupWriteoffWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
-        Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
+        Opportunity[] o = Database.query(buildOpportunityQuery() + ' WHERE Id = :id');
 
         isWriteoffWizard = true;
         isScheduleWizard = false;
@@ -338,9 +338,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Creates an opportunity query with payment mapping and currency fields, filtered on id paramter.
     * @return string An opportunity query string.
     */
-    private String makeOppQuery() {
+    private String buildOpportunityQuery() {
         // requery the Opportunity for all fields that we need.
-        String query = 'SELECT name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
+        String query = 'SELECT name, amount, stagename, npe01__payments_made__c, ' +
+            'npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
 
         // add any opportunity fields from payment field mappings
         for (String s : PMT_PaymentCreator.paymentMappings.keyset()) {
@@ -350,7 +351,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
             }
         }
-        query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
+        query += ', (SELECT Id, npe01__Payment_Amount__c, ' +
+            'npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
 
         //if currencyiso field exists add it to query for use later
         if (Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null) {
@@ -537,19 +539,20 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private Boolean hasFeatureAccess() {
         SObjectType payment = npe01__OppPayment__c.getSObjectType();
         SObjectType opportunity = Opportunity.getSObjectType();
-        if (canCheckPermissionsFor(payment)) {
-            return hasAccessTo(payment, paymentFields())
-                && hasAccessTo(opportunity, opportunityFields());
+        return hasAccessTo(payment, paymentFields())
+            && hasAccessTo(opportunity, opportunityFields());
+    }
+
+    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        if (canCheckPermissionsFor(sObjectType)) {
+            return permissions.canRead(sObjectType, sObjectFields)
+                && permissions.canUpdate(sObjectType, sObjectFields);
         }
         return false;
     }
 
     private Boolean canCheckPermissionsFor(SObjectType objectType) {
-        return perms.canCreate(objectType) && perms.canDelete(objectType);
-    }
-
-    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
-        return perms.canRead(sObjectType, sObjectFields) && perms.canUpdate(sObjectType, sObjectFields);
+        return permissions.canCreate(objectType) && permissions.canDelete(objectType);
     }
 
     private Set<SObjectField> paymentFields() {
