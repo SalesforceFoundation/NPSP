@@ -55,22 +55,46 @@ public with sharing class RD2_ElevateInformation_CTRL {
     * @param recordId Recurring Donation Id
     * @return Map<String, Object> Data value by key
     */
-    @AuraEnabled(cacheable=false)
-    public static Map<String, Object> getData(Id recordId) {
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getPermissionData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
 
         try {
             data = new Map<String, Object> {
-                'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
+                'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+                'isEditEnabled' => RD2_ElevateIntegrationService.isEditEnabled()
             };
 
-            Boolean hasPermissions = hasFieldPermissions();
-            data.put('hasFieldPermissions', hasPermissions);
+            Boolean hasRDUpdatePermission = UTIL_Permissions.canUpdate('npe03__Recurring_Donation__c', false);
 
-            if (hasPermissions) {
+            Boolean hasKeyRequiredFieldReadPermissions = hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('Status__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
+            });
+
+            Boolean hasKeyFieldsUpdatePermissions = hasUpdatePermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardLast4__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationMonth__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationYear__c')
+            });
+
+            data.put('hasFieldPermissions', hasKeyRequiredFieldReadPermissions);
+            data.put('hasFieldUpdatePermission', hasKeyFieldsUpdatePermissions);
+            data.put('hasRDSObjectUpdatePermission', hasRDUpdatePermission);
+
+            if (hasKeyRequiredFieldReadPermissions) {
                 data.put('alert', RD2_VisualizeScheduleController.getValidationAlert(recordId));
-                data.put('errorMessage', getLatestErrorMessage(recordId));
             }
+
+            data.put('showLastFourDigits', hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardLast4__c'),
+                UTIL_Namespace.StrTokenNSPrefix('ACH_Last_4__c') }
+            ));
+            data.put('showExpirationDate', hasReadPermissionsToFields(new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationMonth__c'),
+                UTIL_Namespace.StrTokenNSPrefix('CardExpirationYear__c') }
+            ));
 
             if (RD2_ElevateIntegrationService.isIntegrationEnabled()) {
                 PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
@@ -84,37 +108,14 @@ public with sharing class RD2_ElevateInformation_CTRL {
         return data;
     }
 
-    /**
-     * @description Checks if the user has access for fields retrieved by the Elevate information widget
-     * @return Boolean
-     */
-    private static Boolean hasFieldPermissions() {
-        Set<String> requiredFields = new Set<String>{
-            UTIL_Namespace.StrTokenNSPrefix('Status__c'),
-            UTIL_Namespace.StrTokenNSPrefix('ClosedReason__c'),
-            UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c')
-        };
-
-        Boolean hasPermissions = true;
-
-        for (String fld : requiredFields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
-            if (!dfr.isAccessible()) {
-                hasPermissions = false;
-                break;
-            }
-        }
-
-        return hasPermissions;
-    }
-
     /***
-     * @description Displays the latest error when latest payment could not be charged or
-     * any other issue with the recurring commitment in Elevate
-     * @param recordId Recurring Donation Id
-     * @return String The latest error message if no successful payment is created after it.
-     */
-    private static String getLatestErrorMessage(Id recordId) {
+    * @description Displays the latest error when latest payment could not be charged or
+    * any other issue with the recurring commitment in Elevate
+    * @param recordId Recurring Donation Id
+    * @return String The latest error message if no successful payment is created after it.
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getLatestErrorMessage(Id recordId) {
         Error__c error = new ERR_LogService().getLatestError(recordId);
 
         if (error == null) {
@@ -131,6 +132,38 @@ public with sharing class RD2_ElevateInformation_CTRL {
         return isLatestError
             ? String.format(System.Label.commonErrorPrefix, new String[]{ error.Full_Message__c })
             : null;
+    }
+
+    /**
+     * @description Checks if the user has read access for fields retrieved by the Elevate information widget
+     * @return Boolean
+     */
+    private static Boolean hasReadPermissionsToFields(Set<String> requiredFields) {
+        Boolean hasPermissions = true;
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isAccessible()) {
+                hasPermissions = false;
+                break;
+            }
+        }
+        return hasPermissions;
+    }
+
+    /**
+     * @description Checks if the user has update access for fields retrieved by the Elevate information widget
+     * @return Boolean
+     */
+    private static Boolean hasUpdatePermissionsToFields(Set<String> requiredFields) {
+        Boolean hasPermissions = true;
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isUpdateable()) {
+                hasPermissions = false;
+                break;
+            }
+        }
+        return hasPermissions;
     }
 
 

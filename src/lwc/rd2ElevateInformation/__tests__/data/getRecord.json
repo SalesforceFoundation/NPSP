@@ -19,6 +19,26 @@
         "CommitmentId__c": {
             "displayValue": null,
             "value": "11a1c101-bcde-001-111f-g1dh00i0jk111"
+        },
+        "PaymentMethod__c": {
+            "displayValue": null,
+            "value": "Credit Card"
+        },
+        "CardLast4__c": {
+            "displayValue": null,
+            "value": "1234"
+        },
+        "ACH_Last_4__c": {
+            "displayValue": null,
+            "value": "5678"
+        },
+        "CardExpirationMonth__c": {
+            "displayValue": null,
+            "value": "12"
+        },
+        "CardExpirationYear__c": {
+            "displayValue": null,
+            "value": "2027"
         }
     }
 }
