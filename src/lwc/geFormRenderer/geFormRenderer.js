@@ -1512,6 +1512,7 @@ export default class GeFormRenderer extends LightningElement{
      * @param fields An object with key-value pairs.
      */
     updateFormState(fields) {
+        console.log(JSON.stringify(fields, null, 2));
         Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
             this.updateFormStateForDonationRecordType(fields);
@@ -1523,6 +1524,7 @@ export default class GeFormRenderer extends LightningElement{
 
         // Shallow-copy to a new object to prompt reactivity
         this.formState = Object.assign({}, this.formState);
+        console.log(JSON.stringify(this.formState, null, 2));
     }
 
     updateFormStateFromMap(fieldReferenceToValueMap) {

@@ -122,7 +122,7 @@ describe('c-ge-form-renderer', () => {
         getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         // This error is specific to this mockRenderWrapperWithNoNames
-        // Donor Type, Contact Preferred Email, Donation Date, Donation Amount, Payment Method appear as required
+        // Donor Type, Contact Preferred Email, Donation Date, Donation Amount appear as required
 
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
         mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
@@ -141,15 +141,8 @@ describe('c-ge-form-renderer', () => {
             dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
             dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
             dispatchFormFieldChange(sectionWithWidget, '000000000000000001', 'Contact1Imported__c');
-
-            const contact1ChangeEvent = new CustomEvent('formfieldchange', {
-                detail: {
-                    "value": "003J000001zftFlIAI",
-                    "label": "003J000001zftFlIAI",
-                    "fieldMappingDevName": "Contact1Imported__c"
-                }
-            });
-            sections[0].dispatchEvent(contact1ChangeEvent);
+            dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
+            dispatchFormFieldChange(sectionWithWidget, '2021-02-23', 'Donation_Date_de92fcb14');
 
             return flushPromises().then(() => {
 
@@ -163,7 +156,13 @@ describe('c-ge-form-renderer', () => {
                 );
 
                 expect(iframeElement.tagName.toLowerCase()).toBe('iframe');
-
+                const mockHandlePostMessage = jest.fn();
+                iframeElement.addEventListener('message', mockHandlePostMessage);
+                const btns = element.shadowRoot.querySelectorAll('lightning-button');
+                btns[1].click();
+                return flushPromises().then(() => {
+                    expect(element).toMatchSnapshot();
+                });
             });
         });
     });
