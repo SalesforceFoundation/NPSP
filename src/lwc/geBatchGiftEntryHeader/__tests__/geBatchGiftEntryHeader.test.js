@@ -53,7 +53,15 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
     });
 
-    describe('header body details', () => {
+    describe('gift entry batch header elements', () => {
+        it('should render three action buttons', async () => {
+            const element = setup();
+
+            await flushPromises();
+            const buttons = element.shadowRoot.querySelectorAll('lightning-button');
+            expect(buttons.length).toBe(3);
+        });
+
         it('renders detail row', async () => {
             const element = setup();
 
