@@ -3,7 +3,8 @@ module.exports = {
     ...jestConfig,
     moduleNameMapper: {
         '^(c)/(.+)$': '<rootDir>/src/lwc/$2/$2',
-        "^lightning/navigation$": "<rootDir>/tests/__mocks__/lightning/navigation"
+        "^lightning/navigation$": "<rootDir>/tests/__mocks__/lightning/navigation",
+        "^@salesforce/apex/(.+)$": "<rootDir>/tests/__mocks__/apex/$1"
     },
     testPathIgnorePatterns: [
         '<rootDir>/node_modules/',

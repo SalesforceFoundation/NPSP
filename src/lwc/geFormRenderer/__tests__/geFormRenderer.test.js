@@ -1,4 +1,8 @@
 import { createElement } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+import { createApexTestWireAdapter } from '@salesforce/wire-service-jest-util';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
 import GeFormRenderer from 'c/geFormRenderer';
 import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
@@ -6,17 +10,25 @@ import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryContro
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import GeLabelService from 'c/geLabelService';
-
+import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
+import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
-const mockPaymentTransactionStatusValues = JSON.stringify(require('./data/paymentTransactionStatusValues.json'));
+import psElevateTokenHandler from "c/psElevateTokenHandler";
+
 
 jest.mock('@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper', () => {
     return { default: jest.fn() };
 }, { virtual: true });
 
-jest.mock('@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues', () => {
-    return { default: jest.fn() };
-}, { virtual: true });
+jest.mock(
+    '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo',
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
 
 describe('c-ge-form-renderer', () => {
 
@@ -26,9 +38,9 @@ describe('c-ge-form-renderer', () => {
     });
 
     it('loads with template', () => {
-        getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
+        debugger;
         document.body.appendChild(element);
         return flushPromises().then(() => {
             expect(retrieveDefaultSGERenderWrapper).toHaveBeenCalledTimes(1);
@@ -39,7 +51,6 @@ describe('c-ge-form-renderer', () => {
     });
 
     it('updates form state when a field is changed', () => {
-        getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
@@ -62,7 +73,6 @@ describe('c-ge-form-renderer', () => {
 
 
     it('saving without filling anything in should result in a page level error for missing fields', () => {
-        getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         // This error is specific to this mockRenderWrapperWithNoNames
         // Donor Type, Donation Date, Donation Amount, Payment Method should appear as required
@@ -86,7 +96,6 @@ describe('c-ge-form-renderer', () => {
     });
 
     it('form with payment widget, when payment method changed to credit card then payment iframe loads', () => {
-        getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
 
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
@@ -119,14 +128,17 @@ describe('c-ge-form-renderer', () => {
 
 
     it('form without contact firstname when lookup populated and widget in chargeable state then sendPurchaseRequest is called with first name', () => {
-        getPaymentTransactionStatusValues.mockResolvedValue(mockPaymentTransactionStatusValues);
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         // This error is specific to this mockRenderWrapperWithNoNames
         // Donor Type, Contact Preferred Email, Donation Date, Donation Amount appear as required
 
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
         mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
-
+        getOrgDomainInfo.mockResolvedValue({
+            orgDomain: 'flow-connect-2738-dev-ed',
+            podName: 'CS43'
+        });
+        const iframeMessageSpy = jest.spyOn(psElevateTokenHandler, 'sendIframeMessage')
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
 
@@ -154,17 +166,32 @@ describe('c-ge-form-renderer', () => {
                     'c-ge-form-widget-tokenize-card',
                     iframeSelector
                 );
-
                 expect(iframeElement.tagName.toLowerCase()).toBe('iframe');
-                const mockHandlePostMessage = jest.fn();
-                iframeElement.addEventListener('message', mockHandlePostMessage);
+
                 const btns = element.shadowRoot.querySelectorAll('lightning-button');
                 btns[1].click();
                 return flushPromises().then(() => {
                     expect(element).toMatchSnapshot();
+                    expect(iframeMessageSpy).lastCalledWith(
+                        expect.any(HTMLIFrameElement),
+                        expect.objectContaining({
+                            action: 'createToken',
+                            params: {
+                                'nameOnCard': null
+                            }
+                        }),
+                        undefined // TODO: This should be the origin URL, but requires additional mocks for the iframe to fully mount
+                    );
+
                 });
             });
         });
+    });
+
+    it('tests some iframe stuff', () => {
+        const ifr = document.createElement('iframe');
+        document.body.appendChild(ifr);
+        expect(ifr.contentWindow).toBeTruthy();
     });
 });
 
@@ -192,6 +219,5 @@ const dispatchFormFieldChange = (element, value, fieldMappingDevName) => {
     });
     element.dispatchEvent(changeEvent);
 };
-
 
 
