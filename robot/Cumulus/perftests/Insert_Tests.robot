@@ -136,7 +136,7 @@ Get 200 Contacts Without Address
 
 Test Setup
     Disable Duplicate Matching
-    Delete Default Data
+    Run Keyword And Continue On Failure        Delete Default Data
 
 Disable Duplicate Matching
     [Documentation]  Disable Salesforce duplicate matching
