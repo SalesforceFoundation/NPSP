@@ -1846,6 +1846,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
@@ -1863,6 +1864,7 @@
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
         <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
+        <members>RD2_PaymentInformation</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -1884,6 +1886,7 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
+        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -4234,6 +4237,7 @@
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EditPaymentInformationModal</members>
         <members>rd2ElevateCreditCardForm</members>
         <members>rd2ElevateInformation</members>
         <members>rd2EntryForm</members>

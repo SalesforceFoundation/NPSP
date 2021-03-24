@@ -4,7 +4,7 @@
             {labels.header}
         </h2>
 
-        <div class="slds-m-horizontal--medium slds-border_top"></div>
+        <div class="slds-m-horizontal_medium slds-border_top"></div>
 
         <template if:true={error.detail}>
             <div class="slds-p-horizontal_medium">
@@ -39,7 +39,7 @@
                 </template>
             </template>
 
-            <template if:true={permissions.hasAccess}>
+            <template if:true={permissions.hasKeyFieldsAccess}>
 
                 <template if:false={isElevateRecord}>
                     <div class="slds-p-around_medium slds-illustration slds-illustration_small"
@@ -56,7 +56,7 @@
                 </template>
 
                 <template if:true={isElevateRecord}>
-                    <lightning-layout multiple-rows="true" class="slds-p-around_medium">
+                    <lightning-layout multiple-rows="true" class="slds-p-around_medium" horizontal-align="spread">
 
                         <lightning-layout-item size="12"
                             class="slds-grid slds-align-top slds-form-element slds-form-element_horizontal slds-form-element_1-col">
@@ -73,20 +73,23 @@
                                     </lightning-icon>
                                 </template>
                             </label>
-                            <div class="status slds-form-element__control">
-                                <lightning-formatted-text id="status" data-id="status" value={status.message}
+                            <div class="status slds-form-element__control" id="status">
+                                <lightning-formatted-text data-id="status" value={status.message}
                                     data-qa-locator={qaLocatorStatusMessage} class="status-message">
                                 </lightning-formatted-text>
                             </div>
                         </lightning-layout-item>
 
-                        <lightning-layout-item size="12"
-                            class="slds-form-element slds-form-element_horizontal slds-m-around_none slds-p-top_none">
-                            <template if:true={isElevateConnected}>
+                        <template if:true={isElevateConnected}>
+                            <lightning-layout-item size="4" flexibility="auto"
+                                                   class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
                                 <label
-                                    class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                    class="slds-nowrap slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                     for="commitmentId" id="commitmentIdLabel">{fields.commitmentId.label}</label>
-                                <div class="slds-form-element__control slds-p-around_none" data-id="commitmentId">
+                            </lightning-layout-item>
+                            <lightning-layout-item size="8" flexibility="auto"
+                                                   class="slds-dl_horizontal__detail">
+                                <div class="slds-form-element__control slds-p-around_none" data-id="commitmentId" id="commitmentId">
                                     <div class="slds-col slds-no-flex slds-truncate">
                                         <a onclick={navigateToCommitment} aria-labelledby="commitmentIdLabel">
                                             <lightning-formatted-text value={commitmentId}
@@ -100,12 +103,68 @@
                                         </a>
                                     </div>
                                 </div>
+                            </lightning-layout-item>
+                        </template>
+                        <template if:true={isEditEnabled}>
+                            <template if:true={showLastFourACH}>
+                                <lightning-layout-item size="4" flexibility="auto"
+                                                    class="slds-dl_horizontal__label slds-text-color_weak" slds-m-bottom_x-small>
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                            for="last4ach" id="achlast4Label">{fields.ach_last_four.label}</label>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="8" flexibility="auto"
+                                                    class="slds-dl_horizontal__detail">
+                                    <lightning-formatted-text id="last4ach"
+                                                            value={lastFourDigitsAch}
+                                                            data-qa-locator={qaLocatorLastFourDigits}
+                                                            aria-labelledby="achlast4Label">
+                                    </lightning-formatted-text>
+                                </lightning-layout-item>
                             </template>
-                        </lightning-layout-item>
 
+                            <template if:true={showLastFourCreditCard}>
+                                <lightning-layout-item size="4" flexibility="auto"
+                                                    class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                            for="last4cc" id="cclast4Label">{fields.credit_last_four.label}</label>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="8" flexibility="auto"
+                                                    class="slds-dl_horizontal__detail">
+                                    <lightning-formatted-text id="last4cc"
+                                                            value={lastFourDigitsCreditCard}
+                                                            data-qa-locator={qaLocatorLastFourDigits}
+                                                            aria-labelledby="cclast4Label">
+                                    </lightning-formatted-text>
+                                </lightning-layout-item>
+                            </template>
+
+                            <template if:true={showExpirationDate}>
+                                <lightning-layout-item size="4" flexibility="auto"
+                                                class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
+                                    <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
+                                        for="expirationDate" id="expirationDateLabel">{labels.commonExpirationDate}</label>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="8" flexibility="auto"
+                                                    class="slds-dl_horizontal__detail">
+                                    <lightning-formatted-text id="expirationDate"
+                                                            value={expirationDate}
+                                                            data-qa-locator={qaLocatorExpirationDate}
+                                                            aria-labelledby="expirationDateLabel">
+                                    </lightning-formatted-text>
+                                </lightning-layout-item>
+                            </template>
+                        </template>
                     </lightning-layout>
 
                     <div class="slds-card__footer slds-m-top_none slds-p-around_none slds-m-horizontal--medium">
+                        <template if:true={isEditEnabled}>
+                            <template if:true={permissions.hasKeyFieldsUpdateAccess}>
+                                <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small slds-p-right_medium"
+                                    label={labels.updatePaymentInformation} onclick={openUpdatePaymentInformationModal}
+                                    data-qa-locator={qaLocatorUpdatePaymentInformation}>
+                                </lightning-button>
+                            </template>
+                        </template>
                         <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small"
                             label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}
                             data-qa-locator={qaLocatorViewErrorLog}>
@@ -116,4 +175,10 @@
         </template>
 
     </lightning-card>
+    <template if:true={displayEditModal}>
+        <c-rd2-edit-payment-information-modal
+            onclose={closeUpdatePaymentInformationModal}
+            rd-record={rdRecord}>
+        </c-rd2-edit-payment-information-modal>
+    </template>
 </template>
