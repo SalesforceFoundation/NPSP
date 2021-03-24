@@ -110,7 +110,7 @@ export default class RdActiveSchedule extends LightningElement {
     }
 
     get qaLocatorHeader() {
-        return `text ${this.labels.scheduleTitle}`;
+        return `text Schedule Title`;
     }
 
     get qaLocatorError() {
