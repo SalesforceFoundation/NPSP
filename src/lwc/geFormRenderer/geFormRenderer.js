@@ -1,6 +1,3 @@
-
-     
-
 import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
