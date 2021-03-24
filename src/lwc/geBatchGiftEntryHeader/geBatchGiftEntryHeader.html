@@ -7,14 +7,17 @@
             <lightning-button-group>
                 <lightning-button label={LABELS.bgeBatchDryRun}
                                   onclick={handleClick}
+                                  data-action={ACTIONS.DRY_RUN_BATCH}
                                   data-qa-locator={qaLocatorBatchDryRun}>
                 </lightning-button>
                 <lightning-button label={LABELS.bgeProcessBatch}
                                   onclick={handleClick}
+                                  data-action={ACTIONS.PROCESS_BATCH}
                                   data-qa-locator={qaLocatorProcessBatch}>
                 </lightning-button>
                 <lightning-button label={LABELS.geEditBatchInfo}
                                   onclick={handleClick}
+                                  data-action={ACTIONS.EDIT_BATCH}
                                   data-qa-locator={qaLocatorEditBatchInfo}>
                 </lightning-button>
             </lightning-button-group>

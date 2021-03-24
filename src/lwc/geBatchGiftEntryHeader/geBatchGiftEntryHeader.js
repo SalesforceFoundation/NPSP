@@ -10,6 +10,11 @@ import { CUSTOM_LABELS } from './helpers/customLabels';
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
     LABELS = CUSTOM_LABELS;
+    ACTIONS = Object.freeze({
+        DRY_RUN_BATCH: 'DRY_RUN_BATCH',
+        PROCESS_BATCH: 'PROCESS_BATCH',
+        EDIT_BATCH: 'EDIT_BATCH'
+    });
 
     @api batchId;
     @api isPermissionError;
@@ -63,14 +68,15 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     }
 
     handleClick(event) {
-        switch (event.target.label) {
-            case BATCH_DRY_RUN_LABEL:
+        const action =  event.target.getAttribute('data-action');
+        switch (action) {
+            case this.ACTIONS.DRY_RUN_BATCH:
                 this.dispatchEvent(new CustomEvent('batchdryrun'));
                 break;
-            case PROCESS_BATCH_LABEL:
+            case this.ACTIONS.PROCESS_BATCH:
                 this.dispatchEvent(new CustomEvent('processbatch'));
                 break;
-            case EDIT_BATCH_INFO_LABEL:
+            case this.ACTIONS.EDIT_BATCH:
                 this.editBatch();
                 break;
         }
