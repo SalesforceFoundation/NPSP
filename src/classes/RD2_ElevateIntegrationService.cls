@@ -80,6 +80,10 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return config.isIntegrationEnabled();
     }
 
+    /***
+    * @description Returns the Elevate Integration service enablement status for Edit Commitment feature.
+    * @return Boolean
+    */
     public static Boolean isEditEnabled() {
         return config.isIntegrationEnabled()
             && UTIL_FeatureEnablement.isPilotEnabled(); 

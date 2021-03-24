@@ -3,6 +3,7 @@ import { isNull, showToast, constructErrorMessage, format, isUndefined } from 'c
 import { HTTP_CODES } from 'c/geConstants';
 import { updateRecord } from 'lightning/uiRecordApi';
 import PaymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
+import closeButtonLabel from '@salesforce/label/c.commonClose';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
@@ -31,6 +32,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     labels = Object.freeze({
         PaymentInformationTitle,
         cancelButtonLabel,
+        closeButtonLabel,
         saveButtonLabel,
         spinnerAltText,
         loadingMessage,
