@@ -8,7 +8,13 @@ import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donat
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
+import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
+import FIELD_CC_EXP_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
+import FIELD_CC_EXP_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
+import FIELD_CC_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
+import FIELD_ACH_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
@@ -29,17 +35,31 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
+import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
 const FIELDS = [
     FIELD_NAME,
+    FIELD_PAYMENT_METHOD,
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
-    FIELD_STATUS_REASON
+    FIELD_STATUS_REASON,
+    FIELD_NEXT_DONATION_DATE  
+];
+
+const OPTIONAL_FIELDS = [
+    FIELD_CC_LAST_4,
+    FIELD_ACH_LAST_4,
+    FIELD_CC_EXP_MONTH,
+    FIELD_CC_EXP_YEAR
 ];
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
+const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
+const PAYMENT_METHOD_ACH = 'ACH';
 
 export default class rd2ElevateInformation extends NavigationMixin(LightningElement) {
 
@@ -61,7 +81,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         elevateDisabledMessage,
         elevateRecordCreateFailed,
         commonUnknownError,
-        viewErrorLogLabel
+        viewErrorLogLabel,
+        updatePaymentInformation,
+        commonExpirationDate
     });
 
     @api recordId;
@@ -77,14 +99,27 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     @track isLoading = true;
     @track isElevateCustomer;
+    @track isEditEnabled = false;
     @track isElevateRecord = false;
     @track isElevateConnected = false;
+    @track showLastFourACH = false;
+    @track showLastFourCreditCard = false;
+    @track showExpirationDate = false;
     @track permissions = {
         hasAccess: null,
+        hasKeyFieldsUpdateAccess : null,
+        hasKeyFieldsAccess: null,
+        showLastFourDigits: null,
+        showExpirationDate: null,
         alert: ''
     };
     @track error = {};
+    @track displayEditModal = false;
     commitmentURLPrefix;
+
+    get paymentMethod() {
+        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+    }
 
     get commitmentId() {
         return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
@@ -92,6 +127,14 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get commitmentURL() {
         return this.commitmentURLPrefix + this.commitmentId;
+    }
+
+    get nextDonationDate() {
+        return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
+    }
+
+    get paymentMethod() {
+        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
     }
 
     /***
@@ -104,10 +147,17 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
+                    this.isEditEnabled = response.isEditEnabled;
 
-                    this.permissions.hasAccess = this.isElevateCustomer === true
+                    this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
                         && isNull(this.permissions.alert);
+
+                    this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
+                         && response.hasFieldUpdatePermission;
+
+                    this.permissions.showExpirationDate = response.showExpirationDate;
+                    this.permissions.showLastFourDigits = response.showLastFourDigits;
 
                     if (this.isElevateCustomer === true) {
                         if (!isNull(this.permissions.alert)) {
@@ -121,8 +171,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                                 detail: this.labels.flsErrorDetail
                             });
 
-                        } else if (!isNull(response.errorMessage)) {
-                            this.setErrorStatus(response.errorMessage);
+                        } else {
+                            this.getLatestErrorMessage();
                         }
                     }
                 })
@@ -148,7 +198,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             this.checkLoading();
         }
 
-        if (response.error && this.hasAccess()) {
+        if (response.error && this.hasKeyFieldsAccess()) {
             this.handleError(response.error);
         }
     }
@@ -159,7 +209,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: FIELDS
+        fields: FIELDS,
+        optionalFields: OPTIONAL_FIELDS
     })
     wiredRecurringDonation(response) {
         if (response.data) {
@@ -174,18 +225,92 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             this.checkLoading();
         }
 
-        if (response.error && this.hasAccess()) {
+        if (response.error && this.hasKeyFieldsAccess()) {
             this.handleError(response.error);
         }
     }
 
-    /***
-     * @description Checks if record detail page or user has access to the Elevate Information data
-     */
-    hasAccess() {
-        return this.isTrue(this.permissions.isElevateCustomer)
-            && this.isTrue(this.permissions.hasAccess);
+    /**
+    * @description Get the lateset relevant error message for the Elevate Recurring Donation 
+    */
+    getLatestErrorMessage() {
+        getError({recordId: this.recordId})
+            .then(response => {
+                if (!isNull(response)) {
+                    this.setErrorStatus(response);
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            })
+            .finally(() => {
+                this.checkLoading();
+            });
     }
+    /***
+     * @description Checks if record detail page or user has access to the Elevate Information data fields
+     */
+    hasKeyFieldsAccess() {
+        return this.isTrue(this.permissions.isElevateCustomer)
+            && this.isTrue(this.permissions.hasKeyFieldsAccess);
+    }
+
+    /***
+     * @description Is the payment type ACH and the user has read perms to the two last4 fields?
+     */
+    shouldShowLastFourACH() {
+        return this.paymentMethod === PAYMENT_METHOD_ACH
+            && this.isTrue(this.isElevateCustomer)
+            && this.isTrue(this.permissions.showLastFourDigits);
+    }
+
+    /***
+     * @description Is the payment type CreditCard and the user has read perms to the last4 fields?
+     */
+    shouldShowLastFourCreditCard() {
+        return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+            && this.isTrue(this.isElevateCustomer)
+            && this.isTrue(this.permissions.showLastFourDigits);
+    }
+
+    /***
+     * @description Does the user have perms to show the Expiration Date fields?
+     */
+    shouldShowExpirationDate() {
+        return this.isTrue(this.permissions.showExpirationDate);
+    }
+
+    /***
+     * @description Returns the expiration date as string in the format of MM/YYYY
+     */
+    get expirationDate() {
+        return this.getValue(FIELD_CC_EXP_MONTH.fieldApiName) + '/' + this.getValue(FIELD_CC_EXP_YEAR.fieldApiName);
+    }
+
+    /***
+     * @description Returns the last 4 digits from the ACH account
+     */
+    get lastFourDigitsAch() {
+        return this.getValue(FIELD_ACH_LAST_4.fieldApiName);
+    }
+
+    /***
+     * @description Returns the last 4 digits for a credit card
+     */
+    get lastFourDigitsCreditCard() {
+        return this.getValue(FIELD_CC_LAST_4.fieldApiName);
+    }
+
+    /**
+    * @desciprtion launch Update Payment Information Modal
+    */
+    openUpdatePaymentInformationModal() {
+        this.displayEditModal = true;
+    }
+
+    closeUpdatePaymentInformationModal() {
+        this.displayEditModal = false;
+      }
 
     /***
      * @description Generates URL for Elevate commitment
@@ -206,7 +331,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      * @description Checks if the form still has outstanding data to load
      */
     checkLoading() {
-        if (this.isNot(this.isElevateCustomer) || this.isNot(this.permissions.hasAccess)) {
+        if (this.isNot(this.isElevateCustomer) || this.isNot(this.permissions.hasKeyFieldsAccess)) {
             this.isLoading = false;
 
         } else {
@@ -227,6 +352,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
         this.isElevateRecord = !isNull(commitmentId);
         this.isElevateConnected = this.isElevateRecord && !commitmentId.startsWith(TEMP_PREFIX);
+
+        this.showLastFourACH = this.shouldShowLastFourACH();
+        this.showLastFourCreditCard = this.shouldShowLastFourCreditCard();
+        this.showExpirationDate = this.shouldShowExpirationDate();
 
         if (this.isElevateCustomer === true
             && this.isElevateRecord
@@ -299,6 +428,11 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     setFields(fieldInfos) {
         this.fields.name = extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
         this.fields.commitmentId = extractFieldInfo(fieldInfos, FIELD_COMMITMENT_ID.fieldApiName);
+        this.fields.payment_method = extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
+        this.fields.ach_last_four = extractFieldInfo(fieldInfos, FIELD_ACH_LAST_4.fieldApiName);
+        this.fields.credit_last_four = extractFieldInfo(fieldInfos, FIELD_CC_LAST_4.fieldApiName);
+        this.fields.exp_month = extractFieldInfo(fieldInfos, FIELD_CC_EXP_MONTH.fieldApiName);
+        this.fields.exp_year = extractFieldInfo(fieldInfos, FIELD_CC_EXP_YEAR.fieldApiName);
     }
 
     /**
@@ -340,7 +474,9 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             : constructErrorMessage(error);
 
         if (this.error.detail && this.error.detail.includes('RD2_ElevateInformation_CTRL')) {
-            this.permissions.hasAccess = false;
+            this.permissions.hasKeyFieldsAccess = false;
+            this.permissions.showLastFourDigits = false;
+            this.permissions.showExpirationDate = false;
             this.error.header = this.labels.insufficientPermissions;
             this.isLoading = false;
         }
@@ -351,7 +487,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     * @description data-qa-locator values for elements on the component
     */
     get qaLocatorHeader() {
-        return `text ${this.labels.header}`;
+        return `text Header`;
     }
 
     get qaLocatorError() {
@@ -359,7 +495,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     get qaLocatorSpinner() {
-        return `spinner ${this.labels.loadingMessage}`;
+        return `spinner Loading Message`;
     }
 
     get qaLocatorNoAccessIllustration() {
@@ -387,15 +523,27 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     get qaLocatorCommitmentId() {
-        return `text ${this.fields.commitmentId.label}`;
+        return `text Elevate Recurring Id`;
+    }
+
+    get qaLocatorLastFourDigits() {
+        return `text Last Four Digits`;
+    }
+
+    get qaLocatorExpirationDate() {
+        return `text Expiration Date`;
     }
 
     get qaLocatorNewWindow() {
-        return `link ${this.labels.textNewWindow}`;
+        return `link New Window`;
     }
 
     get qaLocatorViewErrorLog() {
-        return `link ${this.labels.viewErrorLogLabel}`;
+        return `link View Error Log`;
+    }
+
+    get qaLocatorUpdatePaymentInformation() {
+        return `link Update Payment Information`;
     }
 
 }
