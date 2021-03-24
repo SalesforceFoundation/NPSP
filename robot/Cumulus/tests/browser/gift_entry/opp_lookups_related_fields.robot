@@ -44,7 +44,7 @@ Verify Opportunity Related Field Values Autopopulate Correctly
     ...                      When opportunity is selected from Review Donations > Update Opportunity, verifies related values are autopopulated correctly.
     ...                      When opportunity contains value in the field that has default, verifies opportunity value is updated in field upon opportunity selection.
     ...                      When opportunity does not contain value in the field that has default, verifies field default is not cleared upon opportunity selection.
-    [tags]                                  unstable      feature:GE        W-8292782
+    [tags]                                  feature:GE        W-8292782
     #creating a template with opp record type, stage and description with defaults in record type and description
     Go To Page                              Landing                         GE_Gift_Entry
     Click Link                              Templates
