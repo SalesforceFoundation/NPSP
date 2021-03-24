@@ -45,7 +45,6 @@
     </script>
 
     <apex:outputPanel rendered="{!NOT(hasFeatureAccess)}">
-        <c:UTIL_PageMessages id="messages"/>
         <div id='paymentWizardIllustration' />
     </apex:outputPanel>
 
