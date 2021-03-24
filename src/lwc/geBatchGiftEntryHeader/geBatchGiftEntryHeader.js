@@ -1,5 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { refreshApex } from '@salesforce/apex';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
@@ -17,6 +19,18 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     @api batchId;
     @api isPermissionError;
+
+    connectedCallback() {
+        registerListener('geBatchGiftEntryTableChangeEvent', this.handleTableChange, this);
+    }
+
+    disconnectedCallback() {
+        unregisterListener('geBatchGiftEntryTableChangeEvent', this.handleTableChange, this);
+    }
+
+    handleTableChange() {
+        refreshApex(this.batchTotals);
+    }
 
     @wire(getRecord, {
         recordId: '$batchId',

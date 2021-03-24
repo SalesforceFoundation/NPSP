@@ -9,11 +9,18 @@ const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
 const getGiftBatchTotalsByAdapter = registerApexTestWireAdapter(getGiftBatchTotalsBy);
 
-const APEX_BATCH_TOTALS_BY_SUCCESS = {
+const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
     'PROCESSED': 10,
     'FAILED': 5,
     'FAILED_PAYMENT': 1,
     'TOTAL': 20
+};
+
+const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2 = {
+    'PROCESSED': 5,
+    'FAILED': 2,
+    'FAILED_PAYMENT': 3,
+    'TOTAL': 10
 };
 
 describe('c-ge-batch-gift-entry-header', () => {
@@ -50,7 +57,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('renders detail row', async () => {
             const element = setup();
 
-            getGiftBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
+            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -65,12 +72,13 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(headerDetailRows.length).toBe(0);
         });
 
-        it('renders detail blocks with correct record counts', async () => {
+        it('renders detail blocks with correct record counts on load', async () => {
             const element = setup();
 
-            getGiftBatchTotalsByAdapter.emit(APEX_BATCH_TOTALS_BY_SUCCESS);
+            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
 
             await flushPromises();
+
             const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
             expect(detailBlocks.length).toBe(3);
 
@@ -85,6 +93,16 @@ describe('c-ge-batch-gift-entry-header', () => {
             const failedPaymentsBlock = detailBlocks[2].querySelectorAll('p');
             const failedPayments = failedPaymentsBlock[1].innerHTML;
             expect(failedPayments).toBe('1');
+
+            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2);
+
+            await flushPromises();
+            const detailBlocks2 = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
+            expect(detailBlocks.length).toBe(3);
+
+            const processedGiftsBlock2 = detailBlocks2[0].querySelectorAll('p');
+            const processedGifts2 = processedGiftsBlock2[1].innerHTML;
+            expect(processedGifts2).toBe('5 / 10');
         });
     });
 });
