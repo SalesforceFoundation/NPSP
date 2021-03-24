@@ -32,7 +32,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     [Documentation]                         Create a template with Record Type and Campagin Lookup fields, custom labels for lookup, date and text fields
     ...                                     and finally add these fields to batch table. Using this new template create a batch and verify that labels are updated on batch form
     ...                                     Create a gift and verify batch table field names are updated as well and verify that batch is processed without errors.
-    [tags]                                  unstable      feature:GE        W-042499
+    [tags]                                  feature:GE        W-042499
     #Create new template with new field labels
     Go To Page                              Landing                         GE_Gift_Entry
     Click Link                              Templates

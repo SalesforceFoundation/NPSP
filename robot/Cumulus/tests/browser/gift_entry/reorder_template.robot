@@ -71,7 +71,7 @@ Reorder and Modify GE Template Fields
   [Documentation]                       Tests adding, deleting, and reordering form fields on the template builder,
   ...                                   and compares the order of the template form fields with the order of the 
   ...                                   gift form in a batch created from that template.
-  [tags]                                unstable                    feature:GE          W-039563
+  [tags]                                feature:GE          W-039563
   ${template} =                         Generate Random String
   Go to Page                            Landing                     GE_Gift_Entry
   Click Link                            Templates
