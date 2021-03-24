@@ -5,17 +5,11 @@ import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
-import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
-import PROCESS_BATCH_LABEL from '@salesforce/label/c.bgeProcessBatch';
-import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
-import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
+import { CUSTOM_LABELS } from './helpers/customLabels';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
-    batchDryRunLabel = BATCH_DRY_RUN_LABEL;
-    processBatchLabel = PROCESS_BATCH_LABEL;
-    editButtonLabel = EDIT_BATCH_INFO_LABEL;
-    tabHeaderLabel = TAB_HEADER_LABEL;
+    LABELS = CUSTOM_LABELS;
 
     @api batchId;
     @api isPermissionError;
@@ -89,12 +83,12 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     }
 
     get qaLocatorBatchDryRun() {
-        return `button ${this.batchDryRunLabel}`;
+        return `button ${this.LABELS.bgeBatchDryRun}`;
     }
     get qaLocatorProcessBatch() {
-        return `button ${this.processBatchLabel}`;
+        return `button ${this.LABELS.bgeProcessBatch}`;
     }
     get qaLocatorEditBatchInfo() {
-        return `button ${this.editButtonLabel}`;
+        return `button ${this.LABELS.geEditBatchInfo}`;
     }
 }

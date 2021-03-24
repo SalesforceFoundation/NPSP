@@ -2297,10 +2297,13 @@
         <members>commonNoItems</members>
         <members>commonOkay</members>
         <members>commonOpen</members>
+        <members>commonPaymentProcessingErrors</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
         <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
+        <members>commonRecordsFailed</members>
+        <members>commonRecordsProcessed</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
         <members>commonSave</members>

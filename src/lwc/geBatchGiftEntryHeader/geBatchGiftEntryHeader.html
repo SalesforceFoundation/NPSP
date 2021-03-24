@@ -1,19 +1,19 @@
 <template>
     <c-util-page-header title={batchName}
-                        pretext={tabHeaderLabel}
+                        pretext={LABELS.bgeTabHeader}
                         icon-name="standard:contract">
 
         <div slot="actions">
             <lightning-button-group>
-                <lightning-button label={batchDryRunLabel}
+                <lightning-button label={LABELS.bgeBatchDryRun}
                                   onclick={handleClick}
                                   data-qa-locator={qaLocatorBatchDryRun}>
                 </lightning-button>
-                <lightning-button label={processBatchLabel}
+                <lightning-button label={LABELS.bgeProcessBatch}
                                   onclick={handleClick}
                                   data-qa-locator={qaLocatorProcessBatch}>
                 </lightning-button>
-                <lightning-button label={editButtonLabel}
+                <lightning-button label={LABELS.geEditBatchInfo}
                                   onclick={handleClick}
                                   data-qa-locator={qaLocatorEditBatchInfo}>
                 </lightning-button>
@@ -23,7 +23,7 @@
         <c-util-page-header-detail-row if:true={shouldDisplayDetail}>
             <c-util-page-header-detail-block class="first-child">
                 <p class="slds-text-title">
-                    Records Processed
+                    {LABELS.commonRecordsProcessed}
                 </p>
                 <p class="slds-text-body_regular">
                     {processedGiftsCount} / {totalGiftsCount}
@@ -31,7 +31,7 @@
             </c-util-page-header-detail-block>
             <c-util-page-header-detail-block>
                 <p class="slds-text-title">
-                    Records Failed
+                    {LABELS.commonRecordsFailed}
                 </p>
                 <p class="slds-text-body_regular">
                     {failedGiftsCount}
@@ -39,7 +39,7 @@
             </c-util-page-header-detail-block>
             <c-util-page-header-detail-block>
                 <p class="slds-text-title">
-                    Payment Processing Errors
+                    {LABELS.commonPaymentProcessingErrors}
                 </p>
                 <p class="slds-text-body_regular">
                     {failedPaymentsCount}
