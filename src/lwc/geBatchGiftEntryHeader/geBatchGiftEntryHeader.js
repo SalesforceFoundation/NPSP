@@ -3,6 +3,7 @@ import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { refreshApex } from '@salesforce/apex';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import { CUSTOM_LABELS } from './helpers/customLabels';
@@ -49,6 +50,13 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
             return true;
         }
         return false;
+    }
+
+    @wire(isElevateCustomer)
+    isElevateCustomer
+
+    get shouldShowPaymentProcessingErrors() {
+        return this.isElevateCustomer.data;
     }
 
     get processedGiftsCount() {

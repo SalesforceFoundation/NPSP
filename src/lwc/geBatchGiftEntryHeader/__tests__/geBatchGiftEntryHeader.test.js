@@ -4,10 +4,12 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
 const getGiftBatchTotalsByAdapter = registerApexTestWireAdapter(getGiftBatchTotalsBy);
+const isElevateCustomerAdapter = registerApexTestWireAdapter(isElevateCustomer);
 
 const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
     'PROCESSED': 10,
@@ -80,37 +82,44 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(headerDetailRows.length).toBe(0);
         });
 
-        it('renders detail blocks with correct record counts on load', async () => {
+        it('renders detail blocks for records processed and records failed with correct record counts on load', async () => {
             const element = setup();
 
             getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            isElevateCustomerAdapter.emit(false);
+
+            await flushPromises();
+
+            const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
+            expect(detailBlocks.length).toBe(2);
+
+            const processedGifts = detailBlocks[0].querySelectorAll('p')[1].innerHTML;
+            expect(processedGifts).toBe('10 / 20');
+
+            const failedGifts = detailBlocks[1].querySelectorAll('p')[1].innerHTML;
+            expect(failedGifts).toBe('5');
+
+            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2);
+
+            await flushPromises();
+
+            const processedGifts2 = detailBlocks[0].querySelectorAll('p')[1].innerHTML;
+            expect(processedGifts2).toBe('5 / 10');
+        });
+
+        it('renders detail blocks when elevate is enabled with correct record counts on load', async () => {
+            const element = setup();
+
+            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            isElevateCustomerAdapter.emit(true);
 
             await flushPromises();
 
             const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
             expect(detailBlocks.length).toBe(3);
 
-            const processedGiftsBlock = detailBlocks[0].querySelectorAll('p');
-            const processedGifts = processedGiftsBlock[1].innerHTML;
-            expect(processedGifts).toBe('10 / 20');
-
-            const failedGiftsBlock = detailBlocks[1].querySelectorAll('p');
-            const failedGifts = failedGiftsBlock[1].innerHTML;
-            expect(failedGifts).toBe('5');
-
-            const failedPaymentsBlock = detailBlocks[2].querySelectorAll('p');
-            const failedPayments = failedPaymentsBlock[1].innerHTML;
-            expect(failedPayments).toBe('1');
-
-            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2);
-
-            await flushPromises();
-            const detailBlocks2 = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
-            expect(detailBlocks.length).toBe(3);
-
-            const processedGiftsBlock2 = detailBlocks2[0].querySelectorAll('p');
-            const processedGifts2 = processedGiftsBlock2[1].innerHTML;
-            expect(processedGifts2).toBe('5 / 10');
+            const failedGifts = detailBlocks[2].querySelectorAll('p')[1].innerHTML;
+            expect(failedGifts).toBe('1');
         });
     });
 });

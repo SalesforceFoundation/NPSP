@@ -40,7 +40,7 @@
                     {failedGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
-            <c-util-page-header-detail-block>
+            <c-util-page-header-detail-block if:true={shouldShowPaymentProcessingErrors}>
                 <p class="slds-text-title">
                     {LABELS.commonPaymentProcessingErrors}
                 </p>
