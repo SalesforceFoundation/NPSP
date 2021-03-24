@@ -27,6 +27,36 @@
             "label": "Elevate Recurring Id",
             "type": "String",
             "length": 100
+        },
+        "PaymentMethod__c": {
+            "apiName": "PaymentMethod__c",
+            "label": "Payment Method",
+            "type": "String",
+            "length": 100
+        },
+        "CardLast4__c": {
+            "apiName": "CardLast4__c",
+            "label": "Card Last 4",
+            "type": "String",
+            "length": 4
+        },
+        "ACH_Last_4__c": {
+            "apiName": "ACH_Last_4__c",
+            "label": "ACH Last 4",
+            "type": "String",
+            "length": 4
+        },
+        "CardExpirationMonth__c": {
+            "apiName": "CardExpirationMonth__c",
+            "label": "Expiration Month",
+            "type": "String",
+            "length": 2
+        },
+        "CardExpirationYear__c": {
+            "apiName": "CardExpirationYear__c",
+            "label": "Expiration Year",
+            "type": "String",
+            "length": 4
         }
     }
 }

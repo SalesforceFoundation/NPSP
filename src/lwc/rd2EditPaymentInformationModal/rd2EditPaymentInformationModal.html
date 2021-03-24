@@ -1,0 +1,81 @@
+<template>
+    <div>
+        <section 
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_small"
+            onkeyup={handleKeyUp}>
+
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-clearfix">
+                    <lightning-button-icon
+                        class="slds-modal__close"
+                        title={labels.closeButtonLabel}
+                        icon-name="utility:close"
+                        icon-class="slds-button_icon-inverse"
+                        onclick={handleClose}
+                        onkeydown={handleClosedButtonTrapFocus}
+                        data-id="closeButton"
+                        disabled={isSaveButtonDisabled}>
+                    </lightning-button-icon>
+                    <h2
+                        class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                        {labels.paymentInformationTitle}
+                    </h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
+                    <template if:true={isSaving}>
+                        <div class="slds-grid slds-grid_align-center">
+                            <div class="slds-is-relative slds-size_1-of-1">
+                                <lightning-spinner alternative-text={labels.spinnerAltText} data-text={loadingText}
+                                    class="loading-spinner">
+                                </lightning-spinner>
+                                <c-util-stencil row-count="10" column-count="2"></c-util-stencil>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="error-container">
+                        <template if:true={error.detail}>
+                            <c-util-page-level-message title={error.header}
+                                variant="error"
+                                icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
+                                data-qa-locator="error">
+
+                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                    <lightning-formatted-text value={error.detail}></lightning-formatted-text>
+                                </p>
+                            </c-util-page-level-message>
+                        </template>
+                    </div>
+
+                    <div class={paymentEditForm}>
+                        <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                            data-qa-locator='widget Elevate'
+                            payment-method={paymentMethod}
+                            is-edit-payment="true"
+                            next-donation-date={nextDonationDate}>
+                        </c-rd2-elevate-credit-card-form>
+                    </div>
+                </div>
+
+                <footer class="slds-modal__footer slds-clearfix">
+                    <div class="slds-float_right">
+                        <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
+                            variant="neutral" class="slds-m-right_small" onclick={handleClose} disabled={isSaveButtonDisabled}>
+                        </lightning-button>
+                        <lightning-button label={labels.saveButtonLabel} title={labels.saveButtonLabel} disabled={isSaveButtonDisabled}
+                            variant="brand" onclick={handleProcessCommitment} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton">
+                        </lightning-button>
+                    </div>
+                </footer>
+            </div>
+
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>
