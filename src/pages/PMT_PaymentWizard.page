@@ -72,7 +72,7 @@
                 <!-- Opportunity Info -->
                 <div class="slds-section slds-is-open" id="pmtWizardTitle">
                     <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
+                        <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
                             {!$Label.pmtWizardSectionTitle}</span>
                     </h3>
                 </div>
@@ -183,7 +183,7 @@
                     <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                         <div class="slds-section slds-is-open" id="pmtCreateTitle">
                             <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardCreateSchedule}">
+                                <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardCreateSchedule}">
                                     {!$Label.pmtWizardCreateSchedule}
                                 </span>
                             </h3>

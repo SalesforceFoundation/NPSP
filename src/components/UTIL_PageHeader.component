@@ -114,7 +114,7 @@
 
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == false}" styleClass="slds-media__body" id="npspTitle">
                         <p class="slds-text-heading_label">{!headerLabel}</p>
-                        <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-align-middle">{!header}</h1>
                     </apex:outputPanel>
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == true}" styleClass="slds-media__body" id="npspTitleSmall">
                         <h1 class="slds-text-heading_medium slds-m-bottom_large">{!headerLabel}</h1>
