@@ -1,0 +1,28 @@
+/***
+* @description Displays a custom informative text for the loading spinner
+*/
+.loading-spinner::after {
+    position: absolute;
+    content: attr(data-text);
+    width: 100%;
+    text-align: center;
+    top: calc(50% + 3em);
+}
+
+/**
+* @description Override modal size to mimic the standard modal size
+*/
+.THIS.custom-modal .slds-modal__container {
+    max-width: 52.5rem;
+    min-width: 20rem;
+
+}
+
+.slds-modal {
+    height: auto;
+}
+
+.slds-modal__content {
+    height:auto !important;
+    max-height: calc(65vh) !important;
+}
