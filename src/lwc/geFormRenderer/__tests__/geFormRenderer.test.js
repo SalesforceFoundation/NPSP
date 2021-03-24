@@ -104,15 +104,7 @@ describe('c-ge-form-renderer', () => {
 
             const sectionWithWidget = sections[0];
             expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy(); // widget in first section
-
-            const paymentMethodEvent = new CustomEvent('formfieldchange', {
-                detail: {
-                    "value": "Credit Card",
-                    "label": "Credit Card",
-                    "fieldMappingDevName": "Payment_Method_87c012365"
-                }
-            });
-            sections[0].dispatchEvent(paymentMethodEvent);
+            dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
 
             return flushPromises().then(() => {
 
@@ -120,7 +112,6 @@ describe('c-ge-form-renderer', () => {
                 const iframeSelector = `iframe[data-id='${commonPaymentServices}']`;
                 const selectors = ['c-ge-form-widget', 'c-ge-form-widget-tokenize-card', iframeSelector];
                 const iframeElement = traverse(sectionWithWidget, ...selectors);
-                expect(iframeElement.tagName).toBe('iframe');
                 expect(iframeElement).toMatchSnapshot();
             });
         });
@@ -147,6 +138,9 @@ describe('c-ge-form-renderer', () => {
 
             const sectionWithWidget = sections[0];
             expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy(); // widget in first section
+            dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
+            dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
+            dispatchFormFieldChange(sectionWithWidget, '000000000000000001', 'Contact1Imported__c');
 
             const contact1ChangeEvent = new CustomEvent('formfieldchange', {
                 detail: {
@@ -168,8 +162,8 @@ describe('c-ge-form-renderer', () => {
                     iframeSelector
                 );
 
-                //expect(iframeElement.tagName).toBe('iframe');
-                //expect(iframeElement).toBeTruthy();
+                expect(iframeElement.tagName.toLowerCase()).toBe('iframe');
+
             });
         });
     });
@@ -188,6 +182,17 @@ const traverse = (element, ...selectors) => {
     const nextElement = element.shadowRoot.querySelector(firstSelector);
     return traverse(nextElement, ...rest);
 }
+
+const dispatchFormFieldChange = (element, value, fieldMappingDevName) => {
+    const changeEvent = new CustomEvent('formfieldchange', {
+        detail: {
+            value,
+            "label": value,
+            fieldMappingDevName
+        }
+    });
+    element.dispatchEvent(changeEvent);
+};
 
 
 
