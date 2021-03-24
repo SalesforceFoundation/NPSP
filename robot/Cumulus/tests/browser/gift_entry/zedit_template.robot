@@ -41,7 +41,7 @@ Edit GE Template And Verify Changes
     [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved
     ...                              and available when a Single gift or batch gift are created.
 
-    [tags]                           unstable                      feature:GE          W-039559
+    [tags]                           feature:GE          W-039559
     # Edit Default template to add some default values and add a new field to form
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
