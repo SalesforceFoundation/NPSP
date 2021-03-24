@@ -39,7 +39,7 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	...						 leads fields are not autopopulated. Create a gift using new lead in lookup and verify correct related values load
 	...						 automatically and on save batch table has correct lead values. create another gift with different lead and verify
 	...						 lead values load and save correctly. Open previous gift from table and verify correct lead info loads on form
-	[tags]                                        unstable      feature:GE        W-043224
+	[tags]                                        feature:GE        W-043224
 	# Create object and field mappings in Advanced Mapping
 	Click Configure Advanced Mapping
 	Create New Object Group                       Lead
