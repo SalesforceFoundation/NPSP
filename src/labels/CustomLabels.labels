@@ -2325,6 +2325,14 @@
         <value>Paused</value>
     </labels>
     <labels>
+        <fullName>RD2_NextPaymentDonationDateInfo</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Detail for the next payment charging date</shortDescription>
+        <value>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</value>
+    </labels>
+    <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2459,6 +2467,14 @@
         <protected>true</protected>
         <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
         <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PaymentInformation</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Payment Information Title</shortDescription>
+        <value>Payment Information</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -2622,6 +2638,14 @@
         <protected>true</protected>
         <shortDescription>Validation and health check error message when status is not mapped to a state.</shortDescription>
         <value>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_UpdatePaymentInformation</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to update evelate payment information</shortDescription>
+        <value>Update Payment Information</value>
     </labels>
     <labels>
         <fullName>RD2_StatusMustBeMappedSolution</fullName>
