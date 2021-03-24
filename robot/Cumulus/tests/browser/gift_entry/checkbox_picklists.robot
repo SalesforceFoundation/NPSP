@@ -29,7 +29,7 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   [Documentation]                            This test verifies that checkbox-to-checkbox and checkbox-to-picklist Gift Entry field mappings function
                                         ...  as expected. The test maps the fields in the org setup flow, and verifies that they populate as expected
                                         ...  when modified and processed as part of a Gift Entry batch gift.
-  [Tags]                                W-8789974    unstable        feature:GE      
+  [Tags]                                W-8789974            feature:GE      
   ${template} =                         Generate Random String
   Go to Page                            Landing     GE_Gift_Entry
   Click Link                            Templates
