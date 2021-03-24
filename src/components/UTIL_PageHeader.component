@@ -85,7 +85,7 @@
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <header class="slds-page-header" role="banner" id="npspHeader">
-        <div class="slds-grid">
+        <div class="slds-grid slds-wrap">
             <div class="slds-col slds-col_padded">
                 <apex:outputPanel layout="none" rendered="{!showBreadcrumb}">
                     <nav role="navigation" class="slds-p-bottom_x-small" aria-label="{!$Label.lblYouAreHere}">
@@ -124,7 +124,7 @@
             </div>
 
             <div class="slds-col slds-no-flex slds-align-middle">
-                <div class="slds-button-group" role="group" id="grpBTN">
+                <div class="slds-button-group slds-p-top_small slds-p-left_small" role="group" id="grpBTN">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
                         value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
                         rendered="{!showCancelBtn}" reRender="{!cancelReRender}" onclick="{!IF(cancelDisabledOnClick == true,"this.disabled=true;", "")}"/>
