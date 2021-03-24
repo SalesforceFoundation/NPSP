@@ -380,13 +380,16 @@
                 </apex:outputText>
 
 
-                <footer class="slds-docked-form-footer">
-                    <div class="slds-align_absolute-center">
-
+                <footer>
+                    <div class="slds-docked-form-footer slds-show_small slds-align_absolute-center">
                         <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral"
-                        action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
-                        value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
-
+                            action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
+                            value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
+                    </div>
+                    <div class="slds-hide_small">
+                        <apex:commandButton id="cancelBTNSmall" styleClass="slds-button slds-button_neutral"
+                            action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
+                            value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
                     </div>
                 </footer>
             </div>
