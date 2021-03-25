@@ -15,8 +15,8 @@ import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
-import psElevateTokenHandler, { mockIframeSendMessage } from "c/psElevateTokenHandler";
-
+const dataImportObjectInfo = require('./data/dataImportObjectInfo.json');
+import psElevateTokenHandler, { mockIframeSendMessage, mockGetIframeReply } from "c/psElevateTokenHandler";
 
 describe('c-ge-form-renderer', () => {
 
@@ -116,23 +116,25 @@ describe('c-ge-form-renderer', () => {
 
     it('form without contact firstname when lookup populated and widget in chargeable state then sendPurchaseRequest is called with first name', () => {
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
-        // This error is specific to this mockRenderWrapperWithNoNames
-        // Donor Type, Contact Preferred Email, Donation Date, Donation Amount appear as required
         const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
         mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
-        mockIframeSendMessage.mockImplementation((iframe, message, targetOrigin) => {
+        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
             if (message.action === 'createToken') {
-                const data = {"type": "post__npsp", "token": "a_dummy_token"};
-                window.postMessage(data, 'https://flow-connect-2738-dev-ed--npsp.vf.force.com');
+                return {"type": "post__npsp", "token": "a_dummy_token"};
             }
         });
-        // const iframeMessageSpy = jest.spyOn(psElevateTokenHandler, 'sendIframeMessage');
+
+        upsertDataImport.mockImplementation((dataImport) => {
+            return { Id: 'fakeDataImportId', ...dataImport };
+        });
+
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
 
-        const mockSubmit = jest.fn();
-        element.addEventListener('submit', mockSubmit);
+        getObjectInfo.emit(dataImportObjectInfo, config => {
+            return config.objectApiName.objectApiName === 'DataImport__c';
+        });
 
         return flushPromises().then(() => {
             const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
@@ -147,42 +149,21 @@ describe('c-ge-form-renderer', () => {
 
             return flushPromises().then(() => {
                 getRecord.emit(getRecordContact1Imported, config => {
-                    return config.recordId === DUMMY_CONTACT_ID
+                    return config.recordId === DUMMY_CONTACT_ID;
                 });
-                const { commonPaymentServices } = GeLabelService.CUSTOM_LABELS;
-                const iframeSelector = `iframe[data-id='${commonPaymentServices}']`;
 
-                const iframeElement = traverse(sectionWithWidget,
-                    'c-ge-form-widget',
-                    'c-ge-form-widget-tokenize-card',
-                    iframeSelector
-                );
-                expect(iframeElement.tagName.toLowerCase()).toBe('iframe');
                 return flushPromises().then(() => {
                     const btns = element.shadowRoot.querySelectorAll('lightning-button');
                     btns[1].click();
                     return flushPromises().then(() => {
-                        expect(element).toMatchSnapshot();
-                        expect(mockIframeSendMessage).lastCalledWith(
-                            expect.any(HTMLIFrameElement),
-                            expect.objectContaining({
-                                action: 'createToken',
-                                params: {
-                                    'nameOnCard': null
-                                }
-                            }),
-                            undefined // TODO: This should be the origin URL, but requires additional mocks for the iframe to fully mount
-                        );
+                        // TODO: assert firstname not in data import
+                        // TODO: assert stuff about sendPurchaseRequest
+                        expect(sendPurchaseRequest).toHaveBeenCalledTimes(1);
+                        expect(upsertDataImport).toHaveBeenCalledTimes(1);
                     });
                 });
             });
         });
-    });
-
-    it('tests some iframe stuff', () => {
-        const ifr = document.createElement('iframe');
-        document.body.appendChild(ifr);
-        expect(ifr.contentWindow).toBeTruthy();
     });
 });
 

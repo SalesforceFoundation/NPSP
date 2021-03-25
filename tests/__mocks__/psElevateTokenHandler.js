@@ -7,7 +7,7 @@ import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 
 export const mockIframeSendMessage = jest.fn();
-
+export const mockGetIframeReply = jest.fn();
 /***
  * @description Visualforce page used to handle the payment services credit card tokenization request
  */
@@ -38,7 +38,7 @@ export default class psElevateTokenHandler {
 
     _visualforceOriginUrls;
     _visualforceOrigin;
-
+    _componentRef;
 
     /***
      * @description Returns credit card tokenization Visualforce page URL
@@ -100,9 +100,10 @@ export default class psElevateTokenHandler {
      */
     registerPostMessageListener(component) {
         const self = this;
+        this._componentRef = component;
+
         window.onmessage = async function (event) {
             if (self.shouldHandleMessage(event)) {
-                console.log('postmessage response', JSON.stringify(event.data, null, 2));
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
@@ -247,6 +248,7 @@ export default class psElevateTokenHandler {
 
 
     sendIframeMessage(iframe, message, targetOrigin) {
-        mockIframeSendMessage(iframe, message, targetOrigin);
+        const reply = mockGetIframeReply(iframe, message, targetOrigin);
+        this._componentRef.handleMessage(reply);
     }
 }
