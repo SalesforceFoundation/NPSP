@@ -55,10 +55,9 @@ public with sharing class RD2_ElevateInformation_CTRL {
     * @param recordId Recurring Donation Id
     * @return Map<String, Object> Data value by key
     */
-    @AuraEnabled
-    public static Map<String, Object> getData(Id recordId) {
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getPermissionData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
-
 
         try {
             data = new Map<String, Object> {
@@ -86,7 +85,6 @@ public with sharing class RD2_ElevateInformation_CTRL {
 
             if (hasKeyRequiredFieldReadPermissions) {
                 data.put('alert', RD2_VisualizeScheduleController.getValidationAlert(recordId));
-                data.put('errorMessage', getLatestErrorMessage(recordId));
             }
 
             data.put('showLastFourDigits', hasReadPermissionsToFields(new Set<String>{
@@ -108,6 +106,32 @@ public with sharing class RD2_ElevateInformation_CTRL {
         }
 
         return data;
+    }
+
+    /***
+    * @description Displays the latest error when latest payment could not be charged or
+    * any other issue with the recurring commitment in Elevate
+    * @param recordId Recurring Donation Id
+    * @return String The latest error message if no successful payment is created after it.
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getLatestErrorMessage(Id recordId) {
+        Error__c error = new ERR_LogService().getLatestError(recordId);
+
+        if (error == null) {
+            return null;
+        }
+
+        //Do not return error if the error is outdated,
+        //ie created before the latest successful payment
+        Opportunity paidOpp = finder.getLatestPaidOpportunity(recordId);
+
+        Boolean isLatestError = paidOpp == null
+            || paidOpp.CreatedDate <= error.CreatedDate;
+
+        return isLatestError
+            ? String.format(System.Label.commonErrorPrefix, new String[]{ error.Full_Message__c })
+            : null;
     }
 
     /**
@@ -140,31 +164,6 @@ public with sharing class RD2_ElevateInformation_CTRL {
             }
         }
         return hasPermissions;
-    }
-
-    /***
-     * @description Displays the latest error when latest payment could not be charged or
-     * any other issue with the recurring commitment in Elevate
-     * @param recordId Recurring Donation Id
-     * @return String The latest error message if no successful payment is created after it.
-     */
-    private static String getLatestErrorMessage(Id recordId) {
-        Error__c error = new ERR_LogService().getLatestError(recordId);
-
-        if (error == null) {
-            return null;
-        }
-
-        //Do not return error if the error is outdated,
-        //ie created before the latest successful payment
-        Opportunity paidOpp = finder.getLatestPaidOpportunity(recordId);
-
-        Boolean isLatestError = paidOpp == null
-            || paidOpp.CreatedDate <= error.CreatedDate;
-
-        return isLatestError
-            ? String.format(System.Label.commonErrorPrefix, new String[]{ error.Full_Message__c })
-            : null;
     }
 
 
