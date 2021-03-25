@@ -34,7 +34,13 @@
 */
 public with sharing class NPSP_Contact {
 
-    Contact contact;
+    private Contact contact;
+    private Contact oldContact;
+
+    public NPSP_Contact(Contact contact, Contact oldContact) {
+        this.contact = contact;
+        this.oldContact = oldContact;
+    }
 
     public NPSP_Contact(Contact contact) {
         this.contact = contact;
@@ -51,5 +57,9 @@ public with sharing class NPSP_Contact {
 
     public Boolean isAddressOverride() {
         return contact.is_Address_Override__c;
+    }
+
+    public Boolean accountChanged() {
+        return (oldContact != null && oldContact.AccountId != contact.AccountId);
     }
 }

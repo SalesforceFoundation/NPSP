@@ -70,7 +70,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> addressResetQueue = new list<Contact>();
         Map<Id,Account> mapAccountIdAccount = null;
         boolean acctHasAddress = false;
-        boolean acctChanged = false;
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
 
         // bail out if address mgmt turned off.
@@ -93,9 +92,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     if (!isInHouseholdAccount(con, mapAccountIdAccount)) {
                         continue;
                     }
-
-                    Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
-                    acctChanged = (conOld != null && conOld.AccountId != con.AccountId);
 
                     acctHasAddress = accountHasAddresses(mapAccountIdAccount, con);
                     if (con.Current_Address__c != null) {
@@ -127,7 +123,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (SObject so : listNew) {
             i++;  
             Contact con = (Contact)so;
-            NPSP_Contact npspContact=new NPSP_Contact(con);
 
             // we only support address management with HH Accounts being used
             if (con.AccountId == null)
@@ -143,7 +138,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
 
             Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
-            acctChanged = (conOld != null && conOld.AccountId != con.AccountId);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
             // BEFORE UPDATE
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -174,7 +169,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 //     - if isAddressOverride changes to false, refill from Default Address
             	
             	// new highest priority! if Account changes... 
-                if (acctChanged) {
+                if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
             	    if (!npspContact.isAddressOverride() &&
                             !contactService.isContactAddressChanged(con, conOld)) {
@@ -234,7 +229,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (contactService.isContactAddressChanged(con, conOld) || (acctChanged && !contactService.isContactAddressEmpty(con))) {
+                if (contactService.isContactAddressChanged(con, conOld) || (npspContact.accountChanged() &&
+                        !contactService.isContactAddressEmpty(con))) {
                     addressCreationQueue.add(con);
                 }
             }
