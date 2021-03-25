@@ -37,45 +37,6 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
-    // TODO: Potentially temporary delete, move, or split later
-    @isTest
-    private static void shouldReturnMapOfBatchTotals() {
-        DataImportBatch__c batch = new DataImportBatch__c();
-        insert batch;
-
-        List<DataImport__c> dataImports = new List<DataImport__c>();
-        for (Integer i = 0; i < 5; i++) {
-            dataImports.add(createDataImportTemp('Failed', 'DUMMY_STATUS', batch.Id));
-        }
-        for (Integer i = 0; i < 3; i++) {
-            dataImports.add(createDataImportTemp('Imported', 'DUMMY_STATUS', batch.Id));
-        }
-        for (Integer i = 0; i < 8; i++) {
-            dataImports.add(createDataImportTemp('DUMMY_STATUS', 'DECLINED', batch.Id));
-        }
-        for (Integer i = 0; i < 4; i++) {
-            dataImports.add(createDataImportTemp('Failed', 'DECLINED', batch.Id));
-        }
-        insert dataImports;
-
-        Map<String, Integer> batchTotals = GE_GiftEntryController.getGiftBatchTotalsBy(batch.Id);
-
-        System.assertEquals(3, batchTotals.get(GiftBatchAggregateGroupName.PROCESSED.name()));
-        System.assertEquals(5 + 4, batchTotals.get(GiftBatchAggregateGroupName.FAILED.name()));
-        System.assertEquals(8 + 4, batchTotals.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
-        System.assertEquals((5 + 3 + 8 + 4), batchTotals.get(GiftBatchAggregateGroupName.TOTAL.name()));
-    }
-
-    // TODO: Temporary delete later
-    private static DataImport__c createDataImportTemp(String status, String paymentStatus, Id batchId) {
-        DataImport__c dataImport = new DataImport__c(
-            Status__c = status,
-            Payment_Status__c = paymentStatus,
-            NPSP_Data_Import_Batch__c = batchId
-        );
-        return dataImport;
-    }
-
     /***
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
