@@ -39,7 +39,8 @@ public inherited sharing class PS_Request {
         TOKENIZE,
         PURCHASE,
         COMMITMENT,
-        COMMITMENT_CANCEL
+        COMMITMENT_CANCEL,
+        CREATECAPTUREGROUP
     }
 
     public enum ProductType {
@@ -69,6 +70,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
+    public static String ENDPOINT_CREATE_CAPTURE_GROUP = '/v1/payments/verified/batch';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -233,6 +235,8 @@ public inherited sharing class PS_Request {
                         commitmentId
                     }
                 );
+            } else if (endpoint == ElevateEndpoint.CREATECAPTUREGROUP) {
+                value = ENDPOINT_CREATE_CAPTURE_GROUP;
             }
 
             return String.isBlank(value)
