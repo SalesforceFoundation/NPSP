@@ -87,7 +87,7 @@ public with sharing class RD2_EntryFormController {
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
             'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
-            'isPilotEnabled' => UTIL_FeatureEnablement.isPilotEnabled()
+            'isEditEnabled' => RD2_ElevateIntegrationService.isEditEnabled()
         };
     }
 

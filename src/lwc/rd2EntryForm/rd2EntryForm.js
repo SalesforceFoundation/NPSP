@@ -122,6 +122,7 @@ export default class rd2EntryForm extends LightningElement {
     @track isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
+    isEditEnabled = false;
     commitmentId = null;
     paymentMethodToken;
     cardholderName;
@@ -144,6 +145,11 @@ export default class rd2EntryForm extends LightningElement {
         let cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
         let cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
         return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
+    }
+
+    @api
+    get cardLastFourLabel(){
+        return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : '';
     }
 
     /***
@@ -170,17 +176,14 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
-                this.isPilotEnabled = response.isPilotEnabled;
+                this.isEditEnabled = response.isEditEnabled;
             })
             .catch((error) => {
                 this.handleError(error);
             })
             .finally(() => {
-                this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
                 this.isLoading = false;
-                if(this.isPilotEnabled && this.commitmentId !== null){
-                    this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
-                }
+                this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
             });
 
         /*
@@ -254,6 +257,7 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
 
+            this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
             this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
 
         } else if (response.error) {
@@ -330,8 +334,9 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateEditWidget(paymentMethod) {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
+        this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
-        if(this.isEdit && statusField != STATUS_CLOSED){
+        if(this.isEditEnabled && this.commitmentId !== null && this.isEdit && statusField != STATUS_CLOSED){
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
             if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
