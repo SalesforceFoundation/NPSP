@@ -16,20 +16,6 @@ const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.j
 import psElevateTokenHandler from "c/psElevateTokenHandler";
 
 
-jest.mock('@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper', () => {
-    return { default: jest.fn() };
-}, { virtual: true });
-
-jest.mock(
-    '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo',
-    () => {
-        return {
-            default: jest.fn()
-        };
-    },
-    { virtual: true }
-);
-
 describe('c-ge-form-renderer', () => {
 
     afterEach(() => {
@@ -134,10 +120,7 @@ describe('c-ge-form-renderer', () => {
 
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
         mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
-        getOrgDomainInfo.mockResolvedValue({
-            orgDomain: 'flow-connect-2738-dev-ed',
-            podName: 'CS43'
-        });
+
         const iframeMessageSpy = jest.spyOn(psElevateTokenHandler, 'sendIframeMessage')
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
