@@ -187,28 +187,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Handles user onclick event for updating payment information
-    */
-    handleUpdatePayment(){
-        this.readOnlyMode = false;
-        this.showCancel = true;
-        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isDisabled: false
-        });
-    }
-
-    /***
-    * @description Handles user onclick event for cancel payment update
-    */
-    handleCancelUpdate(){
-        this.readOnlyMode = true;
-        this.showCancel = false;
-        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isDisabled: true
-        });
-    }
-
-    /***
     * @description Enables or disables the widget based on provided args.
     */
     displayWidget() {
