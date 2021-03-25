@@ -77,32 +77,25 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
 
+        switch on triggerAction {
+            when BeforeInsert {
+                Set<Id> setAccountId = getSetAccountId(listNew);
+                mapAccountIdAccount = getAccountMap(setAccountId);
+                normalizeLineBreaks(listNew);
+            }
+            when BeforeUpdate {
+                Set<Id> setAccountId = getSetAccountId(listNew);
+                mapAccountIdAccount = getAccountMap(setAccountId);
+                normalizeLineBreaksForContactsWithChangedAddresses(listNew, listOld);
+            }
+        }
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
         
-        if (isBefore) {
-            Set<Id> setAccountId = getSetAccountId(listNew);
-            for (Integer i = 0; i < listNew.size(); i++) {
-                Contact newRecord = (Contact) listNew[i];
-                Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
-
-                // BEFORE INSERT
-                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    UTIL_Address.normalizeLineBreak(newRecord);
-                }
-
-                // BEFORE UPDATE
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && contactService.isContactAddressChanged(newRecord, oldRecord)) {
-                    UTIL_Address.normalizeLineBreak(newRecord);
-                }
-            }
-            populateAccountMap(mapAccountIdAccount, setAccountId);
-        }
-       
-        integer i = -1;        
+        integer i = -1;
         for (SObject so : listNew) {
             i++;  
             Contact con = (Contact)so;
@@ -277,6 +270,24 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return null;
     }
 
+    private void normalizeLineBreaksForContactsWithChangedAddresses(List<SObject> listNew, List<SObject> listOld) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Contact newRecord = (Contact) listNew[i];
+            Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
+
+            if (contactService.isContactAddressChanged(newRecord, oldRecord)) {
+                UTIL_Address.normalizeLineBreak(newRecord);
+            }
+        }
+    }
+
+    private void normalizeLineBreaks(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Contact newRecord = (Contact) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
+    }
+
     private Set<Id> getSetAccountId(List<SObject> listNew) {
         Set<Id> setAccountId = new Set<Id>();
         for (Integer i = 0; i < listNew.size(); i++) {
@@ -290,8 +301,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return setAccountId;
     }
 
-    private void populateAccountMap(Map<Id, Account> mapAccountIdAccount, Set<Id> setAccountId) {
-        mapAccountIdAccount = new Map<Id, Account>([
+    private Map<Id, Account> getAccountMap(Set<Id> setAccountId) {
+        return new Map<Id, Account>([
                 SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
                 FROM Account
                 WHERE Id IN :setAccountId
