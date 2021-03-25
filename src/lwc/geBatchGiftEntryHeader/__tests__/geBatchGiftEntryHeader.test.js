@@ -1,26 +1,22 @@
 import { createElement } from 'lwc';
 import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
 import { getRecord } from 'lightning/uiRecordApi';
-import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
+import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
-import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-const isElevateCustomerAdapter = registerApexTestWireAdapter(isElevateCustomer);
 
 const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
     'PROCESSED': 10,
     'FAILED': 5,
-    'FAILED_PAYMENT': 1,
     'TOTAL': 20
 };
 
 const APEX_GIFT_BATCH_TOTALS_WITHOUT_ROWS = {
     'PROCESSED': 0,
     'FAILED': 0,
-    'FAILED_PAYMENT': 0,
     'TOTAL': 0
 };
 
@@ -98,8 +94,6 @@ describe('c-ge-batch-gift-entry-header', () => {
             getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             let element = setup();
 
-            isElevateCustomerAdapter.emit(false);
-
             await flushPromises();
 
             const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
@@ -110,21 +104,6 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             const failedGifts = detailBlocks[1].querySelectorAll('p')[1].innerHTML;
             expect(failedGifts).toBe('5');
-        });
-
-        it('renders detail blocks when elevate is enabled with correct record counts on load', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
-            const element = setup();
-
-            isElevateCustomerAdapter.emit(true);
-
-            await flushPromises();
-
-            const detailBlocks = element.shadowRoot.querySelectorAll('c-util-page-header-detail-block');
-            expect(detailBlocks.length).toBe(3);
-
-            const failedGifts = detailBlocks[2].querySelectorAll('p')[1].innerHTML;
-            expect(failedGifts).toBe('1');
         });
     });
 });
