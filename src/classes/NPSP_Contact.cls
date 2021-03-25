@@ -37,6 +37,17 @@ public with sharing class NPSP_Contact {
     private Contact contact;
     private Contact oldContact;
 
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
@@ -61,5 +72,9 @@ public with sharing class NPSP_Contact {
 
     public Boolean accountChanged() {
         return (oldContact != null && oldContact.AccountId != contact.AccountId);
+    }
+
+    public Boolean isAddressChanged() {
+        return !contactService.isContactAddressChanged(contact, oldContact);
     }
 }
