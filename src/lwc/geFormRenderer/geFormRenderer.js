@@ -2,13 +2,12 @@ import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
-import sendAuthorizationRequest from '@salesforce/apex/GE_GiftEntryController.sendAuthorizationRequest';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
-import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Capture_Group_Id__c';
+//import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Capture_Group_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
@@ -66,6 +65,7 @@ import {
     isString
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
+import ElevateCaptureGroup from './elevateCaptureGroup';
 import TokenizedGift from './tokenizedGift';
 import AuthorizedGift from './authorizedGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -655,11 +655,28 @@ export default class GeFormRenderer extends LightningElement{
             // handle save depending mode
             if (this.batchId) {
                 if (isCardTokenizable) {
+                    let authorizedGift = {};
                     try {
-                        this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
-                        await this.authorizeCard(true);
+                        this.loadingText = /*this.CUSTOM_LABELS.geAuthorizingCreditCard*/'Authorizing Credit Card...';
+                        
+                        let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
+                        authorizedGift = await currentCaptureGroup.add(null);
+
+                        this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
+
+                        console.log(`Latest capture group id = ${this.latestCaptureGroupId}`);
+                        console.log(`Gift expires = ${authorizedGift.authExpiresAt}`);
+                        console.log(`Authorized gift = ${JSON.stringify(authorizedGift)}`);
+
+                        this.updateFormState({
+                            //[apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                            [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
+                            [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status
+                        });
+                        
                         dataImportFromFormState = this.saveableFormState();
                     } catch (ex) {
+                        console.log(`Exception = ${ex}`);
                         this.handleAsyncWidgetError(ex);
                         return;
                     }
@@ -672,62 +689,14 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    async authorizedCard(retryOnError) {  
-        console.log(`Capture group Id = ${this.captureGroupId}`);
-        if (!this.latestCaptureGroupId || !retryOnError) {
-            this.latestCaptureGroupId = await this.createCaptureGroup();
-        }
-        
-        try {
-            let authorizedGift = await this.addToCaptureGroup(latestCaptureGroupId);
-        } catch (ex) {
-            if (retryOnError) {
-                this.authorizeCard(false); 
-            } else {
-                throw 'Authorization failed after retry';
-            }
-        }
-
-        // Update form state to push values to DI record
-        this.updateFormState({
-            [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
-            [apiNameFor(PAYMENT_ELEVATE_ID)]: '1234567',
-            [apiNameFor(PAYMENT_STATUS)]: 'Authorized'
-        });
-    }
-
-    addToCaptureGroup = async (captureGroupId) => {
-        console.log('in add to capture group');
-        const tokenizedGift = new TokenizedGift(
+    createTokenizedGift() {
+        return new TokenizedGift(
             this.getFieldValueFromFormState('Donation_Amount__c'),
             this.cardholderNames.firstName,
             this.cardholderNames.lastName,
             CURRENCY,
             this.getFieldValueFromFormState('Payment_Authorization_Token__c')
         );
-
-        console.log(tokenizedGift);
-
-        let authorizedGift;
-        await sendAuthorizationRequest(tokenizedGift).then(response => {
-            console.log('apex callout');
-            console.log(response);
-            authorizedGift = response;
-        }).catch(err => {
-            throw 'Authorization failed';
-        });
-
-        console.log('after callout');
-
-        return authorizedGift;
-    }
-
-    createCaptureGroup = async () => {
-        console.log('in create capture group');
-
-        // this.doCallout();
-
-        return '12345';
     }
 
     tokenizeCard = async (sections) => {

@@ -1,9 +1,14 @@
 class AuthorizedGift {
 
-    constructor(authorizationToken, authorizationExpiresBy, transactionId) {
-        this.authorizationToken = authorizationToken;
+    authorizationToken;
+    id;
+    authExpiresAt;
+    status;
+
+    constructor(id, authorizationToken, authorizationExpiresByd) {
+        /*this.authorizationToken = authorizationToken;
         this.authorizationExpiresBy = authorizationExpiresBy;
-        this.transactionId = transactionId;
+        this.id = id;*/
     }
 
 }
