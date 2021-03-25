@@ -1,11 +1,10 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
-import { CUSTOM_LABELS } from './helpers/customLabels';
+import CUSTOM_LABELS from './helpers/customLabels';
 import BatchTotals from './helpers/batchTotals';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
@@ -31,14 +30,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
 
-    retrieveBatchTotals() {
-        getGiftBatchTotalsBy({ batchId: this.batchId })
-            .then(totals => {
-                this.batchTotals = new BatchTotals(totals);
-            })
-            .catch(error => {
-                console.error(error);
-            })
+    async retrieveBatchTotals() {
+        this.batchTotals = await BatchTotals(this.batchId);
     }
 
     @wire(getRecord, {

@@ -16,4 +16,4 @@ const CUSTOM_LABELS = Object.freeze({
     commonPaymentProcessingErrors,
 });
 
-export { CUSTOM_LABELS }
+export default CUSTOM_LABELS;

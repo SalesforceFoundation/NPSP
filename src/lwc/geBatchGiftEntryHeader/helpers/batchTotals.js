@@ -1,33 +1,26 @@
-class BatchTotals {
-    PROCESSED;
-    FAILED;
-    FAILED_PAYMENT;
-    TOTAL;
+import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 
-    constructor(totals) {
-        Object.assign(this, totals);
-        Object.freeze(this);
-    }
+const BatchTotals = async (batchId) => {
+    const totals = await getGiftBatchTotalsBy({ batchId: batchId });
+    const { PROCESSED, FAILED, FAILED_PAYMENT, TOTAL } = totals;
 
-    get processedGiftsCount() {
-        return this.PROCESSED;
-    }
-
-    get failedGiftsCount() {
-        return this.FAILED;
-    }
-
-    get failedPaymentsCount() {
-        return this.FAILED_PAYMENT;
-    }
-
-    get totalGiftsCount() {
-        return this.TOTAL;
-    }
-
-    get hasValuesGreaterThanZero() {
-        return Number(this.PROCESSED) > 0 || Number(this.FAILED) > 0;
-    }
+    return ({
+        get processedGiftsCount() {
+            return PROCESSED;
+        },
+        get failedGiftsCount() {
+            return FAILED;
+        },
+        get failedPaymentsCount() {
+            return FAILED_PAYMENT;
+        },
+        get totalGiftsCount() {
+            return TOTAL;
+        },
+        get hasValuesGreaterThanZero() {
+            return Number(PROCESSED) > 0 || Number(FAILED) > 0;
+        },
+    });
 }
 
 export default BatchTotals;
