@@ -82,6 +82,34 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 Set<Id> setAccountId = getSetAccountId(listNew);
                 mapAccountIdAccount = getAccountMap(setAccountId);
                 normalizeLineBreaks(listNew);
+
+                Contacts contacts = new Contacts(listNew);
+                integer i = -1;
+                for (SObject so : contacts.getRecords()) {
+                    i++;
+                    Contact con = (Contact) so;
+
+                    // we only support address management with HH Accounts being used
+                    if (!isInHouseholdAccount(con, mapAccountIdAccount)) {
+                        continue;
+                    }
+
+                    Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+                    acctChanged = (conOld != null && conOld.AccountId != con.AccountId);
+
+                    acctHasAddress = accountHasAddresses(mapAccountIdAccount, con);
+                    if (con.Current_Address__c != null) {
+                        // remember which contacts will need their address set
+                        listConAddrSet.add(con);
+                        if (con.is_Address_Override__c) {
+                            // track which address's need their dates updated
+                            mapAddrIdIsOverride.put(con.Current_Address__c, true);
+                        }
+                    } else if (contactService.isContactAddressEmpty(con) && acctHasAddress) {
+                        // if the contact has no address specified and the household has a default address, pick up the hh default.
+                        listConAddrReset.add(con);
+                    }
+                }
             }
             when BeforeUpdate {
                 Set<Id> setAccountId = getSetAccountId(listNew);
@@ -110,26 +138,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
                 Account a = mapAccountIdAccount.get(con.AccountId);
                 if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                   continue;
-            }                
+                continue;
+            }
 
             Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
             acctChanged = (conOld != null && conOld.AccountId != con.AccountId);
 
-            // BEFORE INSERT
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                if (con.Current_Address__c != null) {
-                	// remember which contacts will need their address set
-                    listConAddrSet.add(con);
-                    if (con.is_Address_Override__c)
-                        // track which address's need their dates updated
-                        mapAddrIdIsOverride.put(con.Current_Address__c, true);
-                } else if (contactService.isContactAddressEmpty(con) && acctHasAddress) {
-                	// if the contact has no address specified and the household has a default address, pick up the hh default.
-                    listConAddrReset.add(con);
-                }
-            }
-            
             // BEFORE UPDATE
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             	// there can be four different types of changes we need to consider
@@ -268,6 +282,30 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Boolean isInHouseholdAccount(Contact con, Map<Id, Account> mapAccountIdAccount) {
+        Boolean isInHouseholdAccount = true;
+        if (con.AccountId == null) {
+            isInHouseholdAccount = false;
+        }
+        if (con.HHId__c != con.AccountId) {
+            isInHouseholdAccount = false;
+        }
+        Account a = mapAccountIdAccount.get(con.AccountId);
+        if (isNotHouseholdAccount(a)) {
+            isInHouseholdAccount = false;
+        }
+        return isInHouseholdAccount;
+    }
+
+    private Boolean isNotHouseholdAccount(Account a) {
+        return a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
+    private Boolean accountHasAddresses(Map<Id, Account> mapAccountIdAccount, Contact con) {
+        return (mapAccountIdAccount.containsKey(con.AccountId)
+                && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
     }
 
     private void normalizeLineBreaksForContactsWithChangedAddresses(List<SObject> listNew, List<SObject> listOld) {
