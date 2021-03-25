@@ -37,7 +37,9 @@ public inherited sharing class GiftBatchGroupedTotals {
     private Map<Id, GiftBatchTotals> giftBatchTotalsByBatchId = new Map<Id, GiftBatchTotals>();
 
     public Map<String, Integer> totalsFor(Id batchId) {
-        guardNoBatchTotalsFor(batchId);
+        if (giftBatchTotalsByBatchId.get(batchId) == null) {
+            return new GiftBatchTotals().toMap();
+        }
         return giftBatchTotalsByBatchId.get(batchId).toMap();
     }
 
@@ -72,12 +74,4 @@ public inherited sharing class GiftBatchGroupedTotals {
             queryResultProxies.add(queryResultProxy);
         }
     }
-
-    private void guardNoBatchTotalsFor(Id batchId) {
-        if (giftBatchTotalsByBatchId.get(batchId) == null) {
-            throw new GiftBatchGroupedTotalsException('No gift batch totals found for ' + batchId);
-        }
-    }
-
-    public class GiftBatchGroupedTotalsException extends Exception {}
 }
