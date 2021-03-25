@@ -38,6 +38,8 @@ public inherited sharing class GiftBatchTotals {
     private Integer failedPayments = 0;
     private Integer failedGifts = 0;
 
+    public GiftBatchTotals() {}
+
     public GiftBatchTotals(List<AggregateResultProxy> results) {
         for (AggregateResultProxy result : results) {
             GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
