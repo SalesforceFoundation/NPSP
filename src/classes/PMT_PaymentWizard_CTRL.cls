@@ -61,13 +61,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Permissions class used to determine if the running user has permissions
     */
     @TestVisible
-    private UTIL_Permissions perms {
+    private UTIL_Permissions permissions {
         get {
-            if (perms == null) {
-                perms = new UTIL_Permissions();
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
             }
 
-            return perms;
+            return permissions;
         }
         set;
     }
@@ -129,11 +129,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public Integer writeoffPaymentCount { get; set; }
 
     /*******************************************************************************************************
-    * @description decimal for amount float
-    */
-    public Decimal oppAmountFloat { get; set; }
-
-    /*******************************************************************************************************
     * @description integer for the number of installments to create
     */
     public Integer numberOfPayments { get; set; }
@@ -154,17 +149,20 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
 
     /*******************************************************************************************************
-    * @description Returns true if the user has access to the payment SObject
+    * @description Returns true if the user has access to the Payment Wizard feature
     */
-    public Boolean hasPaymentAccess {
+    public Boolean hasFeatureAccess {
         get {
-            if (hasPaymentAccess == null) {
-                hasPaymentAccess = hasPaymentAccess();
+            if (hasFeatureAccess == null) {
+                hasFeatureAccess = hasFeatureAccess();
             }
-
-            return hasPaymentAccess;
+            return hasFeatureAccess;
         }
         set;
+    }
+
+    public String getNamespace() {
+        return UTIL_Namespace.getComponentNamespace();
     }
 
     /*******************************************************************************************************
@@ -187,7 +185,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description gets the payment related settings
     * @return npe01__Contacts_and_Orgs_Settings__c the settings object
     */
-    public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
+    @TestVisible
+    private npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (paymentsSettings == null) {
            paymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         }
@@ -278,7 +277,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     @TestVisible
     private void setupPaymentWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
-        Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
+        Opportunity[] o = Database.query(buildOpportunityQuery() + ' WHERE Id = :id');
 
         isWriteoffWizard = false;
         isScheduleWizard = true;
@@ -309,7 +308,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     @TestVisible
     private void setupWriteoffWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
-        Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
+        Opportunity[] o = Database.query(buildOpportunityQuery() + ' WHERE Id = :id');
 
         isWriteoffWizard = true;
         isScheduleWizard = false;
@@ -339,9 +338,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Creates an opportunity query with payment mapping and currency fields, filtered on id paramter.
     * @return string An opportunity query string.
     */
-    public string makeOppQuery() {
+    private String buildOpportunityQuery() {
         // requery the Opportunity for all fields that we need.
-        String query = 'SELECT name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
+        String query = 'SELECT name, amount, stagename, npe01__payments_made__c, ' +
+            'npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
 
         // add any opportunity fields from payment field mappings
         for (String s : PMT_PaymentCreator.paymentMappings.keyset()) {
@@ -351,7 +351,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
             }
         }
-        query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
+        query += ', (SELECT Id, npe01__Payment_Amount__c, ' +
+            'npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
 
         //if currencyiso field exists add it to query for use later
         if (Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null) {
@@ -367,7 +368,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * creates the specified new payments to cover the amount.
     * @return PageReference null
     */
-    public pageReference calculate() {
+    public PageReference calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
@@ -485,10 +486,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Verify data conditions and add any necessary page messages that need to be rendered.
     */
     public void getPageValidationMessages() {
-        if (!hasPaymentAccess) {
-            displayNoAccessMessage();
-            return;
-        }
 
         if (!getIsPaymentsEnabled()) {
             ApexPages.addMessage(new ApexPages.Message(
@@ -535,50 +532,46 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Displays an error message when then user has no permission to modify payments
-    * @return void
-    */
-    private void displayNoAccessMessage() {
-        String errorMsg;
-
-        if (isWriteoffWizard == true) {
-            errorMsg = System.Label.pmtWizardWriteoffNoAccessMessage;
-        } else if (isScheduleWizard == true) {
-            errorMsg = System.Label.pmtWizardPaymentsNoAccessMessage;
-        } else {
-            errorMsg = System.Label.pmtWizardMsgNoOppFound;
-        }
-
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMsg));
-    }
-
-    /*******************************************************************************************************
     * @description Returns true if the user has permissions to access, create and delete npe01__oppPayment__c
     * and all relevant fields are both readable and modifiable
     * @return Boolean
     */
-    private Boolean hasPaymentAccess() {
-        Boolean accessResult = false;
-
-        SObjectType pmt = npe01__OppPayment__c.getSObjectType();
-        if (perms.canCreate(pmt) && UTIL_Permissions.canDelete(Schema.SObjectType.npe01__oppPayment__c.getName(), false)) {
-            Set<SObjectField> sObjectFields = new Set<SObjectField>{
-                npe01__oppPayment__c.fields.npe01__check_reference_number__c,
-                npe01__oppPayment__c.fields.npe01__paid__c,
-                npe01__oppPayment__c.fields.npe01__payment_amount__c,
-                npe01__oppPayment__c.fields.npe01__payment_date__c,
-                npe01__oppPayment__c.fields.npe01__payment_method__c,
-                npe01__oppPayment__c.fields.npe01__scheduled_date__c,
-                npe01__oppPayment__c.fields.npe01__written_off__c
-            };
-            if (!(perms.canRead(pmt, sObjectFields) && perms.canUpdate(pmt, sObjectFields))) {
-                return accessResult;
-            }
-            accessResult = true;
-        }
-
-        return accessResult;
+    private Boolean hasFeatureAccess() {
+        SObjectType payment = npe01__OppPayment__c.getSObjectType();
+        SObjectType opportunity = Opportunity.getSObjectType();
+        return hasAccessTo(payment, paymentFields())
+            && hasAccessTo(opportunity, opportunityFields());
     }
+
+    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        if (canCheckPermissionsFor(sObjectType)) {
+            return permissions.canRead(sObjectType, sObjectFields)
+                && permissions.canUpdate(sObjectType, sObjectFields);
+        }
+        return false;
+    }
+
+    private Boolean canCheckPermissionsFor(SObjectType objectType) {
+        return permissions.canCreate(objectType) && permissions.canDelete(objectType);
+    }
+
+    private Set<SObjectField> paymentFields() {
+        Set<SObjectField> sObjectFields = new Set<SObjectField>{
+            npe01__OppPayment__c.fields.npe01__Check_Reference_Number__c,
+            npe01__OppPayment__c.fields.npe01__Paid__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Amount__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Date__c,
+            npe01__OppPayment__c.fields.npe01__Payment_Method__c,
+            npe01__OppPayment__c.fields.npe01__Scheduled_Date__c,
+            npe01__OppPayment__c.fields.npe01__Written_Off__c
+        };
+        return sObjectFields;
+    }
+
+    private Set<SObjectField> opportunityFields () {
+        return new Set<SObjectField>{Opportunity.fields.Amount};
+    }
+
 
     /*******************************************************************************************************
     * @description list of items for picklist of the number of payments to be created
