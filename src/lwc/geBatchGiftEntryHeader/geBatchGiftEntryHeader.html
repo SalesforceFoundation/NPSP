@@ -23,13 +23,13 @@
             </lightning-button-group>
         </div>
 
-        <c-util-page-header-detail-row if:true={shouldDisplayDetail}>
+        <c-util-page-header-detail-row if:true={shouldDisplayHeaderDetails}>
             <c-util-page-header-detail-block class="first-child">
                 <p class="slds-text-title">
                     {LABELS.commonRecordsProcessed}
                 </p>
                 <p class="slds-text-body_regular">
-                    {processedGiftsCount} / {totalGiftsCount}
+                    {batchTotals.processedGiftsCount} / {batchTotals.totalGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
             <c-util-page-header-detail-block>
@@ -37,7 +37,7 @@
                     {LABELS.commonRecordsFailed}
                 </p>
                 <p class="slds-text-body_regular">
-                    {failedGiftsCount}
+                    {batchTotals.failedGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
             <c-util-page-header-detail-block if:true={shouldShowPaymentProcessingErrors}>
@@ -45,7 +45,7 @@
                     {LABELS.commonPaymentProcessingErrors}
                 </p>
                 <p class="slds-text-body_regular">
-                    {failedPaymentsCount}
+                    {batchTotals.failedPaymentsCount}
                 </p>
             </c-util-page-header-detail-block>
         </c-util-page-header-detail-row>

@@ -6,6 +6,7 @@ import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevate
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import { CUSTOM_LABELS } from './helpers/customLabels';
+import BatchTotals from './helpers/batchTotals';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
@@ -33,7 +34,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     retrieveBatchTotals() {
         getGiftBatchTotalsBy({ batchId: this.batchId })
             .then(totals => {
-                this.batchTotals = totals;
+                this.batchTotals = new BatchTotals(totals);
             })
             .catch(error => {
                 console.error(error);
@@ -50,11 +51,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
-    get shouldDisplayDetail() {
-        if (Number(this.batchTotals?.TOTAL) > 0 || Number(this.batchTotals?.FAILED) > 0) {
-            return true;
-        }
-        return false;
+    get shouldDisplayHeaderDetails() {
+        return this.batchTotals.hasValuesGreaterThanZero;
     }
 
     @wire(isElevateCustomer)
@@ -62,22 +60,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     get shouldShowPaymentProcessingErrors() {
         return this.isElevateCustomer.data;
-    }
-
-    get processedGiftsCount() {
-        return this.batchTotals?.PROCESSED;
-    }
-
-    get failedGiftsCount() {
-        return this.batchTotals?.FAILED;
-    }
-
-    get failedPaymentsCount() {
-        return this.batchTotals?.FAILED_PAYMENT;
-    }
-
-    get totalGiftsCount() {
-        return this.batchTotals?.TOTAL;
     }
 
     handleClick(event) {
