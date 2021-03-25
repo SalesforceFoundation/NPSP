@@ -48,4 +48,8 @@ public with sharing class NPSP_Contact {
         contact.Current_Address__c = anAddress.getRecord().Id;
         anAddress.copyOntoSObject(getRecord(), 'Mailing','npe01__Primary_Address_Type__c');
     }
+
+    public Boolean isAddressOverride() {
+        return contact.is_Address_Override__c;
+    }
 }
