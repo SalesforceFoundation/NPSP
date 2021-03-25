@@ -36,6 +36,17 @@
 */
 public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles Address Management.
     * 	Rules:
@@ -89,7 +100,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // BEFORE UPDATE
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isContactAddressChanged(newRecord, oldRecord)) {
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && contactService.isContactAddressChanged(newRecord, oldRecord)) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
             }
@@ -129,7 +140,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     if (con.is_Address_Override__c)
                         // track which address's need their dates updated
                         mapAddrIdIsOverride.put(con.Current_Address__c, true);
-                } else if (isContactAddressEmpty(con) && acctHasAddress) {
+                } else if (contactService.isContactAddressEmpty(con) && acctHasAddress) {
                 	// if the contact has no address specified and the household has a default address, pick up the hh default.
                     listConAddrReset.add(con);
                 }
@@ -166,7 +177,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// new highest priority! if Account changes... 
                 if (acctChanged) {
                     // if no override, refill from the Default Address
-            	    if (!con.is_Address_Override__c && !isContactAddressChanged(con, conOld)) {
+            	    if (!con.is_Address_Override__c && !contactService.isContactAddressChanged(con, conOld)) {
                         if (acctHasAddress) { // refresh address if the contact does not have one and account does
                             listConAddrReset.add(con);
                         }
@@ -185,7 +196,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 	            	
 	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
 	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c && 
-	            	    !isContactAddressChanged(con, conOld)) {
+	            	    !contactService.isContactAddressChanged(con, conOld)) {
 	                    listConAddrReset.add(con);
 	                    if (conOld.Current_Address__c != null)
 	                        // track which address's need their dates updated
@@ -223,7 +234,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (isContactAddressChanged(con, conOld) || (acctChanged && !isContactAddressEmpty(con))) {
+                if (contactService.isContactAddressChanged(con, conOld) || (acctChanged && !contactService.isContactAddressEmpty(con))) {
                     setConCreateAddr.add(con);
                 }
             }
@@ -318,61 +329,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
     }
 
-    /*******************************************************************************************************
-    * @description compares two contacts' addresses
-    * @param con1 a Contact
-    * @param con2 a Contact
-    * @return boolean. true if the Mailing Address fields have changed 
-    ********************************************************************************************************/
-    private boolean isContactAddressChanged(Contact con1, Contact con2) {
-    	// if both null, no change
-        if (con1 == null && con2 == null) 
-           return false;
-
-        // if one null, make sure other has at least one address field set
-        if (con1 == null || con2 == null) {
-        	if (con1 == null) 
-        	   con1 = con2;
-        	return (!isContactAddressEmpty(con1) ||
-	           con1.npe01__Primary_Address_Type__c != null);
-        }
-        
-        // both provided, so look for at least one change between address fields
-        boolean isChanged = 
-           !Addresses.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
-           !Addresses.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
-           !Addresses.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
-           !Addresses.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
-           !Addresses.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
-           !Addresses.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
-           
-        if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
-            isChanged = 
-                !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) ||
-                !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
-        }    
-        return isChanged;   
-    }
-    
-    /*******************************************************************************************************
-    * @description returns whether the contact's mailing address is empty
-    * @param con1 a Contact
-    * @return boolean. true if the Mailing Address fields are all empty 
-    ********************************************************************************************************/
-    private boolean isContactAddressEmpty(Contact con1) {
-        boolean isEmpty = 
-            con1.MailingStreet == null &&
-            con1.MailingCity == null &&
-            con1.MailingState == null &&
-            con1.MailingPostalCode == null &&
-            // note that we decided to ignore country so that a default value won't create unnecessary address objects
-            (con1.MailingCountry == null || Addresses.isStateCountryPicklistsEnabled) &&
-            // only test StateCode if picklists enabled.
-            (!Addresses.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
-        return isEmpty;
-           
-    }
-       
     /*******************************************************************************************************
     * @description Creates a new address or matches an existing one, for each Contact.
     * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
