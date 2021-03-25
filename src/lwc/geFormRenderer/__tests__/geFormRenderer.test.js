@@ -1,22 +1,20 @@
 import { createElement } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
-import { createApexTestWireAdapter } from '@salesforce/wire-service-jest-util';
-import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
-import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormRenderer from 'c/geFormRenderer';
+import GeLabelService from 'c/geLabelService';
+
+import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
+import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
+import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
+
 import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
-import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
-import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
-import GeLabelService from 'c/geLabelService';
-import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
-import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
+import { mockGetIframeReply } from 'c/psElevateTokenHandler';
+
 const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
 const dataImportObjectInfo = require('./data/dataImportObjectInfo.json');
-import psElevateTokenHandler, { mockIframeSendMessage, mockGetIframeReply } from "c/psElevateTokenHandler";
 
 describe('c-ge-form-renderer', () => {
 
@@ -74,8 +72,8 @@ describe('c-ge-form-renderer', () => {
         element.addEventListener('submit', mockSubmit);
 
         return flushPromises().then(() => {
-            const btns = element.shadowRoot.querySelectorAll('lightning-button');
-            btns[1].click();
+            const saveButton = element.shadowRoot.querySelectorAll('lightning-button')[1];
+            saveButton.click();
             return flushPromises().then(() => {
                 expect(element).toMatchSnapshot();
             });
@@ -125,11 +123,16 @@ describe('c-ge-form-renderer', () => {
             Payment_Method__c: "Credit Card",
             Payment_Status__c: "PENDING"
         };
-        retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
-        mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
-        mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
+
+        retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+        mockCheckInputValidity.mockReturnValue(true); // lightning-inputs always report they are valid
+        mockCheckComboboxValidity.mockReturnValue(true); // lightning-comboboxes always report they are valid
+
         mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+            // if message action is "createToken", reply with dummy token immediately
+            // instead of trying to hook into postMessage
+            // see sendIframeMessage in mocked psElevateTokenHandler
             if (message.action === 'createToken') {
                 return {"type": "post__npsp", "token": "a_dummy_token"};
             }
@@ -147,10 +150,10 @@ describe('c-ge-form-renderer', () => {
         });
 
         return flushPromises().then(() => {
-            const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
+            const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
 
-            const sectionWithWidget = sections[0];
-            expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy(); // widget in first section
+            expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
+
             dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
             dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
             dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
@@ -167,6 +170,7 @@ describe('c-ge-form-renderer', () => {
             // so when save button is clicked those fields are populated
             const saveButton = element.shadowRoot.querySelectorAll('lightning-button')[1];
             saveButton.click();
+
             return flushPromises().then(() => {
 
                 expect(sendPurchaseRequest).toHaveBeenCalledTimes(1);
@@ -180,7 +184,15 @@ describe('c-ge-form-renderer', () => {
                 expect(upsertDataImport).toHaveBeenLastCalledWith({
                     dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
                 });
-            })
+
+                // first name should not be present in upsert request if not on template
+                expect(upsertDataImport).toHaveBeenLastCalledWith({
+                    dataImport: expect.not.objectContaining({
+                        Contact1_Firstname__c: expect.anything(),
+                        Contact1_LastName__c: expect.anything()
+                    })
+                });
+            });
         });
     });
 });
