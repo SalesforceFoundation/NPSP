@@ -1,6 +1,5 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import { refreshApex } from '@salesforce/apex';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
@@ -20,16 +19,25 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     @api batchId;
     @api isPermissionError;
 
+    @track batchTotals = {}
+
     connectedCallback() {
-        registerListener('geBatchGiftEntryTableChangeEvent', this.handleTableChange, this);
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        this.retrieveBatchTotals();
     }
 
     disconnectedCallback() {
-        unregisterListener('geBatchGiftEntryTableChangeEvent', this.handleTableChange, this);
+        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
 
-    handleTableChange() {
-        refreshApex(this.batchTotals);
+    retrieveBatchTotals() {
+        getGiftBatchTotalsBy({ batchId: this.batchId })
+            .then(totals => {
+                this.batchTotals = totals;
+            })
+            .catch(error => {
+                console.error(error);
+            })
     }
 
     @wire(getRecord, {
@@ -42,11 +50,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
-    @wire(getGiftBatchTotalsBy, { batchId: '$batchId' })
-    batchTotals;
-
     get shouldDisplayDetail() {
-        if (Number(this.batchTotals.data?.TOTAL) > 0 || Number(this.batchTotals.data?.FAILED) > 0) {
+        if (Number(this.batchTotals?.TOTAL) > 0 || Number(this.batchTotals?.FAILED) > 0) {
             return true;
         }
         return false;
@@ -60,19 +65,19 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     }
 
     get processedGiftsCount() {
-        return this.batchTotals.data?.PROCESSED;
+        return this.batchTotals?.PROCESSED;
     }
 
     get failedGiftsCount() {
-        return this.batchTotals.data?.FAILED;
+        return this.batchTotals?.FAILED;
     }
 
     get failedPaymentsCount() {
-        return this.batchTotals.data?.FAILED_PAYMENT;
+        return this.batchTotals?.FAILED_PAYMENT;
     }
 
     get totalGiftsCount() {
-        return this.batchTotals.data?.TOTAL;
+        return this.batchTotals?.TOTAL;
     }
 
     handleClick(event) {

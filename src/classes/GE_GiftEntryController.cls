@@ -41,7 +41,7 @@ public with sharing class GE_GiftEntryController {
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
     private static GiftBatchService giftBatchService = new GiftBatchService();
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }

@@ -8,7 +8,6 @@ import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevate
 
 const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-const getGiftBatchTotalsByAdapter = registerApexTestWireAdapter(getGiftBatchTotalsBy);
 const isElevateCustomerAdapter = registerApexTestWireAdapter(isElevateCustomer);
 
 const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
@@ -18,16 +17,27 @@ const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
     'TOTAL': 20
 };
 
-const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2 = {
-    'PROCESSED': 5,
-    'FAILED': 2,
-    'FAILED_PAYMENT': 3,
-    'TOTAL': 10
+const APEX_GIFT_BATCH_TOTALS_WITHOUT_ROWS = {
+    'PROCESSED': 0,
+    'FAILED': 0,
+    'FAILED_PAYMENT': 0,
+    'TOTAL': 0
 };
+
+jest.mock(
+    "@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy",
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
 
 describe('c-ge-batch-gift-entry-header', () => {
     afterEach(() => {
         clearDOM();
+        jest.clearAllMocks();
     });
 
     function flushPromises() {
@@ -45,6 +55,7 @@ describe('c-ge-batch-gift-entry-header', () => {
 
     describe('getRecord @wire data', () => {
         it('renders user record details', async () => {
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
 
             await flushPromises();
@@ -57,6 +68,7 @@ describe('c-ge-batch-gift-entry-header', () => {
 
     describe('gift entry batch header elements', () => {
         it('should render three action buttons', async () => {
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
 
             await flushPromises();
@@ -65,9 +77,8 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('renders detail row', async () => {
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
-
-            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -75,6 +86,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('does not render detail row', async () => {
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_WITHOUT_ROWS);
             const element = setup();
 
             await flushPromises();
@@ -83,9 +95,9 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('renders detail blocks for records processed and records failed with correct record counts on load', async () => {
-            const element = setup();
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            let element = setup();
 
-            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             isElevateCustomerAdapter.emit(false);
 
             await flushPromises();
@@ -98,19 +110,12 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             const failedGifts = detailBlocks[1].querySelectorAll('p')[1].innerHTML;
             expect(failedGifts).toBe('5');
-
-            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS_2);
-
-            await flushPromises();
-
-            const processedGifts2 = detailBlocks[0].querySelectorAll('p')[1].innerHTML;
-            expect(processedGifts2).toBe('5 / 10');
         });
 
         it('renders detail blocks when elevate is enabled with correct record counts on load', async () => {
+            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
 
-            getGiftBatchTotalsByAdapter.emit(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             isElevateCustomerAdapter.emit(true);
 
             await flushPromises();
