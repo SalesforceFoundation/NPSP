@@ -84,15 +84,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     a new default address, unless they say it is an override
         
         if (isBefore) {
-            Set<Id> setAccountId = new Set<Id>();
+            Set<Id> setAccountId = getSetAccountId(listNew);
             for (Integer i = 0; i < listNew.size(); i++) {
                 Contact newRecord = (Contact) listNew[i];
                 Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
-
-                // need to query account fields we need to look at
-                if (newRecord.AccountId != null) {
-                    setAccountId.add(newRecord.AccountId);
-                }
 
                 // BEFORE INSERT
                 if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -104,11 +99,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
             }
-            mapAccountIdAccount = new Map<Id,Account>([
-                SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
-                FROM Account
-                WHERE Id IN :setAccountId
-            ]);
+            populateAccountMap(mapAccountIdAccount, setAccountId);
         }
        
         integer i = -1;        
@@ -284,6 +275,27 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Set<Id> getSetAccountId(List<SObject> listNew) {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Contact newRecord = (Contact) listNew[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    private void populateAccountMap(Map<Id, Account> mapAccountIdAccount, Set<Id> setAccountId) {
+        mapAccountIdAccount = new Map<Id, Account>([
+                SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
+                FROM Account
+                WHERE Id IN :setAccountId
+        ]);
     }
 
     /*******************************************************************************************************
