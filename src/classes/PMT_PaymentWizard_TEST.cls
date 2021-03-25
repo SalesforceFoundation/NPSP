@@ -505,7 +505,7 @@ private class PMT_PaymentWizard_TEST {
             PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
 
             System.assertNotEquals(null, controller.currentOpp);
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardWriteoffNoAccessMessage);
+            System.assertEquals(false, controller.hasFeatureAccess);
         }
     }
 
@@ -527,7 +527,7 @@ private class PMT_PaymentWizard_TEST {
             PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
 
             System.assertNotEquals(null, controller.currentOpp);
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardPaymentsNoAccessMessage);
+            System.assertEquals(false, controller.hasFeatureAccess);
         }
     }
 
