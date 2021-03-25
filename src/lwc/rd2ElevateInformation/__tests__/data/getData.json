@@ -3,6 +3,6 @@
     "hasFieldPermissions": true,
     "showLastFourDigits": true,
     "showExpirationDate": true,
-    "alert": null,
-    "errorMessage": null
+    "isEditEnabled": true,
+    "alert": null
 }
