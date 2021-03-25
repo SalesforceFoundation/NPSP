@@ -115,6 +115,16 @@ describe('c-ge-form-renderer', () => {
 
 
     it('form without contact firstname when lookup populated and widget in chargeable state then sendPurchaseRequest is called with first name', () => {
+        const EXPECTED_PURCHASE_BODY_PARAMS = '{"firstName":"Hasa","lastName":"FirstName","metadata":{},"amount":1,"paymentMethodToken":"a_dummy_token","paymentMethodType":"CARD"}';
+        const EXPECTED_UPSERT_DATAIMPORT_FIELDS = {
+            Donation_Donor__c: 'Contact',
+            Contact1Imported__c: '003J000001zoYLGIA2',
+            Donation_Date__c: '2021-02-23',
+            Donation_Amount__c: '0.01',
+            Payment_Authorization_Token__c: "a_dummy_token",
+            Payment_Method__c: "Credit Card",
+            Payment_Status__c: "PENDING"
+        };
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
@@ -146,23 +156,31 @@ describe('c-ge-form-renderer', () => {
             dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
             dispatchFormFieldChange(sectionWithWidget, '2021-02-23', 'Donation_Date_de92fcb14');
             dispatchFormFieldChange(sectionWithWidget, DUMMY_CONTACT_ID, 'Contact1Imported__c');
-
-            return flushPromises().then(() => {
-                getRecord.emit(getRecordContact1Imported, config => {
-                    return config.recordId === DUMMY_CONTACT_ID;
-                });
-
-                return flushPromises().then(() => {
-                    const btns = element.shadowRoot.querySelectorAll('lightning-button');
-                    btns[1].click();
-                    return flushPromises().then(() => {
-                        // TODO: assert firstname not in data import
-                        // TODO: assert stuff about sendPurchaseRequest
-                        expect(sendPurchaseRequest).toHaveBeenCalledTimes(1);
-                        expect(upsertDataImport).toHaveBeenCalledTimes(1);
-                    });
-                });
+        }).then(() => {
+            // wire request must exist before we can emit to it
+            // setting Contact1Imported__c will create the wire request
+            getRecord.emit(getRecordContact1Imported, config => {
+                return config.recordId === DUMMY_CONTACT_ID;
             });
+        }).then(() => {
+            // loading the contact causes updates to the form, allow those to resolve
+            // so when save button is clicked those fields are populated
+            const saveButton = element.shadowRoot.querySelectorAll('lightning-button')[1];
+            saveButton.click();
+            return flushPromises().then(() => {
+
+                expect(sendPurchaseRequest).toHaveBeenCalledTimes(1);
+                expect(upsertDataImport).toHaveBeenCalledTimes(1);
+
+                expect(sendPurchaseRequest).toHaveBeenLastCalledWith({
+                    dataImportRecordId: undefined,
+                    requestBodyParameters: EXPECTED_PURCHASE_BODY_PARAMS
+                });
+
+                expect(upsertDataImport).toHaveBeenLastCalledWith({
+                    dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
+                });
+            })
         });
     });
 });
