@@ -3,6 +3,7 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { createApexTestWireAdapter } from '@salesforce/wire-service-jest-util';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
+import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import GeFormRenderer from 'c/geFormRenderer';
 import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
@@ -13,7 +14,8 @@ import GeLabelService from 'c/geLabelService';
 import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
-import psElevateTokenHandler from "c/psElevateTokenHandler";
+const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
+import psElevateTokenHandler, { mockIframeSendMessage } from "c/psElevateTokenHandler";
 
 
 describe('c-ge-form-renderer', () => {
@@ -26,7 +28,6 @@ describe('c-ge-form-renderer', () => {
     it('loads with template', () => {
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
-        debugger;
         document.body.appendChild(element);
         return flushPromises().then(() => {
             expect(retrieveDefaultSGERenderWrapper).toHaveBeenCalledTimes(1);
@@ -117,11 +118,16 @@ describe('c-ge-form-renderer', () => {
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         // This error is specific to this mockRenderWrapperWithNoNames
         // Donor Type, Contact Preferred Email, Donation Date, Donation Amount appear as required
-
+        const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
         mockCheckInputValidity.mockReturnValue(true); // lightning-input is always valid
         mockCheckComboboxValidity.mockReturnValue(true); // lightning-combobox is always valid
-
-        const iframeMessageSpy = jest.spyOn(psElevateTokenHandler, 'sendIframeMessage')
+        mockIframeSendMessage.mockImplementation((iframe, message, targetOrigin) => {
+            if (message.action === 'createToken') {
+                const data = {"type": "post__npsp", "token": "a_dummy_token"};
+                window.postMessage(data, 'https://flow-connect-2738-dev-ed--npsp.vf.force.com');
+            }
+        });
+        // const iframeMessageSpy = jest.spyOn(psElevateTokenHandler, 'sendIframeMessage');
         const element = createElement('c-ge-form-renderer', { is: GeFormRenderer });
         document.body.appendChild(element);
 
@@ -135,12 +141,14 @@ describe('c-ge-form-renderer', () => {
             expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy(); // widget in first section
             dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
             dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
-            dispatchFormFieldChange(sectionWithWidget, '000000000000000001', 'Contact1Imported__c');
             dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
             dispatchFormFieldChange(sectionWithWidget, '2021-02-23', 'Donation_Date_de92fcb14');
+            dispatchFormFieldChange(sectionWithWidget, DUMMY_CONTACT_ID, 'Contact1Imported__c');
 
             return flushPromises().then(() => {
-
+                getRecord.emit(getRecordContact1Imported, config => {
+                    return config.recordId === DUMMY_CONTACT_ID
+                });
                 const { commonPaymentServices } = GeLabelService.CUSTOM_LABELS;
                 const iframeSelector = `iframe[data-id='${commonPaymentServices}']`;
 
@@ -150,22 +158,22 @@ describe('c-ge-form-renderer', () => {
                     iframeSelector
                 );
                 expect(iframeElement.tagName.toLowerCase()).toBe('iframe');
-
-                const btns = element.shadowRoot.querySelectorAll('lightning-button');
-                btns[1].click();
                 return flushPromises().then(() => {
-                    expect(element).toMatchSnapshot();
-                    expect(iframeMessageSpy).lastCalledWith(
-                        expect.any(HTMLIFrameElement),
-                        expect.objectContaining({
-                            action: 'createToken',
-                            params: {
-                                'nameOnCard': null
-                            }
-                        }),
-                        undefined // TODO: This should be the origin URL, but requires additional mocks for the iframe to fully mount
-                    );
-
+                    const btns = element.shadowRoot.querySelectorAll('lightning-button');
+                    btns[1].click();
+                    return flushPromises().then(() => {
+                        expect(element).toMatchSnapshot();
+                        expect(mockIframeSendMessage).lastCalledWith(
+                            expect.any(HTMLIFrameElement),
+                            expect.objectContaining({
+                                action: 'createToken',
+                                params: {
+                                    'nameOnCard': null
+                                }
+                            }),
+                            undefined // TODO: This should be the origin URL, but requires additional mocks for the iframe to fully mount
+                        );
+                    });
                 });
             });
         });

@@ -90,58 +90,16 @@ exports[`c-ge-form-renderer form without contact firstname when lookup populated
       >
         #shadow-root(open)
           <slot />
-        <c-util-page-level-message>
-          #shadow-root(open)
-            <div
-              class="pageLevelErrors"
-              tabindex="-1"
-            >
-              <div
-                aria-live="assertive"
-                class="desktop forcePageError"
-              >
-                <div
-                  class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small"
-                >
-                  <div
-                    class="slds-notify slds-notify_extension slds-notify_toast slds-theme_error"
-                    role="status"
-                  >
-                    <span
-                      class="slds-assistive-text"
-                    >
-                      c.commonAssistiveError
-                    </span>
-                    <div
-                      class="slds-notify__content"
-                    >
-                      <h2
-                        class="slds-text-heading_small"
-                      >
-                        c.commonError
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <slot
-                  name="body"
-                />
-              </div>
-            </div>
-          <ul
-            class="slds-list_dotted slds-text-color_error"
-            slot="body"
-          >
-            <li>
-              <p>
-                c.commonUnknownError
-              </p>
-              <ul
-                class="slds-list_dotted slds-text-color_error"
-              />
-            </li>
-          </ul>
-        </c-util-page-level-message>
+        <div
+          class="spinner-container"
+        >
+          <lightning-spinner>
+            #shadow-root(open)
+          </lightning-spinner>
+          <p
+            class="loading-text slds-text-heading_medium"
+          />
+        </div>
         <c-ge-form-section>
           #shadow-root(open)
             <c-util-expandable-section>
