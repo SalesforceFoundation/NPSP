@@ -1,7 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import CUSTOM_LABELS from './helpers/customLabels';
@@ -46,13 +45,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     get shouldDisplayHeaderDetails() {
         return this.batchTotals.hasValuesGreaterThanZero;
-    }
-
-    @wire(isElevateCustomer)
-    isElevateCustomer
-
-    get shouldShowPaymentProcessingErrors() {
-        return this.isElevateCustomer.data;
     }
 
     handleClick(event) {
