@@ -100,9 +100,8 @@ export default class psElevateTokenHandler {
     registerPostMessageListener(component) {
         const self = this;
         window.onmessage = async function (event) {
-              if (self.shouldHandleMessage(event)) {
-                  console.log('postmessage response', JSON.stringify(event.data, null, 2));
-                  const message = JSON.parse(event.data);
+            if (self.shouldHandleMessage(event)) {
+                const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
         }
@@ -246,8 +245,6 @@ export default class psElevateTokenHandler {
 
 
     sendIframeMessage(iframe, message, targetOrigin) {
-
-        console.log('iframe message: ', JSON.stringify(message, null, 2));
         iframe.contentWindow.postMessage(
             message,
             targetOrigin
