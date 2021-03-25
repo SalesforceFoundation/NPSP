@@ -23,6 +23,7 @@ import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Don
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
+import closeButtonLabel from '@salesforce/label/c.commonClose';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import newHeaderLabel from '@salesforce/label/c.RD2_EntryFormHeader';
 import editHeaderLabel from '@salesforce/label/c.commonEdit';
@@ -70,6 +71,7 @@ export default class rd2EntryForm extends LightningElement {
 
     customLabels = Object.freeze({
         cancelButtonLabel,
+        closeButtonLabel,
         saveButtonLabel,
         donorSectionHeader,
         otherSectionHeader,
