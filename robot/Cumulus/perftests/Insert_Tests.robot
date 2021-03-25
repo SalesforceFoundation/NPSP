@@ -136,7 +136,7 @@ Get 200 Contacts Without Address
 
 Test Setup
     Disable Duplicate Matching
-    Run Keyword And Continue On Failure        Delete Default Data
+    Delete Default Data
 
 Disable Duplicate Matching
     [Documentation]  Disable Salesforce duplicate matching
@@ -146,7 +146,7 @@ Disable Duplicate Matching
 Delete Default Data
     [Documentation]     Delete Entitlement & Associated Records (these are created by default in new scratch orgs)
     Log to Console      Deleting Entitlement Records
-    Run Task            test_data_delete
+    Run keyword and ignore error        Run Task            test_data_delete
         ...     objects=Entitlement,Contact,Account
 
 Disable NPSP Triggers
