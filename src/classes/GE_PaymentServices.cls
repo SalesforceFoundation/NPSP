@@ -150,8 +150,8 @@ public with sharing class GE_PaymentServices {
 
         PurchaseCallBody requestBody = new PurchaseCallBody(
             UserInfo.getDefaultCurrency(),
-            configService.getMerchantIds(),
-            configService.getGatewayIds()
+            getMerchantIds(),
+            getGatewayIds()
         ).applyAll(requestBodyParameters);
 
         return requestBody;
