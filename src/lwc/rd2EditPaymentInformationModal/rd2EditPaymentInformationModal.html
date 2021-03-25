@@ -12,20 +12,21 @@
                 <header class="slds-modal__header slds-clearfix">
                     <lightning-button-icon
                         class="slds-modal__close"
-                        title="Close"
+                        title={labels.closeButtonLabel}
                         icon-name="utility:close"
                         icon-class="slds-button_icon-inverse"
                         onclick={handleClose}
                         onkeydown={handleClosedButtonTrapFocus}
-                        data-id="closeButton">
+                        data-id="closeButton"
+                        disabled={isSaveButtonDisabled}>
                     </lightning-button-icon>
                     <h2
                         class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
-                        {labels.PaymentInformationTitle}
+                        {labels.paymentInformationTitle}
                     </h2>
                 </header>
-                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
 
+                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isSaving}>
                         <div class="slds-grid slds-grid_align-center">
                             <div class="slds-is-relative slds-size_1-of-1">
@@ -49,7 +50,6 @@
                             </c-util-page-level-message>
                         </template>
                     </div>
-                
                     <div class={paymentEditForm}>
                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
                             data-qa-locator='widget Elevate'
@@ -59,10 +59,11 @@
                         </c-rd2-elevate-credit-card-form>
                     </div>
                 </div>
+
                 <footer class="slds-modal__footer slds-clearfix">
                     <div class="slds-float_right">
                         <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
-                            variant="neutral" class="slds-m-right_small" onclick={handleClose}>
+                            variant="neutral" class="slds-m-right_small" onclick={handleClose} disabled={isSaveButtonDisabled}>
                         </lightning-button>
                         <lightning-button label={labels.saveButtonLabel} title={labels.saveButtonLabel} disabled={isSaveButtonDisabled}
                             variant="brand" onclick={handleProcessCommitment} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton">

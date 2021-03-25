@@ -5,9 +5,20 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
 
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
 jest.mock(
-    '@salesforce/apex/RD2_ElevateInformation_CTRL.getData',
+    '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData',
+    () => {
+        return {
+            default: jest.fn(),
+        };
+    },
+    { virtual: true }
+);
+
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+jest.mock(
+    '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage',
     () => {
         return {
             default: jest.fn(),
@@ -75,6 +86,8 @@ describe('c-rd2-elevate-information', () => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(null);
+
             getRecordAdapter.emit(mockGetRecord);
 
             document.body.appendChild(component);
@@ -131,13 +144,13 @@ describe('c-rd2-elevate-information', () => {
     * and an error has been logged for the Recurring Donation.
     */
     describe('on data load when the latest payment failed', () => {
-        let mockGetDataError = JSON.parse(JSON.stringify(mockGetData));
-        mockGetDataError.errorMessage = 'Card declined';
+        const errorMessage = 'Card declined';
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetDataError);
+            getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(errorMessage);
             getRecordAdapter.emit(mockGetRecord);
 
             document.body.appendChild(component);
@@ -145,7 +158,7 @@ describe('c-rd2-elevate-information', () => {
 
         it('should display error icon and message', async () => {
             return global.flushPromises().then(async () => {
-                assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataError.errorMessage);
+                assertStatusIconAndMessage(component, ICON_NAME_ERROR, errorMessage);
 
                 assertNoErrorNotification(component);
             });
@@ -200,6 +213,7 @@ describe('c-rd2-elevate-information', () => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(null);
             getRecordAdapter.emit(mockGetRecordCancelInProgress);
 
             document.body.appendChild(component);
@@ -250,8 +264,7 @@ describe('c-rd2-elevate-information', () => {
     * An error is logged when the commitment create request failed.
     */
     describe('on data load when commitment failed to be created', () => {
-        let mockGetDataFailedCommitment = JSON.parse(JSON.stringify(mockGetData));
-        mockGetDataFailedCommitment.errorMessage = 'Unauthorized endpoint';
+        const errorMessage = 'Unauthorized endpoint';
 
         let mockGetRecordFailedCommitment = JSON.parse(JSON.stringify(mockGetRecord));
         mockGetRecordFailedCommitment.fields[ELEVATE_ID_FIELD_NAME].value = '_PENDING_123TempCommitmentId';
@@ -259,7 +272,8 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetDataFailedCommitment);
+            getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(errorMessage);
             getRecordAdapter.emit(mockGetRecordFailedCommitment);
 
             document.body.appendChild(component);
@@ -267,7 +281,7 @@ describe('c-rd2-elevate-information', () => {
 
         it('should display error status and error notification', async () => {
             return global.flushPromises().then(async () => {
-                assertStatusIconAndMessage(component, ICON_NAME_ERROR, mockGetDataFailedCommitment.errorMessage);
+                assertStatusIconAndMessage(component, ICON_NAME_ERROR, errorMessage);
 
                 assertErrorNotification(component, 'c.geHeaderPageLevelError', 'c.RD2_ElevateRecordCreateFailed');
             });
@@ -310,6 +324,7 @@ describe('c-rd2-elevate-information', () => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetDataNoPermission);
+            getError.mockResolvedValue(null);
             getRecordAdapter.emit(mockGetRecord);
 
             document.body.appendChild(component);
@@ -364,6 +379,7 @@ describe('c-rd2-elevate-information', () => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(null);
             getRecordAdapter.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
@@ -425,6 +441,7 @@ describe('c-rd2-elevate-information', () => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetDataNoElevate);
+            getError.mockResolvedValue(null);
             getRecordAdapter.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
