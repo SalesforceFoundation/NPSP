@@ -123,6 +123,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (SObject so : listNew) {
             i++;  
             Contact con = (Contact)so;
+            Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
             // we only support address management with HH Accounts being used
             if (con.AccountId == null)
@@ -136,9 +138,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
                 continue;
             }
-
-            Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
-            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
             // BEFORE UPDATE
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
