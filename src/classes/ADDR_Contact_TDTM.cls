@@ -182,20 +182,22 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	} else {
             	
 	                // highest priority. if they are changing to a new Current Address, refill from it.
-	            	if (con.Current_Address__c != conOld.Current_Address__c && con.Current_Address__c != null) {
+	            	if (npspContact.currentAddressChanged() &&
+                            npspContact.currentAddress() != null) {
 	                    useCurrentAddressQueue.add(con);
-	                    if (con.is_Address_Override__c)
+	                    if (npspContact.isAddressOverride())
 	                        // track which address's need their dates updated
-	                        isOverrideByAddressId.put(con.Current_Address__c, true);
+	                        isOverrideByAddressId.put(npspContact.currentAddress(), true);
 	            	}
 	            	
 	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
-	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c && 
-	            	    !contactService.isContactAddressChanged(con, conOld)) {
+	            	if (npspContact.addressOverrideChanged() && !npspContact.isAddressOverride() &&
+	            	    !npspContact.isAddressChanged()) {
 	                    addressRefreshQueue.add(con);
-	                    if (conOld.Current_Address__c != null)
+                        NPSP_Contact npspContactOld = new NPSP_Contact(conOld);
+	                    if (npspContactOld.currentAddress() != null)
 	                        // track which address's need their dates updated
-	                        isOverrideByAddressId.put(conOld.Current_Address__c, false);
+	                        isOverrideByAddressId.put(npspContactOld.currentAddress(), false);
 	            	}
 	            	
 	                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
@@ -229,8 +231,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (contactService.isContactAddressChanged(con, conOld) || (npspContact.accountChanged() &&
-                        !contactService.isContactAddressEmpty(con))) {
+                if (npspContact.isAddressChanged() || (npspContact.accountChanged() &&
+                        !npspContact.isAddressEmpty())) {
                     addressCreationQueue.add(con);
                 }
             }
@@ -283,22 +285,21 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
 
     private Boolean isInHouseholdAccount(Contact con, Map<Id, Account> mapAccountIdAccount) {
-        Boolean isInHouseholdAccount = true;
         if (con.AccountId == null) {
-            isInHouseholdAccount = false;
+            return false;
         }
         if (con.HHId__c != con.AccountId) {
-            isInHouseholdAccount = false;
+            return false;
         }
         Account a = mapAccountIdAccount.get(con.AccountId);
-        if (isNotHouseholdAccount(a)) {
-            isInHouseholdAccount = false;
+        if (!isHouseholdAccount(a)) {
+            return false;
         }
-        return isInHouseholdAccount;
+        return true;
     }
 
-    private Boolean isNotHouseholdAccount(Account a) {
-        return a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE;
+    private Boolean isHouseholdAccount(Account a) {
+        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private Boolean accountHasAddresses(Map<Id, Account> mapAccountIdAccount, Contact con) {

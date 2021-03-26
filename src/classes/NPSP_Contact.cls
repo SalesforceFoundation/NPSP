@@ -66,6 +66,10 @@ public with sharing class NPSP_Contact {
         anAddress.copyOntoSObject(getRecord(), 'Mailing','npe01__Primary_Address_Type__c');
     }
 
+    public Id currentAddress() {
+        return contact.Current_Address__c;
+    }
+
     public Boolean isAddressOverride() {
         return contact.is_Address_Override__c;
     }
@@ -75,6 +79,19 @@ public with sharing class NPSP_Contact {
     }
 
     public Boolean isAddressChanged() {
-        return !contactService.isContactAddressChanged(contact, oldContact);
+        return contactService.isContactAddressChanged(contact, oldContact);
     }
+
+    public Boolean isAddressEmpty() {
+        return contactService.isContactAddressEmpty(contact);
+    }
+
+    public Boolean addressOverrideChanged() {
+        return contact.is_Address_Override__c != oldContact.is_Address_Override__c;
+    }
+
+    public Boolean currentAddressChanged() {
+        return contact.Current_Address__c != oldContact.Current_Address__c;
+    }
+
 }
