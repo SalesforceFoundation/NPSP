@@ -83,25 +83,21 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 normalizeLineBreaks(listNew);
 
                 Contacts contacts = new Contacts(listNew);
-                integer i = -1;
-                for (SObject so : contacts.getRecords()) {
-                    i++;
+                // we only support address management with HH Accounts being used
+                for (SObject so :
+                        contacts.contactsInHouseholdAccounts(mapAccountIdAccount).getRecords()) {
                     Contact con = (Contact) so;
+                    NPSP_Contact npspContact=new NPSP_Contact(con);
 
-                    // we only support address management with HH Accounts being used
-                    if (!isInHouseholdAccount(con, mapAccountIdAccount)) {
-                        continue;
-                    }
-
-                    acctHasAddress = accountHasAddresses(mapAccountIdAccount, con);
-                    if (con.Current_Address__c != null) {
+                    acctHasAddress = accountHasAddresses(mapAccountIdAccount, npspContact.getRecord());
+                    if (npspContact.currentAddress() != null) {
                         // remember which contacts will need their address set
                         useCurrentAddressQueue.add(con);
-                        if (con.is_Address_Override__c) {
+                        if (npspContact.isAddressOverride()) {
                             // track which address's need their dates updated
-                            isOverrideByAddressId.put(con.Current_Address__c, true);
+                            isOverrideByAddressId.put(npspContact.currentAddress(), true);
                         }
-                    } else if (contactService.isContactAddressEmpty(con) && acctHasAddress) {
+                    } else if (npspContact.isAddressEmpty() && acctHasAddress) {
                         // if the contact has no address specified and the household has a default address, pick up the hh default.
                         addressRefreshQueue.add(con);
                     }
@@ -281,24 +277,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
-    }
-
-    private Boolean isInHouseholdAccount(Contact con, Map<Id, Account> mapAccountIdAccount) {
-        if (con.AccountId == null) {
-            return false;
-        }
-        if (con.HHId__c != con.AccountId) {
-            return false;
-        }
-        Account a = mapAccountIdAccount.get(con.AccountId);
-        if (!isHouseholdAccount(a)) {
-            return false;
-        }
-        return true;
-    }
-
-    private Boolean isHouseholdAccount(Account a) {
-        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private Boolean accountHasAddresses(Map<Id, Account> mapAccountIdAccount, Contact con) {

@@ -269,4 +269,36 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
     }
+
+    public Contacts contactsInHouseholdAccounts(Map<Id,Account> mapAccountIdAccount) {
+        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
+        integer i = -1;
+        for (SObject so : getRecords()) {
+            i++;
+            Contact con = (Contact) so;
+            if (isInHouseholdAccount(con, mapAccountIdAccount)) {
+                contactsInHouseholdAccounts.add(con);
+            }
+        }
+        return new Contacts(contactsInHouseholdAccounts);
+    }
+
+    private Boolean isInHouseholdAccount(Contact con, Map<Id, Account> mapAccountIdAccount) {
+        if (con.AccountId == null) {
+            return false;
+        }
+        if (con.HHId__c != con.AccountId) {
+            return false;
+        }
+        Account a = mapAccountIdAccount.get(con.AccountId);
+        if (!isHouseholdAccount(a)) {
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean isHouseholdAccount(Account a) {
+        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
 }
