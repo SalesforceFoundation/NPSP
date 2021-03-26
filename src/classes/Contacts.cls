@@ -276,21 +276,21 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (SObject so : getRecords()) {
             i++;
             Contact con = (Contact) so;
-            if (isInHouseholdAccount(con, mapAccountIdAccount)) {
+            if (isInHouseholdAccount(new NPSP_Contact(con), mapAccountIdAccount)) {
                 contactsInHouseholdAccounts.add(con);
             }
         }
         return new Contacts(contactsInHouseholdAccounts);
     }
 
-    private Boolean isInHouseholdAccount(Contact con, Map<Id, Account> mapAccountIdAccount) {
-        if (con.AccountId == null) {
+    private Boolean isInHouseholdAccount(NPSP_Contact npspContact, Map<Id, Account> mapAccountIdAccount) {
+        if (!npspContact.hasAccount()) {
             return false;
         }
-        if (con.HHId__c != con.AccountId) {
+        if (npspContact.householdAndAccountDiffer()) {
             return false;
         }
-        Account a = mapAccountIdAccount.get(con.AccountId);
+        Account a = mapAccountIdAccount.get(npspContact.accountId());
         NPSP_Account npspAccount = new NPSP_Account(a);
         if (!npspAccount.isHouseholdAccount()) {
             return false;

@@ -102,4 +102,8 @@ public with sharing class NPSP_Contact {
         return contact.HHId__c != contact.AccountId;
     }
 
+    public Id accountId() {
+        return contact.AccountId;
+    }
+
 }
