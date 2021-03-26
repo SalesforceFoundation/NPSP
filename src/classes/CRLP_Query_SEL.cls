@@ -82,6 +82,10 @@ public inherited sharing class CRLP_Query_SEL {
         // to the Set of strings (enforcing uniqueness)
         String contactRelField = UTIL_Namespace.StrAllNSPrefix('Contact__c');
         Set<String> queryFields = new Set<String>{'Id'};
+        if (resultObject == Account.SObjectType || resultObject == Contact.SObjectType) {
+            // Add field specifying skew mode
+            queryFields.add(UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c'));
+        }
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             queryFields.add(dfr.getName());
             // Special conditions - these are foreign key fields that are supported in filters for record type and user

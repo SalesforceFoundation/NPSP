@@ -1562,6 +1562,16 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>CustomizableRollups_UseSkewMode__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, Customizable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, Customizable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</inlineHelpText>
+        <label>Customizable Rollups: Force Skew Mode</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Deceased__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</description>
