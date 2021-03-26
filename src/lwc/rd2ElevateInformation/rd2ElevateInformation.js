@@ -35,10 +35,11 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
-import UpdatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
 const FIELDS = [
     FIELD_NAME,
@@ -81,7 +82,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         elevateRecordCreateFailed,
         commonUnknownError,
         viewErrorLogLabel,
-        UpdatePaymentInformation,
+        updatePaymentInformation,
         commonExpirationDate
     });
 
@@ -98,6 +99,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     @track isLoading = true;
     @track isElevateCustomer;
+    @track isEditEnabled = false;
     @track isElevateRecord = false;
     @track isElevateConnected = false;
     @track showLastFourACH = false;
@@ -145,6 +147,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
+                    this.isEditEnabled = response.isEditEnabled;
 
                     this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
@@ -167,8 +170,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                                 detail: this.labels.flsErrorDetail
                             });
 
-                        } else if (!isNull(response.errorMessage)) {
-                            this.setErrorStatus(response.errorMessage);
+                        } else {
+                            this.getLatestErrorMessage();
                         }
                     }
                 })
@@ -226,6 +229,23 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         }
     }
 
+    /**
+    * @description Get the lateset relevant error message for the Elevate Recurring Donation 
+    */
+    getLatestErrorMessage() {
+        getError({recordId: this.recordId})
+            .then(response => {
+                if (!isNull(response)) {
+                    this.setErrorStatus(response);
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            })
+            .finally(() => {
+                this.checkLoading();
+            });
+    }
     /***
      * @description Checks if record detail page or user has access to the Elevate Information data fields
      */
@@ -466,7 +486,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     * @description data-qa-locator values for elements on the component
     */
     get qaLocatorHeader() {
-        return `text ${this.labels.header}`;
+        return `text Header`;
     }
 
     get qaLocatorError() {
@@ -474,7 +494,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     get qaLocatorSpinner() {
-        return `spinner ${this.labels.loadingMessage}`;
+        return `spinner Loading Message`;
     }
 
     get qaLocatorNoAccessIllustration() {
@@ -502,7 +522,15 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     get qaLocatorCommitmentId() {
-        return `text ${this.fields.commitmentId.label}`;
+        return `text Elevate Recurring Id`;
+    }
+
+    get qaLocatorLastFourDigits() {
+        return `text Last Four Digits`;
+    }
+
+    get qaLocatorExpirationDate() {
+        return `text Expiration Date`;
     }
 
     get qaLocatorLastFourDigits() {
@@ -514,11 +542,15 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     get qaLocatorNewWindow() {
-        return `link ${this.labels.textNewWindow}`;
+        return `link New Window`;
     }
 
     get qaLocatorViewErrorLog() {
-        return `link ${this.labels.viewErrorLogLabel}`;
+        return `link View Error Log`;
+    }
+
+    get qaLocatorUpdatePaymentInformation() {
+        return `link Update Payment Information`;
     }
 
     get qaLocatorUpdatePaymentInformation() {

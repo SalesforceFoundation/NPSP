@@ -2468,7 +2468,7 @@
         <shortDescription>Error when Recurring Donation Status picklist value Paused does not exist</shortDescription>
         <value>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>RD2_PaymentInformation</fullName>
         <categories>Recurring-Donations, Elevate</categories>
         <language>en_US</language>
