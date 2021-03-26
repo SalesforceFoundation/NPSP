@@ -60,16 +60,16 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @param objResult the describe for Contacts 
     * @return dmlWrapper.  
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
+    Map<Id,Account> mapAccountIdAccount = null;
+    DmlWrapper dmlWrapper = new DmlWrapper();
+    list<Contact> useCurrentAddressQueue = new list<Contact>();
+    Set<Contact> addressCreationQueue = new Set<Contact>();
+    map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+    list<Contact> addressRefreshQueue = new list<Contact>();
+
+    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        DmlWrapper dmlWrapper = new DmlWrapper();        
-        list<Contact> useCurrentAddressQueue = new list<Contact>();
-        Set<Contact> addressCreationQueue = new Set<Contact>();
-        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
-        list<Contact> addressRefreshQueue = new list<Contact>();
-        Map<Id,Account> mapAccountIdAccount = null;
-        boolean acctHasAddress = false;
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
 
         // bail out if address mgmt turned off.
@@ -78,8 +78,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
-                Set<Id> setAccountId = getSetAccountId(listNew);
-                mapAccountIdAccount = getAccountMap(setAccountId);
+                mapAccountIdAccount = getAccountMap(getSetAccountId(listNew));
                 normalizeLineBreaks(listNew);
 
                 Contacts contacts = new Contacts(listNew);
@@ -88,6 +87,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         contacts.contactsInHouseholdAccounts(mapAccountIdAccount).getRecords()) {
                     Contact con = (Contact) so;
                     NPSP_Contact npspContact=new NPSP_Contact(con);
+                    boolean acctHasAddress = false;
 
                     acctHasAddress = accountHasAddresses(mapAccountIdAccount, npspContact.getRecord());
                     if (npspContact.currentAddress() != null) {
@@ -104,8 +104,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
             }
             when BeforeUpdate {
-                Set<Id> setAccountId = getSetAccountId(listNew);
-                mapAccountIdAccount = getAccountMap(setAccountId);
+                mapAccountIdAccount = getAccountMap(getSetAccountId(listNew));
                 normalizeLineBreaksForContactsWithChangedAddresses(listNew, listOld);
             }
         }
@@ -123,6 +122,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             Contact con = (Contact)so;
             Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
             NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+            boolean acctHasAddress = false;
 
             if (!isBefore && npspContact.householdAndAccountDiffer()){
                 continue;
