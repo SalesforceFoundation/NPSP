@@ -94,4 +94,12 @@ public with sharing class NPSP_Contact {
         return contact.Current_Address__c != oldContact.Current_Address__c;
     }
 
+    public Boolean hasAccount() {
+        return contact.AccountId != null;
+    }
+
+    public Boolean householdAndAccountDiffer() {
+        return contact.HHId__c != contact.AccountId;
+    }
+
 }

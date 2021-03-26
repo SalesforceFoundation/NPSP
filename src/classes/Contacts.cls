@@ -301,4 +301,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
+    public Contacts thatHaveAccounts() {
+        List<Contact> contacts = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact(con);
+            if (!npspContact.hasAccount()) {
+                continue;
+            }
+            contacts.add(con);
+        }
+        return new Contacts(contacts);
+    }
+
 }

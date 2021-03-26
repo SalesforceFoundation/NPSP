@@ -114,19 +114,20 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // updating an existing contact - make their address a new default address, unless they say it is an override
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
-        
+
+        Contacts contacts = new Contacts(listNew, listOld);
         integer i = -1;
-        for (SObject so : listNew) {
-            i++;  
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+            i++;
             Contact con = (Contact)so;
             Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
             NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
-            // we only support address management with HH Accounts being used
-            if (con.AccountId == null)
+            if (!isBefore && npspContact.householdAndAccountDiffer()){
                 continue;
-            if (!isBefore && (con.HHId__c != con.AccountId))
-                continue;
+            }
+
             if (isBefore) {
                 acctHasAddress = (mapAccountIdAccount.containsKey(con.AccountId)
                     && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
@@ -250,8 +251,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // reset the mailing address for contacts who no longer have an address override
         if (addressRefreshQueue.size() > 0) {
-            Contacts contacts = new Contacts(addressRefreshQueue);
-            contacts.resetAddresses();
+            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            contactsForAddressRefresh.resetAddresses();
         }
         
         // update the Latest date fields on any address overrides
