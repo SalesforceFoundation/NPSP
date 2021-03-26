@@ -887,6 +887,7 @@
     </types>
     <types>
         <members>Account.Batch__c</members>
+        <members>Account.CustomizableRollups_UseSkewMode__c</members>
         <members>Account.Funding_Focus__c</members>
         <members>Account.Grantmaker__c</members>
         <members>Account.Matching_Gift_Administrator_Name__c</members>
@@ -993,6 +994,7 @@
         <members>Contact.Address_Verification_Status__c</members>
         <members>Contact.Batch__c</members>
         <members>Contact.Current_Address__c</members>
+        <members>Contact.CustomizableRollups_UseSkewMode__c</members>
         <members>Contact.Deceased__c</members>
         <members>Contact.Do_Not_Contact__c</members>
         <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
