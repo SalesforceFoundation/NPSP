@@ -132,4 +132,75 @@ private class CRLP_Rollup_SVC_TEST {
         a2.Description = 'This field should be ignored';
         System.assertEquals(false, CRLP_Rollup_TDTM.isRollupRecalcNeeded(a1, a2), 'Objects should be identical again');
     }
+
+    /**
+     * @description Verify that records identified as skew mode needed when force skew flag is set true. Test only
+     * validates whether CustomizableRollups_UseSkewMode__c is honored appropriately.
+     */
+    @IsTest
+    static void shouldShowRecordsNeedSkewRollupMethodWhenSkewModeFlagIsTrue() {
+
+        Test.startTest();
+        Account acc = buildAccount(true);
+        insert acc;
+        Contact con = buildContact(acc.Id, true);
+        insert con;
+        Test.stopTest();
+
+        Boolean accNeedsSkew =
+            CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(acc.Id, CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+        Boolean conNeedsSkew =
+            CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(con.Id, CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
+
+        System.assertEquals(true, accNeedsSkew, 'Account record should need skew rollup method.');
+        System.assertEquals(true, conNeedsSkew, 'Contact record should need skew rollup method.');
+    }
+
+    /**
+     * @description Verify that records not identified as skew mode needed when force skew flag is set false.  Test only
+     * validates whether CustomizableRollups_UseSkewMode__c is honored appropriately.
+     */
+    @IsTest
+    static void shouldShowRecordsDoNotNeedSkewRollupMethodWhenSkewModeFlagIsFalse() {
+
+        Test.startTest();
+        Account acc = buildAccount(false);
+        insert acc;
+        Contact con = buildContact(acc.Id, false);
+        insert con;
+        Test.stopTest();
+
+        Boolean accNeedsSkew =
+                CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(acc.Id, CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+        Boolean conNeedsSkew =
+                CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(con.Id, CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
+
+        System.assertEquals(false, accNeedsSkew, 'Account record should not need skew rollup method.');
+        System.assertEquals(false, conNeedsSkew, 'Contact record should not need skew rollup method.');
+    }
+
+    /// Helpers
+
+    /**
+     * @description Instantiate a single mock account that will not be inserted
+     * @return Account
+     */
+    private static Account buildAccount(Boolean skewFlag) {
+        return new Account(
+            Name = 'TestAccount',
+            CustomizableRollups_UseSkewMode__c = skewFlag
+        );
+    }
+
+    /**
+     * @description Instantiate a single mock contact that will not be inserted
+     * @return Contact
+     */
+    private static Contact buildContact(Id acctId, Boolean skewFlag) {
+        return new Contact(
+            AccountId = acctId,
+            LastName = 'TestContact',
+            CustomizableRollups_UseSkewMode__c = skewFlag
+        );
+    }
 }
