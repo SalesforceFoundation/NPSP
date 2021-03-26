@@ -794,6 +794,16 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>CustomizableRollups_UseSkewMode__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, Customizable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, Customizable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</inlineHelpText>
+        <label>Customizable Rollups: Force Skew Mode</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Funding_Focus__c</fullName>
         <description>The general program area(s) that this organization funds.</description>
         <externalId>false</externalId>

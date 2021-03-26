@@ -506,6 +506,69 @@ private class CRLP_RollupProcessor_TEST {
             'The total of closed opportunities for this Account should be 1100, which includes the 1000 from external data');
     }
 
+    /**
+     * @description Verify that skew mode flag is set true when running in skew mode. Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     */
+    @IsTest
+    static void shouldSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        account.CustomizableRollups_UseSkewMode__c = false;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(true, updatedAcct.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should be set true if currently false and running in skew mode.');
+    }
+
+    /**
+     * @description Verify that skew mode flag is not updated if already set true.  Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     */
+    @IsTest
+    static void shouldNotUpdateUpdateRecordWhenSkewModeFlagIsAlreadyTrue() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        account.CustomizableRollups_UseSkewMode__c = true;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(null, updatedAcct,
+            'Account should not be updated if CustomizableRollups_UseSkewMode__c is already true.');
+    }
+
+    /**
+     * @description Verify that skew mode flag is not updated if running in non skew mode.  Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     */
+    @IsTest
+    static void shouldNotSetSkewModeFlagTrueWhenInNonSkewMode() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        account.CustomizableRollups_UseSkewMode__c = false;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(null, updatedAcct,
+            'Account should not be updated if running in non skew mode.');
+    }
+
     // **************************** HELPER METHODS ****************************
 
     /**
