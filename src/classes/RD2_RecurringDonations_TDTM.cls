@@ -250,22 +250,22 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    @TestVisible
-    private void adjustDataAndValidate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+    public void adjustDataAndValidate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
         ) {
             return;
         }
-        
-        RD2_DataRegulationService dataService = new RD2_DataRegulationService(currentDate);        
-        dataService.adjust(rds, oldRds); 
 
-        List<RD2_ValidationService.Notification> notifications = dataService.validate(rds, oldRds);
-        
-        for (RD2_ValidationService.Notification notification : notifications) {
-            notification.getRecord().addError(notification.getErrors()[0]);
+        new RD2_DataRegulationService(currentDate)
+            .adjust(rds, oldRds);
+
+        List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
+            .validate();
+
+        for (RD2_ValidationService.ErrorRecord errorRd : errorRds) {
+            errorRd.getRecord().addError(errorRd.getFirstError());
         }
     }
     

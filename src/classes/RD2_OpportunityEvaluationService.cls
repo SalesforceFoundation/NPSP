@@ -188,7 +188,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         set;
     }
 
-
     /**
      * @description Recurring Donation Id's to be processed
      */
@@ -208,7 +207,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> rds {
         get {
             if (rds == null && rdIds != null) {
-                rds = queryService.getRecurringDonationsWithRelatedLists(this.rdIds, startDate);
+                rds = queryService.getRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate);
             }
             return rds;
         } set;
@@ -226,7 +225,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return newRDIds;
         } set;
     }
-
 
     /**
     * @description Recurring Donation Ids for which schedule has been changed
@@ -501,7 +499,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
 
         Set<String> queryFields = new Set<String>{ 'Id' };
-        queryFields.add(queryService.getOpportunitySubQuery(startDate));
+        queryFields.add(queryService.getOpportunitySubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -515,7 +513,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     
         return oppsByRDId;
     }
-
 
     /**
     * @description Determines which Recurring Donations are new
@@ -572,5 +569,4 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         return paidInstallmentsByRDId;
     }
-    
 }

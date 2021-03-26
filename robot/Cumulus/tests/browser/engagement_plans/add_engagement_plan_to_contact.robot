@@ -25,7 +25,7 @@ Create a Contact and Add Engagement Plan
     [Documentation]                      Create an Engagement plan Template with two tasks and one subtask. And  a contact
     ...                                  Link the  engagement plan for the contact and verify
     ...                                  There is one engagement plan set up for the contact
-    [tags]                               W-038641                 feature:Engagements   unstable
+    [tags]                               W-038641                 feature:Engagements               unstable
 
 
     Go To Page                                       Listing                            Engagement_Plan_Template__c
@@ -52,6 +52,7 @@ Create a Contact and Add Engagement Plan
     Select Tab                                       Related
     Click Related List Button                        Engagement Plans               New
     Wait Until Modal Is Open
+    Sleep                                            1
     Populate Lookup Field                            Engagement Plan Template       Automation_Plan
     Click Button                                     Save
     Wait Until Modal Is Closed

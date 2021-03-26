@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020 Salesforce.org
+    Copyright (c) 2021 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,18 +29,16 @@
 */
 /**
 * @author Salesforce.org
-* @date 2020
+* @date 2021
 * @group Recurring Donations
 * @description Recurring Donation query helper service
 *
 */
 public inherited sharing class RD2_QueryService {
-
     /***
      * @description CurrencyIsoCode field name
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
-
 
     /***
     * @description Determines if multi-currency is enabled for the org
@@ -106,7 +104,6 @@ public inherited sharing class RD2_QueryService {
         String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
         String.valueOf(npe03__Recurring_Donation__c.Status__c)
     };
-    
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
@@ -114,19 +111,21 @@ public inherited sharing class RD2_QueryService {
      * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
      * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
      * @param rdIds Recurring Donation Ids
+     * @param startDate offset by the Next Donation Date match days before the year start date
+     *      so past Opportunities matching future projected installments are returned.
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
-    public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedLists(Set<Id> rdIds, Date startDate) {
+    public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
         queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
         queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
-        queryFields.add(getOpportunitySubQuery(startDate));
+        queryFields.add(getOpportunitySubQuery());
         queryFields.add(getScheduleSubQuery());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
-            queryFields.add(CURRENCY_ISO_CODE_FIELD);
+            queryFields.add('CurrencyIsoCode');
         }
 
         String soql = new UTIL_Query()
@@ -180,7 +179,7 @@ public inherited sharing class RD2_QueryService {
      * @description Returns query on Opportunity required to verify, create or update the Opportunity record
      * @return String Opportunity subquery used in the Recurring Donation SOQL
      */
-    public String getOpportunitySubQuery(Date startDate) {
+    public String getOpportunitySubQuery() {
         //Return Recurring Donations'
         //open Opps regardless of the Close Date
         //and Opps with Close Date >= current date regardless if closed or open
@@ -203,7 +202,8 @@ public inherited sharing class RD2_QueryService {
             .withSelectFields(oppSubqueryFields)
             .withFrom('npe03__Donations__r')
             .withWhere(
-                'IsClosed = false OR CloseDate >= :startDate '
+                'IsClosed = false ' +
+                    'OR CloseDate >= :startDate '
             )
             .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
             .build();

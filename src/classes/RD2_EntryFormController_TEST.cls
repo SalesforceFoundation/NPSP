@@ -243,6 +243,7 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @isTest
     private static void shouldReturnCreatedResponseWhenCreateCommitmentSucceeds() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
@@ -252,7 +253,7 @@ private with sharing class RD2_EntryFormController_TEST {
 
         RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
 
-        UTIL_Http.Response response = service.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        UTIL_Http.Response response = service.handleCommitment(rd, PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
@@ -273,7 +274,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.startTest();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();
 
-        String jsonResponse = RD2_EntryFormController.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        RD2_EntryFormController.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -285,6 +286,104 @@ private with sharing class RD2_EntryFormController_TEST {
             'The error record context type should match with Elevate context.');
         System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
             'The error record should contain error response message.');
+    }
+    
+    /**
+    * @description Verifies an error record will be created when update paymnet commitment fail.
+    */
+    @isTest
+    private static void shouldCreateErrorRecordWhenUpdatePaymentInfoReturnsErrorResponse() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        insert rd;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockBadRequestCalloutResponse();
+
+        RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(),
+            'An error record should be created for an error response.');
+        System.assertEquals(rd.Id, errors[0].Related_Record_Id__c,
+            'The error record should contain donor Contact Id.');
+        System.assertEquals(ERR_Handler_API.Context.Elevate.name(),errors[0].Context_Type__c,
+            'The error record context type should match with Elevate context.');
+        System.assert(errors[0].Full_Message__c.contains(UTIL_Http_TEST.BAD_REQUEST_MESSAGE),
+            'The error record should contain error response message.');
+    }
+
+    /**
+    * @description Verifies commitment success response is returned upon successful update 
+    */
+    @isTest
+    private static void shouldReturnSuccessResponseWhenUpdatePaymentInfoIsSuccess() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        insert rd;
+
+        rd = new npe03__Recurring_Donation__c(Id = rd.Id, CommitmentId__c = COMMITMENT_ID);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+
+        String response = 
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            } 
+        }
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+            'The response status code should match: ' + response);
+            System.assertEquals(UTIL_Http.STATUS_OK, status,
+            'The response status should match: ' + response);
+    }
+
+    /***
+    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
+    */
+    @isTest
+    private static void shouldThrowExceptionWhenRDFieldValueIsInvalid() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        rd.npe03__Amount__c = -100;
+
+        String errorMessage;
+
+        Test.startTest();
+
+        try {
+            RD2_EntryFormController.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+    
+        } catch(Exception ex) {
+            errorMessage = ex.getMessage();
+        }
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_AmountMustBeValid, errorMessage,
+            'RD should be pre-validate before the Elevate Commitment API is called');
     }
     
 

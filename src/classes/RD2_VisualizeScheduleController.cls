@@ -343,7 +343,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
             RD2_QueryService queryService = new RD2_QueryService();
             queryFields.add(queryService.getScheduleSubQuery());
-            queryFields.add(queryService.getOpportunitySubQuery(startDate));
+            queryFields.add(queryService.getOpportunitySubQuery());
 
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)

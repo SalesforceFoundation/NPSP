@@ -120,12 +120,19 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
     @isTest
     static void testGetExistingDataImport() {
+        List<SObjectField> activeFields = new List<SObjectField>{
+            DataImport__c.Donation_Amount__c
+        };
+        DataImportBatch__c batch = new DataImportBatch__c(
+            Name = 'Test Batch 1',
+            Active_Fields__c = JSON.serialize(getBGEFieldList(activeFields))
+        );
+        insert batch;
 
-        Id batchId = createDataImportBatch();
-        List<DataImport__c> dataImports = createDataImports(1, batchId);
+        List<DataImport__c> dataImports = createDataImports(1, batch.Id);
 
         Test.startTest();
-        String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(batchId);
+        String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(batch.Id);
         BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel) JSON.deserialize(jsonModel, BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
         Test.stopTest();
 

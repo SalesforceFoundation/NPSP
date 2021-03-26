@@ -2148,7 +2148,7 @@ public with sharing class RD2_ScheduleService_TEST {
         Test.stopTest();
 
         List<RecurringDonationSchedule__c> schedules = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedLists(new Set<Id>{ rd.Id }, startDate)[0].RecurringDonationSchedules__r;
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, startDate)[0].RecurringDonationSchedules__r;
 
         List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
             new List<npe03__Recurring_Donation__c>{ rd }, startDate, numberOfInstallments, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }

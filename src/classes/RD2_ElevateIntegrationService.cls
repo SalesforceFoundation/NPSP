@@ -36,7 +36,7 @@
 public inherited sharing class RD2_ElevateIntegrationService {
 
     public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
-    public static final String LOG_TYPE_COMMITMENT_UPDATE = 'payment.commitment.update';
+    public static final String LOG_TYPE_COMMITMENT_EDIT = 'payment.commitment.edit';
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
     /***
@@ -81,23 +81,12 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
-    * @description Returns the Elevate Integration service enablement status for Create Commitment feature.
-    * The method should be removed and replaced with "isIntegrationEnabled()" when the feature becomes GA.
-    * @return Boolean
-    */
-    public static Boolean isElevateCreateEnabled() {
-        return config.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();
-    }
-
-    /***
     * @description Returns the Elevate Integration service enablement status for Edit Commitment feature.
-    * The method should be removed and replaced with "isIntegrationEnabled()" when the feature becomes GA.
     * @return Boolean
     */
-    public static Boolean isElevateEditEnabled() {
+    public static Boolean isEditEnabled() {
         return config.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();
+            && UTIL_FeatureEnablement.isPilotEnabled(); 
     }
 
     /***

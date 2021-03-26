@@ -26,7 +26,7 @@ class ExceptionDataError extends Error {
                 this.errorMessage = apexException.body.message;
             }
         } else {
-            this.message = apexException;
+            this.errorMessage = apexException;
         }
     }
 }

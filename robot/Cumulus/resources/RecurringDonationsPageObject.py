@@ -83,9 +83,10 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         for i in range(3):
+            print(f"attempt to load page {i}")
             time.sleep(2)
             self.selenium.location_should_contain(
-                "/lightning/r/npe03__Recurring_Donation__c/",
+                "view",
                 message="Current page is not a Recurring Donations record view",
             )
             locator = npsp_lex_locators["bge"]["button"].format("Edit")
@@ -173,6 +174,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         locator = npsp_lex_locators["bge"]["button"].format("Pause")
         pause_button = self.selenium.get_webelement(locator)
         self.selenium.wait_until_element_is_visible(pause_button,60)
+        self.builtin.sleep(1)
+        self.npsp._loop_is_text_present("Pause")
         self.selenium.click_element(locator)
         if type != "Closed":
             btnlocator = npsp_lex_locators["button-with-text"].format("Save")

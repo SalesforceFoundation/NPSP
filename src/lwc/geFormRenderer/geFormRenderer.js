@@ -45,7 +45,7 @@ import {
     CHECKBOX_TRUE,
     CHECKBOX_FALSE,
     PICKLIST_TRUE,
-    PICKLIST_FALSE
+    PICKLIST_FALSE, CONTACT_FIRST_NAME_INFO, CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
@@ -115,6 +115,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
     CREATE: 'create',
@@ -142,6 +143,7 @@ export default class GeFormRenderer extends LightningElement{
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
+    @api batchCurrencyIsoCode;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -157,6 +159,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
+    cardholderNamesNotInTemplate = {};
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -971,22 +974,26 @@ export default class GeFormRenderer extends LightningElement{
                 lastName: accountName
             }
         } else {
-            return {firstName, lastName};
+            return { firstName, lastName };
         }
     }
 
     get donorNames() {
-        return {
-            firstName: this.getFieldValueFromFormState(
-                DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD
-            ),
-            lastName: this.getFieldValueFromFormState(
-                DATA_IMPORT_CONTACT1_LASTNAME_FIELD
-            ),
-            accountName: this.getFieldValueFromFormState(
-                DATA_IMPORT_ACCOUNT1_NAME
-            )
+        let donorNames = {};
+
+        const nameFields = {
+            firstName: DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD,
+            lastName: DATA_IMPORT_CONTACT1_LASTNAME_FIELD,
+            accountName: DATA_IMPORT_ACCOUNT1_NAME
         };
+
+        Object.entries(nameFields).forEach(([k, v]) => {
+            const formStateValue = this.getFieldValueFromFormState(v);
+            const notInTemplateValue = this.getFieldValueFromCardholderState(v);
+            donorNames[k] = formStateValue || notInTemplateValue;
+        });
+
+        return donorNames;
     }
 
     /**
@@ -1285,7 +1292,6 @@ export default class GeFormRenderer extends LightningElement{
     mapRecordValuesToDataImportFields(record) {
         //reverse map to create an object with relevant source field api names to values
         let dataImport = {};
-
         let objectMappingDevNames = this.getObjectMappingDevNamesForSelectedRecord(record);
 
         objectMappingDevNames.forEach(objectMappingName => {
@@ -1298,6 +1304,8 @@ export default class GeFormRenderer extends LightningElement{
                     dataImport[sourceField] =
                         this.getFieldValueForFormState(
                             valueObjectFromRecord, fieldMapping);
+                } else if(this.isFieldUsedForCardholderName(fieldMapping)) {
+                    this.updateCardholderState(valueObjectFromRecord, fieldMapping);
                 }
             });
 
@@ -2384,4 +2392,37 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    get showMismatchedCurrencyWarning() {
+        if(isEmpty(this.batchCurrencyIsoCode)) {
+            return false;
+        }
+        return this.batchCurrencyIsoCode !== CURRENCY;
+    }
+
+    get mismatchedCurrencyWarning() {
+        if (this.showMismatchedCurrencyWarning) {
+            return GeLabelService.format(
+                this.CUSTOM_LABELS.geWarningBatchGiftEntryCurrencyMismatch,
+                [this.batchCurrencyIsoCode]);
+        }
+    }
+
+    isFieldUsedForCardholderName(fieldMapping) {
+        const cardholderNameFields = [CONTACT_LAST_NAME_INFO, CONTACT_FIRST_NAME_INFO, ACCOUNT_NAME_FIELD];
+        return cardholderNameFields.find( f => apiNameFor(f) === fieldMapping.Target_Field_API_Name);
+    }
+
+    updateCardholderState(valueObjectFromRecord, fieldMapping) {
+        const value = this.getFieldValueForFormState(valueObjectFromRecord, fieldMapping);
+        this.cardholderNamesNotInTemplate[fieldMapping.Source_Field_API_Name] = value;
+    }
+
+    getFieldValueFromCardholderState(fieldApiNameOrFieldReference) {
+        const fieldApiName =
+            typeof fieldApiNameOrFieldReference === 'string' ?
+                fieldApiNameOrFieldReference :
+                apiNameFor(fieldApiNameOrFieldReference);
+
+        return this.cardholderNamesNotInTemplate[fieldApiName];
+    }
 }

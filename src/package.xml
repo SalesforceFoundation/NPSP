@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Cumulus</fullName>
+    <fullName>Nonprofit Success Pack</fullName>
     <types>
         <members>ACCT_AccountMerge_TDTM</members>
         <members>ACCT_AccountMerge_TEST</members>
@@ -73,6 +73,8 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>AllocationParent</members>
+        <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -885,6 +887,7 @@
     </types>
     <types>
         <members>Account.Batch__c</members>
+        <members>Account.CustomizableRollups_UseSkewMode__c</members>
         <members>Account.Funding_Focus__c</members>
         <members>Account.Grantmaker__c</members>
         <members>Account.Matching_Gift_Administrator_Name__c</members>
@@ -991,6 +994,7 @@
         <members>Contact.Address_Verification_Status__c</members>
         <members>Contact.Batch__c</members>
         <members>Contact.Current_Address__c</members>
+        <members>Contact.CustomizableRollups_UseSkewMode__c</members>
         <members>Contact.Deceased__c</members>
         <members>Contact.Do_Not_Contact__c</members>
         <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
@@ -1845,6 +1849,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
@@ -1862,6 +1867,7 @@
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
         <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
+        <members>RD2_PaymentInformation</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -1883,6 +1889,7 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
+        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2402,6 +2409,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorBatchGiftEntryCurrencyMismatch</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2511,6 +2519,7 @@
         <members>geUtilJWTTestInvalidKey</members>
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
+        <members>geWarningBatchGiftEntryCurrencyMismatch</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
@@ -4115,6 +4124,7 @@
         <members>Payment_ACH_Code-de</members>
         <members>Payment_ACH_Code-es</members>
         <members>Payment_ACH_Code-fr</members>
+        <members>Payment_ACH_Code-iw</members>
         <members>Payment_ACH_Code-ja</members>
         <members>Payment_ACH_Code-nl_NL</members>
         <name>GlobalValueSetTranslation</name>
@@ -4231,6 +4241,7 @@
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EditPaymentInformationModal</members>
         <members>rd2ElevateCreditCardForm</members>
         <members>rd2ElevateInformation</members>
         <members>rd2EntryForm</members>

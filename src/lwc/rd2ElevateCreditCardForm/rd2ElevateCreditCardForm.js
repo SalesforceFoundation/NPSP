@@ -15,6 +15,7 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 import updatePaymentButtonLabel from '@salesforce/label/c.RD2_ElevateUpdatePaymentButtonLabel';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
@@ -52,7 +53,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         cardholderNameLabel,
         cardExpirationDate,
         commonNotAvailable,
-        cancelLabel
+        cancelLabel,
+        cardholderNameLabel,
+        nextPaymentDonationDateMessage
     };
 
     @api recordId;
@@ -64,6 +67,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @track record;
 
     _paymentMethod = undefined;
+    _nextDonationDate = undefined;
+    _isEditPayment = false;
 
     @api
     get paymentMethod() {
@@ -72,6 +77,31 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     set paymentMethod(value) {
         this._paymentMethod = value;
+    }
+
+    @api
+    get isEditPayment() {
+        return this._isEditPayment;
+    }
+
+    set isEditPayment(value) {
+        this._isEditPayment = value;
+    }
+
+    get nextPaymentDonationDateMessage() {
+        return (this.nextDonationDate == null)
+        ? ''
+        : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
+    }
+
+    @api 
+    get nextDonationDate() {
+        const localDate = new Date(this._nextDonationDate);
+        return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+    }
+
+    set nextDonationDate(value) {
+        this._nextDonationDate = value;
     }
 
     /***

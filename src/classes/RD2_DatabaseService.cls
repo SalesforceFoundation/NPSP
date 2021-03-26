@@ -1,7 +1,6 @@
 /*
-    Copyright (c) 2020 Salesforce.org
+    Copyright (c) 2021 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
 
@@ -29,11 +28,13 @@
 */
 /**
 * @author Salesforce.org
-* @date 2020
+* @date 2021
 * @group Recurring Donations
 * @description Database DML service to insert/update/delete records and keep track of failed RD Ids.
-* Use without sharing context so Guest Site User can perform DML operation
-*
+*   RD creation is commonly used in Community/Flows to allow customers to create donations. However,
+*   the Winter '21 enforced security policies update which locked down the Site/Community Gues User's permission.
+*   Declaring without sharing context will allow Guest Site Users to continue create Enhanced Recurring Dondations.
+*   The class is specifically used and will only be used by Enhanced Recurring Donation related DML operations.
 */
 public without sharing class RD2_DatabaseService {
     private SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
