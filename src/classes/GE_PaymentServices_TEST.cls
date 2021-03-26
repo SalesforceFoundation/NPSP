@@ -88,6 +88,27 @@ public class GE_PaymentServices_TEST {
         System.assert(!paymentStatusValues.isEmpty(), 'List of payment transaction status values should not be empty.');
     }
 
+    @isTest static void createGroupShouldReturnSuccessfulResponse() {
+        Test.setMock(HttpCalloutMock.class, new ElevateCaptureGroupMockHttpResponse());
+
+        GE_PaymentServicesMock paymentServicesMock = new GE_PaymentServicesMock()
+            .isElevateCustomer(true)
+            .setGatewayId('1234')
+            .setMerchantId('4567');
+
+        GE_PaymentServices paymentServices = (GE_PaymentServices) Test.createStub(
+                GE_PaymentServices.class,
+                paymentServicesMock
+        );
+
+        UTIL_Http.Response response = paymentServices.createCaptureGroup();
+        System.assert(String.isNotBlank(response.body));
+
+        Test.startTest();
+        Test.stopTest();
+
+    }
+
     @isTest static void shouldReturnFailedResponse() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 

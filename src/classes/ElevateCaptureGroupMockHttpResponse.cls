@@ -27,7 +27,7 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
+public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
 
     public final String INVALID_GROUP_ID = 'invalid-group-id';
     public final String VALID_GROUP_ID = 'valid-group-id';
@@ -68,7 +68,7 @@ public with sharing class ElevateCaptureGroupMockHttpResponse implements HttpCal
     private String getEndpointOperation(HttpRequest request) {
         return request.getEndpoint().substringAfterLast('/');
     }
-
+    @TestVisible
     private String createCaptureGroupSuccessBody() {
         return '{\n' +
                 '  "id": "newElevateCaptureGroupdId",\n' +

@@ -43,6 +43,9 @@ public with sharing class GE_PaymentServicesMock implements System.StubProvider 
             when 'getMerchantIds' {
                 return merchantId;
             }
+            when 'createCaptureGroup' {
+                return new GE_PaymentServices().createCaptureGroup();
+            }
         }
         return null;
     }

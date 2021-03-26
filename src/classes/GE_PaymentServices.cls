@@ -168,6 +168,24 @@ public with sharing class GE_PaymentServices {
         return createTransaction(requestBody);
     }
 
+    public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new UTIL_Http.Response();
+    }
+
+    public UTIL_Http.Response createCaptureGroup() {
+        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
+
+        HttpRequest request = new PS_Request.Builder()
+                    .withMethod(UTIL_Http.Method.POST)
+                        //TODO: need to update endpoint
+                    .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
+                    .withBody('test body')
+                    .build();
+
+        UTIL_Http.Response response = requestService.sendRequest(request);
+        return response;
+    }
+
     /**
      * @description Method sends a purchase requet to Elevate.
      * Check out the Payments swagger in the SFDO Payments repo for additional information.
