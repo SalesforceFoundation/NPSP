@@ -291,14 +291,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             return false;
         }
         Account a = mapAccountIdAccount.get(con.AccountId);
-        if (!isHouseholdAccount(a)) {
+        NPSP_Account npspAccount = new NPSP_Account(a);
+        if (!npspAccount.isHouseholdAccount()) {
             return false;
         }
         return true;
-    }
-
-    private Boolean isHouseholdAccount(Account a) {
-        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     public Contacts thatHaveAccounts() {
