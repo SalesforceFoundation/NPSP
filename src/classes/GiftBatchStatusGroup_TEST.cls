@@ -38,7 +38,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnTrueWithCorrectRecordCountForImportedStatusGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue('Status__c','Imported')
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported')
             .withAliasAndValue('recordCount', 10);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -49,7 +49,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForNotImportedGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue('Status__c','Dummy Status');
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Dummy Status');
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isImported());
@@ -58,7 +58,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnTrueWithCorrectRecordCountForFailedStatusGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue('Status__c','Failed')
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
             .withAliasAndValue('recordCount', 5);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -69,7 +69,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForNoneFailedGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue('Status__c','Imported');
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported');
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isProcessingFailed());

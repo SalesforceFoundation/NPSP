@@ -42,16 +42,16 @@ private with sharing class GiftBatchGroupedTotals_TEST {
         Id DUMMY_BATCH_ID_0 = Id.valueOf('001xa000003DIlo');
         List<AggregateResultProxy> proxiesForBatch0 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
-                .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_0)
-                .withAliasAndValue('Status__c','Imported')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported')
                 .withAliasAndValue('recordCount', 1),
             new AggregateResultProxy()
-                .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_0)
-                .withAliasAndValue('Status__c','Failed')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
                 .withAliasAndValue('recordCount', 2),
             new AggregateResultProxy()
-                .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_0)
-                .withAliasAndValue('Payment_Status__c','AUTHORIZED')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Payment_Status__c),'AUTHORIZED')
                 .withAliasAndValue('recordCount', 3)
         };
 
