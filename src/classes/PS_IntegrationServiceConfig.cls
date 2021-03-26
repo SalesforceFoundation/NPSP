@@ -220,14 +220,24 @@ public with sharing class PS_IntegrationServiceConfig {
     */
     public without sharing class Service {
         @TestVisible
-        private Map<String, String> config {
-            get {
-                if (config == null) {
-                    config = new Configuration().keyValueMap;
-                }
-                return config;
+        private Map<String, String> config;
+
+        public Service() {
+            getConfig();
+        }
+
+        @TestVisible
+        private Service(Map<String, String> config) {
+            if (config != null) {
+                this.config = config;
             }
-            set;
+        }
+
+        private Map<String, String> getConfig() {
+            if (config == null) {
+                config = new Configuration().keyValueMap;
+            }
+            return config;
         }
 
         public String getEndpointRoot() {
