@@ -667,6 +667,24 @@ public with sharing class ADDR_Validator_TEST {
         Test.stopTest();
     }
 
+    /**
+     * @description Verify that a "standard" user instantiates the right permissions controller in the addr validation
+     * class - specifically not the "escalated" permissions version.
+     * Note: It's not possible to simulate a guest site user in an org without sites enabled.
+     */
+    @IsTest
+    private static void shouldUseCorrectPermServiceForNonGuestSiteUser() {
+        User stdUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
+
+        System.runAs(stdUser) {
+            Boolean isStanderdPerm = (ADDR_Validator.dbActions InstanceOf ADDR_Validator.StandardPermissions);
+            Boolean isEscelatedPerm = (ADDR_Validator.dbActions InstanceOf ADDR_Validator.EscalatedPermissions);
+
+            System.assertEquals(true, isStanderdPerm, 'The default action should be that the User uses Standard Permissions');
+            System.assertEquals(false, isEscelatedPerm, 'The default action should be that the User does NOT uses Escalated Permissions');
+        }
+    }
+
     // Helpers
     //////////////
 

@@ -2,7 +2,8 @@ import { LightningElement, api, track } from 'lwc';
 import { isNull, showToast, constructErrorMessage, format, isUndefined } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 import { updateRecord } from 'lightning/uiRecordApi';
-import PaymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
+import paymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
+import closeButtonLabel from '@salesforce/label/c.commonClose';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
@@ -22,15 +23,16 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 
-import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
+import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 export default class Rd2EditCreditCardModal extends LightningElement {
     @api rdRecord;
 
     labels = Object.freeze({
-        PaymentInformationTitle,
+        paymentInformationTitle,
         cancelButtonLabel,
+        closeButtonLabel,
         saveButtonLabel,
         spinnerAltText,
         loadingMessage,
@@ -74,18 +76,18 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     }
 
     /**
-     * @description Returns the Recurring Donation field value if the field is set and populated
-     */
+    * @description Returns the Recurring Donation field value if the field is set and populated
+    */
     getValue(fieldName) {
         return this.hasValue(fieldName)
             ? this.rdRecord.fields[fieldName].value
             : null;
     }
 
-     /**
-     * @description Determines if the Recurring Donation record is retrieved and
-     * its fields defined and populated
-     */
+    /**
+    * @description Determines if the Recurring Donation record is retrieved and
+    * its fields defined and populated
+    */
     hasValue(fieldName) {
         return this.rdRecord
             && this.rdRecord.fields
@@ -114,7 +116,6 @@ export default class Rd2EditCreditCardModal extends LightningElement {
             const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
             this.paymentMethodToken = await elevateWidget.returnToken().payload;
-            
 
         } catch (error) {
             this.setSaveButtonDisabled(false);
@@ -124,7 +125,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         this.loadingText = this.labels.savingCommitmentMessage;
 
         try {
-            handleCommitment({
+            handleUpdatePaymentCommitment({
                 jsonRecord: JSON.stringify(this.constructRecurringDonation()),
                 paymentMethodToken: this.paymentMethodToken
             })
@@ -171,7 +172,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     /**
     * @description Launch a succeed toast message and closed the modal
     */
-   handleSuccess() {
+    handleSuccess() {
         const message = this.labels.updateSuccessMessage.replace("{0}", this.rdName);
         showToast(message, '', 'success');
         this.handleClose();
@@ -184,7 +185,6 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         let rd = {};
         rd[FIELD_ID.fieldApiName] = this.rdRecord.id;
         rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
-        
         if (!isNull(response) && !isUndefined(response)
             && !isNull(response.body) && !isUndefined(response.body)
         ) {
@@ -201,10 +201,10 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         return rd;
     }
 
-     /**
-     * @description Displays errors extracted from the error response
-     * returned from the Elevate API when the Commitment cannot be created
-     */
+    /**
+    * @description Displays errors extracted from the error response
+    * returned from the Elevate API when the Commitment cannot be created
+    */
     getCommitmentError(response) {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
@@ -229,9 +229,9 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     }
 
     /***
-     * @description Handle component display when an error on the save action occurs.
-     * Keep Save button enabled so user can correct a value and save again.
-     */
+    * @description Handle component display when an error on the save action occurs.
+    * Keep Save button enabled so user can correct a value and save again.
+    */
     handleSaveError(error) {
         try {
             this.error = constructErrorMessage(error); 
@@ -245,8 +245,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     */
     handleLogError() {
         logError({ recordId: this.rdRecord.id, errorMessage: this.error.detail })
-                .catch((error) => { });
-
+            .catch((error) => { });
     }
 
     /***
@@ -254,7 +253,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     * @param {object} response: Http response object
     * @return {string}: Message from a failed API call response
     */
-   getErrors(response) {
+    getErrors(response) {
         if (response.body && response.body.errors) {
             return response.body.errors.map(error => error.message).join('\n ');
         }
@@ -271,7 +270,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     /**
     * @description Clears the error notification
     */
-   clearError() {
+    clearError() {
         this.error = {};
     }
 

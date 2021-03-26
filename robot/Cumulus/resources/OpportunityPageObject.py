@@ -17,6 +17,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",timeout=60,message="Current page is not a Opportunity detail view")
         self.selenium.wait_until_page_contains("Donation Information")
+        locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
+        self.selenium.wait_until_element_is_visible(locator,60)
 
     def ensure_opportunity_details_are_loaded(self,objectID, value):
         """ Navigate to the page with objectid mentioned
