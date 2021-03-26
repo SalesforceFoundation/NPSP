@@ -134,12 +134,18 @@ export default class rd2EntryForm extends LightningElement {
 
     @track error = {};
 
+    /***
+    * @description Get the next donation date for this recurring donation
+    */
     @api 
     get nextDonationDate() {
         const localDate = new Date(this._nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
+    /***
+    * @description Get the Credit Card expiration date, formated as MM/YYYY
+    */
     @api 
     get cardExpDate(){
         let cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
@@ -147,6 +153,9 @@ export default class rd2EntryForm extends LightningElement {
         return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
     }
 
+    /***
+    * @description Get the Label for the Card Last 4 field
+    */
     @api
     get cardLastFourLabel(){
         return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : '';
@@ -336,7 +345,7 @@ export default class rd2EntryForm extends LightningElement {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
         this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
-        if(this.isEditEnabled && this.commitmentId !== null && this.isEdit && statusField != STATUS_CLOSED){
+        if (this.isEditEnabled && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED){
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
             if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
