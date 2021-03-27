@@ -36,17 +36,6 @@
 */
 public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
-    @TestVisible
-    private ContactService contactService {
-        get {
-            if (contactService == null) {
-                contactService = new ContactService();
-            }
-            return contactService;
-        }
-        set;
-    }
-
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles Address Management.
     * 	Rules:
@@ -78,7 +67,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                normalizeLineBreaks(listNew);
+                contacts.normalizeLineBreaks();
 
                 // we only support address management with HH Accounts being used
                 for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
@@ -100,7 +89,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
             }
             when BeforeUpdate {
-                normalizeLineBreaksForContactsWithChangedAddresses(listNew, listOld);
+                contacts.normalizeLineBreaksForContactsWithChangedAddresses();
             }
         }
         // Rules:
@@ -270,24 +259,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
-    }
-
-    private void normalizeLineBreaksForContactsWithChangedAddresses(List<SObject> listNew, List<SObject> listOld) {
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Contact newRecord = (Contact) listNew[i];
-            Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
-
-            if (contactService.isContactAddressChanged(newRecord, oldRecord)) {
-                UTIL_Address.normalizeLineBreak(newRecord);
-            }
-        }
-    }
-
-    private void normalizeLineBreaks(List<SObject> listNew) {
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Contact newRecord = (Contact) listNew[i];
-            UTIL_Address.normalizeLineBreak(newRecord);
-        }
     }
 
     /*******************************************************************************************************

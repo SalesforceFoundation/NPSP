@@ -36,6 +36,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Contact> oldMap;
 
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     public Contacts(List<Contact> records) {
         this(records, null);
     }
@@ -338,6 +349,23 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public Boolean accountHasAddresses(Contact con) {
         return (accountsByIds().containsKey(con.AccountId)
                 && accountsByIds().get(con.AccountId).Addresses__r.size() > 0);
+    }
+
+    public void normalizeLineBreaksForContactsWithChangedAddresses() {
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            if (contactService.isContactAddressChanged(newRecord, oldVersionOf(newRecord))) {
+                UTIL_Address.normalizeLineBreak(newRecord);
+            }
+        }
+    }
+
+    public void normalizeLineBreaks() {
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
 }
