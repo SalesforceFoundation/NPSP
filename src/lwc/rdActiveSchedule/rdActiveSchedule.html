@@ -1,10 +1,13 @@
 <!-- Enhanced Recurring Donations Active Schedule Visualizer -->
 <template>
-    <lightning-card title={labels.lblScheduleTitle} variant="narrow" icon-name="action:defer">
+    <lightning-card variant="narrow" icon-name="action:defer">
+        <h2 slot="title" class="slds-p-top_xx-small" data-qa-locator={qaLocatorHeader}>
+            {labels.scheduleTitle}
+        </h2>
 
         <div class="slds-m-around_medium" if:true={error}>
             <span class="slds-text-color_error">
-                <lightning-formatted-text value={error}></lightning-formatted-text>
+                <lightning-formatted-text value={error} data-qa-locator={qaLocatorError}></lightning-formatted-text>
             </span>
         </div>
 
@@ -13,9 +16,10 @@
                 <div class="slds-m-around--large slds-border_top" key={schedule.scheduleNumber}>
                     <article class="slds-tile slds-media slds-m-around--medium">
                         <div class="slds-media__figure">
-                            <span class="slds-icon_container" title={labels.AssistiveTextRecordIcon}>
+                            <span class="slds-icon_container" title={labels.recordIcon}>
                                 <lightning-icon icon-name="standard:record"
-                                    alternative-text={labels.AssistiveTextRecordIcon} size="small"></lightning-icon>
+                                    alternative-text={labels.recordIcon} size="small"
+                                    data-qa-locator={qaLocatorRecordIcon}></lightning-icon>
                             </span>
                         </div>
                         <div class="slds-media__body">
@@ -28,14 +32,15 @@
                                     <template for:each={schedule.field} for:item="field">
                                         <lightning-layout-item key={field.column.fieldName} size="5" flexibility="auto"
                                             class="slds-dl_horizontal__label slds-text-color_weak">
-                                            <lightning-formatted-text value={field.column.label}>
+                                            <lightning-formatted-text value={field.column.label}
+                                            data-qa-locator={qaLocatorScheduleFieldLabel}>
                                             </lightning-formatted-text>
                                         </lightning-layout-item>
 
                                         <lightning-layout-item key={field.column.fieldName} size="7" flexibility="auto"
                                             class="slds-dl_horizontal__detail">
                                             <template if:false={field.value}>
-                                                <lightning-formatted-text value={labels.lblNone}>
+                                                <lightning-formatted-text value={labels.none}>
                                                 </lightning-formatted-text>
                                             </template>
 
