@@ -37,7 +37,6 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
-
     /***
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
