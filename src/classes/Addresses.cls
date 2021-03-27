@@ -1158,4 +1158,27 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
+
+    /*******************************************************************************************************
+    * @description Updates the Latest date fields on any address overrides
+    * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
+    * @param dmlWrapper to hold the Addresses that need updating
+    * @return void
+    ********************************************************************************************************/
+    public static void updateAddrIsOverride(Map<Id, boolean> mapAddrIdIsOverride,
+            TDTM_Runnable.DmlWrapper
+            dmlWrapper) {
+
+        for (ID id : mapAddrIdIsOverride.keySet()) {
+            Address__c addr = new Address__c();
+            addr.Id = id;
+            if (mapAddrIdIsOverride.get(id) == true) {
+                addr.Latest_Start_Date__c = system.today();
+                addr.Latest_End_Date__c = null;
+            } else {
+                addr.Latest_End_Date__c = system.today();
+            }
+            dmlWrapper.objectsToUpdate.add(addr);
+        }
+    }
 }

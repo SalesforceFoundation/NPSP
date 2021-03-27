@@ -238,7 +238,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // update the Latest date fields on any address overrides
         if (isOverrideByAddressId.size() > 0) {
-            updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
         }
 
         // create any new Default Address objects
@@ -260,26 +260,5 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Updates the Latest date fields on any address overrides
-    * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
-    * @param dmlWrapper to hold the Addresses that need updating 
-    * @return void  
-    ********************************************************************************************************/
-    private void updateAddrIsOverride(Map<Id, boolean> mapAddrIdIsOverride, DmlWrapper dmlWrapper) {
-
-        for (ID id : mapAddrIdIsOverride.keySet()) {
-            Address__c addr = new Address__c();
-            addr.Id = id;
-            if (mapAddrIdIsOverride.get(id) == true) {
-            	addr.Latest_Start_Date__c = system.today();
-            	addr.Latest_End_Date__c = null;
-            } else {
-                addr.Latest_End_Date__c = system.today();
-            }
-            dmlWrapper.objectsToUpdate.add(addr);
-        }        
     }
 }
