@@ -1,8 +1,8 @@
-import lblScheduleTitle from '@salesforce/label/c.RD2_ScheduleLWCTitle';
-import lblCurrentSchedule from '@salesforce/label/c.RD2_CurrentScheduleTitle';
-import lblFutureSchedule from '@salesforce/label/c.RD2_ScheduleLWCFutureSchedule';
-import lblRecordIcon from '@salesforce/label/c.AssistiveTextRecordIcon';
-import lblNone from '@salesforce/label/c.stgLabelFieldValueNone';
+import scheduleTitle from '@salesforce/label/c.RD2_ScheduleLWCTitle';
+import currentSchedule from '@salesforce/label/c.RD2_CurrentScheduleTitle';
+import futureSchedule from '@salesforce/label/c.RD2_ScheduleLWCFutureSchedule';
+import recordIcon from '@salesforce/label/c.AssistiveTextRecordIcon';
+import none from '@salesforce/label/c.stgLabelFieldValueNone';
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
@@ -26,11 +26,11 @@ export default class RdActiveSchedule extends LightningElement {
     @track error;
 
     labels = {
-        lblScheduleTitle,
-        lblCurrentSchedule,
-        lblFutureSchedule,
-        lblNone,
-        lblRecordIcon
+        scheduleTitle,
+        currentSchedule,
+        futureSchedule,
+        none,
+        recordIcon
     }
 
     /*******************************************************************************
@@ -57,13 +57,6 @@ export default class RdActiveSchedule extends LightningElement {
     }
 
     /*******************************************************************************
-     * @description Called by the HTML to retrieve the schedule to render
-     */
-    get schedules() {
-        return this.schedules;
-    }
-
-    /*******************************************************************************
      * @description Get the schedules
      */
     handleRecords(response) {
@@ -76,7 +69,7 @@ export default class RdActiveSchedule extends LightningElement {
 
                 response.dataTable.columns.forEach(column => {
                     if (column.fieldName === 'isCurrent') {
-                        schedule.title = record[column.fieldName] === true ? lblCurrentSchedule : lblFutureSchedule;
+                        schedule.title = record[column.fieldName] === true ? currentSchedule : futureSchedule;
 
                     } else {
                         let field = {};
@@ -94,7 +87,7 @@ export default class RdActiveSchedule extends LightningElement {
                         schedule.field.push(field);
                     }
                 });
-
+                schedule.scheduleNumber = record.scheduleNumber;
                 filteredRows.push(schedule);
             });
             this.schedules = filteredRows;
@@ -114,5 +107,21 @@ export default class RdActiveSchedule extends LightningElement {
         } else {
             return "";
         }
+    }
+
+    get qaLocatorHeader() {
+        return `text Schedule Title`;
+    }
+
+    get qaLocatorError() {
+        return `text Error`;
+    }
+
+    get qaLocatorRecordIcon() {
+        return `icon Record Icon`;
+    }
+
+    get qaLocatorScheduleFieldLabel() {
+        return `text Field Label`;
     }
 }
