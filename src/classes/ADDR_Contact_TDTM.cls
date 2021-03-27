@@ -147,8 +147,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// new highest priority! if Account changes... 
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
-            	    if (!npspContact.isAddressOverride() &&
-                            !npspContact.isAddressChanged()) {
+            	    if (!npspContact.isAddressOverride() && !npspContact.isAddressChanged()) {
                         if (contacts.accountHasAddresses(npspContact.getRecord())) { //
                             // refresh address if the contact does not have one and account does
                             addressRefreshQueue.add(con);
