@@ -137,7 +137,13 @@
                                     <lightning-layout-item size="12" class="slds-p-bottom_small"
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                                            data-qa-locator='widget Elevate'
+                                            data-qa-locator='widget Elevate'    
+                                            is-edit-mode={isEdit}
+                                            card-exp-date={cardExpDate}
+                                            card-last-four-label={cardLastFourLabel}
+                                            card-last-four={cardLastFour}
+                                            is-edit-payment={isEdit}
+                                            next-donation-date={nextDonationDate}
                                             payment-method={paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>
