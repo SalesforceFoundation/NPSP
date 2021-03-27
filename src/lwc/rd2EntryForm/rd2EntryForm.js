@@ -13,6 +13,7 @@ import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
+import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
@@ -20,6 +21,7 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
+import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -54,6 +56,7 @@ import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
+const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
@@ -116,8 +119,10 @@ export default class rd2EntryForm extends LightningElement {
     @track isSaveButtonDisabled = true;
 
     @track isElevateWidgetEnabled = false;
+    @track isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
+    isEditEnabled = false;
     commitmentId = null;
     paymentMethodToken;
     cardholderName;
@@ -128,6 +133,33 @@ export default class rd2EntryForm extends LightningElement {
     };
 
     @track error = {};
+
+    /***
+    * @description Get the next donation date for this recurring donation
+    */
+    @api 
+    get nextDonationDate() {
+        const localDate = new Date(this._nextDonationDate);
+        return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+    }
+
+    /***
+    * @description Get the Credit Card expiration date, formated as MM/YYYY
+    */
+    @api 
+    get cardExpDate(){
+        let cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+        let cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+        return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
+    }
+
+    /***
+    * @description Get the Label for the Card Last 4 field
+    */
+    @api
+    get cardLastFourLabel(){
+        return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : '';
+    }
 
     /***
     * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
@@ -153,12 +185,14 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.isEditEnabled = response.isEditEnabled;
             })
             .catch((error) => {
                 this.handleError(error);
             })
             .finally(() => {
                 this.isLoading = false;
+                this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
             });
 
         /*
@@ -217,6 +251,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.paymentMethod = extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
         this.fields.status = extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
         this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
+        this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
@@ -231,6 +266,7 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
 
+            this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
             this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
 
         } else if (response.error) {
@@ -303,17 +339,50 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
+    * @description Checks if the Credit Card widget should be displayed on Edit
+    */
+    evaluateElevateEditWidget(paymentMethod) {
+        let statusField = getFieldValue(this.record, FIELD_STATUS);
+        this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
+
+        if (this.isEditEnabled && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED){
+            // On load, we can't rely on the schedule component, but we should when detecting changes
+            let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
+            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
+                recurringType = this.scheduleComponent.getRecurringType();
+            }
+
+            // Since the widget requires interaction to Edit, this should start as true
+            this.isDisabled = true;
+            this.hasUserDisabledElevateWidget = true;
+
+            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
+            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
+
+            this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
+                && this.isEdit 
+                && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+                && recurringType === RECURRING_TYPE_OPEN
+                && this.isCurrencySupported()
+                && this.isCountrySupported();
+
+            this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
+        }
+    }
+
+    /***
     * @description Checks if the credit card widget should be displayed.
     * The Elevate widget is applicable to new RDs only for now.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetEnabled = this.isElevateCustomer === true
+        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
+            || (this.isElevateCustomer === true
             && !this.isEdit
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
             && this.isCurrencySupported()
-            && this.isCountrySupported();
+            && this.isCountrySupported());
 
         this.populateCardHolderName();
     }
@@ -467,13 +536,9 @@ export default class rd2EntryForm extends LightningElement {
             return false;
         }
 
-        if (!this.isEdit) {
-            // A new Recurring Donation will be a new Elevate recurring commitment
-            // when the Elevate widget is displayed on the entry form.
-            return this.isElevateWidgetDisplayed();
-        }
-
-        return false;
+        // A new Recurring Donation will be a new Elevate recurring commitment
+        // when the Elevate widget is displayed on the entry form.
+        return this.isElevateWidgetDisplayed();
     }
 
     /***
