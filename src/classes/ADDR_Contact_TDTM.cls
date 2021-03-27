@@ -60,7 +60,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @param objResult the describe for Contacts 
     * @return dmlWrapper.  
     ********************************************************************************************************/
-    Map<Id,Account> mapAccountIdAccount = null;
     DmlWrapper dmlWrapper = new DmlWrapper();
     list<Contact> useCurrentAddressQueue = new list<Contact>();
     Set<Contact> addressCreationQueue = new Set<Contact>();
@@ -76,20 +75,16 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
 
+        Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                mapAccountIdAccount = getAccountMap(getSetAccountId(listNew));
                 normalizeLineBreaks(listNew);
 
-                Contacts contacts = new Contacts(listNew);
                 // we only support address management with HH Accounts being used
-                for (SObject so :
-                        contacts.contactsInHouseholdAccounts(mapAccountIdAccount).getRecords()) {
+                for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
                     Contact con = (Contact) so;
                     NPSP_Contact npspContact=new NPSP_Contact(con);
-                    boolean acctHasAddress = false;
 
-                    acctHasAddress = accountHasAddresses(mapAccountIdAccount, npspContact.getRecord());
                     if (npspContact.currentAddress() != null) {
                         // remember which contacts will need their address set
                         useCurrentAddressQueue.add(con);
@@ -97,14 +92,14 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             // track which address's need their dates updated
                             isOverrideByAddressId.put(npspContact.currentAddress(), true);
                         }
-                    } else if (npspContact.isAddressEmpty() && acctHasAddress) {
+                    } else if (npspContact.isAddressEmpty() &&
+                            contacts.accountHasAddresses(npspContact.getRecord())) {
                         // if the contact has no address specified and the household has a default address, pick up the hh default.
                         addressRefreshQueue.add(con);
                     }
                 }
             }
             when BeforeUpdate {
-                mapAccountIdAccount = getAccountMap(getSetAccountId(listNew));
                 normalizeLineBreaksForContactsWithChangedAddresses(listNew, listOld);
             }
         }
@@ -114,7 +109,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
 
-        Contacts contacts = new Contacts(listNew, listOld);
         integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contacts.thatHaveAccounts().getRecords()) {
@@ -122,16 +116,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             Contact con = (Contact)so;
             Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
             NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
-            boolean acctHasAddress = false;
 
             if (!isBefore && npspContact.householdAndAccountDiffer()){
                 continue;
             }
 
             if (isBefore) {
-                acctHasAddress = (mapAccountIdAccount.containsKey(con.AccountId)
-                    && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
-                Account a = mapAccountIdAccount.get(con.AccountId);
+                Account a = contacts.accountsByIds().get(con.AccountId);
                 if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
                 continue;
             }
@@ -169,7 +160,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     // if no override, refill from the Default Address
             	    if (!npspContact.isAddressOverride() &&
                             !npspContact.isAddressChanged()) {
-                        if (acctHasAddress) { // refresh address if the contact does not have one and account does
+                        if (contacts.accountHasAddresses(npspContact.getRecord())) { //
+                            // refresh address if the contact does not have one and account does
                             addressRefreshQueue.add(con);
                         }
             	    } else { // create a new address on the account
@@ -280,11 +272,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    private Boolean accountHasAddresses(Map<Id, Account> mapAccountIdAccount, Contact con) {
-        return (mapAccountIdAccount.containsKey(con.AccountId)
-                && mapAccountIdAccount.get(con.AccountId).Addresses__r.size() > 0);
-    }
-
     private void normalizeLineBreaksForContactsWithChangedAddresses(List<SObject> listNew, List<SObject> listOld) {
         for (Integer i = 0; i < listNew.size(); i++) {
             Contact newRecord = (Contact) listNew[i];
@@ -301,27 +288,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             Contact newRecord = (Contact) listNew[i];
             UTIL_Address.normalizeLineBreak(newRecord);
         }
-    }
-
-    private Set<Id> getSetAccountId(List<SObject> listNew) {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Contact newRecord = (Contact) listNew[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
-    }
-
-    private Map<Id, Account> getAccountMap(Set<Id> setAccountId) {
-        return new Map<Id, Account>([
-                SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
-                FROM Account
-                WHERE Id IN :setAccountId
-        ]);
     }
 
     /*******************************************************************************************************

@@ -270,27 +270,27 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public Contacts contactsInHouseholdAccounts(Map<Id,Account> mapAccountIdAccount) {
+    public Contacts contactsInHouseholdAccounts() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
         integer i = -1;
         for (SObject so : getRecords()) {
             i++;
             Contact con = (Contact) so;
-            if (isInHouseholdAccount(new NPSP_Contact(con), mapAccountIdAccount)) {
+            if (isInHouseholdAccount(new NPSP_Contact(con))) {
                 contactsInHouseholdAccounts.add(con);
             }
         }
         return new Contacts(contactsInHouseholdAccounts);
     }
 
-    private Boolean isInHouseholdAccount(NPSP_Contact npspContact, Map<Id, Account> mapAccountIdAccount) {
+    private Boolean isInHouseholdAccount(NPSP_Contact npspContact) {
         if (!npspContact.hasAccount()) {
             return false;
         }
         if (npspContact.householdAndAccountDiffer()) {
             return false;
         }
-        Account a = mapAccountIdAccount.get(npspContact.accountId());
+        Account a = accountsByIds().get(npspContact.accountId());
         NPSP_Account npspAccount = new NPSP_Account(a);
         if (!npspAccount.isHouseholdAccount()) {
             return false;
@@ -308,6 +308,36 @@ public inherited sharing class Contacts extends fflib_SObjects {
             contacts.add(con);
         }
         return new Contacts(contacts);
+    }
+
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    private Map<Id, Account> accountsById;
+    public Map<Id, Account> accountsByIds() {
+        if (accountsById == null) {
+            accountsById = new Map<Id, Account>([
+                    SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
+                    FROM Account
+                    WHERE Id IN :accountIds()
+            ]);
+        }
+        return accountsById;
+    }
+
+    public Boolean accountHasAddresses(Contact con) {
+        return (accountsByIds().containsKey(con.AccountId)
+                && accountsByIds().get(con.AccountId).Addresses__r.size() > 0);
     }
 
 }
