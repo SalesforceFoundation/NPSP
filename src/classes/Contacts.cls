@@ -368,4 +368,170 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
+    /*******************************************************************************************************
+    * @description for each contact, refresh its mailing address from its Address lookup
+    * @param listCon the list of Contacts to update
+    * @return void
+    ********************************************************************************************************/
+    public void setContactAddressFromCurrentAddress(List<Contact> listCon, TDTM_Runnable.DmlWrapper
+            dmlWrapper, TDTM_Runnable.Action triggerAction) {
+
+        List<Contact> listConCreateAddr = new List<Contact>();
+        Set<Id> setAddrId = new Set<Id>();
+        for (Contact con : listCon) {
+            if (con.Current_Address__c != null) {
+                setAddrId.add(con.Current_Address__c);
+            }
+        }
+
+        Map<Id, Address__c> mapAddrIdAddr = new Map<Id, Address__c>([SELECT Id, Address_Type__c,
+                Household_Account__c, MailingStreet__c, MailingStreet2__c, MailingCity__c,
+                MailingState__c, Geolocation__Latitude__s, Geolocation__Longitude__s,
+                MailingPostalCode__c, MailingCountry__c
+        FROM Address__c
+        WHERE Id IN :setAddrId]
+        );
+
+        for (Contact con : listCon) {
+            Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
+            if (Addresses.shouldUpdateAddress(con, addr)) {
+                NPSP_Address address = new NPSP_Address(addr);
+                address.copyOntoSObject(con, 'Mailing','npe01__Primary_Address_Type__c');
+
+                // deal with any address coming from a different account,
+                // which we need to treat as a creation instead.
+                if (addr.Household_Account__c != con.AccountId) {
+                    listConCreateAddr.add(con);
+                }
+            }
+        }
+
+        if (listConCreateAddr.size() > 0) {
+            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a new address or matches an existing one, for each Contact.
+    * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
+    * when pushing a new default address, we need to do it in the AfterInsert/Update.
+    * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
+    * @param listConAll the list of Contacts
+    * @param dmlWrapper to hold the Addresses that need inserting/updating
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return void
+    ********************************************************************************************************/
+    public void createAddrFromCon(list<Contact> listConAll, TDTM_Runnable.DmlWrapper
+            dmlWrapper,
+            TDTM_Runnable.Action triggerAction) {
+
+        // Strategy:
+        // create a new (unsaved) address for each contact.
+        // see if there is an existing address that matches each new address.
+        //
+        // for existing addresses we match
+        //     process during BeforeInsert/Update
+        //     update appropriate fields on contact
+        //
+        // for new addresses that won't be a default (ie, the contact has override set)
+        //     process during BeforeInsert/Update
+        //     create the address now
+        //     update appropriate fields on contact
+        //
+        // for new addresses that will be a default address
+        //     process during AfterInsert/Update
+        //     mark the new address as default
+        //     put it on dmlWrapper
+        //
+
+        map<Contact, Address__c> mapConAddr = new map<Contact, Address__c>();
+        list<Contact> listCon = new list<Contact>();
+        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate);
+
+        for (Contact con : listConAll) {
+            listCon.add(con);
+            NPSP_Address npspAddressFromContact = new NPSP_Address(con);
+            mapConAddr.put(con, npspAddressFromContact.getRecord());
+        }
+
+        // look for duplicates for our proposed new addresses
+        map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+                .values());
+
+        // maps & lists to keep track of the addresses we must insert or update
+        map<Contact, Address__c> mapConAddrInsertNow = new map<Contact, Address__c>();
+        list<Address__c> listAddrUpdateDefault = new list<Address__c>();
+        list<Address__c> listAddrInsertDefault = new list<Address__c>();
+
+        for (Contact con : listCon) {
+            Address__c addrNew = mapConAddr.get(con);
+            Address__c addrDup = mapAddrDupAddr.get(addrNew);
+
+            // if found a match
+            if (addrDup != null) {
+                // record the match in the contact
+                if (isBefore) {
+                    con.Current_Address__c = addrDup.Id;
+
+                    //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
+                    con.npe01__Primary_Address_Type__c = con.npe01__Primary_Address_Type__c == null
+                            ? addrDup.Address_Type__c
+                            : con.npe01__Primary_Address_Type__c;
+
+                    // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
+                    // a second time by the AfterInsert trigger.
+                } else {
+                    // if it is a fuzzy match, not exact, then we want to update the existing address.
+                    NPSP_Address npspAddress = new NPSP_Address(addrNew);
+                    NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
+
+                    if (!npspAddress.isEqualTo(npspAddressDup, true)) {
+                        npspAddressDup.copyFrom(npspAddress);
+                        if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
+                            addrDup.Default_Address__c = true;
+                        }
+                        listAddrUpdateDefault.add(addrDup);
+                    }
+                    // exact match. we aren't specifying override, so the address should become the new hh default address
+                    else if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
+                        addrDup.Default_Address__c = true;
+                        listAddrUpdateDefault.add(addrDup);
+                    }
+                }
+            }
+
+            // no match found, and its an override just for this contact
+            else if (isBefore && con.is_Address_Override__c) {
+                // put it on the list of addresss to create now
+                mapConAddrInsertNow.put(con, addrNew);
+            }
+
+            // no match, not an override, make it a new default hh address
+            else if (!isBefore) {
+                addrNew.Default_Address__c = true;
+                listAddrInsertDefault.add(addrNew);
+            }
+        }
+
+        if (mapConAddrInsertNow.size() > 0 && isBefore) {
+            UTIL_DMLService.insertRecords(mapConAddrInsertNow.values());
+            // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
+            // prevent the After Insert/Update Contact logic from executing when it's eventually called.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+            for (Contact con : mapConAddrInsertNow.keySet()) {
+                Address__c addr = mapConAddrInsertNow.get(con);
+                con.Current_Address__c = addr.Id;
+            }
+        }
+
+        if (listAddrUpdateDefault.size() > 0 && !isBefore) {
+            for (Address__c addr : listAddrUpdateDefault)
+                dmlWrapper.objectsToUpdate.add(addr);
+        }
+
+        if (listAddrInsertDefault.size() > 0 && !isBefore) {
+            dmlWrapper.objectsToInsert.addAll((list<SObject>)listAddrInsertDefault);
+        }
+    }
 }
