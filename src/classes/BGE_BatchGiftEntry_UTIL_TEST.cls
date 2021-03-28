@@ -141,7 +141,7 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     @isTest
     static void shouldReturnElevateFieldsForElevateCustomer() {
         GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
-        mockInstance.isElevateCustomer(true);
+        mockInstance.withIsElevateCustomer(true);
 
         GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
             GE_PaymentServices.class,
@@ -157,7 +157,7 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     @isTest
     static void shouldReturnNoElevateFieldsForNonElevateCustomer() {
         GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
-        mockInstance.isElevateCustomer(false);
+        mockInstance.withIsElevateCustomer(false);
 
         GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
                 GE_PaymentServices.class,
