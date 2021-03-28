@@ -150,8 +150,8 @@ public with sharing class GE_PaymentServices {
 
         PurchaseCallBody requestBody = new PurchaseCallBody(
             UserInfo.getDefaultCurrency(),
-            getMerchantIds(),
-            getGatewayIds()
+            configService.getMerchantIds(),
+            configService.getGatewayIds()
         ).applyAll(requestBodyParameters);
 
         return requestBody;
@@ -177,8 +177,7 @@ public with sharing class GE_PaymentServices {
 
         HttpRequest request = new PS_Request.Builder()
                     .withMethod(UTIL_Http.Method.POST)
-                        //TODO: need to update endpoint
-                    .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
+                    .withEndpoint(PS_Request.ElevateEndpoint.CREATECAPTUREGROUP)
                     .withBody('test body')
                     .build();
 
