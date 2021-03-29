@@ -62,7 +62,8 @@ import {
     validateJSONString,
     relatedRecordFieldNameFor,
     apiNameFor,
-    isString
+    isString,
+    showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateCaptureGroup from './elevateCaptureGroup';
@@ -516,6 +517,13 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
+                    showToast(
+                        'Success!', 
+                        this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
+                        'success', 
+                        'dismissible', 
+                        null
+                    );
                 },
                 error: (error) => {
                     formControls.enableSaveButton();
@@ -637,11 +645,9 @@ export default class GeFormRenderer extends LightningElement{
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
-            const isCardTokenizable = this.shouldTokenizeCard();
-
             let tokenizedGift = null;
             try {
-                if (isCardTokenizable) {
+                if (this.shouldTokenizeCard()) {
                     tokenizedGift = new ElevateTokenizedGift(
                         this.cardholderNames.firstName,
                         this.cardholderNames.lastName,
@@ -663,7 +669,7 @@ export default class GeFormRenderer extends LightningElement{
             if (this.batchId) {
                 if (tokenizedGift) {
                     try {
-                        this.loadingText = /*this.CUSTOM_LABELS.geAuthorizingCreditCard*/'Authorizing Credit Card...';
+                        this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
                         
                         let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
                         let authorizedGift = await currentCaptureGroup.add(tokenizedGift);
@@ -682,7 +688,6 @@ export default class GeFormRenderer extends LightningElement{
                         
                         dataImportFromFormState = this.saveableFormState();
                     } catch (ex) {
-                        console.log(`Exception = ${ex}`);
                         this.handleAsyncWidgetError(ex);
                         return;
                     }

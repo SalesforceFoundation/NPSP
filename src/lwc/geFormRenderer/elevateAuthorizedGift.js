@@ -1,4 +1,4 @@
-class AuthorizedGift {
+class ElevateAuthorizedGift {
 
     authorizationToken;
     id;
@@ -13,4 +13,4 @@ class AuthorizedGift {
 
 }
 
-export default AuthorizedGift;
+export default ElevateAuthorizedGift;

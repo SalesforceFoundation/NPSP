@@ -1,6 +1,6 @@
 import apexAddToCaptureGroup from '@salesforce/apex/GE_GiftEntryController.addToCaptureGroup';
 import apexCreateCaptureGroup from '@salesforce/apex/GE_GiftEntryController.createCaptureGroup';
-import AuthorizedGift from './authorizedGift';
+import ElevateAuthorizedGift from './elevateAuthorizedGift';
 
 class ElevateCaptureGroup {
 
@@ -17,7 +17,7 @@ class ElevateCaptureGroup {
         try {
             let response = await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
             console.log(`Add response = ${response}`);
-            return Object.assign(new AuthorizedGift, JSON.parse(response).body); 
+            return Object.assign(new ElevateAuthorizedGift, JSON.parse(response).body); 
         } catch (ex) {
             if (!this._hasAddRun) {
                 this._hasAddRun = true;

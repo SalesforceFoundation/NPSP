@@ -64,6 +64,7 @@ import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geAuthorizedCreditCardSuccess from '@salesforce/label/c.geAuthorizedCreditCardSuccess';
 import geAuthorizingCreditCard from '@salesforce/label/c.geAuthorizingCreditCard';
 import geBodyAdvancedFieldMapping from '@salesforce/label/c.geBodyAdvancedFieldMapping';
 import geBodyBatchDefaultValues from '@salesforce/label/c.geBodyBatchDefaultValues';
@@ -297,6 +298,7 @@ class GeLabelService {
         geAssistiveSectionUp,
         geAssistiveShowMenu,
         geAssistiveSpinner,
+        geAuthorizedCreditCardSuccess,
         geAuthorizingCreditCard,
         geBodyAdvancedFieldMapping,
         geBodyBatchDefaultValues,
