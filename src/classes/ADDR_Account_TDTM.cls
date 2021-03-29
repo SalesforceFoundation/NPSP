@@ -175,13 +175,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
         list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {
-            Address__c addr = new Address__c();
-            NPSP_Address npspAddress = new NPSP_Address(addr);
-            npspAddress.getRecord().Household_Account__c = acc.Id;
-            npspAddress.getRecord().Default_Address__c = true;
-            npspAddress.getRecord().Latest_Start_Date__c = system.today();
-            npspAddress.getRecord().Latest_End_Date__c = null;
-            npspAddress.copyFromSObject(acc, 'Billing', null);
+            NPSP_Address npspAddress = new NPSP_Address(acc);
             listAddr.add(npspAddress.getRecord());
         }
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.

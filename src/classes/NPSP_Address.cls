@@ -40,6 +40,15 @@ public inherited sharing class NPSP_Address {
         this.addr = address;
     }
 
+    public NPSP_Address(Account acc) {
+        this.addr = new Address__c();
+        addr.Household_Account__c = acc.Id;
+        addr.Default_Address__c = true;
+        addr.Latest_Start_Date__c = system.today();
+        addr.Latest_End_Date__c = null;
+        copyFromSObject(acc, 'Billing', null);
+    }
+
     public Boolean isSeasonal() {
         return (this.addr.Seasonal_Start_Month__c != null && this.addr.Seasonal_Start_Day__c != null &&
                 this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
