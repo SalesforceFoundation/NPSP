@@ -262,10 +262,10 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
-        <members>CreditCardCaptureGroup</members>
         <members>CreditCardCaptureGroupMock</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>

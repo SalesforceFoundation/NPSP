@@ -97,9 +97,9 @@ public class GE_PaymentServices_TEST {
         CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
                 .withInvalidRequestBody();
 
-        CreditCardCaptureGroup creditCardCaptureGroupMock = (CreditCardCaptureGroup) Test.createStub(
-                CreditCardCaptureGroup.class, captureGroupMock);
-        CreditCardCaptureGroup.setInstance(creditCardCaptureGroupMock);
+        ElevateCaptureGroup creditCardCaptureGroupMock = (ElevateCaptureGroup) Test.createStub(
+                ElevateCaptureGroup.class, captureGroupMock);
+        ElevateCaptureGroup.setInstance(creditCardCaptureGroupMock);
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
