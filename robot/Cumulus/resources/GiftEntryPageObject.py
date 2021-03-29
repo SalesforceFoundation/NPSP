@@ -111,7 +111,8 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
             Expects url format like: [a-zA-Z0-9]{15,18}
         """
         id=self.get_template_record_id(template)
-        self.salesforce.store_session_record("Form_Template__c",id)
+        namespace = self.cumulusci.get_namespace_prefix("Nonprofit Success Pack")
+        self.salesforce.store_session_record(namespace + "Form_Template__c",id)
 
 
 @pageobject("Template", "GE_Gift_Entry")
