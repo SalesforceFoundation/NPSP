@@ -169,11 +169,11 @@ public with sharing class GE_PaymentServices {
     }
 
     public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return ElevateCaptureGroup.getInstance().add(tokenizedGift, groupId);
+        return new ElevateCaptureGroup().add(tokenizedGift, groupId);
     }
 
     public UTIL_Http.Response createCaptureGroup() {
-        return ElevateCaptureGroup.getInstance().create();
+        return new ElevateCaptureGroup().create();
     }
 
     /**
