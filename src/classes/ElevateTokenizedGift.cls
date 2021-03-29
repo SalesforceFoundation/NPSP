@@ -1,7 +1,7 @@
 public with sharing class ElevateTokenizedGift {
-    @TestVisible private String merchantId;
-    @TestVisible private String gatewayId;
     private Decimal amount;
+    private String merchantId;
+    private String gatewayId;
     private String firstName;
     private String lastName;
     private String currencyCode;
@@ -10,16 +10,16 @@ public with sharing class ElevateTokenizedGift {
         * Optional properties
         */
     // May be any key:value pairs. i.e. campaignCode: 123
-    public Metadata metadata;
-    public String phone;
-    public String city;
-    public String state;
-    public String postalCode;
+    private Metadata metadata;
+    private String phone;
+    private String city;
+    private String state;
+    private String postalCode;
     // The ISO 3166-1 alpha-2 country code. E.g. US
-    public String country;
-    public AchData achData;
-    public String paymentMethodType;
-    public String accountName;
+    private String country;
+    private AchData achData;
+    private String paymentMethodType;
+    private String accountName;
     private PS_IntegrationServiceConfig.Service configService;
 
     public ElevateTokenizedGift() {
@@ -46,9 +46,19 @@ public with sharing class ElevateTokenizedGift {
     }
 
     private void setConfigServiceInstance() {
-        if (configService == null) {
-            configService = new PS_IntegrationServiceConfig.Service();
-        }
+        configService = new PS_IntegrationServiceConfig.Service();
+    }
+
+    @TestVisible
+    private ElevateTokenizedGift withAmount(Decimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    @TestVisible
+    private ElevateTokenizedGift withToken(String token) {
+        paymentMethodToken = token;
+        return this;
     }
 
     public String phone() {

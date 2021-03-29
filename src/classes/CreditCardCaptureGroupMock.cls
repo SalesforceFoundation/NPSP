@@ -30,15 +30,34 @@
 public class CreditCardCaptureGroupMock implements StubProvider {
 
     public static final String INVALID_PARAMETER = 'invalid-parameter';
-    public static final String VALID_PARAMETER = 'valid-parameter';
     public static final String INVALID_GROUP_ID = 'invalid-group-id';
-    public static final String VALID_GROUP_ID = 'valid-group-id';
+    private static final String DUMMY_GROUP_ID = 'gp-12345';
 
     private String requestBodyParameter;
+    private String groupId;
+    private ElevateTokenizedGift tokenizedGift;
 
     public CreditCardCaptureGroupMock withInvalidRequestBody() {
         requestBodyParameter = INVALID_PARAMETER;
         return this;
+    }
+
+    public CreditCardCaptureGroupMock withInvalidGroupId() {
+        groupId = INVALID_GROUP_ID;
+        return this;
+    }
+
+    public CreditCardCaptureGroupMock withElevateTokenizedGift(ElevateTokenizedGift tokenizedGift) {
+        this.tokenizedGift = tokenizedGift;
+        return this;
+    }
+
+    public String groupId() {
+        if (String.isBlank(groupId)) {
+            return DUMMY_GROUP_ID;
+        } else {
+            return groupId;
+        }
     }
 
     private HttpRequest mockCreateGroupRequest() {
@@ -47,6 +66,21 @@ public class CreditCardCaptureGroupMock implements StubProvider {
                 .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
                 .withBody('{merchantId:' + requestBodyParameter + '}')
                 .build();
+    }
+
+    private HttpRequest mockAddToGroupRequest() {
+        String requestBody = getMockRequestBody();
+
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                .withBody(requestBody)
+                .build();
+    }
+
+    private String getMockRequestBody() {
+        return '{paymentMethodToken:' + requestBodyParameter + '}';
     }
 
     public Object handleMethodCall(Object stubbedObject,

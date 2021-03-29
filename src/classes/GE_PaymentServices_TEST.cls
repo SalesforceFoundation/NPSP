@@ -118,12 +118,6 @@ public class GE_PaymentServices_TEST {
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock();
-
-        CreditCardCaptureGroup creditCardCaptureGroupMock = (CreditCardCaptureGroup) Test.createStub(
-                CreditCardCaptureGroup.class, captureGroupMock);
-        CreditCardCaptureGroup.setInstance(creditCardCaptureGroupMock);
-
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             UTIL_Http.Response response = paymentServices.createCaptureGroup();
@@ -131,8 +125,76 @@ public class GE_PaymentServices_TEST {
 
         System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Status code should be the 201 ' +
                 'created code');
-        System.assertEquals(response.body, mockResponse.createCaptureGroupSuccessBody(), 'Response body should return' +
-                ' the success body for creating a new capture group.');
+        System.assertEquals(mockResponse.createCaptureGroupSuccessBody(), response.body, 'Response body should ' +
+                'return the success body for creating a new capture group.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponseIfGroupIdIsInvalid() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
+                .withInvalidGroupId();
+
+        Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.addToCaptureGroup(new ElevateTokenizedGift(),
+                    captureGroupMock.groupId());
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_NOT_FOUND, response.statusCode, 'Status code should be the 404 ' +
+                'not found code');
+        System.assertEquals(response.body, mockResponse.addToCaptureGroupFailureBody(), 'Response body should return' +
+                ' the failure body for adding to a capture group.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponseForNegativeAmount() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(-100.00);
+        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
+                .withElevateTokenizedGift(tokenizedGift);
+
+        Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.addToCaptureGroup(
+                tokenizedGift,
+                captureGroupMock.groupId());
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
+                'bad request code');
+        System.assertEquals(mockResponse.addToCaptureGroupFailureAmountBody(), response.body, 'Response body should' +
+                ' return' +
+                ' the failure body for adding to a capture group.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(200);
+        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
+                .withElevateTokenizedGift(tokenizedGift);
+
+        Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.addToCaptureGroup(
+                    tokenizedGift,
+                    captureGroupMock.groupId());
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Status code should be the 201 ' +
+                'created code');
+        System.assertEquals(mockResponse.addToCaptureGroupSuccessBody(), response.body, 'Response body should' +
+                ' return the success body for adding to a capture group.');
     }
 
     @isTest static void shouldReturnFailedResponse() {

@@ -169,7 +169,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new UTIL_Http.Response();
+        return CreditCardCaptureGroup.getInstance().add(tokenizedGift, groupId);
     }
 
     public UTIL_Http.Response createCaptureGroup() {

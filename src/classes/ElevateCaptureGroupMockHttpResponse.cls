@@ -44,9 +44,12 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 }
             }
             when 'add' {
-                if (request.getEndpoint().contains(CreditCardCaptureGroupMock.INVALID_GROUP_ID)) {
+                if (hasInvalidGroupId(request)) {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_NOT_FOUND);
                     response.setBody(addToCaptureGroupFailureBody());
+                } else if (amountLessThanZero(request)) {
+                    response.setStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST);
+                    response.setBody(addToCaptureGroupFailureAmountBody());
                 } else {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_CREATED);
                     response.setBody(addToCaptureGroupSuccessBody());
@@ -54,6 +57,21 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
             }
         }
         return response;
+    }
+
+    private Boolean hasInvalidGroupId(HttpRequest request) {
+        return request.getEndpoint().contains(CreditCardCaptureGroupMock.INVALID_GROUP_ID);
+    }
+
+    private Boolean amountLessThanZero(HttpRequest request) {
+        ElevateTokenizedGift tokenizedGift = deserializeBodyToTokenizedGiftType(request.getBody());
+
+        return tokenizedGift.amount() < 0;
+    }
+
+    private ElevateTokenizedGift deserializeBodyToTokenizedGiftType(String requestBody) {
+        return (ElevateTokenizedGift) JSON.deserialize(requestBody,
+                ElevateTokenizedGift.class);
     }
 
     private Boolean hasInvalidRequestParameter(HttpRequest request) {
@@ -64,16 +82,15 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
     private String getEndpointOperation(HttpRequest request) {
         return request.getEndpoint().substringAfterLast('/');
     }
-    @TestVisible
-    private String createCaptureGroupSuccessBody() {
+
+    public String createCaptureGroupSuccessBody() {
         return '{\n' +
                 '  "id": "newElevateCaptureGroupdId",\n' +
                 '  "status": "Open"\n' +
                 '}';
     }
 
-    @TestVisible
-    private String createCaptureGroupFailureBody() {
+    public String createCaptureGroupFailureBody() {
         return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
@@ -85,7 +102,7 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 '}';
     }
 
-    private String addToCaptureGroupSuccessBody() {
+    public String addToCaptureGroupSuccessBody() {
         DateTime DUMMY_TIME = System.today();
         return '{\n' +
                 '  "body": {\n' +
@@ -124,12 +141,23 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 '}';
     }
 
-    private String addToCaptureGroupFailureBody() {
+    public String addToCaptureGroupFailureBody() {
         return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "Not Found",\n' +
                 '      "localizedPaymentsMessage": "Not Found"\n' +
+                '    }\n' +
+                '  ]\n' +
+                '}';
+    }
+
+    public String addToCaptureGroupFailureAmountBody() {
+        return '{\n' +
+                '  "errors": [\n' +
+                '    {\n' +
+                '      "message": "Amount cannot be less than zero",\n' +
+                '      "localizedPaymentsMessage": "Invalid amount"\n' +
                 '    }\n' +
                 '  ]\n' +
                 '}';

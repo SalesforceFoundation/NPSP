@@ -40,7 +40,8 @@ public inherited sharing class PS_Request {
         PURCHASE,
         COMMITMENT,
         COMMITMENT_CANCEL,
-        CREATE_CAPTURE_GROUP
+        CREATE_CAPTURE_GROUP,
+        ADD_TO_CAPTURE_GROUP
     }
 
     public enum ProductType {
@@ -71,6 +72,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_CREATE_CAPTURE_GROUP = '/v1/payments/verified/batch';
+    public static String ENDPOINT_ADD_TO_CAPTURE_GROUP = 'v1/payments/verified/batch/{0}/add';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -104,6 +106,7 @@ public inherited sharing class PS_Request {
         private ElevateEndpoint endpoint;
         private String jsonBody;
         private String commitmentId;
+        private String captureGroupId;
         private Integer timeout;
 
         /***
@@ -133,6 +136,16 @@ public inherited sharing class PS_Request {
         */
         public Builder withCommitmentId(String commitmentId) {
             this.commitmentId = commitmentId;
+            return this;
+        }
+
+        /***
+        * @description Incorporates the Elevate Capture Group Id into the endpoint where applicable
+        * @param commitmentId Elevate Capture Group Id
+        * @return Builder This request builder instance
+        */
+        public Builder withCaptureGroupId(String captureGroupId) {
+            this.captureGroupId = captureGroupId;
             return this;
         }
 
@@ -237,6 +250,13 @@ public inherited sharing class PS_Request {
                 );
             } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP) {
                 value = ENDPOINT_CREATE_CAPTURE_GROUP;
+            } else if (endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
+                value = String.format(
+                    ENDPOINT_ADD_TO_CAPTURE_GROUP,
+                    new String[] {
+                        captureGroupId
+                    }
+                );
             }
 
             return String.isBlank(value)
