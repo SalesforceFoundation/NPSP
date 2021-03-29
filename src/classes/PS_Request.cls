@@ -40,7 +40,7 @@ public inherited sharing class PS_Request {
         PURCHASE,
         COMMITMENT,
         COMMITMENT_CANCEL,
-        CREATECAPTUREGROUP
+        CREATE_CAPTURE_GROUP
     }
 
     public enum ProductType {
@@ -235,7 +235,7 @@ public inherited sharing class PS_Request {
                         commitmentId
                     }
                 );
-            } else if (endpoint == ElevateEndpoint.CREATECAPTUREGROUP) {
+            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP) {
                 value = ENDPOINT_CREATE_CAPTURE_GROUP;
             }
 

@@ -173,16 +173,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public UTIL_Http.Response createCaptureGroup() {
-        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
-
-        HttpRequest request = new PS_Request.Builder()
-                    .withMethod(UTIL_Http.Method.POST)
-                    .withEndpoint(PS_Request.ElevateEndpoint.CREATECAPTUREGROUP)
-                    .withBody('test body')
-                    .build();
-
-        UTIL_Http.Response response = requestService.sendRequest(request);
-        return response;
+        return CreditCardCaptureGroup.getInstance().create();
     }
 
     /**

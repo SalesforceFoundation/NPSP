@@ -88,13 +88,51 @@ public class GE_PaymentServices_TEST {
         System.assert(!paymentStatusValues.isEmpty(), 'List of payment transaction status values should not be empty.');
     }
 
-    @isTest static void createGroupShouldReturnSuccessfulResponse() {
-        Test.setMock(HttpCalloutMock.class, new ElevateCaptureGroupMockHttpResponse());
+    @isTest static void createCreditCardCaptureGroupShouldReturnFailureResponse() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
+                .withInvalidRequestBody();
+
+        CreditCardCaptureGroup creditCardCaptureGroupMock = (CreditCardCaptureGroup) Test.createStub(
+                CreditCardCaptureGroup.class, captureGroupMock);
+        CreditCardCaptureGroup.setInstance(creditCardCaptureGroupMock);
 
         Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.createCaptureGroup();
         Test.stopTest();
 
+        System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
+                'bad request code');
+        System.assertEquals(response.body, mockResponse.createCaptureGroupFailureBody(), 'Response body should return' +
+                ' the failure body for creating a new capture group.');
+    }
+
+    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock();
+
+        CreditCardCaptureGroup creditCardCaptureGroupMock = (CreditCardCaptureGroup) Test.createStub(
+                CreditCardCaptureGroup.class, captureGroupMock);
+        CreditCardCaptureGroup.setInstance(creditCardCaptureGroupMock);
+
+        Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.createCaptureGroup();
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Status code should be the 201 ' +
+                'created code');
+        System.assertEquals(response.body, mockResponse.createCaptureGroupSuccessBody(), 'Response body should return' +
+                ' the success body for creating a new capture group.');
     }
 
     @isTest static void shouldReturnFailedResponse() {

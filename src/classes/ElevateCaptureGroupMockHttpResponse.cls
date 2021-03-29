@@ -29,27 +29,22 @@
  */
 public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
 
-    public final String INVALID_GROUP_ID = 'invalid-group-id';
-    public final String VALID_GROUP_ID = 'valid-group-id';
-    public final String INVALID_BODY_PARAMETER = 'invalid-parameter';
-
-
     public HttpResponse respond(HttpRequest request) {
         HttpResponse response = new HttpResponse();
         response.setHeader('Content-Type', 'application/json');
 
         switch on getEndpointOperation(request) {
-            when 'create' {
+            when 'batch' {
                 if (hasInvalidRequestParameter(request)) {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST);
-                    response.setBody(creatureCaptureGroupFailureBody());
+                    response.setBody(createCaptureGroupFailureBody());
                 } else {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_CREATED);
                     response.setBody(createCaptureGroupSuccessBody());
                 }
             }
             when 'add' {
-                if (request.getEndpoint().contains(INVALID_GROUP_ID)) {
+                if (request.getEndpoint().contains(CreditCardCaptureGroupMock.INVALID_GROUP_ID)) {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_NOT_FOUND);
                     response.setBody(addToCaptureGroupFailureBody());
                 } else {
@@ -62,7 +57,8 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
     }
 
     private Boolean hasInvalidRequestParameter(HttpRequest request) {
-        return request.getBody().contains(INVALID_BODY_PARAMETER);
+        System.debug(request.getBody());
+        return request.getBody().contains(CreditCardCaptureGroupMock.INVALID_PARAMETER);
     }
 
     private String getEndpointOperation(HttpRequest request) {
@@ -76,7 +72,8 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 '}';
     }
 
-    private String creatureCaptureGroupFailureBody() {
+    @TestVisible
+    private String createCaptureGroupFailureBody() {
         return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +

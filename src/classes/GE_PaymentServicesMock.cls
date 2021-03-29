@@ -23,6 +23,6 @@ public class GE_PaymentServicesMock implements StubProvider {
             }
         }
 
-        return true;
+        return null;
     }
 }

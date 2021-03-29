@@ -1,4 +1,4 @@
 public interface ElevateCaptureGroup {
     void add(ElevateTokenizedGift tokenizedGift);
-    void create();
+    UTIL_Http.Response create();
 }
