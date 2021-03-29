@@ -6,7 +6,7 @@ class ElevateCaptureGroup {
 
     constructor(elevateBatchId) {
         this.elevateBatchId = elevateBatchId;
-        this._runCount = 0;
+        this._hasAddRun = false;
     }
 
     async add(tokenizedGift) {
@@ -15,13 +15,12 @@ class ElevateCaptureGroup {
         }
 
         try {
-            this._runCount = 1;
-
             let response = await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
             console.log(`Add response = ${response}`);
             return Object.assign(new AuthorizedGift, JSON.parse(response).body); 
         } catch (ex) {
-            if (!this._runCount) {
+            if (!this._hasAddRun) {
+                this._hasAddRun = true;
                 this.elevateBatchId = await this.create();
                 this.add(tokenizedGift);
             } else {

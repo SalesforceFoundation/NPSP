@@ -643,12 +643,16 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 if (isCardTokenizable) {
                     tokenizedGift = new ElevateTokenizedGift(
-                            this.cardholderNames.firstName,
-                            this.cardholderNames.lastName,
-                            this.getFieldValueFromFormState('Donation_Amount__c'),
-                            CURRENCY,
+                        this.cardholderNames.firstName,
+                        this.cardholderNames.lastName,
+                        this.getFieldValueFromFormState('Donation_Amount__c'),
+                        CURRENCY,
                     );
                     await tokenizedGift.tokenize(sectionsList);
+
+                    this.updateFormState({
+                        [apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]: tokenizedGift.token
+                    });
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
@@ -677,7 +681,6 @@ export default class GeFormRenderer extends LightningElement{
                             //[apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
                             [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
                             [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
-                            [apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]: tokenizedGift.token
                         });
                         
                         dataImportFromFormState = this.saveableFormState();
