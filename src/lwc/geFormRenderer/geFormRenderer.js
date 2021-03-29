@@ -648,11 +648,8 @@ export default class GeFormRenderer extends LightningElement{
                         this.getFieldValueFromFormState('Donation_Amount__c'),
                         CURRENCY,
                     );
-                    await tokenizedGift.tokenize(sectionsList);
 
-                    this.updateFormState({
-                        [apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]: tokenizedGift.token
-                    });
+                    this.updateFormState(await tokenizedGift.tokenize(sectionsList));
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related

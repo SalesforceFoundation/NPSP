@@ -25,6 +25,7 @@ class ElevateTokenizedGift {
 
             if (tokenResponse) {
                 this.token = tokenResponse[0].Payment_Authorization_Token__c;
+                return tokenResponse[0];
             }
         }
     }
