@@ -709,7 +709,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>anAddress</members>
         <members>fflib_Domain</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>

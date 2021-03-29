@@ -32,7 +32,7 @@
 * @date 2021
 * @description Address entity class in NPSP.
 */
-public inherited sharing class NPSP_Address implements anAddress {
+public inherited sharing class NPSP_Address {
 
     private Address__c addr;
 
@@ -49,6 +49,15 @@ public inherited sharing class NPSP_Address implements anAddress {
         copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
     }
 
+    public NPSP_Address(Account acc) {
+        this.addr = new Address__c();
+        addr.Household_Account__c = acc.Id;
+        addr.Default_Address__c = true;
+        addr.Latest_Start_Date__c = system.today();
+        addr.Latest_End_Date__c = null;
+        copyFromSObject(acc, 'Billing', null);
+    }
+
     public Boolean isSeasonal() {
         return (this.addr.Seasonal_Start_Month__c != null && this.addr.Seasonal_Start_Day__c != null &&
                 this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
@@ -58,7 +67,7 @@ public inherited sharing class NPSP_Address implements anAddress {
         return this.addr;
     }
 
-    public Boolean belongsToSameHouseholdAs(anAddress other) {
+    public Boolean belongsToSameHouseholdAs(NPSP_Address other) {
         return householdId() == other.householdId();
     }
 
@@ -66,7 +75,7 @@ public inherited sharing class NPSP_Address implements anAddress {
         return this.addr.Household_Account__c;
     }
 
-    public Boolean overlapsWith(anAddress other) {
+    public Boolean overlapsWith(NPSP_Address other) {
         if (other == null)
             return false;
         if (!isSeasonal() || !other.isSeasonal())
@@ -182,7 +191,7 @@ public inherited sharing class NPSP_Address implements anAddress {
 
     }
 
-    public Boolean isEqualTo(anAddress other, Boolean includeAddressType) {
+    public Boolean isEqualTo(NPSP_Address other, Boolean includeAddressType) {
         Address__c addrOld = other.getRecord();
         if (addr == null || addrOld == null) {
             return false;
@@ -213,7 +222,7 @@ public inherited sharing class NPSP_Address implements anAddress {
     * @param addrDst the destination Address
     * @return void
     */
-    public void copyFrom(anAddress other) {
+    public void copyFrom(NPSP_Address other) {
         addr.MailingStreet__c = other.getRecord().MailingStreet__c;
         addr.MailingStreet2__c = other.getRecord().MailingStreet2__c;
         addr.MailingCity__c = other.getRecord().MailingCity__c;
