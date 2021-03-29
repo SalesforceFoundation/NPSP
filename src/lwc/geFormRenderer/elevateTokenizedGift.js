@@ -1,4 +1,3 @@
-
 class ElevateTokenizedGift {
 
     constructor(firstName, lastName, amount, currencyCode) {
