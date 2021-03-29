@@ -32,7 +32,7 @@
 * @date 2021
 * @description Address entity class in NPSP.
 */
-public inherited sharing class NPSP_Address implements anAddress {
+public inherited sharing class NPSP_Address {
 
     private Address__c addr;
 
@@ -49,7 +49,7 @@ public inherited sharing class NPSP_Address implements anAddress {
         return this.addr;
     }
 
-    public Boolean belongsToSameHouseholdAs(anAddress other) {
+    public Boolean belongsToSameHouseholdAs(NPSP_Address other) {
         return householdId() == other.householdId();
     }
 
@@ -57,7 +57,7 @@ public inherited sharing class NPSP_Address implements anAddress {
         return this.addr.Household_Account__c;
     }
 
-    public Boolean overlapsWith(anAddress other) {
+    public Boolean overlapsWith(NPSP_Address other) {
         if (other == null)
             return false;
         if (!isSeasonal() || !other.isSeasonal())
@@ -173,7 +173,7 @@ public inherited sharing class NPSP_Address implements anAddress {
 
     }
 
-    public Boolean isEqualTo(anAddress other, Boolean includeAddressType) {
+    public Boolean isEqualTo(NPSP_Address other, Boolean includeAddressType) {
         Address__c addrOld = other.getRecord();
         if (addr == null || addrOld == null) {
             return false;
@@ -204,7 +204,7 @@ public inherited sharing class NPSP_Address implements anAddress {
     * @param addrDst the destination Address
     * @return void
     */
-    public void copyFrom(anAddress other) {
+    public void copyFrom(NPSP_Address other) {
         addr.MailingStreet__c = other.getRecord().MailingStreet__c;
         addr.MailingStreet2__c = other.getRecord().MailingStreet2__c;
         addr.MailingCity__c = other.getRecord().MailingCity__c;
