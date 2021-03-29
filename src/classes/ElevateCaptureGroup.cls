@@ -1,7 +1,6 @@
 public with sharing class ElevateCaptureGroup implements CaptureGroup {
     private String id;
     private String status;
-    public static ElevateCaptureGroup captureGroupInstance;
 
     public UTIL_Http.Response create() {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(createRequest());
