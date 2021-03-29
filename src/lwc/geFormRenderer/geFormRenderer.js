@@ -66,8 +66,7 @@ import {
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateCaptureGroup from './elevateCaptureGroup';
-import TokenizedGift from './tokenizedGift';
-import AuthorizedGift from './authorizedGift';
+import ElevateTokenizedGift from './elevateTokenizedGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
@@ -640,9 +639,16 @@ export default class GeFormRenderer extends LightningElement{
 
             const isCardTokenizable = this.shouldTokenizeCard();
 
+            let tokenizedGift = null;
             try {
                 if (isCardTokenizable) {
-                    await this.tokenizeCard(sectionsList);
+                    tokenizedGift = new ElevateTokenizedGift(
+                            this.cardholderNames.firstName,
+                            this.cardholderNames.lastName,
+                            this.getFieldValueFromFormState('Donation_Amount__c'),
+                            CURRENCY,
+                    );
+                    await tokenizedGift.tokenize(sectionsList);
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
@@ -654,13 +660,12 @@ export default class GeFormRenderer extends LightningElement{
 
             // handle save depending mode
             if (this.batchId) {
-                if (isCardTokenizable) {
-                    let authorizedGift = {};
+                if (tokenizedGift) {
                     try {
                         this.loadingText = /*this.CUSTOM_LABELS.geAuthorizingCreditCard*/'Authorizing Credit Card...';
                         
                         let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
-                        authorizedGift = await currentCaptureGroup.add(null);
+                        let authorizedGift = await currentCaptureGroup.add(tokenizedGift);
 
                         this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
@@ -671,7 +676,8 @@ export default class GeFormRenderer extends LightningElement{
                         this.updateFormState({
                             //[apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
                             [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
-                            [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status
+                            [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+                            [apiNameFor(PAYMENT_AUTHORIZE_TOKEN)]: tokenizedGift.token
                         });
                         
                         dataImportFromFormState = this.saveableFormState();
@@ -685,36 +691,6 @@ export default class GeFormRenderer extends LightningElement{
                 this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
             } else {
                 await this.submitSingleGift(dataImportFromFormState);
-            }
-        }
-    }
-
-    createTokenizedGift() {
-        return new TokenizedGift(
-            this.getFieldValueFromFormState('Donation_Amount__c'),
-            this.cardholderNames.firstName,
-            this.cardholderNames.lastName,
-            CURRENCY,
-            this.getFieldValueFromFormState('Payment_Authorization_Token__c')
-        );
-    }
-
-    tokenizeCard = async (sections) => {
-        let widgetValues = [];
-        sections.forEach(section => {
-            if (section.isPaymentWidgetAvailable) {
-                widgetValues = widgetValues.concat(
-                    section.paymentToken
-                );
-            }
-        });
-        if (widgetValues) {
-            const tokenResponse = await Promise.all(
-                [widgetValues[0].payload]
-            );
-
-            if (tokenResponse) {
-                this.updateFormState(tokenResponse[0]);
             }
         }
     }
