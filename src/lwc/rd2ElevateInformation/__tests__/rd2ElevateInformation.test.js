@@ -27,11 +27,6 @@ jest.mock(
     { virtual: true }
 );
 
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
-
-const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
-const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-
 const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetRecord = require('./data/getRecord.json');
 const mockGetData = require('./data/getData.json');
@@ -57,7 +52,7 @@ describe('c-rd2-elevate-information', () => {
             is: rd2ElevateInformation,
         });
 
-        getObjectInfoAdapter.emit(mockGetObjectInfo);
+        getObjectInfo.emit(mockGetObjectInfo);
     });
 
     afterEach(() => {
@@ -88,7 +83,7 @@ describe('c-rd2-elevate-information', () => {
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
 
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -151,7 +146,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(errorMessage);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -214,7 +209,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordCancelInProgress);
+            getRecord.emit(mockGetRecordCancelInProgress);
 
             document.body.appendChild(component);
         });
@@ -274,7 +269,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(errorMessage);
-            getRecordAdapter.emit(mockGetRecordFailedCommitment);
+            getRecord.emit(mockGetRecordFailedCommitment);
 
             document.body.appendChild(component);
         });
@@ -325,7 +320,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataNoPermission);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -380,7 +375,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordNoCommitment);
+            getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
         });
@@ -442,7 +437,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataNoElevate);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordNoCommitment);
+            getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
         });
