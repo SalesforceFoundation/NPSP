@@ -70,7 +70,7 @@ public with sharing class NPSP_Contact {
         return contact.Current_Address__c;
     }
 
-    public Boolean isAddressOverride() {
+    public Boolean hasAddressOverride() {
         return contact.is_Address_Override__c;
     }
 

@@ -77,7 +77,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     if (npspContact.currentAddress() != null) {
                         // remember which contacts will need their address set
                         useCurrentAddressQueue.add(con);
-                        if (npspContact.isAddressOverride()) {
+                        if (npspContact.hasAddressOverride()) {
                             // track which address's need their dates updated
                             isOverrideByAddressId.put(npspContact.currentAddress(), true);
                         }
@@ -147,7 +147,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// new highest priority! if Account changes... 
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
-            	    if (!npspContact.isAddressOverride() && !npspContact.isAddressChanged()) {
+            	    if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
                         if (contacts.accountHasAddresses(npspContact.getRecord())) { //
                             // refresh address if the contact does not have one and account does
                             addressRefreshQueue.add(con);
@@ -161,13 +161,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 	            	if (npspContact.currentAddressChanged() &&
                             npspContact.currentAddress() != null) {
 	                    useCurrentAddressQueue.add(con);
-	                    if (npspContact.isAddressOverride())
+	                    if (npspContact.hasAddressOverride())
 	                        // track which address's need their dates updated
 	                        isOverrideByAddressId.put(npspContact.currentAddress(), true);
 	            	}
 	            	
 	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
-	            	if (npspContact.addressOverrideChanged() && !npspContact.isAddressOverride() &&
+	            	if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
 	            	    !npspContact.isAddressChanged()) {
 	                    addressRefreshQueue.add(con);
                         NPSP_Contact npspContactOld = new NPSP_Contact(conOld);
