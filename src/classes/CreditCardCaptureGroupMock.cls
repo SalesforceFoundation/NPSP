@@ -68,21 +68,6 @@ public class CreditCardCaptureGroupMock implements StubProvider {
                 .build();
     }
 
-    private HttpRequest mockAddToGroupRequest() {
-        String requestBody = getMockRequestBody();
-
-        return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withCaptureGroupId(groupId)
-                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
-                .withBody(requestBody)
-                .build();
-    }
-
-    private String getMockRequestBody() {
-        return '{paymentMethodToken:' + requestBodyParameter + '}';
-    }
-
     public Object handleMethodCall(Object stubbedObject,
             String stubbedMethodName,
             Type returnType,
