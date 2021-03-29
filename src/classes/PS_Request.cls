@@ -59,6 +59,7 @@ public inherited sharing class PS_Request {
     public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
     public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
+    public static String ROLE_PAYMENT_BATCH = 'Payments.Batch';
 
     public static String JWT_ISSUER_PARAM = 'iss';
     public static String JWT_EXPIRES_AT_PARAM = 'exp';
@@ -360,6 +361,10 @@ public inherited sharing class PS_Request {
                 || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
             ) {
                 value = ROLE_PAYMENT_COMMITMENTS;
+            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP ||
+                       endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
+
+                value = ROLE_PAYMENT_BATCH;
             }
 
             if (String.isNotBlank(value)) {
