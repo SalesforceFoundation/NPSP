@@ -123,15 +123,14 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if CurrentAddress changes to a new non-null value, refill to it.
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
-
-        integer i = -1;
+        integer n = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
             // new highest priority! if Account changes...
             if (isBeforeUpdate(triggerAction)) {
-                i++;
+                n++;
                 Contact con = (Contact) so;
-                Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+                Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
                 NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
                 if (npspContact.accountChanged()) {
@@ -144,8 +143,21 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     } else { // create a new address on the account
                         addressCreationQueue.add(con);
                     }
-                } else {
+                }
+            }
+        }
 
+        integer i = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+            // new highest priority! if Account changes...
+            if (isBeforeUpdate(triggerAction)) {
+                i++;
+                Contact con = (Contact) so;
+                Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+                NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+                if (!npspContact.accountChanged()) {
                     // highest priority. if they are changing to a new Current Address, refill from it.
                     if (npspContact.currentAddressChanged() &&
                             npspContact.currentAddress() != null) {
