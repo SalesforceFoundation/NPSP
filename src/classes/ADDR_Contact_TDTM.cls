@@ -117,35 +117,35 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     continue;
             }
 
+            // there can be four different types of changes we need to consider
+            // A. changes to isAddressOverride
+            // B. changes to CurrentAddress
+            // C. changes to MailingAddress fields
+            // D. changes to Account (ie switching accounts)
+            //
+            // that leads to 16 permutations!
+            // (it's actually more permutations, since we need to take into account what
+            // the change in isAddressOverride or CurrentAddress is).
+            //
+            // A,B,C       if (CurrentAddress) refill to it, else update/new address object
+            // A,!B,!C     if !isAddrOverride, refill contact from Default Address
+            // A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
+            // A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
+            // !A,B,C      if (CurrentAddress) refill to it, else update/new address object
+            // !A,!B,C     update/new address object
+            // !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
+            // !A,!B,!C    nothing!
+            // *,*,*,D     if no override, refill from Default Address, else update/new address object
+            //
+            // simplifying this to some precedence rules:
+            //     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
+            //     - if CurrentAddress changes to a new non-null value, refill to it.
+            //     - if MailingAddress field changes, update/new address object
+            //     - if isAddressOverride changes to false, refill from Default Address
+
+            // new highest priority! if Account changes...
             // BEFORE UPDATE
             if (isBeforeUpdate(triggerAction)) {
-                // there can be four different types of changes we need to consider
-                // A. changes to isAddressOverride
-                // B. changes to CurrentAddress
-                // C. changes to MailingAddress fields
-                // D. changes to Account (ie switching accounts)
-                //
-                // that leads to 16 permutations!
-                // (it's actually more permutations, since we need to take into account what
-                // the change in isAddressOverride or CurrentAddress is).
-                //
-                // A,B,C       if (CurrentAddress) refill to it, else update/new address object
-                // A,!B,!C     if !isAddrOverride, refill contact from Default Address
-                // A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
-                // A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
-                // !A,B,C      if (CurrentAddress) refill to it, else update/new address object
-                // !A,!B,C     update/new address object
-                // !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
-                // !A,!B,!C    nothing!
-                // *,*,*,D     if no override, refill from Default Address, else update/new address object
-                //
-                // simplifying this to some precedence rules:
-                //     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
-                //     - if CurrentAddress changes to a new non-null value, refill to it.
-                //     - if MailingAddress field changes, update/new address object
-                //     - if isAddressOverride changes to false, refill from Default Address
-
-                // new highest priority! if Account changes...
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
                     if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
