@@ -27,60 +27,57 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public class CreditCardCaptureGroupMock implements StubProvider {
+@isTest
+public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
 
     public static final String INVALID_PARAMETER = 'invalid-parameter';
     public static final String INVALID_GROUP_ID = 'invalid-group-id';
     private static final String DUMMY_GROUP_ID = 'gp-12345';
 
-    private String requestBodyParameter;
     private String groupId;
-    private ElevateTokenizedGift tokenizedGift;
 
-    public CreditCardCaptureGroupMock withInvalidRequestBody() {
-        requestBodyParameter = INVALID_PARAMETER;
+    @TestVisible
+    private PS_Request.Builder requestBuilder {
+        get {
+            if (requestBuilder == null) {
+                requestBuilder = new PS_Request.Builder();
+            }
+            return requestBuilder;
+        }
+        set;
+    }
+
+    @TestVisible
+    private ElevateTokenizedGift tokenizedGift {
+        get {
+            if (tokenizedGift == null) {
+                tokenizedGift = new ElevateTokenizedGift();
+            }
+            return tokenizedGift;
+        }
+        set;
+    }
+
+    public ElevateCaptureGroupInvalidRequest withInvalidRequestBody() {
+        requestBuilder.withBody('{"merchantId":' + INVALID_PARAMETER + '}');
         return this;
     }
 
-    public CreditCardCaptureGroupMock withInvalidGroupId() {
-        groupId = INVALID_GROUP_ID;
-        return this;
+    protected override HttpRequest createRequest() {
+        return requestBuilder.withMethod(UTIL_Http.Method.POST)
+                             .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
+                             .build();
     }
 
-    public CreditCardCaptureGroupMock withElevateTokenizedGift(ElevateTokenizedGift tokenizedGift) {
-        this.tokenizedGift = tokenizedGift;
-        return this;
-    }
+//    public override UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
+//
+//    }
 
-    public String groupId() {
+    public override String groupId() {
         if (String.isBlank(groupId)) {
             return DUMMY_GROUP_ID;
         } else {
             return groupId;
         }
     }
-
-    private HttpRequest mockCreateGroupRequest() {
-        return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
-                .withBody('{merchantId:' + requestBodyParameter + '}')
-                .build();
-    }
-
-    public Object handleMethodCall(Object stubbedObject,
-            String stubbedMethodName,
-            Type returnType,
-            List<Type> listOfParamTypes,
-            List<String> listOfParamNames,
-            List<Object> listOfArgs) {
-
-        switch on (stubbedMethodName) {
-            when 'create' {
-                return new UTIL_Http.RequestService().sendRequest(mockCreateGroupRequest());
-            }
-        }
-        return null;
-    }
-
 }

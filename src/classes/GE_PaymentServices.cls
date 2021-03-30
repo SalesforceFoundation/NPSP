@@ -39,6 +39,17 @@ public with sharing class GE_PaymentServices {
 
     private static GE_PaymentServices paymentServicesInstance;
 
+    @TestVisible
+    private ElevateCaptureGroup elevateCaptureGroup {
+        get {
+            if (elevateCaptureGroup == null) {
+                elevateCaptureGroup = new ElevateCaptureGroup();
+            }
+            return elevateCaptureGroup;
+        }
+        set;
+    }
+
     /***
      * @description Payment Services configuration
      */
@@ -169,11 +180,11 @@ public with sharing class GE_PaymentServices {
     }
 
     public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new ElevateCaptureGroup().add(tokenizedGift, groupId);
+        return elevateCaptureGroup.add(tokenizedGift, groupId);
     }
 
     public UTIL_Http.Response createCaptureGroup() {
-        return new ElevateCaptureGroup().create();
+        return elevateCaptureGroup.create();
     }
 
     /**

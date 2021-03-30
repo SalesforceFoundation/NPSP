@@ -1,4 +1,4 @@
-public with sharing class ElevateCaptureGroup implements CaptureGroup {
+public virtual with sharing class ElevateCaptureGroup implements CaptureGroup {
     private String id;
     private String status;
 
@@ -7,7 +7,7 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         return response;
     }
 
-    private HttpRequest createRequest() {
+    protected virtual HttpRequest createRequest() {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
@@ -28,12 +28,12 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         return JSON.serialize(new CreateRequestBody());
     }
 
-    public UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
+    public virtual UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(addRequest(tokenizedGift, groupId));
         return response;
     }
 
-    public String groupId() {
+    public virtual String groupId() {
         return id;
     }
 

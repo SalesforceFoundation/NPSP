@@ -60,7 +60,7 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
     }
 
     private Boolean hasInvalidGroupId(HttpRequest request) {
-        return request.getEndpoint().contains(CreditCardCaptureGroupMock.INVALID_GROUP_ID);
+        return request.getEndpoint().contains(ElevateCaptureGroupInvalidRequest.INVALID_GROUP_ID);
     }
 
     private Boolean amountLessThanZero(HttpRequest request) {
@@ -76,7 +76,7 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
 
     private Boolean hasInvalidRequestParameter(HttpRequest request) {
         System.debug(request.getBody());
-        return request.getBody().contains(CreditCardCaptureGroupMock.INVALID_PARAMETER);
+        return request.getBody().contains(ElevateCaptureGroupInvalidRequest.INVALID_PARAMETER);
     }
 
     private String getEndpointOperation(HttpRequest request) {

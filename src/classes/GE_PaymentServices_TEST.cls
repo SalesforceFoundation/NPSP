@@ -94,15 +94,11 @@ public class GE_PaymentServices_TEST {
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
-                .withInvalidRequestBody();
-
-        ElevateCaptureGroup creditCardCaptureGroupMock = (ElevateCaptureGroup) Test.createStub(
-                ElevateCaptureGroup.class, captureGroupMock);
-        ElevateCaptureGroup.setInstance(creditCardCaptureGroupMock);
-
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
+            paymentServices.elevateCaptureGroup = new ElevateCaptureGroupInvalidRequest()
+                    .withInvalidRequestBody();
+
             UTIL_Http.Response response = paymentServices.createCaptureGroup();
         Test.stopTest();
 
@@ -135,13 +131,12 @@ public class GE_PaymentServices_TEST {
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
-                .withInvalidGroupId();
-
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
+            paymentServices.elevateCaptureGroup = new ElevateCaptureGroupInvalidRequest();
+
             UTIL_Http.Response response = paymentServices.addToCaptureGroup(new ElevateTokenizedGift(),
-                    captureGroupMock.groupId());
+                    paymentServices.elevateCaptureGroup.groupId());
         Test.stopTest();
 
         System.assertEquals(UTIL_Http.STATUS_CODE_NOT_FOUND, response.statusCode, 'Status code should be the 404 ' +
@@ -157,8 +152,7 @@ public class GE_PaymentServices_TEST {
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
         ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(-100.00);
-        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
-                .withElevateTokenizedGift(tokenizedGift);
+        ElevateCaptureGroupInvalidRequest captureGroupMock = new ElevateCaptureGroupInvalidRequest();
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
@@ -181,8 +175,7 @@ public class GE_PaymentServices_TEST {
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
         ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(200);
-        CreditCardCaptureGroupMock captureGroupMock = new CreditCardCaptureGroupMock()
-                .withElevateTokenizedGift(tokenizedGift);
+        ElevateCaptureGroupInvalidRequest captureGroupMock = new ElevateCaptureGroupInvalidRequest();
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
