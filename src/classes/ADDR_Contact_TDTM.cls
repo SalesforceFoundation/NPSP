@@ -94,6 +94,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 this.addressCreationQueue = getAddressCreationQueue(contacts, listOld);
                 this.useCurrentAddressQueue = getUseCurrentAddressQueue(contacts, listOld);
                 this.isOverrideByAddressId = getIsOverrideByAddressId(contacts, listOld);
+                this.addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
+                this.isOverrideByAddressId.putAll(
+                        getIsOverrideByAddressIdFromAddressOverrideChanges(
+                                contacts, listOld));
             }
         }
         // Rules:
@@ -127,11 +131,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if CurrentAddress changes to a new non-null value, refill to it.
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
-
-        if (isBeforeUpdate(triggerAction)) {
-            this.addressRefreshQueue = addressOverrideResetsOf(contacts, listOld);
-            this.isOverrideByAddressId = getIsOverrideByAddressIdFromAddressOverrideChanges(contacts, listOld);
-        }
 
         integer j = -1;
         // we only support address management with HH Accounts being used
