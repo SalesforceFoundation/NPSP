@@ -7,7 +7,7 @@ import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServic
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
-//import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Capture_Group_Id__c';
+import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
@@ -505,7 +505,7 @@ export default class GeFormRenderer extends LightningElement{
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    handleSaveBatchGiftEntry(dataImportRecord, formControls) {
+    handleSaveBatchGiftEntry(dataImportRecord, formControls, isCreditCardAuth) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
@@ -518,13 +518,16 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
-                    showToast(
-                        'Success!', 
-                        this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
-                        'success', 
-                        'dismissible', 
-                        null
-                    );
+                    
+                    if (isCreditCardAuth) {
+                        showToast(
+                            this.CUSTOM_LABELS.PageMessagesConfirm,
+                            this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
+                            'success', 
+                            'dismissible', 
+                            null
+                        );
+                    }
                 },
                 error: (error) => {
                     formControls.enableSaveButton();
@@ -682,7 +685,7 @@ export default class GeFormRenderer extends LightningElement{
                         console.log(`Authorized gift = ${JSON.stringify(authorizedGift)}`);
 
                         this.updateFormState({
-                            //[apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                            [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
                             [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
                             [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
                         });
@@ -694,7 +697,7 @@ export default class GeFormRenderer extends LightningElement{
                     }
                 }
                 
-                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
+                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
             } else {
                 await this.submitSingleGift(dataImportFromFormState);
             }
