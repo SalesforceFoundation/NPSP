@@ -1,12 +1,12 @@
-public with sharing class ElevateTokenizedGift {
-    private Decimal amount;
-    private String merchantId;
-    private String gatewayId;
-    private String firstName;
-    private String lastName;
-    private String currencyCode;
-    private String paymentMethodToken;
-    private PS_IntegrationServiceConfig.Service configService;
+public virtual with sharing class ElevateTokenizedGift {
+    protected Decimal amount;
+    protected String firstName;
+    protected String paymentMethodToken;
+    protected String merchantId;
+    protected String gatewayId;
+    protected String lastName;
+    protected String currencyCode;
+    protected PS_IntegrationServiceConfig.Service configService;
 
     public ElevateTokenizedGift() {
         this.currencyCode = UserInfo.getDefaultCurrency();
@@ -35,11 +35,11 @@ public with sharing class ElevateTokenizedGift {
         configService = new PS_IntegrationServiceConfig.Service();
     }
 
-    public Decimal amount() {
+    public virtual Decimal amount() {
         return amount;
     }
 
-    public String firstName() {
+    public virtual String firstName() {
         return firstName;
     }
 
@@ -59,7 +59,7 @@ public with sharing class ElevateTokenizedGift {
         return merchantId;
     }
 
-    public String token() {
+    public virtual String token() {
         return paymentMethodToken;
     }
 }

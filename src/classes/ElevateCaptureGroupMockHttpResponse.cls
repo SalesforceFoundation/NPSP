@@ -33,6 +33,8 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
         HttpResponse response = new HttpResponse();
         response.setHeader('Content-Type', 'application/json');
 
+        ElevateTokenizedGift tokenizedGift = deserializeBodyToTokenizedGiftType(request.getBody());
+
         switch on getEndpointOperation(request) {
             when 'batch' {
                 if (hasInvalidRequestParameter(request)) {
@@ -47,9 +49,15 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 if (hasInvalidGroupId(request)) {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_NOT_FOUND);
                     response.setBody(addToCaptureGroupFailureBody());
-                } else if (amountLessThanZero(request)) {
+                } else if (amountLessThanZero(tokenizedGift)) {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST);
                     response.setBody(addToCaptureGroupFailureAmountBody());
+                } else if (hasNullFirstName(tokenizedGift)) {
+                    response.setStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST);
+                    response.setBody(addToCaptureGroupFailureNullFirstName());
+                } else if (hasInvalidToken(tokenizedGift)) {
+                    response.setStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST);
+                    response.setBody(addToCaptureGroupFailureInvalidToken());
                 } else {
                     response.setStatusCode(UTIL_Http.STATUS_CODE_CREATED);
                     response.setBody(addToCaptureGroupSuccessBody());
@@ -59,13 +67,19 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
         return response;
     }
 
+    private Boolean hasNullFirstName(ElevateTokenizedGift tokenizedGift) {
+        return String.isBlank(tokenizedGift.firstName());
+    }
+
+    private Boolean hasInvalidToken(ElevateTokenizedGift tokenizedGift) {
+        return String.isBlank(tokenizedGift.token());
+    }
+
     private Boolean hasInvalidGroupId(HttpRequest request) {
         return request.getEndpoint().contains(ElevateCaptureGroupInvalidRequest.INVALID_GROUP_ID);
     }
 
-    private Boolean amountLessThanZero(HttpRequest request) {
-        ElevateTokenizedGift tokenizedGift = deserializeBodyToTokenizedGiftType(request.getBody());
-
+    private Boolean amountLessThanZero(ElevateTokenizedGift tokenizedGift) {
         return tokenizedGift.amount() < 0;
     }
 
@@ -158,6 +172,28 @@ public class ElevateCaptureGroupMockHttpResponse implements HttpCalloutMock {
                 '    {\n' +
                 '      "message": "Amount cannot be less than zero",\n' +
                 '      "localizedPaymentsMessage": "Invalid amount"\n' +
+                '    }\n' +
+                '  ]\n' +
+                '}';
+    }
+
+    public String addToCaptureGroupFailureNullFirstName() {
+        return '{\n' +
+                '  "errors": [\n' +
+                '    {\n' +
+                '      "message": "First name cannot be null",\n' +
+                '      "localizedPaymentsMessage": "Invalid first name"\n' +
+                '    }\n' +
+                '  ]\n' +
+                '}';
+    }
+
+    public String addToCaptureGroupFailureInvalidToken() {
+        return '{\n' +
+                '  "errors": [\n' +
+                '    {\n' +
+                '      "message": "Forbidden",\n' +
+                '      "localizedPaymentsMessage": "Forbidden"\n' +
                 '    }\n' +
                 '  ]\n' +
                 '}';

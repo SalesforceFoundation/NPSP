@@ -37,6 +37,7 @@ public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
     private static final String DUMMY_GROUP_ID = 'gp-12345';
 
     private String groupId;
+    private String requestBody;
 
     @TestVisible
     private PS_Request.Builder requestBuilder {
@@ -61,24 +62,28 @@ public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
     }
 
     public ElevateCaptureGroupInvalidRequest withInvalidGroupId() {
-        requestBuilder.withCaptureGroupId(INVALID_GROUP_ID);
+        groupId = INVALID_GROUP_ID;
         return this;
     }
 
     public ElevateCaptureGroupInvalidRequest withInvalidRequestBody() {
-        requestBuilder.withBody('{"merchantId":' + INVALID_PARAMETER + '}');
+        requestBody = '{"merchantId":\"' + INVALID_PARAMETER + '\"}';
         return this;
     }
 
     protected override HttpRequest createRequest() {
+        System.debug(requestBody);
         return requestBuilder.withMethod(UTIL_Http.Method.POST)
                              .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
+                             .withBody(requestBody)
                              .build();
     }
 
-    protected override HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+    protected override HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String invalidGroupId) {
         return requestBuilder.withMethod(UTIL_Http.Method.POST)
+                             .withCaptureGroupId(invalidGroupId)
                              .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                             .withBody(JSON.serialize(tokenizedGift))
                              .build();
     }
 

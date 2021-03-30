@@ -266,7 +266,6 @@
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
-        <members>ElevateCaptureGroupInvalidRequest</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -303,8 +302,11 @@
         <members>ERR_RecordError_TEST</members>
         <members>ElevateAuthorizedGift</members>
         <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupInvalidRequest</members>
         <members>ElevateCaptureGroupMockHttpResponse</members>
         <members>ElevateTokenizedGift</members>
+        <members>ElevateTokenizedGiftInvalidRequest</members>
+        <members>ElevateTokenizedGiftValidRequest</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>

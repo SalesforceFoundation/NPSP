@@ -104,7 +104,7 @@ public class GE_PaymentServices_TEST {
 
         System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
                 'bad request code');
-        System.assertEquals(response.body, mockResponse.createCaptureGroupFailureBody(), 'Response body should return' +
+        System.assertEquals(mockResponse.createCaptureGroupFailureBody(), response.body, 'Response body should return' +
                 ' the failure body for creating a new capture group.');
     }
 
@@ -152,14 +152,14 @@ public class GE_PaymentServices_TEST {
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift();
-        ElevateCaptureGroupInvalidRequest captureGroupMock = new ElevateCaptureGroupInvalidRequest();
+        ElevateTokenizedGiftInvalidRequest tokenizedGiftInvalid = new ElevateTokenizedGiftInvalidRequest()
+                .withInvalidAmount();
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             UTIL_Http.Response response = paymentServices.addToCaptureGroup(
-                tokenizedGift,
-                captureGroupMock.groupId());
+                tokenizedGiftInvalid,
+                'gp-12345');
         Test.stopTest();
 
         System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
@@ -169,20 +169,63 @@ public class GE_PaymentServices_TEST {
                 ' the failure body for adding to a capture group.');
     }
 
+    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponseForNullFirstName() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        ElevateTokenizedGiftInvalidRequest tokenizedGiftInvalid = new ElevateTokenizedGiftInvalidRequest()
+                .withInvalidFirstName();
+
+        Test.startTest();
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            UTIL_Http.Response response = paymentServices.addToCaptureGroup(
+                    tokenizedGiftInvalid,
+                    'gp-12345');
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
+                'bad request code');
+        System.assertEquals(mockResponse.addToCaptureGroupFailureNullFirstName(), response.body, 'Response body should' +
+                ' return the failure body for adding to a capture group with a null first name.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponseForInvalidToken() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
+        Test.setMock(HttpCalloutMock.class, mockResponse);
+
+        ElevateTokenizedGiftInvalidRequest tokenizedGiftInvalid = new ElevateTokenizedGiftInvalidRequest()
+                .withInvalidToken();
+
+        Test.startTest();
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        UTIL_Http.Response response = paymentServices.addToCaptureGroup(
+                tokenizedGiftInvalid,
+                'gp-12345');
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_BAD_REQUEST, response.statusCode, 'Status code should be the 400 ' +
+                'bad request code');
+        System.assertEquals(mockResponse.addToCaptureGroupFailureInvalidToken(), response.body, 'Response body should' +
+                ' return the failure body for adding to a capture group with a null first name.');
+    }
+
     @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(200);
-        ElevateCaptureGroupInvalidRequest captureGroupMock = new ElevateCaptureGroupInvalidRequest();
+        ElevateTokenizedGiftValidRequest tokenizedGift = new ElevateTokenizedGiftValidRequest();
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             UTIL_Http.Response response = paymentServices.addToCaptureGroup(
                     tokenizedGift,
-                    captureGroupMock.groupId());
+                    'gp-12345');
         Test.stopTest();
 
         System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Status code should be the 201 ' +
