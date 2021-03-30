@@ -132,55 +132,88 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
 
-        integer j = -1;
-        // we only support address management with HH Accounts being used
-        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
-            j++;
-            Contact con = (Contact) so;
-            Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
-            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+        if (!isBefore) {
+            integer g = -1;
+            // we only support address management with HH Accounts being used
+            for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+                g++;
+                Contact con = (Contact) so;
+                Contact conOld = (listOld != null ? (Contact) listOld[g] : null);
+                NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
-            if (!isBefore && npspContact.householdAndAccountDiffer()) {
-                continue;
-            }
-
-
-            if (isBefore) {
-                Account a = contacts.accountsByIds().get(con.AccountId);
-                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                    continue;
-            }
-            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
-            // our functionality for dealing with contact address changes requires some trickery!
-            // if the contact doesn't have an address override, we create (or match) a default address,
-            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
-            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
-            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate ||
-                    triggerAction == TDTM_Runnable.Action.BeforeInsert ||
-                    triggerAction == TDTM_Runnable.Action.AfterInsert ||
-                    triggerAction == TDTM_Runnable.Action.AfterUpdate
-               ) {
-                // note that we detect whether the address change is coming from the address trigger,
-                // in which case we don't want to create a new address.
-                if (isRecursive()) {
-                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                    continue;
-                }
-                // If the Before Insert/Update trigger on the Contact has already executed and taken action
-                // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                if (isRecursiveFromContact(triggerAction)) {
-                    UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                if (npspContact.householdAndAccountDiffer()) {
                     continue;
                 }
 
-                // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
-                    addressCreationQueue.add(con);
+                // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
+                // our functionality for dealing with contact address changes requires some trickery!
+                // if the contact doesn't have an address override, we create (or match) a default address,
+                // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
+                // but if the contact has an address override, we are supposed to create (or match) a non default address override.
+                // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
+                if (triggerAction == TDTM_Runnable.Action.AfterInsert ||
+                        triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                    // note that we detect whether the address change is coming from the address trigger,
+                    // in which case we don't want to create a new address.
+                    if (isRecursive()) {
+                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                        continue;
+                    }
+                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                    if (isRecursiveFromContact(triggerAction)) {
+                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                        continue;
+                    }
+
+                    // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+                    if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+                        addressCreationQueue.add(con);
+                    }
                 }
             }
         }
+        if (isBefore) {
+            integer j = -1;
+            // we only support address management with HH Accounts being used
+            for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+                j++;
+                Contact con = (Contact) so;
+                Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
+                NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
+                Account a = contacts.accountsByIds().get(con.AccountId);
+                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                    continue;
+                }
+                // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
+                // our functionality for dealing with contact address changes requires some trickery!
+                // if the contact doesn't have an address override, we create (or match) a default address,
+                // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
+                // but if the contact has an address override, we are supposed to create (or match) a non default address override.
+                // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate ||
+                        triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    // note that we detect whether the address change is coming from the address trigger,
+                    // in which case we don't want to create a new address.
+                    if (isRecursive()) {
+                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                        continue;
+                    }
+                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                    if (isRecursiveFromContact(triggerAction)) {
+                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                        continue;
+                    }
+
+                    // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+                    if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+                        addressCreationQueue.add(con);
+                    }
+                }
+            }
+        }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
