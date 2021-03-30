@@ -125,8 +125,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if isAddressOverride changes to false, refill from Default Address
         if (isBeforeUpdate(triggerAction)) {
             this.addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
-        }
-        if (isBeforeUpdate(triggerAction)) {
             this.addressCreationQueue = getAddressCreationQueue(contacts, listOld);
         }
 
