@@ -121,6 +121,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             triggerAction);
                 }
                 TDTM_TriggerHandler.processDML(dmlWrapper);
+
+                if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+                }
             }
             when AfterInsert {
                 this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
@@ -175,6 +179,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                             triggerAction);
                 }
                 TDTM_TriggerHandler.processDML(dmlWrapper);
+
+                if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+                }
             }
             when AfterUpdate {
                 this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
@@ -222,10 +230,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
 
 
-
-        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-        }
 
         // If the Before Insert/Update trigger on the Contact has already executed and taken action
         // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
