@@ -1,0 +1,12 @@
+.slds-page-header__detail-block__extension {
+    padding: 0 var(--lwc-spacingXLarge, 2rem);
+    max-width: 100%;
+}
+
+:host(.first-child) .slds-page-header__detail-block__extension {
+    padding-left: 0;
+}
+
+:host {
+    max-width: 25%;
+}

@@ -8,9 +8,12 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
-import NextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
+import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
+import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import cancelButtonLabel from '@salesforce/label/c.commonCancel';
+import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -32,7 +35,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         elevateDisabledMessage,
         elevateEnableButtonLabel,
         cardholderNameLabel,
-        NextPaymentDonationDateMessage
+        updatePaymentButtonLabel,
+        cancelButtonLabel,
+        nextPaymentDonationDateMessage,
+        commonExpirationDate
     };
 
     @track isLoading = true;
@@ -42,6 +48,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _paymentMethod = undefined;
     _nextDonationDate = undefined;
     _isEditPayment = false;
+    
+    @api isEditMode;
+    @api cardLastFour;
+    @api cardLastFourLabel;
+    @api cardExpDate;
 
     @api
     get paymentMethod() {
@@ -64,7 +75,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     get nextPaymentDonationDateMessage() {
         return (this.nextDonationDate == null)
         ? ''
-        : this.labels.NextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
+        : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
     }
 
     @api 
@@ -82,6 +93,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
+        if(this.isEditMode){
+            this.isDisabled = true;
+        }
+
         const domainInfo = await getOrgDomainInfo()
             .catch(error => {
                 this.handleError(error);
@@ -263,4 +278,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             payload: this.requestToken()
         };
     }
+
+    get qaLocatorLastFourDigits() {
+        return `text Last Four Digits`;
+    }
+
+    get qaLocatorExpirationDate() {
+        return `text Expiration Date`;
+    }
+
 }

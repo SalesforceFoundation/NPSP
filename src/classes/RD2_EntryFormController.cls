@@ -86,7 +86,8 @@ public with sharing class RD2_EntryFormController {
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+            'isEditEnabled' => RD2_ElevateIntegrationService.isEditEnabled()
         };
     }
 
@@ -263,7 +264,36 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String handleCommitment(String jsonRecord, String paymentMethodToken) {
         try {
-            UTIL_Http.Response response = commitmentService.handleCommitment(jsonRecord, paymentMethodToken);
+            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+
+            commitmentService.adjustAndValidateRD(rd);
+            UTIL_Http.Response response = commitmentService.handleCommitment(rd, paymentMethodToken);
+
+            return JSON.serialize(response);
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    /***
+    * @description Constructs a Recurring Donation record based on the json record, and
+    * submits the update payment commitment request to the Elevate Payments API.
+    * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
+    * @param paymentMethodToken Payment Method Token
+    * @return String Commitment API response
+    */
+    @AuraEnabled
+    public static String handleUpdatePaymentCommitment(String jsonRecord, String paymentMethodToken){
+        try {
+            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+            UTIL_Http.Response response = commitmentService.handleCommitment(rd, paymentMethodToken);
 
             return JSON.serialize(response);
 
@@ -318,17 +348,12 @@ public with sharing class RD2_EntryFormController {
 
         /**
         * @description Handles validation and Elevate recurring commitment creation
-        * @param jsonRecord Recurring Donation fields as entered by the user before the record is saved
+        * @param rd Recurring Donation
         * @param paymentMethodToken Payment Method Token
         * @return UTIL_Http.Response Payments API response
         */
-        public UTIL_Http.Response handleCommitment(String jsonRecord, String paymentMethodToken) {
+        public UTIL_Http.Response handleCommitment(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
             UTIL_Http.Response response;
-            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
-                jsonRecord, npe03__Recurring_Donation__c.class
-            );
-
-            adjustAndValidateRD(rd);
 
             if (shouldSendToElevate(rd, paymentMethodToken)) {
                 PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, paymentMethodToken);
