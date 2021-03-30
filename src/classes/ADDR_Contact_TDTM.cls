@@ -58,8 +58,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
-
         // bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
@@ -94,9 +92,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                     // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
                     // to the Contact's address that are being made by this BeforeUpdate trigger.
-                    if (isBefore) {
-                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-                    }
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
                 }
 
                 // set the mailing address for contacts who specify an address lookup or override
@@ -153,9 +149,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
                     // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
                     // to the Contact's address that are being made by this BeforeUpdate trigger.
-                    if (isBefore) {
-                        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-                    }
+                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
                 }
 
                 // set the mailing address for contacts who specify an address lookup or override
