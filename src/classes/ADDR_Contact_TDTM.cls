@@ -133,6 +133,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if isAddressOverride changes to false, refill from Default Address
 
         if (!isBefore) {
+            Set<Contact> addressCreationQueue = new Set<Contact>();
             integer g = -1;
             // we only support address management with HH Accounts being used
             for (SObject so : contacts.thatHaveAccounts().getRecords()) {
@@ -169,8 +170,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     addressCreationQueue.add(con);
                 }
             }
+            this.addressCreationQueue = addressCreationQueue;
         }
         if (isBefore) {
+            Set<Contact> addressCreationQueue = new Set<Contact>();
             integer j = -1;
             // we only support address management with HH Accounts being used
             for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
@@ -203,6 +206,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     addressCreationQueue.add(con);
                 }
             }
+            this.addressCreationQueue = addressCreationQueue;
         }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
