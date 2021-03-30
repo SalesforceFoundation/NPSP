@@ -37,20 +37,18 @@
 public with sharing class GE_PaymentServices {
     @TestVisible class PaymentServicesException extends Exception {}
 
-    public enum ElevateTransactionStatus {
-        PENDING,
-        AUTHORIZED,
-        CANCELED,
-        CAPTURED,
-        DECLINED,
-        NONRETRYABLEERROR,
-        RETRYABLEERROR,
-        REFUNDISSUED,
-        SETTLED,
-        SUBMITTED
-    }
-
     private static GE_PaymentServices paymentServicesInstance;
+
+    @TestVisible
+    private ElevateCaptureGroup elevateCaptureGroup {
+        get {
+            if (elevateCaptureGroup == null) {
+                elevateCaptureGroup = new ElevateCaptureGroup();
+            }
+            return elevateCaptureGroup;
+        }
+        set;
+    }
 
     /***
      * @description Payment Services configuration
@@ -179,6 +177,14 @@ public with sharing class GE_PaymentServices {
         PurchaseCallBody requestBody = getPurchaseCallBody(jsonRequestBody);
 
         return createTransaction(requestBody);
+    }
+
+    public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return elevateCaptureGroup.add(tokenizedGift, groupId);
+    }
+
+    public UTIL_Http.Response createCaptureGroup() {
+        return elevateCaptureGroup.create();
     }
 
     /**
