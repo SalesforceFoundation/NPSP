@@ -126,11 +126,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
 
-        integer i = -1;
-        // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
-            // new highest priority! if Account changes...
-            if (isBeforeUpdate(triggerAction)) {
+        if (isBeforeUpdate(triggerAction)) {
+            integer i = -1;
+            // we only support address management with HH Accounts being used
+            for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+                // new highest priority! if Account changes...
                 i++;
                 Contact con = (Contact) so;
                 Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
@@ -138,14 +138,26 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
                 if (!npspContact.accountChanged()) {
                     // highest priority. if they are changing to a new Current Address, refill from it.
-                    if (npspContact.currentAddressChanged() &&
-                            npspContact.currentAddress() != null) {
+                    if (addressChangedFor(npspContact)) {
                         useCurrentAddressQueue.add(con);
                         if (npspContact.hasAddressOverride())
                             // track which address's need their dates updated
                             isOverrideByAddressId.put(npspContact.currentAddress(), true);
                     }
+                }
+            }
+        }
+        if (isBeforeUpdate(triggerAction)) {
+            integer i = -1;
+            // we only support address management with HH Accounts being used
+            for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+                // new highest priority! if Account changes...
+                i++;
+                Contact con = (Contact) so;
+                Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+                NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
+                if (!npspContact.accountChanged()) {
                     // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
                     if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
                             !npspContact.isAddressChanged()) {
@@ -260,6 +272,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Boolean addressChangedFor(NPSP_Contact npspContact) {
+        return npspContact.currentAddressChanged() &&
+                npspContact.currentAddress() != null;
     }
 
     private List<Contact> getAddressRefreshQueue(Contacts contacts, List<SObject> listOld) {
