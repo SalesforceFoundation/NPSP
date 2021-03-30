@@ -3,7 +3,7 @@
     <style>
         .slds-scope .slds-notify_toast, .slds-scope .slds-notify--toast
         {
-            min-width: 20rem;
+            min-width: 320px;
         }
     </style>
 
