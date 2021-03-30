@@ -130,8 +130,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         if (isBeforeUpdate(triggerAction)) {
             this.addressRefreshQueue = addressOverrideResetsOf(contacts, listOld);
-        }
-        if (isBeforeUpdate(triggerAction)) {
             this.isOverrideByAddressId = getIsOverrideByAddressIdFromAddressOverrideChanges(contacts, listOld);
         }
 
