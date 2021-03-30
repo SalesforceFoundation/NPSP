@@ -113,7 +113,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
             if (isBefore) {
                 Account a = contacts.accountsByIds().get(con.AccountId);
-                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
+                if (isNotAHouseholdAccount(a))
                     continue;
             }
 
@@ -281,5 +281,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Boolean isNotAHouseholdAccount(Account a) {
+        return a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE;
     }
 }
