@@ -189,25 +189,22 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
                 // but if the contact has an address override, we are supposed to create (or match) a non default address override.
                 // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate ||
-                        triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    // note that we detect whether the address change is coming from the address trigger,
-                    // in which case we don't want to create a new address.
-                    if (isRecursive()) {
-                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                        continue;
-                    }
-                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
-                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                    if (isRecursiveFromContact(triggerAction)) {
-                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
-                        continue;
-                    }
+                // note that we detect whether the address change is coming from the address trigger,
+                // in which case we don't want to create a new address.
+                if (isRecursive()) {
+                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                    continue;
+                }
+                // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                if (isRecursiveFromContact(triggerAction)) {
+                    UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                    continue;
+                }
 
-                    // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                    if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
-                        addressCreationQueue.add(con);
-                    }
+                // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+                if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+                    addressCreationQueue.add(con);
                 }
             }
         }
