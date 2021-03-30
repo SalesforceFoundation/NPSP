@@ -35,18 +35,6 @@ public with sharing class ElevateTokenizedGift {
         configService = new PS_IntegrationServiceConfig.Service();
     }
 
-    @TestVisible
-    private ElevateTokenizedGift withAmount(Decimal amount) {
-        this.amount = amount;
-        return this;
-    }
-
-    @TestVisible
-    private ElevateTokenizedGift withToken(String token) {
-        paymentMethodToken = token;
-        return this;
-    }
-
     public Decimal amount() {
         return amount;
     }

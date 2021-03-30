@@ -15,7 +15,7 @@ public virtual with sharing class ElevateCaptureGroup implements CaptureGroup {
                 .build();
     }
 
-    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+    protected virtual HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withCaptureGroupId(groupId)

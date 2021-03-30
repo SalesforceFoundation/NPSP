@@ -133,7 +133,8 @@ public class GE_PaymentServices_TEST {
 
         Test.startTest();
             GE_PaymentServices paymentServices = new GE_PaymentServices();
-            paymentServices.elevateCaptureGroup = new ElevateCaptureGroupInvalidRequest();
+            paymentServices.elevateCaptureGroup = new ElevateCaptureGroupInvalidRequest()
+                    .withInvalidGroupId();
 
             UTIL_Http.Response response = paymentServices.addToCaptureGroup(new ElevateTokenizedGift(),
                     paymentServices.elevateCaptureGroup.groupId());
@@ -151,7 +152,7 @@ public class GE_PaymentServices_TEST {
         ElevateCaptureGroupMockHttpResponse mockResponse = new ElevateCaptureGroupMockHttpResponse();
         Test.setMock(HttpCalloutMock.class, mockResponse);
 
-        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift().withAmount(-100.00);
+        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift();
         ElevateCaptureGroupInvalidRequest captureGroupMock = new ElevateCaptureGroupInvalidRequest();
 
         Test.startTest();

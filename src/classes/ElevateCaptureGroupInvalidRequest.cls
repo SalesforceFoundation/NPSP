@@ -27,7 +27,9 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-@isTest
+/**
+* @description Used to mock invalid elevate capture group requests for unit tests
+ */
 public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
 
     public static final String INVALID_PARAMETER = 'invalid-parameter';
@@ -58,6 +60,11 @@ public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
         set;
     }
 
+    public ElevateCaptureGroupInvalidRequest withInvalidGroupId() {
+        requestBuilder.withCaptureGroupId(INVALID_GROUP_ID);
+        return this;
+    }
+
     public ElevateCaptureGroupInvalidRequest withInvalidRequestBody() {
         requestBuilder.withBody('{"merchantId":' + INVALID_PARAMETER + '}');
         return this;
@@ -69,9 +76,11 @@ public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
                              .build();
     }
 
-//    public override UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
-//
-//    }
+    protected override HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return requestBuilder.withMethod(UTIL_Http.Method.POST)
+                             .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                             .build();
+    }
 
     public override String groupId() {
         if (String.isBlank(groupId)) {
