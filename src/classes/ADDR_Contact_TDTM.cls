@@ -388,8 +388,4 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return !npspContact.hasAddressOverride() && !npspContact.isAddressChanged();
     }
 
-    private Boolean isBeforeUpdate(Action triggerAction) {
-        return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
-    }
-
 }
