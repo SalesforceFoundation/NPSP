@@ -118,7 +118,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
 
             // BEFORE UPDATE
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            if (isBeforeUpdate(triggerAction)) {
                 // there can be four different types of changes we need to consider
                 // A. changes to isAddressOverride
                 // B. changes to CurrentAddress
@@ -281,6 +281,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Boolean isBeforeUpdate(Action triggerAction) {
+        return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
     }
 
     private Boolean isNotAHouseholdAccount(Account a) {
