@@ -102,85 +102,105 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // we only support address management with HH Accounts being used
         for (SObject so : contacts.thatHaveAccounts().getRecords()) {
             i++;
-            Contact con = (Contact)so;
-            Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
             NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
-            if (!isBefore && npspContact.householdAndAccountDiffer()){
+            if (!isBefore && npspContact.householdAndAccountDiffer()) {
                 continue;
             }
+
 
             if (isBefore) {
                 Account a = contacts.accountsByIds().get(con.AccountId);
                 if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                continue;
+                    continue;
             }
 
             // BEFORE UPDATE
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            	// there can be four different types of changes we need to consider
-            	// A. changes to isAddressOverride
-            	// B. changes to CurrentAddress
-            	// C. changes to MailingAddress fields
-            	// D. changes to Account (ie switching accounts)
-            	//
-            	// that leads to 16 permutations! 
-            	// (it's actually more permutations, since we need to take into account what
-            	// the change in isAddressOverride or CurrentAddress is).
-            	//
-            	// A,B,C       if (CurrentAddress) refill to it, else update/new address object     
-            	// A,!B,!C     if !isAddrOverride, refill contact from Default Address
-            	// A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
-            	// A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
-            	// !A,B,C      if (CurrentAddress) refill to it, else update/new address object
-            	// !A,!B,C     update/new address object
-            	// !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
-            	// !A,!B,!C    nothing!
-            	// *,*,*,D     if no override, refill from Default Address, else update/new address object    
-            	//
-            	// simplifying this to some precedence rules:
-            	//     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
-            	//     - if CurrentAddress changes to a new non-null value, refill to it.
-            	//     - if MailingAddress field changes, update/new address object
+                // there can be four different types of changes we need to consider
+                // A. changes to isAddressOverride
+                // B. changes to CurrentAddress
+                // C. changes to MailingAddress fields
+                // D. changes to Account (ie switching accounts)
+                //
+                // that leads to 16 permutations!
+                // (it's actually more permutations, since we need to take into account what
+                // the change in isAddressOverride or CurrentAddress is).
+                //
+                // A,B,C       if (CurrentAddress) refill to it, else update/new address object
+                // A,!B,!C     if !isAddrOverride, refill contact from Default Address
+                // A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
+                // A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
+                // !A,B,C      if (CurrentAddress) refill to it, else update/new address object
+                // !A,!B,C     update/new address object
+                // !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
+                // !A,!B,!C    nothing!
+                // *,*,*,D     if no override, refill from Default Address, else update/new address object
+                //
+                // simplifying this to some precedence rules:
+                //     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
+                //     - if CurrentAddress changes to a new non-null value, refill to it.
+                //     - if MailingAddress field changes, update/new address object
                 //     - if isAddressOverride changes to false, refill from Default Address
-            	
-            	// new highest priority! if Account changes... 
+
+                // new highest priority! if Account changes...
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
-            	    if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
+                    if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
                         if (contacts.accountHasAddresses(npspContact.getRecord())) { //
                             // refresh address if the contact does not have one and account does
                             addressRefreshQueue.add(con);
                         }
-            	    } else { // create a new address on the account
+                    } else { // create a new address on the account
                         addressCreationQueue.add(con);
-            	    }
-            	} else {
-            	
-	                // highest priority. if they are changing to a new Current Address, refill from it.
-	            	if (npspContact.currentAddressChanged() &&
+                    }
+                } else {
+
+                    // highest priority. if they are changing to a new Current Address, refill from it.
+                    if (npspContact.currentAddressChanged() &&
                             npspContact.currentAddress() != null) {
-	                    useCurrentAddressQueue.add(con);
-	                    if (npspContact.hasAddressOverride())
-	                        // track which address's need their dates updated
-	                        isOverrideByAddressId.put(npspContact.currentAddress(), true);
-	            	}
-	            	
-	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
-	            	if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
-	            	    !npspContact.isAddressChanged()) {
-	                    addressRefreshQueue.add(con);
+                        useCurrentAddressQueue.add(con);
+                        if (npspContact.hasAddressOverride())
+                            // track which address's need their dates updated
+                            isOverrideByAddressId.put(npspContact.currentAddress(), true);
+                    }
+
+                    // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
+                    if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
+                            !npspContact.isAddressChanged()) {
+                        addressRefreshQueue.add(con);
                         NPSP_Contact npspContactOld = new NPSP_Contact(conOld);
-	                    if (npspContactOld.currentAddress() != null)
-	                        // track which address's need their dates updated
-	                        isOverrideByAddressId.put(npspContactOld.currentAddress(), false);
-	            	}
-	            	
-	                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
-	                // this is handled in the next block, since we do it for both new contacts and updated contacts.
+                        if (npspContactOld.currentAddress() != null)
+                            // track which address's need their dates updated
+                            isOverrideByAddressId.put(npspContactOld.currentAddress(), false);
+                    }
+
+                    // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
+                    // this is handled in the next block, since we do it for both new contacts and updated contacts.
                 }
             }
-    
+        }
+
+        integer j = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+            j++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            if (!isBefore && npspContact.householdAndAccountDiffer()) {
+                continue;
+            }
+
+
+            if (isBefore) {
+                Account a = contacts.accountsByIds().get(con.AccountId);
+                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
+                    continue;
+            }
             // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
             // our functionality for dealing with contact address changes requires some trickery!
             // if the contact doesn't have an address override, we create (or match) a default address,
@@ -188,9 +208,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             // but if the contact has an address override, we are supposed to create (or match) a non default address override.
             // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate ||
-               triggerAction == TDTM_Runnable.Action.BeforeInsert ||  
-               triggerAction == TDTM_Runnable.Action.AfterInsert || 
-               triggerAction == TDTM_Runnable.Action.AfterUpdate
+                    triggerAction == TDTM_Runnable.Action.BeforeInsert ||
+                    triggerAction == TDTM_Runnable.Action.AfterInsert ||
+                    triggerAction == TDTM_Runnable.Action.AfterUpdate
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
@@ -213,6 +233,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
             }
         }
+
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
