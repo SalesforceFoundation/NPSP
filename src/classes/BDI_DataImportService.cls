@@ -691,7 +691,7 @@ global with sharing class BDI_DataImportService {
 
         return String.isBlank(paymentStatus) ||
             (dataImport.Payment_Status__c.equalsIgnoreCase(
-                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
+                ElevateTransactionStatus.CAPTURED.name()
             ) || (dataImport.Payment_Method__c == ACH_PAYMENT_METHOD
                 && dataImport.Payment_Elevate_ID__c != null));
     }
