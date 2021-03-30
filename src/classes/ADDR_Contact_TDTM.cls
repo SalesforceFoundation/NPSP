@@ -129,12 +129,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if isAddressOverride changes to false, refill from Default Address
 
         if (isBeforeUpdate(triggerAction)) {
-            List<Contact> addressRefreshQueue = addressOverrideResetsOf(contacts, listOld);
-            this.addressRefreshQueue = addressRefreshQueue;
+            this.addressRefreshQueue = addressOverrideResetsOf(contacts, listOld);
         }
         if (isBeforeUpdate(triggerAction)) {
-            Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdFromAddressOverrideChanges(contacts, listOld);
-            this.isOverrideByAddressId = isOverrideByAddressId;
+            this.isOverrideByAddressId = getIsOverrideByAddressIdFromAddressOverrideChanges(contacts, listOld);
         }
 
         integer j = -1;
