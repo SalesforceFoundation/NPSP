@@ -175,7 +175,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (npspContact.isAddressChanged() || isMovingToANewHousehold(npspContact)) {
+                if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
                     addressCreationQueue.add(con);
                 }
             }
@@ -228,11 +228,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
-    }
-
-    private Boolean isMovingToANewHousehold(NPSP_Contact npspContact) {
-        return npspContact.accountChanged() &&
-                !npspContact.isAddressEmpty();
     }
 
     private Boolean isRecursiveFromContact(Action triggerAction) {

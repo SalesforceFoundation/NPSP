@@ -106,4 +106,8 @@ public with sharing class NPSP_Contact {
         return contact.AccountId;
     }
 
+    public Boolean isMovingToANewHousehold() {
+        return accountChanged() && !isAddressEmpty();
+    }
+
 }
