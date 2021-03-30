@@ -173,16 +173,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (isBefore) {
             integer j = -1;
             // we only support address management with HH Accounts being used
-            for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+            for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
                 j++;
                 Contact con = (Contact) so;
                 Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
                 NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
 
-                Account a = contacts.accountsByIds().get(con.AccountId);
-                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                    continue;
-                }
                 // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
                 // our functionality for dealing with contact address changes requires some trickery!
                 // if the contact doesn't have an address override, we create (or match) a default address,
