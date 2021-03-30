@@ -126,7 +126,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
             i++;
             Contact con = (Contact) so;
             Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
@@ -137,8 +137,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
 
             // new highest priority! if Account changes...
-            Account a = contacts.accountsByIds().get(con.AccountId);
-            if (isBeforeUpdate(triggerAction) && isAHouseholdAccount(a)) {
+            if (isBeforeUpdate(triggerAction)) {
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
                     if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
@@ -280,7 +279,4 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
     }
 
-    private Boolean isAHouseholdAccount(Account a) {
-        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-    }
 }
