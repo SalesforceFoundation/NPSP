@@ -124,27 +124,12 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
         if (isBeforeUpdate(triggerAction)) {
-            integer n = -1;
-            // we only support address management with HH Accounts being used
-            for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
-                n++;
-                Contact con = (Contact) so;
-                Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
-                NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
-
-                // new highest priority! if Account changes...
-                if (npspContact.accountChanged()) {
-                    // if no override, refill from the Default Address
-                    if (isEligibleForRefresh(npspContact)) {
-                        if (contacts.accountHasAddresses(npspContact.getRecord())) { //
-                            // refresh address if the contact does not have one and account does
-                            addressRefreshQueue.add(con);
-                        }
-                    } else { // create a new address on the account
-                        addressCreationQueue.add(con);
-                    }
-                }
-            }
+            List<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
+            this.addressRefreshQueue = addressRefreshQueue;
+        }
+        if (isBeforeUpdate(triggerAction)) {
+            Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
+            this.addressCreationQueue = addressCreationQueue;
         }
 
         integer i = -1;
@@ -281,6 +266,51 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private List<Contact> getAddressRefreshQueue(Contacts contacts, List<SObject> listOld) {
+        list<Contact> addressRefreshQueue = new list<Contact>();
+        integer n = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+            n++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            // new highest priority! if Account changes...
+            if (npspContact.accountChanged()) {
+                // if no override, refill from the Default Address
+                if (isEligibleForRefresh(npspContact)) {
+                    if (contacts.accountHasAddresses(npspContact.getRecord())) { //
+                        // refresh address if the contact does not have one and account does
+                        addressRefreshQueue.add(con);
+                    }
+                }
+            }
+        }
+        return addressRefreshQueue;
+    }
+
+    private Set<Contact> getAddressCreationQueue(Contacts contacts, List<SObject> listOld) {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        integer n = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+            n++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            // new highest priority! if Account changes...
+            if (npspContact.accountChanged()) {
+                // if no override, refill from the Default Address
+                if (!isEligibleForRefresh(npspContact)) {
+                    addressCreationQueue.add(con);
+                }
+            }
+        }
+        return addressCreationQueue;
     }
 
     private Boolean isEligibleForRefresh(NPSP_Contact npspContact) {
