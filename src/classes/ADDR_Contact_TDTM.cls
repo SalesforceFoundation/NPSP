@@ -133,12 +133,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if isAddressOverride changes to false, refill from Default Address
 
         if (!isBefore) {
-            Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
-            this.addressCreationQueue = addressCreationQueue;
+            this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
         }
         if (isBefore) {
-            Set<Contact> addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
-            this.addressCreationQueue = addressCreationQueue;
+            this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
         }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
