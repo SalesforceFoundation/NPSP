@@ -680,10 +680,6 @@ export default class GeFormRenderer extends LightningElement{
 
                         this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
-                        console.log(`Latest capture group id = ${this.latestCaptureGroupId}`);
-                        console.log(`Gift expires = ${authorizedGift.authExpiresAt}`);
-                        console.log(`Authorized gift = ${JSON.stringify(authorizedGift)}`);
-
                         this.updateFormState({
                             [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
                             [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
