@@ -16,7 +16,6 @@ class ElevateCaptureGroup {
 
         try {
             let response = await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
-            console.log(`Add response = ${response}`);
             return Object.assign(new ElevateAuthorizedGift, JSON.parse(response).body); 
         } catch (ex) {
             if (!this._hasAddRun) {
