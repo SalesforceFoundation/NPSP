@@ -79,7 +79,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         useCurrentAddressQueue.add(con);
                         if (npspContact.hasAddressOverride()) {
                             // track which address's need their dates updated
-                            isOverrideByAddressId.put(npspContact.currentAddress(), true);
+                            this.isOverrideByAddressId.put(npspContact.currentAddress(), true);
                         }
                     } else if (npspContact.isAddressEmpty() &&
                             contacts.accountHasAddresses(npspContact.getRecord())) {
@@ -129,6 +129,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if isAddressOverride changes to false, refill from Default Address
 
         if (isBeforeUpdate(triggerAction)) {
+            list<Contact> addressRefreshQueue = new list<Contact>();
             integer i = -1;
             // we only support address management with HH Accounts being used
             for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
@@ -149,8 +150,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     // this is handled in the next block, since we do it for both new contacts and updated contacts.
                 }
             }
+            this.addressRefreshQueue = addressRefreshQueue;
         }
         if (isBeforeUpdate(triggerAction)) {
+            map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
             integer i = -1;
             // we only support address management with HH Accounts being used
             for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
@@ -173,6 +176,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     // this is handled in the next block, since we do it for both new contacts and updated contacts.
                 }
             }
+            this.isOverrideByAddressId = isOverrideByAddressId;
         }
 
         integer j = -1;
@@ -242,16 +246,16 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue, dmlWrapper,
                     triggerAction);
         }
-        
+
         // reset the mailing address for contacts who no longer have an address override
         if (addressRefreshQueue.size() > 0) {
             Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
             contactsForAddressRefresh.resetAddresses();
         }
-        
+
         // update the Latest date fields on any address overrides
-        if (isOverrideByAddressId.size() > 0) {
-            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+        if (this.isOverrideByAddressId.size() > 0) {
+            Addresses.updateAddrIsOverride(this.isOverrideByAddressId, dmlWrapper);
         }
 
         // create any new Default Address objects
