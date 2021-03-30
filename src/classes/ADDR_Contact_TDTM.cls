@@ -70,7 +70,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 contacts.normalizeLineBreaks();
 
                 // we only support address management with HH Accounts being used
-                for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+                for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
                     Contact con = (Contact) so;
                     NPSP_Contact npspContact=new NPSP_Contact(con);
 
@@ -283,7 +283,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -310,7 +310,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> addressRefreshQueue = new list<Contact>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -335,7 +335,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> useCurrentAddressQueue = new list<Contact>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -356,7 +356,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -383,7 +383,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> addressRefreshQueue = new list<Contact>();
         integer n = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             n++;
             Contact con = (Contact) so;
             Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
@@ -407,7 +407,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer n = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInHouseholdAccounts().getRecords()) {
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
             n++;
             Contact con = (Contact) so;
             Contact conOld = (listOld != null ? (Contact) listOld[n] : null);

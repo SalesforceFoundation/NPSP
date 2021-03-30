@@ -281,6 +281,23 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
+    public Contacts contactsInAccountsOfTypeHousehold() {
+        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
+        integer i = -1;
+        for (SObject so : getRecords()) {
+            i++;
+            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
+            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
+                contactsInHouseholdAccounts.add(npspContact.getRecord());
+            }
+        }
+        return new Contacts(contactsInHouseholdAccounts);
+    }
+
+    private Account accountFor(NPSP_Contact npspContact) {
+        return accountsByIds().get(npspContact.accountId());
+    }
+
     public Contacts contactsInHouseholdAccounts() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
         integer i = -1;
@@ -531,7 +548,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listAddrInsertDefault.size() > 0 && !isBefore) {
-            dmlWrapper.objectsToInsert.addAll((list<SObject>)listAddrInsertDefault);
+            dmlWrapper.objectsToInsert.addAll((list<SObject>) listAddrInsertDefault);
         }
+    }
+
+    private Boolean isAnAccountOfTypeHousehold(Account a) {
+        if (a == null) {
+            return false;
+        }
+        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 }
