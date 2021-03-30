@@ -87,6 +87,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         addressRefreshQueue.add(con);
                     }
                 }
+                this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+            }
+            when AfterInsert {
+                this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
             }
             when BeforeUpdate {
                 contacts.normalizeLineBreaksForContactsWithChangedAddresses();
@@ -98,6 +102,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 this.isOverrideByAddressId.putAll(
                         getIsOverrideByAddressIdFromAddressOverrideChanges(
                                 contacts, listOld));
+                this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+            }
+            when AfterUpdate {
+                this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
             }
         }
         // Rules:
@@ -131,13 +139,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if CurrentAddress changes to a new non-null value, refill to it.
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
-
-        if (!isBefore) {
-            this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
-        }
-        if (isBefore) {
-            this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
-        }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
