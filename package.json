@@ -11,9 +11,9 @@
     "axios": "^0.21.1"
   },
   "scripts": {
-    "test:unit": "lwc-jest",
-    "test:unit:watch": "lwc-jest --watch",
-    "test:unit:debug": "lwc-jest --debug"
+    "test:unit": "lwc-jest --skipApiVersionCheck",
+    "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
+    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"
