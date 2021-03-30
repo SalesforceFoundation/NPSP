@@ -98,6 +98,32 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
 
+        // there can be four different types of changes we need to consider
+        // A. changes to isAddressOverride
+        // B. changes to CurrentAddress
+        // C. changes to MailingAddress fields
+        // D. changes to Account (ie switching accounts)
+        //
+        // that leads to 16 permutations!
+        // (it's actually more permutations, since we need to take into account what
+        // the change in isAddressOverride or CurrentAddress is).
+        //
+        // A,B,C       if (CurrentAddress) refill to it, else update/new address object
+        // A,!B,!C     if !isAddrOverride, refill contact from Default Address
+        // A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
+        // A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
+        // !A,B,C      if (CurrentAddress) refill to it, else update/new address object
+        // !A,!B,C     update/new address object
+        // !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
+        // !A,!B,!C    nothing!
+        // *,*,*,D     if no override, refill from Default Address, else update/new address object
+        //
+        // simplifying this to some precedence rules:
+        //     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
+        //     - if CurrentAddress changes to a new non-null value, refill to it.
+        //     - if MailingAddress field changes, update/new address object
+        //     - if isAddressOverride changes to false, refill from Default Address
+
         integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contacts.thatHaveAccounts().getRecords()) {
@@ -110,42 +136,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 continue;
             }
 
-
-            if (isBefore) {
-                Account a = contacts.accountsByIds().get(con.AccountId);
-                if (isNotAHouseholdAccount(a))
-                    continue;
-            }
-
-            // there can be four different types of changes we need to consider
-            // A. changes to isAddressOverride
-            // B. changes to CurrentAddress
-            // C. changes to MailingAddress fields
-            // D. changes to Account (ie switching accounts)
-            //
-            // that leads to 16 permutations!
-            // (it's actually more permutations, since we need to take into account what
-            // the change in isAddressOverride or CurrentAddress is).
-            //
-            // A,B,C       if (CurrentAddress) refill to it, else update/new address object
-            // A,!B,!C     if !isAddrOverride, refill contact from Default Address
-            // A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
-            // A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
-            // !A,B,C      if (CurrentAddress) refill to it, else update/new address object
-            // !A,!B,C     update/new address object
-            // !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
-            // !A,!B,!C    nothing!
-            // *,*,*,D     if no override, refill from Default Address, else update/new address object
-            //
-            // simplifying this to some precedence rules:
-            //     - if Account changes && no override && no MailingAddress field changes, refill from Default Address
-            //     - if CurrentAddress changes to a new non-null value, refill to it.
-            //     - if MailingAddress field changes, update/new address object
-            //     - if isAddressOverride changes to false, refill from Default Address
-
             // new highest priority! if Account changes...
-            // BEFORE UPDATE
-            if (isBeforeUpdate(triggerAction)) {
+            Account a = contacts.accountsByIds().get(con.AccountId);
+            if (isBeforeUpdate(triggerAction) && isAHouseholdAccount(a)) {
                 if (npspContact.accountChanged()) {
                     // if no override, refill from the Default Address
                     if (!npspContact.hasAddressOverride() && !npspContact.isAddressChanged()) {
@@ -287,7 +280,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return triggerAction == TDTM_Runnable.Action.BeforeUpdate;
     }
 
-    private Boolean isNotAHouseholdAccount(Account a) {
-        return a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE;
+    private Boolean isAHouseholdAccount(Account a) {
+        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 }
