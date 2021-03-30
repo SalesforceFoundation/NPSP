@@ -74,6 +74,8 @@
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
         <members>Accounts</members>
+        <members>AggregateResultProxy</members>
+        <members>AggregateResultProxy_TEST</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -324,6 +326,15 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchGroupedTotals</members>
+        <members>GiftBatchGroupedTotals_TEST</members>
+        <members>GiftBatchSelector</members>
+        <members>GiftBatchService</members>
+        <members>GiftBatchStatusGroup</members>
+        <members>GiftBatchStatusGroup_TEST</members>
+        <members>GiftBatchTotals</members>
+        <members>GiftBatches</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -2298,10 +2309,13 @@
         <members>commonNoItems</members>
         <members>commonOkay</members>
         <members>commonOpen</members>
+        <members>commonPaymentProcessingErrors</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
         <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
+        <members>commonRecordsFailed</members>
+        <members>commonRecordsProcessed</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
         <members>commonSave</members>
@@ -4290,6 +4304,8 @@
         <members>utilInput</members>
         <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
+        <members>utilPageHeaderDetailBlock</members>
+        <members>utilPageHeaderDetailRow</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>

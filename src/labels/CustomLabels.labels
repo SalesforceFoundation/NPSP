@@ -5648,6 +5648,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Open</value>
     </labels>
     <labels>
+        <fullName>commonPaymentProcessingErrors</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Processing Errors</shortDescription>
+        <value>Payment Processing Errors</value>
+    </labels>
+    <labels>
         <fullName>commonPaymentServices</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5678,6 +5686,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Read More</shortDescription>
         <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>commonRecordsFailed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Records Failed</shortDescription>
+        <value>Records Failed</value>
+    </labels>
+    <labels>
+        <fullName>commonRecordsProcessed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Records Processed</shortDescription>
+        <value>Records Processed</value>
     </labels>
     <labels>
         <fullName>commonRequired</fullName>

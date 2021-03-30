@@ -13,10 +13,32 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
+                                    <template if:true={isEditMode}>
+                                        <template if:true={isDisabled}>
+                                            <lightning-button variant="base" 
+                                                label={labels.updatePaymentButtonLabel}
+                                                onclick={handleUserEnabledWidget}
+                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                data-qa-locator='button Update Payment Information'>
+                                            </lightning-button>
+                                        </template>
+                                        <template if:false={isDisabled}>
+                                            <lightning-button variant="base" 
+                                                label={labels.cancelButtonLabel}
+                                                icon-name='utility:close' 
+                                                icon-position="right"
+                                                onclick={handleUserDisabledWidget}
+                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                data-qa-locator='button Cancel Update Payment Information'>
+                                            </lightning-button>
+                                        </template>
+                                    </template>
                                     <template if:false={isEditPayment}>
                                         <template if:false={isDisabled}>
-                                            <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
-                                                icon-name='utility:close' icon-position="right"
+                                            <lightning-button variant="base" 
+                                                label={labels.elevateDisableButtonLabel}
+                                                icon-name='utility:close' 
+                                                icon-position="right"
                                                 onclick={handleUserDisabledWidget}
                                                 class='slds-button slds-button_base slds-float_right hide-card-button'
                                                 data-qa-locator='button Do Not Use Elevate'>
@@ -28,21 +50,47 @@
                         </div>
                     </lightning-layout-item>
 
-
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
-
                         <template if:true={isDisabled}>
-                            <p class='fade-in'>
-                                <span class='slds-content-message'>
-                                    <lightning-formatted-rich-text value={labels.elevateDisabledMessage}
-                                                                   data-qa-locator="richtext Elevate Disabled Message">
-                                    </lightning-formatted-rich-text>
-                                </span>
-                                <lightning-button variant='base' label={labels.elevateEnableButtonLabel}
-                                                  title={labels.elevateEnableButtonLabel} onclick={handleUserEnabledWidget}
-                                                  class='slds-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
-                                </lightning-button>
-                            </p>
+                            <template if:true={isEditMode}>
+                                <lightning-layout vertical-align='center' multiple-rows='true'>
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                        <label for="last4CreditCard" id="creditCardLast4Label"
+                                            class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                            {cardLastFourLabel}
+                                        </label><br/>
+                                        <lightning-formatted-text id="last4CreditCard"
+                                            value={cardLastFour}
+                                            data-qa-locator={qaLocatorLastFourDigits}
+                                            aria-labelledby="creditCardLast4Label">
+                                        </lightning-formatted-text>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="4" class="slds-text-color_weak slds-p-bottom_small">
+                                        <label for="expirationDate" id="expirationDateLabel"
+                                            class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                            {labels.commonExpirationDate}
+                                        </label><br/>
+                                        <lightning-formatted-text id="expirationDate"
+                                            value={cardExpDate}
+                                            data-qa-locator={qaLocatorExpirationDate}
+                                            aria-labelledby="expirationDateLabel">
+                                        </lightning-formatted-text>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                            <template if:false={isEditMode}>
+                                <p class='fade-in'>
+                                    <span class='slds-content-message'>
+                                        <lightning-formatted-rich-text value={labels.elevateDisabledMessage}
+                                            data-qa-locator="richtext Elevate Disabled Message">
+                                        </lightning-formatted-rich-text>
+                                    </span>
+                                    <lightning-button variant='base' label={labels.elevateEnableButtonLabel}
+                                        title={labels.elevateEnableButtonLabel} onclick={handleUserEnabledWidget}
+                                        class='slds-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
+                                    </lightning-button>
+                                </p>
+                            </template>
                         </template>
 
                         <template if:false={isDisabled}>

@@ -10,6 +10,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import { handleError } from 'c/utilTemplateBuilder';
 import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
@@ -281,6 +282,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 amount: rowToDelete[DONATION_AMOUNT.fieldApiName]
             }
         }));
+        this.notifyGiftBatchHeaderOfTableChange();
     }
 
     loadMoreData(event) {
@@ -460,9 +462,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this._count = dataImportModel.totalCountOfRows;
             this._total = dataImportModel.batchTotalRowAmount;
             event.detail.success(); //Re-enable the Save button
+            this.notifyGiftBatchHeaderOfTableChange();
         }).catch(error => {
             event.detail.error(error);
         });
+    }
+
+    notifyGiftBatchHeaderOfTableChange = () => {
+        fireEvent(this, 'geBatchGiftEntryTableChangeEvent', {});
     }
 
     _dataImportObjectInfo;
