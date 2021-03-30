@@ -124,12 +124,10 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
         if (isBeforeUpdate(triggerAction)) {
-            List<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
-            this.addressRefreshQueue = addressRefreshQueue;
+            this.addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
         }
         if (isBeforeUpdate(triggerAction)) {
-            Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
-            this.addressCreationQueue = addressCreationQueue;
+            this.addressCreationQueue = getAddressCreationQueue(contacts, listOld);
         }
 
         integer i = -1;
