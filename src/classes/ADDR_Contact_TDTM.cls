@@ -163,21 +163,19 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                ) {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+                if (isRecursive()) {
                     UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
                 // If the Before Insert/Update trigger on the Contact has already executed and taken action
                 // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
-                (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
+                if (isRecursiveFromContact(triggerAction)) {
                     UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
 
                 // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-                if (npspContact.isAddressChanged() || (npspContact.accountChanged() &&
-                        !npspContact.isAddressEmpty())) {
+                if (npspContact.isAddressChanged() || isMovingToANewHousehold(npspContact)) {
                     addressCreationQueue.add(con);
                 }
             }
@@ -230,6 +228,20 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
 
         return null;
+    }
+
+    private Boolean isMovingToANewHousehold(NPSP_Contact npspContact) {
+        return npspContact.accountChanged() &&
+                !npspContact.isAddressEmpty();
+    }
+
+    private Boolean isRecursiveFromContact(Action triggerAction) {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
+                (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate);
+    }
+
+    private Boolean isRecursive() {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges(Contacts contacts, List<SObject> listOld) {
