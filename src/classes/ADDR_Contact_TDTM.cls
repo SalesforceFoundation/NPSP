@@ -181,7 +181,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
             }
             when AfterUpdate {
-                this.addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
+                DmlWrapper dmlWrapper = new DmlWrapper();
+                Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
                     contacts.createAddrFromCon(new List<Contact>(addressCreationQueue), dmlWrapper,
