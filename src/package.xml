@@ -264,6 +264,7 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
@@ -301,6 +302,14 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>ElevateAuthorizedGift</members>
+        <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupInvalidRequest</members>
+        <members>ElevateCaptureGroupMockHttpResponse</members>
+        <members>ElevateTokenizedGift</members>
+        <members>ElevateTokenizedGiftInvalidRequest</members>
+        <members>ElevateTokenizedGiftValidRequest</members>
+        <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_GiftEntryController</members>
@@ -308,6 +317,7 @@
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
+        <members>GE_PaymentServicesMock</members>
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
