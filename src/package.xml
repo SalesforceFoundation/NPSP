@@ -306,6 +306,7 @@
         <members>ElevateCaptureGroup</members>
         <members>ElevateCaptureGroupInvalidRequest</members>
         <members>ElevateCaptureGroupMockHttpResponse</members>
+        <members>ElevateCaptureGroupService</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTokenizedGiftInvalidRequest</members>
         <members>ElevateTokenizedGiftValidRequest</members>
@@ -4277,6 +4278,7 @@
         <members>gsVideoHeader</members>
         <members>gseuHeader</members>
         <members>gseuTrailhead</members>
+        <members>helpers</members>
         <members>libsMoment</members>
         <members>modal</members>
         <members>progressRing</members>
