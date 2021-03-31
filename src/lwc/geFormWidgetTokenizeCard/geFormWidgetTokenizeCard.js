@@ -23,12 +23,9 @@ import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Conta
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import {
-    ACCOUNT_HOLDER_BANK_TYPES,
-    ACCOUNT_HOLDER_TYPES,
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    LABEL_NEW_LINE,
-    PAYMENT_METHOD_CREDIT_CARD,
-    PAYMENT_METHODS
+    PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
+    LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
 } from 'c/geConstants';
 
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
@@ -105,13 +102,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-        if (this.shouldHandleWidgetDataChange()) {
-            this.setCurrentPaymentMethod();
+
+        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) ||
+            this.shouldHandleWidgetDataChange()) {
+
             this.handleWidgetDataChange();
         }
     }
 
     handleWidgetDataChange() {
+        this._hasPaymentMethodInTemplate =
+            this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
             this._currentPaymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
@@ -135,7 +136,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     shouldHandleWidgetDataChange() {
-        return isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) || !this.isPaymentCharged();
+        return !this.isPaymentCharged();
     }
 
     isPaymentCharged() {
@@ -157,10 +158,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
     }
 
-    requestSetPaymentMethod() {
+    requestSetPaymentMethod(paymentMethod) {
         this.isLoading = true;
         tokenHandler.setPaymentMethod(
-            this.iframe(), this._currentPaymentMethod, this.handleError,
+            this.iframe(), paymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
         ).catch(err => {
             this.handleError(err);
@@ -173,7 +174,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get shouldDisplayEnableButton() {
         if (!this._hasPaymentMethodInTemplate) return true;
-        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod()) {
+        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod(this._currentPaymentMethod)) {
             return true;
         }
         return false;
@@ -191,22 +192,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
-        await this.retrievePaymentTransactionStatuses();
-        const domainInfo = await this.retrieveDomainInformation();
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
-    }
-
-    async retrievePaymentTransactionStatuses() {
         this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
             JSON.parse(await getPaymentTransactionStatusValues())
         );
-    }
 
-    async retrieveDomainInformation() {
-        return await getOrgDomainInfo()
+        const domainInfo = await getOrgDomainInfo()
             .catch(error => {
                 this.handleError(error);
             });
+
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***
@@ -214,7 +209,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     renderedCallback() {
         //Listens for a message from the Visualforce iframe.
-        tokenHandler.registerPostMessageListener(this);
+        let component = this;
+        tokenHandler.registerPostMessageListener(component);
+
         registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleEventDisabledWidget, this);
     }
 
