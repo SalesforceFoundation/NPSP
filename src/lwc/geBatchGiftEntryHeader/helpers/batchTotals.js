@@ -2,7 +2,7 @@ import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGif
 
 const BatchTotals = async (batchId) => {
     const totals = await getGiftBatchTotalsBy({ batchId: batchId });
-    const { PROCESSED, FAILED, TOTAL } = totals;
+    const { PROCESSED, FAILED, FAILED_PAYMENT, TOTAL } = totals;
 
     return ({
         get processedGiftsCount() {
@@ -11,6 +11,9 @@ const BatchTotals = async (batchId) => {
         get failedGiftsCount() {
             return FAILED;
         },
+        get failedPaymentsCount() {
+            return FAILED_PAYMENT;
+        },        
         get totalGiftsCount() {
             return TOTAL;
         },

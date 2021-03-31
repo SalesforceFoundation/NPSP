@@ -74,4 +74,25 @@ private with sharing class GiftBatchStatusGroup_TEST {
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isProcessingFailed());
     }
+
+
+    @isTest
+    private static void shouldReturnTrueWithCorrectCountForGroupWithFailedPayments() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+            .withAliasAndValue('Payment_Status__c','DECLINED')
+            .withAliasAndValue('recordCount', 7);
+
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(statusGroup.isPaymentFailed());
+        System.assertEquals(7, statusGroup.recordCount());
+    }
+
+    @isTest
+    private static void shouldReturnFalseForGroupWithoutPaymentFailures() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+            .withAliasAndValue('Payment_Status__c','AUTHORIZED');
+
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(!statusGroup.isPaymentFailed());
+    }
 }
