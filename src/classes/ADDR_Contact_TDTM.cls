@@ -124,8 +124,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
                 // set the mailing address for contacts who specify an address lookup or override
                 if (useCurrentAddressQueue.size() > 0) {
-                    contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue, dmlWrapper,
-                            triggerAction);
+                    contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
                 }
 
                 // reset the mailing address for contacts who no longer have an address override
@@ -264,8 +263,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
         // set the mailing address for contacts who specify an address lookup or override
         if (useCurrentAddressQueue.size() > 0) {
-            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue, dmlWrapper,
-                    triggerAction);
+            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
         }
 
         // reset the mailing address for contacts who no longer have an address override

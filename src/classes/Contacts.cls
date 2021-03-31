@@ -390,8 +390,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @param listCon the list of Contacts to update
     * @return void
     ********************************************************************************************************/
-    public void setContactAddressFromCurrentAddress(List<Contact> listCon, TDTM_Runnable.DmlWrapper
-            dmlWrapper, TDTM_Runnable.Action triggerAction) {
+    public void setContactAddressFromCurrentAddress(List<Contact> listCon) {
 
         List<Contact> listConCreateAddr = new List<Contact>();
         Set<Id> setAddrId = new Set<Id>();
@@ -424,7 +423,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listConCreateAddr.size() > 0) {
-            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
+            createAddrFromConBeforeInsertUpdate(listConCreateAddr);
         }
 
     }
