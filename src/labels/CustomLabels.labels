@@ -6298,6 +6298,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geAuthorizedCreditCardSuccess</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used on toast message to show successfull BGE credit card authorization</shortDescription>
+        <value>Card Authorized Successfully</value>
+    </labels>
+    <labels>
+        <fullName>geAuthorizingCreditCard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed under spinner during BGE credit card authorization</shortDescription>
+        <value>Authorizing Credit Card...</value>
+    </labels>
+    <labels>
         <fullName>geBatchGiftsCount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
