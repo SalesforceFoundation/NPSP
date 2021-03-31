@@ -39,17 +39,6 @@ public with sharing class GE_PaymentServices {
 
     private static GE_PaymentServices paymentServicesInstance;
 
-    @TestVisible
-    private ElevateCaptureGroup elevateCaptureGroup {
-        get {
-            if (elevateCaptureGroup == null) {
-                elevateCaptureGroup = new ElevateCaptureGroup();
-            }
-            return elevateCaptureGroup;
-        }
-        set;
-    }
-
     /***
      * @description Payment Services configuration
      */
@@ -179,13 +168,13 @@ public with sharing class GE_PaymentServices {
         return createTransaction(requestBody);
     }
 
-    public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return elevateCaptureGroup.add(tokenizedGift, groupId);
-    }
-
-    public UTIL_Http.Response createCaptureGroup() {
-        return elevateCaptureGroup.create();
-    }
+//    public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+//        return captureGroupService.sendAddRequest(tokenizedGift, groupId);
+//    }
+//
+//    public UTIL_Http.Response createCaptureGroup() {
+//        return captureGroupService.sendCreateRequest();
+//    }
 
     /**
      * @description Method sends a purchase requet to Elevate.
