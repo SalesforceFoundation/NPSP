@@ -15,15 +15,20 @@ class ElevateCaptureGroup {
         }
 
         try {
-            let response = await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
-            return Object.assign(new ElevateAuthorizedGift, JSON.parse(response).body); 
+            let response = JSON.parse(await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId)).body;
+            let authorizedGift = new ElevateAuthorizedGift();
+            Object.keys(authorizedGift).forEach(
+                key => authorizedGift[key] = response[key]
+            );
+
+            return authorizedGift;
         } catch (ex) {
             if (!this._hasAddRun) {
                 this._hasAddRun = true;
                 this.elevateBatchId = await this.create();
                 this.add(tokenizedGift);
             } else {
-                throw Error; // Propagate error to calling function for error handling
+                throw(ex); // Propagate error to calling function for error handling
             }
         }
     }
