@@ -69,7 +69,19 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             when AfterInsert {
                 DmlWrapper dmlWrapper = new DmlWrapper();
-                Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
+                if (isRecursive() || isRecursiveFromContact(triggerAction)) {
+                    if (isRecursive()) {
+                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                    }
+                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                    if (isRecursiveFromContact(triggerAction)) {
+                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                    }
+                    addressCreationQueue = new Set<Contact>();
+                } else {
+                    addressCreationQueue = getAddressCreationQueueInAfterContext(contacts, listOld);
+                }
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
                     contacts.createAddrFromCon(new List<Contact>(addressCreationQueue), dmlWrapper,
@@ -81,7 +93,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             when BeforeUpdate {
                 contacts.normalizeLineBreaksForContactsWithChangedAddresses();
                 this.addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
-                this.addressCreationQueue = getAddressCreationQueue(contacts, listOld);
+                this.addressCreationQueue = getAddressCreationQueueInBeforeContext(contacts, listOld);
                 this.useCurrentAddressQueue = getUseCurrentAddressQueue(contacts, listOld);
                 this.isOverrideByAddressId = getIsOverrideByAddressId(contacts, listOld);
                 this.addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
@@ -139,7 +151,19 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             when AfterUpdate {
                 DmlWrapper dmlWrapper = new DmlWrapper();
-                Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld, triggerAction);
+                if (isRecursive() || isRecursiveFromContact(triggerAction)) {
+                    if (isRecursive()) {
+                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                    }
+                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
+                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+                    if (isRecursiveFromContact(triggerAction)) {
+                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                    }
+                    addressCreationQueue = new Set<Contact>();
+                } else {
+                    addressCreationQueue = getAddressCreationQueueInAfterContext(contacts, listOld);
+                }
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
                     contacts.createAddrFromCon(new List<Contact>(addressCreationQueue), dmlWrapper,
@@ -298,10 +322,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return addressCreationQueue;
     }
 
-    private Set<Contact> getAddressCreationQueue(Contacts contacts, List<SObject> listOld, Action triggerAction) {
+    private Set<Contact> getAddressCreationQueueInAfterContext(Contacts contacts, List<SObject> listOld) {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer g = -1;
-        // we only support address management with HH Accounts being used
         for (SObject so : contacts.thatHaveAccounts().getRecords()) {
             g++;
             Contact con = (Contact) so;
@@ -312,26 +335,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 continue;
             }
 
-            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
-            // our functionality for dealing with contact address changes requires some trickery!
-            // if the contact doesn't have an address override, we create (or match) a default address,
-            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
-            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
-            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-            // note that we detect whether the address change is coming from the address trigger,
-            // in which case we don't want to create a new address.
-            if (isRecursive()) {
-                UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                continue;
-            }
-            // If the Before Insert/Update trigger on the Contact has already executed and taken action
-            // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-            if (isRecursiveFromContact(triggerAction)) {
-                UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
-                continue;
-            }
-
-            // if the contacts address changed or if the contact with an address moves to a new household remember the contact
             if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
                 addressCreationQueue.add(con);
             }
@@ -472,7 +475,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return addressRefreshQueue;
     }
 
-    private Set<Contact> getAddressCreationQueue(Contacts contacts, List<SObject> listOld) {
+    private Set<Contact> getAddressCreationQueueInBeforeContext(Contacts contacts, List<SObject> listOld) {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer n = -1;
         // we only support address management with HH Accounts being used
