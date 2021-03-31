@@ -57,7 +57,7 @@ public inherited sharing class GiftBatchStatusGroup {
     }
 
     public Boolean isPaymentFailed() {
-      return paymentStatus == 'DECLINED';
+      return paymentStatus == 'Declined';
     }
     
     public Boolean isPaymentAuthorizationExpired() {
