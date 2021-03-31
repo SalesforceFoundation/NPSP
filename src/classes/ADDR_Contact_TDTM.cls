@@ -67,6 +67,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             when BeforeInsert {
                 contacts.normalizeLineBreaks();
 
+                DmlWrapper dmlWrapper = new DmlWrapper();
+                list<Contact> useCurrentAddressQueue = new list<Contact>();
+                Set<Contact> addressCreationQueue = new Set<Contact>();
+                map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+                list<Contact> addressRefreshQueue = new list<Contact>();
                 // we only support address management with HH Accounts being used
                 for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
                     Contact con = (Contact) so;
@@ -77,7 +82,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         useCurrentAddressQueue.add(con);
                         if (npspContact.hasAddressOverride()) {
                             // track which address's need their dates updated
-                            this.isOverrideByAddressId.put(npspContact.currentAddress(), true);
+                            isOverrideByAddressId.put(npspContact.currentAddress(), true);
                         }
                     } else if (npspContact.isAddressEmpty() &&
                             contacts.accountHasAddresses(npspContact.getRecord())) {
@@ -85,7 +90,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                         addressRefreshQueue.add(con);
                     }
                 }
-                this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+                addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
 
                 if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
                     // to avoid pushing these address changes to the HH.
@@ -108,8 +113,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // update the Latest date fields on any address overrides
-                if (this.isOverrideByAddressId.size() > 0) {
-                    Addresses.updateAddrIsOverride(this.isOverrideByAddressId, dmlWrapper);
+                if (isOverrideByAddressId.size() > 0) {
+                    Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
                 }
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
