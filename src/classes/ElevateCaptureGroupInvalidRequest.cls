@@ -30,7 +30,7 @@
 /**
 * @description Used to mock invalid elevate capture group requests for unit tests
  */
-public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
+public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroupService {
 
     public static final String INVALID_PARAMETER = 'invalid-parameter';
     public static final String INVALID_GROUP_ID = 'invalid-group-id';
@@ -59,39 +59,5 @@ public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroup {
             return tokenizedGift;
         }
         set;
-    }
-
-    public ElevateCaptureGroupInvalidRequest withInvalidGroupId() {
-        groupId = INVALID_GROUP_ID;
-        return this;
-    }
-
-    public ElevateCaptureGroupInvalidRequest withInvalidRequestBody() {
-        requestBody = '{"merchantId":\"' + INVALID_PARAMETER + '\"}';
-        return this;
-    }
-
-    protected override HttpRequest createRequest() {
-        System.debug(requestBody);
-        return requestBuilder.withMethod(UTIL_Http.Method.POST)
-                             .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
-                             .withBody(requestBody)
-                             .build();
-    }
-
-    protected override HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String invalidGroupId) {
-        return requestBuilder.withMethod(UTIL_Http.Method.POST)
-                             .withCaptureGroupId(invalidGroupId)
-                             .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
-                             .withBody(JSON.serialize(tokenizedGift))
-                             .build();
-    }
-
-    public override String groupId() {
-        if (String.isBlank(groupId)) {
-            return DUMMY_GROUP_ID;
-        } else {
-            return groupId;
-        }
     }
 }

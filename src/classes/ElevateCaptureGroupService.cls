@@ -27,29 +27,45 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateCaptureGroup implements CaptureGroup {
-    private String id;
+public virtual with sharing class ElevateCaptureGroupService {
 
-    @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
-            }
-            return captureGroupService;
+    public UTIL_Http.Response sendAddRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(addRequest(tokenizedGift, groupId));
+        return response;
+    }
+
+    public UTIL_Http.Response sendCreateRequest() {
+        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(createRequest());
+        return response;
+    }
+
+    public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                .withBody(JSON.serialize(tokenizedGift))
+                .build();
+    }
+
+    private HttpRequest createRequest() {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
+                .withBody(createRequestBody())
+                .build();
+    }
+
+    private String createRequestBody() {
+        return JSON.serialize(new CreateRequestBody());
+    }
+
+    public with sharing class CreateRequestBody {
+        private String merchantId;
+
+        public CreateRequestBody() {
+            this.merchantId = new PS_IntegrationServiceConfig.Service().getMerchantIds();
         }
-        set;
     }
 
-    public UTIL_Http.Response create() {
-        return captureGroupService.sendCreateRequest();
-    }
-
-    public UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return captureGroupService.sendAddRequest(tokenizedGift, groupId);
-    }
-
-    public String groupId() {
-        return id;
-    }
 }
