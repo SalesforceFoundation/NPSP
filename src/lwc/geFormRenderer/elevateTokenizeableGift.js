@@ -1,4 +1,4 @@
-class ElevateTokenizedGift {
+class ElevateTokenizeabledGift {
 
     constructor(firstName, lastName, amount, currencyCode) {
         this.amount = amount;
@@ -32,4 +32,4 @@ class ElevateTokenizedGift {
 
 }
 
-export default ElevateTokenizedGift;
+export default ElevateTokenizeabledGift;

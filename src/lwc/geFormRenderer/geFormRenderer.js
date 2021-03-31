@@ -67,7 +67,7 @@ import {
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateCaptureGroup from './elevateCaptureGroup';
-import ElevateTokenizedGift from './elevateTokenizedGift';
+import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
@@ -505,11 +505,21 @@ export default class GeFormRenderer extends LightningElement{
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    handleSaveBatchGiftEntry(dataImportRecord, formControls, isCreditCardAuth) {
+    async handleSaveBatchGiftEntry(dataImportRecord, formControls, tokenizedGift) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
+
+        if (tokenizedGift) {
+            try {
+                await this.authorizeCreditCard(tokenizedGift);
+                dataImportRecord = this.saveableFormState();
+            } catch (ex) {
+                this.handleAsyncWidgetError(ex);
+                return;
+            }
+        }
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
@@ -519,7 +529,7 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.toggleSpinner();
                     reset();
                     
-                    if (isCreditCardAuth) {
+                    if (tokenizedGift) {
                         showToast(
                             this.CUSTOM_LABELS.PageMessagesConfirm,
                             this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
@@ -652,7 +662,7 @@ export default class GeFormRenderer extends LightningElement{
             let tokenizedGift = null;
             try {
                 if (this.shouldTokenizeCard()) {
-                    tokenizedGift = new ElevateTokenizedGift(
+                    tokenizedGift = new ElevateTokenizeableGift(
                         this.cardholderNames.firstName,
                         this.cardholderNames.lastName,
                         this.getFieldValueFromFormState('Donation_Amount__c'),
@@ -671,33 +681,26 @@ export default class GeFormRenderer extends LightningElement{
 
             // handle save depending mode
             if (this.batchId) {
-                if (tokenizedGift) {
-                    try {
-                        this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
-                        
-                        let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
-                        let authorizedGift = await currentCaptureGroup.add(tokenizedGift);
-
-                        this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
-
-                        this.updateFormState({
-                            [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
-                            [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
-                            [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
-                        });
-                        
-                        dataImportFromFormState = this.saveableFormState();
-                    } catch (ex) {
-                        this.handleAsyncWidgetError(ex);
-                        return;
-                    }
-                }
-                
-                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
+                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, tokenizedGift);
             } else {
                 await this.submitSingleGift(dataImportFromFormState);
             }
         }
+    }
+
+    async authorizeCreditCard(tokenizedGift) {
+        this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
+        
+        let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
+        let authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+
+        this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
+
+        this.updateFormState({
+            [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+            [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
+            [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+        });
     }
 
     shouldTokenizeCard() {

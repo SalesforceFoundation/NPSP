@@ -1,11 +1,11 @@
 class ElevateAuthorizedGift {
 
-    authorizationToken;
     id;
+    authorizationToken;
     status;
 
-    constructor(id, authorizationToken, authorizationExpiresByd) {
-        
+    constructor(id, authorizationToken, status) {
+
     }
 
 }
