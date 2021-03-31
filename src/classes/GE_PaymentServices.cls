@@ -43,6 +43,7 @@ public with sharing class GE_PaymentServices {
         CANCELED,
         CAPTURED,
         DECLINED,
+        EXPIRED,
         NONRETRYABLEERROR,
         RETRYABLEERROR,
         REFUNDISSUED,

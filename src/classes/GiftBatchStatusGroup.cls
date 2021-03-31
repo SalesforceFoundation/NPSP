@@ -49,18 +49,18 @@ public inherited sharing class GiftBatchStatusGroup {
     }
 
     public Boolean isImported() {
-        return status == 'Imported';
+        return status == BDI_DataImport_API.bdiImported;
     }
 
     public Boolean isProcessingFailed() {
-        return status == 'Failed';
+        return status == BDI_DataImport_API.bdiFailed;
     }
 
     public Boolean isPaymentFailed() {
-      return paymentStatus == 'Declined';
+      return paymentStatus == GE_PaymentServices.ElevateTransactionStatus.DECLINED.name();
     }
     
     public Boolean isPaymentAuthorizationExpired() {
-      return paymentStatus == 'Authorization Expired';
+      return paymentStatus == GE_PaymentServices.ElevateTransactionStatus.EXPIRED.name();
     }
 }

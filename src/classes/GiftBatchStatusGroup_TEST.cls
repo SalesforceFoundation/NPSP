@@ -58,7 +58,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnTrueWithCorrectRecordCountForFailedStatusGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), BDI_DataImport_API.bdiFailed)
             .withAliasAndValue('recordCount', 5);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -69,7 +69,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForNoneFailedGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported');
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), BDI_DataImport_API.bdiImported);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isProcessingFailed());
@@ -90,7 +90,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForGroupWithoutPaymentFailures() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue('Payment_Status__c','AUTHORIZED');
+            .withAliasAndValue('Payment_Status__c',GE_PaymentServices.ElevateTransactionStatus.AUTHORIZED.name());
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isPaymentFailed());
