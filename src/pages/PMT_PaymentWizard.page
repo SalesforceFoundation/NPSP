@@ -90,12 +90,12 @@
                 <!--Main Content-->
                 <div class="container slds-p-around_medium">
 
-                <!-- Opportunity Info -->
-                <div class="slds-section slds-is-open" id="pmtWizardTitle">
-                    <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
-                            {!$Label.pmtWizardSectionTitle}</span>
-                            </h3>
+                    <!-- Opportunity Info -->
+                    <div class="slds-section slds-is-open" id="pmtWizardTitle">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
+                                {!$Label.pmtWizardSectionTitle}</span>
+                        </h3>
                     </div>
 
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
