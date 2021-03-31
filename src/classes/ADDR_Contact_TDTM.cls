@@ -140,8 +140,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
-                    contacts.createAddrFromCon(new List<Contact>(addressCreationQueue), dmlWrapper,
-                            triggerAction);
+                    contacts.createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
                 }
                 TDTM_TriggerHandler.processDML(dmlWrapper);
 
