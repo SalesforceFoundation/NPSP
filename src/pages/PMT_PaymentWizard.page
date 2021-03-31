@@ -189,8 +189,8 @@
                             </h3>
                         </div>
                         <div class="slds-form slds-form_stacked">
-                            <div class="slds-grid slds-gutters_small slds-p-top_x-small">
-                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-top_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                     <div class="slds-form-element">
                                         <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" for="paymentCount" styleClass="slds-form-element__label"/>
                                         <div class="slds-form-element__control slds-select_container">
@@ -201,13 +201,13 @@
                                     </div>
                                 </div>
 
-                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                     <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Scheduled_Date__c"
                                                       labelOverride="{!$Label.pmtWizardFirstPaymentDate}" ariaDescription="{!$Label.pmtWizardFirstPaymentDate}"/>
                                 </div>
                             </div>
-                            <div class="slds-grid slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
-                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                     <fieldset class="slds-form-element slds-form_compound">
                                         <legend class="slds-form-element__legend slds-form-element__label" id="intervals">
                                             <apex:outputText value="{!$Label.pmtWizardInterval}"/>
@@ -242,7 +242,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                     <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />
                                 </div>
                             </div>
