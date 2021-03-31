@@ -217,7 +217,19 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 addressRefreshQueue.add(con);
             }
         }
-        addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+        if (isRecursive() || isRecursiveFromContact(triggerAction)) {
+            if (isRecursive()) {
+                UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            }
+            // If the Before Insert/Update trigger on the Contact has already executed and taken action
+            // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+            if (isRecursiveFromContact(triggerAction)) {
+                UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+            }
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+        }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
