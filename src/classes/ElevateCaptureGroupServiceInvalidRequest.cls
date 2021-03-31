@@ -30,7 +30,7 @@
 /**
 * @description Used to mock invalid elevate capture group requests for unit tests
  */
-public class ElevateCaptureGroupInvalidRequest extends ElevateCaptureGroupService {
+public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGroupService {
 
     public static final String INVALID_PARAMETER = 'invalid-parameter';
     public static final String INVALID_GROUP_ID = 'invalid-group-id';
