@@ -43,15 +43,15 @@ private with sharing class GiftBatchGroupedTotals_TEST {
         List<AggregateResultProxy> proxiesForBatch0 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
                 .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),BDI_DataImport_API.bdiImported)
                 .withAliasAndValue('recordCount', 1),
             new AggregateResultProxy()
                 .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),BDI_DataImport_API.bdiFailed)
                 .withAliasAndValue('recordCount', 2),
             new AggregateResultProxy()
                 .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Payment_Status__c),'AUTHORIZED')
+                .withAliasAndValue(String.valueOf(DataImport__c.fields.Payment_Status__c),GE_PaymentServices.ElevateTransactionStatus.AUTHORIZED.name())
                 .withAliasAndValue('recordCount', 3)
         };
 
@@ -59,12 +59,12 @@ private with sharing class GiftBatchGroupedTotals_TEST {
         List<AggregateResultProxy> proxiesForBatch1 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
                 .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_1)
-                .withAliasAndValue('Payment_Status__c','DECLINED')
+                .withAliasAndValue('Payment_Status__c',GE_PaymentServices.ElevateTransactionStatus.DECLINED.name())
                 .withAliasAndValue('recordCount', 4),
             new AggregateResultProxy()
                 .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_1)
                 .withAliasAndValue('Status__c', 'Failed')
-                .withAliasAndValue('Payment_Status__c','DECLINED')
+                .withAliasAndValue('Payment_Status__c',GE_PaymentServices.ElevateTransactionStatus.DECLINED.name())
                 .withAliasAndValue('recordCount', 5)
         };
 
