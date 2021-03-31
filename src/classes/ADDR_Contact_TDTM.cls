@@ -100,7 +100,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     }
                     this.addressCreationQueue = new Set<Contact>();
                 } else {
-                    this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+                    this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
                 }
                 if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
                     // to avoid pushing these address changes to the HH.
@@ -228,7 +228,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld, triggerAction);
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
         }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
@@ -267,7 +267,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
     }
 
-    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts, List<SObject> listOld, Action triggerAction) {
+    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts, List<SObject> listOld) {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer j = -1;
         // we only support address management with HH Accounts being used
