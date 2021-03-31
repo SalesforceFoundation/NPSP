@@ -114,7 +114,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
             });
     });
 
-    it('should permanently disable itself if an payment transaction has been successful', async () => {
+    it('should permanently disable itself if an payment transaction has been successful and a critical failure has occurred', async () => {
         const element = createWidgetWithPaymentMethod(ACH);
         document.body.appendChild(element);
 

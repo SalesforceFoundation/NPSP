@@ -23,14 +23,25 @@ import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Conta
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import {
+    ACCOUNT_HOLDER_BANK_TYPES,
+    ACCOUNT_HOLDER_TYPES,
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
-    LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
+    LABEL_NEW_LINE,
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_METHODS
 } from 'c/geConstants';
 
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 const CONTACT_DONOR_TYPE = 'Contact1';
+
+const MODES = Object.freeze({
+    CHARGE: 'Charge',
+    READ_ONLY: 'ReadOnly',
+    CRITICAL_ERROR: 'CriticalError',
+    DO_NOT_CHARGE: 'DoNotCharge',
+    DEACTIVATE: 'Deactivate'
+});
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
@@ -47,6 +58,39 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
+    _widgetDataFromState;
+
+    setMode (mode) {
+        switch (mode) {
+            case MODES.CHARGE:
+                this.activateChargeMode();
+                break;
+            case MODES.READ_ONLY:
+                this.activateReadOnlyMode();
+                break;
+            case MODES.CRITICAL_ERROR:
+                this.activateCriticalErrorMode();
+                break;
+            case MODES.DO_NOT_CHARGE:
+                this.activateDoNotChargeMode();
+                break;
+            case MODES.DEACTIVATE:
+                this.deActivateWidget();
+                break;
+            default:
+                this.activateChargeMode();
+        }
+    }
+
+    activateChargeMode() {}
+
+    activateReadOnlyMode() { }
+
+    activateCriticalErrorMode() { }
+
+    activateDoNotChargeMode() { }
+
+    deActivateWidget() { }
 
 
     iframe() {
@@ -61,17 +105,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-
-        if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) ||
-            this.shouldHandleWidgetDataChange()) {
-
+        if (this.shouldHandleWidgetDataChange()) {
+            this.setCurrentPaymentMethod();
             this.handleWidgetDataChange();
         }
     }
 
     handleWidgetDataChange() {
-        this._hasPaymentMethodInTemplate =
-            this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
 
         if (this._hasPaymentMethodInTemplate) {
             this._currentPaymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
@@ -95,7 +135,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     shouldHandleWidgetDataChange() {
-        return !this.isPaymentCharged();
+        return isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) || !this.isPaymentCharged();
     }
 
     isPaymentCharged() {
@@ -117,10 +157,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
     }
 
-    requestSetPaymentMethod(paymentMethod) {
+    requestSetPaymentMethod() {
         this.isLoading = true;
         tokenHandler.setPaymentMethod(
-            this.iframe(), paymentMethod, this.handleError,
+            this.iframe(), this._currentPaymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
         ).catch(err => {
             this.handleError(err);
@@ -133,7 +173,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get shouldDisplayEnableButton() {
         if (!this._hasPaymentMethodInTemplate) return true;
-        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod(this._currentPaymentMethod)) {
+        if (this._hasPaymentMethodInTemplate && this.hasValidPaymentMethod()) {
             return true;
         }
         return false;
@@ -151,16 +191,22 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
+        await this.retrievePaymentTransactionStatuses();
+        const domainInfo = await this.retrieveDomainInformation();
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
+    }
+
+    async retrievePaymentTransactionStatuses() {
         this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
             JSON.parse(await getPaymentTransactionStatusValues())
         );
+    }
 
-        const domainInfo = await getOrgDomainInfo()
+    async retrieveDomainInformation() {
+        return await getOrgDomainInfo()
             .catch(error => {
                 this.handleError(error);
             });
-
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***
@@ -168,9 +214,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     renderedCallback() {
         //Listens for a message from the Visualforce iframe.
-        let component = this;
-        tokenHandler.registerPostMessageListener(component);
-
+        tokenHandler.registerPostMessageListener(this);
         registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleEventDisabledWidget, this);
     }
 
