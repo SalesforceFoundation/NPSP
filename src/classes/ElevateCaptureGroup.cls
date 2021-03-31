@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCaptureGroup implements CaptureGroup {
-    private String id;
+    private String groupId;
 
     @TestVisible
     private ElevateCaptureGroupService captureGroupService {
@@ -41,15 +41,21 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         set;
     }
 
-    public UTIL_Http.Response create() {
+    public ElevateCaptureGroup(){}
+
+    public ElevateCaptureGroup(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public ElevateCaptureGroup create() {
         return captureGroupService.sendCreateRequest();
     }
 
-    public UTIL_Http.Response add(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return captureGroupService.sendAddRequest(tokenizedGift, groupId);
+    public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
+        return captureGroupService.sendAddRequest(tokenizedGift, groupId());
     }
 
     public String groupId() {
-        return id;
+        return groupId;
     }
 }

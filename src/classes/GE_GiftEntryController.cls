@@ -41,17 +41,6 @@ public with sharing class GE_GiftEntryController {
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
     private static GiftBatchService giftBatchService = new GiftBatchService();
 
-    @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
-            }
-            return captureGroupService;
-        }
-        set;
-    }
-
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
@@ -194,49 +183,13 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return '{\n' +
-                '  "body": {\n' +
-                '    "id": "bb02ef0f-b0d1-4be8-8319-61ef20796a6f",\n' +
-                '    "timestamp": "2021-03-24T18:33:48.960Z",\n' +
-                '    "createdAt": "2021-03-24T18:33:48.960Z",\n' +
-                '    "submittedAt": "2021-03-24T18:33:48.960Z",\n' +
-                '    "status": "PENDING",\n' +
-                '    "merchantId": "f4338833-20f1-44b5-9270-6087659e0b9f",\n' +
-                '    "merchantName": "TestPortal",\n' +
-                '    "gatewayId": "9a15e898-ae17-4402-a6e6-bd2456082064",\n' +
-                '    "currencyCode": "USD",\n' +
-                '    "amount": 5,\n' +
-                '    "lastName": "Bond",\n' +
-                '    "firstName": "James",\n' +
-                '    "type": "PAYMENT",\n' +
-                '    "paymentType": "CARD",\n' +
-                '    "cardData": {\n' +
-                '      "last4": "1111",\n' +
-                '      "brand": "VISA",\n' +
-                '      "expirationYear": "2025",\n' +
-                '      "expirationMonth": "05",\n' +
-                '      "firstName": "James",\n' +
-                '      "lastName": "Bond",\n' +
-                '      "fingerprint": "nofingerprint"\n' +
-                '    },\n' +
-                '    "originalTransactionId": "bb02ef0f-b0d1-4be8-8319-61ef20796a6f",\n' +
-                '    "batchId": "3e6628ba-3f13-4805-9cd4-4dbab60e6418",\n' +
-                '    "receiptTimezone": "America/Los_Angeles",\n' +
-                '    "amountRefunded": 0,\n' +
-                '    "achData": {},\n' +
-                '    "version": 1\n' +
-                '  },\n' +
-                '  "statusCode": 201\n' +
-                '}';
+    public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new ElevateCaptureGroupService().addToCaptureGroup(tokenizedGift, groupId);
     }
 
     @AuraEnabled
-    public static String createCaptureGroup() {
-        return '{\n' +
-                '  "id": "8fde8fe9-6ed7-43c6-bf23-a4dbc49a8a2a",\n' +
-                '  "status": "Open"\n' +
-                '}';
+    public static void createCaptureGroup() {
+//        return new ElevateCaptureGroupService().sendCreateRequest();
     }
 
     /**

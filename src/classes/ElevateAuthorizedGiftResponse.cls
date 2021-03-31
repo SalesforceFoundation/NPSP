@@ -27,21 +27,12 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateAuthorizedGift {
-    private Decimal amount;
-    private String currencyCode;
-    private String lastName;
-    private String firstName;
-    private String paymentMethod;
-    private String groupId;
-    ElevateAuthorizedGiftResponse authorizedGiftResponse;
+public with sharing class ElevateAuthorizedGiftResponse {
+    private Datetime expiresAt;
+    private ElevateTransactionStatus status;
+    private String paymentId;
 
-    public ElevateAuthorizedGift(){}
-
-    public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift, ElevateAuthorizedGiftResponse authorizedGiftResponse) {
-        amount = tokenizedGift.amount();
-
+    public DateTime expiresAt() {
+        return expiresAt;
     }
-
-
 }

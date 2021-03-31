@@ -303,6 +303,7 @@
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
         <members>ElevateAuthorizedGift</members>
+        <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateCaptureGroup</members>
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
