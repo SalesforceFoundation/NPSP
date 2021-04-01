@@ -42,13 +42,15 @@ public with sharing class ContactService {
     ********************************************************************************************************/
     public Boolean isContactAddressChanged(Contact con1, Contact con2) {
         // if both null, no change
-        if (con1 == null && con2 == null)
+        if (con1 == null && con2 == null) {
             return false;
+        }
 
         // if one null, make sure other has at least one address field set
         if (con1 == null || con2 == null) {
-            if (con1 == null)
+            if (con1 == null) {
                 con1 = con2;
+            }
             return (!isContactAddressEmpty(con1) ||
                     con1.npe01__Primary_Address_Type__c != null);
         }
