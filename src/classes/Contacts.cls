@@ -283,9 +283,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public Contacts contactsInAccountsOfTypeHousehold() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
-        integer i = -1;
         for (SObject so : getRecords()) {
-            i++;
             NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
             if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
                 contactsInHouseholdAccounts.add(npspContact.getRecord());
@@ -300,9 +298,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public Contacts contactsInHouseholdAccounts() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
-        integer i = -1;
         for (SObject so : getRecords()) {
-            i++;
             Contact con = (Contact) so;
             if (isInHouseholdAccount(new NPSP_Contact(con))) {
                 contactsInHouseholdAccounts.add(con);
