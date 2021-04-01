@@ -34,8 +34,7 @@
 public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGroupService {
 
     public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        ElevateAuthorizedGiftResponse giftResponse = new ElevateAuthorizedGiftResponse();
-        giftResponse.errors.add(addCaptureGroupErrorMessage());
+        ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupErrorMessage();
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
@@ -49,8 +48,8 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
         return captureGroup;
     }
 
-    public ElevateAuthorizedGiftResponse.Errors addCaptureGroupErrorMessage() {
-        return (ElevateAuthorizedGiftResponse.Errors)JSON.deserialize('{\n' +
+    public ElevateAuthorizedGiftResponse addCaptureGroupErrorMessage() {
+        return (ElevateAuthorizedGiftResponse)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "authorize failed",\n' +

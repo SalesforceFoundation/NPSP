@@ -28,36 +28,35 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateAuthorizedGiftResponse {
-    public Datetime authExpiresAt;
-    public ElevateTransactionStatus status;
-    public String id;
-    public String gatewayTransactionId;
-    public String originalTransactionId;
+    public Body body;
+    public Integer statusCode;
     public List<Errors> errors;
+
+    public class Body {
+        public String id;
+        public DateTime authExpiresAt;
+        public ElevateTransactionStatus status;
+        public String gatewayTransactionId;
+        public String currencyCode;
+        public Integer amount;
+        public String lastName;
+        public String firstName;
+        public String paymentType;
+        public String originalTransactionId;
+        public String batchId;
+    }
 
     public class Errors {
         public String message;
         public String failure_reason;
     }
 
-    public DateTime authExpiresAt() {
-        return authExpiresAt;
+    public String groupId() {
+        return body.id;
     }
 
     public ElevateTransactionStatus status() {
-        return status;
-    }
-
-    public String id() {
-        return id;
-    }
-
-    public String gatewayTransactionId() {
-        return gatewayTransactionId;
-    }
-
-    public String originalTransactionId() {
-        return originalTransactionId;
+        return body.status;
     }
 
     public List<Errors> errors() {
