@@ -304,6 +304,7 @@
         <members>ERR_RecordError_TEST</members>
         <members>ElevateAuthorizedGift</members>
         <members>ElevateAuthorizedGiftResponse</members>
+        <members>ElevateAuthorizedGift_TEST</members>
         <members>ElevateCaptureGroup</members>
         <members>ElevateCaptureGroupResponse</members>
         <members>ElevateCaptureGroupService</members>

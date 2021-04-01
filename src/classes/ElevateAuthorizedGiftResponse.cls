@@ -28,18 +28,18 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateAuthorizedGiftResponse {
-    private Body body;
+    @TestVisible private Body body;
     private Integer statusCode;
     private List<Errors> errors;
 
-    private class Body {
-        private String id;
-        private DateTime authExpiresAt;
-        private ElevateTransactionStatus status;
-        private String gatewayTransactionId;
-        private String paymentType;
-        private String originalTransactionId;
-        private String batchId;
+    @TestVisible private class Body {
+        @TestVisible private String id;
+        @TestVisible private DateTime authExpiresAt;
+        @TestVisible private ElevateTransactionStatus status;
+        @TestVisible private String gatewayTransactionId;
+        @TestVisible private String paymentType;
+        @TestVisible private String originalTransactionId;
+        @TestVisible private String batchId;
     }
 
     public class Errors {

@@ -45,8 +45,8 @@ public with sharing class ElevateAuthorizedGift {
         this.status = authorizedGiftResponse.status();
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
         this.paymentMethod = authorizedGiftResponse.paymentMethod();
-        this.paymentMethod = authorizedGiftResponse.originalTransactionId();
         this.groupId = authorizedGiftResponse.groupId();
+        this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
     }
 
     public String groupId() {
