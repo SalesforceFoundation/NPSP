@@ -44,7 +44,7 @@ public inherited sharing class NPSP_Address {
         this.addr = new Address__c();
         addr.Household_Account__c = con.AccountId;
         addr.Default_Address__c = !con.is_Address_Override__c;
-        addr.Latest_Start_Date__c = system.today();
+        addr.Latest_Start_Date__c = System.today();
         addr.Latest_End_Date__c = null;
         copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
     }
@@ -53,7 +53,7 @@ public inherited sharing class NPSP_Address {
         this.addr = new Address__c();
         addr.Household_Account__c = acc.Id;
         addr.Default_Address__c = true;
-        addr.Latest_Start_Date__c = system.today();
+        addr.Latest_Start_Date__c = System.today();
         addr.Latest_End_Date__c = null;
         copyFromSObject(acc, 'Billing', null);
     }
@@ -67,32 +67,30 @@ public inherited sharing class NPSP_Address {
         return this.addr;
     }
 
-    public Boolean belongsToSameHouseholdAs(NPSP_Address other) {
-        return householdId() == other.householdId();
-    }
-
     public String householdId() {
         return this.addr.Household_Account__c;
     }
 
     public Boolean overlapsWith(NPSP_Address other) {
-        if (other == null)
+        if (other == null) {
             return false;
-        if (!isSeasonal() || !other.isSeasonal())
+        }
+        if (!isSeasonal() || !other.isSeasonal()) {
             return false;
+        }
 
         // we don't need to know what year or month we are currently in, but
         // we need to take into account days (since we could be in the same month).
         // to make this easy to compare, we convert month & day to be a decimal of month.day.
         // eg., 3.01 for Feb 1st and 3.28 for Feb 28th.
-        decimal start1 = decimalOfMonthDay(startMonth(), startDay());
-        decimal end1 = decimalOfMonthDay(endMonth(), endDay());
-        decimal start2 = decimalOfMonthDay(other.startMonth(), other.startDay());
-        decimal end2 = decimalOfMonthDay(other.endMonth(), other.endDay());
+        Decimal start1 = decimalOfMonthDay(startMonth(), startDay());
+        Decimal end1 = decimalOfMonthDay(endMonth(), endDay());
+        Decimal start2 = decimalOfMonthDay(other.startMonth(), other.startDay());
+        Decimal end2 = decimalOfMonthDay(other.endMonth(), other.endDay());
 
         // now we see if the ranges are increasing (Jan '14 - March '14), or decreasing (Nov 14' - Feb '15),
-        boolean range1Increases = start1 < end1;
-        boolean range2Increases = start2 < end2;
+        Boolean range1Increases = start1 < end1;
+        Boolean range2Increases = start2 < end2;
 
         // we can now tell if there is overlap simply by looking at three scenarios:
         // 1. both ranges increase, make sure start1 not in range2, and start2 not in range1.
@@ -135,7 +133,7 @@ public inherited sharing class NPSP_Address {
     * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
     * @return void
     */
-    public void copyOntoSObject(sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
+    public void copyOntoSObject(SObject sobjDst, String strFieldPrefix, String strFieldAddrType) {
         sobjDst.put(strFieldPrefix + 'Street', Addresses.getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
@@ -256,7 +254,7 @@ public inherited sharing class NPSP_Address {
     * @param addrType if not null, copy to address.Address_Type__c
     * @return void
     */
-    public void copyFromSObject(sObject sobjSrc, String fieldPrefixSrc, String addrType) {
+    public void copyFromSObject(SObject sobjSrc, String fieldPrefixSrc, String addrType) {
         addr.MailingStreet__c = (String) sobjSrc.get(fieldPrefixSrc + 'Street');
         Addresses.handleMultilineStreet(addr);
         addr.MailingCity__c = (String) sobjSrc.get(fieldPrefixSrc + 'City');
@@ -293,8 +291,8 @@ public inherited sharing class NPSP_Address {
     * @param addr the Address to look at
     * @return boolean
     */
-    private boolean isPartialSeasonalAddr() {
-        integer cParts = 0;
+    private Boolean isPartialSeasonalAddr() {
+        Integer cParts = 0;
         if (addr.Seasonal_Start_Month__c != null) cParts++;
         if (addr.Seasonal_Start_Day__c != null) cParts++;
         if (addr.Seasonal_End_Month__c != null) cParts++;
@@ -308,10 +306,10 @@ public inherited sharing class NPSP_Address {
     * @param d the day ordinal as a string
     * @return decimal
     */
-    private static decimal decimalOfMonthDay(string m, string d) {
-        if (integer.valueOf(d) < 10)
-            return decimal.valueOf(m + '.0' + d); else
-                return decimal.valueOf(m + '.' + d);
+    private static Decimal decimalOfMonthDay(String m, String d) {
+        if (Integer.valueOf(d) < 10)
+            return Decimal.valueOf(m + '.0' + d); else
+                return Decimal.valueOf(m + '.' + d);
     }
 
     /*******************************************************************************************************
@@ -322,8 +320,8 @@ public inherited sharing class NPSP_Address {
     * @param addr the Address object to update accordingly
     * @return void
     */
-    @testVisible
-    private static void populateAddressCountryFromCountryCode(sObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    @TestVisible
+    private static void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
         String countryCode = (String) sobjSrc.get(fieldPrefixSrc + 'CountryCode');
         if (String.isBlank(countryCode)) {
             return;
@@ -343,8 +341,8 @@ public inherited sharing class NPSP_Address {
     * @param addr the Address object to update accordingly
     * @return void
     */
-    @testVisible
-    private static void populateAddressStateFromStateCode(sObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    @TestVisible
+    private static void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
         String stateCode = (String) sobjSrc.get(fieldPrefixSrc + 'StateCode');
         if (String.isBlank(stateCode)) {
             return;
@@ -364,7 +362,7 @@ public inherited sharing class NPSP_Address {
     * @param addressMailingState the Address Mailing State
     * @return void
     */
-    @testVisible
+    @TestVisible
     private static Boolean isMatchingStateCode(String stateCode, String addressMailingState) {
         if (String.isBlank(addressMailingState)) {
             return false;
