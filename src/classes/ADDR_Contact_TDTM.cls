@@ -71,21 +71,25 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 onAfterInsertAddrConTDTM(contacts, listOld);
             }
             when BeforeUpdate {
+                DmlWrapper dmlWrapper = new DmlWrapper();
                 contacts.normalizeLineBreaksForContactsWithChangedAddresses();
-                this.addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
-                this.addressCreationQueue = getAddressCreationQueueInBeforeContext(contacts, listOld);
-                this.useCurrentAddressQueue = getUseCurrentAddressQueue(contacts, listOld);
-                this.isOverrideByAddressId = getIsOverrideByAddressId(contacts, listOld);
-                this.addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
-                this.isOverrideByAddressId.putAll(
+                list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
+                Set<Contact> addressCreationQueue =
+                        getAddressCreationQueueInBeforeContext(contacts, listOld);
+                list<Contact> useCurrentAddressQueue =
+                        getUseCurrentAddressQueue(contacts, listOld);
+                map<Id, boolean> isOverrideByAddressId =
+                        getIsOverrideByAddressId(contacts, listOld);
+                addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
+                isOverrideByAddressId.putAll(
                         getIsOverrideByAddressIdFromAddressOverrideChanges(
                                 contacts, listOld));
 
                 if (isRecursive()) {
                     UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                    this.addressCreationQueue = new Set<Contact>();
+                    addressCreationQueue = new Set<Contact>();
                 } else {
-                    this.addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+                    addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
                 }
                 if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
                     // to avoid pushing these address changes to the HH.
@@ -107,8 +111,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 }
 
                 // update the Latest date fields on any address overrides
-                if (this.isOverrideByAddressId.size() > 0) {
-                    Addresses.updateAddrIsOverride(this.isOverrideByAddressId, dmlWrapper);
+                if (isOverrideByAddressId.size() > 0) {
+                    Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
                 }
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
