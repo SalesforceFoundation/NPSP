@@ -1,6 +1,5 @@
 import apexAddToCaptureGroup from '@salesforce/apex/GE_GiftEntryController.addToCaptureGroup';
 import apexCreateCaptureGroup from '@salesforce/apex/GE_GiftEntryController.createCaptureGroup';
-import ElevateAuthorizedGift from './elevateAuthorizedGift';
 
 class ElevateCaptureGroup {
 
@@ -15,13 +14,7 @@ class ElevateCaptureGroup {
         }
 
         try {
-            let response = JSON.parse(await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId)).body;
-            let authorizedGift = new ElevateAuthorizedGift();
-            Object.keys(authorizedGift).forEach(
-                key => authorizedGift[key] = response[key]
-            );
-
-            return authorizedGift;
+            return await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
         } catch (ex) {
             if (!this._hasAddRun) {
                 this._hasAddRun = true;
@@ -34,8 +27,7 @@ class ElevateCaptureGroup {
     }
 
     async create() {
-        let response = JSON.parse(await apexCreateCaptureGroup());
-        return response.id;
+        return await apexCreateCaptureGroup().id;
     }
 
 }
