@@ -98,8 +98,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     };
 
     @track isLoading = true;
-    @track isElevateCustomer;
-    @track isEditEnabled = false;
+    @track isElevateCustomer = false;
     @track isElevateRecord = false;
     @track isElevateConnected = false;
     @track showLastFourACH = false;
@@ -147,7 +146,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                     this.isElevateCustomer = response.isElevateCustomer;
                     this.permissions.alert = response.alert;
                     this.commitmentURLPrefix = response.commitmentURLPrefix;
-                    this.isEditEnabled = response.isEditEnabled;
 
                     this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                         && response.hasFieldPermissions === true
