@@ -728,4 +728,377 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
+
+    public void onBeforeUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        contacts.normalizeLineBreaksForContactsWithChangedAddresses();
+        list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
+        Set<Contact> addressCreationQueue =
+                getAddressCreationQueueInBeforeContext(contacts, listOld);
+        list<Contact> useCurrentAddressQueue =
+                getUseCurrentAddressQueue(contacts, listOld);
+        map<Id, boolean> isOverrideByAddressId =
+                getIsOverrideByAddressId(contacts, listOld);
+        addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
+        isOverrideByAddressId.putAll(
+                getIsOverrideByAddressIdFromAddressOverrideChanges(
+                        contacts, listOld));
+
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+        }
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+            // to the Contact's address that are being made by this BeforeUpdate trigger.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+        }
+
+        // set the mailing address for contacts who specify an address lookup or override
+        if (useCurrentAddressQueue.size() > 0) {
+            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+        }
+
+        // reset the mailing address for contacts who no longer have an address override
+        if (addressRefreshQueue.size() > 0) {
+            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            contactsForAddressRefresh.resetAddresses();
+        }
+
+        // update the Latest date fields on any address overrides
+        if (isOverrideByAddressId.size() > 0) {
+            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+        }
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+        }
+    }
+
+    public void onAfterUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        Set<Contact> addressCreationQueue =
+                getAddressCreationQueue(contacts, listOld);
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
+    }
+
+    public void onAfterInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
+    }
+
+    private Set<Contact> getAddressCreationQueue(Contacts contacts, List<SObject> listOld) {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        if (isRecursive() || isRecursiveFromContact()) {
+            if (isRecursive()) {
+                UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            }
+            // If the Before Insert/Update trigger on the Contact has already executed and taken action
+            // and this is an After Insert/Update trigger, simply reset the flag and exit out.
+            if (isRecursiveFromContact()) {
+                UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+            }
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInAfterContext(contacts, listOld);
+        }
+        return addressCreationQueue;
+    }
+
+    public void onBeforeInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        contacts.normalizeLineBreaks();
+
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        list<Contact> useCurrentAddressQueue = new list<Contact>();
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+        list<Contact> addressRefreshQueue = new list<Contact>();
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            Contact con = (Contact) so;
+            NPSP_Contact npspContact = new NPSP_Contact(con);
+
+            if (npspContact.currentAddress() != null) {
+                // remember which contacts will need their address set
+                useCurrentAddressQueue.add(con);
+                if (npspContact.hasAddressOverride()) {
+                    // track which address's need their dates updated
+                    isOverrideByAddressId.put(npspContact.currentAddress(), true);
+                }
+            } else if (npspContact.isAddressEmpty() &&
+                    contacts.accountHasAddresses(npspContact.getRecord())) {
+                // if the contact has no address specified and the household has a default address, pick up the hh default.
+                addressRefreshQueue.add(con);
+            }
+        }
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+        }
+
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+            // to the Contact's address that are being made by this BeforeUpdate trigger.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+        }
+
+        // set the mailing address for contacts who specify an address lookup or override
+        if (useCurrentAddressQueue.size() > 0) {
+            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+        }
+
+        // reset the mailing address for contacts who no longer have an address override
+        if (addressRefreshQueue.size() > 0) {
+            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            contactsForAddressRefresh.resetAddresses();
+        }
+
+        // update the Latest date fields on any address overrides
+        if (isOverrideByAddressId.size() > 0) {
+            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+        }
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConBeforeInsertUpdate(
+                    new List<Contact>(addressCreationQueue));
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+        }
+    }
+
+    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts, List<SObject> listOld) {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        integer j = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+            j++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            Account a = contacts.accountsByIds().get(con.AccountId);
+            if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                continue;
+            }
+            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
+            // our functionality for dealing with contact address changes requires some trickery!
+            // if the contact doesn't have an address override, we create (or match) a default address,
+            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
+            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
+            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
+            // note that we detect whether the address change is coming from the address trigger,
+            // in which case we don't want to create a new address.
+
+            // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+            if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+                addressCreationQueue.add(con);
+            }
+        }
+        return addressCreationQueue;
+    }
+
+    private Set<Contact> getAddressCreationQueueInAfterContext(Contacts contacts, List<SObject> listOld) {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        integer g = -1;
+        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+            g++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[g] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            if (npspContact.householdAndAccountDiffer()) {
+                continue;
+            }
+
+            if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+                addressCreationQueue.add(con);
+            }
+        }
+        return addressCreationQueue;
+    }
+
+    private Boolean isRecursiveFromContact() {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore);
+    }
+
+    private Boolean isRecursive() {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
+    }
+
+    private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges(Contacts contacts, List<SObject> listOld) {
+        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+        integer i = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            // new highest priority! if Account changes...
+            i++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+            NPSP_Contact npspContactOld = new NPSP_Contact(conOld);
+
+            if (!npspContact.accountChanged()) {
+                // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
+                if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
+                        !npspContact.isAddressChanged() && npspContactOld.currentAddress() != null) {
+                    // track which address's need their dates updated
+                    isOverrideByAddressId.put(npspContactOld.currentAddress(), false);
+                }
+
+                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
+                // this is handled in the next block, since we do it for both new contacts and updated contacts.
+            }
+        }
+        return isOverrideByAddressId;
+    }
+
+    private List<Contact> addressOverrideResetsOf(Contacts contacts, List<SObject> listOld) {
+        list<Contact> addressRefreshQueue = new list<Contact>();
+        integer i = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            // new highest priority! if Account changes...
+            i++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            if (!npspContact.accountChanged()) {
+                // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
+                if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
+                        !npspContact.isAddressChanged()) {
+                    addressRefreshQueue.add(con);
+                }
+
+                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
+                // this is handled in the next block, since we do it for both new contacts and updated contacts.
+            }
+        }
+        return addressRefreshQueue;
+    }
+
+    private List<Contact> getUseCurrentAddressQueue(Contacts contacts, List<SObject> listOld) {
+        list<Contact> useCurrentAddressQueue = new list<Contact>();
+        integer i = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            // new highest priority! if Account changes...
+            i++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            if (!npspContact.accountChanged()) {
+                // highest priority. if they are changing to a new Current Address, refill from it.
+                if (addressChangedFor(npspContact)) {
+                    useCurrentAddressQueue.add(con);
+                }
+            }
+        }
+        return useCurrentAddressQueue;
+    }
+
+    private Map<Id, Boolean> getIsOverrideByAddressId(Contacts contacts, List<SObject> listOld) {
+        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+        integer i = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            // new highest priority! if Account changes...
+            i++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[i] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            if (!npspContact.accountChanged()) {
+                // highest priority. if they are changing to a new Current Address, refill from it.
+                if (addressChangedFor(npspContact) && npspContact.hasAddressOverride()) {
+                    // track which address's need their dates updated
+                    isOverrideByAddressId.put(npspContact.currentAddress(), true);
+                }
+            }
+        }
+        return isOverrideByAddressId;
+    }
+
+    private Boolean addressChangedFor(NPSP_Contact npspContact) {
+        return npspContact.currentAddressChanged() &&
+                npspContact.currentAddress() != null;
+    }
+
+    private List<Contact> getAddressRefreshQueue(Contacts contacts, List<SObject> listOld) {
+        list<Contact> addressRefreshQueue = new list<Contact>();
+        integer n = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            n++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            // new highest priority! if Account changes...
+            if (npspContact.accountChanged()) {
+                // if no override, refill from the Default Address
+                if (isEligibleForRefresh(npspContact)) {
+                    if (contacts.accountHasAddresses(npspContact.getRecord())) { //
+                        // refresh address if the contact does not have one and account does
+                        addressRefreshQueue.add(con);
+                    }
+                }
+            }
+        }
+        return addressRefreshQueue;
+    }
+
+    private Set<Contact> getAddressCreationQueueInBeforeContext(Contacts contacts, List<SObject> listOld) {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        integer n = -1;
+        // we only support address management with HH Accounts being used
+        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+            n++;
+            Contact con = (Contact) so;
+            Contact conOld = (listOld != null ? (Contact) listOld[n] : null);
+            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+
+            // new highest priority! if Account changes...
+            if (npspContact.accountChanged()) {
+                // if no override, refill from the Default Address
+                if (!isEligibleForRefresh(npspContact)) {
+                    addressCreationQueue.add(con);
+                }
+            }
+        }
+        return addressCreationQueue;
+    }
+
+    private Boolean isEligibleForRefresh(NPSP_Contact npspContact) {
+        return !npspContact.hasAddressOverride() && !npspContact.isAddressChanged();
+    }
+
 }
