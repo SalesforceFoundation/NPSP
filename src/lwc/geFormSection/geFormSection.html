@@ -7,9 +7,6 @@
         <lightning-layout multiple-rows='true'>
             <template for:each={renderableElements}
                       for:item='element'>
-                <!-- TODO: It would be great to make the layout sizing more dynamic,
-                    but the lightning-layout-item needs to be in the same component as the lightning-layout.
-                    Maybe size numbers should be passed as part of the "element"? -->
                 <template if:false={element.componentName}>
                     <lightning-layout-item key={element.id}
                                            size='6'
