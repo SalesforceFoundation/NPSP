@@ -71,58 +71,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 onAfterInsertAddrConTDTM(contacts, listOld);
             }
             when BeforeUpdate {
-                DmlWrapper dmlWrapper = new DmlWrapper();
-                contacts.normalizeLineBreaksForContactsWithChangedAddresses();
-                list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
-                Set<Contact> addressCreationQueue =
-                        getAddressCreationQueueInBeforeContext(contacts, listOld);
-                list<Contact> useCurrentAddressQueue =
-                        getUseCurrentAddressQueue(contacts, listOld);
-                map<Id, boolean> isOverrideByAddressId =
-                        getIsOverrideByAddressId(contacts, listOld);
-                addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
-                isOverrideByAddressId.putAll(
-                        getIsOverrideByAddressIdFromAddressOverrideChanges(
-                                contacts, listOld));
-
-                if (isRecursive()) {
-                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                    addressCreationQueue = new Set<Contact>();
-                } else {
-                    addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
-                }
-                if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
-                    // to avoid pushing these address changes to the HH.
-                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-                    // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
-                    // to the Contact's address that are being made by this BeforeUpdate trigger.
-                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-                }
-
-                // set the mailing address for contacts who specify an address lookup or override
-                if (useCurrentAddressQueue.size() > 0) {
-                    contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
-                }
-
-                // reset the mailing address for contacts who no longer have an address override
-                if (addressRefreshQueue.size() > 0) {
-                    Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
-                    contactsForAddressRefresh.resetAddresses();
-                }
-
-                // update the Latest date fields on any address overrides
-                if (isOverrideByAddressId.size() > 0) {
-                    Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
-                }
-                // create any new Default Address objects
-                if (addressCreationQueue.size() > 0) {
-                    contacts.createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
-                }
-                TDTM_TriggerHandler.processDML(dmlWrapper);
-
-                if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
-                    TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-                }
+                onBeforeUpdateAddrConTDTM(contacts, listOld);
             }
             when AfterUpdate {
                 onAfterUpdateAddrConTDTM(contacts, listOld);
@@ -168,6 +117,61 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // If the Before Insert/Update trigger on the Contact has already executed and taken action
         // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
         return null;
+    }
+
+    private void onBeforeUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        DmlWrapper dmlWrapper = new DmlWrapper();
+        contacts.normalizeLineBreaksForContactsWithChangedAddresses();
+        list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
+        Set<Contact> addressCreationQueue =
+                getAddressCreationQueueInBeforeContext(contacts, listOld);
+        list<Contact> useCurrentAddressQueue =
+                getUseCurrentAddressQueue(contacts, listOld);
+        map<Id, boolean> isOverrideByAddressId =
+                getIsOverrideByAddressId(contacts, listOld);
+        addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
+        isOverrideByAddressId.putAll(
+                getIsOverrideByAddressIdFromAddressOverrideChanges(
+                        contacts, listOld));
+
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+        }
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+            // to the Contact's address that are being made by this BeforeUpdate trigger.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+        }
+
+        // set the mailing address for contacts who specify an address lookup or override
+        if (useCurrentAddressQueue.size() > 0) {
+            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+        }
+
+        // reset the mailing address for contacts who no longer have an address override
+        if (addressRefreshQueue.size() > 0) {
+            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            contactsForAddressRefresh.resetAddresses();
+        }
+
+        // update the Latest date fields on any address overrides
+        if (isOverrideByAddressId.size() > 0) {
+            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+        }
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+
+        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+        }
     }
 
     private void onAfterUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
