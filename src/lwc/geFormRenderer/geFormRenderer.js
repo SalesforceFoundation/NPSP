@@ -127,7 +127,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     ACCOUNT1: 'Account1',
     CONTACT1: 'Contact1'
 });
-const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
+
 const ACH_CONSENT_MESSAGE = 'true';
 const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
 
