@@ -2,11 +2,7 @@ import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import tokenHandler from 'c/psElevateTokenHandler';
 import { apiNameFor, format, isEmptyObject } from 'c/utilCommon';
-import {
-    fireEvent,
-    registerListener,
-    unregisterListener,
-} from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener, unregisterListener, } from 'c/pubsubNoPageRef';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     PAYMENT_METHODS,
