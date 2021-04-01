@@ -94,7 +94,8 @@
                     <div class="slds-section slds-is-open" id="pmtWizardTitle">
                         <h3 class="slds-section__title slds-theme_shade">
                             <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
-                                {!$Label.pmtWizardSectionTitle}</span>
+                                {!$Label.pmtWizardSectionTitle}
+                            </span>
                         </h3>
                     </div>
 
@@ -132,7 +133,8 @@
                                                 <label class="slds-form-element__label" for="oppCloseDate">{!$ObjectType.Opportunity.Fields.CloseDate.Label}</label>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-form-element__static">
-                                                        <apex:outputField value="{!currentOpp.CloseDate}" id="oppCloseDate"/></span>
+                                                        <apex:outputField value="{!currentOpp.CloseDate}" id="oppCloseDate"/>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -285,9 +287,9 @@
 
                             <div class="slds-section slds-is-open" id="pmtsToCreateTitle">
                                 <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" id="pmtTableLabel">
-                                    {!$Label.pmtWizardToBeCreated}
-                                </span>
+                                    <span class="slds-truncate slds-p-horizontal_small" id="pmtTableLabel">
+                                        {!$Label.pmtWizardToBeCreated}
+                                    </span>
                                 </h3>
                             </div>
                             <div class="slds-form">
@@ -395,9 +397,7 @@
                                     </div>
                                 </div>
                             </div>
-
                         </apex:outputText>
-
                     </apex:outputText>
 
 
