@@ -439,8 +439,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     */
     public static Boolean isStateCountryPicklistsEnabled {
         get {
-            if (isStateCountryPicklistsEnabled == null)
+            if (isStateCountryPicklistsEnabled == null) {
                 isStateCountryPicklistsEnabled = initValidStateCountryCodes();
+            }
             return isStateCountryPicklistsEnabled;
         }
         private set;
@@ -459,8 +460,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     /*******************************************************************************************************
     * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
     * Adds an Error to each Address object that has an illegal account.
-    * @param listAddr a list of Addresses to verify
-    * @return void.
     */
     public void verifyAddrHHAccOnly() {
         set<Id> setAccId = new set<Id>();
@@ -492,8 +491,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     /*******************************************************************************************************
     * @description verify that any seasonal addresses don't overlap
     * Adds an Error to each Address object that has an illegal seasonal fields
-    * @param listAddr a list of Addresses to verify
-    * @return void.
     */
     public void verifyAddrSeasonalNoOverlap() {
 
@@ -503,8 +500,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
         addErrorsToPartialSeasonalAddresses();
 
         // if none are seasonal, we can bail out
-        if (seasonalAddresses.size() == 0)
+        if (seasonalAddresses.size() == 0) {
             return;
+        }
 
         // protect against overlaps within the set being inserted or updated
         checkForOverlaps(seasonalAddresses);
@@ -523,10 +521,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
     private void checkForOverlaps(List<NPSP_Address> seasonalAddresses) {
         for (NPSP_Address addr : seasonalAddresses) {
             for (NPSP_Address addr2 : seasonalAddresses) {
-                if (addr.getRecord() == addr2.getRecord())
+                if (addr.getRecord() == addr2.getRecord()) {
                     continue;
-                if (addr.householdId() != addr2.householdId())
+                }
+                if (addr.householdId() != addr2.householdId()) {
                     continue;
+                }
                 if (addr.overlapsWith(addr2)) {
                     addr.getRecord().addError(Label.addrSeasonalOverlap);
                 }
@@ -545,8 +545,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
         for (NPSP_Address addr : seasonalAddresses) {
             for (Address__c addr2 : mapAccIdListAddrHH.get(addr.householdId())) {
                 NPSP_Address npspAddress2 = new NPSP_Address(addr2);
-                if (addr.getRecord().id == addr2.id)
+                if (addr.getRecord().id == addr2.id) {
                     continue;
+                }
                 if (addr.overlapsWith(npspAddress2)) {
                     addr.getRecord().addError(Label.addrSeasonalOverlap);
                     break;
@@ -634,7 +635,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listAddr a list of Addresses to update
     * @param dmlWrapper the Addresses to update
     * @param includeAddressType whether to include comparing the AddressType field
-    * @return void
     */
     public static void createNonDuplicateAddresses(list<Address__c> listAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper, boolean includeAddressType) {
@@ -648,8 +648,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
                 if (!npspAddressNew.isEqualTo(npspAddressDup, includeAddressType)) {
                     npspAddressDup.copyFrom(npspAddressNew);
-                    if (npspAddressNew.isDefault())
+                    if (npspAddressNew.isDefault()) {
                         npspAddressDup.setAsDefault();
+                    }
                     dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
                 } else if (npspAddressNew.isDefault() && !npspAddressDup.isDefault()) {
                     npspAddressDup.setAsDefault();
@@ -670,8 +671,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public static map<Address__c, Address__c> findDuplicateAddresses(list<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
         list<Id> listAccId = new list<Id>();
-        for (Address__c addr : listAddr)
+        for (Address__c addr : listAddr) {
             listAccId.add(addr.Household_Account__c);
+        }
         map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
                 (listAccId);
         boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
@@ -705,8 +707,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     mapAddrDupAddr.put(addr, addrMatch);
                 }
             }
-            if (!hasMatch)
+            if (!hasMatch) {
                 mapAddrDupAddr.put(addr, null);
+            }
         }
 
         return mapAddrDupAddr;
@@ -739,7 +742,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * Account and Contacts.
     *
     * @param listAccId a list of Account Id's to process
-    * @return null
     */
     public static void cleanupAccountAddresses(list<ID> listAccId) {
 
@@ -808,15 +810,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
     /*******************************************************************************************************
     * @description routine the scheduled batch job calls to update households with Seasonal addresses
     * @param listAcc a list of Accounts to see if their address needs to be updated
-    * @return void
     */
     public static void batchSeasonalUpdate(list<Account> listAcc) {
-        if (listAcc == null || listAcc.size() == 0)
+        if (listAcc == null || listAcc.size() == 0) {
             return;
+        }
 
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
-        for (Account acc : listAcc)
+        for (Account acc : listAcc) {
             mapAccIdAddr.put(acc.Id, null);
+        }
 
         // get the default and seasonal address for each HH
         map<Id, Addresses.HHInfo> mapAccIdHHInfo =
@@ -827,8 +830,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(acc.Id);
             if (hhinfo != null) {
                 Address__c addr = hhinfo.addrSeasonal;
-                if (addr == null)
+                if (addr == null) {
                     addr = hhinfo.addrDefault;
+                }
                 if (addr != null) {
                     NPSP_Address npspAddr = new NPSP_Address(addr);
                     NPSP_Address npspAddressCurrent = new NPSP_Address(new Address__c());
@@ -858,12 +862,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
     * @param addr the Address to look at
-    * @return boolean
     */
     public static void handleMultilineStreet(Address__c addr) {
 
-        if (addr.MailingStreet__c == null)
+        if (addr.MailingStreet__c == null) {
             return;
+        }
 
         // handle CR NL
         integer ich = addr.MailingStreet__c.indexOf('\r\n');
@@ -901,8 +905,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @return boolean. true if any of the seasonal fields have changed on the Address
     */
     private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
-        if (addrNew == null || addrOld == null)
+        if (addrNew == null || addrOld == null) {
             return false;
+        }
         return (
                 addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
                         addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
@@ -1050,8 +1055,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @return boolean. true if all of the Mailing fields are empty
     */
     private static Boolean isAddressEmpty(Address__c addr) {
-        if (addr == null)
+        if (addr == null) {
             return false;
+        }
         return (
                 addr.MailingStreet__c == Null &&
                         addr.MailingStreet2__c == Null &&
@@ -1069,7 +1075,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param addrWinner the Address to replace with
     * @param listCon the list of Contacts to evaluate
     * @param dmlWrapper to hold any Contacts that need updating
-    * @return null
     */
     private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, list<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
         for (Contact con : listCon) {
@@ -1089,24 +1094,32 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */
     private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
-        if (addrNew == null || addrOld == null)
+        if (addrNew == null || addrOld == null) {
             return false;
+        }
 
         integer cChange = 0;
-        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null)
+        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null) {
             cChange++;
-        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
+        }
+        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null) {
             cChange++;
-        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+        }
+        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null) {
             cChange++;
-        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null)
+        }
+        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null) {
             cChange++;
-        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
+        }
+        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null) {
             cChange++;
-        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+        }
+        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null) {
             cChange++;
-        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null)
+        }
+        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null) {
             cChange++;
+        }
         return cChange <= 1;
     }
 
@@ -1129,7 +1142,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
     * @param mapAddrIdAddr a map of Address Id's to Addresses
     * @dmlWrapper to hold the Contacts to update
-    * @return void
     */
     private void updateAddrOverrides(map<Id, Address__c> mapAddrIdAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
