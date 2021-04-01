@@ -23,6 +23,9 @@ const BatchTotals = async (batchId) => {
         get hasValuesGreaterThanZero() {
             return Number(PROCESSED) > 0 || Number(FAILED) > 0;
         },
+        get hasPaymentsWithExpiredAuthorizations() {
+            return Number(EXPIRED_PAYMENT) > 0;
+        },        
     });
 }
 
