@@ -37,6 +37,35 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
+    @isTest static void createCreditCardCaptureGroupShouldReturnFailureResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
+
+        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
+        try {
+            captureGroup = GE_GiftEntryController.createCaptureGroup();
+        } catch (Exception ex) {
+            System.assertEquals(new ElevateCaptureGroupServiceInvalidRequest().createCaptureGroupErrorMessage(),
+                    ex.getMessage(), 'The error message in the capture group response ' +
+                        'should throw an exception and the message should be the create capture group error ' +
+                        'message specified in the invalid request data type.');
+        }
+    }
+
+    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+
+        Test.startTest();
+            AuraHandledException auraException;
+            try {
+                GE_GiftEntryController.createCaptureGroup();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assert(auraException == null, 'There should be no error thrown when creating a capture group.');
+    }
+
     /***
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate

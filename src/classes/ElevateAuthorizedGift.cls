@@ -28,19 +28,12 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateAuthorizedGift {
-    private Decimal amount;
-    private String currencyCode;
-    private String lastName;
-    private String firstName;
-    private String paymentMethod;
-    private String groupId;
-    ElevateAuthorizedGiftResponse authorizedGiftResponse;
-
-    public ElevateAuthorizedGift(){}
+    @AuraEnabled public ElevateTokenizedGift tokenizedGift;
+    @AuraEnabled public ElevateAuthorizedGiftResponse authorizedGiftResponse;
 
     public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift, ElevateAuthorizedGiftResponse authorizedGiftResponse) {
-        amount = tokenizedGift.amount();
-
+        this.tokenizedGift = tokenizedGift;
+        this.authorizedGiftResponse = authorizedGiftResponse;
     }
 
 

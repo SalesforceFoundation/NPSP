@@ -29,9 +29,14 @@
  */
 public virtual with sharing class ElevateCaptureGroupService {
 
-    public ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+    public virtual ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
         return new ElevateCaptureGroup(groupId).add(tokenizedGift);
     }
+
+    public virtual ElevateCaptureGroup createCaptureGroup() {
+        return new ElevateCaptureGroup().create();
+    }
+
 
     public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(

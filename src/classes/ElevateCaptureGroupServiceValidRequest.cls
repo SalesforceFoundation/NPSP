@@ -27,14 +27,21 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-/**
-* @description Used to mock valid elevate tokenize gift values for unit tests
- */
-public with sharing class ElevateTokenizedGiftValidRequest extends ElevateTokenizedGift{
+public with sharing class ElevateCaptureGroupServiceValidRequest extends ElevateCaptureGroupService {
 
-    public ElevateTokenizedGiftValidRequest() {
-        super.amount = 100.000;
-        super.firstName = 'John';
-        super.paymentMethodToken = 'valid-token';
+    public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        ElevateAuthorizedGiftResponse giftResponse = new ElevateAuthorizedGiftResponse();
+
+        return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
+
+    public override ElevateCaptureGroup createCaptureGroup() {
+        ElevateCaptureGroupResponse captureGroupResponse = new ElevateCaptureGroupResponse();
+
+        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
+        captureGroup.captureGroupResponse = captureGroupResponse;
+
+        return captureGroup;
+    }
+
 }

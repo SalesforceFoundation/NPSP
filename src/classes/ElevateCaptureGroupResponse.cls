@@ -27,31 +27,15 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-/**
-* @description Used to mock invalid elevate tokenize gift values for unit tests
- */
-public with sharing class ElevateTokenizedGiftInvalidRequest extends ElevateTokenizedGift {
+public with sharing class ElevateCaptureGroupResponse {
+    @AuraEnabled public String groupId;
+    @AuraEnabled public String errors;
 
-    private static final String DUMMY_GROUP_ID = 'gp-12345';
-
-    public ElevateTokenizedGiftInvalidRequest() {
-        super.amount = 100.000;
-        super.firstName = 'John';
-        super.paymentMethodToken = 'valid-token';
+    public String groupId() {
+        return groupId;
     }
 
-    public ElevateTokenizedGiftInvalidRequest withInvalidAmount() {
-        super.amount = -100.00;
-        return this;
-    }
-
-    public ElevateTokenizedGiftInvalidRequest withInvalidFirstName() {
-        super.firstName = null;
-        return this;
-    }
-
-    public ElevateTokenizedGiftInvalidRequest withInvalidToken() {
-        super.paymentMethodToken = null;
-        return this;
+    public String errors() {
+        return errors;
     }
 }

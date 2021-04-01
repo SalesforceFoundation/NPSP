@@ -305,11 +305,11 @@
         <members>ElevateAuthorizedGift</members>
         <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupResponse</members>
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
+        <members>ElevateCaptureGroupServiceValidRequest</members>
         <members>ElevateTokenizedGift</members>
-        <members>ElevateTokenizedGiftInvalidRequest</members>
-        <members>ElevateTokenizedGiftValidRequest</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>

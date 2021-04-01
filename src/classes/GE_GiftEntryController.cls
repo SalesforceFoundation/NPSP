@@ -41,6 +41,17 @@ public with sharing class GE_GiftEntryController {
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
     private static GiftBatchService giftBatchService = new GiftBatchService();
 
+    @TestVisible
+    private static ElevateCaptureGroupService captureGroupService {
+        get {
+            if (captureGroupService == null) {
+                captureGroupService = new ElevateCaptureGroupService();
+            }
+            return captureGroupService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
@@ -184,12 +195,38 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new ElevateCaptureGroupService().addToCaptureGroup(tokenizedGift, groupId);
+        ElevateAuthorizedGift authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
+        checkForAuthorizedGiftErrorsIn(authorizedGift);
+        return authorizedGift;
+    }
+
+    @TestVisible
+    private static void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGift authorizedGift) {
+        if (hasAuthorizedGiftErrors(authorizedGift)) {
+            throw new AuraHandledException(authorizedGift.authorizedGiftResponse.errors());
+        }
+    }
+
+    private static Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGift authorizedGift) {
+        return String.isNotBlank(authorizedGift.authorizedGiftResponse.errors());
     }
 
     @AuraEnabled
-    public static void createCaptureGroup() {
-//        return new ElevateCaptureGroupService().sendCreateRequest();
+    public static ElevateCaptureGroup createCaptureGroup() {
+        ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
+        checkForCaptureGroupErrorsIn(captureGroup);
+        return captureGroup;
+    }
+
+    @TestVisible
+    private static void checkForCaptureGroupErrorsIn(ElevateCaptureGroup captureGroup) {
+        if (hasCaptureGroupErrors(captureGroup)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroup.captureGroupResponse.errors());
+        }
+    }
+
+    private static Boolean hasCaptureGroupErrors(ElevateCaptureGroup captureGroup) {
+        return String.isNotBlank(captureGroup.captureGroupResponse.errors());
     }
 
     /**

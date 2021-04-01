@@ -30,34 +30,48 @@
 /**
 * @description Used to mock invalid elevate capture group requests for unit tests
  */
+@isTest
 public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGroupService {
 
-    public static final String INVALID_PARAMETER = 'invalid-parameter';
-    public static final String INVALID_GROUP_ID = 'invalid-group-id';
-    private static final String DUMMY_GROUP_ID = 'gp-12345';
+    public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        ElevateAuthorizedGiftResponse giftResponse = new ElevateAuthorizedGiftResponse();
+        giftResponse.errors = addCaptureGroupErrorMessage();
 
-    private String groupId;
-    private String requestBody;
-
-    @TestVisible
-    private PS_Request.Builder requestBuilder {
-        get {
-            if (requestBuilder == null) {
-                requestBuilder = new PS_Request.Builder();
-            }
-            return requestBuilder;
-        }
-        set;
+        return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
 
-    @TestVisible
-    private ElevateTokenizedGift tokenizedGift {
-        get {
-            if (tokenizedGift == null) {
-                tokenizedGift = new ElevateTokenizedGift();
-            }
-            return tokenizedGift;
-        }
-        set;
+    public override ElevateCaptureGroup createCaptureGroup() {
+        ElevateCaptureGroupResponse captureGroupResponse = new ElevateCaptureGroupResponse();
+        captureGroupResponse.errors = createCaptureGroupErrorMessage();
+
+        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
+        captureGroup.captureGroupResponse = captureGroupResponse;
+
+        return captureGroup;
     }
+
+    public String addCaptureGroupErrorMessage() {
+        return '{\n' +
+                '  "errors": [\n' +
+                '    {\n' +
+                '      "message": "authorize failed",\n' +
+                '      "localizedPaymentsMessage": "Bad Request",\n' +
+                '      "detailedMessage": "create failed"\n' +
+                '    }\n' +
+                '  ]\n' +
+                '}';
+    }
+
+    public String createCaptureGroupErrorMessage() {
+        return '{\n' +
+                '  "errors": [\n' +
+                '    {\n' +
+                '      "message": "create failed",\n' +
+                '      "localizedPaymentsMessage": "Bad Request",\n' +
+                '      "detailedMessage": "create failed"\n' +
+                '    }\n' +
+                '  ]\n' +
+                '}';
+    }
+
 }
