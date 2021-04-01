@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCaptureGroup implements CaptureGroup {
-    private String groupId;
+    @AuraEnabled public String groupId;
     @AuraEnabled public ElevateCaptureGroupResponse captureGroupResponse;
 
     @TestVisible

@@ -215,7 +215,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static ElevateCaptureGroup createCaptureGroup() {
         ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
-        System.debug(captureGroup.captureGroupResponse);
         checkForCaptureGroupErrorsIn(captureGroup);
         return captureGroup;
     }
