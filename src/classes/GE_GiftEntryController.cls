@@ -203,12 +203,13 @@ public with sharing class GE_GiftEntryController {
     @TestVisible
     private static void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGift authorizedGift) {
         if (hasAuthorizedGiftErrors(authorizedGift)) {
-            throw new AuraHandledException(authorizedGift.authorizedGiftResponse.errors());
+            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGift.authorizedGiftResponse.errors()[0].message);
         }
     }
 
     private static Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGift authorizedGift) {
-        return String.isNotBlank(authorizedGift.authorizedGiftResponse.errors());
+        return authorizedGift.authorizedGiftResponse.errors() != null &&
+               !authorizedGift.authorizedGiftResponse.errors().isEmpty();
     }
 
     @AuraEnabled

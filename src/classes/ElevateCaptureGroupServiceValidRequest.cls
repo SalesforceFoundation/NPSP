@@ -39,9 +39,16 @@ public with sharing class ElevateCaptureGroupServiceValidRequest extends Elevate
         ElevateCaptureGroupResponse captureGroupResponse = new ElevateCaptureGroupResponse();
 
         ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
-        captureGroup.captureGroupResponse = captureGroupResponse;
+        captureGroup.captureGroupResponse = createCaptureGroupSuccessMessage();
 
         return captureGroup;
+    }
+
+    public ElevateCaptureGroupResponse createCaptureGroupSuccessMessage() {
+        return (ElevateCaptureGroupResponse)JSON.deserialize('{\n' +
+                '  "id": "test-id",\n' +
+                '  "status": "Open"\n' +
+                '}', ElevateCaptureGroupResponse.class);
     }
 
 }

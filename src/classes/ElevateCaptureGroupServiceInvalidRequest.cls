@@ -35,14 +35,13 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
 
     public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
         ElevateAuthorizedGiftResponse giftResponse = new ElevateAuthorizedGiftResponse();
-        giftResponse.errors = addCaptureGroupErrorMessage();
+        giftResponse.errors.add(addCaptureGroupErrorMessage());
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
 
     public override ElevateCaptureGroup createCaptureGroup() {
-        ElevateCaptureGroupResponse captureGroupResponse = new ElevateCaptureGroupResponse();
-        captureGroupResponse.errors = createCaptureGroupErrorMessage();
+        ElevateCaptureGroupResponse captureGroupResponse = createCaptureGroupErrorMessage();
 
         ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
         captureGroup.captureGroupResponse = captureGroupResponse;
@@ -50,8 +49,8 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
         return captureGroup;
     }
 
-    public String addCaptureGroupErrorMessage() {
-        return '{\n' +
+    public ElevateAuthorizedGiftResponse.Errors addCaptureGroupErrorMessage() {
+        return (ElevateAuthorizedGiftResponse.Errors)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "authorize failed",\n' +
@@ -59,11 +58,11 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
                 '      "detailedMessage": "create failed"\n' +
                 '    }\n' +
                 '  ]\n' +
-                '}';
+                '}', ElevateAuthorizedGiftResponse.class);
     }
 
-    public String createCaptureGroupErrorMessage() {
-        return '{\n' +
+    public ElevateCaptureGroupResponse createCaptureGroupErrorMessage() {
+        return (ElevateCaptureGroupResponse)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "create failed",\n' +
@@ -71,7 +70,7 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
                 '      "detailedMessage": "create failed"\n' +
                 '    }\n' +
                 '  ]\n' +
-                '}';
+                '}', ElevateCaptureGroupResponse.class);
     }
 
 }

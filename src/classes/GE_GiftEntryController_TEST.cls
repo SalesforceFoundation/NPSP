@@ -39,23 +39,11 @@ private with sharing class GE_GiftEntryController_TEST {
 
     @isTest static void createCreditCardCaptureGroupShouldReturnFailureResponse() {
         GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
-
-        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
-        try {
-            captureGroup = GE_GiftEntryController.createCaptureGroup();
-        } catch (Exception ex) {
-            System.assertEquals(new ElevateCaptureGroupServiceInvalidRequest().createCaptureGroupErrorMessage(),
-                    ex.getMessage(), 'The error message in the capture group response ' +
-                        'should throw an exception and the message should be the create capture group error ' +
-                        'message specified in the invalid request data type.');
-        }
-    }
-
-    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
-        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+        String errorMessage = new ElevateCaptureGroupServiceInvalidRequest().createCaptureGroupErrorMessage()
+                .errors()[0].message;
+        AuraHandledException auraException;
 
         Test.startTest();
-            AuraHandledException auraException;
             try {
                 GE_GiftEntryController.createCaptureGroup();
             } catch (AuraHandledException ex) {
@@ -63,7 +51,33 @@ private with sharing class GE_GiftEntryController_TEST {
             }
         Test.stopTest();
 
-        System.assert(auraException == null, 'There should be no error thrown when creating a capture group.');
+        System.assertEquals(errorMessage,
+                auraException.getMessage(), 'The error message in the capture group response ' +
+                    'should throw an exception and the message should be the create capture group error ' +
+                    'message specified in the invalid request data type.');
+    }
+
+    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+        AuraHandledException auraException;
+        ElevateCaptureGroup captureGroup;
+
+        Test.startTest();
+            try {
+                captureGroup = GE_GiftEntryController.createCaptureGroup();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals('test-id', captureGroup.captureGroupResponse.id(), 'The capture group id should be ' +
+                'populated on a successful response.');
+        System.assertEquals(null, captureGroup.captureGroupResponse.errors(), 'The list of errors in the Elevate ' +
+                'Capture Group response should be null since no error should occur in a valid request.');
     }
 
     /***
