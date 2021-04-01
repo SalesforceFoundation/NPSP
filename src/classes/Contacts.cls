@@ -606,26 +606,25 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
-    public void onBeforeUpdateAddrConTDTM(Contacts contacts) {
+    public void onBeforeUpdateAddrConTDTM() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        contacts.normalizeLineBreaksForContactsWithChangedAddresses();
-        list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts);
+        normalizeLineBreaksForContactsWithChangedAddresses();
+        list<Contact> addressRefreshQueue = getAddressRefreshQueue();
         Set<Contact> addressCreationQueue =
-                getAddressCreationQueueInBeforeContext(contacts);
+                getAddressCreationQueueInBeforeContext();
         list<Contact> useCurrentAddressQueue =
-                getUseCurrentAddressQueue(contacts);
+                getUseCurrentAddressQueue();
         map<Id, boolean> isOverrideByAddressId =
-                getIsOverrideByAddressId(contacts);
-        addressRefreshQueue.addAll(addressOverrideResetsOf(contacts));
+                getIsOverrideByAddressId();
+        addressRefreshQueue.addAll(addressOverrideResetsOf());
         isOverrideByAddressId.putAll(
-                getIsOverrideByAddressIdFromAddressOverrideChanges(
-                        contacts));
+                getIsOverrideByAddressIdFromAddressOverrideChanges());
 
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore(contacts);
+            addressCreationQueue = getAddressCreationQueueInBefore();
         }
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
@@ -637,7 +636,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // set the mailing address for contacts who specify an address lookup or override
         if (useCurrentAddressQueue.size() > 0) {
-            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+            setContactAddressFromCurrentAddress(useCurrentAddressQueue);
         }
 
         // reset the mailing address for contacts who no longer have an address override
@@ -652,7 +651,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            contacts.createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
+            createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
 
@@ -661,30 +660,30 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public void onAfterUpdateAddrConTDTM(Contacts contacts) {
+    public void onAfterUpdateAddrConTDTM() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue =
-                getAddressCreationQueue(contacts);
+                getAddressCreationQueue();
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
-    public void onAfterInsertAddrConTDTM(Contacts contacts) {
+    public void onAfterInsertAddrConTDTM() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts);
+        Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
-    private Set<Contact> getAddressCreationQueue(Contacts contacts) {
+    private Set<Contact> getAddressCreationQueue() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         if (isRecursive() || isRecursiveFromContact()) {
             if (isRecursive()) {
@@ -697,13 +696,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInAfterContext(contacts);
+            addressCreationQueue = getAddressCreationQueueInAfterContext();
         }
         return addressCreationQueue;
     }
 
-    public void onBeforeInsertAddrConTDTM(Contacts contacts) {
-        contacts.normalizeLineBreaks();
+    public void onBeforeInsertAddrConTDTM() {
+        normalizeLineBreaks();
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         list<Contact> useCurrentAddressQueue = new list<Contact>();
@@ -711,7 +710,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         list<Contact> addressRefreshQueue = new list<Contact>();
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con);
 
@@ -723,7 +722,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                     isOverrideByAddressId.put(npspContact.currentAddress(), true);
                 }
             } else if (npspContact.isAddressEmpty() &&
-                    contacts.accountHasAddresses(npspContact.getRecord())) {
+                    accountHasAddresses(npspContact.getRecord())) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 addressRefreshQueue.add(con);
             }
@@ -732,7 +731,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore(contacts);
+            addressCreationQueue = getAddressCreationQueueInBefore();
         }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
@@ -745,7 +744,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // set the mailing address for contacts who specify an address lookup or override
         if (useCurrentAddressQueue.size() > 0) {
-            contacts.setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+            setContactAddressFromCurrentAddress(useCurrentAddressQueue);
         }
 
         // reset the mailing address for contacts who no longer have an address override
@@ -760,7 +759,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            contacts.createAddrFromConBeforeInsertUpdate(
+            createAddrFromConBeforeInsertUpdate(
                     new List<Contact>(addressCreationQueue));
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
@@ -770,16 +769,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts) {
+    private Set<Contact> getAddressCreationQueueInBefore() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer j = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+        for (SObject so : thatHaveAccounts().getRecords()) {
             j++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
-            Account a = contacts.accountsByIds().get(con.AccountId);
+            Account a = accountsByIds().get(con.AccountId);
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                 continue;
             }
@@ -800,10 +799,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-    private Set<Contact> getAddressCreationQueueInAfterContext(Contacts contacts) {
+    private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer g = -1;
-        for (SObject so : contacts.thatHaveAccounts().getRecords()) {
+        for (SObject so : thatHaveAccounts().getRecords()) {
             g++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -827,11 +826,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger);
     }
 
-    private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges(Contacts contacts) {
+    private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -853,11 +852,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return isOverrideByAddressId;
     }
 
-    private List<Contact> addressOverrideResetsOf(Contacts contacts) {
+    private List<Contact> addressOverrideResetsOf() {
         list<Contact> addressRefreshQueue = new list<Contact>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -877,11 +876,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
-    private List<Contact> getUseCurrentAddressQueue(Contacts contacts) {
+    private List<Contact> getUseCurrentAddressQueue() {
         list<Contact> useCurrentAddressQueue = new list<Contact>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -897,11 +896,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return useCurrentAddressQueue;
     }
 
-    private Map<Id, Boolean> getIsOverrideByAddressId(Contacts contacts) {
+    private Map<Id, Boolean> getIsOverrideByAddressId() {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         integer i = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
             i++;
             Contact con = (Contact) so;
@@ -923,11 +922,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 npspContact.currentAddress() != null;
     }
 
-    private List<Contact> getAddressRefreshQueue(Contacts contacts) {
+    private List<Contact> getAddressRefreshQueue() {
         list<Contact> addressRefreshQueue = new list<Contact>();
         integer n = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             n++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -936,7 +935,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (npspContact.accountChanged()) {
                 // if no override, refill from the Default Address
                 if (isEligibleForRefresh(npspContact)) {
-                    if (contacts.accountHasAddresses(npspContact.getRecord())) { //
+                    if (accountHasAddresses(npspContact.getRecord())) { //
                         // refresh address if the contact does not have one and account does
                         addressRefreshQueue.add(con);
                     }
@@ -946,11 +945,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
-    private Set<Contact> getAddressCreationQueueInBeforeContext(Contacts contacts) {
+    private Set<Contact> getAddressCreationQueueInBeforeContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer n = -1;
         // we only support address management with HH Accounts being used
-        for (SObject so : contacts.contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             n++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));

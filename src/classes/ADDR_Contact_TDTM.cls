@@ -61,16 +61,16 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                contacts.onBeforeInsertAddrConTDTM(contacts);
+                contacts.onBeforeInsertAddrConTDTM();
             }
             when AfterInsert {
-                contacts.onAfterInsertAddrConTDTM(contacts);
+                contacts.onAfterInsertAddrConTDTM();
             }
             when BeforeUpdate {
-                contacts.onBeforeUpdateAddrConTDTM(contacts);
+                contacts.onBeforeUpdateAddrConTDTM();
             }
             when AfterUpdate {
-                contacts.onAfterUpdateAddrConTDTM(contacts);
+                contacts.onAfterUpdateAddrConTDTM();
             }
         }
         // Rules:
@@ -104,11 +104,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     - if CurrentAddress changes to a new non-null value, refill to it.
         //     - if MailingAddress field changes, update/new address object
         //     - if isAddressOverride changes to false, refill from Default Address
-
-
-
-
-
 
         // If the Before Insert/Update trigger on the Contact has already executed and taken action
         // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
