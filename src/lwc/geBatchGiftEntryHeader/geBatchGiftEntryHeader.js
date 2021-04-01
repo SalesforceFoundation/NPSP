@@ -20,6 +20,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     @track batchTotals = {}
 
+    _hasPaymentsWithExpiredAuthorizations = false;
+
     connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
         this.retrieveBatchTotals();
@@ -32,7 +34,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
 
-        if(this.batchTotals.hasPaymentsWithExpiredAuthorizations) {
+        if(this.batchTotals.hasPaymentsWithExpiredAuthorizations &&
+            !this._hasPaymentsWithExpiredAuthorizations) {
             const detail = {
                 modalProperties: {
                     componentName: 'gePurchaseCallModalError',
@@ -40,6 +43,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
                 }
             };
             this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+            this._hasPaymentsWithExpiredAuthorizations = true;
         }
     }
 
