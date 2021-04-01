@@ -374,7 +374,6 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
-        <members>NPSP_Account</members>
         <members>NPSP_Address</members>
         <members>NPSP_Contact</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
