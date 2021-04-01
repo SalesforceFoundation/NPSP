@@ -64,13 +64,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 contacts.onBeforeInsertAddrConTDTM();
             }
             when AfterInsert {
-                contacts.onAfterInsertAddrConTDTM();
+                contacts.onAfterInsert();
             }
             when BeforeUpdate {
                 contacts.onBeforeUpdateAddrConTDTM();
             }
             when AfterUpdate {
-                contacts.onAfterUpdateAddrConTDTM();
+                contacts.onAfterUpdate();
             }
         }
         // Rules:

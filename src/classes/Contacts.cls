@@ -655,7 +655,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public void onAfterUpdateAddrConTDTM() {
+    public void onAfterUpdate() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
@@ -666,7 +666,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
-    public void onAfterInsertAddrConTDTM() {
+    public void onAfterInsert() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
