@@ -1141,7 +1141,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     /*******************************************************************************************************
     * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
     * @param mapAddrIdAddr a map of Address Id's to Addresses
-    * @dmlWrapper to hold the Contacts to update
+    * @param dmlWrapper to hold the Contacts to update
     */
     private void updateAddrOverrides(Map<Id, Address__c> mapAddrIdAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
@@ -1175,7 +1175,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @description Updates the Latest date fields on any address overrides
     * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
     * @param dmlWrapper to hold the Addresses that need updating
-    * @return void
     ********************************************************************************************************/
     public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride,
             TDTM_Runnable.DmlWrapper
