@@ -258,8 +258,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void resetAddresses() {
         Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
-        for (Contact con : (List<Contact>) getRecords())
+        for (Contact con : (List<Contact>) getRecords()) {
             mapAccIdAddr.put(con.AccountId, null);
+        }
 
         // get the default and seasonal address for each HH
         Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
@@ -270,8 +271,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
             Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
             if (hhinfo != null) {
                 Address__c addr = hhinfo.addrSeasonal;
-                if (addr == null)
+                if (addr == null) {
                     addr = hhinfo.addrDefault;
+                }
                 if (addr != null) {
                     NPSP_Address npspAddress = new NPSP_Address(addr);
                     NPSP_Contact npspContact = new NPSP_Contact(con);
@@ -367,7 +369,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     /*******************************************************************************************************
     * @description for each contact, refresh its mailing address from its Address lookup
     * @param listCon the list of Contacts to update
-    * @return void
     ********************************************************************************************************/
     public void setContactAddressFromCurrentAddress(List<Contact> listCon) {
         List<Contact> listConCreateAddr = new List<Contact>();
@@ -412,7 +413,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * when pushing a new default address, we need to do it in the AfterInsert/Update.
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param listConAll the list of Contacts
-    * @return void
     ********************************************************************************************************/
     public void createAddrFromConBeforeInsertUpdate(List<Contact> listConAll) {
 
@@ -495,8 +495,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param listConAll the list of Contacts
     * @param dmlWrapper to hold the Addresses that need inserting/updating
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return void
     ********************************************************************************************************/
     public void createAddrFromConAfterInsertUpdate(List<Contact> listConAll,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
@@ -568,8 +566,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listAddrUpdateDefault.size() > 0) {
-            for (Address__c addr : listAddrUpdateDefault)
+            for (Address__c addr : listAddrUpdateDefault) {
                 dmlWrapper.objectsToUpdate.add(addr);
+            }
         }
 
         if (listAddrInsertDefault.size() > 0) {
