@@ -58,7 +58,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             return dmlWrapper;
         }
 
-        list<Account> listAccCreateAddr = new list<Account>();
+        List<Account> listAccCreateAddr = new List<Account>();
        
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
@@ -123,11 +123,12 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     * @param acc1 an Account
     * @return boolean.  true if an address is specified in any of the Account Billing fields
     ********************************************************************************************************/
-    private boolean isAccountAddressSpecified(Account acc1) {
-        if (acc1 == null) 
-           return false;
+    private Boolean isAccountAddressSpecified(Account acc1) {
+        if (acc1 == null) {
+            return false;
+        }
         
-        boolean isSpecified = 
+        Boolean isSpecified =
            acc1.BillingStreet != null ||
            acc1.BillingCity != null ||
            acc1.BillingState != null ||
@@ -146,11 +147,12 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     * @param acc2 an Account
     * @return boolean. true if there are any changes between the two accounts.
     ********************************************************************************************************/
-    private boolean isAccountAddressChanged(Account acc1, Account acc2) {
-        if (acc1 == null || acc2 == null) 
-           return false;
+    private Boolean isAccountAddressChanged(Account acc1, Account acc2) {
+        if (acc1 == null || acc2 == null) {
+            return false;
+        }
         
-        boolean isChanged = 
+        Boolean isChanged =
            !Addresses.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
            !Addresses.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
            !Addresses.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
@@ -159,8 +161,8 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
             isChanged = 
-	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) ||
-	            !Addresses.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));
+	            !Addresses.equalsCaseSensitive(String.valueOf(acc1.get('BillingStateCode')), String.valueOf(acc2.get('BillingStateCode'))) ||
+	            !Addresses.equalsCaseSensitive(String.valueOf(acc1.get('BillingCountryCode')), String.valueOf(acc2.get('BillingCountryCode')));
         }    
         return isChanged;   
 
@@ -170,10 +172,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     * @description for each Account, create a new default address and add it to dmlWrapper
     * @param listAcc a list of Accounts
     * @param dmlWrapper to hold the Addresses that need creating
-    * @return void
     ********************************************************************************************************/
-    private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
-        list<Address__c> listAddr = new list<Address__c>();
+    private void createAddrFromAcc(List<Account> listAcc, DmlWrapper dmlWrapper) {
+        List<Address__c> listAddr = new List<Address__c>();
         for (Account acc : listAcc) {
             NPSP_Address npspAddress = new NPSP_Address(acc);
             listAddr.add(npspAddress.getRecord());
