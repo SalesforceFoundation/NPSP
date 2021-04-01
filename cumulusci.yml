@@ -13,9 +13,24 @@ project:
         prefix_release: rel/
         release_notes:
             parsers:
-                6:
+                4:
                     class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
                     title: Community Ideas Delivered
+                5:
+                    class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
+                    title: Features Intended for Future Release
+                6:
+                    class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
+                    title: Features for Elevate Customers
+                7:
+                    class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
+                    title: New Metadata
+                8:
+                    class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
+                    title: Deleted Metadata
+                9:
+                    class_path: cumulusci.tasks.release_notes.parser.InstallLinkParser
+                    title: Installation Info
     apexdoc:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
