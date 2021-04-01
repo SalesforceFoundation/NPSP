@@ -391,7 +391,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @return void
     ********************************************************************************************************/
     public void setContactAddressFromCurrentAddress(List<Contact> listCon) {
-
         List<Contact> listConCreateAddr = new List<Contact>();
         Set<Id> setAddrId = new Set<Id>();
         for (Contact con : listCon) {
@@ -610,15 +609,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         normalizeLineBreaksForContactsWithChangedAddresses();
         list<Contact> addressRefreshQueue = getAddressRefreshQueue();
-        Set<Contact> addressCreationQueue =
-                getAddressCreationQueueInBeforeContext();
-        list<Contact> useCurrentAddressQueue =
-                getUseCurrentAddressQueue();
-        map<Id, boolean> isOverrideByAddressId =
-                getIsOverrideByAddressId();
+        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
+        list<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
+        map<Id, boolean> isOverrideByAddressId = getIsOverrideByAddressId();
         addressRefreshQueue.addAll(addressOverrideResetsOf());
-        isOverrideByAddressId.putAll(
-                getIsOverrideByAddressIdFromAddressOverrideChanges());
+        isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
@@ -662,8 +657,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void onAfterUpdateAddrConTDTM() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        Set<Contact> addressCreationQueue =
-                getAddressCreationQueue();
+        Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
