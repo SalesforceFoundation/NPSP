@@ -1193,8 +1193,6 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 batchDefaultsObject = JSON.parse(this._batchDefaults);
                 sections.forEach(section => {
-                    section.elements = section.elements.filter(element =>
-                        element.componentName !== CREDIT_CARD_WIDGET_NAME);
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
                             if (batchDefaultsObject.hasOwnProperty(key)) {
