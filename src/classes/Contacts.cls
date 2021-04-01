@@ -154,7 +154,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private void applyExclusionsStringChangesToCheckboxes() {
         for (Contact con : (List<Contact>) getRecords()) {
             HouseholdNamingExclusionsString namingExclusionsString =
-                    new householdNamingExclusionsString(con);
+                    new HouseholdNamingExclusionsString(con);
             HouseholdNamingExclusionsString oldNamingExclusionsString =
                     new HouseholdNamingExclusionsString(oldVersionOf(con));
             if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
@@ -257,12 +257,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void resetAddresses() {
-        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
         for (Contact con : (List<Contact>) getRecords())
             mapAccIdAddr.put(con.AccountId, null);
 
         // get the default and seasonal address for each HH
-        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+        Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
                 Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
 
         // reset the Contact's address fields with the appropriate address
@@ -414,7 +414,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @param listConAll the list of Contacts
     * @return void
     ********************************************************************************************************/
-    public void createAddrFromConBeforeInsertUpdate(list<Contact> listConAll) {
+    public void createAddrFromConBeforeInsertUpdate(List<Contact> listConAll) {
 
         // Strategy:
         // create a new (unsaved) address for each contact.
@@ -435,8 +435,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         //     put it on dmlWrapper
         //
 
-        map<Contact, Address__c> mapConAddr = new map<Contact, Address__c>();
-        list<Contact> listCon = new list<Contact>();
+        Map<Contact, Address__c> mapConAddr = new Map<Contact, Address__c>();
+        List<Contact> listCon = new List<Contact>();
 
         for (Contact con : listConAll) {
             listCon.add(con);
@@ -445,11 +445,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // look for duplicates for our proposed new addresses
-        map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+        Map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
                 .values());
 
         // maps & lists to keep track of the addresses we must insert or update
-        map<Contact, Address__c> mapConAddrInsertNow = new map<Contact, Address__c>();
+        Map<Contact, Address__c> mapConAddrInsertNow = new Map<Contact, Address__c>();
 
         for (Contact con : listCon) {
             Address__c addrNew = mapConAddr.get(con);
@@ -498,7 +498,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
     * @return void
     ********************************************************************************************************/
-    public void createAddrFromConAfterInsertUpdate(list<Contact> listConAll,
+    public void createAddrFromConAfterInsertUpdate(List<Contact> listConAll,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         // Strategy:
@@ -520,8 +520,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         //     put it on dmlWrapper
         //
 
-        map<Contact, Address__c> mapConAddr = new map<Contact, Address__c>();
-        list<Contact> listCon = new list<Contact>();
+        Map<Contact, Address__c> mapConAddr = new Map<Contact, Address__c>();
+        List<Contact> listCon = new List<Contact>();
 
         for (Contact con : listConAll) {
             listCon.add(con);
@@ -530,12 +530,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // look for duplicates for our proposed new addresses
-        map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+        Map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
                 .values());
 
         // maps & lists to keep track of the addresses we must insert or update
-        list<Address__c> listAddrUpdateDefault = new list<Address__c>();
-        list<Address__c> listAddrInsertDefault = new list<Address__c>();
+        List<Address__c> listAddrUpdateDefault = new List<Address__c>();
+        List<Address__c> listAddrInsertDefault = new List<Address__c>();
 
         for (Contact con : listCon) {
             Address__c addrNew = mapConAddr.get(con);
@@ -573,7 +573,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listAddrInsertDefault.size() > 0) {
-            dmlWrapper.objectsToInsert.addAll((list<SObject>) listAddrInsertDefault);
+            dmlWrapper.objectsToInsert.addAll((List<SObject>) listAddrInsertDefault);
         }
     }
 
@@ -587,10 +587,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void onBeforeUpdateAddrConTDTM() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         normalizeLineBreaksForContactsWithChangedAddresses();
-        list<Contact> addressRefreshQueue = getAddressRefreshQueue();
+        List<Contact> addressRefreshQueue = getAddressRefreshQueue();
         Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
-        list<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
-        map<Id, boolean> isOverrideByAddressId = getIsOverrideByAddressId();
+        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
+        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
         addressRefreshQueue.addAll(addressOverrideResetsOf());
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
@@ -678,10 +678,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         normalizeLineBreaks();
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        list<Contact> useCurrentAddressQueue = new list<Contact>();
+        List<Contact> useCurrentAddressQueue = new List<Contact>();
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
-        list<Contact> addressRefreshQueue = new list<Contact>();
+        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
+        List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             if (npspContact.currentAddress() != null) {
@@ -793,7 +793,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
-        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -816,7 +816,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private List<Contact> addressOverrideResetsOf() {
-        list<Contact> addressRefreshQueue = new list<Contact>();
+        List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -837,7 +837,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private List<Contact> getUseCurrentAddressQueue() {
-        list<Contact> useCurrentAddressQueue = new list<Contact>();
+        List<Contact> useCurrentAddressQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -854,7 +854,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressId() {
-        map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
+        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -877,7 +877,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private List<Contact> getAddressRefreshQueue() {
-        list<Contact> addressRefreshQueue = new list<Contact>();
+        List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
