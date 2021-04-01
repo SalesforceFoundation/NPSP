@@ -70,7 +70,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @param bc the BatchableContext
     * @return database.Querylocator  
     ********************************************************************************************************/
-    public Database.Querylocator start(Database.BatchableContext bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         final List<String> monthsList = new List<String>{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' };
 
         // Find all Accounts who have any Seasonal Address that might need updating,
@@ -89,7 +89,6 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @description execute Method for the Database.Batchable interface
     * @param bc the BatchableContext
     * @param scope the list of Account objects to process
-    * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, List<Account> scope) {
         Addresses.batchSeasonalUpdate(scope);
@@ -98,7 +97,6 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     /*******************************************************************************************************
     * @description finish Method for the Database.Batchable interface
     * @param bc the BatchableContext
-    * @return void  
     ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {
 
