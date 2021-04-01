@@ -273,10 +273,10 @@
                         <div class="slds-grid slds-m-bottom_large">
                             <div class="slds-col">
                                 <apex:commandButton action="{!calculate}"
-                                    value="{!$Label.pmtWizardBtnCalcPayments}"
-                                    rendered="{!AND(isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
-                                    styleClass="slds-button slds-button_brand slds-m-around_medium"
-                                    reRender="vfForm"/>
+                                                    value="{!$Label.pmtWizardBtnCalcPayments}"
+                                                    rendered="{!AND(isPaymentsEnabled, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}"
+                                                    styleClass="slds-button slds-button_brand slds-m-around_medium"
+                                                    reRender="vfForm"/>
                             </div>
                         </div>
                         <!-- Show Payments to be Created -->
@@ -385,10 +385,10 @@
                                             <div class="slds-form__item" role="listitem">
                                                 <div class="slds-m-vertical_medium">
                                                     <apex:commandButton action="{!writeoff}"
-                                                        value="{!$Label.pmtWizardSectionWriteoffPayments}"
-                                                        onclick="this.disabled = 'true'"
-                                                        styleClass="slds-button slds-button_brand"
-                                                        reRender="vfForm"/>
+                                                                        value="{!$Label.pmtWizardSectionWriteoffPayments}"
+                                                                        onclick="this.disabled = 'true'"
+                                                                        styleClass="slds-button slds-button_brand"
+                                                                        reRender="vfForm"/>
                                                 </div>
                                             </div>
                                         </div>
