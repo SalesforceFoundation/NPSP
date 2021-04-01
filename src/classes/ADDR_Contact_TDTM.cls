@@ -122,20 +122,8 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             when AfterUpdate {
                 DmlWrapper dmlWrapper = new DmlWrapper();
-                Set<Contact> addressCreationQueue = new Set<Contact>();
-                if (isRecursive() || isRecursiveFromContact()) {
-                    if (isRecursive()) {
-                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-                    }
-                    // If the Before Insert/Update trigger on the Contact has already executed and taken action
-                    // and this is an After Insert/Update trigger, simply reset the flag and exit out.
-                    if (isRecursiveFromContact()) {
-                        UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
-                    }
-                    addressCreationQueue = new Set<Contact>();
-                } else {
-                    addressCreationQueue = getAddressCreationQueueInAfterContext(contacts, listOld);
-                }
+                Set<Contact> addressCreationQueue =
+                        getAddressCreationQueue(contacts, listOld);
                 // create any new Default Address objects
                 if (addressCreationQueue.size() > 0) {
                     contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
