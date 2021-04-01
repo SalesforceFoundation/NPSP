@@ -41,7 +41,6 @@ public inherited sharing class AddressService {
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefixDst the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @return void
     */
     public void copyAddressStdSObj(sobject sobjSrc, string strFieldPrefixSrc, sobject sobjDst, string strFieldPrefixDst) {
         sobjDst.put(strFieldPrefixDst + 'Street', sobjSrc.get(strFieldPrefixSrc + 'Street'));
