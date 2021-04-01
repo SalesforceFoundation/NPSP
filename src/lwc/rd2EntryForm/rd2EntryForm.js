@@ -122,7 +122,6 @@ export default class rd2EntryForm extends LightningElement {
     @track isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
-    isEditEnabled = false;
     commitmentId = null;
     paymentMethodToken;
     cardholderName;
@@ -185,7 +184,6 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
-                this.isEditEnabled = response.isEditEnabled;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -345,7 +343,7 @@ export default class rd2EntryForm extends LightningElement {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
         this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
-        if (this.isEditEnabled && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED){
+        if (this.isElevateCustomer && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED){
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
             if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
