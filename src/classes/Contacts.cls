@@ -305,32 +305,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return accountsByIds().get(npspContact.accountId());
     }
 
-    public Contacts contactsInHouseholdAccounts() {
-        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
-        for (SObject so : getRecords()) {
-            Contact con = (Contact) so;
-            if (isInHouseholdAccount(new NPSP_Contact(con))) {
-                contactsInHouseholdAccounts.add(con);
-            }
-        }
-        return new Contacts(contactsInHouseholdAccounts);
-    }
-
-    private Boolean isInHouseholdAccount(NPSP_Contact npspContact) {
-        if (!npspContact.hasAccount()) {
-            return false;
-        }
-        if (npspContact.householdAndAccountDiffer()) {
-            return false;
-        }
-        Account a = accountsByIds().get(npspContact.accountId());
-        NPSP_Account npspAccount = new NPSP_Account(a);
-        if (!npspAccount.isHouseholdAccount()) {
-            return false;
-        }
-        return true;
-    }
-
     public Contacts thatHaveAccounts() {
         List<Contact> contacts = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
