@@ -128,6 +128,22 @@ describe('c-ge-form-widget-tokenize-card', () => {
             expect(spanDisabledMessage(element).innerHTML).toBe(BDI_FAILURE_DISABLED_MESSAGE);
         });
     });
+
+    it('should not display ACH input fields when in batch mode', async () => {
+        const element = createWidgetWithPaymentMethod(ACH);
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            'NPSP_Data_Import_Batch__c': 'DUMMY_ID'
+        }
+        document.body.appendChild(element);
+
+        return Promise.resolve()
+            .then(() => {
+                expect(iframe(element).src).toBeUndefined();
+                expect(spanExtendedDisabledMessage(element).innerHTML).toBe(EXTENDED_DISABLED_MESSAGE);
+                expect(doNotEnterPaymentButton(element)).toBeFalsy();
+            });
+    });
 });
 
 const enterPaymentButton = (element) => {
