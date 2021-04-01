@@ -1,33 +1,31 @@
 import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import getPaymentTransactionStatusValues
-    from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
+import tokenHandler from 'c/psElevateTokenHandler';
 import { apiNameFor, format, isEmptyObject } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
     unregisterListener,
 } from 'c/pubsubNoPageRef';
+import {
+    DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+    PAYMENT_METHODS,
+    PAYMENT_METHOD_CREDIT_CARD,
+    LABEL_NEW_LINE,
+    ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
+} from 'c/geConstants';
 
-import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
+import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
-    from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import DATA_IMPORT_PAYMENT_STATUS_FIELD
-    from '@salesforce/schema/DataImport__c.Payment_Status__c';
-import DATA_IMPORT_PAYMENT_METHOD
-    from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-import {
-    DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
-    LABEL_NEW_LINE, ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
-} from 'c/geConstants';
 
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
