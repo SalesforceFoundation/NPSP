@@ -846,6 +846,8 @@ flows:
         steps:
             2:
                 flow: config_regression
+            3:
+                task: update_admin_profile
 
     config_trial:
         steps:
