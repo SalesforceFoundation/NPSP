@@ -606,26 +606,26 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
-    public void onBeforeUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+    public void onBeforeUpdateAddrConTDTM(Contacts contacts) {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         contacts.normalizeLineBreaksForContactsWithChangedAddresses();
-        list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, listOld);
+        list<Contact> addressRefreshQueue = getAddressRefreshQueue(contacts, oldMap.values());
         Set<Contact> addressCreationQueue =
-                getAddressCreationQueueInBeforeContext(contacts, listOld);
+                getAddressCreationQueueInBeforeContext(contacts, oldMap.values());
         list<Contact> useCurrentAddressQueue =
-                getUseCurrentAddressQueue(contacts, listOld);
+                getUseCurrentAddressQueue(contacts, oldMap.values());
         map<Id, boolean> isOverrideByAddressId =
-                getIsOverrideByAddressId(contacts, listOld);
-        addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, listOld));
+                getIsOverrideByAddressId(contacts, oldMap.values());
+        addressRefreshQueue.addAll(addressOverrideResetsOf(contacts, oldMap.values()));
         isOverrideByAddressId.putAll(
                 getIsOverrideByAddressIdFromAddressOverrideChanges(
-                        contacts, listOld));
+                        contacts, oldMap.values()));
 
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts);
         }
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
@@ -661,10 +661,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public void onAfterUpdateAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+    public void onAfterUpdateAddrConTDTM(Contacts contacts) {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue =
-                getAddressCreationQueue(contacts, listOld);
+                getAddressCreationQueue(contacts, oldMap.values());
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
@@ -673,9 +673,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
-    public void onAfterInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+    public void onAfterInsertAddrConTDTM(Contacts contacts) {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
+        Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, oldMap.values());
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
@@ -702,7 +702,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-    public void onBeforeInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+    public void onBeforeInsertAddrConTDTM(Contacts contacts) {
         contacts.normalizeLineBreaks();
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -732,7 +732,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore(contacts, listOld);
+            addressCreationQueue = getAddressCreationQueueInBefore(contacts);
         }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
@@ -770,15 +770,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts, List<SObject> listOld) {
+    private Set<Contact> getAddressCreationQueueInBefore(Contacts contacts) {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         integer j = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contacts.thatHaveAccounts().getRecords()) {
             j++;
             Contact con = (Contact) so;
-            Contact conOld = (listOld != null ? (Contact) listOld[j] : null);
-            NPSP_Contact npspContact = new NPSP_Contact(con, conOld);
+            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
             Account a = contacts.accountsByIds().get(con.AccountId);
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {

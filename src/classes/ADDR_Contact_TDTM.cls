@@ -61,16 +61,16 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                contacts.onBeforeInsertAddrConTDTM(contacts, listOld);
+                contacts.onBeforeInsertAddrConTDTM(contacts);
             }
             when AfterInsert {
-                contacts.onAfterInsertAddrConTDTM(contacts, listOld);
+                contacts.onAfterInsertAddrConTDTM(contacts);
             }
             when BeforeUpdate {
-                contacts.onBeforeUpdateAddrConTDTM(contacts, listOld);
+                contacts.onBeforeUpdateAddrConTDTM(contacts);
             }
             when AfterUpdate {
-                contacts.onAfterUpdateAddrConTDTM(contacts, listOld);
+                contacts.onAfterUpdateAddrConTDTM(contacts);
             }
         }
         // Rules:
