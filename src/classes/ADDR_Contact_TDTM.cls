@@ -61,7 +61,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                onBeforeInsertAddrConTDTM(contacts, listOld, triggerAction);
+                onBeforeInsertAddrConTDTM(contacts, listOld);
             }
             when AfterInsert {
                 onAfterInsertAddrConTDTM(contacts, listOld);
@@ -211,7 +211,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         return addressCreationQueue;
     }
 
-    private void onBeforeInsertAddrConTDTM(Contacts contacts, List<SObject> listOld, Action triggerAction) {
+    private void onBeforeInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
         contacts.normalizeLineBreaks();
 
         DmlWrapper dmlWrapper = new DmlWrapper();
