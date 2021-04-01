@@ -74,10 +74,8 @@ private with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-id', captureGroup.captureGroupResponse.id(), 'The capture group id should be ' +
+        System.assertEquals('test-id', captureGroup.groupId(), 'The capture group id should be ' +
                 'populated on a successful response.');
-        System.assertEquals(null, captureGroup.captureGroupResponse.errors(), 'The list of errors in the Elevate ' +
-                'Capture Group response should be null since no error should occur in a valid request.');
     }
 
     @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {

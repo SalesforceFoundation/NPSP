@@ -56,7 +56,6 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
         captureGroupService.checkForCaptureGroupErrorsIn(captureGroupResponse);
 
         ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
-        captureGroup.captureGroupResponse = captureGroupResponse;
 
         return captureGroup;
     }

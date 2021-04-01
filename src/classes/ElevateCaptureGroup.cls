@@ -29,7 +29,6 @@
  */
 public with sharing class ElevateCaptureGroup implements CaptureGroup {
     @AuraEnabled public String groupId;
-    @AuraEnabled public ElevateCaptureGroupResponse captureGroupResponse;
 
     @TestVisible
     private ElevateCaptureGroupService captureGroupService {
@@ -48,7 +47,6 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
     }
 
     public ElevateCaptureGroup(ElevateCaptureGroupResponse captureGroupResponse) {
-        this.captureGroupResponse = captureGroupResponse;
         this.groupId = captureGroupResponse.id();
     }
 

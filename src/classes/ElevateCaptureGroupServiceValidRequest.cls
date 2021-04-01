@@ -29,6 +29,17 @@
  */
 public with sharing class ElevateCaptureGroupServiceValidRequest extends ElevateCaptureGroupService {
 
+    @TestVisible
+    private ElevateCaptureGroupService captureGroupService {
+        get {
+            if (captureGroupService == null) {
+                captureGroupService = new ElevateCaptureGroupService();
+            }
+            return captureGroupService;
+        }
+        set;
+    }
+
     public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
         ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupSuccessMessage();
 
@@ -36,12 +47,8 @@ public with sharing class ElevateCaptureGroupServiceValidRequest extends Elevate
     }
 
     public override ElevateCaptureGroup createCaptureGroup() {
-        ElevateCaptureGroupResponse captureGroupResponse = new ElevateCaptureGroupResponse();
-
-        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
-        captureGroup.captureGroupResponse = createCaptureGroupSuccessMessage();
-
-        return captureGroup;
+        ElevateCaptureGroupResponse captureGroupResponse = createCaptureGroupSuccessMessage();
+        return new ElevateCaptureGroup(captureGroupResponse);
     }
 
     public ElevateCaptureGroupResponse createCaptureGroupSuccessMessage() {
