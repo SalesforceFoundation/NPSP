@@ -765,10 +765,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInBefore() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        integer j = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : thatHaveAccounts().getRecords()) {
-            j++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -795,9 +793,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        integer g = -1;
         for (SObject so : thatHaveAccounts().getRecords()) {
-            g++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -822,11 +818,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
-        integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
-            i++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
             NPSP_Contact npspContactOld = new NPSP_Contact(oldVersionOf(con));
@@ -848,11 +842,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private List<Contact> addressOverrideResetsOf() {
         list<Contact> addressRefreshQueue = new list<Contact>();
-        integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
-            i++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -872,11 +864,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private List<Contact> getUseCurrentAddressQueue() {
         list<Contact> useCurrentAddressQueue = new list<Contact>();
-        integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
-            i++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -892,11 +882,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Boolean> getIsOverrideByAddressId() {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
-        integer i = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
             // new highest priority! if Account changes...
-            i++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -918,10 +906,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private List<Contact> getAddressRefreshQueue() {
         list<Contact> addressRefreshQueue = new list<Contact>();
-        integer n = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
-            n++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
@@ -941,10 +927,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInBeforeContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        integer n = -1;
         // we only support address management with HH Accounts being used
         for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
-            n++;
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
