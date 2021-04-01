@@ -68,14 +68,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 onBeforeInsertAddrConTDTM(contacts, listOld, triggerAction);
             }
             when AfterInsert {
-                DmlWrapper dmlWrapper = new DmlWrapper();
-                Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
-                // create any new Default Address objects
-                if (addressCreationQueue.size() > 0) {
-                    contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
-                }
-                TDTM_TriggerHandler.processDML(dmlWrapper);
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
+                onAfterInsertAddrConTDTM(contacts, listOld);
             }
             when BeforeUpdate {
                 contacts.normalizeLineBreaksForContactsWithChangedAddresses();
@@ -190,6 +183,17 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // If the Before Insert/Update trigger on the Contact has already executed and taken action
         // and this is an After Insert/Update trigger, reset the hasAlreadyRunBeforeOnContact flag
         return null;
+    }
+
+    private void onAfterInsertAddrConTDTM(Contacts contacts, List<SObject> listOld) {
+        DmlWrapper dmlWrapper = new DmlWrapper();
+        Set<Contact> addressCreationQueue = getAddressCreationQueue(contacts, listOld);
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            contacts.createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
     private Set<Contact> getAddressCreationQueue(Contacts contacts, List<SObject> listOld) {
