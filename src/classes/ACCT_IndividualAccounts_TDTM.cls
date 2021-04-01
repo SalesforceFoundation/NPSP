@@ -60,7 +60,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
-    private static npe01__Contacts_and_Orgs_Settings__c contactsSettings;
+    private static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
 
     /*******************************************************************************************************************
      * @description a set of languages that require different naming conventions
@@ -156,7 +156,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * household updates.
      */
     private void handleAfter() {
-        contacts = database.query(buildContactSoql());
+        contacts = Database.query(buildContactSoql());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             processAccountsAfterInsert();
@@ -306,15 +306,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Updates the accounts for contacts that have been deleted if they have other hh members
     * @param deletedContacts the list of Contacts that need to be considered
-    * @return void
     */
     private void processAccountsAfterDelete(List<Contact> deletedContacts) {
         List<Id> accountIds = new List<Id>();
         List<Id> householdIdsToUpdate = new List<Id>();
-        List<Account> accounts = new List<Account>();
 
         for (Contact contactRecord : deletedContacts) {
-            accountIds.add(contactRecord.accountId);
+            accountIds.add(contactRecord.AccountId);
         }
 
         for (Account accountRecord : [
@@ -338,7 +336,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
     * @param primaryContactByAccountId a map of AccountId's to ContactId's which specifies which accounts need updating.
-    * @return void
     */
     private void updatePrimaryContactOnAccount(Map<Id, Id> primaryContactByAccountId) {
         if (primaryContactByAccountId.isEmpty()) {
@@ -357,7 +354,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Updates an HH Account's naming, primary contact, and rollups
     * @param accountIds the list of Account (Id's) that need updating.
-    * @return void
     */
     private void updateHouseholds(List<Id> accountIds) {
         if (accountIds.isEmpty()) {
@@ -372,7 +368,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description sets the Primary Account for each Account in the list of Accounts
     * @param accountIds the list of Account (Id's) that need updating.
-    * @return void
     */
     private void resetPrimaryContactForAccount(List<Id> accountIds) {
 
@@ -469,7 +464,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Updates Contacts to relate to a single Individual Account
     * @param contacts the list of Contacts that need updating.
-    * @return void
     */
     private void attachToBucketAccount(List<Contact> contactsWithoutBucketAccount){
         if (contactsWithoutBucketAccount.isEmpty()) {
@@ -488,7 +482,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             Account individual = new Account();
             individual.Name = CAO_Constants.BUCKET_ACCOUNT_NAME;
             //flag the account as an individual account
-            individual.npe01__SYSTEMISINDIVIDUAL__c = true;
+            individual.npe01__SYSTEMIsIndividual__c = true;
             //individual.Type = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             UTIL_DMLService.insertRecord(individual);
@@ -503,7 +497,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Inserts a new 1:1 or HH Account for an Individual Contact
     * @param contactsWithoutAccounts the list of Contacts that need updating.
-    * @return void
     */
     private void createAccounts(List<Contact> contactsWithoutAccounts){
         if (contactsWithoutAccounts.isEmpty()) {
@@ -573,7 +566,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     accountRecord.put('RecordTypeID', individualRecordTypeId);
                 }
                 accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
-                accountRecord.npe01__SYSTEMISINDIVIDUAL__c = true;
+                accountRecord.npe01__SYSTEMIsIndividual__c = true;
                 accountInserts.add(accountRecord);
                 contacts.add(contactRecord);
             }
@@ -594,7 +587,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 for (Database.Error err : insertResult.getErrors()) {
                     accountInserts[index].addError(err.getMessage());
                     Contact contactRecord = contacts[index];
-                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
+                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.FirstName, contactRecord.LastName, err.getMessage()}));
                 }
             }
         }
@@ -610,7 +603,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Updates an Individual Account for an Individual Contact
     * @param oneToOneContactsToUpdate the list of Contacts that need updating.
-    * @return void
     */
     private void updateOneToOneAccounts(List<Contact> oneToOneContactsToUpdate){
         if (oneToOneContactsToUpdate.isEmpty()) {
@@ -631,7 +623,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
                 ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
             FROM Account
-            WHERE Id IN :contactByAccountId.keyset()
+            WHERE Id IN :contactByAccountId.keySet()
         ]) {
             Contact contactRecord = contactByAccountId.get(accountRecord.Id);
             addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord,
@@ -657,7 +649,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
     * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
-    * @return void
     */
     private void updateOwners(Map<Id, Contact> newOwnerContactById) {
         if (newOwnerContactById.isEmpty()) {
@@ -672,7 +663,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         for (Account accountRecord : [
-            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts limit 2)
+            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts LIMIT 2)
             FROM Account
             WHERE Id IN :accountIds
         ]) {
@@ -719,7 +710,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return false;
         }
 
-        Boolean isDeletedOldAccount = [SELECT count() FROM Account WHERE Id =: oldContact.AccountId] == 0;
+        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
 
         return !isDeletedOldAccount;
 
@@ -727,7 +718,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /**
      * @description Determines whether or not the contact requires a household account.
      * @param  contactRecord The contact to verify.
-     * @return Boolean - true when the contact needs a household account.
      */
     private Boolean needsHHAccount(Contact contactRecord) {
         return CAO_Constants.isHHAccountModel()
@@ -774,7 +764,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
-    * @param hhNamingFields the set of fields used in the namespec
     * @param contactRecord the new version of the Contact
     * @param oldContact the old version of the Contact
     * @return Boolean
@@ -856,7 +845,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /**
      * @description Determines whether or not the contact should be assigned to the bucket account
      * @param  contactRecord The contact record to verify.
-     * @return Boolean - true when the contact should be assigned to the bucket account
      */
     private Boolean needsBucketAccount(Contact contactRecord) {
         return CAO_Constants.isBucketModel() && contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
@@ -912,7 +900,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * is the caller's responsibility to decide whether moving opps is appropriate for the involved accounts.
     * @param newHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps to
     * @param oldHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps from
-    * @return void
     */
     public static void moveOppsToContactAccount(Map<Id,Id> newHouseholdIdByContactId, Map<Id,Id> oldHouseholdIdByContactId) {
         if (newHouseholdIdByContactId.isEmpty()) {
@@ -925,7 +912,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         for (OpportunityContactRole role : [
             SELECT ContactId, OpportunityId, Opportunity.AccountId
             FROM OpportunityContactRole
-            WHERE IsPrimary = true
+            WHERE IsPrimary = TRUE
                 AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values()
                 AND ContactId IN :newHouseholdIdByContactId.keySet()
         ]) {
@@ -948,7 +935,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description for the list of AccountId's, recalc their rollups
     * @param accountIds the list of Account (Id's) that need updating.
-    * @return void
     */
     public static void rollupAccounts(List<Id> accountIds) {
         new RLLP_OppRollup().rollupAccounts(new Set<Id>(accountIds));
