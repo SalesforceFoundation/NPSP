@@ -40,7 +40,7 @@ public with sharing class ContactService {
     * @param con2 a Contact
     * @return boolean. true if the Mailing Address fields have changed
     ********************************************************************************************************/
-    public boolean isContactAddressChanged(Contact con1, Contact con2) {
+    public Boolean isContactAddressChanged(Contact con1, Contact con2) {
         // if both null, no change
         if (con1 == null && con2 == null)
             return false;
@@ -54,7 +54,7 @@ public with sharing class ContactService {
         }
 
         // both provided, so look for at least one change between address fields
-        boolean isChanged =
+        Boolean isChanged =
                 !Addresses.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
                         !Addresses.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
                         !Addresses.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
@@ -64,8 +64,8 @@ public with sharing class ContactService {
 
         if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
             isChanged =
-                    !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) ||
-                            !Addresses.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
+                    !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingStateCode')), String.valueOf(con2.get('MailingStateCode'))) ||
+                            !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
         }
         return isChanged;
     }
@@ -75,8 +75,8 @@ public with sharing class ContactService {
     * @param con1 a Contact
     * @return boolean. true if the Mailing Address fields are all empty
     ********************************************************************************************************/
-    public boolean isContactAddressEmpty(Contact con1) {
-        boolean isEmpty =
+    public Boolean isContactAddressEmpty(Contact con1) {
+        Boolean isEmpty =
                 con1.MailingStreet == null &&
                         con1.MailingCity == null &&
                         con1.MailingState == null &&
