@@ -51,7 +51,11 @@ public virtual with sharing class ElevateCaptureGroupService {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 createRequest()
         );
-        return (ElevateCaptureGroup)JSON.deserialize(response.body, ElevateCaptureGroup.class);
+        System.debug(response.body);
+        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
+                response.body, ElevateCaptureGroupResponse.class);
+        System.debug('capture group response -- ' + captureGroupResponse);
+        return new ElevateCaptureGroup(captureGroupResponse);
     }
 
     public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {

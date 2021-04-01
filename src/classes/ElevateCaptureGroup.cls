@@ -47,6 +47,11 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         this.groupId = groupId;
     }
 
+    public ElevateCaptureGroup(ElevateCaptureGroupResponse captureGroupResponse) {
+        this.captureGroupResponse = captureGroupResponse;
+        this.groupId = captureGroupResponse.id();
+    }
+
     public ElevateCaptureGroup create() {
         return captureGroupService.sendCreateRequest();
     }

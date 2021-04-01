@@ -28,14 +28,19 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCaptureGroupResponse {
-    @AuraEnabled public String groupId;
-    @AuraEnabled public String errors;
+    public String id;
+    public List<Errors> errors;
 
-    public String groupId() {
-        return groupId;
+    public class Errors {
+        public String message;
+        public String failure_reason;
     }
 
-    public String errors() {
+    public String id() {
+        return id;
+    }
+
+    public List<Errors> errors() {
         return errors;
     }
 }

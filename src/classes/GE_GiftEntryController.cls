@@ -214,6 +214,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static ElevateCaptureGroup createCaptureGroup() {
         ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
+        System.debug(captureGroup.captureGroupResponse);
         checkForCaptureGroupErrorsIn(captureGroup);
         return captureGroup;
     }
@@ -221,12 +222,13 @@ public with sharing class GE_GiftEntryController {
     @TestVisible
     private static void checkForCaptureGroupErrorsIn(ElevateCaptureGroup captureGroup) {
         if (hasCaptureGroupErrors(captureGroup)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroup.captureGroupResponse.errors());
+            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroup.captureGroupResponse.errors()[0].message);
         }
     }
 
     private static Boolean hasCaptureGroupErrors(ElevateCaptureGroup captureGroup) {
-        return String.isNotBlank(captureGroup.captureGroupResponse.errors());
+        return captureGroup.captureGroupResponse.errors() != null &&
+               !captureGroup.captureGroupResponse.errors().isEmpty();
     }
 
     /**
