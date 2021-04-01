@@ -55,8 +55,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         // bail out if address mgmt turned off.
-        if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
-        	return dmlWrapper;
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return dmlWrapper;
+        }
 
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
