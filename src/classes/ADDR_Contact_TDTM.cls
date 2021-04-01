@@ -68,6 +68,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 onBeforeInsertAddrConTDTM(contacts, listOld, triggerAction);
             }
             when AfterInsert {
+                Set<Contact> addressCreationQueue = new Set<Contact>();
                 DmlWrapper dmlWrapper = new DmlWrapper();
                 if (isRecursive() || isRecursiveFromContact()) {
                     if (isRecursive()) {
