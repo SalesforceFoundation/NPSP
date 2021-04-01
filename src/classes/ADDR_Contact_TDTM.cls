@@ -50,10 +50,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @return dmlWrapper.  
     ********************************************************************************************************/
     DmlWrapper dmlWrapper = new DmlWrapper();
-    list<Contact> useCurrentAddressQueue = new list<Contact>();
-    Set<Contact> addressCreationQueue = new Set<Contact>();
-    map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
-    list<Contact> addressRefreshQueue = new list<Contact>();
 
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
