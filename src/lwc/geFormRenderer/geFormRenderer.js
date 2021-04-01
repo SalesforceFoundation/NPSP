@@ -655,7 +655,7 @@ export default class GeFormRenderer extends LightningElement{
                     tokenizedGift = new ElevateTokenizeableGift(
                         this.cardholderNames.firstName,
                         this.cardholderNames.lastName,
-                        this.getFieldValueFromFormState('Donation_Amount__c'),
+                        this.getFieldValueFromFormState(DONATION_AMOUNT),
                         CURRENCY,
                     );
 
@@ -683,8 +683,8 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                let currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
-                let authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+                const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
+                const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
 
                 this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
