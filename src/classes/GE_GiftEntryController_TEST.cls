@@ -88,7 +88,7 @@ private with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
             try {
                 authorizedGift = GE_GiftEntryController.addToCaptureGroup(new ElevateTokenizedGift(),
-                        'test-valid-group-id');
+                        'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -98,13 +98,8 @@ private with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-valid-group-id', authorizedGift.authorizedGiftResponse.groupId(),
+        System.assertEquals('test-valid-id', authorizedGift.paymentId(),
                 'The capture group id should be populated on a successful response.');
-        System.assertEquals(null, authorizedGift.authorizedGiftResponse.errors(), 'The list of errors in the Elevate ' +
-                'Capture Group response should be null since no error should occur in a valid request.');
-        System.assertEquals(ElevateTransactionStatus.AUTHORIZED, authorizedGift.authorizedGiftResponse.status(),
-                'The list of errors in the Elevate Capture Group response should be null since no error should occur' +
-                'in a valid request.');
     }
 
     @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponse() {
@@ -121,6 +116,8 @@ private with sharing class GE_GiftEntryController_TEST {
             }
         Test.stopTest();
 
+        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
+                'has been sent.');
         System.assertEquals(errorMessage,
                 auraException.getMessage(), 'The error message in the capture group response ' +
                         'should throw an exception and the message should be the create capture group error ' +

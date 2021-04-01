@@ -33,14 +33,27 @@
 @isTest
 public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGroupService {
 
+    @TestVisible
+    private ElevateCaptureGroupService captureGroupService {
+        get {
+            if (captureGroupService == null) {
+                captureGroupService = new ElevateCaptureGroupService();
+            }
+            return captureGroupService;
+        }
+        set;
+    }
+
     public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
         ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupErrorMessage();
+        captureGroupService.checkForAuthorizedGiftErrorsIn(giftResponse);
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
 
     public override ElevateCaptureGroup createCaptureGroup() {
         ElevateCaptureGroupResponse captureGroupResponse = createCaptureGroupErrorMessage();
+        captureGroupService.checkForCaptureGroupErrorsIn(captureGroupResponse);
 
         ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
         captureGroup.captureGroupResponse = captureGroupResponse;

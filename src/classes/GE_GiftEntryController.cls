@@ -195,40 +195,19 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        ElevateAuthorizedGift authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
-        checkForAuthorizedGiftErrorsIn(authorizedGift);
-        return authorizedGift;
-    }
-
-    @TestVisible
-    private static void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGift authorizedGift) {
-        if (hasAuthorizedGiftErrors(authorizedGift)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGift.authorizedGiftResponse.errors()[0].message);
+        ElevateAuthorizedGift authorizedGift;
+        try {
+            authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
+        } catch (AuraHandledException ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
-    }
-
-    private static Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGift authorizedGift) {
-        return authorizedGift.authorizedGiftResponse.errors() != null &&
-               !authorizedGift.authorizedGiftResponse.errors().isEmpty();
+        return authorizedGift;
     }
 
     @AuraEnabled
     public static ElevateCaptureGroup createCaptureGroup() {
         ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
-        checkForCaptureGroupErrorsIn(captureGroup);
         return captureGroup;
-    }
-
-    @TestVisible
-    private static void checkForCaptureGroupErrorsIn(ElevateCaptureGroup captureGroup) {
-        if (hasCaptureGroupErrors(captureGroup)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroup.captureGroupResponse.errors()[0].message);
-        }
-    }
-
-    private static Boolean hasCaptureGroupErrors(ElevateCaptureGroup captureGroup) {
-        return captureGroup.captureGroupResponse.errors() != null &&
-               !captureGroup.captureGroupResponse.errors().isEmpty();
     }
 
     /**

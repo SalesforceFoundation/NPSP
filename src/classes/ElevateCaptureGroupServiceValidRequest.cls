@@ -54,7 +54,7 @@ public with sharing class ElevateCaptureGroupServiceValidRequest extends Elevate
     public ElevateAuthorizedGiftResponse addCaptureGroupSuccessMessage() {
         return (ElevateAuthorizedGiftResponse)JSON.deserialize('{\n' +
                 '  "body": {\n' +
-                '    "id": "test-valid-group-id",\n' +
+                '    "id": "test-valid-id",\n' +
                 '    "timestamp": "2021-03-03T17:43:28.589Z",\n' +
                 '    "createdAt": "2021-03-03T17:43:28.589Z",\n' +
                 '    "submittedAt": "2021-03-03T17:43:29.313Z",\n' +

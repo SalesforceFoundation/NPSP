@@ -28,22 +28,18 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateAuthorizedGiftResponse {
-    public Body body;
-    public Integer statusCode;
-    public List<Errors> errors;
+    private Body body;
+    private Integer statusCode;
+    private List<Errors> errors;
 
-    public class Body {
-        public String id;
-        public DateTime authExpiresAt;
-        public ElevateTransactionStatus status;
-        public String gatewayTransactionId;
-        public String currencyCode;
-        public Integer amount;
-        public String lastName;
-        public String firstName;
-        public String paymentType;
-        public String originalTransactionId;
-        public String batchId;
+    private class Body {
+        private String id;
+        private DateTime authExpiresAt;
+        private ElevateTransactionStatus status;
+        private String gatewayTransactionId;
+        private String paymentType;
+        private String originalTransactionId;
+        private String batchId;
     }
 
     public class Errors {
@@ -51,15 +47,36 @@ public with sharing class ElevateAuthorizedGiftResponse {
         public String failure_reason;
     }
 
-    public String groupId() {
-        return body.id;
+    public String paymentId() {
+        return body?.id;
+    }
+
+    public DateTime authExpiration() {
+        return this.body?.authExpiresAt;
     }
 
     public ElevateTransactionStatus status() {
-        return body.status;
+        return body?.status;
     }
 
     public List<Errors> errors() {
         return errors;
     }
+
+    public String gatewayTransactionId() {
+        return this.body?.gatewayTransactionId;
+    }
+
+    public String paymentMethod() {
+        return this.body?.paymentType;
+    }
+
+    public String originalTransactionId() {
+        return this.body?.originalTransactionId;
+    }
+
+    public String groupId() {
+        return this.body?.batchId;
+    }
+
 }

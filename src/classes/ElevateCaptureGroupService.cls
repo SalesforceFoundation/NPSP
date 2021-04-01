@@ -43,7 +43,21 @@ public virtual with sharing class ElevateCaptureGroupService {
         );
         ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
                 (response.body, ElevateAuthorizedGiftResponse.class);
+        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
+
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
+    }
+
+    @TestVisible
+    private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+        if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
+        }
+    }
+
+    private Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+        return authorizedGiftResponse.errors() != null &&
+               !authorizedGiftResponse.errors().isEmpty();
     }
 
     public ElevateCaptureGroup sendCreateRequest() {
@@ -53,6 +67,18 @@ public virtual with sharing class ElevateCaptureGroupService {
         ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
                 response.body, ElevateCaptureGroupResponse.class);
         return new ElevateCaptureGroup(captureGroupResponse);
+    }
+
+    @TestVisible
+    private void checkForCaptureGroupErrorsIn(ElevateCaptureGroupResponse captureGroupResponse) {
+        if (hasCaptureGroupErrors(captureGroupResponse)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroupResponse.errors()[0].message);
+        }
+    }
+
+    private Boolean hasCaptureGroupErrors(ElevateCaptureGroupResponse captureGroupResponse) {
+        return captureGroupResponse.errors() != null &&
+               !captureGroupResponse.errors().isEmpty();
     }
 
     public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
