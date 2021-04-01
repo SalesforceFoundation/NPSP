@@ -1,10 +1,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import CUSTOM_LABELS from './helpers/customLabels';
-import BatchTotals from './helpers/batchTotals';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
@@ -16,36 +14,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     });
 
     @api batchId;
+    @api batchTotals = {};
     @api isPermissionError;
-
-    @track batchTotals = {}
-
-    _hasPaymentsWithExpiredAuthorizations = false;
-
-    connectedCallback() {
-        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        this.retrieveBatchTotals();
-    }
-
-    disconnectedCallback() {
-        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-    }
-
-    async retrieveBatchTotals() {
-        this.batchTotals = await BatchTotals(this.batchId);
-
-        if(this.batchTotals.hasPaymentsWithExpiredAuthorizations &&
-            !this._hasPaymentsWithExpiredAuthorizations) {
-            const detail = {
-                modalProperties: {
-                    componentName: 'gePurchaseCallModalError',
-                    showCloseButton: false
-                }
-            };
-            this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
-            this._hasPaymentsWithExpiredAuthorizations = true;
-        }
-    }
 
     @wire(getRecord, {
         recordId: '$batchId',

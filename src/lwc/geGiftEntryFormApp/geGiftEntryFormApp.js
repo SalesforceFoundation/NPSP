@@ -29,6 +29,8 @@ import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
+import BatchTotals from './helpers/batchTotals';
+
 /*******************************************************************************
 * @description Constants
 */
@@ -46,6 +48,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
+    @track batchTotals = {}
+
+    _hasPaymentsWithExpiredAuthorizations = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -64,6 +69,32 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         super();
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
     }
+
+    connectedCallback() {
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        this.retrieveBatchTotals();
+    }
+
+    disconnectedCallback() {
+        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    async retrieveBatchTotals() {
+        this.batchTotals = await BatchTotals(this.batchId);
+
+        if(this.batchTotals.hasPaymentsWithExpiredAuthorizations &&
+            !this._hasPaymentsWithExpiredAuthorizations) {
+            const detail = {
+                modalProperties: {
+                    componentName: 'gePurchaseCallModalError',
+                    showCloseButton: false
+                }
+            };
+            this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+            this._hasPaymentsWithExpiredAuthorizations = true;
+        }
+    }
+
 
     /*******************************************************************************
     * @description Receives a 'submit' event from geFormRenderer and proceeds down
