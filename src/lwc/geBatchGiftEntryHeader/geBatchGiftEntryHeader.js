@@ -33,7 +33,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         this.batchTotals = await BatchTotals(this.batchId);
 
         if(this.batchTotals.hasPaymentsWithExpiredAuthorizations) {
-            alert('auths expired!');
             const detail = {
                 modalProperties: {
                     componentName: 'gePurchaseCallModalError',
