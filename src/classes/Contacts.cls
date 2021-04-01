@@ -281,6 +281,15 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
+    public List<NPSP_Contact> npspContacts(){
+        List<NPSP_Contact> npspContacts = new List<NPSP_Contact>();
+        for (Contact so : (List<Contact>)getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact(so, oldVersionOf(so));
+            npspContacts.add(npspContact);
+        }
+        return npspContacts;
+    }
+
     public Contacts contactsInAccountsOfTypeHousehold() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
         for (SObject so : getRecords()) {
@@ -700,13 +709,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         map<Id, boolean> isOverrideByAddressId = new map<Id, boolean>();
         list<Contact> addressRefreshQueue = new list<Contact>();
         // we only support address management with HH Accounts being used
-        for (SObject so : contactsInAccountsOfTypeHousehold().getRecords()) {
-            Contact con = (Contact) so;
-            NPSP_Contact npspContact = new NPSP_Contact(con);
-
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             if (npspContact.currentAddress() != null) {
                 // remember which contacts will need their address set
-                useCurrentAddressQueue.add(con);
+                useCurrentAddressQueue.add(npspContact.getRecord());
                 if (npspContact.hasAddressOverride()) {
                     // track which address's need their dates updated
                     isOverrideByAddressId.put(npspContact.currentAddress(), true);
@@ -714,7 +720,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             } else if (npspContact.isAddressEmpty() &&
                     accountHasAddresses(npspContact.getRecord())) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
-                addressRefreshQueue.add(con);
+                addressRefreshQueue.add(npspContact.getRecord());
             }
         }
         if (isRecursive()) {
@@ -919,14 +925,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getAddressCreationQueueInBeforeContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
-
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             // new highest priority! if Account changes...
             if (npspContact.accountChanged()) {
                 // if no override, refill from the Default Address
                 if (!isEligibleForRefresh(npspContact)) {
-                    addressCreationQueue.add(con);
+                    addressCreationQueue.add(npspContact.getRecord());
                 }
             }
         }
