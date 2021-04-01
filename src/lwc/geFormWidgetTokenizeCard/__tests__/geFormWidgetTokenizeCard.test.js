@@ -11,6 +11,7 @@ const DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction';
 const EXTENDED_DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction c.psSelectValidPaymentMethod';
 const BDI_FAILURE_DISABLED_MESSAGE = 'c.geErrorCardChargedBDIFailed';
 const PAYMENT_METHOD_FIELD = 'Payment_Method__c';
+const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
 
 const createWidgetWithPaymentMethod = (paymentMethod) => {
     const element = createElement(
@@ -133,13 +134,13 @@ describe('c-ge-form-widget-tokenize-card', () => {
         const element = createWidgetWithPaymentMethod(ACH);
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
-            'NPSP_Data_Import_Batch__c': 'DUMMY_ID'
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID'
         }
         document.body.appendChild(element);
 
         return Promise.resolve()
             .then(() => {
-                expect(iframe(element).src).toBeUndefined();
+                expect(iframe(element)).toBeNull();
                 expect(spanExtendedDisabledMessage(element).innerHTML).toBe(EXTENDED_DISABLED_MESSAGE);
                 expect(doNotEnterPaymentButton(element)).toBeFalsy();
             });
