@@ -11,7 +11,6 @@ import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_
 import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
-
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
 const TOKENIZE_CARD_WIDGET = 'geFormWidgetTokenizeCard';

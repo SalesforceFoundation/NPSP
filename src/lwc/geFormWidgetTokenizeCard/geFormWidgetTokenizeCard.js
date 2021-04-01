@@ -22,6 +22,7 @@ import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Cont
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     PAYMENT_METHODS, PAYMENT_METHOD_CREDIT_CARD,
@@ -48,6 +49,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 
+    isInBatchGiftEntry() {
+        return this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
+    }
 
     iframe() {
         return this.template.querySelector(
@@ -64,7 +68,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
         if (isEmptyObject(this.PAYMENT_TRANSACTION_STATUS_ENUM) ||
             this.shouldHandleWidgetDataChange()) {
-
             this.handleWidgetDataChange();
         }
     }
@@ -107,6 +110,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod(paymentMethod) {
+        if (this.isInBatchGiftEntry() && paymentMethod === PAYMENT_METHODS.ACH) {
+            return false;
+        }
         return paymentMethod === PAYMENT_METHODS.ACH
             || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
