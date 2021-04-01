@@ -241,11 +241,11 @@ public inherited sharing class Addresses extends fflib_SObjects {
         //
 
         // get all Addresses by HH, that might need updating
-        list<Id> listAccId = new list<Id>(mapAccIdAddr.keySet());
-        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        List<Id> listAccId = new List<Id>(mapAccIdAddr.keySet());
+        Map<Id, List<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
 
         // for each hh, find the current address to use (seasonal vs default)
-        map<Id, HHInfo> mapAccIdHHInfo = new map<Id, HHInfo>();
+        Map<Id, HHInfo> mapAccIdHHInfo = new Map<Id, HHInfo>();
         for (Id accId : listAccId) {
             // create a HHInfo for each household
             HHInfo hhinfo = new HHInfo();
@@ -268,7 +268,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     if (isSeasonalAddr(addrHH)) {
                         Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
                         Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
-                        Date dtToday = system.today();
+                        Date dtToday = System.today();
                         if (dtToday >= dtStart && dtToday < dtEnd) {
                             hhinfo.addrSeasonal = addrHH;
                         }
@@ -452,7 +452,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param addr the Address to look at
     * @return boolean
     */
-    public static boolean isSeasonalAddr(Address__c addr) {
+    public static Boolean isSeasonalAddr(Address__c addr) {
         return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
@@ -462,13 +462,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * Adds an Error to each Address object that has an illegal account.
     */
     public void verifyAddrHHAccOnly() {
-        set<Id> setAccId = new set<Id>();
+        Set<Id> setAccId = new Set<Id>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
             if (addr.Household_Account__c != null) {
                 setAccId.add(addr.Household_Account__c);
             }
         }
-        map<Id, Account> mapAccIdAcc = new map<Id, Account>([
+        Map<Id, Account> mapAccIdAcc = new Map<Id, Account>([
                 select Id, npe01__SYSTEM_AccountType__c, npe01__SYSTEMIsIndividual__c
                 from Account
                 where Id in :setAccId
@@ -535,17 +535,17 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private void checkForOverlapsAgainstHouseholdAddresses(List<NPSP_Address> seasonalAddresses) {
-        list<Id> listAccId = new list<Id>();
+        List<Id> listAccId = new List<Id>();
         for (NPSP_Address addr : seasonalAddresses) {
             listAccId.add(addr.householdId());
         }
-        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
+        Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
                 (listAccId);
 
         for (NPSP_Address addr : seasonalAddresses) {
             for (Address__c addr2 : mapAccIdListAddrHH.get(addr.householdId())) {
                 NPSP_Address npspAddress2 = new NPSP_Address(addr2);
-                if (addr.getRecord().id == addr2.id) {
+                if (addr.getRecord().Id == addr2.Id) {
                     continue;
                 }
                 if (addr.overlapsWith(npspAddress2)) {
@@ -557,7 +557,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private List<NPSP_Address> seasonalAddresses() {
-        list<NPSP_Address> listAddrS = new list<NPSP_Address>();
+        List<NPSP_Address> listAddrS = new List<NPSP_Address>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
             NPSP_Address npspAddress = new NPSP_Address(addr);
             if (npspAddress.isSeasonal()) {
@@ -617,7 +617,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void deleteEmptyAddresses() {
-        list<Address__c> listAddr = new list<Address__c>();
+        List<Address__c> listAddr = new List<Address__c>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
             if (isAddressEmpty(addr)) {
                 listAddr.add(new Address__c(Id = addr.Id));
@@ -636,10 +636,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param dmlWrapper the Addresses to update
     * @param includeAddressType whether to include comparing the AddressType field
     */
-    public static void createNonDuplicateAddresses(list<Address__c> listAddr,
-            TDTM_Runnable.DmlWrapper dmlWrapper, boolean includeAddressType) {
+    public static void createNonDuplicateAddresses(List<Address__c> listAddr,
+            TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
 
-        map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
+        Map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
         for (Address__c addrNew : listAddr) {
             NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
@@ -668,24 +668,24 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listAddr a list of Addresses to update
     * @return map<Address__c, Address__c>
     */
-    public static map<Address__c, Address__c> findDuplicateAddresses(list<Address__c> listAddr) {
+    public static Map<Address__c, Address__c> findDuplicateAddresses(List<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
-        list<Id> listAccId = new list<Id>();
+        List<Id> listAccId = new List<Id>();
         for (Address__c addr : listAddr) {
             listAccId.add(addr.Household_Account__c);
         }
-        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
+        Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH
                 (listAccId);
-        boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
+        Boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
 
         // create our map for returning information in
-        map<Address__c, Address__c> mapAddrDupAddr = new map<Address__c, Address__c>();
+        Map<Address__c, Address__c> mapAddrDupAddr = new Map<Address__c, Address__c>();
 
         // now compare our Addresses to the existing Addresses
         for (Address__c addr : listAddr) {
             NPSP_Address npspAddress = new NPSP_Address(addr);
-            list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
-            boolean hasMatch = false;
+            List<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
+            Boolean hasMatch = false;
             if (listAddrHH != null) {
                 Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
@@ -720,8 +720,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param addr the Address to look at
     * @return string The Address's unique Key
     */
-    public static string getAddrKey(Address__c addr) {
-        string strKey =
+    public static String getAddrKey(Address__c addr) {
+        String strKey =
                 strCleanup(addr.MailingStreet__c) +
                         strCleanup(addr.MailingStreet2__c) +
                         strCleanup(addr.MailingCity__c) +
@@ -743,23 +743,23 @@ public inherited sharing class Addresses extends fflib_SObjects {
     *
     * @param listAccId a list of Account Id's to process
     */
-    public static void cleanupAccountAddresses(list<ID> listAccId) {
+    public static void cleanupAccountAddresses(List<Id> listAccId) {
 
         // use dmlWrapper to handle all of our database operations
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         // for each Account, track its correct Default Address
-        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
 
         // for each Account, get its list of Addresses in oldest to newest order (of LastModifiedDate)
-        map<Id, list<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH(listAccId);
+        Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH(listAccId);
 
         // Construct Contact repository for Accounts having Addresses
         ContactRepository contactRepo = new ContactRepository(mapAccIdListAddrHH.keySet());
 
-        for (ID accId : mapAccIdListAddrHH.keySet()) {
+        for (Id accId : mapAccIdListAddrHH.keySet()) {
             if (mapAccIdListAddrHH.get(accId) != null) {
-                map<string, list<Address__c>> mapAddrKeyToAddresses = new map<string, list<Address__c>>();
+                Map<String, List<Address__c>> mapAddrKeyToAddresses = new Map<String, List<Address__c>>();
                 Address__c addrDefault;
 
                 for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
@@ -772,10 +772,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     }
 
                     // create our map of Address Keys to a list of one or more Addresses
-                    string addrKey = getAddrKey(addr);
-                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+                    String addrKey = getAddrKey(addr);
+                    List<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
                     if (listAddr == null) {
-                        listAddr = new list<Address__c>();
+                        listAddr = new List<Address__c>();
                         mapAddrKeyToAddresses.put(addrKey, listAddr);
                     }
                     listAddr.add(addr);
@@ -784,10 +784,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 // now we have the Default Address to use and lists of potential duplicate addresses
                 // remove the duplicates, updating any contacts that are using the duplicates
                 // we delay getting the contacts until we know we have a duplicate.
-                for (string addrKey : mapAddrKeyToAddresses.keySet()) {
-                    list<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
+                for (String addrKey : mapAddrKeyToAddresses.keySet()) {
+                    List<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
 
-                    for (integer i = 1, size = listAddr.size(); i < size; i++) {
+                    for (Integer i = 1, size = listAddr.size(); i < size; i++) {
                         Address__c addrDupe = listAddr[i];
 
                         replaceAddress(addrDupe, listAddr[0], contactRepo.getContacts(accId), dmlWrapper);
@@ -799,30 +799,30 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         // perform our updates & deletes for dealing with the duplicate addresses
-        TDTM_TriggerHandler.processDml(dmlWrapper);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
 
         // now make sure all contacts are using the correct default address
         dmlWrapper = new TDTM_Runnable.DmlWrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
-        TDTM_TriggerHandler.processDml(dmlWrapper);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 
     /*******************************************************************************************************
     * @description routine the scheduled batch job calls to update households with Seasonal addresses
     * @param listAcc a list of Accounts to see if their address needs to be updated
     */
-    public static void batchSeasonalUpdate(list<Account> listAcc) {
+    public static void batchSeasonalUpdate(List<Account> listAcc) {
         if (listAcc == null || listAcc.size() == 0) {
             return;
         }
 
-        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
         for (Account acc : listAcc) {
             mapAccIdAddr.put(acc.Id, null);
         }
 
         // get the default and seasonal address for each HH
-        map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+        Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
                 refreshCurrentHHAddress(mapAccIdAddr, null, true);
 
         // now see which accounts actually had their address change, so we only update them.
@@ -852,7 +852,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
 
-        TDTM_Runnable.Dmlwrapper dmlWrapper = new TDTM_Runnable.Dmlwrapper();
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
@@ -870,7 +870,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         // handle CR NL
-        integer ich = addr.MailingStreet__c.indexOf('\r\n');
+        Integer ich = addr.MailingStreet__c.indexOf('\r\n');
         if (ich > -1) {
             addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
             addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
@@ -904,7 +904,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param addrOld the old version of the Address
     * @return boolean. true if any of the seasonal fields have changed on the Address
     */
-    private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
+    private Boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
         if (addrNew == null || addrOld == null) {
             return false;
         }
@@ -931,7 +931,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private void resetLatestStartDateFor(Address__c address) {
-        address.Latest_Start_Date__c = system.today();
+        address.Latest_Start_Date__c = System.today();
     }
 
     private Addresses defaultAddresses() {
@@ -964,7 +964,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private void setEndDateFor(Address__c addr) {
-        addr.Latest_End_Date__c = system.today();
+        addr.Latest_End_Date__c = System.today();
     }
 
     private Boolean isDefaultChanged(Address__c addr) {
@@ -996,18 +996,18 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // If State & Country Picklists are enabled in the org, build maps of the
         // valid Labels and Codes for each field to use for validation
-        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
-        boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
+        Map<String, Schema.SObjectField> acctFields = Account.getSObjectType().getDescribe().fields.getMap();
+        Boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
         if (isCodesEnabled) {
-            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : countryPLValues) {
+            List<Schema.PicklistEntry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
+            for (Schema.PicklistEntry p : countryPLValues) {
                 if (p.isActive()) {
                     validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
                     validCountriesByCode.put(p.getValue(), p.getLabel());
                 }
             }
-            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : statePLValues) {
+            List<Schema.PicklistEntry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
+            for (Schema.PicklistEntry p : statePLValues) {
                 if (p.isActive()) {
                     validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
                     // we can't have a map of valid StateCodes, because they are not unique.
@@ -1025,26 +1025,26 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param fStart whether to return the StartDate or EndDate
     * @return Date
     */
-    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {
-        integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
-        integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
-        integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
-        integer endDay = integer.valueOf(addr.Seasonal_End_Day__c);
+    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, Boolean fStart) {
+        Integer startMonth = Integer.valueOf(addr.Seasonal_Start_Month__c);
+        Integer startDay = Integer.valueOf(addr.Seasonal_Start_Day__c);
+        Integer endMonth = Integer.valueOf(addr.Seasonal_End_Month__c);
+        Integer endDay = Integer.valueOf(addr.Seasonal_End_Day__c);
         Date dtStart;
         Date dtEnd;
-        Date dtToday = system.today();
+        Date dtToday = System.today();
         //seasonal address is contained within a single year
         if (startMonth <= endMonth) {
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
+            dtStart = Date.newInstance(dtToday.year(), startMonth, startDay);
+            dtEnd = Date.newInstance(dtToday.year(), endMonth, endDay);
             //seasonal address overlaps the year, and this month is past the start month
         } else if (startMonth <= dtToday.month()){
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
+            dtStart = Date.newInstance(dtToday.year(), startMonth, startDay);
+            dtEnd = Date.newInstance(dtToday.year()+1, endMonth, endDay);
             //seasonal address overlaps the year, and this month is before the start month
         } else {
-            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
-            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
+            dtStart = Date.newInstance(dtToday.year()-1, startMonth, startDay);
+            dtEnd = Date.newInstance(dtToday.year(), endMonth, endDay);
         }
         return (fStart ? dtStart : dtEnd);
     }
@@ -1076,7 +1076,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listCon the list of Contacts to evaluate
     * @param dmlWrapper to hold any Contacts that need updating
     */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, list<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
         for (Contact con : listCon) {
             if (con.Current_Address__c == addrLoser.Id) {
                 con.Current_Address__c = addrWinner.Id;
@@ -1093,12 +1093,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param includeAddressType whether to include comparing the AddressType field
     * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */
-    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
+    private static Boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, Boolean includeAddressType) {
         if (addrNew == null || addrOld == null) {
             return false;
         }
 
-        integer cChange = 0;
+        Integer cChange = 0;
         if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null) {
             cChange++;
         }
@@ -1128,7 +1128,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param str the string to clean up
     * @return string
     */
-    private static string strCleanup(string str) {
+    private static String strCleanup(String str) {
         if (str != null) {
             str = str.replace(' ', '');
             str = str.toLowerCase();
@@ -1143,9 +1143,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param mapAddrIdAddr a map of Address Id's to Addresses
     * @dmlWrapper to hold the Contacts to update
     */
-    private void updateAddrOverrides(map<Id, Address__c> mapAddrIdAddr,
+    private void updateAddrOverrides(Map<Id, Address__c> mapAddrIdAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
-        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
+        List<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keySet()];
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             NPSP_Address address = new NPSP_Address(addr);
@@ -1156,7 +1156,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
         for (Error__c error : errors.errorRecords) {
-            ID objId = ERR_Handler.getErrorObjectId(error);
+            Id objId = ERR_Handler.getErrorObjectId(error);
             UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
             if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
                 Address__c addr = mapAddressesByAcctId.get(objId);
@@ -1177,18 +1177,18 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param dmlWrapper to hold the Addresses that need updating
     * @return void
     ********************************************************************************************************/
-    public static void updateAddrIsOverride(Map<Id, boolean> mapAddrIdIsOverride,
+    public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride,
             TDTM_Runnable.DmlWrapper
             dmlWrapper) {
 
-        for (ID id : mapAddrIdIsOverride.keySet()) {
+        for (Id id : mapAddrIdIsOverride.keySet()) {
             Address__c addr = new Address__c();
             addr.Id = id;
             if (mapAddrIdIsOverride.get(id) == true) {
-                addr.Latest_Start_Date__c = system.today();
+                addr.Latest_Start_Date__c = System.today();
                 addr.Latest_End_Date__c = null;
             } else {
-                addr.Latest_End_Date__c = system.today();
+                addr.Latest_End_Date__c = System.today();
             }
             dmlWrapper.objectsToUpdate.add(addr);
         }
