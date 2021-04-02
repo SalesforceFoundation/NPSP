@@ -40,6 +40,7 @@ public with sharing class ElevateAuthorizedGiftResponse {
         @TestVisible private String paymentType;
         @TestVisible private String originalTransactionId;
         @TestVisible private String batchId;
+        @TestVisible private String declineReason;
     }
 
     public class Errors {
@@ -57,6 +58,10 @@ public with sharing class ElevateAuthorizedGiftResponse {
 
     public ElevateTransactionStatus status() {
         return body?.status;
+    }
+
+    public String declineReason() {
+        return body?.declineReason;
     }
 
     public List<Errors> errors() {

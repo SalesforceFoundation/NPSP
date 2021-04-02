@@ -31,22 +31,24 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public ElevateTokenizedGift tokenizedGift;
     @AuraEnabled public String paymentId;
     @AuraEnabled public DateTime authExpiration;
-    @AuraEnabled public ElevateTransactionStatus status;
+    @AuraEnabled public String status;
     @AuraEnabled public String gatewayTransactionId;
     @AuraEnabled public String paymentMethod;
     @AuraEnabled public String originalTransactionId;
     @AuraEnabled public String groupId;
+    @AuraEnabled public String declineReason;
 
     public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift,
                                  ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         this.tokenizedGift = tokenizedGift;
         this.paymentId = authorizedGiftResponse.paymentId();
         this.authExpiration = authorizedGiftResponse.authExpiration();
-        this.status = authorizedGiftResponse.status();
+        this.status = authorizedGiftResponse.status().name();
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
         this.paymentMethod = authorizedGiftResponse.paymentMethod();
         this.groupId = authorizedGiftResponse.groupId();
         this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
+        this.declineReason = authorizedGiftResponse.declineReason();
     }
 
     public String groupId() {
@@ -61,7 +63,7 @@ public with sharing class ElevateAuthorizedGift {
         return this.authExpiration;
     }
 
-    public ElevateTransactionStatus status() {
+    public String status() {
         return this.status;
     }
 
@@ -75,5 +77,9 @@ public with sharing class ElevateAuthorizedGift {
 
     public String originalTransactionId() {
         return this.originalTransactionId;
+    }
+
+    public String declineReason() {
+        return this.declineReason;
     }
 }
