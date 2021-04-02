@@ -44,9 +44,15 @@ describe('elevate-capture-group', () => {
             "groupId": "fake-capture-group-id",
             tokenizedGift: tokenizableGift
         });
+
     });
 
     it('capture group with existing id when adding gift then id is unchanged', async () => {
+        // TODO: mock resolved value
+        apexAddToCaptureGroup.mockResolvedValue({
+
+        });
+
         const captureGroup = new ElevateCaptureGroup('fakeId');
 
         const tokenizableGift = getDummyGift();
@@ -55,7 +61,24 @@ describe('elevate-capture-group', () => {
 
         expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(1);
         expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(0);
+
+        // TODO: assert shape/contents of authorized gift
+        expect(authorizedGift).toMatchObject({
+        //    tokenizedGift: '',
+        //    paymentId: '',
+        //    authExpiration: '',
+        //    status: '',
+        //    gatewayTransactionId: '',
+        //    paymentMethod: '',
+        //    originalTransactionId: '',
+        //    groupId: ''
+        });
     });
+
+    it('capture group when add fails and retry fails then exception thrown', () => {
+        // TODO
+    });
+
 });
 
 
