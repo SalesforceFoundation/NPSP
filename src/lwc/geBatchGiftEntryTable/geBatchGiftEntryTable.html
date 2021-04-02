@@ -1,7 +1,7 @@
 <template>
     <article class='slds-card slds-card_extension slds-m-vertical_small'>
-        <div if:true={ready}>
-            <div if:true={hasData}>
+        <template if:true={ready}>
+            <template if:true={hasData}>
                 <div if:false={isLoaded}
                      class="slds-is-relative">
                     <lightning-spinner alternative-text="Loading..."
@@ -69,14 +69,14 @@
                                          data-qa-locator="datatable Batch Gifts">
                     </lightning-datatable>
                 </div>
-            </div>
-            <div if:false={hasData}>
+            </template>
+            <template if:false={hasData}>
                 <c-util-illustration title="Looks like you haven't entered any gifts yet!"
                                      message="Enter a new gift and it will appear here."
                                      size="small"
                                      variant="lake-mountain">
                 </c-util-illustration>
-            </div>
-        </div>
+            </template>
+        </template>
     </article>
 </template>
