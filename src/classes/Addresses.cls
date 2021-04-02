@@ -354,16 +354,17 @@ public inherited sharing class Addresses extends fflib_SObjects {
             // check the Contacts on this household
             if (mapAccIdListCon != null && mapAccIdListCon.containsKey(accId)) {
                 for (Contact con : mapAccIdListCon.get(accId)) {
+                    NPSP_Contact npspContact = new NPSP_Contact(con);
                     // detect that the contact's current address was deleted.
                     // and if so clear any override flag so it will get the default address.
-                    if (con.Current_Address__c == null) {
-                        con.is_Address_Override__c = false;
+                    if (npspContact.currentAddress() == null) {
+                        npspContact.getRecord().is_Address_Override__c = false;
                     }
-                    if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    if (npspContact.hasAddressOverride() == false ||
+                            npspContact.currentAddress() == addr.Id) {
                         if (Addresses.shouldUpdateAddress(con, addr)) {
-                            con.Current_Address__c = addr.Id;
-                            NPSP_Address address = new NPSP_Address(addr);
-                            address.copyOntoSObject(con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                            npspContact.currentAddress(npspAddress);
                             listConUpdate.add(con);
                         }
                     }
@@ -1169,10 +1170,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
             TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keySet()];
         for (Contact con : listCon) {
-            Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            NPSP_Address address = new NPSP_Address(addr);
-            address.copyOntoSObject(con, 'Mailing', 'npe01__Primary_Address_Type__c');
-            dmlWrapper.objectsToUpdate.add(con);
+            NPSP_Contact npspContact = new NPSP_Contact(con);
+            NPSP_Address npspAddress = new NPSP_Address(mapAddrIdAddr.get(npspContact.currentAddress()));
+            npspContact.mailingAddress(npspAddress);
+            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
     }
 

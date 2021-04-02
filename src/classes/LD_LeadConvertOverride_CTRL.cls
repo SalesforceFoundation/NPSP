@@ -609,9 +609,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                NPSP_Address address = new NPSP_Address(tempAddr);
-                address.copyOntoSObject(acc, 'Billing', null);
-                UTIL_DMLService.updateRecord(acc);
+                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+                NPSP_Household npspHousehold = new NPSP_Household(acc);
+                npspHousehold.billingAddress(npspAddress);
+                UTIL_DMLService.updateRecord(npspHousehold.getRecord());
             }
             // handle the optional Affiliation to a new or existing Account.
             Id afflAccId = null;
@@ -621,9 +622,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                NPSP_Address address = new NPSP_Address(tempAddr);
-                address.copyOntoSObject(acc, 'Billing', null);
-                UTIL_DMLService.insertRecord(acc);
+                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+                NPSP_Household npspHousehold = new NPSP_Household(acc);
+                npspHousehold.billingAddress(npspAddress);
+                UTIL_DMLService.insertRecord(npspHousehold.getRecord());
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
                 afflAccId = strAfflAccountId;
