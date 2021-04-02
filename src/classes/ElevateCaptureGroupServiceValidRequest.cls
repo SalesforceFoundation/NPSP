@@ -29,17 +29,6 @@
  */
 public with sharing class ElevateCaptureGroupServiceValidRequest extends ElevateCaptureGroupService {
 
-    @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
-            }
-            return captureGroupService;
-        }
-        set;
-    }
-
     public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
         ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupSuccessMessage();
 
