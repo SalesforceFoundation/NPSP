@@ -5,7 +5,7 @@ class ElevateTokenizeabledGift {
         this.firstName = firstName;
         this.lastName = lastName;
         this.currencyCode = currencyCode;
-        this.token = null;
+        this.paymentMethodToken = null;
     }
 
     async tokenize(sections) {
@@ -24,7 +24,7 @@ class ElevateTokenizeabledGift {
             );
 
             if (tokenResponse) {
-                this.token = tokenResponse[0].Payment_Authorization_Token__c;
+                this.paymentMethodToken = tokenResponse[0].Payment_Authorization_Token__c;
                 return tokenResponse[0];
             }
         }

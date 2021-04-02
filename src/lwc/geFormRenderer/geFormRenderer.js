@@ -690,8 +690,8 @@ export default class GeFormRenderer extends LightningElement{
 
                 this.updateFormState({
                     [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
-                    [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.id,
                     [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+                    [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                 });
 
                 dataImportFromFormState = this.saveableFormState();

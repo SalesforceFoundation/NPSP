@@ -14,7 +14,10 @@ class ElevateCaptureGroup {
         }
 
         try {
-            return await apexAddToCaptureGroup(tokenizedGift, this.elevateBatchId);
+            let authorizedGift = await apexAddToCaptureGroup(
+                {tokenizedGift: tokenizedGift, groupId: this.elevateBatchId}
+            );
+            return authorizedGift;
         } catch (ex) {
             if (!this._hasAddRun) {
                 this._hasAddRun = true;
@@ -27,7 +30,8 @@ class ElevateCaptureGroup {
     }
 
     async create() {
-        return await apexCreateCaptureGroup().id;
+        let captureGroup = await apexCreateCaptureGroup();
+        return captureGroup.groupId;
     }
 
 }
