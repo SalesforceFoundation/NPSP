@@ -332,8 +332,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Account acc = new Account(Id = accId);
             if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
                 NPSP_Address address = new NPSP_Address(addr);
-                address.copyOntoSObject(acc, 'Billing', null);
-                listAccUpdate.add(acc);
+                NPSP_Household household = new NPSP_Household(acc);
+                household.billingAddress(address);
+                listAccUpdate.add(household.getRecord());
             }
 
             // check other addresses on this household that are no longer the default
