@@ -4,8 +4,19 @@ import GeFormSection from 'c/geFormSection';
 import section from './data/section.json';
 import sectionWithElevateWidget from './data/sectionWithElevateWidget.json';
 
-jest.mock('c/geFormField');
-jest.mock('c/geFormWidgetTokenizeCard');
+jest.mock('c/geFormService', () => {
+    return {
+        getFieldMappingWrapper: jest.fn(),
+        getInputTypeFromDataType: jest.fn(),
+        getNumberFormatterByDescribeType: jest.fn(),
+        getObjectMapping: jest.fn(),
+        importedRecordFieldNames: jest.fn(),
+        fieldMappingsForImportedRecordFieldName: jest.fn(),
+        getFieldMappingWrapperFromTarget: jest.fn(),
+        getPaymentTransactionStatusEnums: jest.fn(),
+        getOrgDomain: jest.fn(),
+    };
+});
 
 describe('c-ge-form-section', () => {
     afterEach(() => {
