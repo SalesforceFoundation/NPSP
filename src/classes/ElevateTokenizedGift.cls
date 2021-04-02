@@ -1,11 +1,11 @@
 public with sharing class ElevateTokenizedGift {
-    public Decimal amount;
-    public String firstName;
-    public String paymentMethodToken;
+    @AuraEnabled public Decimal amount {get; set;}
+    @AuraEnabled public String firstName {get; set;}
+    @AuraEnabled public String paymentMethodToken {get; set;}
     public String merchantId;
     public String gatewayId;
-    public String lastName;
-    public String currencyCode;
+    @AuraEnabled public String lastName {get; set;}
+    @AuraEnabled public String currencyCode {get; set;}
     public PS_IntegrationServiceConfig.Service configService;
 
     public ElevateTokenizedGift() {
