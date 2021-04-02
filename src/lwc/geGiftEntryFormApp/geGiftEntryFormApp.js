@@ -59,6 +59,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     namespace;
     count;
     total;
+    batch = {};
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -72,7 +73,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        this.retrieveBatchTotals();
     }
 
     disconnectedCallback() {
@@ -242,7 +242,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             BATCH_TABLE_COLUMNS_FIELD
         ]
     })
-    batch;
+    wiredBatch({data, error}) {
+        if (data) {
+            this.batch.data = data;
+            this.retrieveBatchTotals();
+        } else if (error) {
+            handleError(error);
+        }
+    }
 
     handleProcessBatch() {
         if (this.isProcessable) {
