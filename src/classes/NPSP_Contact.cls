@@ -61,9 +61,9 @@ public with sharing class NPSP_Contact {
         return this.contact;
     }
 
-    public void currentAddress(NPSP_Address anAddress) {
-        contact.Current_Address__c = anAddress.getRecord().Id;
-        anAddress.copyOntoSObject(getRecord(), 'Mailing','npe01__Primary_Address_Type__c');
+    public void currentAddress(NPSP_Address npspAddress) {
+        contact.Current_Address__c = npspAddress.getRecord().Id;
+        mailingAddress(npspAddress);
     }
 
     public Id currentAddress() {
