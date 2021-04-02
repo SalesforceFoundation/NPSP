@@ -35,14 +35,20 @@
 public inherited sharing class NPSP_Household {
 
     private Account householdAccount;
+    private Account oldVersion;
 
     public NPSP_Household(Account account) {
         this.householdAccount = account;
     }
 
-   public Id getId() {
-       return householdAccount.Id;
-   }
+    public NPSP_Household(Account account, Account oldVersion) {
+        this.householdAccount = account;
+        this.oldVersion = oldVersion;
+    }
+
+    public Id getId() {
+        return householdAccount.Id;
+    }
 
     public Account getRecord() {
         return householdAccount;
@@ -51,4 +57,40 @@ public inherited sharing class NPSP_Household {
     public void billingAddress(NPSP_Address npspAddress) {
         npspAddress.copyOntoSObject(householdAccount, 'Billing', null);
     }
+
+    /*******************************************************************************************************
+    * @description utility to compare two Accounts' (billing) addresses
+    * @param acc1 an Account
+    * @param acc2 an Account
+    * @return boolean. true if there are any changes between the two accounts.
+    ********************************************************************************************************/
+    public Boolean isAccountAddressChanged() {
+        if (householdAccount == null || oldVersion == null) {
+            return false;
+        }
+
+        Boolean isChanged =
+                !Addresses.equalsCaseSensitive(householdAccount.BillingStreet, oldVersion
+                        .BillingStreet) ||
+                        !Addresses.equalsCaseSensitive(householdAccount.BillingCity, oldVersion
+                                .BillingCity) ||
+                        !Addresses.equalsCaseSensitive(householdAccount.BillingState, oldVersion
+                                .BillingState) ||
+                        !Addresses.equalsCaseSensitive(householdAccount.BillingPostalCode, oldVersion
+                                .BillingPostalCode) ||
+                        !Addresses.equalsCaseSensitive(householdAccount.BillingCountry, oldVersion
+                                .BillingCountry);
+
+        if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
+            isChanged =
+                    !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get('BillingStateCode')
+                    ), String.valueOf(oldVersion.get('BillingStateCode'))) ||
+                            !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get
+                                    ('BillingCountryCode')), String.valueOf(oldVersion.get
+                                    ('BillingCountryCode')));
+        }
+        return isChanged;
+
+    }
+
 }

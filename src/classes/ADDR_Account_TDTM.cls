@@ -63,6 +63,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+            NPSP_Household npspHousehold = new NPSP_Household(newRecord, oldRecord);
 
             if (isAddressManagementEnabled(newRecord)) {
                 // BEFORE INSERT
@@ -72,7 +73,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
                 // BEFORE UPDATE
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate
-                        && isAccountAddressChanged(newRecord, oldRecord)) {
+                        && npspHousehold.isAccountAddressChanged()) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
 
@@ -86,7 +87,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 // AFTER UPDATE
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     // if the address changed, remember the account we want to add a new address for
-                    if (isAccountAddressChanged(newRecord, oldRecord)) {
+                    if (npspHousehold.isAccountAddressChanged()) {
                         listAccCreateAddr.add(newRecord);
                     }
                 }
@@ -139,33 +140,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            (Addresses.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
 
         return isSpecified;   
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two Accounts' (billing) addresses
-    * @param acc1 an Account
-    * @param acc2 an Account
-    * @return boolean. true if there are any changes between the two accounts.
-    ********************************************************************************************************/
-    private Boolean isAccountAddressChanged(Account acc1, Account acc2) {
-        if (acc1 == null || acc2 == null) {
-            return false;
-        }
-        
-        Boolean isChanged =
-           !Addresses.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
-           !Addresses.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
-           !Addresses.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
-           !Addresses.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
-           !Addresses.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
-
-        if (!isChanged && Addresses.isStateCountryPicklistsEnabled) {
-            isChanged = 
-	            !Addresses.equalsCaseSensitive(String.valueOf(acc1.get('BillingStateCode')), String.valueOf(acc2.get('BillingStateCode'))) ||
-	            !Addresses.equalsCaseSensitive(String.valueOf(acc1.get('BillingCountryCode')), String.valueOf(acc2.get('BillingCountryCode')));
-        }    
-        return isChanged;   
-
     }
 
     /*******************************************************************************************************
