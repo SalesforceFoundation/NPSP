@@ -858,6 +858,27 @@ public inherited sharing class Addresses extends fflib_SObjects {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
     }
 
+    /*******************************************************************************************************
+    * @description Updates the Latest date fields on any address overrides
+    * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
+    * @param dmlWrapper to hold the Addresses that need updating
+    ********************************************************************************************************/
+    public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride,
+            TDTM_Runnable.DmlWrapper
+                    dmlWrapper) {
+
+        for (Id id : mapAddrIdIsOverride.keySet()) {
+            Address__c addr = new Address__c();
+            addr.Id = id;
+            if (mapAddrIdIsOverride.get(id) == true) {
+                addr.Latest_Start_Date__c = System.today();
+                addr.Latest_End_Date__c = null;
+            } else {
+                addr.Latest_End_Date__c = System.today();
+            }
+            dmlWrapper.objectsToUpdate.add(addr);
+        }
+    }
 
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
@@ -1170,26 +1191,4 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-
-    /*******************************************************************************************************
-    * @description Updates the Latest date fields on any address overrides
-    * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
-    * @param dmlWrapper to hold the Addresses that need updating
-    ********************************************************************************************************/
-    public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride,
-            TDTM_Runnable.DmlWrapper
-            dmlWrapper) {
-
-        for (Id id : mapAddrIdIsOverride.keySet()) {
-            Address__c addr = new Address__c();
-            addr.Id = id;
-            if (mapAddrIdIsOverride.get(id) == true) {
-                addr.Latest_Start_Date__c = System.today();
-                addr.Latest_End_Date__c = null;
-            } else {
-                addr.Latest_End_Date__c = System.today();
-            }
-            dmlWrapper.objectsToUpdate.add(addr);
-        }
-    }
 }
