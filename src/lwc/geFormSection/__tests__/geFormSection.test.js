@@ -17,6 +17,7 @@ jest.mock('c/geFormService', () => {
         getOrgDomain: jest.fn(),
     };
 });
+const mockRegisterPaymentWidgetHandler = jest.fn();
 
 describe('c-ge-form-section', () => {
     afterEach(() => {
@@ -36,12 +37,13 @@ describe('c-ge-form-section', () => {
             expect(sectionLabel.innerHTML).toBe('Donor Information');
         });
 
-        it('should render 3 form fields', async () => {
+        it('should render 3 form fields without the elevate widget', async () => {
             const element = create(section);
 
             await flushPromises();
             const formFieldElements = shadowSelectorAll(element, 'c-ge-form-field');
             expect(formFieldElements.length).toBe(3);
+            expect(mockRegisterPaymentWidgetHandler).toHaveBeenCalledTimes(0);
         });
 
         it('should render 3 form fields and the elevate widget', async () => {
@@ -54,6 +56,7 @@ describe('c-ge-form-section', () => {
             const formWidgetElement = shadowSelectorAll(element, 'c-ge-form-widget')[0];
             const elevateWidgets = shadowSelectorAll(formWidgetElement, 'c-ge-form-widget-tokenize-card');
             expect(elevateWidgets.length).toBe(1);
+            expect(mockRegisterPaymentWidgetHandler).toHaveBeenCalledTimes(1);
         });
     });
 });
@@ -71,6 +74,7 @@ const create = (section) => {
         is: GeFormSection
     });
     element.section = section;
+    element.addEventListener('registerpaymentwidget', mockRegisterPaymentWidgetHandler);
     document.body.appendChild(element);
     return element;
 }
