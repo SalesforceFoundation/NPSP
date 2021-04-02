@@ -6,8 +6,8 @@ import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 
-export const mockIframeSendMessage = jest.fn();
 export const mockGetIframeReply = jest.fn();
+
 /***
  * @description Visualforce page used to handle the payment services credit card tokenization request
  */
