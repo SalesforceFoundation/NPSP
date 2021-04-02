@@ -490,12 +490,13 @@ export default class GeFormRenderer extends LightningElement{
     * @param {string} modalBodyComponentName: Name of the LWC to render in the
     * overlay library modal's body.
     */
-    toggleModalByComponentName(modalBodyComponentName) {
+    toggleModalByComponentName(modalBodyComponentName, componentProperties) {
         const detail = {
             modalProperties: {
                 componentName: modalBodyComponentName,
                 showCloseButton: false
-            }
+            }, 
+            componentProperties
         };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
@@ -2361,7 +2362,13 @@ export default class GeFormRenderer extends LightningElement{
 
     handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
-        this.toggleModalByComponentName('gePurchaseCallModalError');
+        this.toggleModalByComponentName('geModalPrompt',
+            {
+                'severity': 'error',
+                'title': this.CUSTOM_LABELS.commonCriticalError,
+                'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
+                'buttonText': CUSTOM_LABELS.commonReviewForm
+            });
 
         const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
         this.addPageLevelErrorMessage(pageLevelError);

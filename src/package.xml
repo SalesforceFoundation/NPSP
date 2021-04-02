@@ -4245,7 +4245,6 @@
         <members>geListView</members>
         <members>geModalPrompt</members>
         <members>gePaymentGatewayManagement</members>
-        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
