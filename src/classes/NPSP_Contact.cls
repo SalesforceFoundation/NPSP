@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact entity class in NPSP.
 */
-public with sharing class NPSP_Contact {
+public inherited sharing class NPSP_Contact {
 
     private Contact contact;
     private Contact oldContact;
