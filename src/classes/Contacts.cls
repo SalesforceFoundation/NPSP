@@ -184,17 +184,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         createAddressesForContacts();
     }
 
-    private void createAddressesForContacts() {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        Set<Contact> addressCreationQueue = getAddressCreationQueue();
-        // create any new Default Address objects
-        if (addressCreationQueue.size() > 0) {
-            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
-        }
-        TDTM_TriggerHandler.processDML(dmlWrapper);
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
-    }
-
     public void onAfterInsert() {
         createAddressesForContacts();
     }
@@ -909,6 +898,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Boolean isEligibleForRefresh(NPSP_Contact npspContact) {
         return !npspContact.hasAddressOverride() && !npspContact.isAddressChanged();
+    }
+
+    private void createAddressesForContacts() {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        Set<Contact> addressCreationQueue = getAddressCreationQueue();
+        // create any new Default Address objects
+        if (addressCreationQueue.size() > 0) {
+            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+        }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
 }
