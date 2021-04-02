@@ -181,6 +181,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
+        createAddressesForContacts();
+    }
+
+    private void createAddressesForContacts() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
