@@ -14,7 +14,7 @@
     },
     "FirstName": {
       "displayValue": null,
-      "value": "Hasa"
+      "value": "DummyFirstName"
     },
     "HomePhone": {
       "displayValue": null,
@@ -22,7 +22,7 @@
     },
     "LastName": {
       "displayValue": null,
-      "value": "FirstName"
+      "value": "DummyLastName"
     },
     "MobilePhone": {
       "displayValue": null,

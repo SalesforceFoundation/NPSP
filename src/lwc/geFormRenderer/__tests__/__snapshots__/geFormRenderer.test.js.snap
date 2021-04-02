@@ -1,15 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`c-ge-form-renderer form with payment widget, when payment method changed to credit card then payment iframe loads 1`] = `
-<iframe
-  class="payment-services-iframe"
-  data-id="c.commonPaymentServices"
-  src="/apex/GE_TokenizeCard"
-  title="c.commonPaymentServices"
-/>
-`;
-
-exports[`c-ge-form-renderer loads with template 1`] = `
+exports[`c-ge-form-renderer form when saving without filling anything in should result in a page level error for missing fields 1`] = `
 <c-ge-form-renderer>
   #shadow-root(open)
     <lightning-layout
@@ -99,6 +90,55 @@ exports[`c-ge-form-renderer loads with template 1`] = `
       >
         #shadow-root(open)
           <slot />
+        <c-util-page-level-message>
+          #shadow-root(open)
+            <div
+              class="pageLevelErrors"
+              tabindex="-1"
+            >
+              <div
+                aria-live="assertive"
+                class="desktop forcePageError"
+              >
+                <div
+                  class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small"
+                >
+                  <div
+                    class="slds-notify slds-notify_extension slds-notify_toast slds-theme_error"
+                    role="status"
+                  >
+                    <span
+                      class="slds-assistive-text"
+                    >
+                      c.commonAssistiveError
+                    </span>
+                    <div
+                      class="slds-notify__content"
+                    >
+                      <h2
+                        class="slds-text-heading_small"
+                      >
+                        c.commonError
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <slot
+                  name="body"
+                />
+              </div>
+            </div>
+          <ul
+            class="slds-list_dotted slds-text-color_error"
+            slot="body"
+          >
+            <li>
+              <p>
+                The following fields are required: Donor Type, Donation Date, Donation Amount
+              </p>
+            </li>
+          </ul>
+        </c-util-page-level-message>
         <c-ge-form-section>
           #shadow-root(open)
             <c-util-expandable-section>
@@ -772,7 +812,16 @@ exports[`c-ge-form-renderer loads with template 1`] = `
 </c-ge-form-renderer>
 `;
 
-exports[`c-ge-form-renderer saving without filling anything in should result in a page level error for missing fields 1`] = `
+exports[`c-ge-form-renderer form with payment widget, when payment method changed to credit card then payment iframe loads 1`] = `
+<iframe
+  class="payment-services-iframe"
+  data-id="c.commonPaymentServices"
+  src="/apex/GE_TokenizeCard"
+  title="c.commonPaymentServices"
+/>
+`;
+
+exports[`c-ge-form-renderer loads with template 1`] = `
 <c-ge-form-renderer>
   #shadow-root(open)
     <lightning-layout
@@ -862,55 +911,6 @@ exports[`c-ge-form-renderer saving without filling anything in should result in 
       >
         #shadow-root(open)
           <slot />
-        <c-util-page-level-message>
-          #shadow-root(open)
-            <div
-              class="pageLevelErrors"
-              tabindex="-1"
-            >
-              <div
-                aria-live="assertive"
-                class="desktop forcePageError"
-              >
-                <div
-                  class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small"
-                >
-                  <div
-                    class="slds-notify slds-notify_extension slds-notify_toast slds-theme_error"
-                    role="status"
-                  >
-                    <span
-                      class="slds-assistive-text"
-                    >
-                      c.commonAssistiveError
-                    </span>
-                    <div
-                      class="slds-notify__content"
-                    >
-                      <h2
-                        class="slds-text-heading_small"
-                      >
-                        c.commonError
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <slot
-                  name="body"
-                />
-              </div>
-            </div>
-          <ul
-            class="slds-list_dotted slds-text-color_error"
-            slot="body"
-          >
-            <li>
-              <p>
-                The following fields are required: Donor Type, Donation Date, Donation Amount
-              </p>
-            </li>
-          </ul>
-        </c-util-page-level-message>
         <c-ge-form-section>
           #shadow-root(open)
             <c-util-expandable-section>
