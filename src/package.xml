@@ -2515,6 +2515,8 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
+        <members>gePaymentAuthExpiredHeader</members>
+        <members>gePaymentAuthExpiredWarningText</members>
         <members>gePaymentProcessError</members>
         <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>

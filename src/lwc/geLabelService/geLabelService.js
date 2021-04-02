@@ -188,6 +188,8 @@ import geLabelDisplaySections from '@salesforce/label/c.geLabelDisplaySections';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import gePaymentAuthExpiredHeader from '@salesforce/label/c.gePaymentAuthExpiredHeader';
+import gePaymentAuthExpiredWarningText from '@salesforce/label/c.gePaymentAuthExpiredWarningText';
 import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWarning';
 import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
@@ -422,6 +424,8 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
+        gePaymentAuthExpiredHeader,
+        gePaymentAuthExpiredWarningText,
         gePaymentProcessedWarning,
         gePaymentProcessError,
         gePaymentProcessingErrorBanner,
