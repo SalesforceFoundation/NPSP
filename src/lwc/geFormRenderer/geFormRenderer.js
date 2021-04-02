@@ -272,7 +272,7 @@ export default class GeFormRenderer extends LightningElement{
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
-        registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
+        registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
