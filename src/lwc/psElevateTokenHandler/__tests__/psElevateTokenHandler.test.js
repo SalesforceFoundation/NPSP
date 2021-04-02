@@ -1,4 +1,4 @@
-import psElevateTokenHandler from 'c/psElevateTokenHandler';
+import PsElevateTokenHandler from 'c/psElevateTokenHandler';
 
 const createPostMessageEvent = (type) => {
    switch (type) {
@@ -40,7 +40,8 @@ const createPostMessageEvent = (type) => {
 }
 
 const buildVFUrls  = (domainInfo, namespace) => {
-   return psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+   const tokenHandler = new PsElevateTokenHandler();
+   return tokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
 }
 
 const mockDomainInfo = () => {
@@ -57,44 +58,49 @@ describe('c-ps-Elevate-Token-Handler', () => {
    });
 
    it('should handle a valid message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const tokenHandler = new PsElevateTokenHandler();
+      tokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
+          tokenHandler.shouldHandleMessage(
               createPostMessageEvent('valid'));
       expect(isMessageHandled).toBe(true);
    });
 
    it('should discard an invalid message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const tokenHandler = new PsElevateTokenHandler();
+      tokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
+          tokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
       expect(isMessageHandled).toBe(false);
 
    });
 
    it('should handle a token message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const tokenHandler = new PsElevateTokenHandler();
+      tokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
+          tokenHandler.shouldHandleMessage(
               createPostMessageEvent('token'));
       expect(isMessageHandled).toBe(true);
 
    });
 
    it('should discard an error message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const tokenHandler = new PsElevateTokenHandler();
+      tokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
+          tokenHandler.shouldHandleMessage(
               createPostMessageEvent('error'));
       expect(isMessageHandled).toBe(true);
 
    });
 
    it('should discard an invalid JSON data from right origin', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      const tokenHandler = new PsElevateTokenHandler();
+      tokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
+          tokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
       expect(isMessageHandled).toBe(false);
 

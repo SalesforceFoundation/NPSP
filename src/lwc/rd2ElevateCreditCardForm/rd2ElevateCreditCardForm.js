@@ -1,7 +1,7 @@
 import { api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
 
-import tokenHandler from 'c/psElevateTokenHandler';
+import PsElevateTokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
@@ -48,7 +48,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _paymentMethod = undefined;
     _nextDonationDate = undefined;
     _isEditPayment = false;
-    
+    tokenHandler = new PsElevateTokenHandler();
+
     @api isEditMode;
     @api cardLastFour;
     @api cardLastFourLabel;
@@ -78,7 +79,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
     }
 
-    @api 
+    @api
     get nextDonationDate() {
         const localDate = new Date(this._nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
@@ -102,7 +103,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                 this.handleError(error);
             });
 
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
+        this.tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***
@@ -110,14 +111,14 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     */
     renderedCallback() {
         let component = this;
-        tokenHandler.registerPostMessageListener(component);
+        this.tokenHandler.registerPostMessageListener(component);
     }
 
     /***
     * @description Elevate credit card tokenization Visualforce page URL
     */
     get tokenizeCardPageUrl() {
-        return tokenHandler.getTokenizeCardPageURL();
+        return this.tokenHandler.getTokenizeCardPageURL();
     }
 
     /***
@@ -125,7 +126,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * @param message Message received from iframe
     */
     async handleMessage(message) {
-        tokenHandler.handleMessage(message);
+        this.tokenHandler.handleMessage(message);
 
         if (message.isReadyToMount && !this.isMounted) {
             this.requestMount();
@@ -138,7 +139,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     */
     requestMount() {
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-        tokenHandler.mount(iframe, this.paymentMethod, this.handleError, this.resolveMount);
+        this.tokenHandler.mount(iframe, this.paymentMethod, this.handleError, this.resolveMount);
     }
 
     /***
@@ -157,7 +158,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
         const params = { nameOnCard : this.getCardholderName() };
-        return tokenHandler.requestToken({
+        return this.tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
             eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
@@ -170,7 +171,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     */
     handleUserDisabledWidget() {
         this.hideWidget();
-        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
+        this.tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
             isDisabled: true
         });
     }
@@ -181,7 +182,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     handleUserEnabledWidget() {
         this.isLoading = true;
         this.displayWidget();
-        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
+        this.tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
             isDisabled: false
         });
     }
