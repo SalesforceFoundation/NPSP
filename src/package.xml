@@ -4241,6 +4241,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>geModalPrompt</members>
         <members>gePaymentGatewayManagement</members>
         <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>

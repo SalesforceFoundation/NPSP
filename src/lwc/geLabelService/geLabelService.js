@@ -31,6 +31,7 @@ import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import commonOkay from '@salesforce/label/c.commonOkay';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
@@ -263,6 +264,7 @@ class GeLabelService {
         commonNext,
         commonNo,
         commonNoItems,
+        commonOkay,
         commonPaymentServices,
         commonPercent,
         commonReadMore,

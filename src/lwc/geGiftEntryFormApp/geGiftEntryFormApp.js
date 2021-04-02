@@ -86,7 +86,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             !this._hasPaymentsWithExpiredAuthorizations) {
             const detail = {
                 modalProperties: {
-                    componentName: 'gePurchaseCallModalError',
+                    componentName: 'geModalPrompt',
                     showCloseButton: false
                 }
             };
