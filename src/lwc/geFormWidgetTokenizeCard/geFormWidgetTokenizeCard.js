@@ -11,8 +11,7 @@ import {
     ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
 } from 'c/geConstants';
 
-import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
-import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
+import GeFormService from 'c/geFormService';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
@@ -151,15 +150,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
-        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
-            JSON.parse(await getPaymentTransactionStatusValues())
-        );
-
-        const domainInfo = await getOrgDomainInfo()
-            .catch(error => {
-                this.handleError(error);
-            });
-
+        this.PAYMENT_TRANSACTION_STATUS_ENUM = await GeFormService.getPaymentTransactionStatusEnums();
+        const domainInfo = await GeFormService.getOrgDomain();
         tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
