@@ -36,7 +36,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
     private static final String DUMMY_FIRST_NAME = 'James';
     private static final String DUMMY_PAYMENT_TYPE = 'card';
     private static final String DUMMY_ID = 'id-123456789';
-    private static final ElevateTransactionStatus DUMMY_STATUS = ElevateTransactionStatus.AUTHORIZED;
+    private static final String DUMMY_STATUS = 'AUTHORIZED';
 
     @isTest
     private static void valueQueriesShouldReturnCorrectValues() {
@@ -80,7 +80,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
         authorizedGiftResponse.body.paymentType = DUMMY_PAYMENT_TYPE;
         authorizedGiftResponse.body.originalTransactionId = DUMMY_ID;
         authorizedGiftResponse.body.batchId = DUMMY_ID;
-        authorizedGiftResponse.body.status = DUMMY_STATUS;
+        authorizedGiftResponse.body.status = ElevateTransactionStatus.AUTHORIZED;
         return authorizedGiftResponse;
     }
 }
