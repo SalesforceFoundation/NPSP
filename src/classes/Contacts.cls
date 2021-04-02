@@ -513,13 +513,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (Addresses.shouldUpdateAddress(con, addr)) {
-                NPSP_Address address = new NPSP_Address(addr);
-                address.copyOntoSObject(con, 'Mailing','npe01__Primary_Address_Type__c');
+                NPSP_Address npspAddress = new NPSP_Address(addr);
+                NPSP_Contact npspContact = new NPSP_Contact(con);
+                npspContact.mailingAddress(npspAddress);
 
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
-                if (addr.Household_Account__c != con.AccountId) {
-                    listConCreateAddr.add(con);
+                if (npspAddress.householdId() != npspContact.accountId()) {
+                    listConCreateAddr.add(npspContact.getRecord());
                 }
             }
         }
