@@ -246,11 +246,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
             // go through the hh addresses storing the default and any seasonal
             if (mapAccIdListAddrHH.get(accId) != null) {
                 for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
+                    NPSP_Address npspAddressHH = new NPSP_Address(addrHH);
 
                     if (hhinfo.addrDefault == null && addrHH.Default_Address__c) {
                         hhinfo.addrDefault = addrHH;
                     }
-                    if (isSeasonalAddr(addrHH)) {
+                    if (npspAddressHH.isSeasonalAddr()) {
                         Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
                         Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
                         Date dtToday = System.today();
@@ -421,16 +422,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description utility to see if the address has seasonal fields set
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static Boolean isSeasonalAddr(Address__c addr) {
-        return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
-                addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
-    }
-
-    /*******************************************************************************************************
     * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
     * Adds an Error to each Address object that has an illegal account.
     */
@@ -582,7 +573,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId() {
         Map<Id, Address__c> defaultAndSeasonalAddressesByAcctId = new Map<Id, Address__c>();
         for (Address__c addr : (List<Address__c>) getRecords()) {
-            if (isDefault(addr) || isSeasonalAddr(addr)) {
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            if (isDefault(addr) || npspAddress.isSeasonalAddr()) {
                 defaultAndSeasonalAddressesByAcctId.put(householdAccountIdFor(addr), addr);
             }
         }

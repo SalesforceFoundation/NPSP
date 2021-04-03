@@ -374,4 +374,15 @@ public inherited sharing class NPSP_Address {
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
+
+    /*******************************************************************************************************
+    * @description utility to see if the address has seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public Boolean isSeasonalAddr() {
+        return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
+                addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+    }
+
 }
