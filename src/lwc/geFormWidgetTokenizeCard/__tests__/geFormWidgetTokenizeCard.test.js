@@ -145,6 +145,40 @@ describe('c-ge-form-widget-tokenize-card', () => {
                 expect(doNotEnterPaymentButton(element)).toBeFalsy();
             });
     });
+
+/*    it('should go into hard read-only mode when credit card payment has been captured', async () => {
+        const element = createWidgetWithPaymentMethod(CREDIT_CARD);
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
+            [DATA_IMPORT_PAYMENT_STATUS]: 'CAPTURED'
+        }
+        element.widgetDataFromState
+        document.body.appendChild(element);
+
+        return Promise.resolve()
+            .then(() => {
+                expect(getLastFourDigits(element).not.toBe(null));
+                expect(getCardExpirationDate(element).not.toBe(null));
+                expect(editPaymentInformationButton(element)).toBeFalsy();
+            });
+    });
+
+    it('should go into soft read-only mode when credit card payment has been authorized', async () => {
+        const element = createWidgetWithPaymentMethod(CREDIT_CARD);
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
+            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
+        }
+        document.body.appendChild(element);
+        return Promise.resolve()
+            .then(() => {
+                expect(getLastFourDigits(element).not.toBe(null));
+                expect(getCardExpirationDate(element).not.toBe(null));
+                expect(editPaymentInformationButton(element)).toBeTruthy();
+            });
+    });*/
 });
 
 const enterPaymentButton = (element) => {
@@ -165,6 +199,22 @@ const spanDisabledMessage = (element) => {
 
 const spanExtendedDisabledMessage = (element) => {
     return shadowQuerySelector(element, '.slds-content-message');
+}
+
+const getLastFourDigits = (element) => {
+    return shadowQuerySelector(element,'[data-qa-locator="text Last Four Digits"]');
+}
+
+const getCardExpirationDate = (element) => {
+    return shadowQuerySelector(element,'[data-qa-locator="text Expiration Date"]');
+}
+
+const editPaymentInformationButton = (element) => {
+    return shadowQuerySelector(element, '.edit-payment-information-button');
+}
+
+const cancelEditPaymentInformationButton = (element) => {
+    return shadowQuerySelector(element, '.cancel-edit-payment-information-button');
 }
 
 const getShadowRoot = (element) => {
