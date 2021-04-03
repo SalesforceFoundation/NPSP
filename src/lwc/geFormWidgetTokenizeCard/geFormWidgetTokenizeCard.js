@@ -161,11 +161,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._widgetDataFromState;
     }
 
-    @api
-    get paymentStatusEnum() {
-        return this.PAYMENT_TRANSACTION_STATUS_ENUM;
-    }
-
     @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
     dataImportObjectDescribe;
 

@@ -2348,13 +2348,11 @@ export default class GeFormRenderer extends LightningElement{
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-
-        const isTransactionSentToElevate = paymentStatus &&
+        return paymentStatus &&
             (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED);
-
-        return isTransactionSentToElevate;
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED
+            );
     }
 
     handleElevateTransactionBDIError(exceptionDataError) {
