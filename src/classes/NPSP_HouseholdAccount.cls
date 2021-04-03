@@ -32,16 +32,16 @@
 * @date 2021
 * @description Household entity class in NPSP.
 */
-public inherited sharing class NPSP_Household {
+public inherited sharing class NPSP_HouseholdAccount {
 
     private Account householdAccount;
     private Account oldVersion;
 
-    public NPSP_Household(Account account) {
+    public NPSP_HouseholdAccount(Account account) {
         this.householdAccount = account;
     }
 
-    public NPSP_Household(Account account, Account oldVersion) {
+    public NPSP_HouseholdAccount(Account account, Account oldVersion) {
         this.householdAccount = account;
         this.oldVersion = oldVersion;
     }

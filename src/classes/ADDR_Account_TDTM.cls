@@ -63,7 +63,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
-            NPSP_Household npspHousehold = new NPSP_Household(newRecord, oldRecord);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
             if (isAddressManagementEnabled(newRecord)) {
                 // BEFORE INSERT

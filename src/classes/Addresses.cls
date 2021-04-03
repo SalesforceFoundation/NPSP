@@ -317,7 +317,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Account acc = new Account(Id = accId);
             if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
                 NPSP_Address address = new NPSP_Address(addr);
-                NPSP_Household household = new NPSP_Household(acc);
+                NPSP_HouseholdAccount household = new NPSP_HouseholdAccount(acc);
                 household.billingAddress(address);
                 listAccUpdate.add(household.getRecord());
             }

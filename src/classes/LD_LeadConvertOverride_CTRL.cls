@@ -610,7 +610,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_Household npspHousehold = new NPSP_Household(acc);
+                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
                 npspHousehold.billingAddress(npspAddress);
                 UTIL_DMLService.updateRecord(npspHousehold.getRecord());
             }
@@ -623,7 +623,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_Household npspHousehold = new NPSP_Household(acc);
+                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
                 npspHousehold.billingAddress(npspAddress);
                 UTIL_DMLService.insertRecord(npspHousehold.getRecord());
                 afflAccId = acc.Id;
