@@ -77,7 +77,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
         // since it may need to now become current or inactive, and we don't want to assume the last time this ran.
         // Make sure to include all Billing Address fields, that we will need to look at
         String soql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
-        if (Addresses.isStateCountryPicklistsEnabled) {
+        if (OrgSettings.isStateCountryPicklistsEnabled) {
             soql += ', BillingStateCode, BillingCountryCode';
         }
         soql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c ' +

@@ -246,7 +246,7 @@ public with sharing class HH_Container_LCTRL {
             addContactMiddleNameField(setContactFields);
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
-                if (Addresses.isStateCountryPicklistsEnabled)
+                if (OrgSettings.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             

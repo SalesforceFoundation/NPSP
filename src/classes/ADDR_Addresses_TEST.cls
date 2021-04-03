@@ -956,7 +956,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
-        if (!Addresses.isStateCountryPicklistsEnabled) {
+        if (!OrgSettings.isStateCountryPicklistsEnabled) {
             return;
         }
 
@@ -1023,7 +1023,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressCountryIsPopulatedFromCountryCode() {
-        if (!Addresses.isStateCountryPicklistsEnabled) {
+        if (!OrgSettings.isStateCountryPicklistsEnabled) {
             return;
         }
 
@@ -1058,7 +1058,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressStateIsPopulatedFromStateCode() {
-        if (!Addresses.isStateCountryPicklistsEnabled) {
+        if (!OrgSettings.isStateCountryPicklistsEnabled) {
             return;
         }
 
@@ -1095,7 +1095,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testIsMatchingStateCode() {
-        if (!Addresses.isStateCountryPicklistsEnabled) {
+        if (!OrgSettings.isStateCountryPicklistsEnabled) {
             return;
         }
 
@@ -2055,7 +2055,7 @@ public with sharing class ADDR_Addresses_TEST {
             'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
             'MailingLatitude', 'MailingLongitude', 'npe01__Primary_Address_Type__c'};
 
-        if (Addresses.isStateCountryPicklistsEnabled) {
+        if (OrgSettings.isStateCountryPicklistsEnabled) {
             selectFields.add('MailingCountryCode');
             selectFields.add('MailingStateCode');
             selectFields.add('OtherCountryCode');
@@ -2078,7 +2078,7 @@ public with sharing class ADDR_Addresses_TEST {
             'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
             'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
 
-        if (Addresses.isStateCountryPicklistsEnabled) {
+        if (OrgSettings.isStateCountryPicklistsEnabled) {
             selectFields.add('BillingCountryCode');
             selectFields.add('BillingStateCode');
         }

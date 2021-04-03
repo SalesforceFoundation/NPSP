@@ -492,7 +492,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
                         'MailingState, MailingPostalCode, MailingCountry, ';
-                if (Addresses.isStateCountryPicklistsEnabled) {
+                if (OrgSettings.isStateCountryPicklistsEnabled) {
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
                 }
                 strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';

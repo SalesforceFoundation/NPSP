@@ -34,21 +34,6 @@
 */
 public inherited sharing class Addresses extends fflib_SObjects {
 
-    /*******************************************************************************************************
-    * @description map from Country name (UPPER CASE) to Country Code
-    */
-    public static Map<String, String> validCountriesByLabel = new Map<String, String>();
-
-    /*******************************************************************************************************
-    * @description map from State name (UPPER CASE) to State Code
-    */
-    public static Map<String, String> validStatesByLabel = new Map<String, String>();
-
-    /*******************************************************************************************************
-    * @description map from Country Code to Country Name
-    */
-    public static Map<String, String> validCountriesByCode = new Map<String, String>();
-
     private Map<Id, Address__c> oldMap;
 
     @TestVisible
@@ -433,20 +418,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             return addr.MailingStreet__c;
         }
         return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
-    }
-
-    /*******************************************************************************************************
-    * @description specifies whether state and country picklists are enabled in this org.
-    * @return true if enabled
-    */
-    public static Boolean isStateCountryPicklistsEnabled {
-        get {
-            if (isStateCountryPicklistsEnabled == null) {
-                isStateCountryPicklistsEnabled = initValidStateCountryCodes();
-            }
-            return isStateCountryPicklistsEnabled;
-        }
-        private set;
     }
 
     /*******************************************************************************************************
@@ -1009,37 +980,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 FROM Account
                 WHERE Id IN :acctIds
         ]);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
-    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
-    */
-    private static Boolean initValidStateCountryCodes() {
-
-        // If State & Country Picklists are enabled in the org, build maps of the
-        // valid Labels and Codes for each field to use for validation
-        Map<String, Schema.SObjectField> acctFields = Account.getSObjectType().getDescribe().fields.getMap();
-        Boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
-        if (isCodesEnabled) {
-            List<Schema.PicklistEntry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
-            for (Schema.PicklistEntry p : countryPLValues) {
-                if (p.isActive()) {
-                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    validCountriesByCode.put(p.getValue(), p.getLabel());
-                }
-            }
-            List<Schema.PicklistEntry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
-            for (Schema.PicklistEntry p : statePLValues) {
-                if (p.isActive()) {
-                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
-                    // we can't have a map of valid StateCodes, because they are not unique.
-                    // ideally we would have a map of CountryCode + StateCode -> StateLabel
-                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently.
-                }
-            }
-        }
-        return isCodesEnabled;
     }
 
     /*******************************************************************************************************

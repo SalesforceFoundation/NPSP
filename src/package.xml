@@ -376,6 +376,7 @@
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
         <members>NPSP_Contact</members>
+        <members>NPSP_Household</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
@@ -405,6 +406,7 @@
         <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
+        <members>OrgSettings</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>

@@ -135,9 +135,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingState != null ||
            acc1.BillingPostalCode != null ||
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-           (acc1.BillingCountry != null && !Addresses.isStateCountryPicklistsEnabled) ||
+           (acc1.BillingCountry != null && !OrgSettings.isStateCountryPicklistsEnabled) ||
            // only test StateCode if picklists enabled.
-           (Addresses.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
+           (OrgSettings.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
 
         return isSpecified;   
     }
