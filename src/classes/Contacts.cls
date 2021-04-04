@@ -71,11 +71,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             setContactAddressFromCurrentAddress(consThatHaveARelatedAddress());
         }
 
-        if (getAddressRefreshQueueBeforeInsert().size() > 0) {
+        if (contactsNeedingHouseholdAddressApplied().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            Contacts contactsForAddressRefresh = new Contacts(getAddressRefreshQueueBeforeInsert());
+            Contacts contactsForAddressRefresh = new Contacts(contactsNeedingHouseholdAddressApplied());
             contactsForAddressRefresh.resetAddresses();
         }
 
@@ -90,7 +90,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
         }
 
-        if (consThatHaveARelatedAddress().size() > 0 || getAddressRefreshQueueBeforeInsert().size() > 0) {
+        if (consThatHaveARelatedAddress().size() > 0 || contactsNeedingHouseholdAddressApplied().size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
     }
@@ -113,7 +113,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-    private List<Contact> getAddressRefreshQueueBeforeInsert() {
+    private List<Contact> contactsNeedingHouseholdAddressApplied() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             if (shouldUseAccountAddress(npspContact)) {
