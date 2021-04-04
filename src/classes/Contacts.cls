@@ -209,14 +209,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
-        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-            addressCreationQueue = new Set<Contact>();
+            return new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore();
+            return getAddressCreationQueueInBefore();
         }
-        return addressCreationQueue;
     }
 
     public void onAfterUpdate() {
@@ -919,21 +917,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return addressRefreshQueue;
-    }
-
-    private Set<Contact> getAddressCreationQueueInBeforeContext() {
-        Set<Contact> addressCreationQueue = new Set<Contact>();
-        // we only support address management with HH Accounts being used
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-            // new highest priority! if Account changes...
-            if (npspContact.accountChanged()) {
-                // if no override, refill from the Default Address
-                if (!isEligibleForRefresh(npspContact)) {
-                    addressCreationQueue.add(npspContact.getRecord());
-                }
-            }
-        }
-        return addressCreationQueue;
     }
 
     private Boolean isEligibleForRefresh(NPSP_Contact npspContact) {
