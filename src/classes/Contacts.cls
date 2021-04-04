@@ -66,12 +66,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         // we only support address management with HH Accounts being used
-        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
         List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeInsert();
 
-        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
+        if (useCurrentAddressQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            setRecursionFlags();
+        }
+        if (addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
         }
