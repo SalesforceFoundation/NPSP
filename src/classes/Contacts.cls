@@ -758,30 +758,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInBefore() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
-        Set<Contact> consWithAddressChanges = new Set<Contact>();
-        // we only support address management with HH Accounts being used
-        for (SObject so : thatHaveAccounts().getRecords()) {
-            Contact con = (Contact) so;
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
-
-            Account a = accountsByIds().get(con.AccountId);
-            if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                continue;
-            }
-            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
-            // our functionality for dealing with contact address changes requires some trickery!
-            // if the contact doesn't have an address override, we create (or match) a default address,
-            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
-            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
-            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-            // note that we detect whether the address change is coming from the address trigger,
-            // in which case we don't want to create a new address.
-
-            // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-            if (npspContact.isAddressChanged()) {
-                consWithAddressChanges.add(con);
-            }
-        }
+        Set<Contact> consWithAddressChanges = getConsWithAddressChanges();
         for (SObject so : thatHaveAccounts().getRecords()) {
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
@@ -806,6 +783,34 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         consMovingToANewHousehold.addAll(consWithAddressChanges);
         return consMovingToANewHousehold;
+    }
+
+    private Set<Contact> getConsWithAddressChanges() {
+        Set<Contact> consWithAddressChanges = new Set<Contact>();
+        // we only support address management with HH Accounts being used
+        for (SObject so : thatHaveAccounts().getRecords()) {
+            Contact con = (Contact) so;
+            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+
+            Account a = accountsByIds().get(con.AccountId);
+            if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                continue;
+            }
+            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
+            // our functionality for dealing with contact address changes requires some trickery!
+            // if the contact doesn't have an address override, we create (or match) a default address,
+            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
+            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
+            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
+            // note that we detect whether the address change is coming from the address trigger,
+            // in which case we don't want to create a new address.
+
+            // if the contacts address changed or if the contact with an address moves to a new household remember the contact
+            if (npspContact.isAddressChanged()) {
+                consWithAddressChanges.add(con);
+            }
+        }
+        return consWithAddressChanges;
     }
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
