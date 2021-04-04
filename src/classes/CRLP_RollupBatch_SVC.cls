@@ -73,22 +73,28 @@ public class CRLP_RollupBatch_SVC {
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
 
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c = null OR ' + parentRelationshipField +
+                queryFilter = ' (' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c = null OR ' + parentRelationshipField +
                     'npo02__NumberOfClosedOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
                     'AND (' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c = null OR ' + parentRelationshipField +
-                    'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ')';
+                    'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
+                    'AND ' + parentRelationshipField +
+                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false';
             } else {
                 queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c >= ' + maxRelatedOppsForNonLDVMode +
-                        ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode + ')';
+                    ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode +
+                    ' OR ' + parentRelationshipField +
+                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
 
             String softCreditField = parentRelationshipField + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c');
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
+                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
+                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)) {
@@ -96,9 +102,11 @@ public class CRLP_RollupBatch_SVC {
             // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
             String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
+                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
+                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
