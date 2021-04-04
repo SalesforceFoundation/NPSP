@@ -66,40 +66,37 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         // we only support address management with HH Accounts being used
-        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
-        List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
-        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeInsert();
 
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
         if (useCurrentAddressQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
-        }
-        // set the mailing address for contacts who specify an address lookup or override
-        if (useCurrentAddressQueue.size() > 0) {
+            // set the mailing address for contacts who specify an address lookup or override
             setContactAddressFromCurrentAddress(useCurrentAddressQueue);
         }
 
+        List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
         if (addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
-        }
-
-        // reset the mailing address for contacts who no longer have an address override
-        if (addressRefreshQueue.size() > 0) {
+            // reset the mailing address for contacts who no longer have an address override
             Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
             contactsForAddressRefresh.resetAddresses();
         }
 
         // update the Latest date fields on any address overrides
+        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
         if (isOverrideByAddressId.size() > 0) {
             Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
         }
+
         // create any new Default Address objects
+        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeInsert();
         if (addressCreationQueue.size() > 0) {
             createAddrFromConBeforeInsertUpdate(
                     new List<Contact>(addressCreationQueue));
         }
+
         TDTM_TriggerHandler.processDML(dmlWrapper);
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
