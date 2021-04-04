@@ -66,16 +66,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-             if (shouldUseAccountAddress(npspContact)) {
-                // if the contact has no address specified and the household has a default address, pick up the hh default.
-                addressRefreshQueue.add(npspContact.getRecord());
-            }
-        }
+        List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
@@ -116,6 +110,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
+    }
+
+    private List<Contact> getAddressRefreshQueueBeforeInsert() {
+        List<Contact> addressRefreshQueue = new List<Contact>();
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (shouldUseAccountAddress(npspContact)) {
+                // if the contact has no address specified and the household has a default address, pick up the hh default.
+                addressRefreshQueue.add(npspContact.getRecord());
+            }
+        }
+        return addressRefreshQueue;
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
