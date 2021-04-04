@@ -74,31 +74,28 @@ public inherited sharing class Contacts extends fflib_SObjects {
             setContactAddressFromCurrentAddress(consThatHaveARelatedAddress());
         }
 
-        List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
-        if (addressRefreshQueue.size() > 0) {
+        if (getAddressRefreshQueueBeforeInsert().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            Contacts contactsForAddressRefresh = new Contacts(getAddressRefreshQueueBeforeInsert());
             contactsForAddressRefresh.resetAddresses();
         }
 
         // update the Latest date fields on any address overrides
-        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
-        if (isOverrideByAddressId.size() > 0) {
-            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+        if (getIsOverrideByAddressIdBeforeInsert().size() > 0) {
+            Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert(), dmlWrapper);
         }
 
         // create any new Default Address objects
-        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeInsert();
-        if (addressCreationQueue.size() > 0) {
+        if (getAddressCreationQueueBeforeInsert().size() > 0) {
             createAddrFromConBeforeInsertUpdate(
-                    new List<Contact>(addressCreationQueue));
+                    new List<Contact>(getAddressCreationQueueBeforeInsert()));
         }
 
         TDTM_TriggerHandler.processDML(dmlWrapper);
 
-        if (consThatHaveARelatedAddress().size() > 0 || addressRefreshQueue.size() > 0) {
+        if (consThatHaveARelatedAddress().size() > 0 || getAddressRefreshQueueBeforeInsert().size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
     }
