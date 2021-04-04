@@ -759,8 +759,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getAddressCreationQueueInBefore() {
         Set<Contact> consWithAddressChanges = getConsWithAddressChanges();
         Set<Contact> consMovingToANewHousehold = getConsMovingToANewHousehold();
-        consMovingToANewHousehold.addAll(consWithAddressChanges);
-        return consMovingToANewHousehold;
+        consWithAddressChanges.addAll(consMovingToANewHousehold);
+        return consWithAddressChanges;
     }
 
     private Set<Contact> getConsMovingToANewHousehold() {
