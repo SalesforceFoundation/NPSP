@@ -78,8 +78,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
                     // track which address's need their dates updated
                     isOverrideByAddressId.put(npspContact.currentAddress(), true);
                 }
-            } else if (npspContact.isAddressEmpty() &&
-                    accountHasAddresses(npspContact.getRecord())) {
+            }
+        }
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+             if (npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord())) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 addressRefreshQueue.add(npspContact.getRecord());
             }
