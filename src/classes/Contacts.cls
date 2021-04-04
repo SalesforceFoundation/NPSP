@@ -64,9 +64,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void onBeforeInsertAddrConTDTM() {
         normalizeLineBreaks();
 
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        // we only support address management with HH Accounts being used
-
         if (consThatHaveARelatedAddress().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
@@ -82,18 +79,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
             contactsForAddressRefresh.resetAddresses();
         }
 
-        // update the Latest date fields on any address overrides
-        if (getIsOverrideByAddressIdBeforeInsert().size() > 0) {
-            Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert(), dmlWrapper);
-        }
-
         // create any new Default Address objects
         if (getAddressCreationQueueBeforeInsert().size() > 0) {
             createAddrFromConBeforeInsertUpdate(
                     new List<Contact>(getAddressCreationQueueBeforeInsert()));
         }
 
-        TDTM_TriggerHandler.processDML(dmlWrapper);
+        // update the Latest date fields on any address overrides
+        if (getIsOverrideByAddressIdBeforeInsert().size() > 0) {
+            TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+            Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert(), dmlWrapper);
+            TDTM_TriggerHandler.processDML(dmlWrapper);
+        }
 
         if (consThatHaveARelatedAddress().size() > 0 || getAddressRefreshQueueBeforeInsert().size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
@@ -164,7 +161,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onBeforeUpdateAddrConTDTM() {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         normalizeLineBreaksForContactsWithChangedAddresses();
         List<Contact> addressRefreshQueue = getAddressRefreshQueue();
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
@@ -193,15 +189,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
             contactsForAddressRefresh.resetAddresses();
         }
 
-        // update the Latest date fields on any address overrides
-        if (isOverrideByAddressId.size() > 0) {
-            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
-        }
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
         }
-        TDTM_TriggerHandler.processDML(dmlWrapper);
+
+        // update the Latest date fields on any address overrides
+        if (isOverrideByAddressId.size() > 0) {
+            TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+            Addresses.updateAddrIsOverride(isOverrideByAddressId, dmlWrapper);
+            TDTM_TriggerHandler.processDML(dmlWrapper);
+        }
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
