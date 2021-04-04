@@ -73,10 +73,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
-            // to the Contact's address that are being made by this BeforeUpdate trigger.
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+            setRecursionFlags();
         }
 
         // set the mailing address for contacts who specify an address lookup or override
@@ -104,6 +101,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
+    }
+
+    private void setRecursionFlags() {
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+        // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+        // to the Contact's address that are being made by this BeforeUpdate trigger.
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
     }
 
     private Set<Contact> getAddressCreationQueueBeforeInsert() {
