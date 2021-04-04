@@ -108,7 +108,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
-            addressCreationQueue = getAddressCreationQueueInBefore();
+            addressCreationQueue = consWithAddressChanges();
         }
         return addressCreationQueue;
     }
@@ -207,7 +207,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             return new Set<Contact>();
         } else {
-            return getAddressCreationQueueInBefore();
+            return consWithAddressChanges();
         }
     }
 
@@ -756,7 +756,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-    private Set<Contact> getAddressCreationQueueInBefore() {
+    private Set<Contact> consWithAddressChanges() {
         Set<Contact> consWithAddressChanges = getConsWithAddressChanges();
         Set<Contact> consMovingToANewHousehold = getConsMovingToANewHousehold();
         consWithAddressChanges.addAll(consMovingToANewHousehold);
