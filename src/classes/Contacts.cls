@@ -71,12 +71,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             setContactAddressFromCurrentAddress(consThatHaveARelatedAddress());
         }
 
-        if (contactsNeedingHouseholdAddressApplied().size() > 0) {
+        if (contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            Contacts contactsForAddressRefresh = new Contacts(contactsNeedingHouseholdAddressApplied());
-            contactsForAddressRefresh.resetAddresses();
+            contactsNeedingHouseholdAddressApplied().resetAddresses();
         }
 
         // create any new Default Address objects
@@ -90,7 +89,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
             Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
         }
 
-        if (consThatHaveARelatedAddress().size() > 0 || contactsNeedingHouseholdAddressApplied().size() > 0) {
+        if (consThatHaveARelatedAddress().size() > 0 ||
+                contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
     }
@@ -113,7 +113,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-    private List<Contact> contactsNeedingHouseholdAddressApplied() {
+    private Contacts contactsNeedingHouseholdAddressApplied() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             if (shouldUseAccountAddress(npspContact)) {
@@ -121,7 +121,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 addressRefreshQueue.add(npspContact.getRecord());
             }
         }
-        return addressRefreshQueue;
+        return new Contacts(addressRefreshQueue);
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
