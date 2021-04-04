@@ -172,13 +172,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         addressRefreshQueue.addAll(addressOverrideResetsOf());
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
-        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
-        if (isRecursive()) {
-            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-            addressCreationQueue = new Set<Contact>();
-        } else {
-            addressCreationQueue = getAddressCreationQueueInBefore();
-        }
+        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
@@ -212,6 +206,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
+    }
+
+    private Set<Contact> getAddressCreationQueueBeforeUpdate() {
+        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore();
+        }
+        return addressCreationQueue;
     }
 
     public void onAfterUpdate() {
