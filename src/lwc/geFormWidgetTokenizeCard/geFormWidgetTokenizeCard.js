@@ -1,7 +1,7 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import tokenHandler from 'c/psElevateTokenHandler';
-import { apiNameFor, format, isEmpty, isNotEmpty } from 'c/utilCommon';
+import { apiNameFor, format, hasNestedProperty, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener, } from 'c/pubsubNoPageRef';
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -44,13 +44,12 @@ const MODES = Object.freeze({
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
-    @track domain;
-    @track isLoading = true;
-    @track alert = {};
-    @track disabledMessage;
-    @track isDisabled = false;
-    @track hasUserDisabledWidget = false;
-    @track hasEventDisabledWidget = false;
+    _isLoading = true;
+    alert = {};
+    _disabledMessage;
+    _isDisabled = false;
+    _hasUserDisabledWidget = false;
+    _hasEventDisabledWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
@@ -90,9 +89,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             // charge mode
             this.requestSetPaymentMethod(this._currentPaymentMethod);
         } else {
-            if (!this.hasUserDisabledWidget) {
+            if (!this._hasUserDisabledWidget) {
                 this.handleUserEnabledWidget();
-                this.hasEventDisabledWidget = false;
+                this._hasEventDisabledWidget = false;
             }
         }
     }
@@ -101,26 +100,26 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
         this.toggleWidget(true, 'Read Only Mode');
         this._isReadOnlyMode = true;
-        this.hasUserDisabledWidget = false;
+        this._hasUserDisabledWidget = false;
     }
 
     enableCriticalErrorMode() {
-        this.toggleWidget(true, this.disabledMessage);
-        this.hasEventDisabledWidget = true;
+        this.toggleWidget(true, this._disabledMessage);
+        this._hasEventDisabledWidget = true;
     }
 
     enableDoNotChargeMode() {
         this.toggleWidget(true);
-        this.hasUserDisabledWidget = true;
+        this._hasUserDisabledWidget = true;
         this.isMounted = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isElevateWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this._hasUserDisabledWidget
         });
     }
 
     disableWidget() {
         this.toggleWidget(true, this.disabledWidgetMessage);
-        this.hasEventDisabledWidget = true;
+        this._hasEventDisabledWidget = true;
     }
 
     disableReadOnlyMode() {
@@ -163,7 +162,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
     dataImportObjectDescribe;
 
-    @wire(getRecord, {recordId: '$dataImportId', fields: [
+    @wire(getRecord, {recordId: '$dataImportId', optionalFields: [
             PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
     wiredDataImportRecord({data, error}) {
         if (data) {
@@ -174,9 +173,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get canViewReadOnlyFields() {
-        return isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_LAST_4)])
-            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)])
-            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)]);
+        return hasNestedProperty(
+            this.dataImportObjectDescribe.data,
+            'fields',
+            apiNameFor(PAYMENT_LAST_4),
+            apiNameFor(PAYMENT_EXPIRATION_MONTH),
+            apiNameFor(PAYMENT_EXPIRATION_YEAR));
+    }
+    
+    get hasUserDisabledWidget() {
+        return this._hasUserDisabledWidget;
     }
 
     setReadOnlyData(data) {
@@ -193,6 +199,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._cardExpirationDate;
     }
 
+    get isLoading() {
+        return this._isLoading;
+    }
+
+    get disabledMessage() {
+        return this._disabledMessage;
+    }
+
+    get isDisabled() {
+        return this._isDisabled;
+    }
+
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
         this.resetWidget();
@@ -204,7 +222,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     resetWidget() {
         this._isReadOnlyMode = false;
         this._showCancelButton= false;
-        this.isDisabled = false;
+        this._isDisabled = false;
         this.dataImportId = null;
     }
 
@@ -269,7 +287,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestSetPaymentMethod(paymentMethod) {
-        this.isLoading = true;
+        this._isLoading = true;
         tokenHandler.setPaymentMethod(
             this.iframe(), paymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
@@ -279,7 +297,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveSetPaymentMethod = () => {
-        this.isLoading = false;
+        this._isLoading = false;
     }
 
     get shouldDisplayEnableButton() {
@@ -344,7 +362,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * and the user did not click an action to hide it
     */
     get displayDisableWidgetButton() {
-        return !(this.hasEventDisabledWidget || this.hasUserDisabledWidget) && !this._showCancelButton;
+        return !(this._hasEventDisabledWidget || this._hasUserDisabledWidget) && !this._showCancelButton;
     }
 
     /***
@@ -358,11 +376,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Handles a user's onclick event for re-enabling the widget.
     */
     handleUserEnabledWidget() {
-        this.isLoading = true;
+        this._isLoading = true;
         this.toggleWidget(false);
-        this.hasUserDisabledWidget = false;
+        this._hasUserDisabledWidget = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isElevateWidgetDisabled: this.hasUserDisabledWidget
+            isElevateWidgetDisabled: this._hasUserDisabledWidget
         });
     }
 
@@ -371,20 +389,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * used when we've submitted a payment, but BDI processing failed.
     */
     handleCriticalError(event) {
-        this.disabledMessage = event.detail.message;
+        this._disabledMessage = event.detail.message;
         this.setMode(MODES.CRITICAL_ERROR);
     }
 
     /***
     * @description Function enables or disables the widget based on provided args.
     *
-    * @param {boolean} isDisabled: Determines whether or not the widget is disabled.
+    * @param {boolean} _isDisabled: Determines whether or not the widget is disabled.
     * @param {string} message: Text to be disabled in the widgets body when disabled.
     */
-    toggleWidget(isDisabled, message) {
-        this.isDisabled = isDisabled;
+    toggleWidget(_isDisabled, message) {
+        this._isDisabled = _isDisabled;
         this.isMounted = false;
-        this.disabledMessage = message || null;
+        this._disabledMessage = message || null;
     }
 
     /***
@@ -405,7 +423,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveMount = () => {
-        this.isLoading = false;
+        this._isLoading = false;
         this.isMounted = true;
     }
 
