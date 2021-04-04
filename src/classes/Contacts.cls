@@ -65,17 +65,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         normalizeLineBreaks();
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        Set<Contact> addressCreationQueue = new Set<Contact>();
         // we only support address management with HH Accounts being used
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
         List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
-        if (isRecursive()) {
-            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-            addressCreationQueue = new Set<Contact>();
-        } else {
-            addressCreationQueue = getAddressCreationQueueInBefore();
-        }
+        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeInsert();
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
@@ -110,6 +104,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
+    }
+
+    private Set<Contact> getAddressCreationQueueBeforeInsert() {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = getAddressCreationQueueInBefore();
+        }
+        return addressCreationQueue;
     }
 
     private List<Contact> getAddressRefreshQueueBeforeInsert() {
