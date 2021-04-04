@@ -66,16 +66,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
-                // track which address's need their dates updated
-                isOverrideByAddressId.put(npspContact.currentAddress(), true);
-            }
-        }
+        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressIdBeforeInsert();
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
              if (shouldUseAccountAddress(npspContact)) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
@@ -122,6 +116,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
+    }
+
+    private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
+        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
+                // track which address's need their dates updated
+                isOverrideByAddressId.put(npspContact.currentAddress(), true);
+            }
+        }
+        return isOverrideByAddressId;
     }
 
     private List<Contact> getUseCurrentAddressQueueBeforeInsert() {
