@@ -75,14 +75,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
         }
-        if (addressRefreshQueue.size() > 0) {
-            // to avoid pushing these address changes to the HH.
-            setRecursionFlags();
-        }
-
         // set the mailing address for contacts who specify an address lookup or override
         if (useCurrentAddressQueue.size() > 0) {
             setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+        }
+
+        if (addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            setRecursionFlags();
         }
 
         // reset the mailing address for contacts who no longer have an address override
