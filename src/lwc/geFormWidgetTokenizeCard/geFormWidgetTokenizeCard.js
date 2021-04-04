@@ -66,26 +66,26 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     setMode (mode) {
         switch (mode) {
             case MODES.CHARGE:
-                this.activateChargeMode();
+                this.enableChargeMode();
                 break;
             case MODES.READ_ONLY:
-                this.activateReadOnlyMode();
+                this.enableReadOnlyMode();
                 break;
             case MODES.CRITICAL_ERROR:
-                this.activateCriticalErrorMode();
+                this.enableCriticalErrorMode();
                 break;
             case MODES.DO_NOT_CHARGE:
-                this.activateDoNotChargeMode();
+                this.enableDoNotChargeMode();
                 break;
             case MODES.DEACTIVATE:
-                this.deActivateWidget();
+                this.disableWidget();
                 break;
             default:
-                this.activateChargeMode();
+                this.enableChargeMode();
         }
     }
 
-    activateChargeMode() {
+    enableChargeMode() {
         if (this.isMounted) {
             // charge mode
             this.requestSetPaymentMethod(this._currentPaymentMethod);
@@ -97,38 +97,19 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         }
     }
 
-    activateReadOnlyMode() {
+    enableReadOnlyMode() {
         this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
         this.toggleWidget(true, 'Read Only Mode');
         this._isReadOnlyMode = true;
         this.hasUserDisabledWidget = false;
     }
 
-    cancelEditPaymentInformation() {
-        this._showCancelButton = false;
-        this.activateReadOnlyMode();
-    }
-
-    get shouldDisplayCancelButton() {
-        return this._showCancelButton;
-    }
-
-    get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnlyMode && (this.currentPaymentStatus() !== this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED);
-    }
-
-    disableReadOnlyMode() {
-        this._isReadOnlyMode = false;
-        this._showCancelButton = true;
-        this.activateChargeMode();
-    }
-
-    activateCriticalErrorMode() {
+    enableCriticalErrorMode() {
         this.toggleWidget(true, this.disabledMessage);
         this.hasEventDisabledWidget = true;
     }
 
-    activateDoNotChargeMode() {
+    enableDoNotChargeMode() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
         this.isMounted = false;
@@ -137,11 +118,21 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         });
     }
 
-    deActivateWidget() {
+    disableWidget() {
         this.toggleWidget(true, this.disabledWidgetMessage);
         this.hasEventDisabledWidget = true;
     }
 
+    disableReadOnlyMode() {
+        this._isReadOnlyMode = false;
+        this._showCancelButton = true;
+        this.enableChargeMode();
+    }
+
+    cancelEditPaymentInformation() {
+        this._showCancelButton = false;
+        this.enableReadOnlyMode();
+    }
 
     isInBatchGiftEntry() {
         return this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
@@ -161,23 +152,31 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._widgetDataFromState;
     }
 
+    get shouldDisplayCancelButton() {
+        return this._showCancelButton;
+    }
+
+    get shouldDisplayEditPaymentInformation() {
+        return this.isReadOnlyMode && (this.currentPaymentStatus() !== this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED);
+    }
+
     @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
     dataImportObjectDescribe;
 
-    get canViewReadOnlyFields() {
-        return isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_LAST_4)])
-            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)])
-            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)]);
-    }
-
     @wire(getRecord, {recordId: '$dataImportId', fields: [
-        PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
+            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
     wiredDataImportRecord({data, error}) {
         if (data) {
             this.setReadOnlyData(data)
         } else if (error) {
             this.handleError(error);
         }
+    }
+
+    get canViewReadOnlyFields() {
+        return isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_LAST_4)])
+            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)])
+            && isNotEmpty(this.dataImportObjectDescribe.data.fields[apiNameFor(PAYMENT_EXPIRATION_MONTH)]);
     }
 
     setReadOnlyData(data) {

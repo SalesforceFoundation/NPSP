@@ -77,12 +77,16 @@
                                 <template if:true={isReadOnlyMode}>
                                     <template if:true={canViewReadOnlyFields}>
                                         <lightning-layout class="read-only-mode">
-                                            <lightning-layout-item padding="around-small" class='fade-in' data-qa-locator={qaLocatorLastFourDigits}>
-                                                <p class="slds-form-element__label" title="last4">Last 4</p>
+                                            <lightning-layout-item padding="around-small"
+                                                                   class='fade-in'
+                                                                   data-qa-locator={qaLocatorLastFourDigits}>
+                                                <p class="slds-form-element__label" title="last4">Card Last 4</p>
                                                 <p class='slds-text-body_regular'>{cardLast4}</p>
                                             </lightning-layout-item>
-                                            <lightning-layout-item padding="around-small" class='fade-in' data-qa-locator={qaLocatorExpirationDate}>
-                                                <p class="slds-form-element__label" title="expirationDate">Expiration Date</p>
+                                            <lightning-layout-item padding="around-small"
+                                                                   class='fade-in'
+                                                                   data-qa-locator={qaLocatorExpirationDate}>
+                                                <p class="slds-form-element__label" title="expirationDate">Card Expiration Date</p>
                                                 <p class='slds-text-body_regular'>{cardExpirationDate}</p>
                                             </lightning-layout-item>
                                         </lightning-layout>
