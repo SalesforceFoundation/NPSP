@@ -167,18 +167,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         normalizeLineBreaksForContactsWithChangedAddresses();
         List<Contact> addressRefreshQueue = getAddressRefreshQueue();
-        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
         List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
         addressRefreshQueue.addAll(addressOverrideResetsOf());
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
+        Set<Contact> addressCreationQueue = getAddressCreationQueueInBeforeContext();
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
             addressCreationQueue = new Set<Contact>();
         } else {
             addressCreationQueue = getAddressCreationQueueInBefore();
         }
+
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
