@@ -828,10 +828,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
     * @param dmlWrapper to hold the Addresses that need updating
     ********************************************************************************************************/
-    public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride,
-            TDTM_Runnable.DmlWrapper
-                    dmlWrapper) {
-
+    public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride) {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         for (Id id : mapAddrIdIsOverride.keySet()) {
             Address__c addr = new Address__c();
             addr.Id = id;
@@ -843,6 +841,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
             dmlWrapper.objectsToUpdate.add(addr);
         }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 
     /*******************************************************************************************************
