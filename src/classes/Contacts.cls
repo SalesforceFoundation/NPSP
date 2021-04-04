@@ -79,9 +79,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // create any new Default Address objects
-        if (getAddressCreationQueueBeforeInsert().size() > 0) {
+        if (contactsWithAddressChanges().size() > 0) {
             createAddrFromConBeforeInsertUpdate(
-                    new List<Contact>(getAddressCreationQueueBeforeInsert()));
+                    new List<Contact>(contactsWithAddressChanges()));
         }
 
         // update the Latest date fields on any address overrides
@@ -102,7 +102,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
     }
 
-    private Set<Contact> getAddressCreationQueueBeforeInsert() {
+    private Set<Contact> contactsWithAddressChanges() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
