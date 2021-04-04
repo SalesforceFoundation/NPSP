@@ -67,7 +67,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         // we only support address management with HH Accounts being used
 
-        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueueBeforeInsert();
+        List<Contact> useCurrentAddressQueue = consThatHaveARelatedAddress();
         if (useCurrentAddressQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
@@ -144,7 +144,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return isOverrideByAddressId;
     }
 
-    private List<Contact> getUseCurrentAddressQueueBeforeInsert() {
+    private List<Contact> consThatHaveARelatedAddress() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
             if (hasCurrentAddress(npspContact)) {
