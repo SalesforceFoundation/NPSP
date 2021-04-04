@@ -74,10 +74,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (hasCurrentAddress(npspContact)) {
                 // remember which contacts will need their address set
                 useCurrentAddressQueue.add(npspContact.getRecord());
-                if (npspContact.hasAddressOverride()) {
-                    // track which address's need their dates updated
-                    isOverrideByAddressId.put(npspContact.currentAddress(), true);
-                }
+            }
+        }
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
+                // track which address's need their dates updated
+                isOverrideByAddressId.put(npspContact.currentAddress(), true);
             }
         }
         for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
