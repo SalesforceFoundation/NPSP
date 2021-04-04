@@ -757,8 +757,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Set<Contact> getAddressCreationQueueInBefore() {
-        Set<Contact> consMovingToANewHousehold = new Set<Contact>();
         Set<Contact> consWithAddressChanges = getConsWithAddressChanges();
+        Set<Contact> consMovingToANewHousehold = new Set<Contact>();
         for (SObject so : thatHaveAccounts().getRecords()) {
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
