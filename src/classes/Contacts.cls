@@ -67,12 +67,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         // we only support address management with HH Accounts being used
 
-        List<Contact> useCurrentAddressQueue = consThatHaveARelatedAddress();
-        if (useCurrentAddressQueue.size() > 0) {
+        if (consThatHaveARelatedAddress().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // set the mailing address for contacts who specify an address lookup or override
-            setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+            setContactAddressFromCurrentAddress(consThatHaveARelatedAddress());
         }
 
         List<Contact> addressRefreshQueue = getAddressRefreshQueueBeforeInsert();
@@ -99,7 +98,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         TDTM_TriggerHandler.processDML(dmlWrapper);
 
-        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+        if (consThatHaveARelatedAddress().size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
     }
