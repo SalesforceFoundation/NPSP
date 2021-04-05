@@ -46,7 +46,7 @@
     </fieldSets>
     <fields>
         <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
-        <label>Fälligk. d. unterg. Aufg. autom. aktual.</label>
+        <label>Fälligkeitsdatum autom. aktualisieren</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
