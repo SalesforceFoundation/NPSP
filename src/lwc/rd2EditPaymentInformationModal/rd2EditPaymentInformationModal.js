@@ -190,7 +190,7 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         if (!isNull(response) && !isUndefined(response)
             && !isNull(response.body) && !isUndefined(response.body)
         ) {
-            const responseBody = JSON.parse(response.body);
+            const responseBody = (typeof response.body === "object") ? response.body : JSON.parse(response.body);
             const cardData = responseBody.cardData;
 
             if (!isNull(cardData) && !isUndefined(cardData)) {
