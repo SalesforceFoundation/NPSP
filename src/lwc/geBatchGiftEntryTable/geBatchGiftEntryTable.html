@@ -71,8 +71,8 @@
                 </div>
             </template>
             <template if:false={hasData}>
-                <c-util-illustration title="Looks like you haven't entered any gifts yet!"
-                                     message="Enter a new gift and it will appear here."
+                <c-util-illustration title={CUSTOM_LABELS.bgeGridNoGiftsHeader}
+                                     message={CUSTOM_LABELS.bgeGridNoGiftsBody}
                                      size="small"
                                      variant="lake-mountain">
                 </c-util-illustration>

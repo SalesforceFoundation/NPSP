@@ -2,6 +2,8 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
+import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -187,10 +189,11 @@ import geLabelDisplaySections from '@salesforce/label/c.geLabelDisplaySections';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
-import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWarning';
 import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
+import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWarning';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
@@ -205,7 +208,6 @@ import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
-import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
 import geTextPaymentsSaveNotice from '@salesforce/label/c.geTextPaymentsSaveNotice';
 import geTextProcessing from '@salesforce/label/c.geTextProcessing';
@@ -218,8 +220,8 @@ import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCre
 import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDeleteSuccess';
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
-import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import geWarningBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geWarningBatchGiftEntryCurrencyMismatch';
+import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
@@ -234,6 +236,8 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
+        bgeGridNoGiftsBody,
+        bgeGridNoGiftsHeader,
         commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
@@ -311,7 +315,6 @@ class GeLabelService {
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
         geBodyFormFieldsRightCol,
-        geProcessingErrors,
         geBodyMatchingApplyNewPayment,
         geBodyMatchingNewOpportunity,
         geBodyMatchingNoPayments,
@@ -420,10 +423,11 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
-        gePaymentProcessedWarning,
         gePaymentProcessError,
+        gePaymentProcessedWarning,
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
+        geProcessingErrors,
         geSearchPlaceholder,
         geSelectBatchTableColumns,
         geSelectPlaceholder,
@@ -450,8 +454,8 @@ class GeLabelService {
         geToastTemplateDeleteSuccess,
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
-        geWarningFormFieldsModalDeleteSection,
         geWarningBatchGiftEntryCurrencyMismatch,
+        geWarningFormFieldsModalDeleteSection,
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
