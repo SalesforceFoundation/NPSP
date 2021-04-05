@@ -78,6 +78,8 @@ describe('c-ge-batch-gift-entry-header', () => {
             getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
 
+            isElevateCustomerAdapter.emit(false);
+
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
             expect(headerDetailRows.length).toBe(1);
