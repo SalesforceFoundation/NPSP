@@ -38,6 +38,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
     private static final String DUMMY_ID = 'id-123456789';
     private static final String DUMMY_STATUS = 'AUTHORIZED';
     private static final String DUMMY_CARD_NETWORK = 'visa';
+    private static final String DUMMY_CARD_LAST_4 = '1234';
     private static final DateTime DUMMY_DATE = System.today();
     private static final String DUMMY_EXPIRATION_YEAR = String.valueOf(DUMMY_DATE.addYears(1).year());
     private static final String DUMMY_EXPIRATION_MONTH = String.valueOf(DUMMY_DATE.addYears(1).month());
@@ -68,6 +69,10 @@ public with sharing class ElevateAuthorizedGift_TEST {
         System.assertEquals(DUMMY_EXPIRATION_MONTH, authorizedGift.cardExpirationMonth());
         System.assertEquals(DUMMY_ID, authorizedGift.gatewayId());
         System.assertEquals(DUMMY_ID, authorizedGift.gatewayTransactionId());
+        System.assertEquals(DUMMY_CARD_LAST_4, authorizedGift.cardLast4());
+        System.assertEquals(DUMMY_DATE, authorizedGift.authorizedAt());
+        System.assertEquals(DUMMY_CARD_NETWORK, authorizedGift.cardNetwork());
+        System.assertEquals(null, authorizedGift.declineReason());
     }
 
     private static ElevateTokenizedGift createTokenizedGift() {
@@ -93,8 +98,11 @@ public with sharing class ElevateAuthorizedGift_TEST {
         authorizedGiftResponse.body.status = ElevateTransactionStatus.AUTHORIZED;
         authorizedGiftResponse.body.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
         authorizedGiftResponse.body.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
+        authorizedGiftResponse.body.cardData.last4 = DUMMY_CARD_LAST_4;
+        authorizedGiftResponse.body.cardData.brand = DUMMY_CARD_NETWORK;
         authorizedGiftResponse.body.gatewayId = DUMMY_ID;
         authorizedGiftResponse.body.gatewayTransactionId = DUMMY_ID;
+        authorizedGiftResponse.body.authorizedAt = DUMMY_DATE;
         return authorizedGiftResponse;
     }
 }
