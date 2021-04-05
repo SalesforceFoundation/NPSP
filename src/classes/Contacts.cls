@@ -91,65 +91,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private void setRecursionFlags() {
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
-        // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
-        // to the Contact's address that are being made by this BeforeUpdate trigger.
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-    }
-
-    private Set<Contact> contactsWithAddressChanges() {
-        Set<Contact> addressCreationQueue = new Set<Contact>();
-        if (isRecursive()) {
-            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-            addressCreationQueue = new Set<Contact>();
-        } else {
-            addressCreationQueue = consWithAddressChanges();
-        }
-        return addressCreationQueue;
-    }
-
-    private Contacts contactsNeedingHouseholdAddressApplied() {
-        List<Contact> addressRefreshQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-            if (shouldUseAccountAddress(npspContact)) {
-                // if the contact has no address specified and the household has a default address, pick up the hh default.
-                addressRefreshQueue.add(npspContact.getRecord());
-            }
-        }
-        return new Contacts(addressRefreshQueue);
-    }
-
-    private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
-        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
-                // track which address's need their dates updated
-                isOverrideByAddressId.put(npspContact.currentAddress(), true);
-            }
-        }
-        return isOverrideByAddressId;
-    }
-
-    private List<Contact> consThatHaveARelatedAddress() {
-        List<Contact> useCurrentAddressQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
-            if (hasCurrentAddress(npspContact)) {
-                // remember which contacts will need their address set
-                useCurrentAddressQueue.add(npspContact.getRecord());
-            }
-        }
-        return useCurrentAddressQueue;
-    }
-
-    private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
-        return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
-    }
-
-    private Boolean hasCurrentAddress(NPSP_Contact npspContact) {
-        return npspContact.currentAddress() != null;
-    }
-
     public void onBeforeUpdate() {
         applyExclusionsStringChangesToCheckboxes();
     }
@@ -186,19 +127,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
-    }
-
-    private void deactivateAddrRecursionFlag() {
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
-    }
-
-    private Set<Contact> getAddressCreationQueueBeforeUpdate() {
-        if (isRecursive()) {
-            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
-            return new Set<Contact>();
-        } else {
-            return consWithAddressChanges();
-        }
     }
 
     public void onAfterUpdate() {
@@ -265,227 +193,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 setExclusionsCheckboxes(con, exclusionsAsBooleans);
             }
         }
-    }
-
-    private Boolean isIncludedInHouseholdName(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromName();
-    }
-
-    private Boolean isIncludedInFormalGreeting(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromFormalGreeting();
-    }
-
-    private Boolean isIncludedInInformalGreeting(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromInformalGreeting();
-    }
-
-    private Contacts contactsInHouseholds() {
-        List<Contact> consInHouseholds = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (householdIdFor(con) != null) {
-                consInHouseholds.add(con);
-            }
-        }
-        return new Contacts(consInHouseholds);
-    }
-
-    private void applyExclusionsStringChangesToCheckboxes() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsString namingExclusionsString =
-                    new HouseholdNamingExclusionsString(con);
-            HouseholdNamingExclusionsString oldNamingExclusionsString =
-                    new HouseholdNamingExclusionsString(oldVersionOf(con));
-            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
-                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
-                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
-                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
-            }
-        }
-    }
-
-    private void setExclusionsStringFor(Contact contact, String val) {
-        contact.npo02__Naming_Exclusions__c = val;
-    }
-
-    /**
-     * @param exclusionsAsBooleans Checkbox implemenation of Household Naming Exclusions
-     * @param exclusionsAsString Concatenated string implementation of Household Naming
-     * Exclusions
-     * @description Checks any exclusions checkboxes to true that are included in the
-     * concatenated string, and then updates the string to include exclusions (field names)
-     * for any Exclusion checkboxes that are marked TRUE for the Contact.
-     */
-    private void mergeExclusions(INamingExclusions exclusionsAsBooleans,
-            INamingExclusions exclusionsAsString) {
-        // Prioritize booleans by syncing from picklists first
-        exclusionsAsBooleans.synchronizeFrom(exclusionsAsString);
-        exclusionsAsString.synchronizeFrom(exclusionsAsBooleans);
-    }
-
-    private void setExclusionsCheckboxes(Contact con, INamingExclusions exclusions) {
-        con.Exclude_from_Household_Name__c = exclusions.isExcludedFromName();
-        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isExcludedFromFormalGreeting();
-        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
-    }
-
-    private void fireRollupsForMergedContacts() {
-        Set<Id> mergedWinningContact = getMergedWinningContactIds();
-        if (mergedWinningContact.size() > 0) {
-            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
-        }
-    }
-
-    private Set<Id> getMergedWinningContactIds() {
-        Set<Id> mergedWinningContactIds = new Set<Id>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (isLosingRecordInMergeOperation(con)) {
-                mergedWinningContactIds.add(con.MasterRecordId);
-            }
-        }
-        return mergedWinningContactIds;
-    }
-
-    private Id householdIdFor(Contact con) {
-        return con.npo02__Household__c;
-    }
-
-    private Boolean isLosingRecordInMergeOperation(Contact con) {
-        return con.MasterRecordId != null;
-    }
-
-    private Contact oldVersionOf(Contact con) {
-        return oldMap.get(con.Id);
-    }
-
-    /*******************************************************************************************************
-     * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
-     * the Household Account model
-     * @param winningContacts Set of Contact Id's
-     ********************************************************************************************************/
-    @TestVisible
-    private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
-
-        ContactAndOrgSettings contactAndOrgSettings = new ContactAndOrgSettings();
-        if (contactAndOrgSettings.isHouseholdAccountModel()) {
-            return;
-        }
-
-        Set<Id> oppIds = getOppIdsForWinningContacts(winningContacts);
-        if (!oppIds.isEmpty()) {
-            if (System.isFuture() || System.isBatch()) {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
-            } else {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
-            }
-        }
-    }
-
-    private static Set<Id> getOppIdsForWinningContacts(Set<Id> winningContacts) {
-        Set<Id> oppIds = new Set<Id>();
-        for (OpportunityContactRole ocr : [
-                SELECT OpportunityId
-                FROM OpportunityContactRole
-                WHERE ContactId IN :winningContacts AND IsPrimary = TRUE
-        ]
-        ) {
-            oppIds.add(ocr.OpportunityId);
-        }
-        return oppIds;
-    }
-
-    public void resetAddressUsingHouseholdAddress() {
-        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            mapAccIdAddr.put(con.AccountId, null);
-        }
-
-        // get the default and seasonal address for each HH
-        Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
-                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
-
-        // reset the Contact's address fields with the appropriate address
-        for (Contact con : (List<Contact>) getRecords()) {
-            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
-            if (hhinfo != null) {
-                Address__c addr = hhinfo.addrSeasonal;
-                if (addr == null) {
-                    addr = hhinfo.addrDefault;
-                }
-                if (addr != null) {
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
-                    NPSP_Contact npspContact = new NPSP_Contact(con);
-                    npspContact.currentAddress(npspAddress);
-                }
-            }
-        }
-    }
-
-    public List<NPSP_Contact> npspContacts(){
-        List<NPSP_Contact> npspContacts = new List<NPSP_Contact>();
-        for (Contact so : (List<Contact>)getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(so, oldVersionOf(so));
-            npspContacts.add(npspContact);
-        }
-        return npspContacts;
-    }
-
-    public Contacts contactsInAccountsOfTypeHousehold() {
-        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
-        for (SObject so : getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
-            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
-                contactsInHouseholdAccounts.add(npspContact.getRecord());
-            }
-        }
-        return new Contacts(contactsInHouseholdAccounts);
-    }
-
-    private Account accountFor(NPSP_Contact npspContact) {
-        return accountsByIds().get(npspContact.accountId());
-    }
-
-    public Contacts thatHaveAccounts() {
-        List<Contact> contacts = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(con);
-            if (!npspContact.hasAccount()) {
-                continue;
-            }
-            contacts.add(con);
-        }
-        return new Contacts(contacts);
-    }
-
-    public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
-    }
-
-    private Map<Id, Account> accountsById;
-    public Map<Id, Account> accountsByIds() {
-        if (accountsById == null) {
-            accountsById = new Map<Id, Account>([
-                    SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
-                    FROM Account
-                    WHERE Id IN :accountIds()
-            ]);
-        }
-        return accountsById;
     }
 
     public Boolean accountHasAddresses(Contact con) {
@@ -718,6 +425,300 @@ public inherited sharing class Contacts extends fflib_SObjects {
             dmlWrapper.objectsToInsert.addAll((List<SObject>) listAddrInsertDefault);
         }
     }
+
+    public void resetAddressUsingHouseholdAddress() {
+        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            mapAccIdAddr.put(con.AccountId, null);
+        }
+
+        // get the default and seasonal address for each HH
+        Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
+                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+
+        // reset the Contact's address fields with the appropriate address
+        for (Contact con : (List<Contact>) getRecords()) {
+            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
+            if (hhinfo != null) {
+                Address__c addr = hhinfo.addrSeasonal;
+                if (addr == null) {
+                    addr = hhinfo.addrDefault;
+                }
+                if (addr != null) {
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_Contact npspContact = new NPSP_Contact(con);
+                    npspContact.currentAddress(npspAddress);
+                }
+            }
+        }
+    }
+
+    public List<NPSP_Contact> npspContacts(){
+        List<NPSP_Contact> npspContacts = new List<NPSP_Contact>();
+        for (Contact so : (List<Contact>)getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact(so, oldVersionOf(so));
+            npspContacts.add(npspContact);
+        }
+        return npspContacts;
+    }
+
+    public Contacts contactsInAccountsOfTypeHousehold() {
+        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
+        for (SObject so : getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
+            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
+                contactsInHouseholdAccounts.add(npspContact.getRecord());
+            }
+        }
+        return new Contacts(contactsInHouseholdAccounts);
+    }
+
+    public Contacts thatHaveAccounts() {
+        List<Contact> contacts = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact(con);
+            if (!npspContact.hasAccount()) {
+                continue;
+            }
+            contacts.add(con);
+        }
+        return new Contacts(contacts);
+    }
+
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    private Map<Id, Account> accountsById;
+    public Map<Id, Account> accountsByIds() {
+        if (accountsById == null) {
+            accountsById = new Map<Id, Account>([
+                    SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
+                    FROM Account
+                    WHERE Id IN :accountIds()
+            ]);
+        }
+        return accountsById;
+    }
+
+    private void deactivateAddrRecursionFlag() {
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+    }
+
+    private Set<Contact> getAddressCreationQueueBeforeUpdate() {
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            return new Set<Contact>();
+        } else {
+            return consWithAddressChanges();
+        }
+    }
+
+    private void setRecursionFlags() {
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+        // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+        // to the Contact's address that are being made by this BeforeUpdate trigger.
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+    }
+
+    private Set<Contact> contactsWithAddressChanges() {
+        Set<Contact> addressCreationQueue = new Set<Contact>();
+        if (isRecursive()) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+            addressCreationQueue = new Set<Contact>();
+        } else {
+            addressCreationQueue = consWithAddressChanges();
+        }
+        return addressCreationQueue;
+    }
+
+    private Contacts contactsNeedingHouseholdAddressApplied() {
+        List<Contact> addressRefreshQueue = new List<Contact>();
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (shouldUseAccountAddress(npspContact)) {
+                // if the contact has no address specified and the household has a default address, pick up the hh default.
+                addressRefreshQueue.add(npspContact.getRecord());
+            }
+        }
+        return new Contacts(addressRefreshQueue);
+    }
+
+    private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
+        Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
+                // track which address's need their dates updated
+                isOverrideByAddressId.put(npspContact.currentAddress(), true);
+            }
+        }
+        return isOverrideByAddressId;
+    }
+
+    private List<Contact> consThatHaveARelatedAddress() {
+        List<Contact> useCurrentAddressQueue = new List<Contact>();
+        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+            if (hasCurrentAddress(npspContact)) {
+                // remember which contacts will need their address set
+                useCurrentAddressQueue.add(npspContact.getRecord());
+            }
+        }
+        return useCurrentAddressQueue;
+    }
+
+    private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
+        return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
+    }
+
+    private Boolean hasCurrentAddress(NPSP_Contact npspContact) {
+        return npspContact.currentAddress() != null;
+    }
+
+    private Boolean isIncludedInHouseholdName(Contact con) {
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromName();
+    }
+
+    private Boolean isIncludedInFormalGreeting(Contact con) {
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromFormalGreeting();
+    }
+
+    private Boolean isIncludedInInformalGreeting(Contact con) {
+        HouseholdNamingExclusionsString exclusionsAsString = new
+                HouseholdNamingExclusionsString(con);
+        return !exclusionsAsString.isExcludedFromInformalGreeting();
+    }
+
+    private Contacts contactsInHouseholds() {
+        List<Contact> consInHouseholds = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (householdIdFor(con) != null) {
+                consInHouseholds.add(con);
+            }
+        }
+        return new Contacts(consInHouseholds);
+    }
+
+    private void applyExclusionsStringChangesToCheckboxes() {
+        for (Contact con : (List<Contact>) getRecords()) {
+            HouseholdNamingExclusionsString namingExclusionsString =
+                    new HouseholdNamingExclusionsString(con);
+            HouseholdNamingExclusionsString oldNamingExclusionsString =
+                    new HouseholdNamingExclusionsString(oldVersionOf(con));
+            if (!namingExclusionsString.equals(oldNamingExclusionsString)) {
+                HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes = new HouseholdNamingExclusionsCheckboxes(con);
+                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
+                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
+            }
+        }
+    }
+
+    private void setExclusionsStringFor(Contact contact, String val) {
+        contact.npo02__Naming_Exclusions__c = val;
+    }
+
+    /**
+     * @param exclusionsAsBooleans Checkbox implemenation of Household Naming Exclusions
+     * @param exclusionsAsString Concatenated string implementation of Household Naming
+     * Exclusions
+     * @description Checks any exclusions checkboxes to true that are included in the
+     * concatenated string, and then updates the string to include exclusions (field names)
+     * for any Exclusion checkboxes that are marked TRUE for the Contact.
+     */
+    private void mergeExclusions(INamingExclusions exclusionsAsBooleans,
+            INamingExclusions exclusionsAsString) {
+        // Prioritize booleans by syncing from picklists first
+        exclusionsAsBooleans.synchronizeFrom(exclusionsAsString);
+        exclusionsAsString.synchronizeFrom(exclusionsAsBooleans);
+    }
+
+    private void setExclusionsCheckboxes(Contact con, INamingExclusions exclusions) {
+        con.Exclude_from_Household_Name__c = exclusions.isExcludedFromName();
+        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isExcludedFromFormalGreeting();
+        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
+    }
+
+    private void fireRollupsForMergedContacts() {
+        Set<Id> mergedWinningContact = getMergedWinningContactIds();
+        if (mergedWinningContact.size() > 0) {
+            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
+            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
+        }
+    }
+
+    private Set<Id> getMergedWinningContactIds() {
+        Set<Id> mergedWinningContactIds = new Set<Id>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (isLosingRecordInMergeOperation(con)) {
+                mergedWinningContactIds.add(con.MasterRecordId);
+            }
+        }
+        return mergedWinningContactIds;
+    }
+
+    private Id householdIdFor(Contact con) {
+        return con.npo02__Household__c;
+    }
+
+    private Boolean isLosingRecordInMergeOperation(Contact con) {
+        return con.MasterRecordId != null;
+    }
+
+    private Contact oldVersionOf(Contact con) {
+        return oldMap.get(con.Id);
+    }
+
+    /*******************************************************************************************************
+     * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
+     * the Household Account model
+     * @param winningContacts Set of Contact Id's
+     ********************************************************************************************************/
+    @TestVisible
+    private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
+
+        ContactAndOrgSettings contactAndOrgSettings = new ContactAndOrgSettings();
+        if (contactAndOrgSettings.isHouseholdAccountModel()) {
+            return;
+        }
+
+        Set<Id> oppIds = getOppIdsForWinningContacts(winningContacts);
+        if (!oppIds.isEmpty()) {
+            if (System.isFuture() || System.isBatch()) {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
+            } else {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
+            }
+        }
+    }
+
+    private static Set<Id> getOppIdsForWinningContacts(Set<Id> winningContacts) {
+        Set<Id> oppIds = new Set<Id>();
+        for (OpportunityContactRole ocr : [
+                SELECT OpportunityId
+                FROM OpportunityContactRole
+                WHERE ContactId IN :winningContacts AND IsPrimary = TRUE
+        ]
+        ) {
+            oppIds.add(ocr.OpportunityId);
+        }
+        return oppIds;
+    }
+
+    private Account accountFor(NPSP_Contact npspContact) {
+        return accountsByIds().get(npspContact.accountId());
+    }
+
 
     private Boolean isAnAccountOfTypeHousehold(Account a) {
         if (a == null) {
