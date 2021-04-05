@@ -1,4 +1,4 @@
-import { api, LightningElement, track, wire } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import tokenHandler from 'c/psElevateTokenHandler';
 import { apiNameFor, format, hasNestedProperty, isEmpty, isNotEmpty } from 'c/utilCommon';
@@ -85,20 +85,21 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     enableChargeMode() {
-        if (this.isMounted) {
-            // charge mode
-            this.requestSetPaymentMethod(this._currentPaymentMethod);
-        } else {
-            if (!this._hasUserDisabledWidget) {
-                this.handleUserEnabledWidget();
-                this._hasEventDisabledWidget = false;
-            }
+        if (this.isInNonChargeableState()) {
+            this.handleUserEnabledWidget();
+            this._hasEventDisabledWidget = false;
+            return;
         }
+        this.requestSetPaymentMethod(this._currentPaymentMethod);
+    }
+
+    isInNonChargeableState() {
+        return !this.isMounted && !this._hasUserDisabledWidget;
     }
 
     enableReadOnlyMode() {
         this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
-        this.toggleWidget(true, 'Read Only Mode');
+        this.toggleWidget(true);
         this._isReadOnlyMode = true;
         this._hasUserDisabledWidget = false;
     }
@@ -238,9 +239,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             } else {
                this.setMode(MODES.DEACTIVATE)
             }
-        } else {
-            this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
+            return;
         }
+        this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
     }
 
     hasPaymentMethodFieldInForm() {
