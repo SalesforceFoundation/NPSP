@@ -164,23 +164,27 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
 
-        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
+        // set the mailing address for contacts who specify an address lookup or override
+        if (useCurrentAddressQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
             // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
             // to the Contact's address that are being made by this BeforeUpdate trigger.
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-        }
-
-        // set the mailing address for contacts who specify an address lookup or override
-        if (useCurrentAddressQueue.size() > 0) {
             setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
 
         // reset the mailing address for contacts who no longer have an address override
         if (addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
+            // set this flag to true to prevent the AfterUpdate trigger on the Contact from processing changes
+            // to the Contact's address that are being made by this BeforeUpdate trigger.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
             Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
             contactsForAddressRefresh.resetAddresses();
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
 
         // create any new Default Address objects
@@ -188,11 +192,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
-
-        if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         }
-    }
 
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
         if (isRecursive()) {
