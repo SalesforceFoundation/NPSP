@@ -71,11 +71,13 @@
                 </div>
             </template>
             <template if:false={hasData}>
-                <c-util-illustration title={CUSTOM_LABELS.bgeGridNoGiftsHeader}
-                                     message={CUSTOM_LABELS.bgeGridNoGiftsBody}
-                                     size="small"
-                                     variant="lake-mountain">
-                </c-util-illustration>
+                <div class='slds-p-around_small'>
+                    <c-util-illustration title={CUSTOM_LABELS.bgeGridNoGiftsHeader}
+                                        message={CUSTOM_LABELS.bgeGridNoGiftsBody}
+                                        size='small'
+                                        variant='lake-mountain'>
+                    </c-util-illustration>
+                </div>
             </template>
         </template>
     </article>
