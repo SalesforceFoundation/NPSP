@@ -538,7 +538,7 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     private void initForceSkewModeValues(SObjectType parentObjType) {
         if (this.qualifiedSkewField == null) {
-            this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
+            this.qualifiedSkewField = UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c');
             this.useForceSkewModeField = (parentObjType == Account.SObjectType || parentObjType == Contact.SObjectType);
         }
     }
