@@ -78,12 +78,12 @@ public class CRLP_RollupBatch_SVC {
                     'AND (' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c = null OR ' + parentRelationshipField +
                     'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
                     'AND ' + parentRelationshipField +
-                    UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false';
+                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false';
             } else {
                 queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c >= ' + maxRelatedOppsForNonLDVMode +
                     ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode +
                     ' OR ' + parentRelationshipField +
-                    UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -91,10 +91,10 @@ public class CRLP_RollupBatch_SVC {
             String softCreditField = parentRelationshipField + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c');
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
                 queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
-                    ' AND ' + UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
+                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)) {
@@ -103,10 +103,10 @@ public class CRLP_RollupBatch_SVC {
             String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
                 queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
-                    ' AND ' + UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
+                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
@@ -139,7 +139,7 @@ public class CRLP_RollupBatch_SVC {
                 jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             String objName = recordId.getSobjectType().getDescribe().getName();
             String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID AND ('
-                + UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c')
+                + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c')
                 + ' = true';
             String filter = getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(filter)) {

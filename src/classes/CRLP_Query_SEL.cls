@@ -84,7 +84,7 @@ public inherited sharing class CRLP_Query_SEL {
         Set<String> queryFields = new Set<String>{'Id'};
         if (resultObject == Account.SObjectType || resultObject == Contact.SObjectType) {
             // Add field specifying skew mode
-            queryFields.add(UTIL_Namespace.StrAllNSPrefix('CustomizableRollups_UseSkewMode__c'));
+            queryFields.add(UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c'));
         }
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             queryFields.add(dfr.getName());
