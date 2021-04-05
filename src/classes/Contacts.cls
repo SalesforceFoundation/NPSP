@@ -83,9 +83,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 new List<Contact>(contactsWithAddressChanges()));
 
         // update the Latest date fields on any address overrides
-        if (getIsOverrideByAddressIdBeforeInsert().size() > 0) {
-            Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
-        }
+        Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
 
         if (consThatHaveARelatedAddress().size() > 0 ||
                 contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
@@ -189,9 +187,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
 
         // update the Latest date fields on any address overrides
-        if (isOverrideByAddressId.size() > 0) {
-            Addresses.updateAddrIsOverride(isOverrideByAddressId);
-        }
+        Addresses.updateAddrIsOverride(isOverrideByAddressId);
 
         if (useCurrentAddressQueue.size() > 0 || addressRefreshQueue.size() > 0) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);

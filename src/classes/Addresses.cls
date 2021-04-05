@@ -829,19 +829,21 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param dmlWrapper to hold the Addresses that need updating
     ********************************************************************************************************/
     public static void updateAddrIsOverride(Map<Id, Boolean> mapAddrIdIsOverride) {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        for (Id id : mapAddrIdIsOverride.keySet()) {
-            Address__c addr = new Address__c();
-            addr.Id = id;
-            if (mapAddrIdIsOverride.get(id) == true) {
-                addr.Latest_Start_Date__c = System.today();
-                addr.Latest_End_Date__c = null;
-            } else {
-                addr.Latest_End_Date__c = System.today();
+        if (!mapAddrIdIsOverride.isEmpty()) {
+            TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+            for (Id id : mapAddrIdIsOverride.keySet()) {
+                Address__c addr = new Address__c();
+                addr.Id = id;
+                if (mapAddrIdIsOverride.get(id) == true) {
+                    addr.Latest_Start_Date__c = System.today();
+                    addr.Latest_End_Date__c = null;
+                } else {
+                    addr.Latest_End_Date__c = System.today();
+                }
+                dmlWrapper.objectsToUpdate.add(addr);
             }
-            dmlWrapper.objectsToUpdate.add(addr);
+            TDTM_TriggerHandler.processDML(dmlWrapper);
         }
-        TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 
     /*******************************************************************************************************
