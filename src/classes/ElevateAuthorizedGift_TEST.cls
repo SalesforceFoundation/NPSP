@@ -37,6 +37,11 @@ public with sharing class ElevateAuthorizedGift_TEST {
     private static final String DUMMY_PAYMENT_TYPE = 'card';
     private static final String DUMMY_ID = 'id-123456789';
     private static final String DUMMY_STATUS = 'AUTHORIZED';
+    private static final String DUMMY_CARD_NETWORK = 'visa';
+    private static final DateTime DUMMY_DATE = System.today();
+    private static final String DUMMY_EXPIRATION_YEAR = String.valueOf(DUMMY_DATE.addYears(1).year());
+    private static final String DUMMY_EXPIRATION_MONTH = String.valueOf(DUMMY_DATE.addYears(1).month());
+
 
     @isTest
     private static void valueQueriesShouldReturnCorrectValues() {
@@ -59,6 +64,10 @@ public with sharing class ElevateAuthorizedGift_TEST {
         System.assertEquals(DUMMY_ID, authorizedGift.groupId());
         System.assertEquals(System.today().addDays(1), authorizedGift.authExpiration());
         System.assertEquals(DUMMY_STATUS, authorizedGift.status());
+        System.assertEquals(DUMMY_EXPIRATION_YEAR, authorizedGift.cardExpirationYear());
+        System.assertEquals(DUMMY_EXPIRATION_MONTH, authorizedGift.cardExpirationMonth());
+        System.assertEquals(DUMMY_ID, authorizedGift.gatewayId());
+        System.assertEquals(DUMMY_ID, authorizedGift.gatewayTransactionId());
     }
 
     private static ElevateTokenizedGift createTokenizedGift() {
@@ -74,6 +83,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
     private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
         ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
         authorizedGiftResponse.body = new ElevateAuthorizedGiftResponse.Body();
+        authorizedGiftResponse.body.cardData = new ElevateAuthorizedGiftResponse.CardData();
         authorizedGiftResponse.body.id = DUMMY_ID;
         authorizedGiftResponse.body.authExpiresAt = System.today().addDays(1);
         authorizedGiftResponse.body.gatewayTransactionId = DUMMY_ID;
@@ -81,6 +91,10 @@ public with sharing class ElevateAuthorizedGift_TEST {
         authorizedGiftResponse.body.originalTransactionId = DUMMY_ID;
         authorizedGiftResponse.body.batchId = DUMMY_ID;
         authorizedGiftResponse.body.status = ElevateTransactionStatus.AUTHORIZED;
+        authorizedGiftResponse.body.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
+        authorizedGiftResponse.body.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
+        authorizedGiftResponse.body.gatewayId = DUMMY_ID;
+        authorizedGiftResponse.body.gatewayTransactionId = DUMMY_ID;
         return authorizedGiftResponse;
     }
 }
