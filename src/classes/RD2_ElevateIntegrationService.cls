@@ -81,15 +81,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
-    * @description Returns the Elevate Integration service enablement status for Edit Commitment feature.
-    * @return Boolean
-    */
-    public static Boolean isEditEnabled() {
-        return config.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled(); 
-    }
-
-    /***
     * @description Determines whether a Recurring Donation event is from the Elevate integration
     * @param rd Changed Recurring Donation
     * @param oldRd Old Recurring Donation
