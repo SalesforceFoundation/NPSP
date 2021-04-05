@@ -156,7 +156,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnlyMode && (this.currentPaymentStatus() !== this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED);
+        return this.isReadOnlyMode && !this.isPaymentCaptured();
+    }
+
+    isPaymentCaptured() {
+        return this.currentPaymentStatus() === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
     }
 
     @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
