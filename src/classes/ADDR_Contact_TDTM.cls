@@ -62,13 +62,13 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Contacts contacts = new Contacts(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                contacts.onBeforeInsertAddrConTDTM();
+                contacts.onBeforeInsert_FromAddrContactTDTM();
             }
             when AfterInsert {
                 contacts.onAfterInsert();
             }
             when BeforeUpdate {
-                contacts.onBeforeUpdateAddrConTDTM();
+                contacts.onBeforeUpdate_FromAddrContactTDTM();
             }
             when AfterUpdate {
                 contacts.onAfterUpdate();

@@ -61,7 +61,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         synchronizeNamingExclusions();
     }
 
-    public void onBeforeInsertAddrConTDTM() {
+    public void onBeforeInsert_FromAddrContactTDTM() {
         normalizeLineBreaks();
 
         if (consThatHaveARelatedAddress().size() > 0) {
@@ -95,7 +95,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         applyExclusionsStringChangesToCheckboxes();
     }
 
-    public void onBeforeUpdateAddrConTDTM() {
+    public void onBeforeUpdate_FromAddrContactTDTM() {
         normalizeLineBreaksForContactsWithChangedAddresses();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
