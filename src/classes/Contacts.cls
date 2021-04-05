@@ -75,11 +75,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            contactsNeedingHouseholdAddressApplied().resetAddresses();
+            contactsNeedingHouseholdAddressApplied().resetAddressUsingHouseholdAddress();
         }
 
         // create any new Default Address objects
-        createAddrFromConBeforeInsertUpdate(
+        createAddressFromContact(
                 new List<Contact>(contactsWithAddressChanges()));
 
         // update the Latest date fields on any address overrides
@@ -160,28 +160,29 @@ public inherited sharing class Contacts extends fflib_SObjects {
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
         // set the mailing address for contacts who specify an address lookup or override
-        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
-        if (useCurrentAddressQueue.size() > 0) {
+        List<Contact> consNeedingAddressFieldsPopulated = consWhoseAddressChanged();
+        if (consNeedingAddressFieldsPopulated.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
-            setContactAddressFromCurrentAddress(useCurrentAddressQueue);
+            setContactAddressFromCurrentAddress(consNeedingAddressFieldsPopulated);
             deactivateAddrRecursionFlag();
         }
 
         // reset the mailing address for contacts who no longer have an address override
-        List<Contact> addressRefreshQueue = getAddressRefreshQueue();
-        addressRefreshQueue.addAll(addressOverrideResetsOf());
+        List<Contact> addressRefreshQueue =
+                consWhoseAccountChangedAndDontHaveAddressOverrides();
+        addressRefreshQueue.addAll(consHavingAddressOverridesRemoved());
         if (addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
-            contactsForAddressRefresh.resetAddresses();
+            contactsForAddressRefresh.resetAddressUsingHouseholdAddress();
             deactivateAddrRecursionFlag();
         }
 
         // create any new Default Address objects
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
-        createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
+        createAddressFromContact(new List<Contact>(addressCreationQueue));
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
@@ -399,7 +400,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return oppIds;
     }
 
-    public void resetAddresses() {
+    public void resetAddressUsingHouseholdAddress() {
         Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
         for (Contact con : (List<Contact>) getRecords()) {
             mapAccIdAddr.put(con.AccountId, null);
@@ -545,7 +546,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
 
-        createAddrFromConBeforeInsertUpdate(listConCreateAddr);
+        createAddressFromContact(listConCreateAddr);
     }
 
     /*******************************************************************************************************
@@ -555,7 +556,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param listConAll the list of Contacts
     ********************************************************************************************************/
-    public void createAddrFromConBeforeInsertUpdate(List<Contact> listConAll) {
+    public void createAddressFromContact(List<Contact> listConAll) {
         if (!listConAll.isEmpty()) {
             // Strategy:
             // create a new (unsaved) address for each contact.
@@ -853,7 +854,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return isOverrideByAddressId;
     }
 
-    private List<Contact> addressOverrideResetsOf() {
+    private List<Contact> consHavingAddressOverridesRemoved() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
@@ -874,7 +875,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
-    private List<Contact> getUseCurrentAddressQueue() {
+    private List<Contact> consWhoseAddressChanged() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
@@ -914,7 +915,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 npspContact.currentAddress() != null;
     }
 
-    private List<Contact> getAddressRefreshQueue() {
+    private List<Contact> consWhoseAccountChangedAndDontHaveAddressOverrides() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
         for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
