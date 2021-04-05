@@ -2,6 +2,15 @@ import { createElement } from 'lwc';
 import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
 import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { getRecord } from 'lightning/uiRecordApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
+
+const mockGetRecord = require('./data/DIMockRecord.json');
+const mockObjectInfo = require('./data/dataImportObjectDescribeInfo.json');
+
+const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
+const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
 
 const CASH = 'Cash';
 const CREDIT_CARD = 'Credit Card';
@@ -12,6 +21,7 @@ const EXTENDED_DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction c.psS
 const BDI_FAILURE_DISABLED_MESSAGE = 'c.geErrorCardChargedBDIFailed';
 const PAYMENT_METHOD_FIELD = 'Payment_Method__c';
 const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
+const DATA_IMPORT_PAYMENT_STATUS = 'Payment_Status__c';
 
 const createWidgetWithPaymentMethod = (paymentMethod) => {
     const element = createElement(
@@ -28,6 +38,7 @@ const setPaymentMethod = (element, paymentMethod) => {
         [PAYMENT_METHOD_FIELD]: paymentMethod
     };
 }
+
 
 describe('c-ge-form-widget-tokenize-card', () => {
 
@@ -146,16 +157,16 @@ describe('c-ge-form-widget-tokenize-card', () => {
             });
     });
 
-/*    it('should go into hard read-only mode when credit card payment has been captured', async () => {
+    it('should go into hard read-only mode when credit card payment has been captured', async () => {
         const element = createWidgetWithPaymentMethod(CREDIT_CARD);
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
             [DATA_IMPORT_PAYMENT_STATUS]: 'CAPTURED'
         }
-        element.widgetDataFromState
         document.body.appendChild(element);
-
+        getObjectInfoAdapter.emit(mockObjectInfo);
+        getRecordAdapter.emit(mockGetRecord);
         return Promise.resolve()
             .then(() => {
                 expect(getLastFourDigits(element).not.toBe(null));
@@ -171,14 +182,22 @@ describe('c-ge-form-widget-tokenize-card', () => {
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
             [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
         }
+        element.paymentTransactionStatusValues = {
+            AUTHORIZED: 'AUTHORIZED',
+            CAPTURED: 'CAPTURED'
+        }
         document.body.appendChild(element);
+        await flushPromises();
+
+        getObjectInfoAdapter.emit(mockObjectInfo);
+        getRecordAdapter.emit(mockGetRecord);
         return Promise.resolve()
             .then(() => {
                 expect(getLastFourDigits(element).not.toBe(null));
                 expect(getCardExpirationDate(element).not.toBe(null));
                 expect(editPaymentInformationButton(element)).toBeTruthy();
             });
-    });*/
+    });
 });
 
 const enterPaymentButton = (element) => {
@@ -210,11 +229,11 @@ const getCardExpirationDate = (element) => {
 }
 
 const editPaymentInformationButton = (element) => {
-    return shadowQuerySelector(element, '.edit-payment-information-button');
+    return shadowQuerySelector(element, '[data-qa-locator="button Edit Payment Information"]');
 }
 
 const cancelEditPaymentInformationButton = (element) => {
-    return shadowQuerySelector(element, '.cancel-edit-payment-information-button');
+    return shadowQuerySelector(element, '[data-qa-locator="button Cancel Edit Payment Information"]');
 }
 
 const getShadowRoot = (element) => {
