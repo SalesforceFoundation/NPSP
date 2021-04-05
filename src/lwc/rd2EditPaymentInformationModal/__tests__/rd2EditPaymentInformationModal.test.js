@@ -112,7 +112,11 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on successfully save with new payment information', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+
+            const mockPaymentResultString = mockPaymentResult;
+            mockPaymentResultString.body = JSON.stringify(mockPaymentResultString.body);
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResultString));
+
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
             
