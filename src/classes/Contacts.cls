@@ -87,7 +87,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         if (consThatHaveARelatedAddress().size() > 0 ||
                 contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+            deactivateAddrRecursionFlag();
         }
     }
 
