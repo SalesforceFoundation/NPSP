@@ -136,7 +136,7 @@
     </fields>
     <fields>
         <help>Gibt an, ob der Spender den üblichen Marktpreis für diese Sachspende angegeben hat.</help>
-        <label>Vom Spender angeg. Wert f. d. Sachspende</label>
+        <label>Vom Spender angegebener Wert</label>
         <name>In_Kind_Donor_Declared_Value__c</name>
     </fields>
     <fields>
