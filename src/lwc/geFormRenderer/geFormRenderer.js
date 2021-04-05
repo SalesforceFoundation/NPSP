@@ -655,7 +655,9 @@ export default class GeFormRenderer extends LightningElement{
                     tokenizedGift = new ElevateTokenizeableGift(
                         this.cardholderNames.firstName,
                         this.cardholderNames.lastName,
-                        this.getFieldValueFromFormState(DONATION_AMOUNT),
+                        getCurrencyLowestCommonDenominator(
+                            this.getFieldValueFromFormState(DONATION_AMOUNT)
+                        ),
                         CURRENCY,
                     );
 
@@ -690,8 +692,15 @@ export default class GeFormRenderer extends LightningElement{
 
                 this.updateFormState({
                     [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
-                    [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
                     [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
+                    [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+                    [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
+                    [apiNameFor(PAYMENT_DECLINED_REASON)]: authorizedGift.declineReason,
+                    [apiNameFor(PAYMENT_LAST_4)]: authorizedGift.cardLast4,
+                    [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
+                    [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
+                    [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
+                    [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt
                 });
 
                 dataImportFromFormState = this.saveableFormState();
