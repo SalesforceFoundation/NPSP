@@ -507,7 +507,11 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 (listAccId);
 
         for (NPSP_Address addr : seasonalAddresses) {
-            for (Address__c addr2 : mapAccIdListAddrHH.get(addr.householdId())) {
+            List<Address__c> existingHouseholdAddresses = mapAccIdListAddrHH.get(addr.householdId());
+            if (existingHouseholdAddresses == null || existingHouseholdAddresses.isEmpty()) {
+                continue;
+            }
+            for (Address__c addr2 : existingHouseholdAddresses) {
                 NPSP_Address npspAddress2 = new NPSP_Address(addr2);
                 if (addr.getRecord().Id == addr2.Id) {
                     continue;
