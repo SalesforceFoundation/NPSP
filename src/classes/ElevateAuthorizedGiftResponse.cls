@@ -32,9 +32,12 @@ public with sharing class ElevateAuthorizedGiftResponse {
     private Integer statusCode;
     private List<Errors> errors;
 
-    @TestVisible private class Body {
+    @TestVisible
+    private class Body {
+        @TestVisible private CardData cardData;
         @TestVisible private String id;
         @TestVisible private DateTime authExpiresAt;
+        @TestVisible private Datetime authorizedAt;
         @TestVisible private ElevateTransactionStatus status;
         @TestVisible private String gatewayTransactionId;
         @TestVisible private String paymentType;
@@ -43,13 +46,41 @@ public with sharing class ElevateAuthorizedGiftResponse {
         @TestVisible private String declineReason;
     }
 
+    @TestVisible
+    private class CardData {
+        @TestVisible private String last4;
+        @TestVisible private String brand;
+        @TestVisible private String expirationYear;
+        @TestVisible private String expirationMonth;
+    }
+
     public class Errors {
         public String message;
         public String failure_reason;
     }
 
-    public String paymentId() {
+    public String id() {
         return body?.id;
+    }
+
+    public DateTime authorizedAt() {
+        return body?.authorizedAt;
+    }
+
+    public String last4() {
+        return body?.cardData?.last4;
+    }
+
+    public String brand() {
+        return body?.cardData?.brand;
+    }
+
+    public String expirationYear() {
+        return body?.cardData?.expirationYear;
+    }
+
+    public String expirationMonth() {
+        return body?.cardData?.expirationMonth;
     }
 
     public DateTime authExpiration() {
@@ -83,5 +114,4 @@ public with sharing class ElevateAuthorizedGiftResponse {
     public String groupId() {
         return this.body?.batchId;
     }
-
 }

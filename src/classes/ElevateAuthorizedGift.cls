@@ -37,11 +37,16 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public String originalTransactionId;
     @AuraEnabled public String groupId;
     @AuraEnabled public String declineReason;
+    @AuraEnabled public String cardLast4;
+    @AuraEnabled public String cardNetwork;
+    @AuraEnabled public String cardExpirationMonth;
+    @AuraEnabled public String cardExpirationYear;
+    @AuraEnabled public DateTime authorizedAt;
 
     public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift,
                                  ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         this.tokenizedGift = tokenizedGift;
-        this.paymentId = authorizedGiftResponse.paymentId();
+        this.paymentId = authorizedGiftResponse.id();
         this.authExpiration = authorizedGiftResponse.authExpiration();
         this.status = authorizedGiftResponse.status().name();
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
@@ -49,37 +54,62 @@ public with sharing class ElevateAuthorizedGift {
         this.groupId = authorizedGiftResponse.groupId();
         this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
         this.declineReason = authorizedGiftResponse.declineReason();
+        this.cardLast4 = authorizedGiftResponse.last4();
+        this.cardNetwork = authorizedGiftResponse.brand();
+        this.cardExpirationMonth = authorizedGiftResponse.expirationMonth();
+        this.cardExpirationYear = authorizedGiftResponse.expirationYear();
+        this.authorizedAt = authorizedGiftResponse.authorizedAt();
     }
 
     public String groupId() {
-        return this.groupId;
+        return groupId;
+    }
+
+    public DateTime authorizedAt() {
+        return authorizedAt;
+    }
+
+    public String cardLast4() {
+        return cardLast4;
+    }
+
+    public String cardNetwork() {
+        return cardNetwork;
+    }
+
+    public String cardExpirationMonth() {
+        return cardExpirationMonth;
+    }
+
+    public String cardExpirationYear() {
+        return cardExpirationYear;
     }
 
     public String paymentId() {
-        return this.paymentId;
+        return paymentId;
     }
 
     public DateTime authExpiration() {
-        return this.authExpiration;
+        return authExpiration;
     }
 
     public String status() {
-        return this.status;
+        return status;
     }
 
     public String gatewayTransactionId() {
-        return this.gatewayTransactionId;
+        return gatewayTransactionId;
     }
 
     public String paymentMethod() {
-        return this.paymentMethod;
+        return paymentMethod;
     }
 
     public String originalTransactionId() {
-        return this.originalTransactionId;
+        return originalTransactionId;
     }
 
     public String declineReason() {
-        return this.declineReason;
+        return declineReason;
     }
 }
