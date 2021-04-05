@@ -3,7 +3,7 @@ import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
 import { getRecord } from 'lightning/uiRecordApi';
 import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
-import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+//import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 const mockGetRecord = require('./data/getRecord.json');
@@ -53,8 +53,17 @@ describe('c-ge-batch-gift-entry-header', () => {
 
     describe('getRecord @wire data', () => {
         it('renders user record details', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            //getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
+
+            element.batchTotals = {
+                hasValuesGreaterThanZero: true,
+                totalGifts: 20,
+                processedGifts: 10,
+                failedPayments: 0,
+                failedGifts: 5,
+                expiredPayments: 0
+            }
 
             await flushPromises();
             const headerElement = element.shadowRoot.querySelectorAll('c-util-page-header');
@@ -66,17 +75,34 @@ describe('c-ge-batch-gift-entry-header', () => {
 
     describe('gift entry batch header elements', () => {
         it('should render three action buttons', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            //getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
 
+            element.batchTotals = {
+                hasValuesGreaterThanZero: true,
+                totalGifts: 20,
+                processedGifts: 10,
+                failedPayments: 0,
+                failedGifts: 5,
+                expiredPayments: 0
+            }
             await flushPromises();
             const buttons = element.shadowRoot.querySelectorAll('lightning-button');
             expect(buttons.length).toBe(3);
         });
 
         it('renders detail row', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            //getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
+
+            element.batchTotals = {
+                hasValuesGreaterThanZero: true,
+                totalGifts: 20,
+                processedGifts: 10,
+                failedPayments: 0,
+                failedGifts: 5,
+                expiredPayments: 0
+            }
 
             isElevateCustomerAdapter.emit(false);
 
@@ -86,8 +112,17 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('does not render detail row', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_WITHOUT_ROWS);
+            //getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             const element = setup();
+
+            element.batchTotals = {
+                hasValuesGreaterThanZero: true,
+                totalGifts: 20,
+                processedGifts: 10,
+                failedPayments: 0,
+                failedGifts: 5,
+                expiredPayments: 0
+            }
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -95,9 +130,17 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('renders detail blocks for records processed and records failed with correct record counts on load', async () => {
-            getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
-            let element = setup();
+            //getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
+            const element = setup();
 
+            element.batchTotals = {
+                hasValuesGreaterThanZero: true,
+                totalGifts: 20,
+                processedGifts: 10,
+                failedPayments: 0,
+                failedGifts: 5,
+                expiredPayments: 0
+            }
             isElevateCustomerAdapter.emit(true);
 
             await flushPromises();
