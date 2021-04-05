@@ -1,7 +1,7 @@
 import { createElement } from 'lwc';
 import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
 import { getRecord } from 'lightning/uiRecordApi';
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
+import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
