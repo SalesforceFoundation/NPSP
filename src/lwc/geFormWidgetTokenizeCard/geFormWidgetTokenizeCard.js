@@ -1,21 +1,23 @@
 import { api, LightningElement, wire } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import tokenHandler from 'c/psElevateTokenHandler';
-import { apiNameFor, format, hasNestedProperty, isEmpty, isNotEmpty } from 'c/utilCommon';
-import { fireEvent, registerListener, unregisterListener, } from 'c/pubsubNoPageRef';
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import { apiNameFor, format, isEmpty, isNotEmpty } from 'c/utilCommon';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { getFieldValue, getRecord } from "lightning/uiRecordApi";
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
+    ACCOUNT_HOLDER_BANK_TYPES,
+    ACCOUNT_HOLDER_TYPES,
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    PAYMENT_METHODS,
-    PAYMENT_METHOD_CREDIT_CARD,
     LABEL_NEW_LINE,
-    ACCOUNT_HOLDER_TYPES, ACCOUNT_HOLDER_BANK_TYPES
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_METHODS
 } from 'c/geConstants';
 
 import GeFormService from 'c/geFormService';
 
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
+    from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
@@ -43,6 +45,7 @@ const MODES = Object.freeze({
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
+    @api paymentTransactionStatusValues;
     _isLoading = true;
     alert = {};
     _disabledMessage;
@@ -51,7 +54,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _hasEventDisabledWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    PAYMENT_TRANSACTION_STATUS_ENUM;
 
     dataImportId;
     _currentPaymentMethod = undefined;
@@ -160,7 +162,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     isPaymentCaptured() {
-        return this.currentPaymentStatus() === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED;
+        return this.currentPaymentStatus() === this.paymentTransactionStatusValues.CAPTURED;
     }
 
     @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
@@ -177,12 +179,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get canViewReadOnlyFields() {
-        return hasNestedProperty(
-            this.dataImportObjectDescribe.data,
-            'fields',
-            apiNameFor(PAYMENT_LAST_4),
-            apiNameFor(PAYMENT_EXPIRATION_MONTH),
-            apiNameFor(PAYMENT_EXPIRATION_YEAR));
+        const fields = this.dataImportObjectDescribe.data.fields;
+        return fields?.[apiNameFor(PAYMENT_LAST_4)]
+            && fields?.[apiNameFor(PAYMENT_EXPIRATION_MONTH)]
+            && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)];
     }
     
     get hasUserDisabledWidget() {
@@ -258,10 +258,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     readOnlyStatuses () {
         return [
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED,
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED,
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
-            this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED
+            this.paymentTransactionStatusValues.CAPTURED,
+            this.paymentTransactionStatusValues.SUBMITTED,
+            this.paymentTransactionStatusValues.AUTHORIZED,
+            this.paymentTransactionStatusValues.DECLINED
         ]
     }
 
@@ -270,7 +270,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasReadOnlyStatus() {
-        if(!this.isInBatchGiftEntry() || isEmpty(this.PAYMENT_TRANSACTION_STATUS_ENUM)) {
+        if(!this.isInBatchGiftEntry() || isEmpty(this.paymentTransactionStatusValues)) {
             return false;
         }
         return this.readOnlyStatuses().includes(this.currentPaymentStatus());
@@ -324,7 +324,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
-        this.PAYMENT_TRANSACTION_STATUS_ENUM = await GeFormService.getPaymentTransactionStatusEnums();
         const domainInfo = await GeFormService.getOrgDomain();
         tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
@@ -504,7 +503,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     resolveToken = (token) => {
         return {
             [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: token,
-            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
+            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: this.paymentTransactionStatusValues.PENDING
         }
     }
 

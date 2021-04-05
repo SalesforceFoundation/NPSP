@@ -44,6 +44,10 @@ export default class GeFormWidget extends LightningElement {
         return this.widgetConfig ? this.widgetConfig.sourceFieldsUsedInTemplate : [];
     }
 
+    get paymentTransactionStatusValues() {
+        return this.widgetConfig && this.isElevateTokenizeCard ? this.widgetConfig.paymentTransactionStatusValues : {};
+    }
+
     @api
     get formState() {
         return this._formState;
