@@ -4,9 +4,11 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 const mockGetRecord = require('./data/getRecord.json');
 const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
+const isElevateCustomerAdapter = registerApexTestWireAdapter(isElevateCustomer);
 
 const APEX_GIFT_BATCH_TOTALS_BY_SUCCESS = {
     'PROCESSED': 10,
@@ -93,6 +95,8 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('renders detail blocks for records processed and records failed with correct record counts on load', async () => {
             getGiftBatchTotalsBy.mockResolvedValue(APEX_GIFT_BATCH_TOTALS_BY_SUCCESS);
             let element = setup();
+
+            isElevateCustomerAdapter.emit(true);
 
             await flushPromises();
 
