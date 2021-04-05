@@ -2268,6 +2268,7 @@
         <members>commonBatches</members>
         <members>commonCVV</members>
         <members>commonCancel</members>
+        <members>commonCardLast4</members>
         <members>commonCardType</members>
         <members>commonCardholderName</members>
         <members>commonClone</members>

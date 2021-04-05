@@ -11,6 +11,7 @@ import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCVV from '@salesforce/label/c.commonCVV';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardLast4 from '@salesforce/label/c.commonCardLast4';
 import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
 import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
@@ -224,6 +225,7 @@ import geWarningBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geWarni
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
+import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 
 class GeLabelService {
 
@@ -244,6 +246,7 @@ class GeLabelService {
         commonBatches,
         commonCVV,
         commonCancel,
+        commonCardLast4,
         commonCardType,
         commonClone,
         commonCreditNumber,
@@ -457,6 +460,7 @@ class GeLabelService {
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
+        updatePaymentInformation
     });
 
     /*******************************************************************************

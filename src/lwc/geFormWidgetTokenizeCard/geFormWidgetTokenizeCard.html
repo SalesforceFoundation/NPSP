@@ -29,7 +29,7 @@
                                     </template>
                                     <template if:true={shouldDisplayEditPaymentInformation}>
                                         <lightning-button variant="base"
-                                                          label='Edit Payment Information'
+                                                          label={CUSTOM_LABELS.updatePaymentInformation}
                                                           icon-name='utility:close'
                                                           icon-position="right"
                                                           onclick={disableReadOnlyMode}
@@ -80,13 +80,17 @@
                                             <lightning-layout-item padding="around-small"
                                                                    class='fade-in'
                                                                    data-qa-locator={qaLocatorLastFourDigits}>
-                                                <p class="slds-form-element__label" title="last4">Card Last 4</p>
+                                                <p class="slds-form-element__label" title="last4">
+                                                    {CUSTOM_LABELS.commonCardLast4}
+                                                </p>
                                                 <p class='slds-text-body_regular'>{cardLast4}</p>
                                             </lightning-layout-item>
                                             <lightning-layout-item padding="around-small"
                                                                    class='fade-in'
                                                                    data-qa-locator={qaLocatorExpirationDate}>
-                                                <p class="slds-form-element__label" title="expirationDate">Card Expiration Date</p>
+                                                <p class="slds-form-element__label" title="expirationDate">
+                                                    {CUSTOM_LABELS.commonMMYY}
+                                                </p>
                                                 <p class='slds-text-body_regular'>{cardExpirationDate}</p>
                                             </lightning-layout-item>
                                         </lightning-layout>
