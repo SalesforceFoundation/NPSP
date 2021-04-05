@@ -61,6 +61,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
         synchronizeNamingExclusions();
     }
 
+    /**
+     * @description ADDR_Contact_TDTM was refactored and its logic was moved down into this
+     * class and supporting entity classes like NPSP_Contact and NPSP_Address.  However, there
+     * is already a Trigger Handler (HH_Households_TDTM) running in the
+     * before insert context for Contacts, and that handler calls the onBeforeInsert method.
+     * Secondary Trigger Handlers running in
+     * the same context will have to use specific trigger context entry point methods, like
+     * this one (or call other public methods directly) until NPSP is able to merge down
+     * Trigger Handlers so that there is only one per Trigger Context for each object.  At
+     * that point the logic in this method will be moved into the onBeforeInsert method and
+     * this method will be removed.
+     */
     public void onBeforeInsert_FromAddrContactTDTM() {
         normalizeLineBreaks();
 
@@ -95,6 +107,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
         applyExclusionsStringChangesToCheckboxes();
     }
 
+    /**
+     * @description ADDR_Contact_TDTM was refactored and its logic was moved down into this
+     * class and supporting entity classes like NPSP_Contact and NPSP_Address.  However, there
+     * is already a Trigger Handler (HH_Households_TDTM) running in the
+     * before update context for Contacts, and that handler calls the onBeforeUpdate method.
+     * Secondary Trigger Handlers running in
+     * the same context will have to use specific trigger context entry point methods, like
+     * this one (or call other public methods directly) until NPSP is able to merge down
+     * Trigger Handlers so that there is only one per Trigger Context for each object.  At
+     * that point the logic in this method will be moved into the onBeforeUpdate method and
+     * this method will be removed.
+     */
     public void onBeforeUpdate_FromAddrContactTDTM() {
         normalizeLineBreaksForContactsWithChangedAddresses();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
