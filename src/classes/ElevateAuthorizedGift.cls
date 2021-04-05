@@ -32,7 +32,6 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public String paymentId;
     @AuraEnabled public DateTime authExpiration;
     @AuraEnabled public String status;
-    @AuraEnabled public String gatewayTransactionId;
     @AuraEnabled public String paymentMethod;
     @AuraEnabled public String originalTransactionId;
     @AuraEnabled public String groupId;
@@ -42,6 +41,8 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public String cardExpirationMonth;
     @AuraEnabled public String cardExpirationYear;
     @AuraEnabled public DateTime authorizedAt;
+    @AuraEnabled public String gatewayTransactionId;
+    @AuraEnabled public String gatewayId;
 
     public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift,
                                  ElevateAuthorizedGiftResponse authorizedGiftResponse) {
@@ -59,10 +60,20 @@ public with sharing class ElevateAuthorizedGift {
         this.cardExpirationMonth = authorizedGiftResponse.expirationMonth();
         this.cardExpirationYear = authorizedGiftResponse.expirationYear();
         this.authorizedAt = authorizedGiftResponse.authorizedAt();
+        this.gatewayId = authorizedGiftResponse.gatewayId();
+        this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
     }
 
     public String groupId() {
         return groupId;
+    }
+
+    public String gatewayId() {
+        return gatewayId;
+    }
+
+    public String gatewayTransactionId() {
+        return gatewayTransactionId;
     }
 
     public DateTime authorizedAt() {
@@ -95,10 +106,6 @@ public with sharing class ElevateAuthorizedGift {
 
     public String status() {
         return status;
-    }
-
-    public String gatewayTransactionId() {
-        return gatewayTransactionId;
     }
 
     public String paymentMethod() {

@@ -12,7 +12,7 @@ import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import PAYMENT_GATEWAY_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
-import PAYMENT_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
+import PAYMENT_GATEWAY_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
 import PAYMENT_AUTHORIZED_AT from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
 import PAYMENT_CREATED_AT from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c';
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
@@ -700,7 +700,9 @@ export default class GeFormRenderer extends LightningElement{
                     [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
                     [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
                     [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
-                    [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt
+                    [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
+                    [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
+                    [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
                 });
 
                 dataImportFromFormState = this.saveableFormState();
@@ -2300,7 +2302,7 @@ export default class GeFormRenderer extends LightningElement{
             [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
             [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
             [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
-            [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
+            [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
             [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
             [apiNameFor(PAYMENT_CREATED_AT)]: responseBody.createdAt
         };

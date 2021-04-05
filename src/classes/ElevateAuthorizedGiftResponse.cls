@@ -39,11 +39,12 @@ public with sharing class ElevateAuthorizedGiftResponse {
         @TestVisible private DateTime authExpiresAt;
         @TestVisible private Datetime authorizedAt;
         @TestVisible private ElevateTransactionStatus status;
-        @TestVisible private String gatewayTransactionId;
         @TestVisible private String paymentType;
         @TestVisible private String originalTransactionId;
         @TestVisible private String batchId;
         @TestVisible private String declineReason;
+        @TestVisible private String gatewayId;
+        @TestVisible private String gatewayTransactionId;
     }
 
     @TestVisible
@@ -57,6 +58,14 @@ public with sharing class ElevateAuthorizedGiftResponse {
     public class Errors {
         public String message;
         public String failure_reason;
+    }
+
+    public String gatewayId() {
+        return body?.gatewayId;
+    }
+
+    public String gatewayTransactionId() {
+        return body?.gatewayTransactionId;
     }
 
     public String id() {
@@ -97,10 +106,6 @@ public with sharing class ElevateAuthorizedGiftResponse {
 
     public List<Errors> errors() {
         return errors;
-    }
-
-    public String gatewayTransactionId() {
-        return this.body?.gatewayTransactionId;
     }
 
     public String paymentMethod() {
