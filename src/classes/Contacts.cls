@@ -156,15 +156,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void onBeforeUpdateAddrConTDTM() {
         normalizeLineBreaksForContactsWithChangedAddresses();
-        List<Contact> addressRefreshQueue = getAddressRefreshQueue();
-        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
-        addressRefreshQueue.addAll(addressOverrideResetsOf());
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
-        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
-
         // set the mailing address for contacts who specify an address lookup or override
+        List<Contact> useCurrentAddressQueue = getUseCurrentAddressQueue();
         if (useCurrentAddressQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
@@ -173,6 +169,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // reset the mailing address for contacts who no longer have an address override
+        List<Contact> addressRefreshQueue = getAddressRefreshQueue();
+        addressRefreshQueue.addAll(addressOverrideResetsOf());
         if (addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
@@ -182,11 +180,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // create any new Default Address objects
+        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
         createAddrFromConBeforeInsertUpdate(new List<Contact>(addressCreationQueue));
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
-        }
+    }
 
     private void deactivateAddrRecursionFlag() {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
