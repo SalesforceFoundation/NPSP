@@ -153,13 +153,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(
             JSON.parse(await getPaymentTransactionStatusValues())
         );
-        try {
-            const domainInfo = await getOrgDomainInfo();
-            tokenHandler.setVisualforceOriginURLs(domainInfo);
-        } catch (error) {
-            this.handleError(error);
-        }
 
+        const domainInfo = await getOrgDomainInfo()
+            .catch(error => {
+                this.handleError(error);
+            });
+
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***
