@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "@sa11y/jest": "^0.2.0",
-    "@salesforce/sfdx-lwc-jest": "^0.7.1",
-    "jest": "^26.0.1"
+    "@sa11y/jest": "^0.3.0",
+    "@salesforce/sfdx-lwc-jest": "^0.12.1",
+    "jest": "^26.6.3"
   },
   "resolutions": {
     "js-yaml": "^3.13.1",
@@ -10,9 +10,9 @@
     "axios": "^0.21.1"
   },
   "scripts": {
-    "test:unit": "lwc-jest",
-    "test:unit:watch": "lwc-jest --watch",
-    "test:unit:debug": "lwc-jest --debug"
+    "test:unit": "lwc-jest --skipApiVersionCheck",
+    "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
+    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"
