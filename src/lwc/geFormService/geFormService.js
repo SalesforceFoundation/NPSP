@@ -2,7 +2,6 @@ import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDe
 import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import getFieldMappings from '@salesforce/apex/GE_GiftEntryController.getFieldMappings';
-import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import { handleError } from 'c/utilTemplateBuilder';
