@@ -14,7 +14,7 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         when running NPSP tests in a different repo"""
         url_template = "{root}/lightning/o/{object}/list"
         name = self._object_name
-        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Cumulus Managed Feature Test")
+        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Nonprofit Success Pack Managed Feature Test")
         object_name = "{}{}".format(namespace, name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
