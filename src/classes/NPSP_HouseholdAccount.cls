@@ -81,7 +81,7 @@ public inherited sharing class NPSP_HouseholdAccount {
                         !Addresses.equalsCaseSensitive(householdAccount.BillingCountry, oldVersion
                                 .BillingCountry);
 
-        if (!isChanged && OrgSettings.isStateCountryPicklistsEnabled) {
+        if (!isChanged && OrgConfig.isStateCountryPicklistsEnabled) {
             isChanged =
                     !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get('BillingStateCode')
                     ), String.valueOf(oldVersion.get('BillingStateCode'))) ||

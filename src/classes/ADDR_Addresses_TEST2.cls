@@ -1509,7 +1509,7 @@ public with sharing class ADDR_Addresses_TEST2 {
             con.MailingPostalCode = null;
             con.MailingState = null;
             con.MailingCountry = null;
-	        if (OrgSettings.isStateCountryPicklistsEnabled) {
+	        if (OrgConfig.isStateCountryPicklistsEnabled) {
 	            con.put('MailingStateCode', null);
 	            con.put('MailingCountryCode', null);
 	        }                

@@ -140,23 +140,23 @@ public inherited sharing class NPSP_Address {
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
 
-        if (!OrgSettings.isStateCountryPicklistsEnabled) {
+        if (!OrgConfig.isStateCountryPicklistsEnabled) {
             sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
             sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
         } else {
             if (addr.MailingCountry__c != null) {
-                if (OrgSettings.validCountriesByLabel.containsKey(addr.MailingCountry__c
+                if (OrgConfig.validCountriesByLabel.containsKey(addr.MailingCountry__c
                         .toUpperCase()
                 )) {
                     sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
                     sobjDst.put(strFieldPrefix + 'CountryCode',
-                            OrgSettings.validCountriesByLabel.get(
+                            OrgConfig.validCountriesByLabel.get(
                                     addr.MailingCountry__c.toUpperCase()));
-                } else if (OrgSettings.validCountriesByCode.containsKey(addr.MailingCountry__c
+                } else if (OrgConfig.validCountriesByCode.containsKey(addr.MailingCountry__c
                         .toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
                     sobjDst.put(strFieldPrefix + 'Country',
-                            OrgSettings.validCountriesByCode.get(
+                            OrgConfig.validCountriesByCode.get(
                                     addr.MailingCountry__c.toUpperCase()));
                 } else {
                     // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
@@ -167,10 +167,10 @@ public inherited sharing class NPSP_Address {
                 sobjDst.put(strFieldPrefix + 'Country', null);
             }
             if (addr.MailingState__c != null) {
-                if (OrgSettings.validStatesByLabel.containsKey(addr.MailingState__c
+                if (OrgConfig.validStatesByLabel.containsKey(addr.MailingState__c
                         .toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', OrgSettings.validStatesByLabel
+                    sobjDst.put(strFieldPrefix + 'StateCode', OrgConfig.validStatesByLabel
                             .get(addr
                             .MailingState__c.toUpperCase()));
                 } else {
@@ -264,7 +264,7 @@ public inherited sharing class NPSP_Address {
         addr.Geolocation__Latitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Latitude');
         addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
 
-        if (OrgSettings.isStateCountryPicklistsEnabled) {
+        if (OrgConfig.isStateCountryPicklistsEnabled) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
             populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
         }
@@ -328,7 +328,7 @@ public inherited sharing class NPSP_Address {
         }
 
         if (String.isEmpty(addr.MailingCountry__c)) {
-            addr.MailingCountry__c = OrgSettings.validCountriesByCode.get(countryCode
+            addr.MailingCountry__c = OrgConfig.validCountriesByCode.get(countryCode
                     .toUpperCase());
         }
     }
@@ -368,9 +368,9 @@ public inherited sharing class NPSP_Address {
             return false;
         }
 
-        String mappedMailingState = (OrgSettings.validStatesByLabel == null)
+        String mappedMailingState = (OrgConfig.validStatesByLabel == null)
                 ? ''
-                : OrgSettings.validStatesByLabel.get(addressMailingState.toUpperCase());
+                : OrgConfig.validStatesByLabel.get(addressMailingState.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }

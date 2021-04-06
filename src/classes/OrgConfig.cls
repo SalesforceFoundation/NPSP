@@ -32,7 +32,7 @@
 * @date 2021
 * @description Org Settings class in NPSP.
 */
-public inherited sharing class OrgSettings {
+public inherited sharing class OrgConfig {
 
     /*******************************************************************************************************
     * @description map from Country name (UPPER CASE) to Country Code
