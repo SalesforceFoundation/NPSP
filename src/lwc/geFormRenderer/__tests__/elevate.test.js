@@ -48,35 +48,39 @@ describe('elevate-capture-group', () => {
     });
 
     it('capture group with existing id when adding gift then id is unchanged', async () => {
-        // TODO: mock resolved value
-        apexAddToCaptureGroup.mockResolvedValue({
+        apexAddToCaptureGroup.mockResolvedValue({});
 
-        });
-
-        const captureGroup = new ElevateCaptureGroup('fakeId');
+        const captureGroup = new ElevateCaptureGroup('fakeCaptureGroupId');
 
         const tokenizableGift = getDummyGift();
 
-        const authorizedGift = await captureGroup.add(tokenizableGift);
+        await captureGroup.add(tokenizableGift);
 
         expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(1);
         expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(0);
 
-        // TODO: assert shape/contents of authorized gift
-        expect(authorizedGift).toMatchObject({
-        //    tokenizedGift: '',
-        //    paymentId: '',
-        //    authExpiration: '',
-        //    status: '',
-        //    gatewayTransactionId: '',
-        //    paymentMethod: '',
-        //    originalTransactionId: '',
-        //    groupId: ''
+        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({
+            groupId: 'fakeCaptureGroupId',
+            tokenizedGift: tokenizableGift
         });
     });
 
-    it('capture group when add fails and retry fails then exception thrown', () => {
-        // TODO
+    it('capture group when add fails then new group id should be used in subsequent call', async () => {
+        apexCreateCaptureGroup.mockResolvedValue({
+            "groupId" : "good-fake-capture-group-id"
+        });
+        apexAddToCaptureGroup.mockRejectedValueOnce({});
+        apexAddToCaptureGroup.mockResolvedValueOnce({});
+
+        const captureGroup = new ElevateCaptureGroup('badFakeCaptureGroup');
+
+        const tokenizableGift = getDummyGift();
+
+        await captureGroup.add(tokenizableGift);
+
+        expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(2); // first add fails due to group being closed
+        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({"groupId": "good-fake-capture-group-id", "tokenizedGift": tokenizableGift })
+        expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(1); // a new group should have been created
     });
 
 });

@@ -10,11 +10,11 @@ class ElevateCaptureGroup {
 
     async add(tokenizedGift) {
         if (!this.elevateBatchId) {
-            this.elevateBatchId = await this.create();   
+            this.elevateBatchId = await this.create();
         }
 
         try {
-            let authorizedGift = await apexAddToCaptureGroup(
+            const authorizedGift = await apexAddToCaptureGroup(
                 {tokenizedGift: tokenizedGift, groupId: this.elevateBatchId}
             );
             return authorizedGift;
@@ -22,7 +22,7 @@ class ElevateCaptureGroup {
             if (!this._hasAddRun) {
                 this._hasAddRun = true;
                 this.elevateBatchId = await this.create();
-                this.add(tokenizedGift);
+                return this.add(tokenizedGift);
             } else {
                 throw(ex); // Propagate error to calling function for error handling
             }
@@ -30,7 +30,7 @@ class ElevateCaptureGroup {
     }
 
     async create() {
-        let captureGroup = await apexCreateCaptureGroup();
+        const captureGroup = await apexCreateCaptureGroup();
         return captureGroup.groupId;
     }
 
