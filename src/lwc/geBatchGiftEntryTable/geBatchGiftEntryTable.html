@@ -4,8 +4,7 @@
             <template if:true={hasData}>
                 <div if:false={isLoaded}
                      class="slds-is-relative">
-                    <lightning-spinner alternative-text="Loading..."
-                                       class="loading">
+                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
                     </lightning-spinner>
                 </div>
 
