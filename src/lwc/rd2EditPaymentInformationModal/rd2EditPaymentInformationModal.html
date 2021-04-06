@@ -63,7 +63,7 @@
                 <footer class="slds-modal__footer slds-clearfix">
                     <div class="slds-float_right">
                         <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
-                            variant="neutral" class="slds-m-right_small" onclick={handleClose} disabled={isSaveButtonDisabled}>
+                            variant="neutral" class="slds-m-right_small" onclick={handleClose} disabled={isSaveButtonDisabled} data-id="cancelButton">
                         </lightning-button>
                         <lightning-button label={labels.saveButtonLabel} title={labels.saveButtonLabel} disabled={isSaveButtonDisabled}
                             variant="brand" onclick={handleProcessCommitment} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton">
