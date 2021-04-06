@@ -45,7 +45,7 @@ const MODES = Object.freeze({
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api sourceFieldsUsedInTemplate = [];
-    @api paymentTransactionStatusValues;
+    @api paymentTransactionStatusValues = {};
     _isLoading = true;
     alert = {};
     _disabledMessage;
@@ -180,9 +180,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get canViewReadOnlyFields() {
         const fields = this.dataImportObjectDescribe.data.fields;
-        return fields?.[apiNameFor(PAYMENT_LAST_4)]
-            && fields?.[apiNameFor(PAYMENT_EXPIRATION_MONTH)]
-            && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)];
+        return fields?.[apiNameFor(PAYMENT_LAST_4)] !== undefined
+            && fields?.[apiNameFor(PAYMENT_EXPIRATION_MONTH)] !== undefined
+            && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)] !== undefined;
     }
     
     get hasUserDisabledWidget() {

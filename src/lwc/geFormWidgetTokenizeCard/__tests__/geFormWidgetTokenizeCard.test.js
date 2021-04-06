@@ -23,13 +23,12 @@ const PAYMENT_METHOD_FIELD = 'Payment_Method__c';
 const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
 const DATA_IMPORT_PAYMENT_STATUS = 'Payment_Status__c';
 
-const createWidgetWithPaymentMethod = (paymentMethod) => {
+const createWidgetElement = () => {
     const element = createElement(
         'c-ge-form-widget-tokenize-card',
         { is: GeFormWidgetTokenizeCard }
     );
     element.sourceFieldsUsedInTemplate = [PAYMENT_METHOD_FIELD];
-    setPaymentMethod(element, paymentMethod);
     return element;
 }
 
@@ -47,7 +46,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should render disabled message and button to re-enable widget', async () => {
-        const element = createWidgetWithPaymentMethod(CREDIT_CARD);
+        const element = createWidgetElement();
+        setPaymentMethod(element, CREDIT_CARD);
         document.body.appendChild(element);
 
         doNotEnterPaymentButton(element).click();
@@ -59,7 +59,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should render extended disabled message without button to re-enable widget', async () => {
-        const element = createWidgetWithPaymentMethod(CASH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, CASH);
         document.body.appendChild(element);
 
         expect(doNotEnterPaymentButton(element)).toBeFalsy();
@@ -70,7 +71,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should allow disabling and enabling of widget', async () => {
-        const element = createWidgetWithPaymentMethod(ACH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
         expect(doNotEnterPaymentButton(element)).toBeTruthy();
@@ -93,7 +95,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should disable itself after switch to invalid/incompatible payment method', async () => {
-        const element = createWidgetWithPaymentMethod(ACH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
         expect(doNotEnterPaymentButton(element)).toBeTruthy();
@@ -110,7 +113,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should re-enable itself after switch to valid payment method', async () => {
-        const element = createWidgetWithPaymentMethod(CASH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, CASH);
         document.body.appendChild(element);
         expect(doNotEnterPaymentButton(element)).toBeFalsy();
 
@@ -127,7 +131,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should permanently disable itself if an payment transaction has been successful', async () => {
-        const element = createWidgetWithPaymentMethod(ACH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
         return Promise.resolve()
@@ -142,7 +147,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should not display ACH input fields when in batch mode', async () => {
-        const element = createWidgetWithPaymentMethod(ACH);
+        const element = createWidgetElement();
+        setPaymentMethod(element, ACH);
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID'
@@ -158,45 +164,71 @@ describe('c-ge-form-widget-tokenize-card', () => {
     });
 
     it('should go into hard read-only mode when credit card payment has been captured', async () => {
-        const element = createWidgetWithPaymentMethod(CREDIT_CARD);
-        element.widgetDataFromState = {
-            ...element.widgetDataFromState,
-            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
-            [DATA_IMPORT_PAYMENT_STATUS]: 'CAPTURED'
-        }
-        document.body.appendChild(element);
-        getObjectInfoAdapter.emit(mockObjectInfo);
-        getRecordAdapter.emit(mockGetRecord);
-        return Promise.resolve()
-            .then(() => {
-                expect(getLastFourDigits(element).not.toBe(null));
-                expect(getCardExpirationDate(element).not.toBe(null));
-                expect(editPaymentInformationButton(element)).toBeFalsy();
-            });
-    });
-
-    it('should go into soft read-only mode when credit card payment has been authorized', async () => {
-        const element = createWidgetWithPaymentMethod(CREDIT_CARD);
-        element.widgetDataFromState = {
-            ...element.widgetDataFromState,
-            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
-            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
-        }
+        const element = createWidgetElement();
         element.paymentTransactionStatusValues = {
             AUTHORIZED: 'AUTHORIZED',
             CAPTURED: 'CAPTURED'
         }
-        document.body.appendChild(element);
-        await flushPromises();
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            [PAYMENT_METHOD_FIELD]: CREDIT_CARD,
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
+            [DATA_IMPORT_PAYMENT_STATUS]: 'CAPTURED'
+        };
 
         getObjectInfoAdapter.emit(mockObjectInfo);
         getRecordAdapter.emit(mockGetRecord);
-        return Promise.resolve()
-            .then(() => {
-                expect(getLastFourDigits(element).not.toBe(null));
-                expect(getCardExpirationDate(element).not.toBe(null));
-                expect(editPaymentInformationButton(element)).toBeTruthy();
-            });
+        document.body.appendChild(element);
+        expect(getLastFourDigits(element)).not.toBe(null);
+        expect(getCardExpirationDate(element)).not.toBe(null);
+        expect(editPaymentInformationButton(element)).toBeFalsy();
+    });
+
+    it('should go into soft read-only mode when credit card payment has been authorized', async () => {
+        const element = createWidgetElement();
+        element.paymentTransactionStatusValues = {
+            AUTHORIZED: 'AUTHORIZED',
+            CAPTURED: 'CAPTURED'
+        }
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            [PAYMENT_METHOD_FIELD]: CREDIT_CARD,
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
+            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
+        }
+
+        getObjectInfoAdapter.emit(mockObjectInfo);
+        getRecordAdapter.emit(mockGetRecord);
+        document.body.appendChild(element);
+        await flushPromises();
+        expect(getLastFourDigits(element)).not.toBe(null);
+        expect(getCardExpirationDate(element)).not.toBe(null);
+        expect(editPaymentInformationButton(element)).toBeTruthy();
+    });
+
+    it('should allow for payment information to be updated in update payment information is clicked', async () => {
+        const element = createWidgetElement();
+        element.paymentTransactionStatusValues = {
+            AUTHORIZED: 'AUTHORIZED',
+            CAPTURED: 'CAPTURED'
+        }
+        element.widgetDataFromState = {
+            ...element.widgetDataFromState,
+            [PAYMENT_METHOD_FIELD]: CREDIT_CARD,
+            [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
+            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
+        }
+
+        getObjectInfoAdapter.emit(mockObjectInfo);
+        getRecordAdapter.emit(mockGetRecord);
+        document.body.appendChild(element);
+
+        editPaymentInformationButton(element).click();
+
+        await flushPromises();
+        expect(editPaymentInformationButton(element)).toBeFalsy();
+        expect(cancelEditPaymentInformationButton(element)).toBeTruthy();
+        expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
     });
 });
 
