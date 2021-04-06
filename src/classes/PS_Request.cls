@@ -361,8 +361,8 @@ public inherited sharing class PS_Request {
                 || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
             ) {
                 value = ROLE_PAYMENT_COMMITMENTS;
-            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP ||
-                       endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
+            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
+                || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
 
                 value = ROLE_PAYMENT_BATCH;
             }
