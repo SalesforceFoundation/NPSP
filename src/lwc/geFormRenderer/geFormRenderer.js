@@ -167,7 +167,10 @@ export default class GeFormRenderer extends LightningElement{
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
+    @track widgetConfig = {
+        sourceFieldsUsedInTemplate: undefined,
+        paymentTransactionStatusValues: undefined
+    }
     @track isAccessible = true;
 
     _isFormCollapsed = false;
@@ -362,6 +365,7 @@ export default class GeFormRenderer extends LightningElement{
 
     initializeWidgetConfig() {
         this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
+        this.widgetConfig.paymentTransactionStatusValues = this.PAYMENT_TRANSACTION_STATUS_ENUM;
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
@@ -2348,13 +2352,11 @@ export default class GeFormRenderer extends LightningElement{
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-
-        const isTransactionSentToElevate = paymentStatus &&
+        return paymentStatus &&
             (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED);
-
-        return isTransactionSentToElevate;
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED
+            );
     }
 
     handleElevateTransactionBDIError(exceptionDataError) {

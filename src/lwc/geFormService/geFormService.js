@@ -43,16 +43,6 @@ class GeFormService {
     fieldTargetMappings;
     donationFieldTemplateLabel;
 
-    getPaymentTransactionStatusEnums = async () => {
-        try {
-            return Object.freeze(
-                JSON.parse(await getPaymentTransactionStatusValues())
-            );
-        } catch(error) {
-            handleError(error);
-        }
-    }
-
     getOrgDomain = async () => {
         try {
             return await getOrgDomainInfo();

@@ -13,6 +13,7 @@ import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCVV from '@salesforce/label/c.commonCVV';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardLast4 from '@salesforce/label/c.commonCardLast4';
 import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
 import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
@@ -35,6 +36,7 @@ import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
+import commonPermissionErrorMessage from '@salesforce/label/c.commonPermissionErrorMessage';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
@@ -225,6 +227,7 @@ import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarning
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
+import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 
 class GeLabelService {
 
@@ -247,6 +250,7 @@ class GeLabelService {
         commonBatches,
         commonCVV,
         commonCancel,
+        commonCardLast4,
         commonCardType,
         commonClone,
         commonCreditNumber,
@@ -269,6 +273,7 @@ class GeLabelService {
         commonNoItems,
         commonPaymentServices,
         commonPercent,
+        commonPermissionErrorMessage,
         commonReadMore,
         commonRequired,
         commonReviewForm,
@@ -459,6 +464,7 @@ class GeLabelService {
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
+        updatePaymentInformation
     });
 
     /*******************************************************************************
