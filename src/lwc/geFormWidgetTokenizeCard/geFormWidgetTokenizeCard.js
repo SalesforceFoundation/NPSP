@@ -9,7 +9,7 @@ import {
     unregisterListener,
 } from 'c/pubsubNoPageRef';
 
-import PsElevateTokenHandler from 'c/psElevateTokenHandler';
+import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
@@ -44,7 +44,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
-    tokenHandler = new PsElevateTokenHandler();
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 
@@ -119,7 +118,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     requestSetPaymentMethod(paymentMethod) {
         this.isLoading = true;
-        this.tokenHandler.setPaymentMethod(
+        tokenHandler.setPaymentMethod(
             this.iframe(), paymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
         ).catch(err => {
@@ -156,7 +155,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         );
         try {
             const domainInfo = await getOrgDomainInfo();
-            this.tokenHandler.setVisualforceOriginURLs(domainInfo);
+            tokenHandler.setVisualforceOriginURLs(domainInfo);
         } catch (error) {
             this.handleError(error);
         }
@@ -169,7 +168,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     renderedCallback() {
         //Listens for a message from the Visualforce iframe.
         let component = this;
-        this.tokenHandler.registerPostMessageListener(component);
+        tokenHandler.registerPostMessageListener(component);
 
         registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleEventDisabledWidget, this);
     }
@@ -185,7 +184,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Returns the Elevate credit card tokenization Visualforce page URL
     */
     get tokenizeCardPageUrl() {
-        return this.tokenHandler.getTokenizeCardPageURL();
+        return tokenHandler.getTokenizeCardPageURL();
     }
 
     /***
@@ -247,7 +246,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
-        this.tokenHandler.handleMessage(message);
+        tokenHandler.handleMessage(message);
 
         if (message.isReadyToMount && !this.isMounted) {
             this.requestMount();
@@ -255,7 +254,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestMount() {
-        this.tokenHandler.mount(this.iframe(), this._currentPaymentMethod, this.handleError, this.resolveMount);
+        tokenHandler.mount(this.iframe(), this._currentPaymentMethod, this.handleError, this.resolveMount);
     }
 
     resolveMount = () => {
@@ -270,7 +269,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
      */
     requestToken() {
         this.clearError();
-        return this.tokenHandler.requestToken({
+        return tokenHandler.requestToken({
             iframe: this.iframe(),
             tokenizeParameters: this.buildTokenizeParameters(),
             eventAction: this.tokenizeEventAction(),

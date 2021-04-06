@@ -28,7 +28,7 @@ const NON_NAMESPACED_CHARACTER = 'c';
 /***
  * @description Payment services Elevate credit card tokenization service
  */
-export default class psElevateTokenHandler {
+class psElevateTokenHandler {
     /***
      * @description Custom labels
      */
@@ -252,3 +252,6 @@ export default class psElevateTokenHandler {
         this._componentRef.handleMessage(reply);
     }
 }
+
+export default new psElevateTokenHandler();
+
