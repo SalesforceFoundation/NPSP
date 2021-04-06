@@ -25,17 +25,16 @@ describe('c-ge-form-renderer', () => {
         jest.clearAllMocks();
     });
 
-    it('loads with template', async () => {
+    it('loads a template with four sections', async () => {
 
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
         getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
-        const element = createElement('c-ge-form-renderer', {is: GeFormRenderer});
+        const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
 
         document.body.appendChild(element);
         await flushPromises();
 
         expect(retrieveDefaultSGERenderWrapper).toHaveBeenCalledTimes(1);
-        expect(element).toMatchSnapshot();
         const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
         expect(sections).toHaveLength(4);
     });
@@ -58,7 +57,11 @@ describe('c-ge-form-renderer', () => {
         saveButton.click();
 
         await flushPromises();
-        expect(element).toMatchSnapshot();
+
+        const pageLevelMessage = element.shadowRoot.querySelector('c-util-page-level-message');
+        const pElement = pageLevelMessage.querySelector('p');
+
+        expect(pElement.innerHTML).toBe('The following fields are required: Donor Type, Donation Date, Donation Amount');
     });
 
     it('form with payment widget, when payment method changed to credit card then payment iframe loads', async () => {
@@ -72,11 +75,9 @@ describe('c-ge-form-renderer', () => {
         document.body.appendChild(element);
         await flushPromises();
 
-        const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
-        // for this template, the account1 billing city field is the second field in the second section
-
-        const sectionWithWidget = sections[0];
+        const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
         expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
+
         dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
         await flushPromises();
 
