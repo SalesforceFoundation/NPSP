@@ -6309,7 +6309,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Displayed under spinner during BGE credit card authorization</shortDescription>
-        <value>Authorizing Credit Card...</value>
+        <value>Authorizing...</value>
     </labels>
     <labels>
         <fullName>geBatchGiftsCount</fullName>
