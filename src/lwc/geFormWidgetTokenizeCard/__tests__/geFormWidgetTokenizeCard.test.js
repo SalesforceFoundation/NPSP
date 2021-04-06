@@ -179,6 +179,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
         getObjectInfoAdapter.emit(mockObjectInfo);
         getRecordAdapter.emit(mockGetRecord);
         document.body.appendChild(element);
+
+        await flushPromises();
         expect(getLastFourDigits(element)).not.toBe(null);
         expect(getCardExpirationDate(element)).not.toBe(null);
         expect(editPaymentInformationButton(element)).toBeFalsy();
@@ -200,6 +202,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
         getObjectInfoAdapter.emit(mockObjectInfo);
         getRecordAdapter.emit(mockGetRecord);
         document.body.appendChild(element);
+
         await flushPromises();
         expect(getLastFourDigits(element)).not.toBe(null);
         expect(getCardExpirationDate(element)).not.toBe(null);
