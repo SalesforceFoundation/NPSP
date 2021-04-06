@@ -221,6 +221,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
         this.resetWidget();
+        this.setCurrentPaymentMethod();
         if (this.shouldHandleWidgetDataChange()) {
             this.handleWidgetDataChange();
         }
@@ -234,15 +235,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     handleWidgetDataChange() {
-        this._currentPaymentMethod = this.hasPaymentMethodFieldInForm()
-            ? this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)]
-            : PAYMENT_METHOD_CREDIT_CARD;
         if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
             this.setMode(MODES.READ_ONLY);
             this.setMode(MODES.CHARGE);
             return;
         }
         this.setMode(MODES.DEACTIVATE);
+    }
+
+    setCurrentPaymentMethod() {
+        this._currentPaymentMethod = this.hasPaymentMethodFieldInForm()
+            ? this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)]
+            : PAYMENT_METHOD_CREDIT_CARD;
     }
 
     hasPaymentMethodFieldInForm() {
