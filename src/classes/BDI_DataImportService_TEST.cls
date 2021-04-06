@@ -145,14 +145,14 @@ private with sharing class BDI_DataImportService_TEST {
     * @description Tests that BDI correctly processes all data import records that meet custom criteria.
     */
     @isTest
-    private static void shouldProcessDataImportsWithAllCriteriaMet() {
+    private static void shouldProcessDataImportsWithCapturedStatus() {
         Data_Import_Settings__c diSettings = getDataImportSettings();
 
         BDI_DataImportService service = new BDI_DataImportService(false,
                 BDI_MappingServiceAdvanced.getInstance());
         service.injectDataImportSettings(diSettings);
 
-        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(10);
         insert testDataImports;
 
         for (DataImport__c dataImport : testDataImports) {
@@ -168,6 +168,36 @@ private with sharing class BDI_DataImportService_TEST {
                 'processed by BDI.');
             System.assertEquals(BDI_DataImport_API.bdiImported, dataImport.Status__c,
                 'The data import was not successfully processed.');
+        }
+    }
+
+    /*******************************************************************************************************************
+    * @description Tests that BDI correctly processes all data import records that meet custom criteria.
+    */
+    @isTest
+    private static void shouldProcessDryRunDataImportsWhenAuthorized() {
+        Data_Import_Settings__c diSettings = getDataImportSettings();
+
+        BDI_DataImportService service = new BDI_DataImportService(true,
+                BDI_MappingServiceAdvanced.getInstance());
+        service.injectDataImportSettings(diSettings);
+
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(10);
+        insert testDataImports;
+
+        for (DataImport__c dataImport : testDataImports) {
+            dataImport.Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name();
+        }
+
+        Test.startTest();
+            service.process(null, diSettings, testDataImports);
+        Test.stopTest();
+
+        for (DataImport__c dataImport : [SELECT Status__c FROM DataImport__c]) {
+            System.assert(String.isNotBlank(dataImport.Status__c), 'The data import should have been' +
+                    'processed by BDI.');
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c,
+                    'The data import was not successfully processed.');
         }
     }
 
