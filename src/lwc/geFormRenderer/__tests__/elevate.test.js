@@ -72,15 +72,18 @@ describe('elevate-capture-group', () => {
         apexAddToCaptureGroup.mockRejectedValueOnce({});
         apexAddToCaptureGroup.mockResolvedValueOnce({});
 
-        const captureGroup = new ElevateCaptureGroup('badFakeCaptureGroup');
+        const captureGroup = new ElevateCaptureGroup('badFakeCaptureGroupId');
 
         const tokenizableGift = getDummyGift();
 
         await captureGroup.add(tokenizableGift);
 
         expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(2); // first add fails due to group being closed
-        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({"groupId": "good-fake-capture-group-id", "tokenizedGift": tokenizableGift })
+        expect(apexAddToCaptureGroup).toHaveBeenNthCalledWith(1, {"groupId": "badFakeCaptureGroupId", "tokenizedGift": tokenizableGift });
         expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(1); // a new group should have been created
+
+        // second call uses known good group id
+        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({"groupId": "good-fake-capture-group-id", "tokenizedGift": tokenizableGift });
     });
 
 });
@@ -94,10 +97,3 @@ const getDummyGift = () => {
         'USD'
     );
 }
-
-describe('elevate-tokenizable-gift', () => {
-    afterEach(() => {
-        clearDOM();
-        jest.clearAllMocks();
-    });
-});
