@@ -29,18 +29,9 @@ describe('c-ge-batch-gift-entry-header', () => {
     }
 
     describe('getRecord @wire data', () => {
-        it('renders user record details', async () => {
+        it('renders the data import batch record name as the title', async () => {
             const element = setup();
 
-            element.batchTotals = {
-                hasValuesGreaterThanZero: true,
-                hasPaymentsWithExpiredAuthorizations: false,
-                totalGiftsCount: 20,
-                processedGiftsCount: 10,
-                failedPaymentsCount: 0,
-                failedGiftsCount: 5,
-                expiredPaymentsCount: 0
-            }
 
             await flushPromises();
             const headerElement = element.shadowRoot.querySelectorAll('c-util-page-header');
@@ -94,7 +85,7 @@ describe('c-ge-batch-gift-entry-header', () => {
             element.batchTotals = {
                 hasValuesGreaterThanZero: false,
                 hasPaymentsWithExpiredAuthorizations: false,
-                totalGiftsCount: 20,
+                totalGiftsCount: 0,
                 processedGiftsCount: 0,
                 failedPaymentsCount: 0,
                 failedGiftsCount: 0,

@@ -57,10 +57,10 @@ public inherited sharing class GiftBatchStatusGroup {
     }
 
     public Boolean isPaymentFailed() {
-      return paymentStatus == GE_PaymentServices.ElevateTransactionStatus.DECLINED.name() ||
-      paymentStatus == GE_PaymentServices.ElevateTransactionStatus.EXPIRED.name() ||
-      paymentStatus == GE_PaymentServices.ElevateTransactionStatus.NONRETRYABLEERROR.name() ||
-      paymentStatus == GE_PaymentServices.ElevateTransactionStatus.RETRYABLEERROR.name();
+      return paymentStatus == GE_PaymentServices.ElevateTransactionStatus.DECLINED.name()
+          || paymentStatus == GE_PaymentServices.ElevateTransactionStatus.EXPIRED.name()
+          || paymentStatus == GE_PaymentServices.ElevateTransactionStatus.NONRETRYABLEERROR.name()
+          || paymentStatus == GE_PaymentServices.ElevateTransactionStatus.RETRYABLEERROR.name();
     }
     
     public Boolean isPaymentAuthorizationExpired() {
