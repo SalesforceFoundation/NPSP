@@ -17,7 +17,6 @@ jest.mock(
 import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 import SystemModstamp from '@salesforce/schema/AcceptedEventRelation.SystemModstamp';
 
-const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
 
 const mockGetRecord = require('./data/getRecord.json');
 const mockGetSchedule = require('./data/getSchedule.json');
@@ -60,7 +59,7 @@ describe('c-rd-active-schedule', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
             getSchedules.mockResolvedValue(mockGetSchedule);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -95,7 +94,7 @@ describe('c-rd-active-schedule', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
             getSchedules.mockResolvedValue(mockGetSchedules);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
