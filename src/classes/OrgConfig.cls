@@ -39,15 +39,27 @@ public inherited sharing class OrgConfig {
     */
     public static Map<String, String> validCountriesByLabel = new Map<String, String>();
 
+    public Map<String, String> validCountriesByLabel() {
+        return validCountriesByLabel;
+    }
+
     /*******************************************************************************************************
     * @description map from State name (UPPER CASE) to State Code
     */
     public static Map<String, String> validStatesByLabel = new Map<String, String>();
 
+    public Map<String, String> validStatesByLabel() {
+        return validStatesByLabel;
+    }
+
     /*******************************************************************************************************
     * @description map from Country Code to Country Name
     */
     public static Map<String, String> validCountriesByCode = new Map<String, String>();
+
+    public Map<String, String> validCountriesByCode() {
+        return validCountriesByCode;
+    }
 
     /*******************************************************************************************************
     * @description specifies whether state and country picklists are enabled in this org.
@@ -61,6 +73,10 @@ public inherited sharing class OrgConfig {
             return isStateCountryPicklistsEnabled;
         }
         private set;
+    }
+
+    public Boolean isStateCountryPicklistsEnabled() {
+        return isStateCountryPicklistsEnabled;
     }
 
     /*******************************************************************************************************

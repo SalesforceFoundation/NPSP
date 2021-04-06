@@ -36,6 +36,17 @@ public inherited sharing class NPSP_Address {
 
     private Address__c addr;
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     public NPSP_Address(Address__c address) {
         this.addr = address;
     }
@@ -140,23 +151,23 @@ public inherited sharing class NPSP_Address {
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
 
-        if (!OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
             sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
             sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
         } else {
             if (addr.MailingCountry__c != null) {
-                if (OrgConfig.validCountriesByLabel.containsKey(addr.MailingCountry__c
+                if (orgConfig.validCountriesByLabel().containsKey(addr.MailingCountry__c
                         .toUpperCase()
                 )) {
                     sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
                     sobjDst.put(strFieldPrefix + 'CountryCode',
-                            OrgConfig.validCountriesByLabel.get(
+                            orgConfig.validCountriesByLabel().get(
                                     addr.MailingCountry__c.toUpperCase()));
-                } else if (OrgConfig.validCountriesByCode.containsKey(addr.MailingCountry__c
+                } else if (orgConfig.validCountriesByCode().containsKey(addr.MailingCountry__c
                         .toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
                     sobjDst.put(strFieldPrefix + 'Country',
-                            OrgConfig.validCountriesByCode.get(
+                            orgConfig.validCountriesByCode().get(
                                     addr.MailingCountry__c.toUpperCase()));
                 } else {
                     // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
@@ -167,10 +178,10 @@ public inherited sharing class NPSP_Address {
                 sobjDst.put(strFieldPrefix + 'Country', null);
             }
             if (addr.MailingState__c != null) {
-                if (OrgConfig.validStatesByLabel.containsKey(addr.MailingState__c
+                if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
                         .toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', OrgConfig.validStatesByLabel
+                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
                             .get(addr
                             .MailingState__c.toUpperCase()));
                 } else {
@@ -264,7 +275,7 @@ public inherited sharing class NPSP_Address {
         addr.Geolocation__Latitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Latitude');
         addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
 
-        if (OrgConfig.isStateCountryPicklistsEnabled) {
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
             populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
         }
