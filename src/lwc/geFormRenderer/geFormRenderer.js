@@ -654,12 +654,10 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 if (this.shouldTokenizeCard()) {
                     tokenizedGift = new ElevateTokenizeableGift(
-                        this.cardholderNames.firstName,
-                        this.cardholderNames.lastName,
+                        this.cardholderNames,
                         getCurrencyLowestCommonDenominator(
                             this.getFieldValueFromFormState(DONATION_AMOUNT)
-                        ),
-                        CURRENCY,
+                        )
                     );
 
                     this.updateFormState(await tokenizedGift.tokenize(sectionsList));

@@ -1,10 +1,12 @@
+import CURRENCY from '@salesforce/i18n/currency';
+
 class ElevateTokenizeabledGift {
 
-    constructor(firstName, lastName, amount, currencyCode) {
+    constructor(fullName, amount) {
         this.amount = amount;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.currencyCode = currencyCode;
+        this.firstName = fullName.firstName;
+        this.lastName = fullName.lastName;
+        this.currencyCode = CURRENCY;
         this.paymentMethodToken = null;
     }
 
