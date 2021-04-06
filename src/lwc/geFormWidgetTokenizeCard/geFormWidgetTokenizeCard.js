@@ -86,6 +86,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     enableChargeMode() {
+        if(this._isReadOnlyMode) return;
         if (this.isInNonChargeableState()) {
             this.handleUserEnabledWidget();
             this._hasEventDisabledWidget = false;
@@ -99,10 +100,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     enableReadOnlyMode() {
-        this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
-        this.toggleWidget(true);
-        this._isReadOnlyMode = true;
-        this._hasUserDisabledWidget = false;
+        if (this.hasReadOnlyStatus()) {
+            this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
+            this.toggleWidget(true);
+            this._isReadOnlyMode = true;
+            this._hasUserDisabledWidget = false;
+        }
     }
 
     enableCriticalErrorMode() {
@@ -234,14 +237,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         if (this.hasPaymentMethodFieldInForm()) {
             this._currentPaymentMethod = this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
             if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
-                if (this.hasReadOnlyStatus()) {
-                    this.setMode(MODES.READ_ONLY)
-                } else {
-                    this.setMode(MODES.CHARGE);
-                }
-            } else {
-               this.setMode(MODES.DEACTIVATE)
+                this.setMode(MODES.READ_ONLY);
+                this.setMode(MODES.CHARGE);
+                return;
             }
+            this.setMode(MODES.DEACTIVATE);
             return;
         }
         this._currentPaymentMethod = PAYMENT_METHOD_CREDIT_CARD;
