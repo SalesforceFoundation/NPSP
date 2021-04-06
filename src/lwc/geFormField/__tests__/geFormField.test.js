@@ -1,6 +1,5 @@
 import { createElement } from 'lwc';
 import GeFormField from 'c/geFormField';
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 // Import mock data
@@ -11,11 +10,6 @@ const recordTypeIdFieldMapping = require('./data/recordTypeIdFieldMapping.json')
 const elementJSON = require('./data/picklistElement.json');
 const recordTypeIdElementJSON = require('./data/recordTypeIdElement.json');
 
-// Register a test wire adapter to control @wire(getPicklistValues)
-const getPicklistValuesWireAdapter = registerLdsTestWireAdapter(getPicklistValues);
-
-// Register a test wire adapter to control @wire(getObjectInfo)
-const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
 
 jest.useFakeTimers();
 jest.mock('c/geFormService', () => {
@@ -101,8 +95,8 @@ describe('c-ge-form-field', () => {
     it('should return 3 picklist options', async () => {
         const element = createStandardPicklistElement();
 
-        getObjectInfoAdapter.emit(mockSObjectDescribeInfo);
-        getPicklistValuesWireAdapter.emit(mockGetPicklistValues);
+        getObjectInfo.emit(mockSObjectDescribeInfo);
+        getPicklistValues.emit(mockGetPicklistValues);
 
         document.body.appendChild(element);
 
@@ -120,7 +114,7 @@ describe('c-ge-form-field', () => {
     it('should return 2 picklist options for record type id fields', async () => {
         const element = createRecordTypeIdPicklistElement();
 
-        getObjectInfoAdapter.emit(mockSObjectDescribeInfo);
+        getObjectInfo.emit(mockSObjectDescribeInfo);
 
         document.body.appendChild(element);
 
@@ -137,8 +131,8 @@ describe('c-ge-form-field', () => {
     it('has correct default value for standard picklists', async () => {
         const element = createStandardPicklistElement();
 
-        getObjectInfoAdapter.emit(mockSObjectDescribeInfo);
-        getPicklistValuesWireAdapter.emit(mockGetPicklistValues);
+        getObjectInfo.emit(mockSObjectDescribeInfo);
+        getPicklistValues.emit(mockGetPicklistValues);
 
         document.body.appendChild(element);
 
@@ -152,7 +146,7 @@ describe('c-ge-form-field', () => {
     it('has correct default value for record type id picklists', async () => {
         const element = createRecordTypeIdPicklistElement();
 
-        getObjectInfoAdapter.emit(mockSObjectDescribeInfo);
+        getObjectInfo.emit(mockSObjectDescribeInfo);
 
         document.body.appendChild(element);
 
@@ -166,8 +160,8 @@ describe('c-ge-form-field', () => {
     it('has correct value when changed in form state', async () => {
         const element = createStandardPicklistElement();
 
-        getObjectInfoAdapter.emit(mockSObjectDescribeInfo);
-        getPicklistValuesWireAdapter.emit(mockGetPicklistValues);
+        getObjectInfo.emit(mockSObjectDescribeInfo);
+        getPicklistValues.emit(mockGetPicklistValues);
 
         document.body.appendChild(element);
 
