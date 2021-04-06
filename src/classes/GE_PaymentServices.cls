@@ -168,14 +168,6 @@ public with sharing class GE_PaymentServices {
         return createTransaction(requestBody);
     }
 
-//    public UTIL_Http.Response addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-//        return captureGroupService.sendAddRequest(tokenizedGift, groupId);
-//    }
-//
-//    public UTIL_Http.Response createCaptureGroup() {
-//        return captureGroupService.sendCreateRequest();
-//    }
-
     /**
      * @description Method sends a purchase requet to Elevate.
      * Check out the Payments swagger in the SFDO Payments repo for additional information.
@@ -204,8 +196,6 @@ public with sharing class GE_PaymentServices {
             .withBody(jsonRequestBody)
             .build();
     }
-
-
 
     /***
     * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
