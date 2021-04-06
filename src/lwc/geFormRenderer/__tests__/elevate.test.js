@@ -70,13 +70,15 @@ describe('elevate-capture-group', () => {
             "groupId" : "good-fake-capture-group-id"
         });
         apexAddToCaptureGroup.mockRejectedValueOnce({});
-        apexAddToCaptureGroup.mockResolvedValueOnce({});
+
+        const DUMMY_RESPONSE = { groupId: 'DUMMY_GROUP_ID', tokenizedGift: {} };
+        apexAddToCaptureGroup.mockResolvedValueOnce(DUMMY_RESPONSE);
 
         const captureGroup = new ElevateCaptureGroup('badFakeCaptureGroupId');
 
         const tokenizableGift = getDummyGift();
 
-        await captureGroup.add(tokenizableGift);
+        const captureGroupResponse = await captureGroup.add(tokenizableGift);
 
         expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(2); // first add fails due to group being closed
         expect(apexAddToCaptureGroup).toHaveBeenNthCalledWith(1, {"groupId": "badFakeCaptureGroupId", "tokenizedGift": tokenizableGift });
@@ -84,6 +86,8 @@ describe('elevate-capture-group', () => {
 
         // second call uses known good group id
         expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({"groupId": "good-fake-capture-group-id", "tokenizedGift": tokenizableGift });
+
+        expect(captureGroupResponse).toBe(DUMMY_RESPONSE);
     });
 
 });
