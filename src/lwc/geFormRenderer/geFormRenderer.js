@@ -645,6 +645,7 @@ export default class GeFormRenderer extends LightningElement{
 
         if (isFormReadyToSave) {
             // Disable save button
+            this.loadingText = '';
             event.target.disable = true;
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
