@@ -11,7 +11,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
-import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 

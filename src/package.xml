@@ -1916,7 +1916,6 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
-        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2281,6 +2280,7 @@
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
+        <members>commonEditPaymentInformation</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonErrorPrefix</members>

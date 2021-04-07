@@ -21,6 +21,7 @@ import commonCriticalError from '@salesforce/label/c.commonCriticalError';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
+import commonEditPaymentInformation from '@salesforce/label/c.commonEditPaymentInformation';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
@@ -227,7 +228,6 @@ import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarning
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
-import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
 
 class GeLabelService {
 
@@ -258,6 +258,7 @@ class GeLabelService {
         commonDefaultValue,
         commonDelete,
         commonEdit,
+        commonEditPaymentInformation,
         commonError,
         commonFieldLabel,
         commonFieldNotFound,
@@ -464,7 +465,6 @@ class GeLabelService {
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
-        updatePaymentInformation
     });
 
     /*******************************************************************************
