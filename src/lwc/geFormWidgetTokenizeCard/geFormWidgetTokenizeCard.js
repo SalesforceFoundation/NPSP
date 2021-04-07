@@ -235,7 +235,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     handleWidgetDataChange() {
-        if (this.hasValidPaymentMethod(this._currentPaymentMethod)) {
+        if (this.hasValidPaymentMethod()) {
             this.setMode(MODES.READ_ONLY);
             this.setMode(MODES.CHARGE);
             return;
@@ -278,12 +278,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.readOnlyStatuses().includes(this.currentPaymentStatus());
     }
 
-    hasValidPaymentMethod(paymentMethod) {
-        if (this.isInBatchGiftEntry() && paymentMethod === PAYMENT_METHODS.ACH) {
+    hasValidPaymentMethod() {
+        if (this.isInBatchGiftEntry() && this._currentPaymentMethod === PAYMENT_METHODS.ACH) {
             return false;
         }
-        return paymentMethod === PAYMENT_METHODS.ACH
-            || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+        return this._currentPaymentMethod === PAYMENT_METHODS.ACH
+            || this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     tokenizeEventAction() {
@@ -292,10 +292,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             : TOKENIZE_CREDIT_CARD_EVENT_ACTION;
     }
 
-    requestSetPaymentMethod(paymentMethod) {
+    requestSetPaymentMethod() {
         this._isLoading = true;
         tokenHandler.setPaymentMethod(
-            this.iframe(), paymentMethod, this.handleError,
+            this.iframe(), this._currentPaymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
         ).catch(err => {
             this.handleError(err);

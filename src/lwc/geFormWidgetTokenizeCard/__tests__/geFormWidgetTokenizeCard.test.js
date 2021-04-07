@@ -2,15 +2,9 @@ import { createElement } from 'lwc';
 import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
 import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { getRecord } from 'lightning/uiRecordApi';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 
 const mockGetRecord = require('./data/DIMockRecord.json');
 const mockObjectInfo = require('./data/dataImportObjectDescribeInfo.json');
-
-const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
 
 const CASH = 'Cash';
 const CREDIT_CARD = 'Credit Card';
@@ -176,8 +170,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
             [DATA_IMPORT_PAYMENT_STATUS]: 'CAPTURED'
         };
 
-        getObjectInfoAdapter.emit(mockObjectInfo);
-        getRecordAdapter.emit(mockGetRecord);
+        getObjectInfo.emit(mockObjectInfo);
+        getRecord.emit(mockGetRecord);
         document.body.appendChild(element);
 
         await flushPromises();
@@ -199,8 +193,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
             [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
         }
 
-        getObjectInfoAdapter.emit(mockObjectInfo);
-        getRecordAdapter.emit(mockGetRecord);
+        getObjectInfo.emit(mockObjectInfo);
+        getRecord.emit(mockGetRecord);
         document.body.appendChild(element);
 
         await flushPromises();
@@ -222,8 +216,8 @@ describe('c-ge-form-widget-tokenize-card', () => {
             [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
         }
 
-        getObjectInfoAdapter.emit(mockObjectInfo);
-        getRecordAdapter.emit(mockGetRecord);
+        getObjectInfo.emit(mockObjectInfo);
+        getRecord.emit(mockGetRecord);
         document.body.appendChild(element);
 
         editPaymentInformationButton(element).click();
