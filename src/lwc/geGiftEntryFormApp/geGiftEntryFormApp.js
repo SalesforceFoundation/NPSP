@@ -50,7 +50,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
     @track batchTotals = {}
 
-    _hasPaymentsWithExpiredAuthorizations = false;
+    _hasDisplayedExpiredAuthorizationWarning = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -82,25 +82,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
 
-        if(this.batchTotals.hasPaymentsWithExpiredAuthorizations &&
-            !this._hasPaymentsWithExpiredAuthorizations) {
-            const detail = {
-                modalProperties: {
-                    componentName: 'geModalPrompt',
-                    showCloseButton: false
-                },
-                componentProperties: {
-                    'severity': 'warning',
-                    'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
-                    'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
-                    'buttonText': this.CUSTOM_LABELS.commonOkay
-                },
-            };
-            this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
-            this._hasPaymentsWithExpiredAuthorizations = true;
+        if(this.shouldDisplayExpiredAuthorizationWarning) {
+            this.displayExpiredAuthorizationWarningModal();
         }
     }
-
 
     /*******************************************************************************
     * @description Receives a 'submit' event from geFormRenderer and proceeds down
@@ -232,6 +217,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     get giftsTableTitle() {
         return format(geBatchGiftsHeader, [this.batchName]);
+    }
+
+    get shouldDisplayExpiredAuthorizationWarning() {
+        return this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && !this._hasDisplayedExpiredAuthorizationWarning;
     }
 
     @wire(getRecord, {
@@ -393,6 +383,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.dispatchEvent(new CustomEvent('togglemodal', {
             detail: modalContent
         }));
+    }
+
+    displayExpiredAuthorizationWarningModal() {
+        const detail = {
+            modalProperties: {
+                componentName: 'geModalPrompt',
+                showCloseButton: false
+            },
+            componentProperties: {
+                'severity': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'buttonText': this.CUSTOM_LABELS.commonOkay
+            },
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+        this._hasDisplayedExpiredAuthorizationWarning = true;        
     }
 
     buildModalConfigSelectColumns(available, selected) {

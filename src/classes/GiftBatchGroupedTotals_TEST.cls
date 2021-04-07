@@ -40,31 +40,38 @@ private with sharing class GiftBatchGroupedTotals_TEST {
     @isTest
     private static void shouldReturnMapContainingCorrectRecordCounts() {
         Id DUMMY_BATCH_ID_0 = Id.valueOf('001xa000003DIlo');
+        String elevatePaymentAuthorizedStatus = GE_PaymentServices.ElevateTransactionStatus.AUTHORIZED.name();
+        String elevatePaymentDeclinedStatus = GE_PaymentServices.ElevateTransactionStatus.DECLINED.name();
+
+        String dataImportBatchFieldAPIName = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
+        String dataImportPaymentStatusFieldAPIName = String.valueOf(DataImport__c.fields.Payment_Status__c);
+        String dataImportStatusFieldName = String.valueOf(DataImport__c.fields.Status__c);
+
         List<AggregateResultProxy> proxiesForBatch0 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),BDI_DataImport_API.bdiImported)
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiImported)
                 .withAliasAndValue('recordCount', 1),
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),BDI_DataImport_API.bdiFailed)
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiFailed)
                 .withAliasAndValue('recordCount', 2),
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Payment_Status__c),GE_PaymentServices.ElevateTransactionStatus.AUTHORIZED.name())
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentAuthorizedStatus)
                 .withAliasAndValue('recordCount', 3)
         };
 
         Id DUMMY_BATCH_ID_1 = Id.valueOf('002zb000004EJmp');
         List<AggregateResultProxy> proxiesForBatch1 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
-                .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_1)
-                .withAliasAndValue('Payment_Status__c',GE_PaymentServices.ElevateTransactionStatus.DECLINED.name())
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_1)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentDeclinedStatus)
                 .withAliasAndValue('recordCount', 4),
             new AggregateResultProxy()
-                .withAliasAndValue('NPSP_Data_Import_Batch__c', DUMMY_BATCH_ID_1)
-                .withAliasAndValue('Status__c', 'Failed')
-                .withAliasAndValue('Payment_Status__c',GE_PaymentServices.ElevateTransactionStatus.DECLINED.name())
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_1)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiFailed)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentDeclinedStatus)
                 .withAliasAndValue('recordCount', 5)
         };
 

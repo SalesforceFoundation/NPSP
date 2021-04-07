@@ -32,7 +32,6 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('renders the data import batch record name as the title', async () => {
             const element = setup();
 
-
             await flushPromises();
             const headerElement = element.shadowRoot.querySelectorAll('c-util-page-header');
             const headerElements = headerElement[0].shadowRoot.querySelectorAll('h1');
@@ -45,15 +44,6 @@ describe('c-ge-batch-gift-entry-header', () => {
         it('should render three action buttons', async () => {
             const element = setup();
 
-            element.batchTotals = {
-                hasValuesGreaterThanZero: true,
-                hasPaymentsWithExpiredAuthorizations: false,
-                totalGiftsCount: 20,
-                processedGiftsCount: 10,
-                failedPaymentsCount: 0,
-                failedGiftsCount: 5,
-                expiredPaymentsCount: 0
-            }
             await flushPromises();
             const buttons = element.shadowRoot.querySelectorAll('lightning-button');
             expect(buttons.length).toBe(3);
