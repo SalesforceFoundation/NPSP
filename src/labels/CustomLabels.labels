@@ -5525,7 +5525,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to edit elevate payment information</shortDescription>
-        <value>Edit Payment Information</value>
+        <value>Edit payment information.</value>
     </labels>
     <labels>
         <fullName>commonElevateFailedOnboarding</fullName>
