@@ -35,7 +35,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateRecordCreateFailed from '@salesforce/label/c.RD2_ElevateRecordCreateFailed';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
-import updatePaymentInformation from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import updatePaymentInformation from '@salesforce/label/c.commonEditPaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
