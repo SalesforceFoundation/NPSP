@@ -2,6 +2,8 @@ import { createElement } from 'lwc';
 import GeFormWidgetTokenizeCard from 'c/geFormWidgetTokenizeCard';
 import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { getRecord } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiRecordApi/uiRecordApi";
+import { getObjectInfo } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiObjectInfoApi/uiObjectInfoApi";
 
 const mockGetRecord = require('./data/DIMockRecord.json');
 const mockObjectInfo = require('./data/dataImportObjectDescribeInfo.json');
