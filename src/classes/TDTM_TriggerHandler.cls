@@ -218,13 +218,11 @@ public class TDTM_TriggerHandler {
 
     private static Map<String, Type> typeMap = new Map<String, Type>();
     private static Type getTypeForClassNamed(String str) {
-        if (typeMap.get(str) != null) {
-            return typeMap.get(str);
-        } else {
+        if (typeMap.get(str) == null) {
             Type typeInst = Type.forName(str);
             typeMap.put(str, typeInst);
-            return typeInst;
         }
+        return typeMap.get(str);
     }
 
     /*******************************************************************************************************
