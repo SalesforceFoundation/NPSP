@@ -93,6 +93,78 @@ public inherited sharing class NPSP_Address {
         return this.addr.Household_Account__c;
     }
 
+    public Boolean isAddressMatchFuzzyWith(NPSP_Address other) {
+        Address__c otherAddress = other.getRecord();
+
+        if (addr == null || otherAddress == null) {
+            return false;
+        }
+
+        Integer cChange = 0;
+        if (strCleanup(addr.MailingStreet__c) != strCleanup(otherAddress.MailingStreet__c)
+                && otherAddress.MailingStreet__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addr.MailingStreet2__c) != strCleanup(otherAddress.MailingStreet2__c)
+                && otherAddress.MailingStreet2__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addr.MailingCity__c) != strCleanup(otherAddress.MailingCity__c)
+                && otherAddress.MailingCity__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addr.MailingState__c) != strCleanup(otherAddress.MailingState__c)
+                && otherAddress.MailingState__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addr.MailingPostalCode__c) != strCleanup(otherAddress.MailingPostalCode__c)
+                && otherAddress.MailingPostalCode__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addr.MailingCountry__c) != strCleanup(otherAddress.MailingCountry__c)
+                && otherAddress.MailingCountry__c != null) {
+            cChange++;
+        }
+        if (addr.Address_Type__c != null
+                && strCleanup(addr.Address_Type__c) != strCleanup(otherAddress.Address_Type__c)
+                && otherAddress.Address_Type__c != null) {
+            cChange++;
+        }
+        return cChange <= 1;
+    }
+
+    public String getAddrKey() {
+        Address__c addr = this.getRecord();
+        String strKey =
+                strCleanup(addr.MailingStreet__c) +
+                        strCleanup(addr.MailingStreet2__c) +
+                        strCleanup(addr.MailingCity__c) +
+                        strCleanup(addr.MailingState__c) +
+                        strCleanup(addr.MailingPostalCode__c) +
+                        strCleanup(addr.MailingCountry__c) +
+                        strCleanup(addr.Address_Type__c) +
+                        (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
+                        (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
+                        (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
+                        (addr.Seasonal_End_Month__c != null ? addr.Seasonal_End_Month__c : '');
+        return strKey;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to remove all whitespace and to lowercase the string
+    * @param str the string to clean up
+    * @return string
+    */
+    private static String strCleanup(String str) {
+        if (str != null) {
+            str = str.replace(' ', '');
+            str = str.toLowerCase();
+        } else {
+            str = '';
+        }
+        return str;
+    }
+
     public Boolean overlapsWith(NPSP_Address other) {
         if (other == null) {
             return false;
@@ -287,8 +359,8 @@ public inherited sharing class NPSP_Address {
         addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
-            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
-            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
+            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
+            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc);
         }
 
         // if specified, also include Address Type
@@ -343,14 +415,14 @@ public inherited sharing class NPSP_Address {
     * @return void
     */
     @TestVisible
-    private static void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    private void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc) {
         String countryCode = (String) sobjSrc.get(fieldPrefixSrc + 'CountryCode');
         if (String.isBlank(countryCode)) {
             return;
         }
 
         if (String.isEmpty(addr.MailingCountry__c)) {
-            addr.MailingCountry__c = OrgConfig.validCountriesByCode.get(countryCode
+            addr.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
                     .toUpperCase());
         }
     }
@@ -360,17 +432,16 @@ public inherited sharing class NPSP_Address {
     *              or does not match the Account's BillingStateCode or Contact's MailingStateCode value.
     * @param sobjSrc the source Account or Contact
     * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
-    * @param addr the Address object to update accordingly
     * @return void
     */
     @TestVisible
-    private static void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    private void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc) {
         String stateCode = (String) sobjSrc.get(fieldPrefixSrc + 'StateCode');
         if (String.isBlank(stateCode)) {
             return;
         }
 
-        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode, addr.MailingState__c)) {
+        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode)) {
 
             // Assume it's a valid statecode
             addr.MailingState__c = stateCode;
@@ -381,18 +452,17 @@ public inherited sharing class NPSP_Address {
     * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the
     *              Address record's Mailing State.
     * @param stateCode the BillingStateCode or MailingStateCode
-    * @param addressMailingState the Address Mailing State
     * @return void
     */
     @TestVisible
-    private static Boolean isMatchingStateCode(String stateCode, String addressMailingState) {
-        if (String.isBlank(addressMailingState)) {
+    private Boolean isMatchingStateCode(String stateCode) {
+        if (String.isBlank(addr.MailingState__c)) {
             return false;
         }
 
-        String mappedMailingState = (OrgConfig.validStatesByLabel == null)
+        String mappedMailingState = (orgConfig.validStatesByLabel() == null)
                 ? ''
-                : OrgConfig.validStatesByLabel.get(addressMailingState.toUpperCase());
+                : orgConfig.validStatesByLabel().get(addr.MailingState__c.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
@@ -405,6 +475,18 @@ public inherited sharing class NPSP_Address {
     public Boolean isSeasonalAddr() {
         return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+    }
+
+    public void mailingState(String state) {
+        addr.MailingState__c = state;
+    }
+
+    public String mailingState() {
+        return addr.MailingState__c;
+    }
+
+    public String mailingCountry() {
+        return addr.MailingCountry__c;
     }
 
 }

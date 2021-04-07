@@ -62,6 +62,8 @@ public with sharing class ADDR_Addresses_TEST2 {
     */
     private static List<Address__c> listAddrT;
 
+    private static OrgConfig orgConfig = new OrgConfig();
+
     /*********************************************************************************************************
     * @description
     * utility to set up common test data for the Address tests.
@@ -1509,7 +1511,7 @@ public with sharing class ADDR_Addresses_TEST2 {
             con.MailingPostalCode = null;
             con.MailingState = null;
             con.MailingCountry = null;
-	        if (OrgConfig.isStateCountryPicklistsEnabled) {
+	        if (orgConfig.isStateCountryPicklistsEnabled()) {
 	            con.put('MailingStateCode', null);
 	            con.put('MailingCountryCode', null);
 	        }                
