@@ -134,7 +134,6 @@ public inherited sharing class NPSP_Address {
     }
 
     public String getAddrKey() {
-        Address__c addr = this.getRecord();
         String strKey =
                 strCleanup(addr.MailingStreet__c) +
                         strCleanup(addr.MailingStreet2__c) +
