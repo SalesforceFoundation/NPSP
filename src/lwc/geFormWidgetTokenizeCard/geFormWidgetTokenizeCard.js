@@ -52,6 +52,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _isDisabled = false;
     _hasUserDisabledWidget = false;
     _hasEventDisabledWidget = false;
+    _isEditMode = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -86,26 +87,35 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     enableChargeMode() {
-        if(this._isReadOnlyMode) return;
-        if (this.isInNonChargeableState()) {
+        if (this.canEnterChargeMode()) {
             this.handleUserEnabledWidget();
             this._hasEventDisabledWidget = false;
             return;
         }
-        this.requestSetPaymentMethod(this._currentPaymentMethod);
+        if (this.isMounted) {
+            this.requestSetPaymentMethod(this._currentPaymentMethod);
+        }
     }
 
-    isInNonChargeableState() {
-        return !this.isMounted && !this._hasUserDisabledWidget;
+    canEnterChargeMode() {
+        return !(this.isMounted
+            || this._isReadOnlyMode || this._isEditMode
+            || this._hasUserDisabledWidget
+        );
     }
 
     enableReadOnlyMode() {
+        if (!this.canEnterReadOnlyMode()) return;
         if (this.hasReadOnlyStatus()) {
             this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
             this.toggleWidget(true);
             this._isReadOnlyMode = true;
             this._hasUserDisabledWidget = false;
         }
+    }
+
+    canEnterReadOnlyMode() {
+        return !(this._isEditMode || this._hasUserDisabledWidget);
     }
 
     enableCriticalErrorMode() {
@@ -123,18 +133,26 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     disableWidget() {
+        this._isReadOnlyMode = false;
+        this._showCancelButton = false;
         this.toggleWidget(true, this.disabledWidgetMessage);
         this._hasEventDisabledWidget = true;
     }
 
     disableReadOnlyMode() {
+        if (!this.hasValidPaymentMethod()) {
+            this.setMode(MODES.DEACTIVATE);
+            return;
+        }
+        this._isEditMode = true;
         this._isReadOnlyMode = false;
         this._showCancelButton = true;
-        this.enableChargeMode();
+        this.handleUserEnabledWidget();
     }
 
     cancelEditPaymentInformation() {
         this._showCancelButton = false;
+        this._isEditMode = false;
         this.enableReadOnlyMode();
     }
 
@@ -220,18 +238,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     set widgetDataFromState(widgetState) {
         this._widgetDataFromState = widgetState;
-        this.resetWidget();
         this.setCurrentPaymentMethod();
         if (this.shouldHandleWidgetDataChange()) {
             this.handleWidgetDataChange();
         }
-    }
-
-    resetWidget() {
-        this._isReadOnlyMode = false;
-        this._showCancelButton= false;
-        this._isDisabled = false;
-        this.dataImportId = null;
     }
 
     handleWidgetDataChange() {
@@ -272,7 +282,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasReadOnlyStatus() {
-        if(!this.isInBatchGiftEntry() || isEmpty(this.paymentTransactionStatusValues)) {
+        if (!this.isInBatchGiftEntry()) {
             return false;
         }
         return this.readOnlyStatuses().includes(this.currentPaymentStatus());
@@ -394,11 +404,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     /***
     * @description Function enables or disables the widget based on provided args.
     *
-    * @param {boolean} _isDisabled: Determines whether or not the widget is disabled.
+    * @param {boolean} isDisabled: Determines whether or not the widget is disabled.
     * @param {string} message: Text to be disabled in the widgets body when disabled.
     */
-    toggleWidget(_isDisabled, message) {
-        this._isDisabled = _isDisabled;
+    toggleWidget(isDisabled, message) {
+        this._isDisabled = isDisabled;
         this.isMounted = false;
         this._disabledMessage = message || null;
     }
