@@ -40,6 +40,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 // Written by jason venable and evan callahan
 // at the NPSP Sprint 2010
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Sets the Lead to be converted
     */
@@ -492,7 +503,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
                         'MailingState, MailingPostalCode, MailingCountry, ';
-                if (OrgConfig.isStateCountryPicklistsEnabled) {
+                if (orgConfig.isStateCountryPicklistsEnabled()) {
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
                 }
                 strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';

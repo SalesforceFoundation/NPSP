@@ -34,6 +34,17 @@
 */
 public with sharing class ContactService {
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description compares two contacts' addresses
     * @param con1 a Contact
@@ -64,7 +75,7 @@ public with sharing class ContactService {
                         !Addresses.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
                         !Addresses.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
 
-        if (!isChanged && OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
             isChanged =
                     !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingStateCode')), String.valueOf(con2.get('MailingStateCode'))) ||
                             !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
@@ -84,9 +95,9 @@ public with sharing class ContactService {
                         con1.MailingState == null &&
                         con1.MailingPostalCode == null &&
                         // note that we decided to ignore country so that a default value won't create unnecessary address objects
-                        (con1.MailingCountry == null || OrgConfig.isStateCountryPicklistsEnabled) &&
+                        (con1.MailingCountry == null || orgConfig.isStateCountryPicklistsEnabled()) &&
                         // only test StateCode if picklists enabled.
-                        (!OrgConfig.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
+                        (!orgConfig.isStateCountryPicklistsEnabled() || con1.get('MailingStateCode') == null);
         return isEmpty;
 
     }

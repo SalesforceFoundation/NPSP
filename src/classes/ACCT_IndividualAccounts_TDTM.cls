@@ -36,6 +36,17 @@
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
+    @TestVisible
     private HouseholdNamingService householdNamingService {
         get {
             if (householdNamingService == null) {
@@ -415,7 +426,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             'Phone', 'Fax'
         };
 
-        if (OrgConfig.isStateCountryPicklistsEnabled) {
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
             selectFields.add('MailingCountryCode');
             selectFields.add('MailingStateCode');
             selectFields.add('OtherCountryCode');

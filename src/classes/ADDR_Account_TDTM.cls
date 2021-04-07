@@ -36,6 +36,17 @@
 */
 public class ADDR_Account_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Account that handles Address management.
     * @param listNew the list of Accounts from trigger new. 
@@ -135,9 +146,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingState != null ||
            acc1.BillingPostalCode != null ||
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-           (acc1.BillingCountry != null && !OrgConfig.isStateCountryPicklistsEnabled) ||
+           (acc1.BillingCountry != null && !orgConfig.isStateCountryPicklistsEnabled()) ||
            // only test StateCode if picklists enabled.
-           (OrgConfig.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
+           (orgConfig.isStateCountryPicklistsEnabled() && acc1.get('BillingStateCode') != null);
 
         return isSpecified;   
     }

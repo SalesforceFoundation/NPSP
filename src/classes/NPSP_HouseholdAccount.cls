@@ -34,6 +34,17 @@
 */
 public inherited sharing class NPSP_HouseholdAccount {
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     private Account householdAccount;
     private Account oldVersion;
 
@@ -81,7 +92,7 @@ public inherited sharing class NPSP_HouseholdAccount {
                         !Addresses.equalsCaseSensitive(householdAccount.BillingCountry, oldVersion
                                 .BillingCountry);
 
-        if (!isChanged && OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
             isChanged =
                     !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get('BillingStateCode')
                     ), String.valueOf(oldVersion.get('BillingStateCode'))) ||
