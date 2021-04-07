@@ -66,7 +66,7 @@ public inherited sharing class HouseholdAccounts {
     * @param accountId The Id of an Account to retrieve Contacts for
     * @return Contact[] List of Contacts for the specified Account. Empty list if the Account has no Contacts.
     */
-    public Contact[] getContacts(Id accountId) {
+    public Contact[] membersOf(Id accountId) {
         if (!queryAccountIds.contains(accountId)) {
             queryAccountIds.add(accountId);
 

@@ -1782,11 +1782,11 @@ public with sharing class ADDR_Addresses_TEST {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
-        HouseholdAccounts contactRepo = new HouseholdAccounts(new Set<Id>{
+        HouseholdAccounts householdAccounts = new HouseholdAccounts(new Set<Id>{
                 account.Id
         });
 
-        Contact[] contacts = contactRepo.getContacts(account.Id);
+        Contact[] contacts = householdAccounts.membersOf(account.Id);
         System.assertEquals(0, contacts.size());
     }
 
@@ -1847,7 +1847,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Account account : accounts) {
             Contact[] expectedContacts = contactsByAccountId.get(account.Id);
-            Contact[] actualContacts = contactRepo.getContacts(account.Id);
+            Contact[] actualContacts = contactRepo.membersOf(account.Id);
 
             System.assertEquals(UTIL_SObject.extractIds(expectedContacts), UTIL_SObject.extractIds(actualContacts));
         }

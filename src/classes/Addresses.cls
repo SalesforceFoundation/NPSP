@@ -645,7 +645,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getMapAccIdListAddrHH(listAccId);
 
         // Construct Contact repository for Accounts having Addresses
-        HouseholdAccounts contactRepo = new HouseholdAccounts(mapAccIdListAddrHH.keySet());
+        HouseholdAccounts householdAccounts = new HouseholdAccounts(mapAccIdListAddrHH.keySet());
 
         for (Id accId : mapAccIdListAddrHH.keySet()) {
             if (mapAccIdListAddrHH.get(accId) != null) {
@@ -681,7 +681,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     for (Integer i = 1, size = listAddr.size(); i < size; i++) {
                         Address__c addrDupe = listAddr[i];
 
-                        replaceAddress(addrDupe, listAddr[0], contactRepo.getContacts(accId), dmlWrapper);
+                        replaceAddress(addrDupe, listAddr[0], householdAccounts.membersOf(accId), dmlWrapper);
                         dmlWrapper.objectsToDelete.add(addrDupe);
                     }
                 }
