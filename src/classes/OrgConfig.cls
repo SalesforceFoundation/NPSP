@@ -37,7 +37,7 @@ public inherited sharing class OrgConfig {
     /*******************************************************************************************************
     * @description map from Country name (UPPER CASE) to Country Code
     */
-    public static Map<String, String> validCountriesByLabel = new Map<String, String>();
+    private static Map<String, String> validCountriesByLabel = new Map<String, String>();
 
     public Map<String, String> validCountriesByLabel() {
         return validCountriesByLabel;

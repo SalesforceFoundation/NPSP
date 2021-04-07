@@ -359,8 +359,8 @@ public inherited sharing class NPSP_Address {
         addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
-            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc, addr);
-            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc, addr);
+            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
+            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc);
         }
 
         // if specified, also include Address Type
@@ -415,14 +415,14 @@ public inherited sharing class NPSP_Address {
     * @return void
     */
     @TestVisible
-    private static void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    private void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc) {
         String countryCode = (String) sobjSrc.get(fieldPrefixSrc + 'CountryCode');
         if (String.isBlank(countryCode)) {
             return;
         }
 
         if (String.isEmpty(addr.MailingCountry__c)) {
-            addr.MailingCountry__c = OrgConfig.validCountriesByCode.get(countryCode
+            addr.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
                     .toUpperCase());
         }
     }
@@ -432,17 +432,16 @@ public inherited sharing class NPSP_Address {
     *              or does not match the Account's BillingStateCode or Contact's MailingStateCode value.
     * @param sobjSrc the source Account or Contact
     * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
-    * @param addr the Address object to update accordingly
     * @return void
     */
     @TestVisible
-    private static void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc, Address__c addr) {
+    private void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc) {
         String stateCode = (String) sobjSrc.get(fieldPrefixSrc + 'StateCode');
         if (String.isBlank(stateCode)) {
             return;
         }
 
-        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode, addr.MailingState__c)) {
+        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode)) {
 
             // Assume it's a valid statecode
             addr.MailingState__c = stateCode;
@@ -453,18 +452,17 @@ public inherited sharing class NPSP_Address {
     * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the
     *              Address record's Mailing State.
     * @param stateCode the BillingStateCode or MailingStateCode
-    * @param addressMailingState the Address Mailing State
     * @return void
     */
     @TestVisible
-    private static Boolean isMatchingStateCode(String stateCode, String addressMailingState) {
-        if (String.isBlank(addressMailingState)) {
+    private Boolean isMatchingStateCode(String stateCode) {
+        if (String.isBlank(addr.MailingState__c)) {
             return false;
         }
 
-        String mappedMailingState = (OrgConfig.validStatesByLabel == null)
+        String mappedMailingState = (orgConfig.validStatesByLabel() == null)
                 ? ''
-                : OrgConfig.validStatesByLabel.get(addressMailingState.toUpperCase());
+                : orgConfig.validStatesByLabel().get(addr.MailingState__c.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
@@ -477,6 +475,18 @@ public inherited sharing class NPSP_Address {
     public Boolean isSeasonalAddr() {
         return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+    }
+
+    public void mailingState(String state) {
+        addr.MailingState__c = state;
+    }
+
+    public String mailingState() {
+        return addr.MailingState__c;
+    }
+
+    public String mailingCountry() {
+        return addr.MailingCountry__c;
     }
 
 }

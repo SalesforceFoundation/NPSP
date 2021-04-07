@@ -1036,12 +1036,13 @@ public with sharing class ADDR_Addresses_TEST {
         String countryCode = 'US';
         String country = 'United States';
 
-        NPSP_Address.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
-        System.assertEquals(null, addressEmptyCountry.MailingCountry__c);
+        NPSP_Address npspAddressEmptyCountry = new NPSP_Address(addressEmptyCountry);
+        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
+        System.assertEquals(null, npspAddressEmptyCountry.mailingCountry());
 
         con.put('MailingCountryCode', countryCode);
-        NPSP_Address.populateAddressCountryFromCountryCode(con, 'Mailing', addressEmptyCountry);
-        System.assertEquals(country, addressEmptyCountry.MailingCountry__c);
+        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
+        System.assertEquals(country, npspAddressEmptyCountry.mailingCountry());
 
         Test.stopTest();
     }
@@ -1070,16 +1071,17 @@ public with sharing class ADDR_Addresses_TEST {
 
         String stateCode = 'CA';
 
-        NPSP_Address.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals(null, addressEmptyState.MailingState__c);
+        NPSP_Address npspAddressEmptyState = new NPSP_Address(addressEmptyState);
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(null, npspAddressEmptyState.mailingState());
 
         con.put('MailingStateCode', stateCode);
-        NPSP_Address.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(stateCode, npspAddressEmptyState.mailingState());
 
-        addressEmptyState.MailingState__c = 'NY';
-        NPSP_Address.populateAddressStateFromStateCode(con, 'Mailing', addressEmptyState);
-        System.assertEquals(stateCode, addressEmptyState.MailingState__c);
+        npspAddressEmptyState.mailingState('NY');
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(stateCode, npspAddressEmptyState.mailingState());
 
         Test.stopTest();
     }
@@ -1105,14 +1107,15 @@ public with sharing class ADDR_Addresses_TEST {
 
         String stateCode = 'CA';
 
-        addressMatch.MailingState__c = null;
-        System.assertEquals(false, NPSP_Address.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        NPSP_Address npspAddressMatch = new NPSP_Address(addressMatch);
+        npspAddressMatch.mailingState(null);
+        System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
 
-        addressMatch.MailingState__c = 'Hawaii';
-        System.assertEquals(false, NPSP_Address.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        npspAddressMatch.mailingState('Hawaii');
+        System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
 
-        addressMatch.MailingState__c = 'California';
-        System.assertEquals(true, NPSP_Address.isMatchingStateCode(stateCode, addressMatch.MailingState__c));
+        npspAddressMatch.mailingState('California');
+        System.assertEquals(true, npspAddressMatch.isMatchingStateCode(stateCode));
 
         Test.stopTest();
     }
