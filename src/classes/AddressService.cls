@@ -67,4 +67,63 @@ public inherited sharing class AddressService {
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }
     }
+
+    /*******************************************************************************************************
+    * @description utility to compare a Contact or Account address to the Address record
+    * @param sObj Account or Contact
+    * @param addr Address
+    * @return boolean. true if any of the Address fields on the Contact are different from this Address record
+    */
+    public Boolean isSObjectAddressDifferent(SObject sObj, Address__c addr) {
+        if (sObj == null || addr == null) {
+            return false;
+        }
+        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
+        String prefix = (isContact ? 'Mailing' : 'Billing');
+
+        Boolean isDifferent = (
+                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
+                        (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
+                        (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
+                        (isContact &&
+                                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
+                                        !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
+                        )
+        );
+        return isDifferent;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether two strings are equal, using a case sensitve comparison
+    * @param str1 The first string
+    * @param str2 The second string
+    * @return boolean
+    ********************************************************************************************************/
+    public Boolean equalsCaseSensitive(String str1, String str2) {
+        if (str1 == null) {
+            return str2 == null;
+        }
+        if (str2 == null) {
+            return false;
+        }
+        return str1.equals(str2);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to combine mailing street fields into a single string with embedded CR LF
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public String getMultilineStreet(Address__c addr) {
+        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        if (isOneLineStreetAddress) {
+            return addr.MailingStreet__c;
+        }
+        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
+    }
+
 }

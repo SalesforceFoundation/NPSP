@@ -264,11 +264,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            if (Addresses.shouldUpdateAddress(con, addr)) {
-                NPSP_Address npspAddress = new NPSP_Address(addr);
-                NPSP_Contact npspContact = new NPSP_Contact(con);
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            NPSP_Contact npspContact = new NPSP_Contact(con);
+            if (npspContact.mailingAddressIsDifferentFrom(npspAddress)) {
                 npspContact.mailingAddress(npspAddress);
-
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
                 if (npspAddress.householdId() != npspContact.accountId()) {

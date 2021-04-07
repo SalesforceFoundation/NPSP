@@ -47,6 +47,17 @@ public inherited sharing class NPSP_Address {
         set;
     }
 
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     public NPSP_Address(Address__c address) {
         this.addr = address;
     }
@@ -145,7 +156,7 @@ public inherited sharing class NPSP_Address {
     * @return void
     */
     public void copyOntoSObject(SObject sobjDst, String strFieldPrefix, String strFieldAddrType) {
-        sobjDst.put(strFieldPrefix + 'Street', Addresses.getMultilineStreet(addr));
+        sobjDst.put(strFieldPrefix + 'Street', addressService.getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
@@ -206,22 +217,22 @@ public inherited sharing class NPSP_Address {
             return false;
         }
         if (includeAddressType) {
-            if (!Addresses.equalsCaseSensitive(
+            if (!addressService.equalsCaseSensitive(
                     addr.Address_Type__c, addrOld.Address_Type__c)) {
                 return false;
             }
         }
-        return (Addresses.equalsCaseSensitive(
+        return (addressService.equalsCaseSensitive(
                 addr.MailingStreet__c, addrOld.MailingStreet__c) &&
-                Addresses.equalsCaseSensitive(
+                addressService.equalsCaseSensitive(
                         addr.MailingStreet2__c, addrOld.MailingStreet2__c) &&
-                Addresses.equalsCaseSensitive(
+                addressService.equalsCaseSensitive(
                         addr.MailingCity__c, addrOld.MailingCity__c) &&
-                Addresses.equalsCaseSensitive(
+                addressService.equalsCaseSensitive(
                         addr.MailingState__c, addrOld.MailingState__c) &&
-                Addresses.equalsCaseSensitive(
+                addressService.equalsCaseSensitive(
                         addr.MailingPostalCode__c, addrOld.MailingPostalCode__c) &&
-                Addresses.equalsCaseSensitive(
+                addressService.equalsCaseSensitive(
                         addr.MailingCountry__c, addrOld.MailingCountry__c));
     }
 

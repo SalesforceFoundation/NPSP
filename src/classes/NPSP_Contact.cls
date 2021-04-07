@@ -48,6 +48,17 @@ public inherited sharing class NPSP_Contact {
         set;
     }
 
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
@@ -112,6 +123,10 @@ public inherited sharing class NPSP_Contact {
 
     public void mailingAddress(NPSP_Address npspAddress) {
         npspAddress.copyOntoSObject(contact, 'Mailing','npe01__Primary_Address_Type__c');
+    }
+
+    public Boolean mailingAddressIsDifferentFrom(NPSP_Address npspAddress) {
+       return addressService.isSObjectAddressDifferent(contact, npspAddress.getRecord());
     }
 
 }
