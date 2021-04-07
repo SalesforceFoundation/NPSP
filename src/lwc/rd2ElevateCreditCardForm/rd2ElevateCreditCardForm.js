@@ -48,7 +48,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _paymentMethod = undefined;
     _nextDonationDate = undefined;
     _isEditPayment = false;
-
+    
     @api isEditMode;
     @api cardLastFour;
     @api cardLastFourLabel;
@@ -78,7 +78,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
     }
 
-    @api
+    @api 
     get nextDonationDate() {
         const localDate = new Date(this._nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
