@@ -93,35 +93,41 @@ public inherited sharing class NPSP_Address {
         return this.addr.Household_Account__c;
     }
 
-    public Boolean isAddressMatchFuzzyWith(NPSP_Address addressOther) {
+    public Boolean isAddressMatchFuzzyWith(NPSP_Address other) {
+        Address__c otherAddress = other.getRecord();
 
-        Address__c addrNew = this.getRecord();
-        Address__c addrOld = addressOther.getRecord();
-
-        if (addrNew == null || addrOld == null) {
+        if (addr == null || otherAddress == null) {
             return false;
         }
 
         Integer cChange = 0;
-        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null) {
+        if (strCleanup(addr.MailingStreet__c) != strCleanup(otherAddress.MailingStreet__c)
+                && otherAddress.MailingStreet__c != null) {
             cChange++;
         }
-        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null) {
+        if (strCleanup(addr.MailingStreet2__c) != strCleanup(otherAddress.MailingStreet2__c)
+                && otherAddress.MailingStreet2__c != null) {
             cChange++;
         }
-        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null) {
+        if (strCleanup(addr.MailingCity__c) != strCleanup(otherAddress.MailingCity__c)
+                && otherAddress.MailingCity__c != null) {
             cChange++;
         }
-        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null) {
+        if (strCleanup(addr.MailingState__c) != strCleanup(otherAddress.MailingState__c)
+                && otherAddress.MailingState__c != null) {
             cChange++;
         }
-        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null) {
+        if (strCleanup(addr.MailingPostalCode__c) != strCleanup(otherAddress.MailingPostalCode__c)
+                && otherAddress.MailingPostalCode__c != null) {
             cChange++;
         }
-        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null) {
+        if (strCleanup(addr.MailingCountry__c) != strCleanup(otherAddress.MailingCountry__c)
+                && otherAddress.MailingCountry__c != null) {
             cChange++;
         }
-        if (addrNew.Address_Type__c != null && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null) {
+        if (addr.Address_Type__c != null
+                && strCleanup(addr.Address_Type__c) != strCleanup(otherAddress.Address_Type__c)
+                && otherAddress.Address_Type__c != null) {
             cChange++;
         }
         return cChange <= 1;
