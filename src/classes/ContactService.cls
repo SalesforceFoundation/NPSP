@@ -45,6 +45,17 @@ public with sharing class ContactService {
         set;
     }
 
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description compares two contacts' addresses
     * @param con1 a Contact
@@ -68,17 +79,27 @@ public with sharing class ContactService {
 
         // both provided, so look for at least one change between address fields
         Boolean isChanged =
-                !Addresses.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
-                        !Addresses.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
-                        !Addresses.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
-                        !Addresses.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
-                        !Addresses.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
-                        !Addresses.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
+                !addressService.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
+                        !addressService.equalsCaseSensitive(con1.MailingCity, con2
+                                .MailingCity) ||
+                        !addressService.equalsCaseSensitive(con1.MailingState, con2
+                                .MailingState) ||
+                        !addressService.equalsCaseSensitive(con1.MailingPostalCode, con2
+                                .MailingPostalCode) ||
+                        !addressService.equalsCaseSensitive(con1.MailingCountry, con2
+                                .MailingCountry) ||
+                        !addressService.equalsCaseSensitive(con1
+                                .npe01__Primary_Address_Type__c,
+                                con2
+                                .npe01__Primary_Address_Type__c);
 
         if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
             isChanged =
-                    !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingStateCode')), String.valueOf(con2.get('MailingStateCode'))) ||
-                            !Addresses.equalsCaseSensitive(String.valueOf(con1.get('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
+                    !addressService.equalsCaseSensitive(String.valueOf(con1.get
+                            ('MailingStateCode')),
+                            String.valueOf(con2.get('MailingStateCode'))) ||
+                            !addressService.equalsCaseSensitive(String.valueOf(con1.get
+                                    ('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
         }
         return isChanged;
     }

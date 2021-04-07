@@ -154,51 +154,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description utility to compare a Contact or Account address to the Address record
-    * @param sObj Account or Contact
-    * @param addr Address
-    * @return boolean. true if any of the Address fields on the Contact are different from this Address record
-    */
-    public static Boolean shouldUpdateAddress(SObject sObj, Address__c addr) {
-        if (sObj == null || addr == null) {
-            return false;
-        }
-        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
-        String prefix = (isContact ? 'Mailing' : 'Billing');
-
-        Boolean isDifferent = (
-                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
-                        (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
-                        (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
-                        (isContact &&
-                                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
-                                        !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
-                        )
-        );
-        return isDifferent;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns whether two strings are equal, using a case sensitve comparison
-    * @param str1 The first string
-    * @param str2 The second string
-    * @return boolean
-    ********************************************************************************************************/
-    public static Boolean equalsCaseSensitive(String str1, String str2) {
-        if (str1 == null) {
-            return str2 == null;
-        }
-        if (str2 == null) {
-            return false;
-        }
-        return str1.equals(str2);
-    }
-
-    /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default
     * address, as well as checking to see if there is a seasonal address that should be used instead.
@@ -316,11 +271,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            if (Addresses.shouldUpdateAddress(accountsById.get(accId), addr)) {
-                NPSP_Address address = new NPSP_Address(addr);
-                NPSP_HouseholdAccount household = new NPSP_HouseholdAccount(acc);
-                household.billingAddress(address);
-                listAccUpdate.add(household.getRecord());
+            NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount
+                    (accountsById.get(accId));
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
+                npspHouseholdAccount.billingAddress(npspAddress);
+                listAccUpdate.add(npspHouseholdAccount.getRecord());
             }
 
             // check other addresses on this household that are no longer the default
@@ -346,10 +302,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     if (npspContact.currentAddress() == null) {
                         npspContact.getRecord().is_Address_Override__c = false;
                     }
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
                     if (npspContact.hasAddressOverride() == false ||
                             npspContact.currentAddress() == addr.Id) {
-                        if (Addresses.shouldUpdateAddress(con, addr)) {
+                        if (npspContact.mailingAddressIsDifferentFrom(npspAddress)) {
                             npspContact.currentAddress(npspAddress);
                             listConUpdate.add(con);
                         }
@@ -406,19 +361,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             listAddrHH.add(addr);
         }
         return mapAccIdListAddrHH;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to combine mailing street fields into a single string with embedded CR LF
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static String getMultilineStreet(Address__c addr) {
-        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
-        if (isOneLineStreetAddress) {
-            return addr.MailingStreet__c;
-        }
-        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
 
     /*******************************************************************************************************

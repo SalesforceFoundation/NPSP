@@ -48,6 +48,17 @@ public inherited sharing class NPSP_HouseholdAccount {
     private Account householdAccount;
     private Account oldVersion;
 
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     public NPSP_HouseholdAccount(Account account) {
         this.householdAccount = account;
     }
@@ -71,8 +82,6 @@ public inherited sharing class NPSP_HouseholdAccount {
 
     /*******************************************************************************************************
     * @description utility to compare two Accounts' (billing) addresses
-    * @param acc1 an Account
-    * @param acc2 an Account
     * @return boolean. true if there are any changes between the two accounts.
     ********************************************************************************************************/
     public Boolean isAccountAddressChanged() {
@@ -81,27 +90,37 @@ public inherited sharing class NPSP_HouseholdAccount {
         }
 
         Boolean isChanged =
-                !Addresses.equalsCaseSensitive(householdAccount.BillingStreet, oldVersion
+                !addressService.equalsCaseSensitive(householdAccount.BillingStreet, oldVersion
                         .BillingStreet) ||
-                        !Addresses.equalsCaseSensitive(householdAccount.BillingCity, oldVersion
+                        !addressService.equalsCaseSensitive(householdAccount.BillingCity,
+                                oldVersion
                                 .BillingCity) ||
-                        !Addresses.equalsCaseSensitive(householdAccount.BillingState, oldVersion
+                        !addressService.equalsCaseSensitive(householdAccount.BillingState,
+                                oldVersion
                                 .BillingState) ||
-                        !Addresses.equalsCaseSensitive(householdAccount.BillingPostalCode, oldVersion
+                        !addressService.equalsCaseSensitive(householdAccount
+                                .BillingPostalCode, oldVersion
                                 .BillingPostalCode) ||
-                        !Addresses.equalsCaseSensitive(householdAccount.BillingCountry, oldVersion
+                        !addressService.equalsCaseSensitive(householdAccount
+                                .BillingCountry, oldVersion
                                 .BillingCountry);
 
         if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
             isChanged =
-                    !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get('BillingStateCode')
+                    !addressService.equalsCaseSensitive(String.valueOf(householdAccount.get
+                            ('BillingStateCode')
                     ), String.valueOf(oldVersion.get('BillingStateCode'))) ||
-                            !Addresses.equalsCaseSensitive(String.valueOf(householdAccount.get
+                            !addressService.equalsCaseSensitive(String.valueOf
+                                    (householdAccount.get
                                     ('BillingCountryCode')), String.valueOf(oldVersion.get
                                     ('BillingCountryCode')));
         }
         return isChanged;
 
+    }
+
+    public Boolean billingAddressIsDifferentFrom(NPSP_Address npspAddress) {
+        return addressService.isSObjectAddressDifferent(householdAccount, npspAddress.getRecord());
     }
 
 }
