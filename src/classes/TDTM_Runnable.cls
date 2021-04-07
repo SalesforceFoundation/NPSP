@@ -148,16 +148,16 @@ global abstract class TDTM_Runnable {
         * @return void
         */
         public void groupByType() {
-            if (!objectsToInsert.isEmpty()) {
+            if (objectsToInsert?.isEmpty() == false) {
                 objectsToInsert = groupSObjects(objectsToInsert);
             }
-            if (!objectsToUpdate.isEmpty()) {
+            if (objectsToUpdate?.isEmpty() == false) {
                 objectsToUpdate = groupSObjects(objectsToUpdate);
             }
-            if (!objectsToDelete.isEmpty()) {
+            if (objectsToDelete?.isEmpty() == false) {
                 objectsToDelete = groupSObjects(objectsToDelete);
             }
-            if (!objectsToUndelete.isEmpty()) {
+            if (objectsToUndelete?.isEmpty() == false) {
                 objectsToUndelete = groupSObjects(objectsToUndelete);
             }
         }
