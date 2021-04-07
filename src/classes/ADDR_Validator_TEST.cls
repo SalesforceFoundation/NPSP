@@ -42,6 +42,7 @@ public with sharing class ADDR_Validator_TEST {
     private static final String STATUS_ERROR = STG_PanelHealthCheck_CTRL.statusError;
     private static final String STATUS_SUCCESS = STG_PanelHealthCheck_CTRL.statusSuccess;
     private static final String SAVE_SETTINGS_SUCCESS_MESSAGE = System.Label.Saved + '\n';
+    private static OrgConfig orgConfig = new OrgConfig();
 
     @IsTest
     private static void testContactAddress() {
@@ -79,7 +80,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        if (OrgConfig.isStateCountryPicklistsEnabled) {
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
             System.assertEquals('California', contact.MailingState);
         } else {
             System.assertEquals('CA', contact.MailingState);

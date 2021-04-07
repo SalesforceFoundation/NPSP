@@ -62,6 +62,7 @@ public with sharing class ADDR_Addresses_TEST {
     */
     public static List<Address__c> listAddrT;
 
+    private static OrgConfig orgConfig = new OrgConfig();
 
     /*********************************************************************************************************
     @description
@@ -956,7 +957,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
-        if (!OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
             return;
         }
 
@@ -1023,7 +1025,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressCountryIsPopulatedFromCountryCode() {
-        if (!OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
             return;
         }
 
@@ -1059,7 +1062,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressStateIsPopulatedFromStateCode() {
-        if (!OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
             return;
         }
 
@@ -1097,7 +1101,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testIsMatchingStateCode() {
-        if (!OrgConfig.isStateCountryPicklistsEnabled) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
             return;
         }
 
@@ -2058,7 +2063,8 @@ public with sharing class ADDR_Addresses_TEST {
             'MailingStreet', 'MailingCity', 'MailingState', 'MailingCountry', 'MailingPostalCode',
             'MailingLatitude', 'MailingLongitude', 'npe01__Primary_Address_Type__c'};
 
-        if (OrgConfig.isStateCountryPicklistsEnabled) {
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+
             selectFields.add('MailingCountryCode');
             selectFields.add('MailingStateCode');
             selectFields.add('OtherCountryCode');
@@ -2081,7 +2087,8 @@ public with sharing class ADDR_Addresses_TEST {
             'Id', 'BillingStreet', 'BillingCity', 'BillingState',  'BillingCountry',
             'BillingPostalCode', 'BillingLatitude', 'BillingLongitude'};
 
-        if (OrgConfig.isStateCountryPicklistsEnabled) {
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+
             selectFields.add('BillingCountryCode');
             selectFields.add('BillingStateCode');
         }
