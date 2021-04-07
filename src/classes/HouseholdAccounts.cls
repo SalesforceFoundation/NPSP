@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class ContactRepository {
+public inherited sharing class HouseholdAccounts {
 
     /*******************************************************************************************************
     * @description Account filter when querying Contacts
@@ -55,7 +55,7 @@ public inherited sharing class ContactRepository {
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public ContactRepository(Set<Id> accountIds) {
+    public HouseholdAccounts(Set<Id> accountIds) {
         queryAccountIds = accountIds == null
                 ? new Set<Id>()
                 : accountIds;

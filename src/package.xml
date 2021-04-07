@@ -267,7 +267,7 @@
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
         <members>ContactAndOrgSettings</members>
-        <members>ContactRepository</members>
+        <members>HouseholdAccounts</members>
         <members>ContactService</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>

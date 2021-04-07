@@ -1782,7 +1782,9 @@ public with sharing class ADDR_Addresses_TEST {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
-        ContactRepository contactRepo = new ContactRepository(new Set<Id>{ account.Id });
+        HouseholdAccounts contactRepo = new HouseholdAccounts(new Set<Id>{
+                account.Id
+        });
 
         Contact[] contacts = contactRepo.getContacts(account.Id);
         System.assertEquals(0, contacts.size());
@@ -1800,8 +1802,8 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ContactRepository contactRepo = new ContactRepository(
-            UTIL_SObject.extractIds(listAccT)
+        HouseholdAccounts contactRepo = new HouseholdAccounts(
+                UTIL_SObject.extractIds(listAccT)
         );
 
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
@@ -1819,10 +1821,12 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ContactRepository contactRepo = new ContactRepository(new Set<Id>());
+        HouseholdAccounts contactRepo = new HouseholdAccounts(new Set<Id>());
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
 
-        contactRepo = new ContactRepository(new Set<Id>{ listAccT[0].Id });
+        contactRepo = new HouseholdAccounts(new Set<Id>{
+                listAccT[0].Id
+        });
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
     }
 
@@ -1832,7 +1836,7 @@ public with sharing class ADDR_Addresses_TEST {
     verify:
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
-    static void testAndAssertContactRepositoryGetContacts(ContactRepository contactRepo, List<Account> accounts, List<Contact> contacts) {
+    static void testAndAssertContactRepositoryGetContacts(HouseholdAccounts contactRepo, List<Account> accounts, List<Contact> contacts) {
         Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
         for (Contact c : contacts) {
             if (!contactsByAccountId.containsKey(c.AccountId)) {
