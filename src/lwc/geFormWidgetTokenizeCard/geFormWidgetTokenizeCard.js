@@ -63,6 +63,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _cardLast4;
     _cardExpirationDate;
     _widgetDataFromState;
+    _hasPaymentMethodFieldInForm = false;
 
     setMode (mode) {
         switch (mode) {
@@ -254,13 +255,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     setCurrentPaymentMethod() {
-        this._currentPaymentMethod = this.hasPaymentMethodFieldInForm()
+        this._currentPaymentMethod = this._hasPaymentMethodFieldInForm
             ? this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)]
             : PAYMENT_METHOD_CREDIT_CARD;
-    }
-
-    hasPaymentMethodFieldInForm() {
-       return this.sourceFieldsUsedInTemplate.includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
     }
 
     shouldHandleWidgetDataChange() {
@@ -317,11 +314,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get shouldDisplayEnableButton() {
-        if (!this.hasPaymentMethodFieldInForm()) return true;
-        if (this.hasPaymentMethodFieldInForm() && this.hasValidPaymentMethod(this._currentPaymentMethod)) {
-            return true;
-        }
-        return false;
+        if (!this._hasPaymentMethodFieldInForm) return true;
+        return !!(this._hasPaymentMethodFieldInForm && this.hasValidPaymentMethod());
+
     }
 
     get disabledWidgetMessage() {
@@ -336,6 +331,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @description Initializes the component and determines the Visualforce origin URLs
     */
     async connectedCallback() {
+        this._hasPaymentMethodFieldInForm = this.sourceFieldsUsedInTemplate
+            .includes(apiNameFor(DATA_IMPORT_PAYMENT_METHOD));
         const domainInfo = await GeFormService.getOrgDomain();
         tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
