@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`c-ge-form-renderer form with payment widget, when payment method changed to credit card then payment iframe loads 1`] = `
+<iframe
+  class="payment-services-iframe"
+  data-id="c.commonPaymentServices"
+  src="/apex/GE_TokenizeCard"
+  title="c.commonPaymentServices"
+/>
+`;

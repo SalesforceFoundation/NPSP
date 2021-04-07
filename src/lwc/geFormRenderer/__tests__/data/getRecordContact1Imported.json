@@ -1,0 +1,68 @@
+{
+  "apiName": "Contact",
+  "childRelationships": {},
+  "id": "003J000001zoYLGIA2",
+  "lastModifiedById": "005J000000B3RxfIAF",
+  "lastModifiedDate": "2021-03-22T17:53:34.000Z",
+  "recordTypeId": "012000000000000AAA",
+  "recordTypeInfo": null,
+  "systemModstamp": "2021-03-22T17:53:34.000Z",
+  "fields": {
+    "Birthdate": {
+      "displayValue": null,
+      "value": null
+    },
+    "FirstName": {
+      "displayValue": null,
+      "value": "DummyFirstName"
+    },
+    "HomePhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "LastName": {
+      "displayValue": null,
+      "value": "DummyLastName"
+    },
+    "MobilePhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "OtherPhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "Salutation": {
+      "displayValue": null,
+      "value": null
+    },
+    "Title": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__AlternateEmail__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__HomeEmail__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__PreferredPhone__c": {
+      "displayValue": "Home",
+      "value": "Home"
+    },
+    "npe01__Preferred_Email__c": {
+      "displayValue": "Personal",
+      "value": "Personal"
+    },
+    "npe01__WorkEmail__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__WorkPhone__c": {
+      "displayValue": null,
+      "value": null
+    }
+  }
+}
