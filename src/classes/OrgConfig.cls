@@ -65,7 +65,8 @@ public inherited sharing class OrgConfig {
     * @description specifies whether state and country picklists are enabled in this org.
     * @return true if enabled
     */
-    public static Boolean isStateCountryPicklistsEnabled {
+    @TestVisible
+    private static Boolean isStateCountryPicklistsEnabled {
         get {
             if (isStateCountryPicklistsEnabled == null) {
                 isStateCountryPicklistsEnabled = initValidStateCountryCodes();
