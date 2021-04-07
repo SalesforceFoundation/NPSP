@@ -665,7 +665,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         addrMatch = addrHH;
                         break;
                     }
-                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH, addr.Address_Type__c != null)) {
+                    if (tryFuzzy && npspAddress.isAddressMatchFuzzyWith(npspAddressHH)) {
                         // found fuzzy match, remember it and continue searching
                         addrMatch = addrHH;
                         continue;
@@ -682,27 +682,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         return mapAddrDupAddr;
-    }
-
-    /*******************************************************************************************************
-    * @description returns a unique key the represents the address object for address matching
-    * @param addr the Address to look at
-    * @return string The Address's unique Key
-    */
-    public static String getAddrKey(Address__c addr) {
-        String strKey =
-                strCleanup(addr.MailingStreet__c) +
-                        strCleanup(addr.MailingStreet2__c) +
-                        strCleanup(addr.MailingCity__c) +
-                        strCleanup(addr.MailingState__c) +
-                        strCleanup(addr.MailingPostalCode__c) +
-                        strCleanup(addr.MailingCountry__c) +
-                        strCleanup(addr.Address_Type__c) +
-                        (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
-                        (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
-                        (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
-                        (addr.Seasonal_End_Month__c != null ? addr.Seasonal_End_Month__c : '');
-        return strKey;
     }
 
     /*******************************************************************************************************
@@ -741,7 +720,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     }
 
                     // create our map of Address Keys to a list of one or more Addresses
-                    String addrKey = getAddrKey(addr);
+                    NPSP_Address npspAddr = new NPSP_Address(addr);
+                    String addrKey = npspAddr.getAddrKey();
                     List<Address__c> listAddr = mapAddrKeyToAddresses.get(addrKey);
                     if (listAddr == null) {
                         listAddr = new List<Address__c>();
@@ -1043,59 +1023,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 dmlWrapper.objectsToUpdate.add(con);
             }
         }
-    }
-
-    /*******************************************************************************************************
-    * @description Compare two address objects address fields and support fuzzy matching; our definition of
-    * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
-    */
-    private static Boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, Boolean includeAddressType) {
-        if (addrNew == null || addrOld == null) {
-            return false;
-        }
-
-        Integer cChange = 0;
-        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null) {
-            cChange++;
-        }
-        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null) {
-            cChange++;
-        }
-        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null) {
-            cChange++;
-        }
-        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null) {
-            cChange++;
-        }
-        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null) {
-            cChange++;
-        }
-        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null) {
-            cChange++;
-        }
-        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null) {
-            cChange++;
-        }
-        return cChange <= 1;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to remove all whitespace and to lowercase the string
-    * @param str the string to clean up
-    * @return string
-    */
-    private static String strCleanup(String str) {
-        if (str != null) {
-            str = str.replace(' ', '');
-            str = str.toLowerCase();
-        } else {
-            str = '';
-        }
-        return str;
     }
 
     /*******************************************************************************************************

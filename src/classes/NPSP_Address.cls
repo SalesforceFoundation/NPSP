@@ -82,6 +82,72 @@ public inherited sharing class NPSP_Address {
         return this.addr.Household_Account__c;
     }
 
+    public Boolean isAddressMatchFuzzyWith(NPSP_Address addressOther) {
+
+        Address__c addrNew = this.getRecord();
+        Address__c addrOld = addressOther.getRecord();
+
+        if (addrNew == null || addrOld == null) {
+            return false;
+        }
+
+        Integer cChange = 0;
+        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null) {
+            cChange++;
+        }
+        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null) {
+            cChange++;
+        }
+        if (addrNew.Address_Type__c != null && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null) {
+            cChange++;
+        }
+        return cChange <= 1;
+    }
+
+    public String getAddrKey() {
+        Address__c addr = this.getRecord();
+        String strKey =
+                strCleanup(addr.MailingStreet__c) +
+                        strCleanup(addr.MailingStreet2__c) +
+                        strCleanup(addr.MailingCity__c) +
+                        strCleanup(addr.MailingState__c) +
+                        strCleanup(addr.MailingPostalCode__c) +
+                        strCleanup(addr.MailingCountry__c) +
+                        strCleanup(addr.Address_Type__c) +
+                        (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
+                        (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
+                        (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
+                        (addr.Seasonal_End_Month__c != null ? addr.Seasonal_End_Month__c : '');
+        return strKey;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to remove all whitespace and to lowercase the string
+    * @param str the string to clean up
+    * @return string
+    */
+    private static String strCleanup(String str) {
+        if (str != null) {
+            str = str.replace(' ', '');
+            str = str.toLowerCase();
+        } else {
+            str = '';
+        }
+        return str;
+    }
+
     public Boolean overlapsWith(NPSP_Address other) {
         if (other == null) {
             return false;
