@@ -1,0 +1,19 @@
+{
+  "attributes" : {
+    "type" : "Allocations_Settings__c",
+    "url" : "/services/data/v51.0/sobjects/Allocations_Settings__c/a0NS000000jIjJzMAK"
+  },
+  "Id" : "a0NS000000jIjJzMAK",
+  "IsDeleted" : false,
+  "Name" : "a0NS000000jIjJz",
+  "SetupOwnerId" : "00DS0000003bcPmMAI",
+  "CreatedDate" : "2021-03-31T17:14:12.000+0000",
+  "CreatedById" : "005S000000NgZaaIAF",
+  "LastModifiedDate" : "2021-04-02T15:27:50.000+0000",
+  "LastModifiedById" : "005S000000NgZaaIAF",
+  "SystemModstamp" : "2021-04-02T15:27:50.000+0000",
+  "Default_Allocations_Enabled__c" : false,
+  "Payment_Allocations_Enabled__c" : false,
+  "Rollup_N_Day_Value__c" : 365.0,
+  "Use_Fiscal_Year_for_Rollups__c" : false
+}
