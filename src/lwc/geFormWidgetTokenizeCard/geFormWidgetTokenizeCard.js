@@ -44,7 +44,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
-
     _currentPaymentMethod = undefined;
     _hasPaymentMethodInTemplate = false;
 

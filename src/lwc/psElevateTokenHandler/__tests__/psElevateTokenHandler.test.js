@@ -1,4 +1,4 @@
-import psElevateTokenHandler from 'c/psElevateTokenHandler';
+import psElevateTokenHandler from '../psElevateTokenHandler';
 
 const createPostMessageEvent = (type) => {
    switch (type) {
