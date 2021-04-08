@@ -6298,6 +6298,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geAuthorizedCreditCardSuccess</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about card being authorized</shortDescription>
+        <value>Card authorized.</value>
+    </labels>
+    <labels>
+        <fullName>geAuthorizingCreditCard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the payment is being Authorized</shortDescription>
+        <value>Authorizing...</value>
+    </labels>
+    <labels>
         <fullName>geBatchGiftsCount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

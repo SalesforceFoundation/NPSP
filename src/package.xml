@@ -264,6 +264,7 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
@@ -301,6 +302,16 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>ElevateAuthorizedGift</members>
+        <members>ElevateAuthorizedGiftResponse</members>
+        <members>ElevateAuthorizedGift_TEST</members>
+        <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupResponse</members>
+        <members>ElevateCaptureGroupService</members>
+        <members>ElevateCaptureGroupServiceInvalidRequest</members>
+        <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevateTokenizedGift</members>
+        <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_GiftEntryController</members>
@@ -308,6 +319,7 @@
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
+        <members>GE_PaymentServicesMock</members>
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
@@ -1213,6 +1225,7 @@
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
         <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
+        <members>DataImport__c.Payment_Elevate_Batch_ID__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
@@ -2378,6 +2391,8 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geAuthorizedCreditCardSuccess</members>
+        <members>geAuthorizingCreditCard</members>
         <members>geBatchGiftsCount</members>
         <members>geBatchGiftsExpectedCountOrTotalMessage</members>
         <members>geBatchGiftsExpectedTotalsMessage</members>

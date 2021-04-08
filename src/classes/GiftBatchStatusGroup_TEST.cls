@@ -81,7 +81,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
             .withAliasAndValue(
                 String.valueOf(DataImport__c.fields.Payment_Status__c), 
-                GE_PaymentServices.ElevateTransactionStatus.DECLINED.name())
+                ElevateTransactionStatus.DECLINED.name())
             .withAliasAndValue('recordCount', 7);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -94,7 +94,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
             .withAliasAndValue(
                 String.valueOf(DataImport__c.fields.Payment_Status__c), 
-                GE_PaymentServices.ElevateTransactionStatus.AUTHORIZED.name());
+                ElevateTransactionStatus.AUTHORIZED.name());
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isPaymentFailed());
