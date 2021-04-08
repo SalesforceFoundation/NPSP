@@ -1461,6 +1461,18 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>Payment_Elevate_Batch_ID__c</fullName>
+        <description>The ID of a batch of payments sent to Elevate for processing.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID of a batch of payments sent to Elevate for processing.</inlineHelpText>
+        <label>Payment Elevate Batch ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Elevate_Created_Date__c</fullName>
         <description>The date and time the transaction was created.</description>
         <externalId>false</externalId>

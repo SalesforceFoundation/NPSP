@@ -37,19 +37,6 @@
 public with sharing class GE_PaymentServices {
     @TestVisible class PaymentServicesException extends Exception {}
 
-    public enum ElevateTransactionStatus {
-        PENDING,
-        AUTHORIZED,
-        CANCELED,
-        CAPTURED,
-        DECLINED,
-        NONRETRYABLEERROR,
-        RETRYABLEERROR,
-        REFUNDISSUED,
-        SETTLED,
-        SUBMITTED
-    }
-
     private static GE_PaymentServices paymentServicesInstance;
 
     /***
@@ -209,8 +196,6 @@ public with sharing class GE_PaymentServices {
             .withBody(jsonRequestBody)
             .build();
     }
-
-
 
     /***
     * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
