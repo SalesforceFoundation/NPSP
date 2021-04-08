@@ -392,7 +392,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showCloseButton: false
             },
             componentProperties: {
-                'severity': 'warning',
+                'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
                 'buttonText': this.CUSTOM_LABELS.commonOkay

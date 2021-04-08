@@ -1,9 +1,10 @@
 import { LightningElement, api } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { isEmpty } from 'c/utilCommon';
 
 export default class geModalPrompt extends LightningElement {
 
-    @api severity;
+    @api variant = '';
     @api title;
     @api message;
     @api buttonText;
@@ -13,28 +14,18 @@ export default class geModalPrompt extends LightningElement {
     }
 
     get titleSectionComputedClass() {
+
+        let allowedVariants = ['warning', 'shade', 'inverse', 'alt-inverse', 
+            'success', 'info', 'error', 'offline', 'default'];
+
         let baseClass = ['slds-box', 'slds-theme_alert-texture', 'slds-box_extension'];
 
-        if (this.severity === 'warning') {
-            baseClass.push('slds-theme_warning');
-        } else if (this.severity === 'shade') {
-            baseClass.push('slds-theme_shade');
-        } else if (this.severity === 'inverse') {
-            baseClass.push('slds-theme_inverse');
-        } else if (this.severity === 'alt-inverse') {
-            baseClass.push('slds-theme_alt-inverse');
-        } else if (this.severity === 'success') {
-            baseClass.push('slds-theme_success');
-        } else if (this.severity === 'info') {
-            baseClass.push('slds-theme_info');
-        } else if (this.severity === 'error') {
-            baseClass.push('slds-theme_error');
-        } else if (this.severity === 'offline') {
-            baseClass.push('slds-theme_offline');                                                
-        } else {
+        if (isEmpty(this.variant) || !allowedVariants.includes(this.variant)) {
             baseClass.push('slds-theme_default');
+            return baseClass.join(' ');
         }
 
+        baseClass.push('slds-theme_'+ this.variant);
         return baseClass.join(' ');
     }
 }

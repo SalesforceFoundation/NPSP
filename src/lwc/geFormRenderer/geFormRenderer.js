@@ -2364,7 +2364,7 @@ export default class GeFormRenderer extends LightningElement{
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('geModalPrompt',
             {
-                'severity': 'error',
+                'variant': 'error',
                 'title': this.CUSTOM_LABELS.commonCriticalError,
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
                 'buttonText': CUSTOM_LABELS.commonReviewForm
