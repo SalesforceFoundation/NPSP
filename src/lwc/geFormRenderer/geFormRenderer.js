@@ -131,7 +131,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     ACCOUNT1: 'Account1',
     CONTACT1: 'Contact1'
 });
-const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
+
 const ACH_CONSENT_MESSAGE = 'true';
 const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
 
@@ -172,7 +172,10 @@ export default class GeFormRenderer extends LightningElement{
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
+    @track widgetConfig = {
+        hasPaymentMethodFieldInForm: undefined,
+        paymentTransactionStatusValues: undefined
+    }
     @track isAccessible = true;
 
     _isFormCollapsed = false;
@@ -366,7 +369,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     initializeWidgetConfig() {
-        this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
+        this.widgetConfig.hasPaymentMethodFieldInForm = this.sourceFieldsUsedInTemplate().includes(apiNameFor(PAYMENT_METHOD));
+        this.widgetConfig.paymentTransactionStatusValues = this.PAYMENT_TRANSACTION_STATUS_ENUM;
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
@@ -968,7 +972,7 @@ export default class GeFormRenderer extends LightningElement{
 
         dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
             convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-
+        this.reset();
         this.updateFormState(dataImportWithNullValuesAppended);
     }
 
@@ -2387,13 +2391,11 @@ export default class GeFormRenderer extends LightningElement{
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-
-        const isTransactionSentToElevate = paymentStatus &&
+        return paymentStatus &&
             (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED);
-
-        return isTransactionSentToElevate;
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED
+            );
     }
 
     handleElevateTransactionBDIError(exceptionDataError) {

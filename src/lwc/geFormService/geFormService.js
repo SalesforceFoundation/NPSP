@@ -2,13 +2,13 @@ import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDe
 import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import getFieldMappings from '@salesforce/apex/GE_GiftEntryController.getFieldMappings';
+import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
-
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -41,6 +41,14 @@ class GeFormService {
     objectMappings;
     fieldTargetMappings;
     donationFieldTemplateLabel;
+
+    getOrgDomain = async () => {
+        try {
+            return await getOrgDomainInfo();
+        } catch(error) {
+            handleError(error);
+        }
+    }
 
     /**
      * Retrieve the default form render wrapper.
