@@ -36,6 +36,17 @@
 */
 public class ADDR_Account_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Account that handles Address management.
     * @param listNew the list of Accounts from trigger new. 
@@ -58,11 +69,12 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             return dmlWrapper;
         }
 
-        list<Account> listAccCreateAddr = new list<Account>();
+        List<Account> listAccCreateAddr = new List<Account>();
        
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
             if (isAddressManagementEnabled(newRecord)) {
                 // BEFORE INSERT
@@ -72,7 +84,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
                 // BEFORE UPDATE
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate
-                        && isAccountAddressChanged(newRecord, oldRecord)) {
+                        && npspHousehold.isAccountAddressChanged()) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
 
@@ -86,7 +98,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 // AFTER UPDATE
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     // if the address changed, remember the account we want to add a new address for
-                    if (isAccountAddressChanged(newRecord, oldRecord)) {
+                    if (npspHousehold.isAccountAddressChanged()) {
                         listAccCreateAddr.add(newRecord);
                     }
                 }
@@ -123,67 +135,36 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     * @param acc1 an Account
     * @return boolean.  true if an address is specified in any of the Account Billing fields
     ********************************************************************************************************/
-    private boolean isAccountAddressSpecified(Account acc1) {
-        if (acc1 == null) 
-           return false;
+    private Boolean isAccountAddressSpecified(Account acc1) {
+        if (acc1 == null) {
+            return false;
+        }
         
-        boolean isSpecified = 
+        Boolean isSpecified =
            acc1.BillingStreet != null ||
            acc1.BillingCity != null ||
            acc1.BillingState != null ||
            acc1.BillingPostalCode != null ||
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-           (acc1.BillingCountry != null && !ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) ||
+           (acc1.BillingCountry != null && !orgConfig.isStateCountryPicklistsEnabled()) ||
            // only test StateCode if picklists enabled.
-           (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
+           (orgConfig.isStateCountryPicklistsEnabled() && acc1.get('BillingStateCode') != null);
 
         return isSpecified;   
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two Accounts' (billing) addresses
-    * @param acc1 an Account
-    * @param acc2 an Account
-    * @return boolean. true if there are any changes between the two accounts.
-    ********************************************************************************************************/
-    private boolean isAccountAddressChanged(Account acc1, Account acc2) {
-        if (acc1 == null || acc2 == null) 
-           return false;
-        
-        boolean isChanged = 
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
-           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
-
-        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            isChanged = 
-	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) || 
-	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));
-        }    
-        return isChanged;   
-
     }
 
     /*******************************************************************************************************
     * @description for each Account, create a new default address and add it to dmlWrapper
     * @param listAcc a list of Accounts
     * @param dmlWrapper to hold the Addresses that need creating
-    * @return void
     ********************************************************************************************************/
-    private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
-        list<Address__c> listAddr = new list<Address__c>();
+    private void createAddrFromAcc(List<Account> listAcc, DmlWrapper dmlWrapper) {
+        List<Address__c> listAddr = new List<Address__c>();
         for (Account acc : listAcc) {
-            Address__c addr = new Address__c();
-            addr.Household_Account__c = acc.Id;
-            addr.Default_Address__c = true;
-            addr.Latest_Start_Date__c = system.today();
-            addr.Latest_End_Date__c = null;
-            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr, null);
-            listAddr.add(addr);         
+            NPSP_Address npspAddress = new NPSP_Address(acc);
+            listAddr.add(npspAddress.getRecord());
         }
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.
-        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
+        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 }

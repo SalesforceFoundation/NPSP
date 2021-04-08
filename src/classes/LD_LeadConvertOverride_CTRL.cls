@@ -40,6 +40,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 // Written by jason venable and evan callahan
 // at the NPSP Sprint 2010
 
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Sets the Lead to be converted
     */
@@ -492,7 +503,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
                 strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
                         'MailingState, MailingPostalCode, MailingCountry, ';
-                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+                if (orgConfig.isStateCountryPicklistsEnabled()) {
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
                 }
                 strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
@@ -543,13 +554,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // now create the address object if appropriate
                 if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
                     Address__c addr = new Address__c();
-                    addr.Household_Account__c = myAccount.Id;
-                    addr.Default_Address__c = true;
-                    addr.Latest_Start_Date__c = System.today();
-                    addr.Latest_End_Date__c = null;
-                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(
-                            con, 'Mailing', addr, null);
-                    UTIL_DMLService.insertRecord(addr);
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    npspAddress.getRecord().Household_Account__c = myAccount.Id;
+                    npspAddress.getRecord().Default_Address__c = true;
+                    npspAddress.getRecord().Latest_Start_Date__c = System.today();
+                    npspAddress.getRecord().Latest_End_Date__c = null;
+                    npspAddress.copyFromSObject(con, 'Mailing', null);
+                    UTIL_DMLService.insertRecord(npspAddress.getRecord());
                 }
             }
 
@@ -609,9 +620,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(
-                        tempAddr, acc, 'Billing', null);
-                UTIL_DMLService.updateRecord(acc);
+                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+                npspHousehold.billingAddress(npspAddress);
+                UTIL_DMLService.updateRecord(npspHousehold.getRecord());
             }
             // handle the optional Affiliation to a new or existing Account.
             Id afflAccId = null;
@@ -621,9 +633,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country
                 // picklists if enabled
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(
-                        tempAddr, acc, 'Billing', null);
-                UTIL_DMLService.insertRecord(acc);
+                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+                npspHousehold.billingAddress(npspAddress);
+                UTIL_DMLService.insertRecord(npspHousehold.getRecord());
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
                 afflAccId = strAfflAccountId;

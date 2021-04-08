@@ -52,7 +52,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            set<ID> setMergeWinner = new set<ID>();
+            Set<Id> setMergeWinner = new Set<Id>();
         
             for (SObject so : listOld) {
                 Account acc = (Account)so;
@@ -81,7 +81,6 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
     *   - fixup Addresses (for Household and Org Accounts)
     *
     * @param listAccountId the list of Accounts that were the winner in Account Merge 
-    * @return null
     ********************************************************************************************************/
     @Future    
     private static void handleAccountMergeFixupsFuture(List<Id> listAccountId) {
@@ -90,12 +89,12 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
 
     private static void handleAccountMergeFixups(List<Id> listAccountId) {
         // figure out which of type of accounts we are dealing with
-        list<ID> listHHId = new list<ID>();
-        list<ID> listOne2OneId = new list<ID>();
-        list<ID> listOrgId = new list<ID>();
-        list<ID> listTemp = new list<ID>();            
+        List<Id> listHHId = new List<Id>();
+        List<Id> listOne2OneId = new List<Id>();
+        List<Id> listOrgId = new List<Id>();
+        List<Id> listTemp = new List<Id>();
         
-        for (Account acc : [select Id, npe01__SYSTEM_AccountType__c from Account where Id in :listAccountId]) {
+        for (Account acc : [SELECT Id, npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :listAccountId]) {
             if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 listHHId.add(acc.Id);
             }
@@ -120,7 +119,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         listTemp.addAll(listHHId);
         listTemp.addAll(listOrgId);
         if (listTemp.size() > 0) {
-            ADDR_Addresses_TDTM.cleanupAccountAddresses(listTemp);
+            Addresses.cleanupAccountAddresses(listTemp);
         }
     }
 }
