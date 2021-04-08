@@ -168,7 +168,7 @@ export default class GeFormRenderer extends LightningElement{
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
     @track widgetConfig = {
-        sourceFieldsUsedInTemplate: undefined,
+        hasPaymentMethodFieldInForm: undefined,
         paymentTransactionStatusValues: undefined
     }
     @track isAccessible = true;
@@ -364,7 +364,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     initializeWidgetConfig() {
-        this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
+        this.widgetConfig.hasPaymentMethodFieldInForm = this.sourceFieldsUsedInTemplate().includes(apiNameFor(PAYMENT_METHOD));
         this.widgetConfig.paymentTransactionStatusValues = this.PAYMENT_TRANSACTION_STATUS_ENUM;
     }
 

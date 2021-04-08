@@ -40,8 +40,8 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_ID)
     ];
 
-    get sourceFieldsUsedInTemplate() {
-        return this.widgetConfig ? this.widgetConfig.sourceFieldsUsedInTemplate : [];
+    get hasPaymentMethodFieldInForm() {
+        return this.widgetConfig?.hasPaymentMethodFieldInForm;
     }
 
     get paymentTransactionStatusValues() {

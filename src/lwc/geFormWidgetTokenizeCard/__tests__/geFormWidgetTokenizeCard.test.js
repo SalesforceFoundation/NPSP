@@ -20,12 +20,10 @@ const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
 const DATA_IMPORT_PAYMENT_STATUS = 'Payment_Status__c';
 
 const createWidgetElement = () => {
-    const element = createElement(
+    return createElement(
         'c-ge-form-widget-tokenize-card',
-        { is: GeFormWidgetTokenizeCard }
+        {is: GeFormWidgetTokenizeCard}
     );
-    element.sourceFieldsUsedInTemplate = [PAYMENT_METHOD_FIELD];
-    return element;
 }
 
 const setPaymentMethod = (element, paymentMethod) => {
@@ -41,8 +39,19 @@ describe('c-ge-form-widget-tokenize-card', () => {
         clearDOM();
     });
 
+    it('should render default credit card if payment method field is not on the form', async () => {
+        const element = createWidgetElement();
+        document.body.appendChild(element);
+
+        return Promise.resolve().then(() => {
+            expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
+            expect(doNotEnterPaymentButton(element)).toBeTruthy();
+        });
+    });
+
     it('should render disabled message and button to re-enable widget', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, CREDIT_CARD);
         document.body.appendChild(element);
 
@@ -56,6 +65,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should render extended disabled message without button to re-enable widget', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, CASH);
         document.body.appendChild(element);
 
@@ -68,6 +78,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should allow disabling and enabling of widget', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
@@ -92,6 +103,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should disable itself after switch to invalid/incompatible payment method', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
@@ -110,6 +122,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should re-enable itself after switch to valid payment method', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, CASH);
         document.body.appendChild(element);
         expect(doNotEnterPaymentButton(element)).toBeFalsy();
@@ -128,6 +141,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should permanently disable itself if an payment transaction has been successful', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, ACH);
         document.body.appendChild(element);
 
@@ -144,7 +158,9 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should not display ACH input fields when in batch mode', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         setPaymentMethod(element, ACH);
+
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID'
@@ -161,6 +177,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should go into hard read-only mode when credit card payment has been captured', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
             AUTHORIZED: 'AUTHORIZED',
             CAPTURED: 'CAPTURED'
@@ -184,6 +201,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should go into soft read-only mode when credit card payment has been authorized', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
             AUTHORIZED: 'AUTHORIZED',
             CAPTURED: 'CAPTURED'
@@ -207,6 +225,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
     it('should allow for payment information to be updated in update payment information is clicked', async () => {
         const element = createWidgetElement();
+        element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
             AUTHORIZED: 'AUTHORIZED',
             CAPTURED: 'CAPTURED'
