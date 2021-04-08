@@ -37,6 +37,91 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
+    @isTest static void createCreditCardCaptureGroupShouldReturnFailureResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
+        String errorMessage = new ElevateCaptureGroupServiceInvalidRequest().createCaptureGroupErrorMessage()
+                .errors()[0].message;
+        AuraHandledException auraException;
+
+        Test.startTest();
+            try {
+                GE_GiftEntryController.createCaptureGroup();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assertEquals(errorMessage,
+                auraException.getMessage(), 'The error message in the capture group response ' +
+                    'should throw an exception and the message should be the create capture group error ' +
+                    'message specified in the invalid request data type.');
+    }
+
+    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+        AuraHandledException auraException;
+        ElevateCaptureGroup captureGroup;
+
+        Test.startTest();
+            try {
+                captureGroup = GE_GiftEntryController.createCaptureGroup();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals('test-id', captureGroup.groupId(), 'The capture group id should be ' +
+                'populated on a successful response.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+        AuraHandledException auraException;
+        ElevateAuthorizedGift authorizedGift;
+
+        Test.startTest();
+            try {
+                authorizedGift = GE_GiftEntryController.addToCaptureGroup(new ElevateTokenizedGift(),
+                        'test-valid-id');
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals('test-valid-id', authorizedGift.paymentId(),
+                'The capture group id should be populated on a successful response.');
+    }
+
+    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponse() {
+        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
+        String errorMessage = new ElevateCaptureGroupServiceInvalidRequest().addCaptureGroupErrorMessage()
+                .errors()[0].message;
+        AuraHandledException auraException;
+
+        Test.startTest();
+            try {
+                GE_GiftEntryController.addToCaptureGroup(new ElevateTokenizedGift(), 'test-valid-group-id');
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        Test.stopTest();
+
+        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
+                'has been sent.');
+        System.assertEquals(errorMessage,
+                auraException.getMessage(), 'The error message in the capture group response ' +
+                        'should throw an exception and the message should be the create capture group error ' +
+                        'message specified in the invalid request data type.');
+    }
+
     /***
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
