@@ -79,8 +79,8 @@ public class GE_PaymentServices_TEST {
             paymentStatusValues.add(enumName);
         }
 
-        for (GE_PaymentServices.ElevateTransactionStatus value :
-                GE_PaymentServices.ElevateTransactionStatus.values()) {
+        for (ElevateTransactionStatus value :
+                ElevateTransactionStatus.values()) {
                     System.assert(paymentStatusValues.contains(value.name()), 'Every payment transaction status value' +
                         'should be included in the enum returned by the method.');
         }
