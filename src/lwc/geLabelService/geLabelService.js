@@ -35,6 +35,7 @@ import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import commonOkay from '@salesforce/label/c.commonOkay';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
 import commonPermissionErrorMessage from '@salesforce/label/c.commonPermissionErrorMessage';
@@ -194,8 +195,10 @@ import geLabelDisplaySections from '@salesforce/label/c.geLabelDisplaySections';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
-import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
+import gePaymentAuthExpiredHeader from '@salesforce/label/c.gePaymentAuthExpiredHeader';
+import gePaymentAuthExpiredWarningText from '@salesforce/label/c.gePaymentAuthExpiredWarningText';
 import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWarning';
+import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
@@ -274,6 +277,7 @@ class GeLabelService {
         commonNext,
         commonNo,
         commonNoItems,
+        commonOkay,
         commonPaymentServices,
         commonPercent,
         commonPermissionErrorMessage,
@@ -433,8 +437,10 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
-        gePaymentProcessError,
+        gePaymentAuthExpiredHeader,
+        gePaymentAuthExpiredWarningText,
         gePaymentProcessedWarning,
+        gePaymentProcessError,
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
         geProcessingErrors,

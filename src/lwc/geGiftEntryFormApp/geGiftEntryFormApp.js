@@ -29,6 +29,8 @@ import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
+import BatchTotals from './helpers/batchTotals';
+
 /*******************************************************************************
 * @description Constants
 */
@@ -46,6 +48,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
+    @track batchTotals = {}
+
+    _hasDisplayedExpiredAuthorizationWarning = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -54,6 +59,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     namespace;
     count;
     total;
+    batch = {};
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -63,6 +69,22 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     constructor() {
         super();
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
+    }
+
+    connectedCallback() {
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    disconnectedCallback() {
+        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    async retrieveBatchTotals() {
+        this.batchTotals = await BatchTotals(this.batchId);
+
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
+            this.displayExpiredAuthorizationWarningModal();
+        }
     }
 
     /*******************************************************************************
@@ -197,6 +219,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return format(geBatchGiftsHeader, [this.batchName]);
     }
 
+    shouldDisplayExpiredAuthorizationWarning() {
+        return this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && !this._hasDisplayedExpiredAuthorizationWarning;
+    }
+
     @wire(getRecord, {
         recordId: '$recordId',
         fields: [
@@ -211,7 +238,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             BATCH_TABLE_COLUMNS_FIELD
         ]
     })
-    batch;
+    wiredBatch({data, error}) {
+        if (data) {
+            this.batch.data = data;
+            this.retrieveBatchTotals();
+        } else if (error) {
+            handleError(error);
+        }
+    }
 
     handleProcessBatch() {
         if (this.isProcessable) {
@@ -349,6 +383,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.dispatchEvent(new CustomEvent('togglemodal', {
             detail: modalContent
         }));
+    }
+
+    displayExpiredAuthorizationWarningModal() {
+        const detail = {
+            modalProperties: {
+                componentName: 'geModalPrompt',
+                showCloseButton: false
+            },
+            componentProperties: {
+                'variant': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'buttonText': this.CUSTOM_LABELS.commonOkay
+            },
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+        this._hasDisplayedExpiredAuthorizationWarning = true;        
     }
 
     buildModalConfigSelectColumns(available, selected) {

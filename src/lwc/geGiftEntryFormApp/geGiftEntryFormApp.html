@@ -2,6 +2,7 @@
     <template if:true={isBatchMode}>
         <c-ge-batch-gift-entry-header
                 batch-id={recordId}
+                batch-totals={batchTotals}
                 is-permission-error={isPermissionError}
                 onbatchdryrun={handleBatchDryRun}
                 onedit={handleEditBatch}
@@ -35,7 +36,7 @@
                     oncountchanged={handleCountChanged}
                     ontotalchanged={handleTotalChanged}
                     onselectcolumns={handleSelectColumns}
-                    batch-currency-iso-code= {batchCurrencyIsoCode}>
+                    batch-currency-iso-code={batchCurrencyIsoCode}>
             </c-ge-batch-gift-entry-table>
         </template>
     </template>

@@ -34,10 +34,12 @@
 */
 public inherited sharing class GiftBatchStatusGroup {
     final private String status;
+    final private String paymentStatus;    
     private Integer recordCount;
 
     public GiftBatchStatusGroup(AggregateResultProxy result) {
         Map<String,Object> resultProxy = result.getValuesByAlias();
+        paymentStatus = (String) resultProxy.get(String.valueOf(DataImport__c.fields.Payment_Status__c));
         status = (String) resultProxy.get(String.valueOf(DataImport__c.fields.Status__c));
         recordCount = (Integer) resultProxy.get('recordCount');
     }
@@ -47,10 +49,21 @@ public inherited sharing class GiftBatchStatusGroup {
     }
 
     public Boolean isImported() {
-        return status == 'Imported';
+        return status == BDI_DataImport_API.bdiImported;
     }
 
     public Boolean isProcessingFailed() {
-        return status == 'Failed';
+        return status == BDI_DataImport_API.bdiFailed;
+    }
+
+    public Boolean isPaymentFailed() {
+      return paymentStatus == ElevateTransactionStatus.DECLINED.name()
+          || paymentStatus == ElevateTransactionStatus.EXPIRED.name()
+          || paymentStatus == ElevateTransactionStatus.NONRETRYABLEERROR.name()
+          || paymentStatus == ElevateTransactionStatus.RETRYABLEERROR.name();
+    }
+    
+    public Boolean isPaymentAuthorizationExpired() {
+      return paymentStatus == ElevateTransactionStatus.EXPIRED.name();
     }
 }

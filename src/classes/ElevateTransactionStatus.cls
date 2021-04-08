@@ -33,6 +33,7 @@ public enum ElevateTransactionStatus {
     CANCELED,
     CAPTURED,
     DECLINED,
+    EXPIRED,
     NONRETRYABLEERROR,
     RETRYABLEERROR,
     REFUNDISSUED,
