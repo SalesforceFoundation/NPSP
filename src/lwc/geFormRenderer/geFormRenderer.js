@@ -933,7 +933,7 @@ export default class GeFormRenderer extends LightningElement{
 
         dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
             convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-
+        this.reset();
         this.updateFormState(dataImportWithNullValuesAppended);
     }
 

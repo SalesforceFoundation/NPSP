@@ -237,11 +237,25 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     set widgetDataFromState(widgetState) {
+        if (this.isNewRow(widgetState)) {
+           this.resetWidget();
+        }
         this._widgetDataFromState = widgetState;
         this.setCurrentPaymentMethod();
         if (this.shouldHandleWidgetDataChange()) {
             this.handleWidgetDataChange();
         }
+    }
+
+    isNewRow(widgetState) {
+        if (isEmpty(this._widgetDataFromState)) return false;
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)] !== widgetState[apiNameFor(DATA_IMPORT_ID)];
+    }
+
+    resetWidget() {
+        this._isReadOnlyMode = false;
+        this._showCancelButton= false;
+        this._widgetDataFromState = undefined;
     }
 
     handleWidgetDataChange() {
