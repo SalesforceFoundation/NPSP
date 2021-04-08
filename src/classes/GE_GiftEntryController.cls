@@ -41,6 +41,17 @@ public with sharing class GE_GiftEntryController {
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
     private static GiftBatchService giftBatchService = new GiftBatchService();
 
+    @TestVisible
+    private static ElevateCaptureGroupService captureGroupService {
+        get {
+            if (captureGroupService == null) {
+                captureGroupService = new ElevateCaptureGroupService();
+            }
+            return captureGroupService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
@@ -180,6 +191,23 @@ public with sharing class GE_GiftEntryController {
 
             throw buildDmlException(JSONExceptionData);
         }
+    }
+
+    @AuraEnabled
+    public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        ElevateAuthorizedGift authorizedGift;
+        try {
+            authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
+        } catch (AuraHandledException ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return authorizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateCaptureGroup createCaptureGroup() {
+        ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
+        return captureGroup;
     }
 
     /**
