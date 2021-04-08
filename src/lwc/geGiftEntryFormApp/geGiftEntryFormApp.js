@@ -82,7 +82,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
 
-        if(this.shouldDisplayExpiredAuthorizationWarning) {
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModal();
         }
     }
@@ -219,7 +219,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return format(geBatchGiftsHeader, [this.batchName]);
     }
 
-    get shouldDisplayExpiredAuthorizationWarning() {
+    shouldDisplayExpiredAuthorizationWarning() {
         return this.batchTotals.hasPaymentsWithExpiredAuthorizations 
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }
