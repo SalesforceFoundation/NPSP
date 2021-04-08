@@ -168,7 +168,7 @@ public class TDTM_TriggerHandler {
 
         if (classToRunRecord != null) {
             String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
-            Type classType = Type.forName(classToRunName);
+            Type classType = getTypeForClassNamed(classToRunName);
 
             if (classType != null) {
                 Object classInstance = classType.newInstance();
@@ -178,7 +178,7 @@ public class TDTM_TriggerHandler {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
                     Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
                     Boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
-                         thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
+                            thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
 
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
@@ -214,6 +214,16 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
+    }
+
+    private static Map<String, Type> typeMap = new Map<String, Type>();
+    private static Type getTypeForClassNamed(String str) {
+        str = str.toLowerCase();
+        if (typeMap.get(str) == null) {
+            Type typeInst = Type.forName(str);
+            typeMap.put(str, typeInst);
+        }
+        return typeMap.get(str);
     }
 
     /*******************************************************************************************************
@@ -295,8 +305,14 @@ public class TDTM_TriggerHandler {
 
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client
         process of all the errors that occurred in the context **/
-        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(dmlWrapper.objectsToInsert, allOrNothing);
-        List<Database.SaveResult> updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
+        List<Database.SaveResult> insertResults;
+        if (!dmlWrapper.objectsToInsert.isEmpty()) {
+            insertResults = UTIL_DMLService.insertRecords(dmlWrapper.objectsToInsert, allOrNothing);
+        }
+        List<Database.SaveResult> updateResults;
+        if (!dmlWrapper.objectsToUpdate.isEmpty()) {
+            updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
+        }
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);        
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
         
