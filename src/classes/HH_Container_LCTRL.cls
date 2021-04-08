@@ -44,7 +44,7 @@ public with sharing class HH_Container_LCTRL {
     * lightning components.
     */
     public static void packageLabels() {
-        string str;
+        String str;
         str = Label.lblAddressOverride;
         str = Label.lblCCardExcludeFrom;
         str = Label.lblHouseholdName;
@@ -80,29 +80,33 @@ public with sharing class HH_Container_LCTRL {
     * @return SObject The Household Account or Custom Object
     */
     @AuraEnabled
-    public static SObject getHH(ID hhId) {
+    public static SObject getHH(Id hhId) {
         try {
-            if (hhId == null)
+            if (hhId == null) {
                 return null;
+            }
             
-            string strSoql = 'select Id, ';
+            String strSoql = 'select Id, ';
             String strComma = '';
             Boolean isHHAccount = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
-            list<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
+            List<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
             String strObject = isHHAccount ? 'Account' : 'npo02__Household__c';
             
             // check field level security and construct our soql            
             for (String strF : listStrFld) {
                 DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
-                if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
-                    throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+                if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
+                    throw (new permsException(String.format(Label.flsError, new string[]{
+                            strObject + '.' + strF
+                    })));
+                }
                 
                 strSoql += strComma + strF;
                 strComma = ',';
             }
             
             strSoql += ' from ' + strObject + ' where Id = :hhId';
-            return database.query(strSoql);
+            return Database.query(strSoql);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -112,7 +116,7 @@ public with sharing class HH_Container_LCTRL {
     * @description returns a list of Fields (developer name) that must be editable on the Household
     * @return list<String> the set of Fields
     */
-    private static list<String> getUpdateableHouseholdFields(Boolean isHHAccount) {
+    private static List<String> getUpdateableHouseholdFields(Boolean isHHAccount) {
         List<String> listFields = new List<String>{
             'Name',
             'npo02__SYSTEM_CUSTOM_NAMING__c', 
@@ -213,7 +217,7 @@ public with sharing class HH_Container_LCTRL {
     @TestVisible
     private static Set<String> getContactFields() {
         try {
-            set<String> setContactFields = new Set<String>{
+            Set<String> setContactFields = new Set<String>{
                 'Id', 
                 'npo02__Household_Naming_Order__c', 
                 'FirstName', 
@@ -242,7 +246,7 @@ public with sharing class HH_Container_LCTRL {
             addContactMiddleNameField(setContactFields);
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
-                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                if (OrgSettings.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
@@ -259,8 +263,8 @@ public with sharing class HH_Container_LCTRL {
     * @description returns a set of Contact Fields (developer name) that must be editable
     * @return set<String> the set of Contact Fields
     */
-    private static set<String> setUpdateableContactFields() {
-        set<String> setContactFields = new Set<String>{
+    private static Set<String> setUpdateableContactFields() {
+        Set<String> setContactFields = new Set<String>{
             'AccountId',
             'FirstName',
             'LastName',
@@ -316,18 +320,18 @@ public with sharing class HH_Container_LCTRL {
     * @return void
     */
     @AuraEnabled
-    public static void upsertContacts(list<Contact> listCon) {
+    public static void upsertContacts(List<Contact> listCon) {
         // Even though we are given a list of Contacts from the lightning component,
         // apex seems to treat them as generic sObjects, and thus we can't do upsert.
         // thus we will split the list into update and insert lists.
-        list<Contact> listInsert = new list<Contact>();
-        list<Contact> listUpdate = new list<Contact>();
-        list<String> listStrFld = new list<String>(setUpdateableContactFields());
+        List<Contact> listInsert = new List<Contact>();
+        List<Contact> listUpdate = new List<Contact>();
+        List<String> listStrFld = new List<String>(setUpdateableContactFields());
         
         Savepoint sp = Database.setSavepoint(); 
         try {
             // check object permissions
-            if (!Contact.sObjectType.getDescribe().isCreateable() || !Contact.sObjectType.getDescribe().isUpdateable()) {
+            if (!Contact.SObjectType.getDescribe().isCreateable() || !Contact.SObjectType.getDescribe().isUpdateable()) {
                  throw new System.NoAccessException();    
             }
             
@@ -352,11 +356,12 @@ public with sharing class HH_Container_LCTRL {
             
             // allow potential duplicates when rules to warn are turned on.
             Database.DMLOptions dml = new Database.DMLOptions();
-            dml.DuplicateRuleHeader.AllowSave = true;
+            dml.duplicateRuleHeader.allowSave = true;
             List<Database.SaveResult> listSR = UTIL_DMLService.insertRecords(listInsert, dml);
             for (Database.SaveResult sr : listSR) {
-                if (!sr.isSuccess())
+                if (!sr.isSuccess()) {
                     throw new DmlException(sr.getErrors()[0].getMessage());
+                }
             }
 
             UTIL_DMLService.updateRecords(listUpdate);
@@ -386,19 +391,19 @@ public with sharing class HH_Container_LCTRL {
             if (isHHAccount) {
                 strObject = 'Account';
                 hhCopy = new Account(Id=hh.Id);
-                if (!Account.sObjectType.getDescribe().isUpdateable()) {
+                if (!Account.SObjectType.getDescribe().isUpdateable()) {
                     throw new System.NoAccessException(); 
                 }
             } else {
                 strObject = 'npo02__Household__c';
                 hhCopy = new npo02__Household__c(Id=hh.Id);
-                if (!npo02__Household__c.sObjectType.getDescribe().isUpdateable()) {
+                if (!npo02__Household__c.SObjectType.getDescribe().isUpdateable()) {
                     throw new System.NoAccessException(); 
                 }
             }
             
             // do FLS and only copy the fields we allow to be touched in our UI
-            list<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);            
+            List<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
             UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, listStrFld);
             
             // we've already saved the data for the contacts in the household.
@@ -426,16 +431,17 @@ public with sharing class HH_Container_LCTRL {
     * @return void
     */
     @AuraEnabled
-    public static void mergeHouseholds(Account hhWinner, list<Account> listHHMerge) {
+    public static void mergeHouseholds(Account hhWinner, List<Account> listHHMerge) {
         try {
             // Check object permissions
-            if (!Account.sObjectType.getDescribe().isUpdateable() || 
-                !Account.sObjectType.getDescribe().isDeletable()) {
+            if (!Account.SObjectType.getDescribe().isUpdateable() ||
+                !Account.SObjectType.getDescribe().isDeletable()) {
                     throw new System.NoAccessException(); 
                }
-            
-            for (Account loser : listHHMerge)
+
+            for (Account loser : listHHMerge) {
                 merge hhWinner loser;
+            }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -447,10 +453,9 @@ public with sharing class HH_Container_LCTRL {
     * @param listCon The list of Contacts to save (update and insert)
     * @param listConRemove The list of Contacts to remove from the household
     * @param listHHMerge the list of Households to merge into the winner
-    * @return void
     */
     @AuraEnabled
-    public static void saveHouseholdPage(SObject hh, list<Contact> listCon, list<Contact> listConRemove, list<Account>listHHMerge) {
+    public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
         updateHousehold(hh);
         
         // need to merge any households (Accounts only) before we save contacts
@@ -480,7 +485,6 @@ public with sharing class HH_Container_LCTRL {
     /*******************************************************************************************************
     * @description Cleans up/refreshes the Addresses for specified Account Ids
     * @param accountIds List of Account Ids
-    * @return void
     */
     private static void cleanupAddresses(List<Id> accountIds) {
         Id[] cleanupAccountIds = new Id[0];       
@@ -491,7 +495,7 @@ public with sharing class HH_Container_LCTRL {
             }           
         }
 
-        ADDR_Addresses_TDTM.cleanupAccountAddresses(cleanupAccountIds);
+        Addresses.cleanupAccountAddresses(cleanupAccountIds);
     }
 
     /*******************************************************************************************************
@@ -515,7 +519,7 @@ public with sharing class HH_Container_LCTRL {
     * @return SObject the Household object
     */
     @AuraEnabled
-    public static SObject getHHNamesGreetings(SObject hh, list<Contact> listCon) {
+    public static SObject getHHNamesGreetings(SObject hh, List<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
             Contacts contacts = new Contacts(listCon);
@@ -546,20 +550,22 @@ public with sharing class HH_Container_LCTRL {
     * @return list<Address__c> The addresses in the household and contacts
     */
     @AuraEnabled
-    public static list<Address__c> getAddresses(ID hhId, list<Address__c> listAddrExisting) {
+    public static List<Address__c> getAddresses(Id hhId, List<Address__c> listAddrExisting) {
         try {
-            if (hhId == null)
+            if (hhId == null) {
                 return null;
+            }
 
             // keep unique list of addresses in temp Address objects
-            list<Address__c> listAddr = new list<Address__c>();
-            set<String> setAddrKey = new set<String>();
+            List<Address__c> listAddr = new List<Address__c>();
+            Set<String> setAddrKey = new Set<String>();
 
             // if they provide existing addresses, do our initialization
             if (listAddrExisting != null) {
                 for (Address__c addr : listAddrExisting) {
                     listAddr.add(addr);
-                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    setAddrKey.add(npspAddress.getAddrKey());
                 }
             }
 
@@ -569,7 +575,7 @@ public with sharing class HH_Container_LCTRL {
             // ie, track a static hh and with hhId it came from, and use it in getHH()
             // if the hhId matches.  Same with listCon.
             SObject hh = getHH(hhId);
-            list<Contact> listCon = getContacts(hhid);
+            List<Contact> listCon = getContacts(hhId);
 
             // copy the household's address
             Address__c addr = new Address__c();
@@ -577,9 +583,9 @@ public with sharing class HH_Container_LCTRL {
                 addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
                 addr.MailingStreet__c = (String)hh.get('BillingStreet');
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = (String)hh.get('BillingCity');
                 addr.MailingState__c = (String)hh.get('BillingState');
                 addr.MailingPostalCode__c = (String)hh.get('BillingPostalCode');
@@ -591,48 +597,54 @@ public with sharing class HH_Container_LCTRL {
                 addr.MailingPostalCode__c = (String)hh.get('npo02__MailingPostalCode__c');
                 addr.MailingCountry__c = (String)hh.get('npo02__MailingCountry__c');
             }
-            if (listAddrExisting == null || listAddrExisting.size() == 0)
-                addr.Default_Address__c = true;  // the HH address is the default.
-            String strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
-            if (setAddrKey.add(strKey))
+            if (listAddrExisting == null || listAddrExisting.size() == 0) {
+                addr.Default_Address__c = true;
+            }  // the HH address is the default.
+            String strKey = new NPSP_Address(addr).getAddrKey();
+            if (setAddrKey.add(strKey)) {
                 listAddr.add(addr);
+            }
 
             // copy the contacts' addresses
             for (Contact con : listCon) {
                 addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
                 addr.MailingCountry__c = con.MailingCountry;
-                strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
-                if (setAddrKey.add(strKey))
+                strKey = new NPSP_Address(addr).getAddrKey();
+                if (setAddrKey.add(strKey)) {
                     listAddr.add(addr);
+                }
             }
 
             // copy any address objects
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
 
-                set<String> setFields = new set<String>{'MailingStreet__c', 'MailingStreet2__c', 
+                Set<String> setFields = new Set<String>{'MailingStreet__c', 'MailingStreet2__c',
                     'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c', 'Default_Address__c'};
-                string strSoql = 'select ';
-                string strComma = '';
+                String strSoql = 'select ';
+                String strComma = '';
                 
                 for (String strF : setFields) {
                     // check field level security
                     DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('Address__c'), UTIL_Namespace.StrTokenNSPrefix(strF));
-                    if (dfr == null || !dfr.isAccessible())
-                        throw (new permsException(string.format(label.flsError, new string[]{'Address__c' + '.' + strF})));
+                    if (dfr == null || !dfr.isAccessible()) {
+                        throw (new permsException(String.format(Label.flsError, new string[]{
+                                'Address__c' + '.' + strF
+                        })));
+                    }
                     
                     strSoql += strComma + strF;
                     strComma = ',';
                 }
                 strSoql += ' from Address__c where Household_Account__c = :hhId';
-                list<Address__c> listAddrHH = database.query(strSoql);
+                List<Address__c> listAddrHH = Database.query(strSoql);
                 for (Address__c addrT : listAddrHH) {
                     // init other values we don't want to query for that the key might use.
                     addrT.Seasonal_Start_Day__c = null;
@@ -640,9 +652,10 @@ public with sharing class HH_Container_LCTRL {
                     addrT.Seasonal_End_Day__c = null;
                     addrT.Seasonal_End_Month__c = null;
                     addrT.Address_Type__c = null;
-                    strKey = ADDR_Addresses_TDTM.getAddrKey(addrT);
-                    if (setAddrKey.add(strKey))
+                    strKey = new NPSP_Address(addrT).getAddrKey();
+                    if (setAddrKey.add(strKey)) {
                         listAddr.add(addrT);
+                    }
                 }
             }
 
@@ -663,20 +676,21 @@ public with sharing class HH_Container_LCTRL {
     * @return list<Address__c> The addresses in the household and contacts
     */
     @AuraEnabled
-    public static list<Address__c> addContactAddresses(list<Contact> listCon, list<Address__c> listAddrExisting) {
+    public static List<Address__c> addContactAddresses(List<Contact> listCon, List<Address__c> listAddrExisting) {
         try {
-            if (listCon == null)
+            if (listCon == null) {
                 return null;
+            }
 
             // keep unique list of addresses in temp Address objects
-            list<Address__c> listAddr = new list<Address__c>();
-            set<String> setAddrKey = new set<String>();
+            List<Address__c> listAddr = new List<Address__c>();
+            Set<String> setAddrKey = new Set<String>();
 
             // if they provide existing addresses, do our initialization
             if (listAddrExisting != null) {
                 for (Address__c addr : listAddrExisting) {
                     listAddr.add(addr);
-                    setAddrKey.add(ADDR_Addresses_TDTM.getAddrKey(addr));
+                    setAddrKey.add(new NPSP_Address(addr).getAddrKey());
                 }
             }
 
@@ -685,16 +699,17 @@ public with sharing class HH_Container_LCTRL {
                 Address__c addr = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
                 addr.MailingStreet__c = con.MailingStreet;
-                ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                Addresses.handleMultilineStreet(addr);
                 addr.MailingCity__c = con.MailingCity;
                 addr.MailingState__c = con.MailingState;
                 addr.MailingPostalCode__c = con.MailingPostalCode;
                 addr.MailingCountry__c = con.MailingCountry;
-                string strKey = ADDR_Addresses_TDTM.getAddrKey(addr);
-                if (setAddrKey.add(strKey))
+                String strKey = new NPSP_Address(addr).getAddrKey();
+                if (setAddrKey.add(strKey)) {
                     listAddr.add(addr);
+                }
             }
 
             return listAddr;
@@ -708,14 +723,14 @@ public with sharing class HH_Container_LCTRL {
     * @return list<SelectOption> The Salutations
     */
     @AuraEnabled
-    public static list<SelectOption> getSalutations() {
+    public static List<SelectOption> getSalutations() {
         try {
 
             List<Schema.PicklistEntry> picklistSalutations = Contact.Salutation.getDescribe().getPicklistValues();
             List<SelectOption> listSalutations = new List<SelectOption>();
 
             listSalutations.add(new SelectOption(Label.stgLabelNone, null));
-            for (Schema.PickListEntry entry : picklistSalutations) {
+            for (Schema.PicklistEntry entry : picklistSalutations) {
                 listSalutations.add(new SelectOption(entry.getLabel(), entry.getValue()));
             }
             return listSalutations;
@@ -729,16 +744,16 @@ public with sharing class HH_Container_LCTRL {
     */
     public class SelectOption {
 
-        public SelectOption(string strLabel, string strValue) {
+        public SelectOption(String strLabel, String strValue) {
             label = strLabel;
             value = strValue;
         }
 
         @AuraEnabled
-        public string label { get; set; }
+        public String label { get; set; }
 
         @AuraEnabled
-        public string value { get; set; }
+        public String value { get; set; }
     }
 
 }

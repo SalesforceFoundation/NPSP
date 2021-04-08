@@ -74,6 +74,8 @@
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
         <members>Accounts</members>
+        <members>AddressService</members>
+        <members>Addresses</members>
         <members>AggregateResultProxy</members>
         <members>AggregateResultProxy_TEST</members>
         <members>AllocationParent</members>
@@ -266,6 +268,8 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
+        <members>HouseholdAccounts</members>
+        <members>ContactService</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -382,6 +386,9 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>NPSP_Address</members>
+        <members>NPSP_Contact</members>
+        <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
@@ -411,6 +418,7 @@
         <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
+        <members>OrgConfig</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -1929,7 +1937,6 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
-        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2281,6 +2288,7 @@
         <members>commonBatches</members>
         <members>commonCVV</members>
         <members>commonCancel</members>
+        <members>commonCardLast4</members>
         <members>commonCardType</members>
         <members>commonCardholderName</members>
         <members>commonClone</members>
@@ -2293,6 +2301,7 @@
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
+        <members>commonEditPaymentInformation</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonErrorPrefix</members>

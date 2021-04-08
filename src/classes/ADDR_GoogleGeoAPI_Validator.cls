@@ -347,7 +347,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
             populateAddressFromGoogleResponse();
 
-            ADDR_Addresses_TDTM.handleMultilineStreet(address);
+            Addresses.handleMultilineStreet(address);
             address.Geolocation__Latitude__s = googleResponse.results[0].geometry.location.lat;
             address.Geolocation__Longitude__s = googleResponse.results[0].geometry.location.lng;
             address.Verified__c = true;

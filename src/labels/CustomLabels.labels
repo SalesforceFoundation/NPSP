@@ -2648,14 +2648,6 @@
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
     </labels>
     <labels>
-        <fullName>RD2_UpdatePaymentInformation</fullName>
-        <categories>Recurring-Donations, Elevate</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text to update evelate payment information</shortDescription>
-        <value>Update Payment Information</value>
-    </labels>
-    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -5424,6 +5416,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cardholder Name</value>
     </labels>
     <labels>
+        <fullName>commonCardLast4</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for card last 4</shortDescription>
+        <value>Card Last 4</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5518,6 +5518,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Edit</shortDescription>
         <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>commonEditPaymentInformation</fullName>
+        <categories>Recurring-Donations, Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to edit elevate payment information</shortDescription>
+        <value>Edit payment information.</value>
     </labels>
     <labels>
         <fullName>commonElevateFailedOnboarding</fullName>

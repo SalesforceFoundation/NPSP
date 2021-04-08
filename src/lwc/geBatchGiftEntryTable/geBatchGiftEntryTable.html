@@ -1,11 +1,10 @@
 <template>
     <article class='slds-card slds-card_extension slds-m-vertical_small'>
-        <div if:true={ready}>
-            <div if:true={hasData}>
-                <div if:false={isLoaded} class="slds-is-relative">
-                    <lightning-spinner
-                            alternative-text="Loading..."
-                            class="loading">
+        <template if:true={ready}>
+            <template if:true={hasData}>
+                <div if:false={isLoaded}
+                     class="slds-is-relative">
+                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
                     </lightning-spinner>
                 </div>
 
@@ -27,58 +26,58 @@
                                                    menu-alignment="right"
                                                    onselect={handleMenuItemSelect}
                                                    data-qa-locator={qaLocatorTableMenu}>
-                                <lightning-menu-item
-                                        value="selectcolumns"
-                                        label={CUSTOM_LABELS.geSelectBatchTableColumns}
-                                        data-qa-locator={qaLocatorSelectBatchTableColumns}>
+                                <lightning-menu-item value="selectcolumns"
+                                                     label={CUSTOM_LABELS.geSelectBatchTableColumns}
+                                                     data-qa-locator={qaLocatorSelectBatchTableColumns}>
                                 </lightning-menu-item>
                             </lightning-button-menu>
                         </div>
                     </lightning-layout-item>
-                    <lightning-layout-item size=12 medium-device-size=6
+                    <lightning-layout-item size=12
+                                           medium-device-size=6
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
-                        <c-util-progress-bar
-                                title={geBatchGiftsCountLabel}
-                                actual-value={count}
-                                expected-value={expectedCount}>
+                        <c-util-progress-bar title={geBatchGiftsCountLabel}
+                                             actual-value={count}
+                                             expected-value={expectedCount}>
                         </c-util-progress-bar>
                     </lightning-layout-item>
-                    <lightning-layout-item size=12 medium-device-size=6
+                    <lightning-layout-item size=12
+                                           medium-device-size=6
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
-                        <c-util-progress-bar
-                                title={geBatchGiftsTotalLabel}
-                                actual-value={total}
-                                expected-value={expectedTotal}
-                                format-style="currency"
-                                currency-code={batchCurrencyISOCode}>
+                        <c-util-progress-bar title={geBatchGiftsTotalLabel}
+                                             actual-value={total}
+                                             expected-value={expectedTotal}
+                                             format-style="currency"
+                                             currency-code={batchCurrencyISOCode}>
                         </c-util-progress-bar>
                     </lightning-layout-item>
                 </lightning-layout>
 
                 <div style="height: 20rem;">
-                    <lightning-datatable
-                            key-field="Id"
-                            data={data}
-                            errors={tableRowErrors}
-                            columns={columns}
-                            hide-checkbox-column="true"
-                            show-row-number-column="true"
-                            onrowaction={handleRowActions}
-                            enable-infinite-loading
-                            onloadmore={loadMoreData}
-                            data-qa-locator="datatable Batch Gifts">
+                    <lightning-datatable key-field="Id"
+                                         data={data}
+                                         errors={tableRowErrors}
+                                         columns={columns}
+                                         hide-checkbox-column="true"
+                                         show-row-number-column="true"
+                                         onrowaction={handleRowActions}
+                                         enable-infinite-loading
+                                         onloadmore={loadMoreData}
+                                         data-qa-locator="datatable Batch Gifts">
                     </lightning-datatable>
                 </div>
-            </div>
-            <div if:false={hasData}>
-                <c-util-illustration title="Looks like you haven't entered any gifts yet!"
-                                     message="Enter a new gift and it will appear here."
-                                     size="small"
-                                     variant="lake-mountain">
-                </c-util-illustration>
-            </div>
-        </div>
+            </template>
+            <template if:false={hasData}>
+                <div class='slds-p-around_small'>
+                    <c-util-illustration title={CUSTOM_LABELS.bgeGridNoGiftsHeader}
+                                        message={CUSTOM_LABELS.bgeGridNoGiftsBody}
+                                        size='small'
+                                        variant='lake-mountain'>
+                    </c-util-illustration>
+                </div>
+            </template>
+        </template>
     </article>
 </template>

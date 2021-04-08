@@ -2,6 +2,8 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
+import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -11,6 +13,7 @@ import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCVV from '@salesforce/label/c.commonCVV';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardLast4 from '@salesforce/label/c.commonCardLast4';
 import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
 import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
@@ -18,6 +21,7 @@ import commonCriticalError from '@salesforce/label/c.commonCriticalError';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
+import commonEditPaymentInformation from '@salesforce/label/c.commonEditPaymentInformation';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
@@ -34,6 +38,7 @@ import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonOkay from '@salesforce/label/c.commonOkay';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
+import commonPermissionErrorMessage from '@salesforce/label/c.commonPermissionErrorMessage';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
@@ -196,6 +201,7 @@ import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWar
 import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
@@ -210,7 +216,6 @@ import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
-import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
 import geTextPaymentsSaveNotice from '@salesforce/label/c.geTextPaymentsSaveNotice';
 import geTextProcessing from '@salesforce/label/c.geTextProcessing';
@@ -223,8 +228,8 @@ import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCre
 import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDeleteSuccess';
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
-import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import geWarningBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geWarningBatchGiftEntryCurrencyMismatch';
+import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
@@ -239,6 +244,8 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
+        bgeGridNoGiftsBody,
+        bgeGridNoGiftsHeader,
         commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
@@ -248,6 +255,7 @@ class GeLabelService {
         commonBatches,
         commonCVV,
         commonCancel,
+        commonCardLast4,
         commonCardType,
         commonClone,
         commonCreditNumber,
@@ -255,6 +263,7 @@ class GeLabelService {
         commonDefaultValue,
         commonDelete,
         commonEdit,
+        commonEditPaymentInformation,
         commonError,
         commonFieldLabel,
         commonFieldNotFound,
@@ -271,6 +280,7 @@ class GeLabelService {
         commonOkay,
         commonPaymentServices,
         commonPercent,
+        commonPermissionErrorMessage,
         commonReadMore,
         commonRequired,
         commonReviewForm,
@@ -319,7 +329,6 @@ class GeLabelService {
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
         geBodyFormFieldsRightCol,
-        geProcessingErrors,
         geBodyMatchingApplyNewPayment,
         geBodyMatchingNewOpportunity,
         geBodyMatchingNoPayments,
@@ -434,6 +443,7 @@ class GeLabelService {
         gePaymentProcessError,
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
+        geProcessingErrors,
         geSearchPlaceholder,
         geSelectBatchTableColumns,
         geSelectPlaceholder,
@@ -460,8 +470,8 @@ class GeLabelService {
         geToastTemplateDeleteSuccess,
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
-        geWarningFormFieldsModalDeleteSection,
         geWarningBatchGiftEntryCurrencyMismatch,
+        geWarningFormFieldsModalDeleteSection,
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
