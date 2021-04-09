@@ -1,5 +1,12 @@
 <apex:component controller="UTIL_PageMessages_CTRL" selfClosing="true">
 
+    <style>
+        .slds-scope .slds-notify_toast, .slds-scope .slds-notify--toast
+        {
+            min-width: 320px;
+        }
+    </style>
+
     <apex:attribute name="useToast"
         description="If true, page messages will be displayed as floating toast messages, as described in the SLDS style guide. Otherwise, page messages will appear as blocks where the component is used."
         type="Boolean"
