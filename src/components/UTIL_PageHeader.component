@@ -85,7 +85,7 @@
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <header class="slds-page-header" role="banner" id="npspHeader">
-        <div class="slds-grid">
+        <div class="slds-grid slds-wrap">
             <div class="slds-col slds-col_padded">
                 <apex:outputPanel layout="none" rendered="{!showBreadcrumb}">
                     <nav role="navigation" class="slds-p-bottom_x-small" aria-label="{!$Label.lblYouAreHere}">
@@ -114,7 +114,7 @@
 
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == false}" styleClass="slds-media__body" id="npspTitle">
                         <p class="slds-text-heading_label">{!headerLabel}</p>
-                        <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-align-middle">{!header}</h1>
                     </apex:outputPanel>
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == true}" styleClass="slds-media__body" id="npspTitleSmall">
                         <h1 class="slds-text-heading_medium slds-m-bottom_large">{!headerLabel}</h1>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="slds-col slds-no-flex slds-align-middle">
-                <div class="slds-button-group" role="group" id="grpBTN">
+                <div class="slds-button-group slds-p-top_small slds-p-left_small" role="group" id="grpBTN">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
                         value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
                         rendered="{!showCancelBtn}" reRender="{!cancelReRender}" onclick="{!IF(cancelDisabledOnClick == true,"this.disabled=true;", "")}"/>
