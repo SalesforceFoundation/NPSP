@@ -27,8 +27,8 @@
 
             <!-- TEMPLATE VIEW -->
             <form class="slds-form slds-form_horizontal">
-                <apex:outputPanel styleClass="slds-grid" id="templateForm">
-                    <div class="slds-col slds-col_padded slds-p-top_large slds-size_1-of-2">
+                <apex:outputPanel styleClass="slds-grid slds-wrap" id="templateForm">
+                    <div class="slds-col slds-col_padded slds-p-top_large slds-size_1-of-1 slds-large-size_1-of-2">
                         <div class="slds-form-element slds-p-top_small">
                             <apex:outputLabel for="idName" styleClass="slds-form-element__label">
                                 <abbr class="slds-required" title="required">*</abbr> {!$ObjectType.Engagement_Plan_Template__c.Fields.Name.Label}
@@ -52,7 +52,7 @@
                                 required="{!f.DBRequired || f.Required}"/>
                         </apex:repeat>
                     </div>
-                    <div class="slds-col slds-col_padded slds-p-top_large slds-size_1-of-2">
+                    <div class="slds-col slds-col_padded slds-p-top_large slds-size_1-of-1 slds-large-size_1-of-2">
                         <div class="slds-form-element slds-p-top_small">
                             <apex:outputLabel value="{!$ObjectType.Engagement_Plan_Template__c.Fields.Default_Assignee__c.Label}" for="idBlankAssignmentRule" styleClass="slds-form-element__label" />
                             <div class="slds-form-element__control">
