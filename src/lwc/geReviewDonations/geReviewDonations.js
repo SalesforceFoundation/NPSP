@@ -20,7 +20,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     _donationType;
     _selectedDonation;
     _opportunities = [];
-    _dedicatedListenerEventName = 'geDonationMatchingEvent';
+    _dedicatedListenerEventName = 'geModalCloseEvent';
 
     connectedCallback() {
         registerListener('resetReviewDonationsEvent', this.handleResetReviewDonationsComponent, this);

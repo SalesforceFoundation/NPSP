@@ -8657,6 +8657,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
     </labels>
     <labels>
+        <fullName>gePaymentAuthExpiredHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header text for payment authorization warning</shortDescription>
+        <value>Payment Authorization Expired</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentAuthExpiredWarningText</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about processing batch when authorizations have expired</shortDescription>
+        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with Expired Authorization Payment Status.</value>
+    </labels>
+    <labels>
         <fullName>gePaymentProcessedWarning</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

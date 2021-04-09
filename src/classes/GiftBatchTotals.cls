@@ -35,7 +35,9 @@
 public inherited sharing class GiftBatchTotals {
     private Integer totalGifts = 0;
     private Integer processedGifts = 0;
+    private Integer failedPayments = 0;
     private Integer failedGifts = 0;
+    private Integer expiredPayments = 0;
 
     public GiftBatchTotals() {}
 
@@ -45,6 +47,8 @@ public inherited sharing class GiftBatchTotals {
             addToTotalGiftsCountFor(statusGroup);
             countProcessedGiftsFor(statusGroup);
             addToFailedGiftsCountFor(statusGroup);
+            addToFailedPaymentGiftsCountFor(statusGroup);
+            addToExpiredPaymentGiftsCountFor(statusGroup);
         }
     }
 
@@ -52,7 +56,9 @@ public inherited sharing class GiftBatchTotals {
         return new Map<String, Integer> {
             GiftBatchAggregateGroupName.TOTAL.name() => this.totalGifts,
             GiftBatchAggregateGroupName.PROCESSED.name() => this.processedGifts,
-            GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts
+            GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts,
+            GiftBatchAggregateGroupName.FAILED_PAYMENT.name() => this.failedPayments,
+            GiftBatchAggregateGroupName.EXPIRED_PAYMENT.name() => this.expiredPayments
         };
     }
 
@@ -69,6 +75,18 @@ public inherited sharing class GiftBatchTotals {
     private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isProcessingFailed()) {
             failedGifts += statusGroup.recordCount();
+        }
+    }
+
+    private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isPaymentFailed()) {
+            failedPayments += statusGroup.recordCount();
+        }
+    }
+
+    private void addToExpiredPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isPaymentAuthorizationExpired()) {
+            expiredPayments += statusGroup.recordCount();
         }
     }
 }

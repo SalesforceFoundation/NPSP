@@ -2539,6 +2539,8 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
+        <members>gePaymentAuthExpiredHeader</members>
+        <members>gePaymentAuthExpiredWarningText</members>
         <members>gePaymentProcessError</members>
         <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
@@ -4265,8 +4267,8 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>geModalPrompt</members>
         <members>gePaymentGatewayManagement</members>
-        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>

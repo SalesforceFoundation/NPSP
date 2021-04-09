@@ -38,7 +38,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnTrueWithCorrectRecordCountForImportedStatusGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported')
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), BDI_DataImport_API.bdiImported)
             .withAliasAndValue('recordCount', 10);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -49,7 +49,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForNotImportedGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Dummy Status');
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), 'Dummy Status');
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isImported());
@@ -58,7 +58,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnTrueWithCorrectRecordCountForFailedStatusGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), BDI_DataImport_API.bdiFailed)
             .withAliasAndValue('recordCount', 5);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
@@ -69,9 +69,34 @@ private with sharing class GiftBatchStatusGroup_TEST {
     @isTest
     private static void shouldReturnFalseForNoneFailedGroup() {
         AggregateResultProxy resultProxy = new AggregateResultProxy()
-            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported');
+            .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c), BDI_DataImport_API.bdiImported);
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isProcessingFailed());
+    }
+
+
+    @isTest
+    private static void shouldReturnTrueWithCorrectCountForGroupWithFailedPayments() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+            .withAliasAndValue(
+                String.valueOf(DataImport__c.fields.Payment_Status__c), 
+                ElevateTransactionStatus.DECLINED.name())
+            .withAliasAndValue('recordCount', 7);
+
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(statusGroup.isPaymentFailed());
+        System.assertEquals(7, statusGroup.recordCount());
+    }
+
+    @isTest
+    private static void shouldReturnFalseForGroupWithoutPaymentFailures() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+            .withAliasAndValue(
+                String.valueOf(DataImport__c.fields.Payment_Status__c), 
+                ElevateTransactionStatus.AUTHORIZED.name());
+
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(!statusGroup.isPaymentFailed());
     }
 }

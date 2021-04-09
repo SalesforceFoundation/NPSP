@@ -40,26 +40,62 @@ private with sharing class GiftBatchGroupedTotals_TEST {
     @isTest
     private static void shouldReturnMapContainingCorrectRecordCounts() {
         Id DUMMY_BATCH_ID_0 = Id.valueOf('001xa000003DIlo');
+        String elevatePaymentAuthorizedStatus = ElevateTransactionStatus.AUTHORIZED.name();
+        String elevatePaymentDeclinedStatus = ElevateTransactionStatus.DECLINED.name();
+        String elevatePaymentExpiredStatus = ElevateTransactionStatus.EXPIRED.name();
+
+        String dataImportBatchFieldAPIName = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
+        String dataImportPaymentStatusFieldAPIName = String.valueOf(DataImport__c.fields.Payment_Status__c);
+        String dataImportStatusFieldName = String.valueOf(DataImport__c.fields.Status__c);
+
         List<AggregateResultProxy> proxiesForBatch0 = new List<AggregateResultProxy> {
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Imported')
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiImported)
                 .withAliasAndValue('recordCount', 1),
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Status__c),'Failed')
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiFailed)
                 .withAliasAndValue('recordCount', 2),
             new AggregateResultProxy()
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c), DUMMY_BATCH_ID_0)
-                .withAliasAndValue(String.valueOf(DataImport__c.fields.Payment_Status__c),'AUTHORIZED')
-                .withAliasAndValue('recordCount', 3)
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentAuthorizedStatus)
+                .withAliasAndValue('recordCount', 3),
+            new AggregateResultProxy()
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_0)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentExpiredStatus)
+                .withAliasAndValue('recordCount', 4)                
         };
 
-        GiftBatchGroupedTotals batchTotals = new GiftBatchGroupedTotals(proxiesForBatch0);
+        Id DUMMY_BATCH_ID_1 = Id.valueOf('002zb000004EJmp');
+        List<AggregateResultProxy> proxiesForBatch1 = new List<AggregateResultProxy> {
+            new AggregateResultProxy()
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_1)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentDeclinedStatus)
+                .withAliasAndValue('recordCount', 5),
+            new AggregateResultProxy()
+                .withAliasAndValue(dataImportBatchFieldAPIName, DUMMY_BATCH_ID_1)
+                .withAliasAndValue(dataImportStatusFieldName, BDI_DataImport_API.bdiFailed)
+                .withAliasAndValue(dataImportPaymentStatusFieldAPIName, elevatePaymentDeclinedStatus)
+                .withAliasAndValue('recordCount', 6)
+        };
+
+        List<AggregateResultProxy> allProxies = new List<AggregateResultProxy>();
+        allProxies.addAll(proxiesForBatch0);
+        allProxies.addAll(proxiesForBatch1);
+        GiftBatchGroupedTotals batchTotals = new GiftBatchGroupedTotals(allProxies);
 
         Map<String, Integer> totalsForBatch0 = batchTotals.totalsFor(DUMMY_BATCH_ID_0);
         System.assertEquals(1, totalsForBatch0.get(GiftBatchAggregateGroupName.PROCESSED.name()));
         System.assertEquals(2, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED.name()));
-        System.assertEquals(1 + 2 + 3, totalsForBatch0.get(GiftBatchAggregateGroupName.TOTAL.name()));
+        System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
+        System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.EXPIRED_PAYMENT.name()));
+        System.assertEquals(1 + 2 + 3 + 4, totalsForBatch0.get(GiftBatchAggregateGroupName.TOTAL.name()));
+
+        Map<String, Integer> totalsForBatch1 = batchTotals.totalsFor(DUMMY_BATCH_ID_1);
+        System.assertEquals(0, totalsForBatch1.get(GiftBatchAggregateGroupName.PROCESSED.name()));
+        System.assertEquals(6, totalsForBatch1.get(GiftBatchAggregateGroupName.FAILED.name()));
+        System.assertEquals(11, totalsForBatch1.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
+        System.assertEquals(5 + 6, totalsForBatch1.get(GiftBatchAggregateGroupName.TOTAL.name()));
     }
 }

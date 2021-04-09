@@ -1,10 +1,8 @@
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import CUSTOM_LABELS from './helpers/customLabels';
-import BatchTotals from './helpers/batchTotals';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
@@ -16,22 +14,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     });
 
     @api batchId;
+    @api batchTotals = {};
     @api isPermissionError;
-
-    @track batchTotals = {}
-
-    connectedCallback() {
-        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        this.retrieveBatchTotals();
-    }
-
-    disconnectedCallback() {
-        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-    }
-
-    async retrieveBatchTotals() {
-        this.batchTotals = await BatchTotals(this.batchId);
-    }
 
     @wire(getRecord, {
         recordId: '$batchId',
