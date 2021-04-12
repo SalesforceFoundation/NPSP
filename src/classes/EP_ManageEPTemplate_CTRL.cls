@@ -416,7 +416,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         }
 
         //add task button
-        Component.Apex.OutputPanel buttonGridPanel = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
+        Component.Apex.OutputPanel buttonGridPanel = new Component.Apex.OutputPanel(styleClass='slds-grid slds-wrap', layout='block');
         Component.Apex.OutputPanel buttonColPanel = new Component.Apex.OutputPanel(styleClass='slds-col slds-p-around_medium', layout='block');
 
         Component.Apex.CommandButton addTaskButton = new Component.Apex.CommandButton(
@@ -463,21 +463,21 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level +
             '</legend>', escape=false);
 
-        Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
-        Component.Apex.OutputPanel secondRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
-        Component.Apex.OutputPanel cardFooter = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
+        Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid slds-wrap', layout='block');
+        Component.Apex.OutputPanel secondRow = new Component.Apex.OutputPanel(styleClass='slds-grid slds-wrap', layout='block');
+        Component.Apex.OutputPanel cardFooter = new Component.Apex.OutputPanel(styleClass='slds-grid slds-wrap', layout='block');
         Component.Apex.OutputPanel buttonGroup = new Component.Apex.OutputPanel(styleClass='slds-button-group slds-p-top_large', layout='block');
 
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Name', 'slds-col slds-size_1-of-4', true));
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size_1-of-4', false));
-        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Type__c', 'slds-col slds-size_1-of-4', false));
-        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size_1-of-4', 'slds-select','taskPriorityOptions', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Name', 'slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', true));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Assigned_To__c', 'slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', false));
+        firstRow.childComponents.add(genericInputField(wrapper, accessString, 'Type__c', 'slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', false));
+        firstRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Priority__c', ' slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', 'slds-select','taskPriorityOptions', false));
 
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size_1-of-4', 'slds-select','taskStatusOptions', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size_1-of-8 slds-p-top_medium slds-p-left_medium', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Reminder__c', 'slds-col slds-size_1-of-8 slds-p-top_medium', false));
-        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size_1-of-4', 'slds-select','reminderTimeOptions', false));
-        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size_1-of-4', false));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Status__c', ' slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', 'slds-select','taskStatusOptions', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Send_Email__c', 'slds-col slds-size_1-of-2 slds-small-size_1-of-4 slds-large-size_1-of-8 slds-p-top_medium slds-p-left_medium', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Reminder__c', 'slds-col slds-size_1-of-2 slds-small-size_1-of-4 slds-large-size_1-of-8 slds-p-top_medium', false));
+        secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', 'slds-select','reminderTimeOptions', false));
+        secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4', false));
 
         // Creates an add dependent task button on the form
         // Uses escape = false but the labels are escaped to prevent xss

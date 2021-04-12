@@ -92,10 +92,11 @@
 
                     <!-- Opportunity Info -->
                     <div class="slds-section slds-is-open" id="pmtWizardTitle">
-                            <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
-                            {!$Label.pmtWizardSectionTitle}</span>
-                            </h3>
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardSectionTitle}">
+                                {!$Label.pmtWizardSectionTitle}
+                            </span>
+                        </h3>
                     </div>
 
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
@@ -107,9 +108,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppLink">{!$ObjectType.Opportunity.label}</label>
                                                 <div class="slds-form-element__control">
-                                                <span class="slds-form-element__static">
-                                                    <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}" id="oppLink">{!currentOpp.Name}</a>
-                                                </span>
+                                                    <span class="slds-form-element__static">
+                                                        <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}" id="oppLink">{!currentOpp.Name}</a>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,9 +120,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppStage">{!$ObjectType.Opportunity.Fields.StageName.Label}</label>
                                                 <div class="slds-form-element__control">
-                                                <span class="slds-form-element__static">
-                                                    <apex:outputField value="{!currentOpp.StageName}" id="oppStage"/>
-                                                </span>
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputField value="{!currentOpp.StageName}" id="oppStage"/>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -131,8 +132,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppCloseDate">{!$ObjectType.Opportunity.Fields.CloseDate.Label}</label>
                                                 <div class="slds-form-element__control">
-                                                <span class="slds-form-element__static">
-                                                    <apex:outputField value="{!currentOpp.CloseDate}" id="oppCloseDate"/></span>
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputField value="{!currentOpp.CloseDate}" id="oppCloseDate"/>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,9 +148,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                                 <div class="slds-form-element__control">
-                                                <span class="slds-form-element__static">
-                                                    <apex:outputText value="{!oppAmount}" id="oppAmount" />
-                                                </span>
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputText value="{!oppAmount}" id="oppAmount" />
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,9 +172,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppPmtMade">{!$ObjectType.Opportunity.Fields.npe01__Amount_Written_Off__c.Label}</label>
                                                 <div class="slds-form-element__control">
-                                                        <span class="slds-form-element__static">
-                                                            <apex:outputText value="{!totalWrittenOff}"  id="oppAmtWrittenOff" />
-                                                        </span>
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputText value="{!totalWrittenOff}"  id="oppAmtWrittenOff" />
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,9 +184,9 @@
                                             <div class="slds-form-element slds-form-element_horizontal">
                                                 <label class="slds-form-element__label" for="oppAmtOutstanding">{!$ObjectType.Opportunity.Fields.npe01__Amount_Outstanding__c.Label}</label>
                                                 <div class="slds-form-element__control">
-                                                <span class="slds-form-element__static">
-                                                    <apex:outputText value="{!amountOutstandingText}"  id="oppAmtOutstanding" />
-                                                </span>
+                                                    <span class="slds-form-element__static">
+                                                        <apex:outputText value="{!amountOutstandingText}"  id="oppAmtOutstanding" />
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -204,14 +206,14 @@
                         <apex:outputText rendered="{!AND(NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                             <div class="slds-section slds-is-open" id="pmtCreateTitle">
                                 <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardCreateSchedule}">
-                                    {!$Label.pmtWizardCreateSchedule}
-                                </span>
+                                    <span class="slds-p-horizontal_small" title="{!$Label.pmtWizardCreateSchedule}">
+                                        {!$Label.pmtWizardCreateSchedule}
+                                    </span>
                                 </h3>
                             </div>
                             <div class="slds-form slds-form_stacked">
-                                <div class="slds-grid slds-gutters_small slds-p-top_x-small">
-                                    <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                <div class="slds-grid slds-wrap slds-gutters_small slds-p-top_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                         <div class="slds-form-element">
                                             <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" for="paymentCount" styleClass="slds-form-element__label"/>
                                             <div class="slds-form-element__control slds-select_container">
@@ -222,13 +224,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                         <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Scheduled_Date__c"
                                                           labelOverride="{!$Label.pmtWizardFirstPaymentDate}" ariaDescription="{!$Label.pmtWizardFirstPaymentDate}"/>
                                     </div>
                                 </div>
-                                <div class="slds-grid slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
-                                    <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                <div class="slds-grid slds-wrap slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
+                                    <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                         <fieldset class="slds-form-element slds-form_compound">
                                             <legend class="slds-form-element__legend slds-form-element__label" id="intervals">
                                                 <apex:outputText value="{!$Label.pmtWizardInterval}"/>
@@ -242,7 +244,7 @@
                                                             </label>
                                                             <div class="slds-form-element__control slds-select_container">
                                                                 <apex:selectList value="{!interval}" html-aria-labelledby="intervals intervalnumberlabel" id="intervalnumber"
-                                                                                 multiselect="false" size="1" styleClass="slds-select">
+                                                                        multiselect="false" size="1" styleClass="slds-select">
                                                                     <apex:selectOptions value="{!intervals}"/>
                                                                 </apex:selectList>
                                                             </div>
@@ -253,7 +255,7 @@
                                                             </label>
                                                             <div class="slds-form-element__control slds-select_container">
                                                                 <apex:selectList value="{!intervalunit}" html-aria-labelledby="intervals intervalperiodlabel"
-                                                                                 id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
+                                                                                id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
                                                                     <apex:selectOptions value="{!intervalunits}"/>
                                                                 </apex:selectList>
                                                             </div>
@@ -263,7 +265,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2 slds-has-flexi-truncate slds-grid">
                                         <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />
                                     </div>
                                 </div>
@@ -285,49 +287,49 @@
 
                             <div class="slds-section slds-is-open" id="pmtsToCreateTitle">
                                 <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" id="pmtTableLabel">
-                                    {!$Label.pmtWizardToBeCreated}
-                                </span>
+                                    <span class="slds-truncate slds-p-horizontal_small" id="pmtTableLabel">
+                                        {!$Label.pmtWizardToBeCreated}
+                                    </span>
                                 </h3>
                             </div>
                             <div class="slds-form">
                                 <table class="slds-table" id="pmtTable" aria-labelledby="pmtTableLabel">
                                     <thead>
-                                    <tr class="slds-text-heading_label">
-                                        <th scope="col" class="slds-cell-wrap">
-                                            <apex:outputText value="{!$Label.pmtWizardPaymentNumber}"/>
-                                        </th>
-                                        <apex:repeat value="{!pmtFieldSet}" var="fLbl">
+                                        <tr class="slds-text-heading_label">
                                             <th scope="col" class="slds-cell-wrap">
-                                                <span class="slds-truncate" id="{!fLbl.label}">
-                                                    <apex:outputText value="{!fLbl.label}"/>
-                                                </span>
+                                                <apex:outputText value="{!$Label.pmtWizardPaymentNumber}"/>
                                             </th>
-                                        </apex:repeat>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <apex:repeat value="{!payments}" var="p">
-                                        <tr>
-                                            <td>
-                                                <div class="slds-form-element">
-                                                    <apex:outputText value="{!p.paymentNumber}"/>
-                                                </div>
-                                            </td>
-                                            <apex:repeat value="{!pmtFieldSet}" var="f">
-                                                <td>
-                                                    <c:UTIL_FormField id="paymentFieldInfo"
-                                                                      field="{!f.fieldPath}"
-                                                                      sObj="{!p.OppPayment}"
-                                                                      sObjType="npe01__OppPayment__c"
-                                                                      showLabel="false"
-                                                                      required="{!f.DBRequired || f.Required}"
-                                                                      ariaDescription="{!$Label.pmtWizardPaymentNumber} {!p.paymentNumber} {!f.label}"
-                                                    />
-                                                </td>
+                                            <apex:repeat value="{!pmtFieldSet}" var="fLbl">
+                                                <th scope="col" class="slds-cell-wrap">
+                                                    <span class="slds-truncate" id="{!fLbl.label}">
+                                                        <apex:outputText value="{!fLbl.label}"/>
+                                                    </span>
+                                                </th>
                                             </apex:repeat>
                                         </tr>
-                                    </apex:repeat>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!payments}" var="p">
+                                            <tr>
+                                                <td>
+                                                    <div class="slds-form-element">
+                                                        <apex:outputText value="{!p.paymentNumber}"/>
+                                                    </div>
+                                                </td>
+                                                <apex:repeat value="{!pmtFieldSet}" var="f">
+                                                    <td>
+                                                        <c:UTIL_FormField id="paymentFieldInfo"
+                                                              field="{!f.fieldPath}"
+                                                              sObj="{!p.OppPayment}"
+                                                              sObjType="npe01__OppPayment__c"
+                                                              showLabel="false"
+                                                              required="{!f.DBRequired || f.Required}"
+                                                              ariaDescription="{!$Label.pmtWizardPaymentNumber} {!p.paymentNumber} {!f.label}"
+                                                        />
+                                                    </td>
+                                                </apex:repeat>
+                                            </tr>
+                                        </apex:repeat>
                                     </tbody>
                                 </table>
                             </div>
@@ -351,9 +353,9 @@
                                          styleClass="slds-p-around_medium">
                             <div class="slds-section slds-is-open" id="writeoffPmtsTitle">
                                 <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionWriteoffPayments}">
-                                    {!$Label.pmtWizardSectionWriteoffPayments}
-                                </span>
+                                    <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.pmtWizardSectionWriteoffPayments}">
+                                        {!$Label.pmtWizardSectionWriteoffPayments}
+                                    </span>
                                 </h3>
                             </div>
 
@@ -374,10 +376,10 @@
                                             <div class="slds-form__item" role="listitem">
                                                 <div class="slds-form-element">
                                                     <c:UTIL_FormField
-                                                            sObj="{!writeoffPayment}"
-                                                            sObjType="npe01__OppPayment__c"
-                                                            field="npe01__Payment_Date__c"
-                                                            labelOverride="{!$Label.pmtWizardWriteoffDate}"/>
+                                                        sObj="{!writeoffPayment}"
+                                                        sObjType="npe01__OppPayment__c"
+                                                        field="npe01__Payment_Date__c"
+                                                        labelOverride="{!$Label.pmtWizardWriteoffDate}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -395,19 +397,20 @@
                                     </div>
                                 </div>
                             </div>
-
                         </apex:outputText>
-
                     </apex:outputText>
 
 
-                    <footer class="slds-docked-form-footer">
-                        <div class="slds-align_absolute-center">
-
+                    <footer>
+                        <div class="slds-docked-form-footer slds-show_small slds-align_absolute-center">
                             <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral"
-                                                action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
-                                                value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
-
+                                action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
+                                value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
+                        </div>
+                        <div class="slds-hide_small">
+                            <apex:commandButton id="cancelBTNSmall" styleClass="slds-button slds-button_neutral"
+                                action="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
+                                value="{!$Label.stgBtnCancel}"  immediate="true" disabled="false" />
                         </div>
                     </footer>
                 </div>
