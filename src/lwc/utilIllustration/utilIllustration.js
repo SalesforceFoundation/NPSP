@@ -43,7 +43,12 @@ export default class UtilIllustration extends LightningElement {
     get isGoingCamping() {
         return this.variant === 'going-camping' ? true : false;
     }
+
     get isNoAccess() {
         return this.variant === 'no-access' ? true : false;
+    }
+
+    get isPageNotAvailable() {
+        return this.variant === 'page-not-available' ? true : false
     }
 }
