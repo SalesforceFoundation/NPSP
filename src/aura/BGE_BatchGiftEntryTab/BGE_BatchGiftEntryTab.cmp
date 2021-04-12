@@ -36,7 +36,7 @@
 
 <aura:component implements="force:appHostable" access="public">
 
-    <header role="banner" class="header slds-p-bottom_medium">
+    <header role="banner" class="header slds-p-bottom_small">
         <div class="slds-page-header">
             <div class="slds-grid">
                 <div class="slds-col slds-has-flexi-truncate slds-align-middle">
@@ -49,5 +49,15 @@
             </div>
         </div>
     </header>
+
+    <article class="slds-card">
+        <div class="slds-card__body slds-card__body_inner">
+            <c:utilIllustration title="test"
+                                message="test message"
+                                size="small"
+                                variant="page-not-available">
+            </c:utilIllustration>
+        </div>
+    </article>
 
 </aura:component>
