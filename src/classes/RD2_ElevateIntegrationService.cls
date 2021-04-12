@@ -87,10 +87,10 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * @return Boolean
     */
     public static Boolean isElevateEvent(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
-        String elevateEvent = rd.getSObject().LastElevateEventPlayed__c;
+        Integer elevateEventVersion = Integer.valueOf(rd.getSObject().LastElevateVersionPlayed__c);
 
-        Boolean isElevateEventChanged = String.isNotBlank(elevateEvent)
-            && elevateEvent != oldRd.getSObject().LastElevateEventPlayed__c;
+        Boolean isElevateEventChanged = elevateEventVersion != null
+            && elevateEventVersion > oldRd.getSObject().LastElevateVersionPlayed__c;
 
         return isElevateEventChanged;
     }
