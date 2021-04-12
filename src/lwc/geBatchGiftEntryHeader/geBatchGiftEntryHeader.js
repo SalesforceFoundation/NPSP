@@ -3,6 +3,7 @@ import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import CUSTOM_LABELS from './helpers/customLabels';
+import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
 
@@ -17,6 +18,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     @api batchTotals = {};
     @api isPermissionError;
 
+    isElevateCustomer;
+
     @wire(getRecord, {
         recordId: '$batchId',
         fields: NAME_FIELD
@@ -29,6 +32,10 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     get shouldDisplayHeaderDetails() {
         return this.batchTotals.hasValuesGreaterThanZero;
+    }
+
+    async connectedCallback() {
+        this.isElevateCustomer = await checkForElevateCustomer();
     }
 
     handleClick(event) {
