@@ -52,8 +52,9 @@
 
     <article class="slds-card">
         <div class="slds-card__body slds-card__body_inner">
-            <c:utilIllustration title="test"
-                                message="test message"
+            <c:utilIllustration title="{!$Label.c.bgeNotSupportedHeader}"
+                                message="{!$Label.c.bgeNotSupportedBody}"
+                                shouldWrapText="true"
                                 size="small"
                                 variant="page-not-available">
             </c:utilIllustration>
