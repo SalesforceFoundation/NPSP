@@ -268,7 +268,6 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
-        <members>HouseholdAccounts</members>
         <members>ContactService</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
@@ -362,6 +361,7 @@
         <members>HH_ManageHousehold_EXT</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
+        <members>HouseholdAccounts</members>
         <members>HouseholdName</members>
         <members>HouseholdNamingExclusionsCheckboxes</members>
         <members>HouseholdNamingExclusionsString</members>
@@ -2261,6 +2261,8 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeNotSupportedBody</members>
+        <members>bgeNotSupportedHeader</members>
         <members>bgeProcessBatch</members>
         <members>bgeRetirementWarningBody</members>
         <members>bgeRetirementWarningHeader</members>
