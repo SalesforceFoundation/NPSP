@@ -537,20 +537,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return Boolean
     */
     private Boolean hasFeatureAccess() {
-        List<SObjectType> requiredObjects = new List<SObjectType>{
-                npe01__OppPayment__c.getSObjectType(),
-                Opportunity.getSObjectType()
-        };
-
-        if (hasRequiredObjectLevelAccessTo(requiredObjects)) {
-            return hasRequiredFieldLevelAccessTo(requiredObjects);
+        if (hasRequiredObjectLevelAccess()) {
+            return hasAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
+                    && hasAccessTo(Opportunity.getSObjectType(), opportunityFields());
         }
         return false;
-    }
-
-    private Boolean hasRequiredFieldLevelAccessTo(List<SObjectType> objectTypes) {
-        return hasAccessTo(objectTypes[0], paymentFields())
-                && hasAccessTo(objectTypes[1], opportunityFields());
     }
 
     private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
@@ -558,19 +549,23 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 && permissions.canUpdate(sObjectType, sObjectFields);
     }
 
-    private Boolean canCheckPermissionsFor(SObjectType payment) {
-        return permissions.canCreate(payment)
-                && UTIL_Permissions.canDelete(String.valueOf(payment), false);
+    private Boolean hasRequiredObjectLevelAccess() {
+        return hasRequiredPermissionsForPayment()
+                && hasCreateAccessToOpportunity();
     }
 
-    private Boolean hasRequiredObjectLevelAccessTo(List<SObjectType> objectTypes) {
-        return canCheckPermissionsFor(objectTypes[0]) && permissions.canCreate(objectTypes[1]);
+    private Boolean hasRequiredPermissionsForPayment() {
+        String paymentObject = String.valueOf(npe01__OppPayment__c.getSObjectType());
+        return permissions.canCreate(npe01__OppPayment__c.getSObjectType())
+                && UTIL_Permissions.canDelete(paymentObject, false);
     }
 
-
+    private Boolean hasCreateAccessToOpportunity() {
+        return permissions.canCreate(Opportunity.getSObjectType());
+    }
 
     private Set<SObjectField> paymentFields() {
-        Set<SObjectField> sObjectFields = new Set<SObjectField>{
+        return new Set<SObjectField>{
             npe01__OppPayment__c.fields.npe01__Check_Reference_Number__c,
             npe01__OppPayment__c.fields.npe01__Paid__c,
             npe01__OppPayment__c.fields.npe01__Payment_Amount__c,
@@ -579,7 +574,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
             npe01__OppPayment__c.fields.npe01__Scheduled_Date__c,
             npe01__OppPayment__c.fields.npe01__Written_Off__c
         };
-        return sObjectFields;
     }
 
     private Set<SObjectField> opportunityFields() {
