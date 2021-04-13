@@ -667,9 +667,6 @@ export default class GeFormRenderer extends LightningElement{
                     );
 
                     this.updateFormState(await tokenizedGift.tokenize(sectionsList));
-
-                    const paymentMethodToken = this.getFieldValueFromFormState(PAYMENT_AUTHORIZE_TOKEN);
-                    tokenizedGift.paymentMethodToken = paymentMethodToken;
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
