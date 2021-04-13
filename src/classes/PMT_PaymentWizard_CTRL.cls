@@ -546,7 +546,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
         return permissions.canRead(sObjectType, sObjectFields)
-                && permissions.canUpdate(sObjectType, sObjectFields);
+            && permissions.canUpdate(sObjectType, sObjectFields);
     }
 
     private Boolean hasRequiredObjectLevelAccess() {
