@@ -557,7 +557,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private Boolean hasRequiredPermissionsForPayment() {
         String paymentObject = String.valueOf(npe01__OppPayment__c.getSObjectType());
         return permissions.canCreate(npe01__OppPayment__c.getSObjectType())
-                && UTIL_Permissions.canDelete(paymentObject, false);
+            && UTIL_Permissions.canDelete(paymentObject, false);
     }
 
     private Boolean hasCreateAccessToOpportunity() {
