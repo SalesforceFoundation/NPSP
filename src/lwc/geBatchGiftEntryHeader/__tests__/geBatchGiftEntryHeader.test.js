@@ -95,7 +95,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 hasPaymentsWithExpiredAuthorizations: false,
                 totalGiftsCount: 20,
                 processedGiftsCount: 10,
-                failedPaymentsCount: 0,
+                failedPaymentsCount: 3,
                 failedGiftsCount: 5,
                 expiredPaymentsCount: 0
             }
@@ -111,6 +111,11 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             const failedGifts = detailBlocks[1].querySelectorAll('p')[1].innerHTML;
             expect(failedGifts).toBe('5');
+
+            const failedPaymentGifts = detailBlocks[2].querySelectorAll('p')[1].innerHTML;
+            expect(failedPaymentGifts).toBe('3');
+        });
+
         });
     });
 });
