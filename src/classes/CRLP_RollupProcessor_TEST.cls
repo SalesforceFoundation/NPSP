@@ -513,18 +513,45 @@ private class CRLP_RollupProcessor_TEST {
     @IsTest
     static void shouldSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode = 1;
 
         Account account = buildMockAccount();
+        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode;
         account.CustomizableRollups_UseSkewMode__c = false;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withDetailRecords(new List<SObject> {buildMockOpportunity(account.Id, 5)} );
 
         Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
 
         System.assertEquals(true, updatedAcct.CustomizableRollups_UseSkewMode__c,
-            'CustomizableRollups_UseSkewMode__c should be set true if currently false and running in skew mode.');
+            'CustomizableRollups_UseSkewMode__c should be set true if currently false and skew threshold is met.');
+    }
+
+    /**
+     * @description Verify that skew mode flag is set true when running in skew mode. Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     */
+    @IsTest
+    static void shouldNotSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode = 2;
+
+        Account account = buildMockAccount();
+        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode;
+        account.CustomizableRollups_UseSkewMode__c = false;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withDetailRecords(new List<SObject> {buildMockOpportunity(account.Id, 5)} );
+
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(false, updatedAcct.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should not be set true if currently false and skew threshold is not met.');
     }
 
     /**
