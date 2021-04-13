@@ -51,7 +51,7 @@
     </header>
 
     <article class="slds-card">
-        <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-card__body slds-card__body_inner slds-p-vertical_large">
             <c:utilIllustration title="{!$Label.c.bgeNotSupportedHeader}"
                                 message="{!$Label.c.bgeNotSupportedBody}"
                                 shouldWrapText="true"
