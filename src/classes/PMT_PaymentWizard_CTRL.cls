@@ -551,7 +551,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     private Boolean hasRequiredObjectLevelAccess() {
         return hasRequiredPermissionsForPayment()
-                && hasCreateAccessToOpportunity();
+            && hasCreateAccessToOpportunity();
     }
 
     private Boolean hasRequiredPermissionsForPayment() {
