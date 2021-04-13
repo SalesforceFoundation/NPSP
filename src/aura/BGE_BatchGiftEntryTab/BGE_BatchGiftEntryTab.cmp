@@ -34,9 +34,34 @@
   @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
-<aura:component implements="force:appHostable" access="public">
+<aura:component implements="force:appHostable" controller="BGE_BatchGiftEntryTab_CTRL" access="public">
 
-    <header role="banner" class="header slds-p-bottom_small">
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
+
+    <!-- events we handle -->
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> -->
+
+    <!-- Private Attributes -->
+    <aura:attribute name="batchData" type="List" default="[]" access="private"
+                    description="List of Data Import Batch records and sorting info for the datatable."/>
+    <aura:attribute name="batchListColumns" type="List" access="private"
+                    description="Set of columns to display in the datatable"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"
+                    description="Count of all Data Import Batch records
+                    where GiftBatch__c = true that are accessible to the user."/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate" access="private"/>
+    <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
+    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="showRetirementPrompt" type="Boolean" default="false" access="private"/>
+
+    <!-- Start Markup -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <!-- Banner -->
+    <header role="banner" class="header slds-p-bottom_medium">
         <div class="slds-page-header">
             <div class="slds-grid">
                 <div class="slds-col slds-has-flexi-truncate slds-align-middle">
@@ -46,6 +71,15 @@
                         </span>
                     </h1>
                 </div>
+                <!--
+                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
+                    <lightning:buttonGroup>
+                        <lightning:button aura:id="newBGEBatch"
+                                          label="{!$Label.c.bgeNewBatch}"
+                                          onclick="{!c.handleNewBatchClick}"/>
+                    </lightning:buttonGroup>
+                </div>
+                -->
             </div>
         </div>
     </header>
@@ -60,5 +94,37 @@
             </c:utilIllustration>
         </div>
     </article>
+
+    <aura:if isTrue="{!v.showRetirementPrompt}">
+        <c:utilPrompt
+            aura:id="retirementPrompt"
+            id="retirementPrompt"
+            headerTitle="{!$Label.c.bgeRetirementWarningHeader}"
+            promptMessage="{!$Label.c.bgeRetirementWarningBody}"
+            confirmButtonTitle="{!$Label.c.commonOkay}"
+            hasBackdrop="true"
+            variant="error"
+            onconfirm="{!c.handleConfirmClick}"
+        ></c:utilPrompt>
+    </aura:if>
+
+    <!--Data Table-->
+    <lightning:datatable aura:id="dataTable"
+                         keyField="id"
+                         data="{!v.batchData}"
+                         columns="{!v.batchListColumns}"
+                         onrowaction="{!c.handleRowAction}"
+                         hideCheckboxColumn="true"
+                         enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                         showRowNumberColumn="true"
+                         onloadmore="{!c.loadMoreData}"
+                         isLoading="{!v.isLoadingDataTable}"
+                         onsort="{!c.sortByColumns}"
+                         sortedBy="{!v.sortBy}"
+                         sortedDirection="{!v.sortDirection}"
+                         defaultSortDirection="asc"
+    />
+
+    <!-- End Markup -->
 
 </aura:component>
