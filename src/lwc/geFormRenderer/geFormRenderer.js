@@ -35,6 +35,7 @@ import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
+    buildErrorMessage,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
     handleError,
@@ -711,7 +712,8 @@ export default class GeFormRenderer extends LightningElement{
 
                 dataImportFromFormState = this.saveableFormState();
             } catch (ex) {
-                this.handleAsyncWidgetError(ex);
+                const errors = [{ message: buildErrorMessage(ex) }];
+                this.handlePurchaseCallValidationErrors(errors);
                 return;
             }
         }
