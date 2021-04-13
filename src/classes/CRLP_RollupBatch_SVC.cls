@@ -64,49 +64,16 @@ public class CRLP_RollupBatch_SVC {
         String queryFilter = '';
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
 
-        // If the Summary Object is the Account, then filter on Accounts that have at least a single
-        // Opportunity attached. This is helpful to reduce the overall query size.
-        // To handle a scenario where an attached Opportunity was deleted, but the record not recalculated
-        // also include any records where the TotalGifts or TotalMemberships fields are not zero.
-        // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
         if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+            jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+            CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)
+        ) {
 
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = ' (' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c = null OR ' + parentRelationshipField +
-                    'npo02__NumberOfClosedOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
-                    'AND (' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c = null OR ' + parentRelationshipField +
-                    'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
-                    'AND ' + parentRelationshipField +
-                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false';
+                queryFilter = '(' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
-                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + parentRelationshipField +
-                    UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
-            }
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-
-            String softCreditField = parentRelationshipField + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c');
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
-                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
-            } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
-            }
-
-        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)) {
-            // TODO -- How to get Accounts that require using this method for Soft Credits??
-            // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
-            String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '((' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')' +
-                    ' AND ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
-            } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode +
-                    ' OR ' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+                queryFilter = '(' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {

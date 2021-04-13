@@ -65,7 +65,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * at some point when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the
      * reference changed.
      * The objective of this method is to identify one or more fields on the Summary object that help identify
-     * if the rerord "ever" had rollups to it, even if there are no detail records currently to roll up. This
+     * if the record "ever" had rollups to it, even if there are no detail records currently to roll up. This
      * allows the rollup process to clear the rollups in the summary record if the last remaining detail record
      * is no longer eligible for rolling up (such as it was deleted).
     */

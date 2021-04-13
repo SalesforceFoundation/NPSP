@@ -47,6 +47,17 @@ public inherited sharing class CRLP_RollupProcessor {
     /** @description Support filtering the specific types of Rollup definitions that will be processed */
     private CRLP_RollupProcessingOptions.RollupTypeFilter rollupTypesToProcess = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
 
+    /** @description Retrieve Skew Mode Threshold value once per session */
+    @TestVisible
+    private static Integer maxRelatedOppsForNonLDVMode {
+        get {
+            if (maxRelatedOppsForNonLDVMode == null) {
+                maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+            }
+            return maxRelatedOppsForNonLDVMode;
+        } set;
+    }
+
     /** @description Optional processing options for the rollup operation */
     @TestVisible
     private CRLP_RollupProcessingOptions.ProcessingOptions options {
@@ -519,10 +530,9 @@ public inherited sharing class CRLP_RollupProcessor {
         // Determine if the updated SObject record is different than the parent.
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
-        // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
-            updatedRecord.put(this.qualifiedSkewField, true);
-            needsUpdate = true;
+        // Ensure skew mode is set when threshold indicates it should be
+        if (useForceSkewModeField && !isForceSkewModeTrue) {
+            needsUpdate = needsSkewModeOverrideSet(updatedRecord, needsUpdate);
         }
 
         if (!needsUpdate) {
@@ -541,6 +551,25 @@ public inherited sharing class CRLP_RollupProcessor {
             this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
             this.useForceSkewModeField = (parentObjType == Account.SObjectType || parentObjType == Contact.SObjectType);
         }
+    }
+
+    /**
+     * @description Set needsUpdate and CustomizableRollups_UseSkewMode__c true if >= Skew Mode Threshold
+     * @param updatedRecord Update SObject record for rollup totals
+     * @param needsUpdate Boolean indicating whether or not record requires update
+     * @return Boolean
+     */
+    private Boolean needsSkewModeOverrideSet(SObject updatedRecord, Boolean needsUpdate) {
+        if (((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonLDVMode ||
+            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonLDVMode) ||
+            (updatedRecord.getSObjectType() == Contact.SObjectType) &&
+            (Decimal) updatedRecord.get('Number_of_Soft_Credits__c') >= maxRelatedOppsForNonLDVMode)
+        {
+            updatedRecord.put('CustomizableRollups_UseSkewMode__c', true);
+            needsUpdate = true;
+        }
+
+        return needsUpdate;
     }
 
     /**
