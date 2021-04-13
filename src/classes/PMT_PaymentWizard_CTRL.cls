@@ -539,7 +539,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private Boolean hasFeatureAccess() {
         if (hasRequiredObjectLevelAccess()) {
             return hasAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
-                    && hasAccessTo(Opportunity.getSObjectType(), opportunityFields());
+                && hasAccessTo(Opportunity.getSObjectType(), opportunityFields());
         }
         return false;
     }
