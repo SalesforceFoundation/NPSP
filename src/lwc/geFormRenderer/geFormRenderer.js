@@ -670,7 +670,8 @@ export default class GeFormRenderer extends LightningElement{
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
-                this.handleAsyncWidgetError(ex);
+                const errors = [{ message: buildErrorMessage(ex) }];
+                this.handlePurchaseCallValidationErrors(errors);
                 return;
             }
 
@@ -692,25 +693,30 @@ export default class GeFormRenderer extends LightningElement{
     
                 const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
                 const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+                if(authorizedGift.status === 'AUTHORIZED') {
+                    this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
-                this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
+                    this.updateFormState({
+                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                        [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
+                        [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+                        [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
+                        [apiNameFor(PAYMENT_DECLINED_REASON)]: authorizedGift.declineReason,
+                        [apiNameFor(PAYMENT_LAST_4)]: authorizedGift.cardLast4,
+                        [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
+                        [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
+                        [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
+                        [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
+                        [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
+                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
+                    });
 
-                this.updateFormState({
-                    [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
-                    [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
-                    [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
-                    [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
-                    [apiNameFor(PAYMENT_DECLINED_REASON)]: authorizedGift.declineReason,
-                    [apiNameFor(PAYMENT_LAST_4)]: authorizedGift.cardLast4,
-                    [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
-                    [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
-                    [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
-                    [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
-                    [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
-                    [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
-                });
-
-                dataImportFromFormState = this.saveableFormState();
+                    dataImportFromFormState = this.saveableFormState();
+                } else {
+                    const errors = [{ message: authorizedGift.declineReason }];
+                    this.handlePurchaseCallValidationErrors(errors);
+                    return;                
+                }
             } catch (ex) {
                 const errors = [{ message: buildErrorMessage(ex) }];
                 this.handlePurchaseCallValidationErrors(errors);
