@@ -95,6 +95,11 @@ public class BDI_RecurringDonations {
 
         matchRecurringDonations(diWithValidRDInfo);
 
+        // If BDI is in dry run mode then end before objects are mapped or DML is performed.
+        if (bdi.isDryRun) {
+            return;
+        }
+
         for (DataImport__c dataImport : diWithValidRDInfo) {
             try {
                 npe03__Recurring_Donation__c rd = prepareRDForUpdateInsert(dataImport);
@@ -158,16 +163,11 @@ public class BDI_RecurringDonations {
                 continue;
             }
 
-            // If the imported id field is populated but there are no other RD fields populated OR if 
-            // imported id field is null and Recurring Donation Amount and Recurring Donation Status 
-            // are null then skip this DI.
-            // Once we have custom external Id then we can check to see if that field is populated before
-            // skipping as well.
-            if ((dataImport.RecurringDonationImported__c != null &&
-                 !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToRDField))
-                 || (dataImport.RecurringDonationImported__c == null 
-                    && dataImport.Recurring_Donation_Amount__c == null 
-                    && dataImport.Recurring_Donation_Status__c == null)) {
+            // If the imported Id is null, and the amount is null then its not an update and it can't be a valid new RD,
+            // so it should be skipped.
+            // This will need to be changed once we support more matching types.
+            if (dataImport.RecurringDonationImported__c == null
+                    && dataImport.Recurring_Donation_Amount__c == null ) {
                 continue;
             }
 
@@ -197,10 +197,11 @@ public class BDI_RecurringDonations {
         //real id for a record that hasn't been deleted on insert of the DI.
         for (DataImport__c di : disForMatching) {
             if (di.RecurringDonationImported__c != null){
-                di.DonationImportStatus__c = System.label.bdiMatched;
+                di.RecurringDonationImportStatus__c = bdi.statusMatchedExisting();
                 rdByDataImportId.put(di.Id,new npe03__Recurring_Donation__c(Id = di.RecurringDonationImported__c));
+            } else {
+                di.RecurringDonationImportStatus__c = bdi.statusMatchedNone();
             }
-            
         }
     }
 
@@ -230,10 +231,16 @@ public class BDI_RecurringDonations {
             if (dataImport.Donation_Amount__c != null) {
                 rd.DisableFirstInstallment__c = true;
             }
-        }
 
-        if (bdi.isDryRun) {
-            return rd;
+        } else {
+            // If the recurring donation imported field is populated, but there are no fields being mapped for the
+            // RD then it is just being provided as an existing parent of a new Opportunity, and doesn't need to be
+            // included in the update.
+            if (dataImport.RecurringDonationImported__c != null &&
+                    !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToRDField)) {
+                return null;
+
+            }
         }
 
         // Copy the data import fields to the Recurring Donation

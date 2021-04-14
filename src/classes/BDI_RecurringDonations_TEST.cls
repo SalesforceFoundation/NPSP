@@ -1,7 +1,10 @@
 @isTest
 private class BDI_RecurringDonations_TEST {
     static final String RD_STATUS_CLOSED = 'Closed';
-    private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+
+    private static final String OPTION_NAME_DISABLE_FIRST =
+            RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+  
     @TestSetup
     static void setupTestData(){
 
@@ -311,7 +314,6 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(3,rdResults.size());
 
         for (npe03__Recurring_Donation__c rd : rdResults){
-            System.debug('recurring donation: ' + rd);
             if (rd.Id == testDIResultA.RecurringDonationImported__c) {
                 rdA = rd;
             } else if (rd.Id == testDIResultB.RecurringDonationImported__c) {
@@ -515,5 +517,123 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(300, rdC2.npe03__Amount__c);
         System.assertEquals('No Longer Interested',rdC2.ClosedReason__c);
         System.assertEquals(RD_STATUS_CLOSED, rdC2.Status__c);
+    }
+
+    /*******************************************************************************************************
+    * @description This unit test validates that the basic Id matching functionality works for recurring donation and
+    * that the correct status is set during dry run for recurring donations.  It also verifies that just specifying an
+    * Id for the Recurring Donation will allow the user to create a new Donation for that Recurring Donation and link
+    * it correctly.
+    */
+    @isTest
+    static void shouldRunBDIDryRunAndMatchAndImportNewDonationOnExistingRD() {
+
+        Account testAccount = new Account(name = 'testAcct');
+        insert testAccount;
+
+        // Insert recurring donation with commitmentId to test dupe suppression for accounts.
+        npe03__Recurring_Donation__c testExistingRD = new npe03__Recurring_Donation__c(
+                npe03__Organization__c = testAccount.Id,
+                npe03__Amount__c = 200,
+                InstallmentFrequency__c = 1,
+                npe03__Installment_Period__c = 'Monthly',
+                Day_of_Month__c = String.valueOf(System.date.today().day()),
+                RecurringType__c = 'Open',
+                Status__c = 'Active',
+                StartDate__c = System.date.today());
+
+        insert testExistingRD;
+
+
+        DataImport__c testDI1 = new DataImport__c(Account1Imported__c = testAccount.Id,
+                                                    RecurringDonationImported__c = testExistingRD.Id,
+                                                    Donation_Donor__c = 'Account1',
+                                                    Donation_Amount__c = 100,
+                                                    Donation_Date__c = System.Date.Today().addDays(10),
+                                                    Payment_Check_Reference_Number__c = '501',
+                                                    Payment_Method__c = 'Check');
+        insert testDI1;
+
+        DataImport__c[] testDIs = new DataImport__c[]{testDI1};
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettings_API.getDataImportSettings();
+        diSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
+
+        // Run BDI in dry run mode to make sure the Recurring Donation matched and is in the correct import status
+        BDI_DataImport_API.processDataImportRecords(diSettings,testDIs, true);
+
+        testDI1 = [SELECT Id,
+                            Status__c,
+                            FailureInformation__c,
+                            Contact1_Lastname__c,
+                            Account1_Name__c,
+                            Account1ImportStatus__c,
+                            Account1Imported__c,
+                            Account2ImportStatus__c,
+                            Account2Imported__c,
+                            DonationImportStatus__c,
+                            DonationImported__c,
+                            RecurringDonationImported__c,
+                            RecurringDonationImportStatus__c,
+                            Recurring_Donation_Status__c,
+                            Recurring_Donation_Amount__c,
+                            HomeAddressImportStatus__c,
+                            HomeAddressImported__c,
+                            HouseholdAccountImported__c,
+                            PaymentImportStatus__c,
+                            PaymentImported__c
+                    FROM DataImport__c
+                    WHERE Id =: testDI1.Id LIMIT 1];
+
+
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, testDI1.Status__c);
+        System.assertEquals(null, testDI1.FailureInformation__c);
+        System.assertEquals(System.Label.bdiDryRunMatched,testDI1.Account1ImportStatus__c);
+        System.assertEquals(System.Label.bdiDryRunMatched,testDI1.RecurringDonationImportStatus__c);
+
+
+        // Now run BDI on the DI record with dry run set to false to validate that the records are imported.
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings,testDIs, false);
+        Test.stopTest();
+
+        // Requery the DI record to see the results after non-DryRun processing.
+        testDI1 = [SELECT Id,
+                        Status__c,
+                        FailureInformation__c,
+                        Contact1_Lastname__c,
+                        Account1_Name__c,
+                        Account1ImportStatus__c,
+                        Account1Imported__c,
+                        Account2ImportStatus__c,
+                        Account2Imported__c,
+                        DonationImportStatus__c,
+                        DonationImported__c,
+                        RecurringDonationImported__c,
+                        RecurringDonationImportStatus__c,
+                        Recurring_Donation_Status__c,
+                        Recurring_Donation_Amount__c,
+                        HomeAddressImportStatus__c,
+                        HomeAddressImported__c,
+                        HouseholdAccountImported__c,
+                        PaymentImportStatus__c,
+                        PaymentImported__c
+                FROM DataImport__c
+                WHERE Id =: testDI1.Id LIMIT 1];
+
+        // Verify that the donation was imported and that the import status on the Recurring Donation is correct.
+        System.assertEquals(System.Label.bdiImported, testDI1.Status__c);
+        System.assertNotEquals(null,testDI1.DonationImported__c);
+        System.assertEquals(null, testDI1.FailureInformation__c);
+        System.assertEquals(System.Label.bdiCreated,testDI1.DonationImportStatus__c);
+        System.assertEquals(System.Label.bdiMatched,testDI1.RecurringDonationImportStatus__c);
+        System.assertNotEquals(null,testDI1.RecurringDonationImported__c);
+
+        // Query the opportunity to make sure it was correctly linked to the RD.
+        Opportunity rdOppt1 = [SELECT Id, npe03__Recurring_Donation__c
+                                FROM Opportunity
+                                WHERE Id =: testDI1.DonationImported__c LIMIT 1];
+
+        System.assertEquals(testDI1.RecurringDonationImported__c,rdOppt1.npe03__Recurring_Donation__c);
     }
 }

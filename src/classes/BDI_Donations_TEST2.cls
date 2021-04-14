@@ -267,7 +267,7 @@ public with sharing class BDI_Donations_TEST2 {
 
         //Confirm that both data import records were imported successfully and Oppts and Payments were marked as updated
         System.assertEquals(System.label.bdiImported,di1update.Status__c);
-        System.assertEquals(System.label.bdiUpdated,di1update.DonationImportStatus__c);
+        System.assertEquals(System.label.bdiMatchedId,di1update.DonationImportStatus__c);
         System.assertEquals(System.label.bdiUpdated,di1update.PaymentImportStatus__c);
         System.assertEquals(System.label.bdiImported,di2update.Status__c);
         System.assertEquals(System.label.bdiUpdated,di2update.DonationImportStatus__c);
