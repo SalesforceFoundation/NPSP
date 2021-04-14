@@ -27,7 +27,7 @@ class ElevateTokenizeabledGift {
             );
 
             if (tokenResponse) {
-                this.paymentMethodToken = tokenResponse[0][PAYMENT_AUTHORIZE_TOKEN];
+                this.paymentMethodToken = tokenResponse[0][PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
                 return tokenResponse[0];
             }
         }
