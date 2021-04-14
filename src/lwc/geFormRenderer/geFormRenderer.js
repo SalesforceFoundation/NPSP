@@ -692,7 +692,7 @@ export default class GeFormRenderer extends LightningElement{
     
                 const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
                 const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
-                if(authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
+                if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
                     this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
                     this.updateFormState({
