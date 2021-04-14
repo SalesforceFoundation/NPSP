@@ -18,8 +18,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     @api isPermissionError;
     @api isElevateCustomer;
 
-    isElevateCustomer;
-
     @wire(getRecord, {
         recordId: '$batchId',
         fields: NAME_FIELD
