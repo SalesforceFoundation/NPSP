@@ -513,10 +513,10 @@ private class CRLP_RollupProcessor_TEST {
     @IsTest
     static void shouldSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
-        CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode = 1;
+        CRLP_RollupProcessor.maxRelatedOppsForNonSkewMode = 1;
 
         Account account = buildMockAccount();
-        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode;
+        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonSkewMode;
         account.CustomizableRollups_UseSkewMode__c = false;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
@@ -537,10 +537,10 @@ private class CRLP_RollupProcessor_TEST {
     @IsTest
     static void shouldNotSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
-        CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode = 2;
+        CRLP_RollupProcessor.maxRelatedOppsForNonSkewMode = 2;
 
         Account account = buildMockAccount();
-        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonLDVMode;
+        account.npo02__NumberOfClosedOpps__c = CRLP_RollupProcessor.maxRelatedOppsForNonSkewMode;
         account.CustomizableRollups_UseSkewMode__c = false;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()

@@ -64,20 +64,15 @@ public class CRLP_RollupBatch_SVC {
         String queryFilter = '';
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
 
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-            jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-            jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-            CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
         ) {
 
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
-                queryFilter = '(' + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            // no extra filter on this type since we're always processing all GAU's using the skew method
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
 

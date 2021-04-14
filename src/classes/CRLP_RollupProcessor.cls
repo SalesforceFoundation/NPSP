@@ -49,12 +49,12 @@ public inherited sharing class CRLP_RollupProcessor {
 
     /** @description Retrieve Skew Mode Threshold value once per session */
     @TestVisible
-    private static Integer maxRelatedOppsForNonLDVMode {
+    private static Integer maxRelatedOppsForNonSkewMode {
         get {
-            if (maxRelatedOppsForNonLDVMode == null) {
-                maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+            if (maxRelatedOppsForNonSkewMode == null) {
+                maxRelatedOppsForNonSkewMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
             }
-            return maxRelatedOppsForNonLDVMode;
+            return maxRelatedOppsForNonSkewMode;
         } set;
     }
 
@@ -560,10 +560,26 @@ public inherited sharing class CRLP_RollupProcessor {
      * @return Boolean
      */
     private Boolean needsSkewModeOverrideSet(SObject updatedRecord, Boolean needsUpdate) {
-        if (((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonLDVMode ||
-            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonLDVMode) ||
-            (updatedRecord.getSObjectType() == Contact.SObjectType) &&
-            (Decimal) updatedRecord.get('Number_of_Soft_Credits__c') >= maxRelatedOppsForNonLDVMode)
+        Boolean addSkewField = false;
+
+        if (updatedRecord.get('npo02__NumberOfClosedOpps__c') != null &&
+            (Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode)
+        {
+            addSkewField = true;
+
+        } else if (updatedRecord.get('npo02__NumberOfMembershipOpps__c') != null &&
+            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode)
+        {
+            addSkewField = true;
+
+        } else if (updatedRecord.getSObjectType() == Contact.SObjectType &&
+            updatedRecord.get('npo02__NumberOfMembershipOpps__c') != null &&
+            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode)
+        {
+            addSkewField = true;
+        }
+
+        if (addSkewField)
         {
             updatedRecord.put('CustomizableRollups_UseSkewMode__c', true);
             needsUpdate = true;
