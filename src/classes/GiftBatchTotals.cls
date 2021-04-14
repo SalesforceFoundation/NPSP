@@ -47,7 +47,6 @@ public inherited sharing class GiftBatchTotals {
             addToTotalGiftsCountFor(statusGroup);
             countProcessedGiftsFor(statusGroup);
             addToFailedGiftsCountFor(statusGroup);
-            addToFailedPaymentGiftsCountFor(statusGroup);
             addToExpiredPaymentGiftsCountFor(statusGroup);
         }
     }
@@ -62,6 +61,15 @@ public inherited sharing class GiftBatchTotals {
         };
     }
 
+    private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isPaymentFailed()) {
+            failedPayments += statusGroup.recordCount();
+            failedGifts += statusGroup.recordCount();
+        } else if (statusGroup.isProcessingFailed()) {
+            failedGifts += statusGroup.recordCount();
+        }
+    }
+
     private void addToTotalGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         totalGifts += statusGroup.recordCount();
     }
@@ -69,18 +77,6 @@ public inherited sharing class GiftBatchTotals {
     private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isImported()) {
             processedGifts = statusGroup.recordCount();
-        }
-    }
-
-    private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-        if (statusGroup.isProcessingFailed()) {
-            failedGifts += statusGroup.recordCount();
-        }
-    }
-
-    private void addToFailedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
-        if (statusGroup.isPaymentFailed()) {
-            failedPayments += statusGroup.recordCount();
         }
     }
 
