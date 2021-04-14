@@ -670,8 +670,7 @@ export default class GeFormRenderer extends LightningElement{
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
-                const errors = [{ message: buildErrorMessage(ex) }];
-                this.handlePurchaseCallValidationErrors(errors);
+                this.handleAsyncWidgetError(ex);
                 return;
             }
 
