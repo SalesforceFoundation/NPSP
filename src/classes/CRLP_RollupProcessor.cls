@@ -560,33 +560,16 @@ public inherited sharing class CRLP_RollupProcessor {
      * @return Boolean
      */
     private Boolean needsSkewModeOverrideSet(SObject updatedRecord, Boolean needsUpdate) {
-        Boolean addSkewField = false;
-
-        if (updatedRecord.get('npo02__NumberOfClosedOpps__c') != null &&
-            (Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode)
-        {
-            addSkewField = true;
-
-        } else if (updatedRecord.get('npo02__NumberOfMembershipOpps__c') != null &&
-            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode)
-        {
-            addSkewField = true;
-
-        } else if (updatedRecord.getSObjectType() == Contact.SObjectType &&
-            updatedRecord.get('npo02__NumberOfMembershipOpps__c') != null &&
-            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode)
-        {
-            addSkewField = true;
-        }
-
-        if (addSkewField)
+        if (((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode ||
+            (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode) ||
+            (updatedRecord.getSObjectType() == Contact.SObjectType) &&
+            (Decimal) updatedRecord.get('Number_of_Soft_Credits__c') >= maxRelatedOppsForNonSkewMode)
         {
             updatedRecord.put('CustomizableRollups_UseSkewMode__c', true);
             needsUpdate = true;
         }
 
-        return needsUpdate;
-    }
+        return needsUpdate;    }
 
     /**
      * @description Call the instantiated handler with the parent and details
