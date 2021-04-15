@@ -560,11 +560,22 @@ public inherited sharing class CRLP_RollupProcessor {
      * @return Boolean
      */
     private Boolean needsSkewModeOverrideSet(SObject updatedRecord, Boolean needsUpdate) {
-        if (((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode ||
-           (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode) ||
-           (updatedRecord.getSObjectType() == Contact.SObjectType &&
-           (Decimal) updatedRecord.get(UTIL_Namespace.StrTokenNSPrefix('Number_of_Soft_Credits__c')) >= maxRelatedOppsForNonSkewMode))
+        Boolean useSkewMode = false;
+
+        if ((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode) {
+            useSkewMode = true;
+
+        } else if ((Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode) {
+            useSkewMode = true;
+
+        } else if (updatedRecord.getSObjectType() == Contact.SObjectType
+            && (Decimal) updatedRecord.get(UTIL_Namespace.StrTokenNSPrefix('Number_of_Soft_Credits__c'))
+                >= maxRelatedOppsForNonSkewMode)
         {
+            useSkewMode = true;
+        }
+
+        if (useSkewMode) {
             updatedRecord.put(UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c'), true);
             needsUpdate = true;
         }
