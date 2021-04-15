@@ -76,7 +76,7 @@ public inherited sharing class GiftBatchTotals {
 
     private void countProcessedGiftsFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isImported()) {
-            processedGifts = statusGroup.recordCount();
+            processedGifts += statusGroup.recordCount();
         }
     }
 
