@@ -569,7 +569,8 @@ public inherited sharing class CRLP_RollupProcessor {
             needsUpdate = true;
         }
 
-        return needsUpdate;    }
+        return needsUpdate;
+    }
 
     /**
      * @description Call the instantiated handler with the parent and details
