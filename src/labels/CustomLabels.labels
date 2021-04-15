@@ -5102,6 +5102,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Retiring Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeNotSupportedHeader</fullName>
+        <categories>Batch Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry</shortDescription>
+        <value>Batch Gift Entry Not Supported</value>
+    </labels>
+    <labels>
+        <fullName>bgeNotSupportedBody</fullName>
+        <categories>Batch Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry</shortDescription>
+        <value>
+            As of July 13, 2021, Batch Gift Entry is no longer supported and has been replaced by Gift Entry.
+            If you have any in-progress batches, you can still access those records, but you can't process them using Batch Gift Entry.
+            Contact support if you need to access in-progress batches.
+            You may want to explore Gift Entry as an alternative to Batch Gift Entry.
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.
+        </value>
+    </labels>
+    <labels>
         <fullName>bgeTabHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>

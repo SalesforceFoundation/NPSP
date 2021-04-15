@@ -2,26 +2,6 @@
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
         <componentInstances>
-            <componentName>BGE_DataImportBatchEntry</componentName>
-            <visibilityRule>
-                <booleanFilter>1 AND 2</booleanFilter>
-                <criteria>
-                    <leftValue>{!Record.GiftBatch__c}</leftValue>
-                    <operator>EQUAL</operator>
-                    <rightValue>true</rightValue>
-                </criteria>
-                <criteria>
-                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
-                    <operator>LT</operator>
-                    <rightValue>2.0</rightValue>
-                </criteria>
-            </visibilityRule>
-        </componentInstances>
-        <name>header</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <componentInstances>
             <componentInstanceProperties>
                 <name>relatedListComponentOverride</name>
                 <value>NONE</value>
@@ -35,10 +15,16 @@
         <componentInstances>
             <componentName>force:detailPanel</componentName>
             <visibilityRule>
+                <booleanFilter>1 OR 2</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>LT</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -91,10 +77,16 @@
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
             <visibilityRule>
+                <booleanFilter>1 OR 2</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>LT</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -105,10 +97,16 @@
             </componentInstanceProperties>
             <componentName>flexipage:tabset</componentName>
             <visibilityRule>
+                <booleanFilter>1 OR 2</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>LT</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>

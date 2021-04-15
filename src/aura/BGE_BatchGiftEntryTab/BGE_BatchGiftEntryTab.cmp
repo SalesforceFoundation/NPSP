@@ -40,7 +40,7 @@
     <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!-- events we handle -->
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> -->
 
     <!-- Private Attributes -->
     <aura:attribute name="batchData" type="List" default="[]" access="private"
@@ -54,7 +54,6 @@
     <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
-    <aura:attribute name="showRetirementPrompt" type="Boolean" default="false" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -71,6 +70,7 @@
                         </span>
                     </h1>
                 </div>
+                <!--
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
                         <lightning:button aura:id="newBGEBatch"
@@ -78,25 +78,24 @@
                                           onclick="{!c.handleNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
+                -->
             </div>
         </div>
     </header>
 
-    <aura:if isTrue="{!v.showRetirementPrompt}">
-        <c:utilPrompt 
-            aura:id="retirementPrompt" 
-            id="retirementPrompt"
-            headerTitle="{!$Label.c.bgeRetirementWarningHeader}"
-            promptMessage="{!$Label.c.bgeRetirementWarningBody}"
-            confirmButtonTitle="{!$Label.c.commonOkay}" 
-            hasBackdrop="true" 
-            variant="error" 
-            onconfirm="{!c.handleConfirmClick}"
-        ></c:utilPrompt>
-    </aura:if>
+    <article class="slds-card">
+        <div class="slds-card__body slds-card__body_inner slds-p-vertical_large">
+            <c:utilIllustration title="{!$Label.c.bgeNotSupportedHeader}"
+                                message="{!$Label.c.bgeNotSupportedBody}"
+                                shouldWrapText="true"
+                                size="small"
+                                variant="page-not-available">
+            </c:utilIllustration>
+        </div>
+    </article>
 
     <!--Data Table-->
-    <lightning:datatable aura:id="dataTable"
+    <!-- <lightning:datatable aura:id="dataTable"
                          keyField="id"
                          data="{!v.batchData}"
                          columns="{!v.batchListColumns}"
@@ -110,7 +109,7 @@
                          sortedBy="{!v.sortBy}"
                          sortedDirection="{!v.sortDirection}"
                          defaultSortDirection="asc"
-    />
+    /> -->
 
     <!-- End Markup -->
 
