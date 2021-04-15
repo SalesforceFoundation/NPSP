@@ -713,12 +713,12 @@ export default class GeFormRenderer extends LightningElement{
                     dataImportFromFormState = this.saveableFormState();
                 } else {
                     const errors = [{ message: authorizedGift.declineReason }];
-                    this.handlePurchaseCallValidationErrors(errors);
+                    this.handleElevateAPIErrors(errors);
                     return;                
                 }
             } catch (ex) {
                 const errors = [{ message: buildErrorMessage(ex) }];
-                this.handlePurchaseCallValidationErrors(errors);
+                this.handleElevateAPIErrors(errors);
                 return;
             }
         }
@@ -2229,7 +2229,7 @@ export default class GeFormRenderer extends LightningElement{
     processPurchaseResponse = async (responseBody) => {
         if (responseBody.errors) {
             this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
-            this.handlePurchaseCallValidationErrors(responseBody.errors);
+            this.handleElevateAPIErrors(responseBody.errors);
             this.hasFailedPurchaseRequest = true;
         }
 
@@ -2284,7 +2284,7 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handlePurchaseCallValidationErrors(errors) {
+    handleElevateAPIErrors(errors) {
         const errorMessage = JSON.stringify(
             errors.map(error => error.message))
             || this.CUSTOM_LABELS.commonUnknownError;
