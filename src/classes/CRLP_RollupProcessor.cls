@@ -563,9 +563,9 @@ public inherited sharing class CRLP_RollupProcessor {
         if (((Decimal) updatedRecord.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonSkewMode ||
             (Decimal) updatedRecord.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonSkewMode) ||
             (updatedRecord.getSObjectType() == Contact.SObjectType) &&
-            (Decimal) updatedRecord.get('Number_of_Soft_Credits__c') >= maxRelatedOppsForNonSkewMode)
+            (Decimal) updatedRecord.get(UTIL_Namespace.StrTokenNSPrefix('Number_of_Soft_Credits__c')) >= maxRelatedOppsForNonSkewMode)
         {
-            updatedRecord.put('CustomizableRollups_UseSkewMode__c', true);
+            updatedRecord.put(UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c'), true);
             needsUpdate = true;
         }
 
