@@ -45,6 +45,8 @@ project:
         - github: https://github.com/SalesforceFoundation/Relationships
         # npe5
         - github: https://github.com/SalesforceFoundation/Affiliations
+    dependency_resolutions:
+        preproduction: include_beta
 
 sources:
     pmm:
