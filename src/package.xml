@@ -4236,6 +4236,7 @@
         <members>gseuTrailhead</members>
         <members>libsMoment</members>
         <members>modal</members>
+        <members>oppDonationAttribution</members>
         <members>progressRing</members>
         <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>

@@ -1,0 +1,14 @@
+<template>
+    <div class='slds-card slds-card_extension slds-p-around_medium'>
+        <lightning-record-view-form record-id={recordId} object-api-name="Opportunity">
+            
+            <h1 slot="title" class="slds-p-top_xx-small" >
+                <lightning-output-field field-name="Name"></lightning-output-field>
+            </h1>
+                
+            <div class="status slds-form-element__control" id="status">
+                <h1>{displayText}</h1>
+            </div>
+        </lightning-record-view-form>
+    </div>
+</template>
