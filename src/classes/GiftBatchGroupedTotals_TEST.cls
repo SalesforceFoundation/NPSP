@@ -87,14 +87,14 @@ private with sharing class GiftBatchGroupedTotals_TEST {
 
         Map<String, Integer> totalsForBatch0 = batchTotals.totalsFor(DUMMY_BATCH_ID_0);
         System.assertEquals(1, totalsForBatch0.get(GiftBatchAggregateGroupName.PROCESSED.name()));
-        System.assertEquals(2, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED.name()));
+        System.assertEquals(2 + 4, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED.name()));
         System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
         System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.EXPIRED_PAYMENT.name()));
         System.assertEquals(1 + 2 + 3 + 4, totalsForBatch0.get(GiftBatchAggregateGroupName.TOTAL.name()));
 
         Map<String, Integer> totalsForBatch1 = batchTotals.totalsFor(DUMMY_BATCH_ID_1);
         System.assertEquals(0, totalsForBatch1.get(GiftBatchAggregateGroupName.PROCESSED.name()));
-        System.assertEquals(6, totalsForBatch1.get(GiftBatchAggregateGroupName.FAILED.name()));
+        System.assertEquals(11, totalsForBatch1.get(GiftBatchAggregateGroupName.FAILED.name()));
         System.assertEquals(11, totalsForBatch1.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
         System.assertEquals(5 + 6, totalsForBatch1.get(GiftBatchAggregateGroupName.TOTAL.name()));
     }

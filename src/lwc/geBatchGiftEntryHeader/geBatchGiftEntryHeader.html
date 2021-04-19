@@ -40,6 +40,14 @@
                     {batchTotals.failedGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
+            <c-util-page-header-detail-block if:true={isElevateCustomer}>
+                <p class="slds-text-title">
+                    {LABELS.commonPaymentProcessingErrors}
+                </p>
+                <p class="slds-text-body_regular">
+                    {batchTotals.failedPaymentsCount}
+                </p>
+            </c-util-page-header-detail-block>
         </c-util-page-header-detail-row>
         
     </c-util-page-header>
