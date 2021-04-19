@@ -14,6 +14,8 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
+import checkForElevateCustomer 
+    from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 /*******************************************************************************
 * @description Schema imports
@@ -55,6 +57,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     isFailedPurchase = false;
+    isElevateCustomer = false;
 
     namespace;
     count;
@@ -71,8 +74,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        this.isElevateCustomer = await checkForElevateCustomer();
     }
 
     disconnectedCallback() {
