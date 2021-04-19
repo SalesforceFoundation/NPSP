@@ -537,26 +537,35 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return Boolean
     */
     private Boolean hasFeatureAccess() {
-        SObjectType payment = npe01__OppPayment__c.getSObjectType();
-        SObjectType opportunity = Opportunity.getSObjectType();
-        return hasAccessTo(payment, paymentFields())
-            && hasAccessTo(opportunity, opportunityFields());
-    }
-
-    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
-        if (canCheckPermissionsFor(sObjectType)) {
-            return permissions.canRead(sObjectType, sObjectFields)
-                && permissions.canUpdate(sObjectType, sObjectFields);
+        if (hasRequiredObjectLevelAccess()) {
+            return hasAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
+                && hasAccessTo(Opportunity.getSObjectType(), opportunityFields());
         }
         return false;
     }
 
-    private Boolean canCheckPermissionsFor(SObjectType objectType) {
-        return permissions.canCreate(objectType) && permissions.canDelete(objectType);
+    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        return permissions.canRead(sObjectType, sObjectFields)
+            && permissions.canUpdate(sObjectType, sObjectFields);
+    }
+
+    private Boolean hasRequiredObjectLevelAccess() {
+        return hasRequiredPermissionsForPayment()
+            && hasCreateAccessToOpportunity();
+    }
+
+    private Boolean hasRequiredPermissionsForPayment() {
+        String paymentObject = String.valueOf(npe01__OppPayment__c.getSObjectType());
+        return permissions.canCreate(npe01__OppPayment__c.getSObjectType())
+            && UTIL_Permissions.canDelete(paymentObject, false);
+    }
+
+    private Boolean hasCreateAccessToOpportunity() {
+        return permissions.canCreate(Opportunity.getSObjectType());
     }
 
     private Set<SObjectField> paymentFields() {
-        Set<SObjectField> sObjectFields = new Set<SObjectField>{
+        return new Set<SObjectField>{
             npe01__OppPayment__c.fields.npe01__Check_Reference_Number__c,
             npe01__OppPayment__c.fields.npe01__Paid__c,
             npe01__OppPayment__c.fields.npe01__Payment_Amount__c,
@@ -565,10 +574,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             npe01__OppPayment__c.fields.npe01__Scheduled_Date__c,
             npe01__OppPayment__c.fields.npe01__Written_Off__c
         };
-        return sObjectFields;
     }
 
-    private Set<SObjectField> opportunityFields () {
+    private Set<SObjectField> opportunityFields() {
         return new Set<SObjectField>{Opportunity.fields.Amount};
     }
 
