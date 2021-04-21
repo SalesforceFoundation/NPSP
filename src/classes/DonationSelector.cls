@@ -34,42 +34,40 @@
 */
 public inherited sharing class DonationSelector {
 
-  public List<Opportunity> selectOpportunitiesById(Set<Id> ids) {
-      return [
-          SELECT Id,
-            Name,
-            Amount,
-            Account.Name,
-            Account.RecordTypeId,
-            Account.RecordType.Name,
-            Primary_Contact__c,
-            Primary_Contact__r.FirstName,
-            Primary_Contact__r.LastName,
-            (SELECT Id,
-              Role, 
-              ContactId,
-              Contact.FirstName,
-              Contact.LastName,
-              IsPrimary
-              FROM OpportunityContactRoles),
-            (SELECT Id,
-              Name,
-              Role__c,
-              Amount__c,
-              Account__c
-              FROM Account_Soft_Credits__r),
-            (SELECT Id,
-              Amount__c,
-              Contact__c,
-              Contact_Name__c,
-              Contact_Role_ID__c,
-              Role_Name__c,
-              Name
-              FROM Partial_Soft_Credits__r)
-          FROM Opportunity
-          WHERE Id IN :ids
-          //WITH SECURITY_ENFORCED
-      ];
-  }
-
+    public List<Opportunity> selectOpportunitiesById(Set<Id> ids) {
+        return [SELECT Id,
+                Name,
+                Amount,
+                Account.Name,
+                Account.RecordTypeId,
+                Account.RecordType.Name,
+                Primary_Contact__c,
+                Primary_Contact__r.FirstName,
+                Primary_Contact__r.LastName,
+                (SELECT Id,
+                    Role, 
+                    ContactId,
+                    Contact.FirstName,
+                    Contact.LastName,
+                    IsPrimary
+                FROM OpportunityContactRoles),
+                (SELECT Id,
+                    Name,
+                    Role__c,
+                    Amount__c,
+                    Account__c
+                FROM Account_Soft_Credits__r),
+                (SELECT Id,
+                    Amount__c,
+                    Contact__c,
+                    Contact_Name__c,
+                    Contact_Role_ID__c,
+                    Role_Name__c,
+                    Name
+                FROM Partial_Soft_Credits__r)
+            FROM Opportunity
+            WHERE Id IN :ids
+            //WITH SECURITY_ENFORCED
+        ];
+    }
 }

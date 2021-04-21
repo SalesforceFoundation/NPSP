@@ -75,7 +75,9 @@ public inherited sharing class Donation {
             acctDonor.isHardCredit = true;
             acctDonor.amount = donationOpp.Amount;
             acctDonor.fullName = donationOpp.Account?.Name;
-            if(donationOpp.Account.RecordType.Name.indexOf('Household') > -1) {
+            if(donationOpp.Account.RecordType != null &&
+                donationOpp.Account.RecordType.Name != null &&
+                donationOpp.Account.RecordType.Name.indexOf('Household') > -1) {
                 acctDonor.donorType = Donor.DonorType.HOUSEHOLD.name();
             } else {
                 acctDonor.donorType = Donor.DonorType.ORGANIZATION.name();

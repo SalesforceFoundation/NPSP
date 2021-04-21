@@ -34,24 +34,24 @@
 * @description Holds behavior for Donors.
 */
 public inherited sharing class Donor {
-  public enum DonorType {
-    CONTACT,
-    HOUSEHOLD,
-    ORGANIZATION
-  }
+    public enum DonorType {
+        CONTACT,
+        HOUSEHOLD,
+        ORGANIZATION
+    }
 
-  @AuraEnabled public String fullName = '';
-  @AuraEnabled public String donorType = '';
-  @AuraEnabled public Id recordId;
-  @AuraEnabled public Boolean isHardCredit = false;
-  @AuraEnabled public Boolean isPartialCredit = false;
-  @AuraEnabled public Decimal amount;
+    @AuraEnabled public String fullName = '';
+    @AuraEnabled public String donorType = '';
+    @AuraEnabled public Id recordId;
+    @AuraEnabled public Boolean isHardCredit = false;
+    @AuraEnabled public Boolean isPartialCredit = false;
+    @AuraEnabled public Decimal amount;
 
-  public Donor(Id recordId) {
-    this.recordId = recordId; 
-  }
+    public Donor(Id recordId) {
+        this.recordId = recordId; 
+    }
 
-  public Donor() {
+    public Donor() {
 
-  }
+    }
 }
