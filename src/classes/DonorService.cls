@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -30,45 +30,20 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Selector class for Donations in NPSP.
+* @group Allocations
+* @description Provides interface to Donors.
 */
-public inherited sharing class DonationSelector {
+public inherited sharing class DonorService {
 
-  public List<Opportunity> selectOpportunitiesById(Set<Id> ids) {
-      return [
-          SELECT Id,
-            Name,
-            Account.Name,
-            Account.RecordTypeId,
-            Account.RecordType.Name,
-            Primary_Contact__c,
-            Primary_Contact__r.FirstName,
-            Primary_Contact__r.LastName,
-            (SELECT Id,
-              Role, 
-              ContactId,
-              Contact.FirstName,
-              Contact.LastName,
-              IsPrimary
-              FROM OpportunityContactRoles),
-            (SELECT Id,
-              Name,
-              Role__c,
-              Amount__c,
-              Account__c
-              FROM Account_Soft_Credits__r),
-            (SELECT Id,
-              Amount__c,
-              Contact__c,
-              Contact_Name__c,
-              Contact_Role_ID__c,
-              Role_Name__c,
-              Name
-              FROM Partial_Soft_Credits__r)
-          FROM Opportunity
-          WHERE Id IN :ids
-          //WITH SECURITY_ENFORCED
-      ];
+  @AuraEnabled
+  public static List<Donor> getHardCreditDonorsFor(Id opportunityId) {
+    try {
+      Donation aDonation = new Donation(opportunityId, new DonationSelector());
+      aDonation.query();
+      return aDonation.getHardCreditDonors();
+    } catch (Exception ex) {
+      throw new AuraHandledException(ex.getMessage());
+    }
   }
-
+  
 }

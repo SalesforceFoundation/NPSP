@@ -42,7 +42,7 @@ public inherited sharing class Donor {
 
   @AuraEnabled public String fullName = '';
   @AuraEnabled public String donorType = '';
-  @AuraEnabled public Id recordId = '';
+  @AuraEnabled public Id recordId;
 
   public Donor(Id recordId) {
     this.recordId = recordId; 

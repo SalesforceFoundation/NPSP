@@ -11,12 +11,11 @@ export default class OppDonationAttribution extends LightningElement {
 
     async connectedCallback() {
         this.donors = await getHardCreditDonorsFor(this.recordId);
-        alert(this.recordId);
     }
 
     get displayText() {
         if(this.donors.length > 0) {
-            return donors[0].fullName;
+            return this.donors[0].fullName;
         } else {
             return 'Not Found';
         }
