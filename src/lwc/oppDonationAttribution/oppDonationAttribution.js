@@ -1,10 +1,24 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
+import getHardCreditDonorsFor 
+    from '@salesforce/apex/DonorService.getHardCreditDonorsFor';
+
 
 export default class OppDonationAttribution extends LightningElement {
 
     @api recordId;
+    
+    @track donors = []; 
+
+    async connectedCallback() {
+        this.donors = await getHardCreditDonorsFor(this.recordId);
+        alert(this.recordId);
+    }
 
     get displayText() {
-        return 'Tess Testerson';
+        if(this.donors.length > 0) {
+            return donors[0].fullName;
+        } else {
+            return 'Not Found';
+        }
     }
 }
