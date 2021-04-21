@@ -38,6 +38,7 @@ public inherited sharing class DonationSelector {
       return [
           SELECT Id,
             Name,
+            Amount,
             Account.Name,
             Account.RecordTypeId,
             Account.RecordType.Name,

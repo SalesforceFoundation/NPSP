@@ -35,58 +35,66 @@
 */
 public inherited sharing class Donation {
 
-  public Id recordId;
-  private DonationSelector selector;
-  private Opportunity donationOpp;
+    public Id recordId;
+    private DonationSelector selector;
+    private Opportunity donationOpp;
 
-  public Donation(Id recordId) {
-    this.recordId = recordId; 
-  }
-
-  public Donation(DonationSelector selector) {
-    this.selector = selector; 
-  }
-
-  public Donation(Id recordId, DonationSelector selector) {
-    this.recordId = recordId; 
-    this.selector = selector; 
-  }
-
-  public void query() {
-    Opportunity donationOpp;
-    if(recordId != null && selector != null) {
-      List<Opportunity> opps = selector.selectOpportunitiesById(new Set<Id> { recordId });
-      if(opps.size() > 0) {
-        donationOpp = opps[0];
-      }
-    }
-    this.donationOpp = donationOpp;
-  }
-
-  public List<Donor> getHardCreditDonors() {
-    List<Donor> hcDonors = new List<Donor>();
-    if(donationOpp == null) {
-      return hcDonors;
+    public Donation(Id recordId) {
+        this.recordId = recordId; 
     }
 
-    if(donationOpp?.Account != null) {
-      Donor acctDonor = new Donor();
-      acctDonor.fullName = donationOpp.Account?.Name;
-      if(donationOpp.Account.RecordType.Name.indexOf('Household') > -1) {
-        acctDonor.donorType = Donor.DonorType.HOUSEHOLD.name();
-      } else {
-        acctDonor.donorType = Donor.DonorType.ORGANIZATION.name();
-      }
-      hcDonors.add( acctDonor );
-    } else if(donationOpp?.Primary_Contact__c != null) {
-      Donor contactDonor = new Donor();
-      contactDonor.fullName = donationOpp.Primary_Contact__r?.FirstName + ' ' +
-        donationOpp.Primary_Contact__r?.LastName;
-      contactDonor.donorType = Donor.DonorType.CONTACT.name();
-      hcDonors.add( contactDonor );
+    public Donation(DonationSelector selector) {
+        this.selector = selector; 
     }
 
-    return hcDonors;
-  }
+    public Donation(Id recordId, DonationSelector selector) {
+        this.recordId = recordId; 
+        this.selector = selector; 
+    }
+
+    public void query() {
+        Opportunity donationOpp;
+        if(recordId != null && selector != null) {
+            List<Opportunity> opps = selector.selectOpportunitiesById(new Set<Id> { recordId });
+            if(opps.size() > 0) {
+                donationOpp = opps[0];
+            }
+        }
+        this.donationOpp = donationOpp;
+    }
+
+    public List<Donor> getHardCreditDonors() {
+        List<Donor> hcDonors = new List<Donor>();
+        if(donationOpp == null) {
+            return hcDonors;
+        }
+
+        Boolean hasOrgAccount = false;
+        if(donationOpp?.Account != null) {
+            Donor acctDonor = new Donor();
+            acctDonor.isHardCredit = true;
+            acctDonor.amount = donationOpp.Amount;
+            acctDonor.fullName = donationOpp.Account?.Name;
+            if(donationOpp.Account.RecordType.Name.indexOf('Household') > -1) {
+                acctDonor.donorType = Donor.DonorType.HOUSEHOLD.name();
+            } else {
+                acctDonor.donorType = Donor.DonorType.ORGANIZATION.name();
+                hasOrgAccount = true;
+            }
+            hcDonors.add( acctDonor );
+        }
+        if(!hasOrgAccount && donationOpp?.Primary_Contact__c != null) {
+            Donor contactDonor = new Donor();
+            contactDonor.isHardCredit = true;
+            contactDonor.amount = donationOpp.Amount;
+            contactDonor.fullName = donationOpp.Account?.Name;
+            contactDonor.fullName = donationOpp.Primary_Contact__r?.FirstName + ' ' +
+                donationOpp.Primary_Contact__r?.LastName;
+                contactDonor.donorType = Donor.DonorType.CONTACT.name();
+            hcDonors.add( contactDonor );
+        }
+
+        return hcDonors;
+    }
 
 }

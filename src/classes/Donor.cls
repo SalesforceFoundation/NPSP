@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2021
 * @group Allocations
-* @description Holds behavior for Donations.
+* @description Holds behavior for Donors.
 */
 public inherited sharing class Donor {
   public enum DonorType {
@@ -43,6 +43,9 @@ public inherited sharing class Donor {
   @AuraEnabled public String fullName = '';
   @AuraEnabled public String donorType = '';
   @AuraEnabled public Id recordId;
+  @AuraEnabled public Boolean isHardCredit = false;
+  @AuraEnabled public Boolean isPartialCredit = false;
+  @AuraEnabled public Decimal amount;
 
   public Donor(Id recordId) {
     this.recordId = recordId; 
@@ -51,7 +54,4 @@ public inherited sharing class Donor {
   public Donor() {
 
   }
-  
-
-  
 }

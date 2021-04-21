@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import getHardCreditDonorsFor 
     from '@salesforce/apex/DonorService.getHardCreditDonorsFor';
 
@@ -7,14 +7,17 @@ export default class OppDonationAttribution extends LightningElement {
 
     @api recordId;
     
-    @track donors = []; 
+    donors = []; 
     donorNames = '';
     error;
 
     @wire(getHardCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredDonors({data, error}) {
         if (data) {
-            this.donorNames = data;
+            this.donors = data;
+            if(this.donors.length > 0) {
+                this.donorNames = this.donors[0].fullName;
+            }
         } else if (error) {
             this.error = 'Unknown error';
             if (Array.isArray(error.body)) {

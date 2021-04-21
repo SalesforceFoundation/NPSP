@@ -6,6 +6,16 @@
                 <div class="slds-form-element__control">
                     <h1>Donor: {donorNames}</h1>
                 </div>
+                <template if:true={donors}>
+                    <template for:each={donors} for:item="donor">
+                        <div key={donor.recordId}>
+                            <p>{donor.fullName}</p>
+                            <p>{donor.donorType}</p>
+                            <p>{donor.isHardCredit}</p>
+                            <p>{donor.amount}</p>
+                        </div>
+                    </template>
+                </template>                
                 <template if:true={error}>
                     <p>{error}</p>
                 </template>
