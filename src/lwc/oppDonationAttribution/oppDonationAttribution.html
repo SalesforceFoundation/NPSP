@@ -1,16 +1,15 @@
 <template>
     <lightning-card title="Attribution">
-        <lightning-record-view-form record-id={recordId} object-api-name="Opportunity">
-            
-            <h1 class="slds-p-top_xx-small" >
-                <lightning-output-field field-name="Name"></lightning-output-field>
-            </h1>
-            <div class="slds-p-around_small">
-                Current Record ID in Lightning Web Component: <strong>{recordId}</strong>
-            </div>    
-            <div class="status slds-form-element__control" id="status">
-                <h1>{displayText}</h1>
-            </div>
-        </lightning-record-view-form>
+        <div class='slds-card slds-p-around_medium'>
+            <lightning-record-view-form record-id={recordId} object-api-name="Opportunity">
+                  
+                <div class="slds-form-element__control">
+                    <h1>Donor: {donorNames}</h1>
+                </div>
+                <template if:true={error}>
+                    <p>{error}</p>
+                </template>
+            </lightning-record-view-form>
+        </div>
     </lightning-card>
 </template>

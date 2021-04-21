@@ -35,12 +35,18 @@
 */
 public inherited sharing class DonorService {
 
-  @AuraEnabled
-  public static List<Donor> getHardCreditDonorsFor(Id opportunityId) {
+  @AuraEnabled(cacheable=true)
+  public static String getHardCreditDonorsFor(Id opportunityId) {
+    System.debug(' **** opp id: '+opportunityId);
     try {
       Donation aDonation = new Donation(opportunityId, new DonationSelector());
       aDonation.query();
-      return aDonation.getHardCreditDonors();
+      List<Donor> donors = aDonation.getHardCreditDonors();
+      List<String> donorNames = new List<String>();
+      for(Donor d: donors) {
+        donorNames.add(d.fullName + ' ['+d.donorType+']');
+      }
+      return String.join(donorNames, ';');
     } catch (Exception ex) {
       throw new AuraHandledException(ex.getMessage());
     }
