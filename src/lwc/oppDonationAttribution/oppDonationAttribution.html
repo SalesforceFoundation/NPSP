@@ -1,38 +1,122 @@
 <template>
-    <lightning-card title="Attribution">
-        <div class='slds-card slds-p-around_medium'>                  
-            <div class='slds-p-around_small'>
-                <h1>Hard Credits</h1>
-            </div>
-            <template if:true={donors}>
-                <template for:each={donors} for:item="donor">
-                    <div class='slds-p-around_medium' key={donor.recordId}>
-                        <p>{donor.fullName}</p>
-                        <p>{donor.donorType}</p>
-                        <p>{donor.isHardCredit}</p>
-                        <p>{donor.amount}</p>
-                    </div>
-                </template>
-            </template>
+    <lightning-card title="Attributions">
 
-            <div class='slds-p-around_small'>
-                <h1>Soft Credits</h1>
-            </div>
-            <template if:true={softCredits}>
-                <template for:each={softCredits} for:item="softCredit">
-                    <div class='slds-p-around_medium' key={softCredit.recordId}>
-                        <p>{softCredit.fullName}</p>
-                        <p>{softCredit.donorType}</p>
-                        <p>{softCredit.role}</p>
-                        <p>{softCredit.isHardCredit}</p>
-                        <p>{softCredit.amount}</p>
+        <lightning-layout>
+            <lightning-layout-item class="slds-m-vertical_none">
+                <div class='slds-p-around_small slds-text-heading_small'>
+                    Hard Credits
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item class="slds-m-vertical_none">
+                <lightning-helptext content="Placeholder...">
+                </lightning-helptext>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template if:true={donors}>
+            <template for:each={donors} for:item="donor">
+                <div class='slds-p-around_medium' key={donor.recordId}>
+                    <lightning-layout>
+                        <lightning-layout-item size="1">
+                            <lightning-icon icon-name={donor.iconName} size="small"></lightning-icon>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="11">
+                            <a href="">{donor.fullName}</a>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <div class="slds-text-body_regular" style="font-weight: bold;">
+                        <lightning-layout>
+                            <lightning-layout-item size="1"></lightning-layout-item>
+                            <lightning-layout-item size="11">
+                                <lightning-layout>
+                                    <lightning-layout-item size="3">
+                                        Amount:
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="9">
+                                        $500
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                        <lightning-layout if:true={donor.role}>
+                            <lightning-layout-item size="1"></lightning-layout-item>
+                            <lightning-layout-item size="11">
+                                <lightning-layout>
+                                    <lightning-layout-item size="3">
+                                        Role:
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="9">
+                                        {donor.role}
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
                     </div>
-                </template>
-            </template>                    
-
-            <template if:true={error}>
-                <p>{error}</p>
+                </div>
             </template>
-        </div>
+        </template>
+
+        <template if:true={softCredits}>
+            <div class="slds-p-around_small">
+                <div class="slds-border_top"></div>
+            </div>
+
+            <lightning-layout>
+                <lightning-layout-item class="slds-m-vertical_none">
+                    <div class='slds-p-around_small slds-text-heading_small'>
+                        Soft Credits
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item class="slds-m-vertical_none">
+                    <lightning-helptext content="Placeholder...">
+                    </lightning-helptext>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <template for:each={softCredits} for:item="softCredit">
+                <div class='slds-p-around_medium' key={softCredit.recordId}>
+                    <lightning-layout>
+                        <lightning-layout-item size="1">
+                            <lightning-icon icon-name={softCredit.iconName} size="small"></lightning-icon>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="11">
+                            <a href="">{softCredit.fullName}</a>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <div class="slds-text-body_regular" style="font-weight: bold;">
+                        <lightning-layout>
+                            <lightning-layout-item size="1"></lightning-layout-item>
+                            <lightning-layout-item size="11">
+                                <lightning-layout>
+                                    <lightning-layout-item size="3">
+                                        Amount:
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="9">
+                                        $500
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                        <lightning-layout if:true={softCredit.role}>
+                            <lightning-layout-item size="1"></lightning-layout-item>
+                            <lightning-layout-item size="11">
+                                <lightning-layout>
+                                    <lightning-layout-item size="3">
+                                        Role:
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="9">
+                                        {softCredit.role}
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <template if:true={error}>
+            <p>{error}</p>
+        </template>
+
     </lightning-card>
 </template>

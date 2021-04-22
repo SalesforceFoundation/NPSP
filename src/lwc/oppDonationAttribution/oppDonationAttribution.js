@@ -16,7 +16,19 @@ export default class OppDonationAttribution extends LightningElement {
     @wire(getHardCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredDonors({data, error}) {
         if (data) {
-            this.donors = data;
+            for (let i = 0; i < data.length; i++) {
+                this.donors.push(Object.assign({}, data[i], {selectable: false}));
+            }
+            
+            this.donors.map(donor => {
+                let iconName = 'standard:contact';
+                if (donor.donorType === 'HOUSEHOLD') {
+                    iconName = 'standard:household';
+                }
+
+                donor.iconName = iconName;
+            });
+
             if(this.donors.length > 0) {
                 this.donorNames = this.donors[0].fullName;
             }
