@@ -1,4 +1,5 @@
 import CURRENCY from '@salesforce/i18n/currency';
+import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 
 class ElevateTokenizeabledGift {
 
@@ -26,7 +27,7 @@ class ElevateTokenizeabledGift {
             );
 
             if (tokenResponse) {
-                this.paymentMethodToken = tokenResponse[0].Payment_Authorization_Token__c;
+                this.paymentMethodToken = tokenResponse[0][PAYMENT_AUTHORIZE_TOKEN.fieldApiName];
                 return tokenResponse[0];
             }
         }
