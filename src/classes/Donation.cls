@@ -39,8 +39,10 @@ public inherited sharing class Donation {
     private DonationSelector selector;
     private Opportunity donationOpp;
 
+    // TODO Read this from settings
     private Boolean alwaysRollupToPrimaryContactRole = false;
     
+    // TODO Read this from settings
     private Set<String> softCreditRoles = new Set<String> {
         'Matched Donor',
         'Soft Credit',
@@ -69,6 +71,14 @@ public inherited sharing class Donation {
             }
         }
         this.donationOpp = donationOpp;
+
+        // populate info from settings
+        npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        alwaysRollupToPrimaryContactRole = householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c;
+
+        String scRolesSetting = householdsSettings.npo02__Soft_Credit_Roles__c;
+        softCreditRoles = new Set<String>(scRolesSetting.split(';'));
+
     }
 
     public List<Donor> getHardCreditDonors() {

@@ -37,7 +37,6 @@ public inherited sharing class DonorService {
 
     @AuraEnabled(cacheable=true)
     public static List<Donor> getHardCreditDonorsFor(Id opportunityId) {
-        System.debug(' **** opp id: '+opportunityId);
         try {
             Donation aDonation = new Donation(opportunityId, new DonationSelector());
             aDonation.query();
@@ -50,7 +49,6 @@ public inherited sharing class DonorService {
 
     @AuraEnabled(cacheable=true)
     public static List<Donor> getSoftCreditDonorsFor(Id opportunityId) {
-        System.debug(' **** opp id: '+opportunityId);
         try {
             Donation aDonation = new Donation(opportunityId, new DonationSelector());
             aDonation.query();
