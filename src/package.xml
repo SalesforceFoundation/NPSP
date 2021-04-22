@@ -263,7 +263,6 @@
         <members>Callable_API_TEST</members>
         <members>Donation</members>
         <members>DonationSelector</members>
-        <members>Donations</members>
         <members>Donor</members>
         <members>DonorService</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -686,9 +685,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>fflib_Domain</members>
-        <members>fflib_Objects</members>
-        <members>fflib_SObjects</members>
         <name>ApexClass</name>
     </types>
     <types>

@@ -39,6 +39,14 @@ public inherited sharing class Donation {
     private DonationSelector selector;
     private Opportunity donationOpp;
 
+    private Boolean alwaysRollupToPrimaryContactRole = false;
+    
+    private Set<String> softCreditRoles = new Set<String> {
+        'Matched Donor',
+        'Soft Credit',
+        'Household Member'
+    };
+
     public Donation(Id recordId) {
         this.recordId = recordId; 
     }
@@ -54,23 +62,31 @@ public inherited sharing class Donation {
 
     public void query() {
         Opportunity donationOpp;
-        if(recordId != null && selector != null) {
+        if (recordId != null && selector != null) {
             List<Opportunity> opps = selector.selectOpportunitiesById(new Set<Id> { recordId });
-            if(opps.size() > 0) {
+            if (opps.size() > 0) {
                 donationOpp = opps[0];
             }
         }
         this.donationOpp = donationOpp;
+
+        // populate info from settings
+        npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        alwaysRollupToPrimaryContactRole = householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c;
+
+        String scRolesSetting = householdsSettings.npo02__Soft_Credit_Roles__c;
+        softCreditRoles = new Set<String>(scRolesSetting.split(';'));
+
     }
 
     public List<Donor> getHardCreditDonors() {
         List<Donor> hcDonors = new List<Donor>();
-        if(donationOpp == null) {
+        if (donationOpp == null) {
             return hcDonors;
         }
 
         Boolean hasOrgAccount = false;
-        if(donationOpp?.Account != null) {
+        if (donationOpp?.Account != null) {
             Donor acctDonor = new Donor();
             acctDonor.isHardCredit = true;
             acctDonor.recordId = donationOpp?.AccountId;
@@ -85,16 +101,25 @@ public inherited sharing class Donation {
             }
             hcDonors.add( acctDonor );
         }
-        if(!hasOrgAccount && donationOpp?.Primary_Contact__c != null) {
-            Donor contactDonor = new Donor();
-            contactDonor.isHardCredit = true;
-            contactDonor.recordId = donationOpp?.Primary_Contact__c;
-            contactDonor.amount = donationOpp.Amount;
-            contactDonor.fullName = donationOpp.Account?.Name;
-            contactDonor.fullName = donationOpp.Primary_Contact__r?.FirstName + ' ' +
-                donationOpp.Primary_Contact__r?.LastName;
-                contactDonor.donorType = Donor.DonorType.CONTACT.name();
-            hcDonors.add( contactDonor );
+
+        if ((!hasOrgAccount || alwaysRollupToPrimaryContactRole)
+            && donationOpp.OpportunityContactRoles != null) {
+
+            for (OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
+                if (contactRole.IsPrimary) {
+                    Donor contactDonor = new Donor();
+                    contactDonor.isHardCredit = true;
+                    contactDonor.amount = donationOpp.Amount;
+                    contactDonor.fullName = contactRole.Contact.FirstName +' '+
+                        contactRole.Contact.LastName;
+                    contactDonor.role = contactRole.Role;
+                    contactDonor.donorType = Donor.DonorType.CONTACT.name();
+                    contactDonor.recordId = contactRole.ContactId;
+                    
+                    hcDonors.add(contactDonor);
+                    break;
+                }
+            }
         }
 
         return hcDonors;
@@ -102,13 +127,24 @@ public inherited sharing class Donation {
 
     public List<Donor> getSoftCreditDonors() {
         List<Donor> scDonors = new List<Donor>();
+
         if(donationOpp == null) {
             return scDonors;
         }
 
-        if(donationOpp.OpportunityContactRoles != null) {
-            for(OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
-                if(!contactRole.IsPrimary) {
+        List<Donor> hcDonors = getHardCreditDonors();
+        Set<Id> hcRecordIds = new Set<Id>();
+        for (Donor hardCreditDonor: hcDonors) {
+            if (hardCreditDonor.recordId != null) {
+                hcRecordIds.add(hardCreditDonor.recordId);
+            }
+        }
+
+        if (donationOpp.OpportunityContactRoles != null) {
+            for (OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
+                if (!hcRecordIds.contains(contactRole.ContactId) && 
+                    softCreditRoles.contains(contactRole.Role)) {
+
                     Donor ocrDonor = new Donor();
                     ocrDonor.isHardCredit = false;
                     ocrDonor.amount = donationOpp.Amount;
@@ -123,8 +159,9 @@ public inherited sharing class Donation {
             }
         }
 
-        if(donationOpp.Partial_Soft_Credits__r != null) {
-            for(Partial_Soft_Credit__c partialSoftCredit: donationOpp.Partial_Soft_Credits__r) {
+        if (donationOpp.Partial_Soft_Credits__r != null) {
+            for (Partial_Soft_Credit__c partialSoftCredit: donationOpp.Partial_Soft_Credits__r) {
+                
                 Donor pscDonor = new Donor();
                 pscDonor.isHardCredit = false;
                 pscDonor.amount = partialSoftCredit.Amount__c;
@@ -137,14 +174,14 @@ public inherited sharing class Donation {
             }
         }        
 
-        if(donationOpp.Account_Soft_Credits__r != null) {
-            for(Account_Soft_Credit__c accountSoftCredit: donationOpp.Account_Soft_Credits__r) {
+        if (donationOpp.Account_Soft_Credits__r != null) {
+            for (Account_Soft_Credit__c accountSoftCredit: donationOpp.Account_Soft_Credits__r) {
                 Donor ascDonor = new Donor();
                 ascDonor.isHardCredit = false;
                 ascDonor.amount = accountSoftCredit.Amount__c;
                 ascDonor.fullName = accountSoftCredit.Account__r.Name;
                 ascDonor.role = accountSoftCredit.Role__c;
-                if(accountSoftCredit.Account__r.npe01__SYSTEM_AccountType__c != null &&
+                if (accountSoftCredit.Account__r.npe01__SYSTEM_AccountType__c != null &&
                     accountSoftCredit.Account__r.npe01__SYSTEM_AccountType__c.indexOf('Household') > -1) {
                     ascDonor.donorType = Donor.DonorType.HOUSEHOLD.name();    
                 } else {
