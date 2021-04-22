@@ -90,10 +90,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 message="Current page is not a Recurring Donations record view",
             )
             locator = npsp_lex_locators["bge"]["button"].format("Edit")
-            active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format("Current Schedule")
-            self.selenium.wait_until_element_is_enabled(active_schedule_card,error="Checkbox could not be found on the page")
             self.selenium.wait_until_page_contains_element(locator, error="Recurring donations Details page did not load fully")
-            
             edit_button = self.selenium.get_webelement(locator)
             if self.npsp.check_if_element_displayed(edit_button):
                 return
@@ -216,7 +213,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                raise Exception("Key not supported expected keys <Paused Reason> or <Date>")
            
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
-        self.selenium.wait_until_element_is_enabled(btnlocator,error="Save button is not enabled")
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
