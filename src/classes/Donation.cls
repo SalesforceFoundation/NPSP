@@ -71,7 +71,7 @@ public inherited sharing class Donation {
         this.donationOpp = donationOpp;
 
         // populate info from settings
-        npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        npo02__Households_Settings__c householdsSettings = npo02__Households_Settings__c.getInstance();
         alwaysRollupToPrimaryContactRole = householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c;
 
         String scRolesSetting = householdsSettings.npo02__Soft_Credit_Roles__c;
