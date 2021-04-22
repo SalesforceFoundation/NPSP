@@ -43,6 +43,7 @@ public inherited sharing class Donor {
     @AuraEnabled public String fullName = '';
     @AuraEnabled public String donorType = '';
     @AuraEnabled public Id recordId;
+    @AuraEnabled public String role = '';
     @AuraEnabled public Boolean isHardCredit = false;
     @AuraEnabled public Boolean isPartialCredit = false;
     @AuraEnabled public Decimal amount;

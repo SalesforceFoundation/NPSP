@@ -73,11 +73,11 @@ public inherited sharing class Donation {
         if(donationOpp?.Account != null) {
             Donor acctDonor = new Donor();
             acctDonor.isHardCredit = true;
+            acctDonor.recordId = donationOpp?.AccountId;
             acctDonor.amount = donationOpp.Amount;
             acctDonor.fullName = donationOpp.Account?.Name;
-            if(donationOpp.Account.RecordType != null &&
-                donationOpp.Account.RecordType.Name != null &&
-                donationOpp.Account.RecordType.Name.indexOf('Household') > -1) {
+            if(donationOpp.Account.npe01__SYSTEM_AccountType__c != null &&
+                donationOpp.Account.npe01__SYSTEM_AccountType__c.indexOf('Household') > -1) {
                 acctDonor.donorType = Donor.DonorType.HOUSEHOLD.name();
             } else {
                 acctDonor.donorType = Donor.DonorType.ORGANIZATION.name();
@@ -88,6 +88,7 @@ public inherited sharing class Donation {
         if(!hasOrgAccount && donationOpp?.Primary_Contact__c != null) {
             Donor contactDonor = new Donor();
             contactDonor.isHardCredit = true;
+            contactDonor.recordId = donationOpp?.Primary_Contact__c;
             contactDonor.amount = donationOpp.Amount;
             contactDonor.fullName = donationOpp.Account?.Name;
             contactDonor.fullName = donationOpp.Primary_Contact__r?.FirstName + ' ' +
@@ -97,6 +98,63 @@ public inherited sharing class Donation {
         }
 
         return hcDonors;
+    }
+
+    public List<Donor> getSoftCreditDonors() {
+        List<Donor> scDonors = new List<Donor>();
+        if(donationOpp == null) {
+            return scDonors;
+        }
+
+        if(donationOpp.OpportunityContactRoles != null) {
+            for(OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
+                Donor ocrDonor = new Donor();
+                ocrDonor.isHardCredit = false;
+                ocrDonor.amount = donationOpp.Amount;
+                ocrDonor.fullName = contactRole.Contact.FirstName +' '+
+                    contactRole.Contact.LastName;
+                ocrDonor.role = contactRole.Role;
+                ocrDonor.donorType = Donor.DonorType.CONTACT.name();
+                ocrDonor.recordId = contactRole.ContactId;
+                
+                scDonors.add(ocrDonor);
+            }
+        }
+
+        if(donationOpp.Partial_Soft_Credits__r != null) {
+            for(Partial_Soft_Credit__c partialSoftCredit: donationOpp.Partial_Soft_Credits__r) {
+                Donor pscDonor = new Donor();
+                pscDonor.isHardCredit = false;
+                pscDonor.amount = partialSoftCredit.Amount__c;
+                pscDonor.fullName = partialSoftCredit.Contact_Name__c;
+                pscDonor.role = partialSoftCredit.Role_Name__c;
+                pscDonor.donorType = Donor.DonorType.CONTACT.name();
+                pscDonor.recordId = partialSoftCredit.Contact__c;
+                
+                scDonors.add(pscDonor);
+            }
+        }        
+
+        if(donationOpp.Account_Soft_Credits__r != null) {
+            for(Account_Soft_Credit__c accountSoftCredit: donationOpp.Account_Soft_Credits__r) {
+                Donor ascDonor = new Donor();
+                ascDonor.isHardCredit = false;
+                ascDonor.amount = accountSoftCredit.Amount__c;
+                ascDonor.fullName = accountSoftCredit.Account__r.Name;
+                ascDonor.role = accountSoftCredit.Role__c;
+                if(accountSoftCredit.Account__r.npe01__SYSTEM_AccountType__c != null &&
+                    accountSoftCredit.Account__r.npe01__SYSTEM_AccountType__c.indexOf('Household') > -1) {
+                    ascDonor.donorType = Donor.DonorType.HOUSEHOLD.name();    
+                } else {
+                    ascDonor.donorType = Donor.DonorType.ORGANIZATION.name();
+                }
+                ascDonor.recordId = accountSoftCredit.Account__c;
+                
+                scDonors.add(ascDonor);
+            }
+        }
+
+        return scDonors;
     }
 
 }

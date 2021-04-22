@@ -1,25 +1,38 @@
 <template>
     <lightning-card title="Attribution">
-        <div class='slds-card slds-p-around_medium'>
-            <lightning-record-view-form record-id={recordId} object-api-name="Opportunity">
-                  
-                <div class="slds-form-element__control">
-                    <h1>Donor: {donorNames}</h1>
-                </div>
-                <template if:true={donors}>
-                    <template for:each={donors} for:item="donor">
-                        <div key={donor.recordId}>
-                            <p>{donor.fullName}</p>
-                            <p>{donor.donorType}</p>
-                            <p>{donor.isHardCredit}</p>
-                            <p>{donor.amount}</p>
-                        </div>
-                    </template>
-                </template>                
-                <template if:true={error}>
-                    <p>{error}</p>
+        <div class='slds-card slds-p-around_medium'>                  
+            <div class='slds-p-around_small'>
+                <h1>Hard Credits</h1>
+            </div>
+            <template if:true={donors}>
+                <template for:each={donors} for:item="donor">
+                    <div class='slds-p-around_medium' key={donor.recordId}>
+                        <p>{donor.fullName}</p>
+                        <p>{donor.donorType}</p>
+                        <p>{donor.isHardCredit}</p>
+                        <p>{donor.amount}</p>
+                    </div>
                 </template>
-            </lightning-record-view-form>
+            </template>
+
+            <div class='slds-p-around_small'>
+                <h1>Soft Credits</h1>
+            </div>
+            <template if:true={softCredits}>
+                <template for:each={softCredits} for:item="softCredit">
+                    <div class='slds-p-around_medium' key={softCredit.recordId}>
+                        <p>{softCredit.fullName}</p>
+                        <p>{softCredit.donorType}</p>
+                        <p>{softCredit.role}</p>
+                        <p>{softCredit.isHardCredit}</p>
+                        <p>{softCredit.amount}</p>
+                    </div>
+                </template>
+            </template>                    
+
+            <template if:true={error}>
+                <p>{error}</p>
+            </template>
         </div>
     </lightning-card>
 </template>
