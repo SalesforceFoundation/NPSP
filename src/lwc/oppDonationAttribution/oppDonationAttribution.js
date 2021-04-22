@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import getHardCreditDonorsFor 
     from '@salesforce/apex/DonorService.getHardCreditDonorsFor';
 import getSoftCreditDonorsFor 
@@ -8,8 +8,8 @@ export default class OppDonationAttribution extends LightningElement {
 
     @api recordId;
     
-    donors = [];
-    softCredits = []; 
+    @track donors = [];
+    @track softCredits = []; 
     donorNames = '';
     error;
 
