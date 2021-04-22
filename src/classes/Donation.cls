@@ -39,10 +39,8 @@ public inherited sharing class Donation {
     private DonationSelector selector;
     private Opportunity donationOpp;
 
-    // TODO Read this from settings
     private Boolean alwaysRollupToPrimaryContactRole = false;
     
-    // TODO Read this from settings
     private Set<String> softCreditRoles = new Set<String> {
         'Matched Donor',
         'Soft Credit',
@@ -123,19 +121,6 @@ public inherited sharing class Donation {
                 }
             }
         }
-        /***
-        if(!hasOrgAccount && donationOpp?.Primary_Contact__c != null) {
-            Donor contactDonor = new Donor();
-            contactDonor.isHardCredit = true;
-            contactDonor.recordId = donationOpp?.Primary_Contact__c;
-            contactDonor.amount = donationOpp.Amount;
-            contactDonor.fullName = donationOpp.Account?.Name;
-            contactDonor.fullName = donationOpp.Primary_Contact__r?.FirstName + ' ' +
-                donationOpp.Primary_Contact__r?.LastName;
-                contactDonor.donorType = Donor.DonorType.CONTACT.name();
-            hcDonors.add( contactDonor );
-        }
-        ***/
 
         return hcDonors;
     }
