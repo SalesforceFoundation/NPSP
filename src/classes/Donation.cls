@@ -108,16 +108,18 @@ public inherited sharing class Donation {
 
         if(donationOpp.OpportunityContactRoles != null) {
             for(OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
-                Donor ocrDonor = new Donor();
-                ocrDonor.isHardCredit = false;
-                ocrDonor.amount = donationOpp.Amount;
-                ocrDonor.fullName = contactRole.Contact.FirstName +' '+
-                    contactRole.Contact.LastName;
-                ocrDonor.role = contactRole.Role;
-                ocrDonor.donorType = Donor.DonorType.CONTACT.name();
-                ocrDonor.recordId = contactRole.ContactId;
-                
-                scDonors.add(ocrDonor);
+                if(!contactRole.IsPrimary) {
+                    Donor ocrDonor = new Donor();
+                    ocrDonor.isHardCredit = false;
+                    ocrDonor.amount = donationOpp.Amount;
+                    ocrDonor.fullName = contactRole.Contact.FirstName +' '+
+                        contactRole.Contact.LastName;
+                    ocrDonor.role = contactRole.Role;
+                    ocrDonor.donorType = Donor.DonorType.CONTACT.name();
+                    ocrDonor.recordId = contactRole.ContactId;
+                    
+                    scDonors.add(ocrDonor);
+                }
             }
         }
 
