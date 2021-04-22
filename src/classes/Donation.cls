@@ -155,7 +155,6 @@ public inherited sharing class Donation {
                 scDonors.add(ascDonor);
             }
         }
-
         return scDonors;
     }
 
