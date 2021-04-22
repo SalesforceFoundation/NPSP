@@ -13,6 +13,10 @@ export default class OppDonationAttribution extends LightningElement {
     donorNames = '';
     error;
 
+    get hasSoftCredits() {
+        return this.softCredits && this.softCredits.length > 0;
+    }
+
     @wire(getHardCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredDonors({data, error}) {
         if (data) {
