@@ -38,9 +38,11 @@ public inherited sharing class DonationSelector {
         return [SELECT Id,
                 Name,
                 Amount,
+                AccountId,
                 Account.Name,
                 Account.RecordTypeId,
                 Account.RecordType.Name,
+                Account.npe01__SYSTEM_AccountType__c,
                 Primary_Contact__c,
                 Primary_Contact__r.FirstName,
                 Primary_Contact__r.LastName,
@@ -55,7 +57,9 @@ public inherited sharing class DonationSelector {
                     Name,
                     Role__c,
                     Amount__c,
-                    Account__c
+                    Account__c,
+                    Account__r.Name,
+                    Account__r.npe01__SYSTEM_AccountType__c
                 FROM Account_Soft_Credits__r),
                 (SELECT Id,
                     Amount__c,

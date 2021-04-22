@@ -1,13 +1,15 @@
 import { LightningElement, api, wire } from 'lwc';
 import getHardCreditDonorsFor 
     from '@salesforce/apex/DonorService.getHardCreditDonorsFor';
-
+import getSoftCreditDonorsFor 
+    from '@salesforce/apex/DonorService.getSoftCreditDonorsFor';
 
 export default class OppDonationAttribution extends LightningElement {
 
     @api recordId;
     
-    donors = []; 
+    donors = [];
+    softCredits = []; 
     donorNames = '';
     error;
 
@@ -28,16 +30,17 @@ export default class OppDonationAttribution extends LightningElement {
         }
     };
 
-    /***
-    async connectedCallback() {
-        this.donorNames = await getHardCreditDonorsFor({ recordId: this.recordId });
-    }
-    get displayText() {
-        if(this.donorNames) {
-            return this.donorNames;
-        } else {
-            return 'Not Found';
+    @wire(getSoftCreditDonorsFor, { opportunityId: '$recordId' }) 
+    wiredSoftCredit({data, error}) {
+        if (data) {
+            this.softCredits = data;
+        } else if (error) {
+            this.error = 'Unknown error';
+            if (Array.isArray(error.body)) {
+                this.error = error.body.map(e => e.message).join(', ');
+            } else if (typeof error.body.message === 'string') {
+                this.error = error.body.message;
+            }
         }
-    }
-    */
+    };
 }
