@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import getHardCreditDonorsFor 
     from '@salesforce/apex/DonorService.getHardCreditDonorsFor';
 import getSoftCreditDonorsFor 
@@ -8,15 +8,31 @@ export default class OppDonationAttribution extends LightningElement {
 
     @api recordId;
     
-    donors = [];
-    softCredits = []; 
+    @track donors = [];
+    @track softCredits = []; 
     donorNames = '';
     error;
+
+    get hasSoftCredits() {
+        return this.softCredits && this.softCredits.length > 0;
+    }
 
     @wire(getHardCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredDonors({data, error}) {
         if (data) {
-            this.donors = data;
+            for (let i = 0; i < data.length; i++) {
+                this.donors.push(Object.assign({}, data[i], {selectable: false}));
+            }
+            
+            this.donors.map(donor => {
+                let iconName = 'standard:contact';
+                if (donor.donorType === 'HOUSEHOLD') {
+                    iconName = 'standard:household';
+                }
+
+                donor.iconName = iconName;
+            });
+
             if(this.donors.length > 0) {
                 this.donorNames = this.donors[0].fullName;
             }
