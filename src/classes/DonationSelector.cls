@@ -64,6 +64,8 @@ public inherited sharing class DonationSelector {
                 (SELECT Id,
                     Amount__c,
                     Contact__c,
+                    Contact__r.FirstName,
+                    Contact__r.LastName,
                     Contact_Name__c,
                     Contact_Role_ID__c,
                     Role_Name__c,

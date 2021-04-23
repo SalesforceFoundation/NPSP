@@ -165,7 +165,8 @@ public inherited sharing class Donation {
                 Donor pscDonor = new Donor();
                 pscDonor.isHardCredit = false;
                 pscDonor.amount = partialSoftCredit.Amount__c;
-                pscDonor.fullName = partialSoftCredit.Contact_Name__c;
+                pscDonor.fullName = partialSoftCredit.Contact__r.FirstName +' '+
+                    partialSoftCredit.Contact__r.LastName;
                 pscDonor.role = partialSoftCredit.Role_Name__c;
                 pscDonor.donorType = Donor.DonorType.CONTACT.name();
                 pscDonor.recordId = partialSoftCredit.Contact__c;
