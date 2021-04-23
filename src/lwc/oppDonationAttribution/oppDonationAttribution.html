@@ -1,7 +1,7 @@
 <template>
         <c-util-card>
             <div slot="title">
-                <h2 class="slds-card__header-title">Attributions</h2>
+                <h2 class="slds-card__header-title">Attribution</h2>
             </div>
 
             <div class="slds-p-left_medium slds-p-right_medium">
@@ -33,7 +33,7 @@
                                     <a href="">{donor.fullName}</a>
                                 </lightning-layout-item>
                             </lightning-layout>
-                            <div class="slds-text-body_regular" style="font-weight: bold;">
+                            <div class="slds-text-body_regular">
                                 <lightning-layout>
                                     <lightning-layout-item size="1"></lightning-layout-item>
                                     <lightning-layout-item size="11">
@@ -42,7 +42,11 @@
                                                 Amount:
                                             </lightning-layout-item>
                                             <lightning-layout-item size="9">
-                                                <lightning-formatted-number value={donor.amount} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                                <lightning-formatted-number 
+                                                    value={donor.amount} 
+                                                    format-style="currency" 
+                                                    currency-code="USD">
+                                                </lightning-formatted-number>
                                             </lightning-layout-item>
                                         </lightning-layout>
                                     </lightning-layout-item>
@@ -92,16 +96,19 @@
                                     <a href="">{softCredit.fullName}</a>
                                 </lightning-layout-item>
                             </lightning-layout>
-                            <div class="slds-text-body_regular" style="font-weight: bold;">
+                            <div class="slds-text-body_regular">
                                 <lightning-layout>
                                     <lightning-layout-item size="1"></lightning-layout-item>
                                     <lightning-layout-item size="11">
                                         <lightning-layout>
-                                            <lightning-layout-item size="2">
+                                            <lightning-layout-item size="3">
                                                 Amount:
                                             </lightning-layout-item>
-                                            <lightning-layout-item size="8">
-                                                <lightning-formatted-number value={softCredit.amount} format-style="currency" currency-code="USD">
+                                            <lightning-layout-item size="9">
+                                                <lightning-formatted-number 
+                                                    value={softCredit.amount} 
+                                                    format-style="currency" 
+                                                    currency-code="USD">
                                                 </lightning-formatted-number>
                                             </lightning-layout-item>
                                         </lightning-layout>
@@ -111,10 +118,10 @@
                                     <lightning-layout-item size="1"></lightning-layout-item>
                                     <lightning-layout-item size="11">
                                         <lightning-layout>
-                                            <lightning-layout-item size="2">
+                                            <lightning-layout-item size="3">
                                                 Role:
                                             </lightning-layout-item>
-                                            <lightning-layout-item size="8">
+                                            <lightning-layout-item size="9">
                                                 {softCredit.role}
                                             </lightning-layout-item>
                                         </lightning-layout>
@@ -131,7 +138,7 @@
             </template>
 
             <div slot="footer" class="slds-p-around_small">
-                <a href="">View all attributions</a>
+                <a href="">View All Attributions</a>
             </div>
         </c-util-card>
 </template>

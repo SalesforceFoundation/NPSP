@@ -20,18 +20,7 @@ export default class OppDonationAttribution extends LightningElement {
     @wire(getHardCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredDonors({data, error}) {
         if (data) {
-            for (let i = 0; i < data.length; i++) {
-                this.donors.push(Object.assign({}, data[i], {selectable: false}));
-            }
-            
-            this.donors.map(donor => {
-                let iconName = 'standard:contact';
-                if (donor.donorType === 'HOUSEHOLD') {
-                    iconName = 'standard:household';
-                }
-
-                donor.iconName = iconName;
-            });
+            this.donors = this.generateDonationIcon(data);
 
             if(this.donors.length > 0) {
                 this.donorNames = this.donors[0].fullName;
@@ -49,7 +38,7 @@ export default class OppDonationAttribution extends LightningElement {
     @wire(getSoftCreditDonorsFor, { opportunityId: '$recordId' }) 
     wiredSoftCredit({data, error}) {
         if (data) {
-            this.softCredits = data;
+            this.softCredits = this.generateDonationIcon(data);
         } else if (error) {
             this.error = 'Unknown error';
             if (Array.isArray(error.body)) {
@@ -59,4 +48,24 @@ export default class OppDonationAttribution extends LightningElement {
             }
         }
     };
+
+    generateDonationIcon(records) {
+        let updatedRecords = [];
+        
+        for (let i = 0; i < records.length; i++) {
+            updatedRecords.push(Object.assign({}, records[i], { selectable: false }));
+        }
+
+        updatedRecords.map(record => {
+            let iconName = 'standard:contact';
+            if (record.donorType === 'HOUSEHOLD') {
+                iconName = 'standard:household';
+            }
+
+            record.iconName = iconName;
+        });
+
+        return updatedRecords;
+    }
+
 }
