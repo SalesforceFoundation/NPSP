@@ -44,6 +44,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         String PAYMENT_FIELDNAME = SObjectType.Allocation__c.fields.Payment__c.Name;
         String OPPORTUNITY_FIELDNAME = SObjectType.Allocation__c.fields.Opportunity__c.Name;
+        String RECURRING_DONATION_FIELDNAME = SObjectType.Allocation__c.fields.Recurring_Donation__c.Name;
 
         String sourceObjName = SObjectType.DataImport__c.getName();
 
@@ -57,6 +58,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
             Object paymentIdValue;
             Object opportunityIdValue;
+            Object recurringDonationIdValue;
 
             for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
                 String sourceFieldName = fieldMapping.Source_Field_API_Name;
@@ -76,15 +78,19 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                             paymentIdValue = value;
                         } else if (fieldMapping.Target_Field_API_Name == OPPORTUNITY_FIELDNAME) {
                             opportunityIdValue = value;
+                        } else if (fieldMapping.Target_Field_API_Name == RECURRING_DONATION_FIELDNAME) {
+                            recurringDonationIdValue = value;
                         } else {
                             castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);
                         }
                     }
                 }
             }
-
+            System.debug('CustObjMappingGAUAllocation: ' + settings.Payment_Allocations_Enabled__c);
             // If the payment is specified and payment allocations are enabled, always use that first.
-            if ( paymentIdValue != null && settings.Payment_Allocations_Enabled__c) {
+            if ( recurringDonationIdValue != null ) {
+                objWrap.sObj.put(RECURRING_DONATION_FIELDNAME,recurringDonationIdValue);
+            } else if ( paymentIdValue != null && settings.Payment_Allocations_Enabled__c) {
                 objWrap.sObj.put(PAYMENT_FIELDNAME,paymentIdValue);
             } else if ( opportunityIdValue != null ) {
                 objWrap.sObj.put(OPPORTUNITY_FIELDNAME,opportunityIdValue);
