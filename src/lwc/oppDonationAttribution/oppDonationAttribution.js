@@ -60,6 +60,8 @@ export default class OppDonationAttribution extends LightningElement {
             let iconName = 'standard:contact';
             if (record.donorType === 'HOUSEHOLD') {
                 iconName = 'standard:household';
+            } else if (record.donorType === 'ORGANIZATION') {
+                iconName = 'standard:account';
             }
 
             record.iconName = iconName;

@@ -140,9 +140,29 @@ public inherited sharing class Donation {
             }
         }
 
+        Set<Id> pscRecordIds = new Set<Id>();
+
+        if (donationOpp.Partial_Soft_Credits__r != null) {
+            for (Partial_Soft_Credit__c partialSoftCredit: donationOpp.Partial_Soft_Credits__r) {
+                
+                Donor pscDonor = new Donor();
+                pscDonor.isHardCredit = false;
+                pscDonor.amount = partialSoftCredit.Amount__c;
+                pscDonor.fullName = partialSoftCredit.Contact__r.FirstName +' '+
+                    partialSoftCredit.Contact__r.LastName;
+                pscDonor.role = partialSoftCredit.Role_Name__c;
+                pscDonor.donorType = Donor.DonorType.CONTACT.name();
+                pscDonor.recordId = partialSoftCredit.Contact__c;
+                
+                pscRecordIds.add(pscDonor.recordId);
+                scDonors.add(pscDonor);
+            }
+        }  
+
         if (donationOpp.OpportunityContactRoles != null) {
             for (OpportunityContactRole contactRole: donationOpp.OpportunityContactRoles) {
                 if (!hcRecordIds.contains(contactRole.ContactId) && 
+                    !pscRecordIds.contains(contactRole.ContactId) &&
                     softCreditRoles.contains(contactRole.Role)) {
 
                     Donor ocrDonor = new Donor();
@@ -157,23 +177,7 @@ public inherited sharing class Donation {
                     scDonors.add(ocrDonor);
                 }
             }
-        }
-
-        if (donationOpp.Partial_Soft_Credits__r != null) {
-            for (Partial_Soft_Credit__c partialSoftCredit: donationOpp.Partial_Soft_Credits__r) {
-                
-                Donor pscDonor = new Donor();
-                pscDonor.isHardCredit = false;
-                pscDonor.amount = partialSoftCredit.Amount__c;
-                pscDonor.fullName = partialSoftCredit.Contact__r.FirstName +' '+
-                    partialSoftCredit.Contact__r.LastName;
-                pscDonor.role = partialSoftCredit.Role_Name__c;
-                pscDonor.donorType = Donor.DonorType.CONTACT.name();
-                pscDonor.recordId = partialSoftCredit.Contact__c;
-                
-                scDonors.add(pscDonor);
-            }
-        }        
+        }      
 
         if (donationOpp.Account_Soft_Credits__r != null) {
             for (Account_Soft_Credit__c accountSoftCredit: donationOpp.Account_Soft_Credits__r) {
