@@ -32,7 +32,7 @@
 * @date 2021
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Provides helper methods to validate and process GAUs entered on the DI.
+* @description Provides helper methods to validate and process GAUs entered on the Data Import record.
 */
 
 public with sharing class BDI_GAUAllocationsUtil {
@@ -127,36 +127,53 @@ public with sharing class BDI_GAUAllocationsUtil {
         // If there are disByOpptId then query existing Allocations
         if (!disByOpptId.isEmpty()) {
             Set<Id> opptIds = disByOpptId.keySet();
-            String queryString = ' SELECT Id, ' +
-                    'General_Accounting_Unit__c, ' +
-                    'Opportunity__c,' +
-                    'Payment__c,' +
-                    'Payment__r.npe01__Opportunity__c '+
-                    'FROM Allocation__c WHERE Opportunity__c IN: opptIds';
 
-            if (alloSettings.Payment_Allocations_Enabled__c) {
-                queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds';
-            }
+            UTIL_Permissions utilPerm = UTIL_Permissions.getInstance();
 
-            Allocation__c[] existingAllos = Database.query(queryString);
+            Set<SObjectField> allocFields = new Set<SObjectField>();
+            allocFields.add(SObjectType.Allocation__c.fields.Id.getSobjectField());
+            allocFields.add(SObjectType.Allocation__c.fields.Payment__c.getSobjectField());
+            allocFields.add(SObjectType.Allocation__c.fields.Opportunity__c.getSobjectField());
+            allocFields.add(SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getSobjectField());
 
-            if (existingAllos != null){
-                for (Allocation__c allo: existingAllos) {
-                    DataImport__c[] opptAlloMatchingDIs;
-                    DataImport__c[] paymentAlloMatchingDIs;
+            Set<SObjectField> paymentFields = new Set<SObjectField>();
+            paymentFields.add(SObjectType.npe01__OppPayment__c.fields.Id.getSobjectField());
+            paymentFields.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField());
 
-                    // Log error for newly created donations that already have
-                    if (disByOpptId.get(allo.Opportunity__c) != null) {
-                        opptAlloMatchingDIs = disByOpptId.get(allo.Opportunity__c);
-                        for (DataImport__c di : opptAlloMatchingDIs) {
-                            bdi.LogBDIError(di,label.bdiErrorExistingDonationAllocations,null);
+            if(utilPerm.canRead(Allocation__c.getSObjectType(),allocFields)
+                && utilPerm.canRead(npe01__OppPayment__c.getSObjectType(),paymentFields)) {
+
+                String queryString = ' SELECT Id, ' +
+                        'General_Accounting_Unit__c, ' +
+                        'Opportunity__c,' +
+                        'Payment__c,' +
+                        'Payment__r.npe01__Opportunity__c '+
+                        'FROM Allocation__c WHERE Opportunity__c IN: opptIds';
+
+                if (alloSettings.Payment_Allocations_Enabled__c) {
+                    queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds';
+                }
+
+                Allocation__c[] existingAllos = Database.query(queryString);
+
+                if (existingAllos != null){
+                    for (Allocation__c allo: existingAllos) {
+                        DataImport__c[] opptAlloMatchingDIs;
+                        DataImport__c[] paymentAlloMatchingDIs;
+
+                        // Log error for newly created donations that already have
+                        if (disByOpptId.get(allo.Opportunity__c) != null) {
+                            opptAlloMatchingDIs = disByOpptId.get(allo.Opportunity__c);
+                            for (DataImport__c di : opptAlloMatchingDIs) {
+                                bdi.LogBDIError(di,label.bdiErrorExistingDonationAllocations,null);
+                            }
                         }
-                    }
 
-                    if (disByOpptId.get(allo.Payment__r.npe01__Opportunity__c) != null) {
-                        paymentAlloMatchingDIs = disByOpptId.get(allo.Payment__r.npe01__Opportunity__c);
-                        for (DataImport__c di : opptAlloMatchingDIs) {
-                            bdi.LogBDIError(di,label.bdiErrorExistingPaymentAllocations,null);
+                        if (disByOpptId.get(allo.Payment__r.npe01__Opportunity__c) != null) {
+                            paymentAlloMatchingDIs = disByOpptId.get(allo.Payment__r.npe01__Opportunity__c);
+                            for (DataImport__c di : paymentAlloMatchingDIs) {
+                                bdi.LogBDIError(di,label.bdiErrorExistingPaymentAllocations,null);
+                            }
                         }
                     }
                 }

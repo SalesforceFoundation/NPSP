@@ -580,6 +580,7 @@ global with sharing class BDI_DataImportService {
             // they can be correctly applied.
             Map<Id, DataImport__c> diWithGAUToProcessById = BDI_GAUAllocationsUtil.getDIsWithGAUtoProcess(this.listDI);
 
+            Boolean alloTriggersDisabled = false;
             // Disabling Allocation triggers if there are GAU on the DI since we will be directly calling allocation
             // processing
             if (!isDryRun && diWithGAUToProcessById.size() > 0) {
@@ -590,6 +591,7 @@ global with sharing class BDI_DataImportService {
                 // Only disable allocation triggers if there are still DIs with GAUs that are valid
                 if (diWithGAUToProcessById.size() > 0) {
                     ALLO_AllocationsUtil.disableAllocationTriggers();
+                    alloTriggersDisabled = true;
                 }
             }
 
@@ -641,7 +643,7 @@ global with sharing class BDI_DataImportService {
             }
 
             // Processing allocations and Re-enabling allocation triggers after BDI processing is complete.
-            if (!isDryRun && diWithGAUToProcessById.size() > 0) {
+            if (!isDryRun && alloTriggersDisabled) {
                 BDI_GAUAllocationsUtil.processAllocations(this,listDI);
                 ALLO_AllocationsUtil.enableAllocationTriggers();
             }

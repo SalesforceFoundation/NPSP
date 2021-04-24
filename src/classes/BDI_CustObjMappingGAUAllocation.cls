@@ -86,7 +86,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                     }
                 }
             }
-            System.debug('CustObjMappingGAUAllocation: ' + settings.Payment_Allocations_Enabled__c);
+
             // If the payment is specified and payment allocations are enabled, always use that first.
             if ( recurringDonationIdValue != null ) {
                 objWrap.sObj.put(RECURRING_DONATION_FIELDNAME,recurringDonationIdValue);

@@ -3912,7 +3912,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorGAUAllocationOver100</shortDescription>
-        <value>The GAU Allocations entered exceed 100 percent.</value>
+        <value>The provided GAU Allocations exceed 100 percent.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidCampaignName</fullName>
