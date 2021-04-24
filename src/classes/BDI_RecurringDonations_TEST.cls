@@ -19,6 +19,7 @@ private class BDI_RecurringDonations_TEST {
 
         General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2,gau3};
         insert testGAUs;
+
         Campaign testCampaign = new Campaign(Name = 'TestGroupA Campaign',
                                         IsActive = true,
                                         StartDate = Date.today().addDays(-10), 
@@ -60,6 +61,7 @@ private class BDI_RecurringDonations_TEST {
                     Payment_Method__c = 'Check',
                     GAU_Allocation_1_Percent__c = 100,
                     GAU_Allocation_1_GAU__c = gau1.Id);
+
 
         //RD with Contact1 as donor, yearly schedule, and creation of new campaign
         DataImport__c testDataImportB = 
@@ -173,8 +175,6 @@ private class BDI_RecurringDonations_TEST {
         alloSettings.Default__c = gau3.Id;
 
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloSettings);
-
-        System.debug('Allo settings for test: ' + UTIL_CustomSettingsFacade.getAllocationsSettings());
 
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
@@ -382,20 +382,6 @@ private class BDI_RecurringDonations_TEST {
         System.assertNotEquals(null,pymtA1Alloc);
         System.assertEquals(gau1.Id,pymtA1Alloc.General_Accounting_Unit__c);
 
-        Opportunity[] opptResults = [SELECT Id,
-                Name,
-                Amount,
-                CloseDate,
-                CreatedDate,
-                StageName,
-                Account.Name,
-                npe03__Recurring_Donation__c,
-                RecordtypeId
-        FROM Opportunity];
-
-        for (Opportunity oppt : opptResults) {
-            System.debug('Oppt is: ' + oppt);
-        }
         //Updating this DI to close RD
         DataImport__c diAUpdate = 
             new DataImport__c(
