@@ -7,6 +7,19 @@ private class BDI_RecurringDonations_TEST {
   
     @TestSetup
     static void setupTestData(){
+
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGAU1',
+                Active__c = true);
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGAU2',
+                Active__c = true);
+
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'TestGAU3',
+                Active__c = true);
+
+        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2,gau3};
+        insert testGAUs;
+
         Campaign testCampaign = new Campaign(Name = 'TestGroupA Campaign',
                                         IsActive = true,
                                         StartDate = Date.today().addDays(-10), 
@@ -45,7 +58,10 @@ private class BDI_RecurringDonations_TEST {
                     Home_Zip_Postal_Code__c = '94105',
                     Household_Phone__c = '555-789-0001',
                     Payment_Check_Reference_Number__c = '453',
-                    Payment_Method__c = 'Check');
+                    Payment_Method__c = 'Check',
+                    GAU_Allocation_1_Percent__c = 100,
+                    GAU_Allocation_1_GAU__c = gau1.Id);
+
 
         //RD with Contact1 as donor, yearly schedule, and creation of new campaign
         DataImport__c testDataImportB = 
@@ -137,11 +153,28 @@ private class BDI_RecurringDonations_TEST {
     static void shouldCreateAndUpdateRecurringDonation() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        //Disabling first installment creation for this test.  Will reenable when the disable
-        //first installment field on the RD is working.
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
-            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
-        });
+        General_Accounting_Unit__c gau1;
+        General_Accounting_Unit__c gau2;
+        General_Accounting_Unit__c gau3;
+
+        for (General_Accounting_Unit__c gau : [SELECT Id, Name
+                                                FROM General_Accounting_Unit__c
+                                                LIMIT 10]) {
+            if (gau.Name == 'TestGAU1') {
+                gau1 = gau;
+            } else if (gau.Name == 'TestGAU2') {
+                gau2 = gau;
+            } else if (gau.Name == 'TestGAU3') {
+                gau3 = gau;
+            }
+        }
+
+        Allocations_Settings__c alloSettings = new Allocations_Settings__c();
+        alloSettings.Payment_Allocations_Enabled__c = true;
+        alloSettings.Default_Allocations_Enabled__c = true;
+        alloSettings.Default__c = gau3.Id;
+
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloSettings);
 
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
@@ -178,6 +211,8 @@ private class BDI_RecurringDonations_TEST {
                                         DonationImportStatus__c,
                                         DonationImported__c,
                                         Donation_Donor__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_1_Import_Status__c,
                                         Recurring_Donation_Amount__c,
                                         RecurringDonationImported__c,
                                         RecurringDonationImportStatus__c,
@@ -210,6 +245,8 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(System.label.bdiCreated,testDIResultA.DonationImportStatus__c);
         System.assertNotEquals(null,testDIResultA.HouseholdAccountImported__c);
         System.assertNotEquals(null,testDIResultA.HomeAddressImported__c);
+        System.assertNotEquals(null,testDIResultA.GAU_Allocation_1_Imported__c);
+        System.assertNotEquals(null,testDIResultA.PaymentImported__c);
 
         //RD with Contact1 as donor, yearly schedule, and creation of new campaign
         System.assertEquals(null,testDIResultB.FailureInformation__c);
@@ -316,17 +353,35 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(testDIResultC.Recurring_Donation_Day_Of_Month__c,rdC.Day_Of_Month__c);
         System.assertEquals(1,rdC.InstallmentFrequency__c);
 
-        Opportunity[] opptResults = [SELECT Id, 
-                                            Name,
-                                            Amount,
-                                            CloseDate,
-                                            CreatedDate,
-                                            StageName,
-                                            Account.Name,
-                                            npe03__Recurring_Donation__c,
-                                            RecordtypeId
-                                        FROM Opportunity];
-        
+        Allocation__c rdA1Alloc;
+        Allocation__c opptA1Alloc;
+        Allocation__c pymtA1Alloc;
+
+        for(Allocation__c alloc : [SELECT Id,
+                                    Opportunity__c,
+                                    Recurring_Donation__c,
+                                    Payment__c,
+                                    General_Accounting_Unit__c,
+                                    Amount__c,
+                                    Percent__c
+                                    FROM Allocation__c]) {
+            System.debug('Allocation is: ' + alloc);
+            if (alloc.Recurring_Donation__c == testDIResultA.RecurringDonationImported__c) {
+                rdA1Alloc = alloc;
+            } else if (alloc.Opportunity__c == testDIResultA.DonationImported__c) {
+                opptA1Alloc = alloc;
+            } else if (alloc.Payment__c == testDIResultA.PaymentImported__c) {
+                pymtA1Alloc = alloc;
+            }
+        }
+
+        System.assertNotEquals(null,rdA1Alloc);
+        System.assertEquals(gau1.Id,rdA1Alloc.General_Accounting_Unit__c);
+        System.assertNotEquals(null,opptA1Alloc);
+        System.assertEquals(gau1.Id,opptA1Alloc.General_Accounting_Unit__c);
+        System.assertNotEquals(null,pymtA1Alloc);
+        System.assertEquals(gau1.Id,pymtA1Alloc.General_Accounting_Unit__c);
+
         //Updating this DI to close RD
         DataImport__c diAUpdate = 
             new DataImport__c(
