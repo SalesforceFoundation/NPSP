@@ -183,6 +183,7 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
+
         Metadata metadata = new Metadata()
             .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
 
@@ -194,6 +195,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withMerchantId(configService.getMerchantIds())
             .withGatewayId(configService.getGatewayIds())
             .withPaymentMethodToken(token)
+            .withPaymentMethodType(rd.PaymentMethod__c)
             .withCurrency(currencyCode)
             .withMetadata(metadata)
             .withProductMetaData(productMetaData);

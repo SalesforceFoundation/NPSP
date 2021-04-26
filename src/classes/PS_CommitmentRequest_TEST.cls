@@ -78,6 +78,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCampaign(rdCampaign.Id)
+            .withPaymentMethod('CARD')
             .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
@@ -88,7 +89,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(PS_IntegrationServiceConfig_TEST.testMerchantId, requestBody.merchantId, 'Merchant Id should match');
         System.assertEquals(PS_IntegrationServiceConfig_TEST.testGatewayId, requestBody.gatewayId, 'Gateway Id should match');
         System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'First Name should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Payment method should be CARD');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
