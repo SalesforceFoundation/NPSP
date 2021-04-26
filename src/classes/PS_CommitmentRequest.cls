@@ -364,7 +364,6 @@ public inherited sharing class PS_CommitmentRequest {
             //set defaults
             currencyCode = UserInfo.getDefaultCurrency();
             type = CommitmentType.SUSTAINER.name();
-            paymentMethodType = PaymentMethod.CARD.name();
         }
 
         /**
@@ -414,6 +413,18 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public RequestBody withPaymentMethodToken(String token) {
             this.paymentMethodToken = token;
+            return this;
+        }
+
+        public RequestBody withPaymentMethodType(String paymentMethodType) {
+            switch on paymentMethodType {
+                when 'ACH' {
+                    this.paymentMethodType = PaymentMethod.ACH.name();
+                }
+                when 'CARD' {
+                    this.paymentMethodType = PaymentMethod.CARD.name();
+                }
+            }
             return this;
         }
 

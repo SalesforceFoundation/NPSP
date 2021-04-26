@@ -219,6 +219,17 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
 
+    @IsTest
+    private static void requestBodyCanSetPaymentMethod() {
+        PS_CommitmentRequest.RequestBody commitmentBody = new PS_CommitmentRequest.RequestBody();
+        System.assertEquals(null, commitmentBody.paymentMethodType);
+
+        commitmentBody.withPaymentMethodType('ACH');
+
+        System.assertEquals('ACH', commitmentBody.paymentMethodType);
+    }
+
+
 
     // Helpers
     ///////////////
