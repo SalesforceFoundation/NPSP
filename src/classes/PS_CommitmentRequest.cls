@@ -43,10 +43,11 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-     * @description Commitment payment method. Currently only credit card is supported.
+     * @description Commitment payment method.
      */
     public enum PaymentMethod {
-        CARD
+        CARD,
+        ACH
     }
 
     /***
