@@ -306,18 +306,34 @@ public with sharing class HH_Households_TEST {
     */
     static testMethod void newNoHouseholdProcessor() {
         //Given
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
+        setOrgContactSettingsToOneToOne();
+        setHouseholdSettingsToNoContacts();
 
         //When
-        Test.startTest();
         Contact aContactWithAnAddress = getContactHavingAddress();
+        Test.startTest();
         insert aContactWithAnAddress;
         Test.stopTest();
 
         //Then
         Contact[] createdContacts = getCreatedContacts(aContactWithAnAddress);
         system.assertEquals(null,createdContacts[0].npo02__household__c);
+    }
+
+    private static void setHouseholdSettingsToNoContacts() {
+        npo02__Households_Settings__c householdSettingsForTests =
+                UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                        new npo02__Households_Settings__c (
+                                npo02__Household_Rules__c =
+                                        HH_Households.NO_HOUSEHOLDS_PROCESSOR));
+    }
+
+    private static void setOrgContactSettingsToOneToOne() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests =
+                UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                        new npe01__Contacts_and_Orgs_Settings__c (
+                                npe01__Account_Processor__c =
+                                        CAO_Constants.ONE_TO_ONE_PROCESSOR));
     }
 
     private static Contact[] getCreatedContacts(Contact con) {
