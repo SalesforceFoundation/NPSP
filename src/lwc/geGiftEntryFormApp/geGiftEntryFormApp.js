@@ -85,7 +85,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
-        console.log(`Batch totals = ${JSON.stringify(this.batchTotals)}`);
 
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModal();
