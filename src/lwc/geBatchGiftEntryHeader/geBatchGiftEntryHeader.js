@@ -56,7 +56,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorBatchDryRun() {
         return `button ${this.LABELS.bgeBatchDryRun}`;
     }
-    get qaLocatorProcessBatch() {
+    get qaLocatorProcessBatch() { // TODO: Ask Deepa about this
         return `button ${this.LABELS.bgeProcessBatch}`;
     }
     get qaLocatorEditBatchInfo() {
@@ -65,8 +65,8 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     get processBatchButtonName() {
         let buttonName = this.LABELS.bgeProcessBatch;
-        if (this.batchTotals.authorizedPaymentsCount > 0) {
-            buttonName = 'Process Batch and Payments';
+        if (this.batchTotals.authorizedPaymentsCount) {
+            buttonName = this.LABELS.bgeProcessBatchAndPayments;
         }
         
         return buttonName;

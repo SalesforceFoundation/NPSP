@@ -182,6 +182,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.isReadOnlyMode && !this.isPaymentCaptured();
     }
 
+    get shouldDisplayCardProcessingGuidanceMessage() {
+        return !this.isReadOnlyMode && this.isInBatchGiftEntry();
+    }
+
     isPaymentCaptured() {
         return this.currentPaymentStatus() === this.paymentTransactionStatusValues.CAPTURED;
     }

@@ -52,7 +52,9 @@
                         </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size='12' padding='around-small'>
+                    <lightning-layout-item size='12' 
+                                           padding='around-small' 
+                                           if:true={shouldDisplayCardProcessingGuidanceMessage}>
                         <div class='slds-text-body_regular'>
                             <b>The donor's credit card will be processed when you process the batch.</b>
                         </div>
