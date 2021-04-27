@@ -255,11 +255,6 @@ public with sharing class HH_Households_TEST {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
 
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -310,7 +305,7 @@ public with sharing class HH_Households_TEST {
         setHouseholdSettingsToNoContacts();
 
         //When
-        Contact aContactWithAnAddress = getContactHavingAddress();
+        Contact aContactWithAnAddress = contactHavingAnAddress();
         Test.startTest();
         insert aContactWithAnAddress;
         Test.stopTest();
@@ -339,13 +334,12 @@ public with sharing class HH_Households_TEST {
         return createdContacts;
     }
 
-    private static Contact getContactHavingAddress() {
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
-
+    static String street = '2345 Elm St.';
+    static String city = 'Seattle';
+    static String state = 'Washington';
+    static String zip = '88777';
+    static String country = 'United States';
+    private static Contact contactHavingAnAddress() {
         Contact con = new Contact(
                 FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                 LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
