@@ -48,8 +48,8 @@ public with sharing class HH_Households_TEST {
     */
     static testMethod void newIndContactAllContactsProcessor() {
         //Given
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        setHouseholdSettingsToAll();
+        setOrgContactSettingsToOneToOne();
 
         //When
         Test.startTest();
@@ -87,7 +87,6 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
-
 
     /*********************************************************************************************************
     * @description Test insert and update a contact and see household object naming change
@@ -294,6 +293,12 @@ public with sharing class HH_Households_TEST {
         //Then
         Contact[] createdContacts = getCreatedContacts(aContactWithAnAddress);
         system.assertEquals(null,createdContacts[0].npo02__household__c);
+    }
+
+    private static void setHouseholdSettingsToAll() {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
     }
 
     private static void setHouseholdSettingsToNoContacts() {
