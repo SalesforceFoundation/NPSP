@@ -632,10 +632,12 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
+            .withLastElevateVersionPlayed(2)
             .build();
-        npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateVersionPlayed__c = 2;
-        oldRd.LastElevateVersionPlayed__c = 1;
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
+            .build();
 
         System.assertEquals(
             true,
@@ -652,10 +654,11 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
+            .withLastElevateVersionPlayed(2)
             .build();
-        npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateVersionPlayed__c = 2;
-        oldRd.LastElevateVersionPlayed__c = null;
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
 
         System.assertEquals(
             true,
@@ -672,10 +675,9 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
             .build();
         npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateVersionPlayed__c = 1;
-        oldRd.LastElevateVersionPlayed__c = 1;
 
         System.assertEquals(
             false,
@@ -693,9 +695,10 @@ public class RD2_ElevateIntegrationService_TEST {
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
             .build();
-        npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateVersionPlayed__c = null;
-        oldRd.LastElevateVersionPlayed__c = 1;
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
+            .build();
 
         System.assertEquals(
             false,

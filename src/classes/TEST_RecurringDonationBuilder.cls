@@ -575,6 +575,16 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Set LastElevateVersionPlayed
+    * @param version Integer for the 'Last Elevate Version Played'
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withLastElevateVersionPlayed(Integer version) {
+        valuesByFieldName.put('LastElevateVersionPlayed__c', version);
+        return this;
+    }
+
     /**
     * @description Configure the RD with the appropriate default values based on the mode
     */
