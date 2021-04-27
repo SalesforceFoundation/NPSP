@@ -305,18 +305,18 @@ public with sharing class HH_Households_TEST {
     * @description Tests insert individual with no household processor
     */
     static testMethod void newNoHouseholdProcessor() {
-
+        //Given
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
 
-        Contact con = getContactHavingAddress();
-
+        //When
         Test.startTest();
-        insert con;
+        Contact aContactWithAnAddress = getContactHavingAddress();
+        insert aContactWithAnAddress;
         Test.stopTest();
 
-        Contact[] createdContacts = getCreatedContacts(con);
-
+        //Then
+        Contact[] createdContacts = getCreatedContacts(aContactWithAnAddress);
         system.assertEquals(null,createdContacts[0].npo02__household__c);
     }
 
