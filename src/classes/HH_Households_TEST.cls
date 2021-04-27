@@ -47,37 +47,18 @@ public with sharing class HH_Households_TEST {
     * @description Tests insert individual with all contacts processor
     */
     static testMethod void newIndContactAllContactsProcessor() {
-
+        //Given
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
 
-
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            MailingStreet = street,
-            MailingCity = city,
-            MailingState = state,
-            MailingPostalCode = zip,
-            MailingCountry = country
-        );
+        //When
         Test.startTest();
-        insert con;
+        Contact contactHavingAnAddress = getContactHavingAnAddress();
+        insert contactHavingAnAddress;
         Test.stopTest();
-        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
-            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
-            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
-            from Contact where id=:con.id];
+
+        //Then
+        Contact[] createdContacts = getCreatedContacts(contactHavingAnAddress);
 
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -89,13 +70,13 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
 
         //blank out the HH
-        con.npo02__household__c = null;
-        update con;
+        contactHavingAnAddress.npo02__household__c = null;
+        update contactHavingAnAddress;
 
         createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
             npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
             npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
-            from Contact where id=:con.id];
+            from Contact where id=:contactHavingAnAddress.id];
 
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -305,7 +286,7 @@ public with sharing class HH_Households_TEST {
         setHouseholdSettingsToNoContacts();
 
         //When
-        Contact aContactWithAnAddress = contactHavingAnAddress();
+        Contact aContactWithAnAddress = getContactHavingAnAddress();
         Test.startTest();
         insert aContactWithAnAddress;
         Test.stopTest();
@@ -339,7 +320,7 @@ public with sharing class HH_Households_TEST {
     static String state = 'Washington';
     static String zip = '88777';
     static String country = 'United States';
-    private static Contact contactHavingAnAddress() {
+    private static Contact getContactHavingAnAddress() {
         Contact con = new Contact(
                 FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                 LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
