@@ -62,4 +62,13 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorEditBatchInfo() {
         return `button ${this.LABELS.geEditBatchInfo}`;
     }
+
+    get processBatchButtonName() {
+        let buttonName = this.LABELS.bgeProcessBatch;
+        if (this.batchTotals.authorizedPaymentsCount > 0) {
+            buttonName = 'Process Batch and Payments';
+        }
+        
+        return buttonName;
+    }
 }
