@@ -29,6 +29,7 @@
  */
 public with sharing class ElevateCaptureGroup implements CaptureGroup {
     @AuraEnabled public String groupId;
+    public Id batchId;
 
     @TestVisible
     private ElevateCaptureGroupService captureGroupService {
@@ -46,6 +47,10 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         this.groupId = groupId;
     }
 
+    public ElevateCaptureGroup(Id batchId) {
+        this.batchId = batchId;
+    }
+
     public ElevateCaptureGroup(ElevateCaptureGroupResponse captureGroupResponse) {
         this.groupId = captureGroupResponse.id();
     }
@@ -58,7 +63,27 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
         return captureGroupService.sendAddRequest(tokenizedGift, groupId());
     }
 
+    public ElevateCaptureGroup charge() {
+        return captureGroupService.sendChargeRequest(groupIds());
+    }
+
     public String groupId() {
         return groupId;
+    }
+
+    public List<String> groupIds() {
+        // Build list of elevate batch Ids here
+        List<DataImport__c> dataImports = [
+                SELECT Payment_Elevate_Batch_ID__c
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c =: batchId
+                AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
+        ];
+
+        List<String> groupIds = new List<String>();
+        for (DataImport__c dataImport : dataImports) {
+            groupIds.add(dataImport?.Payment_Elevate_Batch_ID__c);
+        }
+        return groupIds;
     }
 }

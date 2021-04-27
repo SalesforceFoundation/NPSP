@@ -37,6 +37,10 @@ public virtual with sharing class ElevateCaptureGroupService {
         return new ElevateCaptureGroup().create();
     }
 
+    public virtual ElevateCaptureGroup chargeCaptureGroup(Id batchId) {
+        return new ElevateCaptureGroup(batchId).charge();
+    }
+
     public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, groupId)
@@ -46,6 +50,36 @@ public virtual with sharing class ElevateCaptureGroupService {
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
+    }
+
+    public ElevateCaptureGroup sendCreateRequest() {
+        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
+                createRequest()
+        );
+        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
+                response.body, ElevateCaptureGroupResponse.class);
+        return new ElevateCaptureGroup(captureGroupResponse);
+    }
+
+    public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                .withBody(JSON.serialize(tokenizedGift))
+                .build();
+    }
+
+    public ElevateCaptureGroup sendChargeRequest(List<String> groupIds) {
+        for (String elevateBatchId : groupIds) {
+            UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
+                    chargeRequest(elevateBatchId)
+            );
+            ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
+                    response.body, ElevateCaptureGroupResponse.class);
+            return new ElevateCaptureGroup(captureGroupResponse);
+        }
+        return null;
     }
 
     @TestVisible
@@ -60,15 +94,6 @@ public virtual with sharing class ElevateCaptureGroupService {
                !authorizedGiftResponse.errors().isEmpty();
     }
 
-    public ElevateCaptureGroup sendCreateRequest() {
-        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                createRequest()
-        );
-        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
-                response.body, ElevateCaptureGroupResponse.class);
-        return new ElevateCaptureGroup(captureGroupResponse);
-    }
-
     @TestVisible
     private void checkForCaptureGroupErrorsIn(ElevateCaptureGroupResponse captureGroupResponse) {
         if (hasCaptureGroupErrors(captureGroupResponse)) {
@@ -81,20 +106,19 @@ public virtual with sharing class ElevateCaptureGroupService {
                !captureGroupResponse.errors().isEmpty();
     }
 
-    public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withCaptureGroupId(groupId)
-                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
-                .withBody(JSON.serialize(tokenizedGift))
-                .build();
-    }
-
     private HttpRequest createRequest() {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
                 .withBody(createRequestBody())
+                .build();
+    }
+
+    private HttpRequest chargeRequest(String groupId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
                 .build();
     }
 

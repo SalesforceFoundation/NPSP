@@ -16,6 +16,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import chargeCaptureGroup from '@salesforce/apex/GE_GiftEntryController.chargeCaptureGroup';
 
 /*******************************************************************************
 * @description Schema imports
@@ -252,7 +253,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleProcessBatch() {
-        if (this.isProcessable) {
+        if (this.isProcessable()) {
+            this.chargeCaptureGroup();
             this.navigateToDataImportProcessingPage();
         } else {
             if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
@@ -263,8 +265,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    async chargeCaptureGroup() {
+        try {
+            await chargeCaptureGroup({
+                batchId: this.batchId
+            })
+        } catch (ex) {
+            handleError(ex);
+        }
+    }
+
     navigateToDataImportProcessingPage() {
-        let url = '/apex/' + this.bdiDataImportPageName +
+        let url = '/apex/' + this.bdiDataImportPageName() +
             '?batchId=' + this.recordId + '&retURL=' + this.recordId;
 
         this[NavigationMixin.Navigate]({
@@ -277,17 +289,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         );
     }
 
-    get bdiDataImportPageName() {
+    bdiDataImportPageName() {
         return this.namespace ?
             `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
             BDI_DATA_IMPORT_PAGE;
     };
 
-    get requireTotalMatch() {
+    requireTotalMatch() {
         return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
     }
 
-    get totalsMatch() {
+    totalsMatch() {
         if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
             return this.countMatches && this.amountMatches;
         } else if (this.expectedCountOfGifts) {
@@ -305,14 +317,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return this.total === this.expectedTotalBatchAmount;
     }
 
-    get isProcessable() {
-        if (this.totalsMatch) {
-            return true;
-        } else if (this.requireTotalMatch) {
-            return false;
-        } else {
+    isProcessable() {
+        if (this.totalsMatch()) {
             return true;
         }
+        return !this.requireTotalMatch();
     }
 
     handleDelete(event) {

@@ -41,7 +41,8 @@ public inherited sharing class PS_Request {
         COMMITMENT,
         COMMITMENT_CANCEL,
         CREATE_CAPTURE_GROUP,
-        ADD_TO_CAPTURE_GROUP
+        ADD_TO_CAPTURE_GROUP,
+        CHARGE_CAPTURE_GROUP
     }
 
     public enum ProductType {
@@ -74,6 +75,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_CREATE_CAPTURE_GROUP = '/v1/payments/verified/batch';
     public static String ENDPOINT_ADD_TO_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_CHARGE_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/capture';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -258,6 +260,13 @@ public inherited sharing class PS_Request {
                         captureGroupId
                     }
                 );
+            } else if (endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
+                value = String.format(
+                        ENDPOINT_CHARGE_CAPTURE_GROUP,
+                        new String[] {
+                                captureGroupId
+                        }
+                );
             }
 
             return String.isBlank(value)
@@ -362,7 +371,8 @@ public inherited sharing class PS_Request {
             ) {
                 value = ROLE_PAYMENT_COMMITMENTS;
             } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
-                || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
+                || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP
+                    || endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
 
                 value = ROLE_PAYMENT_BATCH;
             }

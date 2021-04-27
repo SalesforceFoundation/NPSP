@@ -210,6 +210,12 @@ public with sharing class GE_GiftEntryController {
         return captureGroup;
     }
 
+    @AuraEnabled
+    public static ElevateCaptureGroup chargeCaptureGroup(Id batchId) {
+        ElevateCaptureGroup captureGroup = captureGroupService.chargeCaptureGroup(batchId);
+        return captureGroup;
+    }
+
     /**
      * @description Validates that the currency of a batch matches the currently logged in
      * user's currency
