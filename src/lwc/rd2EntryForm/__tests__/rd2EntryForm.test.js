@@ -49,13 +49,6 @@ describe('c-rd2-entry-form', () => {
         jest.clearAllMocks();
     })
 
-    it('loads when user has required field permissions', async () => {
-        const element = createElement('c-rd2-entry-form', { is: Rd2EntryForm })
-        document.body.appendChild(element);
-        await flushPromises();
-        expect(element).toMatchSnapshot();
-    });
-
     it('displays an error when user does not have required permissions', async () => {
         hasRequiredFieldPermissions.mockResolvedValue(false);
         const element = createElement('c-rd2-entry-form', { is: Rd2EntryForm })
