@@ -57,7 +57,7 @@ public with sharing class HH_Households_TEST {
         insert contactHavingAnAddress;
         Test.stopTest();
         //Then
-        Contact[] createdContacts = getCreatedContacts2(contactHavingAnAddress);
+        Contact[] createdContacts = getCreatedContacts(contactHavingAnAddress);
 
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -72,7 +72,7 @@ public with sharing class HH_Households_TEST {
         contactHavingAnAddress.npo02__household__c = null;
         update contactHavingAnAddress;
 
-        createdContacts = getCreatedContacts2(contactHavingAnAddress);
+        createdContacts = getCreatedContacts(contactHavingAnAddress);
 
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -84,13 +84,16 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
 
-    private static Contact[] getCreatedContacts2(Contact contactHavingAnAddress) {
+    private static Contact[] getCreatedContacts(Contact contactHavingAnAddress) {
         Contact[] createdContacts = [
-                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
-                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
-                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
-                from Contact
-                where id = :contactHavingAnAddress.id
+                SELECT npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+                        npo02__Household__r.npo02__MailingCity__c,
+                        npo02__Household__r.npo02__MailingState__c,
+                        npo02__Household__r.npo02__MailingPostalCode__c,
+                        npo02__Household__r.npo02__MailingCountry__c,
+                        npo02__Household__c,npo02__Household__r.Number_of_Household_Members__c
+                FROM Contact
+                WHERE Id = :contactHavingAnAddress.Id
         ];
         return createdContacts;
     }
@@ -248,7 +251,7 @@ public with sharing class HH_Households_TEST {
         Test.stopTest();
 
         //Then
-        Contact[] createdContacts = getCreatedContacts2(con);
+        Contact[] createdContacts = getCreatedContacts(con);
         NPSP_Contact firstNpspContact = new NPSP_Contact(con);
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         NPSP_Household firstNpspHousehold = new NPSP_Household(createdContacts[0]
@@ -268,7 +271,7 @@ public with sharing class HH_Households_TEST {
         update con;
 
         //Then
-        createdContacts = getCreatedContacts2(con);
+        createdContacts = getCreatedContacts(con);
         NPSP_Contact createdNpspContact = new NPSP_Contact(con);
 
         //Assert Contact no longer belongs to the first Household
@@ -300,7 +303,7 @@ public with sharing class HH_Households_TEST {
         Test.stopTest();
 
         //Then
-        Contact[] createdContacts = getCreatedContacts2(aContactWithAnAddress);
+        Contact[] createdContacts = getCreatedContacts(aContactWithAnAddress);
         system.assertEquals(null,createdContacts[0].npo02__household__c);
     }
 
