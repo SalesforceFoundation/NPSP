@@ -60,7 +60,7 @@ public with sharing class HH_Households_TEST {
         //Then
         NPSP_Contact npspContactHavingAnAddress = new NPSP_Contact(contactHavingAnAddress);
         Contact[] createdContacts = getCreatedContacts(contactHavingAnAddress);
-        Id firstHouseholdId = createdContacts[0].npo02__household__c;
+        Id firstHouseholdId = createdContacts[0].npo02__Household__c;
         NPSP_Household firstNpspHousehold =
                 new NPSP_Household(createdContacts[0].npo02__Household__r);
 
@@ -68,23 +68,30 @@ public with sharing class HH_Households_TEST {
                 .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
                 'The Household should have inherited its Address from the Contact.');
 
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
-        system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
+        System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__Household__r.Name);
+        System.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
 
-        //blank out the HH
-        contactHavingAnAddress.npo02__household__c = null;
+        //SECOND TEST:
+        //Given a Contact leaves a Household
+        contactHavingAnAddress.npo02__Household__c = null;
+
+        //When
         update contactHavingAnAddress;
 
+        //Then
         createdContacts = getCreatedContacts(contactHavingAnAddress);
+        NPSP_Household secondNpspHousehold =
+                new NPSP_Household(createdContacts[0].npo02__Household__r);
 
-        system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
-        system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
-        system.assertEquals(city,createdContacts[0].npo02__household__r.npo02__MailingCity__c);
-        system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
-        system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
-        system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
-        system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
+        System.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__Household__c);
+
+        System.assert(secondNpspHousehold.mailingAddress()
+                .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
+                'The Contacts new Household should have inherited its Address from the ' +
+                        'Contact.');
+
+        System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__Household__r.Name);
+        System.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
     }
 
     private static Contact[] getCreatedContacts(Contact contactHavingAnAddress) {
