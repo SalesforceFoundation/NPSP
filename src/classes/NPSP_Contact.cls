@@ -117,12 +117,20 @@ public inherited sharing class NPSP_Contact {
         return contact.AccountId;
     }
 
+    public Id householdId() {
+        return contact.npo02__household__c;
+    }
+
     public Boolean isMovingToANewHousehold() {
         return accountChanged() && !isAddressEmpty();
     }
 
     public void mailingAddress(NPSP_Address npspAddress) {
         npspAddress.copyOntoSObject(contact, 'Mailing','npe01__Primary_Address_Type__c');
+    }
+
+    public NPSP_Address mailingAddress() {
+        return new NPSP_Address(contact);
     }
 
     public Boolean mailingAddressIsDifferentFrom(NPSP_Address npspAddress) {

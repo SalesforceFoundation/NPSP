@@ -56,9 +56,8 @@ public with sharing class HH_Households_TEST {
         Contact contactHavingAnAddress = getContactHavingAnAddress();
         insert contactHavingAnAddress;
         Test.stopTest();
-
         //Then
-        Contact[] createdContacts = getCreatedContacts(contactHavingAnAddress);
+        Contact[] createdContacts = getCreatedContacts2(contactHavingAnAddress);
 
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -73,10 +72,7 @@ public with sharing class HH_Households_TEST {
         contactHavingAnAddress.npo02__household__c = null;
         update contactHavingAnAddress;
 
-        createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
-            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
-            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
-            from Contact where id=:contactHavingAnAddress.id];
+        createdContacts = getCreatedContacts3(contactHavingAnAddress);
 
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -86,6 +82,28 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
+    }
+
+    private static Contact[] getCreatedContacts3(Contact contactHavingAnAddress) {
+        Contact[] createdContacts = [
+                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
+                from Contact
+                where id = :contactHavingAnAddress.id
+        ];
+        return createdContacts;
+    }
+
+    private static Contact[] getCreatedContacts2(Contact contactHavingAnAddress) {
+        Contact[] createdContacts = [
+                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
+                from Contact
+                where id = :contactHavingAnAddress.id
+        ];
+        return createdContacts;
     }
 
     /*********************************************************************************************************
@@ -234,33 +252,48 @@ public with sharing class HH_Households_TEST {
         setHouseholdSettingsToAllIndividuals();
         setOrgContactSettingsToOneToOne();
 
+        //When
         Contact con = getContactHavingAnAddress();
         Test.startTest();
         insert con;
         Test.stopTest();
+
+        //Then
         Contact[] createdContacts = getCreatedContacts(con);
-
+        NPSP_Contact firstNpspContact = new NPSP_Contact(con);
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
-        system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
-        system.assertEquals(city,createdContacts[0].npo02__household__r.npo02__MailingCity__c);
-        system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
-        system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
-        system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
+        NPSP_Household firstNpspHousehold = new NPSP_Household(createdContacts[0]
+                .npo02__Household__r);
 
-        //blank out the HH
+        //Assert that the Contact's Household's Address is same as what was on Contact
+        System.assert(firstNpspHousehold.mailingAddress()
+                .isEqualTo(firstNpspContact.mailingAddress(), false));
+
+        //Assert HouseholdName value
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX, createdContacts[0].npo02__household__r.Name);
+
+        //SECOND TEST:
+        //Given the Contact leaves the Household
         con.npo02__household__c = null;
+        //When
         update con;
 
+        //Then
         createdContacts = getCreatedContacts(con);
+        NPSP_Contact createdNpspContact = new NPSP_Contact(con);
 
-        system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
-        system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
-        system.assertEquals(city,createdContacts[0].npo02__household__r.npo02__MailingCity__c);
-        system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
-        system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
-        system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
+        //Assert Contact no longer belongs to the first Household
+        system.assertNotEquals(firstHouseholdId, createdNpspContact.householdId());
+        NPSP_Household secondNpspHousehold = new NPSP_Household(createdContacts[0]
+                .npo02__Household__r);
+
+        //Assert Contact (has a new Household?) with same initial Address from Contact
+        System.assert(secondNpspHousehold.mailingAddress()
+                .isEqualTo(createdNpspContact.mailingAddress(), false));
+
+        //Assert Household Name for new (second) Household?
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS +
+                CAO_Constants.HH_NAME_SUFFIX, createdContacts[0].npo02__household__r.Name);
     }
 
     /*********************************************************************************************************

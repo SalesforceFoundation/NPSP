@@ -80,6 +80,15 @@ public inherited sharing class NPSP_Address {
         copyFromSObject(acc, 'Billing', null);
     }
 
+    public NPSP_Address(npo02__Household__c household) {
+        this.addr = new Address__c();
+        addr.MailingStreet__c = household.npo02__MailingStreet__c;
+        addr.MailingCity__c = household.npo02__MailingCity__c;
+        addr.MailingState__c = household.npo02__MailingState__c;
+        addr.MailingPostalCode__c = household.npo02__MailingPostalCode__c;
+        addr.MailingCountry__c = household.npo02__MailingCountry__c;
+    }
+
     public Boolean isSeasonal() {
         return (this.addr.Seasonal_Start_Month__c != null && this.addr.Seasonal_Start_Day__c != null &&
                 this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
