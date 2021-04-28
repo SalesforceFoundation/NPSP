@@ -71,7 +71,7 @@ public with sharing class HH_Households_TEST {
         System.assertEquals(
                 CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,
                 firstNpspHousehold.name());
-        System.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
+        System.assertEquals(1, firstNpspHousehold.numberOfHouseholdMembers());
 
         //SECOND TEST:
         //Given a Contact leaves a Household
@@ -93,7 +93,9 @@ public with sharing class HH_Households_TEST {
                 'The Contacts new Household should have inherited its Address from the ' +
                         'Contact.');
 
-        System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__Household__r.Name);
+        System.assertEquals(
+                CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,
+                secondNpspHousehold.name());
         System.assertEquals(1, secondNpspHousehold.numberOfHouseholdMembers());
     }
 
