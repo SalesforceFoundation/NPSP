@@ -84,6 +84,14 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
 
+    private static Contact[] getCreatedContacts(Contact con) {
+        Contact[] createdContacts = [
+                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id = :con.id];
+        return createdContacts;
+    }
+
     private static Contact[] getCreatedContacts2(Contact contactHavingAnAddress) {
         Contact[] createdContacts = [
                 select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
@@ -328,11 +336,6 @@ public with sharing class HH_Households_TEST {
                 new npe01__Contacts_and_Orgs_Settings__c (
                         npe01__Account_Processor__c =
                                 CAO_Constants.ONE_TO_ONE_PROCESSOR));
-    }
-
-    private static Contact[] getCreatedContacts(Contact con) {
-        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id = :con.id];
-        return createdContacts;
     }
 
     static String street = '2345 Elm St.';
