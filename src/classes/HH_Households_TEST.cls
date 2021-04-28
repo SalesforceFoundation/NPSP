@@ -91,7 +91,7 @@ public with sharing class HH_Households_TEST {
                         'Contact.');
 
         System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__Household__r.Name);
-        System.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
+        System.assertEquals(1, secondNpspHousehold.numberOfHouseholdMembers());
     }
 
     private static Contact[] getCreatedContacts(Contact contactHavingAnAddress) {

@@ -34,13 +34,19 @@
 */
 public inherited sharing class NPSP_Household {
 
+    private npo02__Household__c record;
     NPSP_Address mailingAddress;
 
-    public NPSP_Household(npo02__Household__c household){
-       this.mailingAddress = new NPSP_Address(household);
+    public NPSP_Household(npo02__Household__c household) {
+        this.record = household;
+        this.mailingAddress = new NPSP_Address(household);
     }
 
-    public NPSP_Address mailingAddress(){
+    public NPSP_Address mailingAddress() {
         return mailingAddress;
+    }
+
+    public Integer numberOfHouseholdMembers() {
+        return (Integer) record?.Number_of_Household_Members__c;
     }
 }
