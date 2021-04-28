@@ -83,7 +83,8 @@ public with sharing class HH_Households_TEST {
         NPSP_Household secondNpspHousehold =
                 new NPSP_Household(createdContacts[0].npo02__Household__r);
 
-        System.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__Household__c);
+        System.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__Household__c,
+                'The Contact should no longer be in the first Household.');
 
         System.assert(secondNpspHousehold.mailingAddress()
                 .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
