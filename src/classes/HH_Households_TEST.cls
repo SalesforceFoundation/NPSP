@@ -72,7 +72,7 @@ public with sharing class HH_Households_TEST {
         contactHavingAnAddress.npo02__household__c = null;
         update contactHavingAnAddress;
 
-        createdContacts = getCreatedContacts3(contactHavingAnAddress);
+        createdContacts = getCreatedContacts2(contactHavingAnAddress);
 
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -82,17 +82,6 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
-    }
-
-    private static Contact[] getCreatedContacts3(Contact contactHavingAnAddress) {
-        Contact[] createdContacts = [
-                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
-                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
-                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
-                from Contact
-                where id = :contactHavingAnAddress.id
-        ];
-        return createdContacts;
     }
 
     private static Contact[] getCreatedContacts2(Contact contactHavingAnAddress) {
