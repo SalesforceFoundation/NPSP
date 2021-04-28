@@ -59,6 +59,7 @@ import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
+const PAYMENT_METHOD_ACH = 'ACH';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 
@@ -343,7 +344,7 @@ export default class rd2EntryForm extends LightningElement {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
         this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
-        if (this.isElevateCustomer && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED){
+        if (this.isElevateCustomer && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED) {
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
             if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
@@ -359,7 +360,7 @@ export default class rd2EntryForm extends LightningElement {
 
             this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
                 && this.isEdit 
-                && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+                && (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH)
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
@@ -374,13 +375,18 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
+        const isOpenSchedule = (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN);
+        const isValidPaymentMethod = (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH);
+        const currencySupported = this.isCurrencySupported();
+        const countrySupported = this.isCountrySupported();
+        debugger;
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && !this.isEdit
-            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
-            && (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN)
-            && this.isCurrencySupported()
-            && this.isCountrySupported());
+            && isValidPaymentMethod
+            && isOpenSchedule
+            && currencySupported
+            && countrySupported);
 
         this.populateCardHolderName();
     }
@@ -588,6 +594,7 @@ export default class rd2EntryForm extends LightningElement {
 
         const responseBody = JSON.parse(response.body);
         const cardData = responseBody.cardData;
+        const achData = responseBody.achData;
 
         if (response.statusCode === HTTP_CODES.Created) {
             // Track the commitment Id to log an error if the RD insert fails as well as
@@ -602,6 +609,10 @@ export default class rd2EntryForm extends LightningElement {
             allFields[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
             allFields[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
             allFields[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
+        }
+
+        if(achData) {
+            // populate ACH commitment fields
         }
     }
 
@@ -869,7 +880,11 @@ export default class rd2EntryForm extends LightningElement {
             ? {}
             : this.customFieldsComponent.returnValues();
 
-        return { ...scheduleFields, ...donorFields, ...customFields, ...this.returnValues() };
+        const paymentMethod = {
+            [FIELD_PAYMENT_METHOD.fieldApiName]: this.paymentMethod
+        }
+
+        return { ...scheduleFields, ...donorFields, ...customFields, ...paymentMethod, ...this.returnValues() };
     }
 
     /***
