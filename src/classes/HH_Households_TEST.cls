@@ -84,14 +84,6 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
 
-    private static Contact[] getCreatedContacts(Contact con) {
-        Contact[] createdContacts = [
-                select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
-                        npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
-                        npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id = :con.id];
-        return createdContacts;
-    }
-
     private static Contact[] getCreatedContacts2(Contact contactHavingAnAddress) {
         Contact[] createdContacts = [
                 select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
@@ -256,7 +248,7 @@ public with sharing class HH_Households_TEST {
         Test.stopTest();
 
         //Then
-        Contact[] createdContacts = getCreatedContacts(con);
+        Contact[] createdContacts = getCreatedContacts2(con);
         NPSP_Contact firstNpspContact = new NPSP_Contact(con);
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         NPSP_Household firstNpspHousehold = new NPSP_Household(createdContacts[0]
@@ -276,7 +268,7 @@ public with sharing class HH_Households_TEST {
         update con;
 
         //Then
-        createdContacts = getCreatedContacts(con);
+        createdContacts = getCreatedContacts2(con);
         NPSP_Contact createdNpspContact = new NPSP_Contact(con);
 
         //Assert Contact no longer belongs to the first Household
@@ -308,7 +300,7 @@ public with sharing class HH_Households_TEST {
         Test.stopTest();
 
         //Then
-        Contact[] createdContacts = getCreatedContacts(aContactWithAnAddress);
+        Contact[] createdContacts = getCreatedContacts2(aContactWithAnAddress);
         system.assertEquals(null,createdContacts[0].npo02__household__c);
     }
 
