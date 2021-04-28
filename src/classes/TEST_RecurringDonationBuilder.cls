@@ -200,8 +200,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Amount
-    * @param amount Amount
+    * @description Sets Payment Method
+    * @param payMethod Payment Method
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withPaymentMethod(String payMethod) {

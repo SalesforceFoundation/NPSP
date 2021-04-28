@@ -78,7 +78,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCampaign(rdCampaign.Id)
-            .withPaymentMethod('CARD')
+            .withPaymentMethod('Credit Card')
             .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
@@ -221,13 +221,31 @@ private with sharing class PS_CommitmentRequest_TEST {
 
 
     @IsTest
-    private static void requestBodyCanSetPaymentMethod() {
+    private static void requestBodyCanSetPaymentMethodCard() {
         PS_CommitmentRequest.RequestBody commitmentBody = new PS_CommitmentRequest.RequestBody();
-        System.assertEquals(null, commitmentBody.paymentMethodType);
+        System.assertEquals(null,
+                commitmentBody.paymentMethodType,
+                'Expected payment method for new RequestBody to be empty');
 
-        commitmentBody.withPaymentMethodType('ACH');
+        String CARD_PICKLIST_API_VALUE = 'Credit Card';
 
-        System.assertEquals('ACH', commitmentBody.paymentMethodType);
+        commitmentBody.withPaymentMethodType(CARD_PICKLIST_API_VALUE);
+
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(),
+                commitmentBody.paymentMethodType,
+                'Expected payment method to be CARD');
+    }
+
+    @IsTest
+    private static void requestBodyCanSetPaymentMethodACH() {
+        PS_CommitmentRequest.RequestBody commitmentBody = new PS_CommitmentRequest.RequestBody();
+        String ACH_PICKLIST_API_VALUE = 'ACH';
+
+        commitmentBody.withPaymentMethodType(ACH_PICKLIST_API_VALUE);
+
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(),
+                commitmentBody.paymentMethodType,
+                'Expected payment method to be ACH');
     }
 
 

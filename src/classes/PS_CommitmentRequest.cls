@@ -423,7 +423,7 @@ public inherited sharing class PS_CommitmentRequest {
                 when 'ACH' {
                     this.paymentMethodType = PaymentMethod.ACH.name();
                 }
-                when 'CARD' {
+                when 'Credit Card' {
                     this.paymentMethodType = PaymentMethod.CARD.name();
                 }
             }
