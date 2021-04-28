@@ -35,7 +35,7 @@
 public inherited sharing class NPSP_Household {
 
     private npo02__Household__c record;
-    NPSP_Address mailingAddress;
+    private NPSP_Address mailingAddress;
 
     public NPSP_Household(npo02__Household__c household) {
         this.record = household;
@@ -49,4 +49,9 @@ public inherited sharing class NPSP_Household {
     public Integer numberOfHouseholdMembers() {
         return (Integer) record?.Number_of_Household_Members__c;
     }
+
+    public String name() {
+        return record?.Name;
+    }
+
 }

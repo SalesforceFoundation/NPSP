@@ -68,7 +68,9 @@ public with sharing class HH_Households_TEST {
                 .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
                 'The Household should have inherited its Address from the Contact.');
 
-        System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__Household__r.Name);
+        System.assertEquals(
+                CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,
+                firstNpspHousehold.name());
         System.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
 
         //SECOND TEST:
