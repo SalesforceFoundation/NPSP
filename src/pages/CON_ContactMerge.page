@@ -321,8 +321,8 @@
                                                         <apex:inputCheckbox value="{!item.selected}"/>
                                                         <span class="slds-checkbox_faux" id="fauxCBSelect"></span>
                                                         <span class="slds-form-element__label slds-assistive-text">
-                                                            {!$Label.conMergeSelectContact} <apex:outputText
-                                                                    value="{!item.contactRecord.Name}"/>
+                                                            {!$Label.conMergeSelectContact}
+                                                            <apex:outputText value="{!item.contactRecord.Name}"/>
                                                         </span>
                                                     </label>
                                                 </td>
