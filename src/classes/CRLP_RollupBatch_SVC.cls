@@ -91,7 +91,7 @@ public class CRLP_RollupBatch_SVC {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
 
-        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType) ||
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
             jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
 
             // TODO -- How to get Accounts that require using this method for Soft Credits??
