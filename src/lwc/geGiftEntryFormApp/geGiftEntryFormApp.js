@@ -253,27 +253,26 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleProcessBatch() {
-        // TODO refresh batch totals here
-        this._hasDisplayedExpiredAuthorizationWarning = false;
-        try {
-            if(this.isElevateCustomer) {
-                this.batchTotals = await BatchTotals(this.batchId);
-            }
-        } catch (error) {
-            handleError(error);
-        } finally {
-            if (this.shouldDisplayExpiredAuthorizationWarning()) {
-                this.displayExpiredAuthorizationWarningModalForProcessAndDryRun();
-            } else {
-                if (this.isProcessable) {
-                    this.navigateToDataImportProcessingPage();
-                } else {
-                    if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-                        handleError(geBatchGiftsExpectedTotalsMessage);
-                    } else {
-                        handleError(geBatchGiftsExpectedCountOrTotalMessage);
-                    }
+        if (this.isProcessable) {
+            try {
+                if(this.isElevateCustomer) {
+                    this._hasDisplayedExpiredAuthorizationWarning = false;
+                    this.batchTotals = await BatchTotals(this.batchId);
                 }
+            } catch (error) {
+                handleError(error);
+            } finally {
+                if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun();
+                } else {
+                    this.navigateToDataImportProcessingPage();
+                }
+            }
+        } else {
+            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+                handleError(geBatchGiftsExpectedTotalsMessage);
+            } else {
+                handleError(geBatchGiftsExpectedCountOrTotalMessage);
             }
         }
     }
@@ -362,7 +361,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
                 JSON.stringify(event.payload.values);
 
-            const recordInput = {fields};
+            const recordInput = { fields };
             const lastModifiedDate =
                 this.batch.data.lastModifiedDate;
             const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
@@ -408,7 +407,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const detail = {
             modalProperties: {
                 componentName: 'geModalPrompt',
-                showCloseButton: false
+                showCloseButton: true
             },
             componentProperties
         };
@@ -431,19 +430,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
                 'button1Text': 'Proceed Anyway',
-                'button1Action': () => {
-                    let url = '/apex/' + this.bdiDataImportPageName +
-                        '?batchId=' + this.recordId + '&retURL=' + this.recordId;
-
-                    this[NavigationMixin.Navigate]({
-                        type: 'standard__webPage',
-                        attributes: {
-                            url: url
-                        }
-                    },
-                    true);
-                },
-                'button2Text': this.CUSTOM_LABELS.commonCancel
+                'button1Action': () => { this.navigateToDataImportProcessingPage(); },
+                'button2Text': this.CUSTOM_LABELS.commonOkay
             });
         this._hasDisplayedExpiredAuthorizationWarning = true;
     }    
