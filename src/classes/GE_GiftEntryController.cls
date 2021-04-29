@@ -211,9 +211,13 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateCaptureGroup chargeCaptureGroup(Id batchId) {
-        ElevateCaptureGroup captureGroup = captureGroupService.chargeCaptureGroup(batchId);
-        return captureGroup;
+    public static void processPaymentsFor(Id batchId) {
+       try {
+           NPSP_Batch batch = new NPSP_Batch(batchId);
+           batch.processPayments();
+       } catch (AuraHandledException ex) {
+           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+       }
     }
 
     /**

@@ -30,6 +30,7 @@
 public with sharing class ElevateCaptureGroupResponse {
     public String id;
     public List<Errors> errors;
+    public String status;
 
     public class Errors {
         public String message;
@@ -38,6 +39,10 @@ public with sharing class ElevateCaptureGroupResponse {
 
     public String id() {
         return id;
+    }
+
+    public String status() {
+        return status;
     }
 
     public List<Errors> errors() {

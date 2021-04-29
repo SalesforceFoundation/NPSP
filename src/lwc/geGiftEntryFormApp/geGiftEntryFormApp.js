@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace } from 'c/utilCommon';
+import {validateJSONString, format, getNamespace, showToast} from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -16,7 +16,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
-import chargeCaptureGroup from '@salesforce/apex/GE_GiftEntryController.chargeCaptureGroup';
+import processPayments from '@salesforce/apex/GE_GiftEntryController.processPaymentsFor';
 
 /*******************************************************************************
 * @description Schema imports
@@ -252,9 +252,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    handleProcessBatch() {
+    async handleProcessBatch() {
         if (this.isProcessable()) {
-            this.chargeCaptureGroup();
+            await this.chargeCaptureGroup();
             this.navigateToDataImportProcessingPage();
         } else {
             if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
@@ -266,13 +266,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async chargeCaptureGroup() {
-        try {
-            await chargeCaptureGroup({
+        await processPayments({
                 batchId: this.batchId
-            })
-        } catch (ex) {
-            handleError(ex);
-        }
+        });
     }
 
     navigateToDataImportProcessingPage() {
