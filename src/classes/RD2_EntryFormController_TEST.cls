@@ -43,6 +43,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final String CARD_LAST_4 = '1234';
     private static final String CARD_EXPIRATION_MONTH = '11';
     private static final String CARD_EXPIRATION_YEAR = '2019';
+    private static final String EVENT_VERSION = '1';
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
@@ -240,6 +241,8 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
         System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode,
             'The response status code should match: ' + response);
+        System.assert(response.body.contains('"version":"'+EVENT_VERSION+'"'),
+            'The response should include the version: ' + response);
     }
 
     /**
@@ -387,6 +390,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static String mockSuccessResponseBody() {
         return '{"id":"' + COMMITMENT_ID
             + '","status":"ACTIVE","statusReason":"COMMITMENT_CREATED"'
+            + ',"version":"' + EVENT_VERSION +'"'
             + ',"cardData":{"last4":"' + CARD_LAST_4
             + '","expirationMonth":"' + CARD_EXPIRATION_MONTH
             + '","expirationYear":"' + CARD_EXPIRATION_YEAR
