@@ -290,7 +290,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleAccountChange(event) {
-        this.donorAccountId = event.detail;
+        this.organizationAccountId = event.detail;
     }
 
     /**
@@ -307,8 +307,8 @@ export default class rd2EntryForm extends LightningElement {
     wiredGetRecord({error, data}) {
         if (data) {
             this.contact.MailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
-            this.contact.LastName = getFieldValue(data, CONTACT_LAST_NAME);
-            this.contact.FirstName = getFieldValue(data, CONTACT_FIRST_NAME);
+            this.contactLastName = getFieldValue(data, CONTACT_LAST_NAME);
+            this.contactFirstName = getFieldValue(data, CONTACT_FIRST_NAME);
 
             this.handleElevateWidgetDisplay();
 
@@ -318,11 +318,11 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     @wire(getRecord, {
-        recordId: '$donorAccountId', fields: [ACCOUNT_NAME]
+        recordId: '$organizationAccountId', fields: [ACCOUNT_NAME]
     })
     wiredGetDonorAccount({error, data}) {
         if(data) {
-            this.donorAccountName = getFieldValue(data, ACCOUNT_NAME);
+            this.organizationAccountName = getFieldValue(data, ACCOUNT_NAME);
         } else if(error) {
             this.handleError(error);
         }
