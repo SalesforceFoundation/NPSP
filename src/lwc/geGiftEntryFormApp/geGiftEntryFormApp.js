@@ -419,7 +419,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
-                'button1Text': this.CUSTOM_LABELS.commonOkay
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonOkay,
+                        variant: 'neutral'
+                    }]
             });
         this._hasDisplayedExpiredAuthorizationWarning = true;
     }
@@ -429,9 +433,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
-                'button1Text': 'Proceed Anyway',
-                'button1Action': () => { this.navigateToDataImportProcessingPage(); },
-                'button2Text': this.CUSTOM_LABELS.commonOkay
+                'buttons': 
+                    [{
+                        label: 'Proceed Anyway',
+                        variant: 'neutral',
+                        action: () => { this.navigateToDataImportProcessingPage(); }
+                    },
+                    {
+                        label: this.CUSTOM_LABELS.commonCancel,
+                        variant: 'brand'      
+                    }]
             });
         this._hasDisplayedExpiredAuthorizationWarning = true;
     }    

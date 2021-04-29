@@ -2413,7 +2413,10 @@ export default class GeFormRenderer extends LightningElement{
                 'variant': 'error',
                 'title': this.CUSTOM_LABELS.commonCriticalError,
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-                'button1Text': this.CUSTOM_LABELS.commonReviewForm
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonReviewForm        
+                    }]
             });
 
         const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
