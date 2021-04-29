@@ -292,29 +292,21 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
-        //todo: remove
-        Address__c addrOld = (Address__c) other.getRecord();
         if (addr == null || other == null) {
             return false;
         }
         if (includeAddressType) {
-            if (!addressService.equalsCaseSensitive(
-                    getType(), other.getType())) {
+            if (!addressService.equalsCaseSensitive(getType(), other.getType())) {
                 return false;
             }
         }
-        return (addressService.equalsCaseSensitive(
-                street(), other.street()) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingStreet2__c, addrOld.MailingStreet2__c) &&
-                addressService.equalsCaseSensitive(
-                        city(), other.city()) &&
-                addressService.equalsCaseSensitive(
-                        state(), other.state()) &&
-                addressService.equalsCaseSensitive(
-                        postalCode(), other.postalCode()) &&
-                addressService.equalsCaseSensitive(
-                        country(), other.country()));
+        return (addressService.equalsCaseSensitive(street(), other.street()) &&
+                addressService.equalsCaseSensitive(street2(), other.street2()) &&
+                addressService.equalsCaseSensitive(city(), other.city()) &&
+                addressService.equalsCaseSensitive(state(), other.state()) &&
+                addressService.equalsCaseSensitive(postalCode(), other.postalCode()) &&
+                addressService.equalsCaseSensitive(country(), other.country())
+        );
     }
 
     /*******************************************************************************************************
@@ -492,6 +484,10 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public String street() {
         return addr.MailingStreet__c;
+    }
+
+    public String street2() {
+        return addr.MailingStreet2__c;
     }
 
     public String city() {

@@ -1,6 +1,7 @@
 public interface IAddress {
 
     String street();
+    String street2();
     String city();
     String state();
     String postalCode();
