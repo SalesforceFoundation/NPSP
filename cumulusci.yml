@@ -31,11 +31,6 @@ project:
                 9:
                     class_path: cumulusci.tasks.release_notes.parser.InstallLinkParser
                     title: Installation Info
-    apexdoc:
-        homepage: ApexDocContent/homepage.htm
-        banner: ApexDocContent/projectheader.htm
-        branch: gh-pages
-        repo_dir: ApexDocumentation
     dependencies:
         # npo02 (includes npe01)
         - github: https://github.com/SalesforceFoundation/Households
