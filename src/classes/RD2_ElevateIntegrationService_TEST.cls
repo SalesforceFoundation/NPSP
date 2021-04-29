@@ -624,7 +624,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
-    * @description Should determine that event is from Elevate when Last Elevate Event Played changes
+    * @description Should determine that event is from Elevate when Last Elevate Version Played changes
     */
     @isTest
     private static void shouldIdentifyEventFromElevateWhenLastElevateEventPlayedChanged() {
@@ -632,10 +632,12 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
+            .withLastElevateVersionPlayed(2)
             .build();
-        npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateEventPlayed__c = 'event-v2';
-        oldRd.LastElevateEventPlayed__c = 'event-v1';
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
+            .build();
 
         System.assertEquals(
             true,
@@ -644,7 +646,28 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
-    * @description Should determine that event is from Elevate when Last Elevate Event Played changes
+    * @description Should determine that event is from Elevate when Last Elevate Version Played changes
+    */
+    @isTest
+    private static void shouldIdentifyEventFromElevateWhenLastElevateEventPlayedChangeFromNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .withLastElevateVersionPlayed(2)
+            .build();
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+
+        System.assertEquals(
+            true,
+            RD2_ElevateIntegrationService.isElevateEvent(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the event is from Elevate');
+    }
+
+    /***
+    * @description Should determine that event is not from Elevate when Last Elevate Version Played is unchanged
     */
     @isTest
     private static void shouldIdentifyEventNotFromElevateWhenLastElevateEventPlayedUnchanged() {
@@ -652,10 +675,30 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
             .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
             .build();
         npe03__Recurring_Donation__c oldRd = newRd.clone();
-        newRd.LastElevateEventPlayed__c = 'event-v1';
-        oldRd.LastElevateEventPlayed__c = 'event-v1';
+
+        System.assertEquals(
+            false,
+            RD2_ElevateIntegrationService.isElevateEvent(new RD2_RecurringDonation(newRd), new RD2_RecurringDonation(oldRd)),
+            'Should recognize the event is not from Elevate');
+    }
+
+    /***
+    * @description Should determine that event is not from Elevate when Last Elevate Version Played is unchanged
+    */
+    @isTest
+    private static void shouldIdentifyEventNotFromElevateWhenLastElevateEventPlayedNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c newRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .build();
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatusClosed()
+            .withLastElevateVersionPlayed(1)
+            .build();
 
         System.assertEquals(
             false,
