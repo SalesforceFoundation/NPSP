@@ -32,7 +32,7 @@
 * @date 2021
 * @description Address entity class in NPSP.
 */
-public inherited sharing class NPSP_Address {
+public inherited sharing class NPSP_Address implements IAddress {
 
     private Address__c addr;
 
@@ -291,8 +291,9 @@ public inherited sharing class NPSP_Address {
 
     }
 
-    public Boolean isEqualTo(NPSP_Address other, Boolean includeAddressType) {
-        Address__c addrOld = other.getRecord();
+    public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
+        //todo: remove
+        Address__c addrOld = (Address__c) other.getRecord();
         if (addr == null || addrOld == null) {
             return false;
         }
@@ -489,11 +490,23 @@ public inherited sharing class NPSP_Address {
         addr.MailingState__c = state;
     }
 
-    public String mailingState() {
+    public String street() {
+        return addr.MailingStreet__c;
+    }
+
+    public String city() {
+        return addr.MailingCity__c;
+    }
+
+    public String state() {
         return addr.MailingState__c;
     }
 
-    public String mailingCountry() {
+    public String postalCode() {
+        return addr.MailingPostalCode__c;
+    }
+
+    public String country() {
         return addr.MailingCountry__c;
     }
 
