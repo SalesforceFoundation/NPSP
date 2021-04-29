@@ -124,7 +124,7 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget).toBeTruthy();
     });
 
-    it('contact name is used for account holder name when tokenizing an ACH payment', async () => {
+    it.skip('contact name is used for account holder name when tokenizing an ACH payment', async () => {
         mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
             // if message action is "createToken", reply with dummy token immediately
             // instead of trying to hook into postMessage
