@@ -75,17 +75,14 @@ describe('c-rd2-entry-form', () => {
     it('elevate customer selects Credit Card payment method then widget displayed', async () => {
         const element = createRd2EntryForm();
 
-        mockGetInputFieldValue.mockImplementation(field => {
-            return field.fieldName === FIELD_RECURRING_TYPE.fieldApiName ? 'Open' : field._value;
-        });
-
         await flushPromises();
 
         await setupWireMocksForElevate();
+        setDefaultInputFieldValues(element);
 
         const paymentMethodField = selectPaymentMethodField(element);
-
-        dispatchChangeEvent(paymentMethodField, 'Credit Card');
+        paymentMethodField.value = 'Credit Card';
+        dispatchChangeEvent(paymentMethodField);
 
         await flushPromises();
 
@@ -96,30 +93,14 @@ describe('c-rd2-entry-form', () => {
 
     it('elevate customer selects ACH payment method then widget displayed', async () => {
         const element = createRd2EntryForm();
-        setInputFieldDefaultValues();
         await flushPromises();
 
         await setupWireMocksForElevate();
-
-        const paymentMethodField = selectPaymentMethodField(element);
-
-        dispatchChangeEvent(paymentMethodField, 'ACH');
-
-        await flushPromises();
-
-        const elevateWidget = selectElevateWidget(element);
-        expect(elevateWidget).toBeTruthy();
-    });
-
-    it('elevate customer selects ACH payment method then widget displayed', async () => {
-        const element = createRd2EntryForm();
-        setInputFieldDefaultValues();
-        await flushPromises();
-
-        await setupWireMocksForElevate();
+        setDefaultInputFieldValues(element);
 
         const paymentMethodField = selectPaymentMethodField(element);
         paymentMethodField.value = 'ACH';
+        dispatchChangeEvent(paymentMethodField);
 
         await flushPromises();
 
@@ -127,25 +108,44 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget).toBeTruthy();
     });
 
-    it.skip('contact name is used for account holder name when tokenizing an ACH payment', async () => {
+    it('elevate customer selects ACH payment method then widget displayed', async () => {
+        const element = createRd2EntryForm();
+        await flushPromises();
+
+        await setupWireMocksForElevate();
+        setDefaultInputFieldValues(element);
+
+        const paymentMethodField = selectPaymentMethodField(element);
+        paymentMethodField.value = 'ACH';
+        dispatchChangeEvent(paymentMethodField);
+        await flushPromises();
+
+        const elevateWidget = selectElevateWidget(element);
+        expect(elevateWidget).toBeTruthy();
+    });
+
+    it('contact name is used for account holder name when tokenizing an ACH payment', async () => {
         mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
             // if message action is "createToken", reply with dummy token immediately
             // instead of trying to hook into postMessage
             // see sendIframeMessage in mocked psElevateTokenHandler
-            if (message.action === 'createToken') {
+            if (message.action === 'createToken' || message.action === 'createAchToken') {
                 return {"type": "post__npsp", "token": "a_dummy_token"};
             }
         });
 
         const element = createRd2EntryForm();
-        setInputFieldDefaultValues();
+
         await flushPromises();
 
         await setupWireMocksForElevate();
 
-        const paymentMethodField = selectPaymentMethodField(element);
+        setDefaultInputFieldValues(element);
 
+        const paymentMethodField = selectPaymentMethodField(element);
         paymentMethodField.value = 'ACH';
+        dispatchChangeEvent(paymentMethodField);
+
         const donorSection = selectDonorSection(element);
         const lookupField = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="contactLookup"]');
         const amountField = element.shadowRoot.querySelector('lightning-input-field[data-id="amountField"]');
@@ -156,9 +156,11 @@ describe('c-rd2-entry-form', () => {
 
         const elevateWidget = selectElevateWidget(element);
         expect(elevateWidget).toBeTruthy();
+        expect(elevateWidget.payerFirstName).toBe('John');
 
         const saveButton = selectSaveButton(element);
         saveButton.click();
+
         await flushPromises();
 
         expect(mockGetIframeReply).toHaveBeenCalledWith(
@@ -186,23 +188,37 @@ const createRd2EntryForm = () => {
     return element;
 }
 
-const setInputFieldDefaultValues = () => {
-    mockGetInputFieldValue.mockImplementation(field => {
-        switch (field.fieldName) {
-            case FIELD_RECURRING_TYPE.fieldApiName:
-                return 'Open';
-            case FIELD_DATE_ESTABLISHED.fieldApiName:
-                return '2021-02-03';
-            case FIELD_START_DATE.fieldApiName:
-                return '2021-02-03';
-            default:
-                return field._value;
-        }
-    });
+const setDefaultInputFieldValues = (element) => {
+    const recurringTypeField = selectRecurringTypeField(element);
+    recurringTypeField.value = 'Open';
+    recurringTypeField.dispatchEvent(new CustomEvent('change'));
+
+    const dateEstablishedField = selectDateEstablishedField(element);
+    dateEstablishedField.value = '2021-02-03';
+    dateEstablishedField.dispatchEvent(new CustomEvent('change'));
+
+    const startDateField = selectStartDateField(element);
+    startDateField.value = '2021-02-03';
+    startDateField.dispatchEvent(new CustomEvent('change'));
 }
 
 const selectSaveButton = (element) => {
     return element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
+}
+
+const selectRecurringTypeField = (element) => {
+    const scheduleSection = selectScheduleSection(element);
+    return scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="RecurringType__c"]');
+}
+
+const selectStartDateField = (element) => {
+    const scheduleSection = selectScheduleSection(element);
+    return scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="startDate"]');
+}
+
+const selectDateEstablishedField = (element) => {
+    const donorSection = selectDonorSection(element);
+    return donorSection.shadowRoot.querySelector('lightning-input-field[data-id="dateEstablished"]')
 }
 
 const selectPaymentMethodField = (element) => {
@@ -217,7 +233,12 @@ const selectElevateWidget = (element) => {
     return element.shadowRoot.querySelector('c-rd2-elevate-credit-card-form');
 }
 
-const dispatchChangeEvent = (element, value) => {
+const selectScheduleSection = (element) => {
+    return element.shadowRoot.querySelector('c-rd2-entry-form-schedule-section');
+}
+
+const dispatchChangeEvent = (element) => {
+    const { value } = element;
     element.dispatchEvent(new CustomEvent('change', { detail: { value } }));
 }
 
@@ -244,11 +265,11 @@ const setupWireMocksForElevate = async () => {
 
     getRecord.emit(accountGetRecord, config => {
         return config.recordId === '001fakeAccountId';
-    })
+    });
 
     getRecord.emit(contactGetRecord, config => {
         return config.recordId === '001fakeContactId';
-    })
+    });
 
     await flushPromises();
 }

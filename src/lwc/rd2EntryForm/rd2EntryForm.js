@@ -129,7 +129,6 @@ export default class rd2EntryForm extends LightningElement {
     isElevateCustomer = false;
     commitmentId = null;
     paymentMethodToken;
-    cardholderName;
 
     contactId;
     donorAccountId;

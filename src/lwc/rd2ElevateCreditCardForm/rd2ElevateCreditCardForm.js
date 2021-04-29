@@ -21,7 +21,8 @@ import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
-const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+const CREATE_TOKEN_ACTION = 'createToken';
+const CREATE_ACH_TOKEN_ACTION = 'createAchToken';
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form

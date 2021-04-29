@@ -48,7 +48,11 @@
                     </template>
 
                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.dateEstablished}>
-                        <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                        <lightning-input-field
+                                field-name={fields.dateEstablished.apiName}
+                                required
+                                data-id="dateEstablished"
+                        >
                         </lightning-input-field>
                     </lightning-layout-item>
 

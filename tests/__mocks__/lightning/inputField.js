@@ -5,10 +5,6 @@
  */
 import { LightningElement, api } from 'lwc';
 
-export const mockGetInputFieldValue = jest.fn().mockImplementation((field) => {
-    return field._value;
-});
-
 export const mockReportValidity = jest.fn().mockImplementation(function () {
     if (this.required && (this.value === undefined || this.value === null || this.value === '')) {
         return false;
@@ -22,13 +18,7 @@ export default class InputField extends LightningElement {
     @api fieldName;
     @api readOnly;
     @api required;
-    @api get value() {
-        return mockGetInputFieldValue(this);
-    }
-    set value(v) {
-        this._value = v;
-        this.dispatchEvent(new CustomEvent('change', { detail: { value: v }} ));
-    }
+    @api value;
     @api variant;
     @api clean() {}
     @api reportValidity = mockReportValidity;
@@ -37,6 +27,4 @@ export default class InputField extends LightningElement {
     @api updateDependentField() {}
     @api wirePicklistValues() {}
     @api wireRecordUi() {}
-
-    _value;
 }
