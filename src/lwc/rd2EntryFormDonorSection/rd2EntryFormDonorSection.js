@@ -176,21 +176,18 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * the contact lookup value change itself.
      */
     handleContactChange(event) {
-        this.dispatchContactChangeEvent(event.target.value);
+        this.dispatchLookupChangeEvent('contactchange', event.target.value);
     }
 
-    /**
-     * @description Dispatches an event to the encompassing parent component 
-     * when the contact value changes either due to the Donor Type change or
-     * the contact lookup value change itself.
-     * Note: The contact Id is propagated to the parent component
-     * regardless if Donor Type is Contact or Account.
-     */
-    dispatchContactChangeEvent(contactId) {
+    handleAccountChange(event) {
+        this.dispatchLookupChangeEvent('accountchange', event.target.value);
+    }
+
+    dispatchLookupChangeEvent(eventName, recordId) {
         this.dispatchEvent(new CustomEvent(
-            'contactchange',
-            { detail: contactId }
-        ));
+            eventName,
+            { detail: recordId }
+        ))
     }
 
     /**
@@ -205,7 +202,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             this.accountRequired = false;
             this.contactRequired = true;
         }
-        this.dispatchContactChangeEvent(null);
+        this.dispatchLookupChangeEvent('contactchange', null);
     }
 
     /**
