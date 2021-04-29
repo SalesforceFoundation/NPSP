@@ -22,6 +22,7 @@ import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donatio
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
+import FIELD_LAST_ELEVATE_VERSION from '@salesforce/schema/npe03__Recurring_Donation__c.LastElevateVersionPlayed__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -596,6 +597,9 @@ export default class rd2EntryForm extends LightningElement {
             this.commitmentId = responseBody.id;
 
             allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
+
+            // Set the version so we can compare later and know when an update occurs
+            allFields[FIELD_LAST_ELEVATE_VERSION.fieldApiName] = responseBody.version;
         }
 
         if (cardData) {
