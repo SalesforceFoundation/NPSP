@@ -55,6 +55,10 @@ import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCom
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
+import CONTACT_FIRST_NAME from '@salesforce/schema/Contact.FirstName';
+import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
+import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
+
 
 const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
@@ -128,6 +132,7 @@ export default class rd2EntryForm extends LightningElement {
     cardholderName;
 
     contactId;
+    donorAccountId;
     contact = {
         MailingCountry: null
     };
@@ -285,18 +290,41 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    handleAccountChange(event) {
+        this.donorAccountId = event.detail;
+    }
+
     /**
      * @description Retrieves the contact data whenever a contact is changed.
      * Data is not refreshed when the contact Id is null.
      */
-    @wire(getRecord, { recordId: '$contactId', fields: MAILING_COUNTRY_FIELD })
-    wiredGetRecord({ error, data }) {
+    @wire(getRecord, {
+        recordId: '$contactId', fields: [
+            MAILING_COUNTRY_FIELD,
+            CONTACT_LAST_NAME,
+            CONTACT_FIRST_NAME
+        ]
+    })
+    wiredGetRecord({error, data}) {
         if (data) {
-            this.contact.MailingCountry = data.fields.MailingCountry.value;
+            this.contact.MailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
+            this.contact.LastName = getFieldValue(data, CONTACT_LAST_NAME);
+            this.contact.FirstName = getFieldValue(data, CONTACT_FIRST_NAME);
 
             this.handleElevateWidgetDisplay();
 
         } else if (error) {
+            this.handleError(error);
+        }
+    }
+
+    @wire(getRecord, {
+        recordId: '$donorAccountId', fields: [ACCOUNT_NAME]
+    })
+    wiredGetDonorAccount({error, data}) {
+        if(data) {
+            this.donorAccountName = getFieldValue(data, ACCOUNT_NAME);
+        } else if(error) {
             this.handleError(error);
         }
     }
@@ -379,7 +407,6 @@ export default class rd2EntryForm extends LightningElement {
         const isValidPaymentMethod = (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH);
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
-        debugger;
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && !this.isEdit
