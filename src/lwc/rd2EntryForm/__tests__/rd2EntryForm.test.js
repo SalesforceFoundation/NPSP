@@ -7,17 +7,23 @@ import RD2_EntryFormMissingPermissions from '@salesforce/label/c.RD2_EntryFormMi
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
+import FIELD_DATE_ESTABLISHED from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Date_Established__c';
+import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
-import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
+import { mockGetIframeReply } from "c/psElevateTokenHandler";
 const recurringSettingsResponse = require('./data/getRecurringSettings.json');
 const recurringDonationObjectInfo = require('./data/recurringDonationObjectInfo.json');
 const installmentPeriodPicklistValues = require('./data/installmentPeriodPicklistValues.json');
 const dayOfMonthPicklistValues = require('./data/dayOfMonthPicklistValues.json');
 const contactPartialDescribe = require('./data/contactPartialDescribe.json');
 const accountPartialDescribe = require('./data/accountPartialDescribe.json');
+const contactGetRecord = require('./data/contactGetRecord.json');
+const accountGetRecord = require('./data/accountGetRecord.json');
 
 const mockScrollIntoView = jest.fn();
 
@@ -36,6 +42,8 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions'
 );
 
 
+
+
 describe('c-rd2-entry-form', () => {
 
     beforeEach(() => {
@@ -51,8 +59,7 @@ describe('c-rd2-entry-form', () => {
 
     it('displays an error when user does not have required permissions', async () => {
         hasRequiredFieldPermissions.mockResolvedValue(false);
-        const element = createElement('c-rd2-entry-form', { is: Rd2EntryForm })
-        document.body.appendChild(element);
+        const element = createRd2EntryForm();
 
         await flushPromises();
 
@@ -66,8 +73,7 @@ describe('c-rd2-entry-form', () => {
     });
 
     it('elevate customer selects Credit Card payment method then widget displayed', async () => {
-        const element = createElement('c-rd2-entry-form', { is: Rd2EntryForm });
-        document.body.appendChild(element);
+        const element = createRd2EntryForm();
 
         mockGetInputFieldValue.mockImplementation(field => {
             return field.fieldName === FIELD_RECURRING_TYPE.fieldApiName ? 'Open' : field._value;
@@ -89,13 +95,8 @@ describe('c-rd2-entry-form', () => {
     });
 
     it('elevate customer selects ACH payment method then widget displayed', async () => {
-        const element = createElement('c-rd2-entry-form', { is: Rd2EntryForm });
-        document.body.appendChild(element);
-
-        mockGetInputFieldValue.mockImplementation(field => {
-            return field.fieldName === FIELD_RECURRING_TYPE.fieldApiName ? 'Open' : field._value;
-        });
-
+        const element = createRd2EntryForm();
+        setInputFieldDefaultValues();
         await flushPromises();
 
         await setupWireMocksForElevate();
@@ -110,9 +111,95 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget).toBeTruthy();
     });
 
+    it('elevate customer selects ACH payment method then widget displayed', async () => {
+        const element = createRd2EntryForm();
+        setInputFieldDefaultValues();
+        await flushPromises();
 
+        await setupWireMocksForElevate();
+
+        const paymentMethodField = selectPaymentMethodField(element);
+        paymentMethodField.value = 'ACH';
+
+        await flushPromises();
+
+        const elevateWidget = selectElevateWidget(element);
+        expect(elevateWidget).toBeTruthy();
+    });
+
+    it.skip('contact name is used for account holder name when tokenizing an ACH payment', async () => {
+        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+            // if message action is "createToken", reply with dummy token immediately
+            // instead of trying to hook into postMessage
+            // see sendIframeMessage in mocked psElevateTokenHandler
+            if (message.action === 'createToken') {
+                return {"type": "post__npsp", "token": "a_dummy_token"};
+            }
+        });
+
+        const element = createRd2EntryForm();
+        setInputFieldDefaultValues();
+        await flushPromises();
+
+        await setupWireMocksForElevate();
+
+        const paymentMethodField = selectPaymentMethodField(element);
+
+        paymentMethodField.value = 'ACH';
+        const donorSection = selectDonorSection(element);
+        const lookupField = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="contactLookup"]');
+        const amountField = element.shadowRoot.querySelector('lightning-input-field[data-id="amountField"]');
+        lookupField.value = '001fakeContactId';
+        amountField.value = 1.00;
+
+        await flushPromises();
+
+        const elevateWidget = selectElevateWidget(element);
+        expect(elevateWidget).toBeTruthy();
+
+        const saveButton = selectSaveButton(element);
+        saveButton.click();
+        await flushPromises();
+
+        expect(mockGetIframeReply).toHaveBeenCalledWith(
+            expect.any(HTMLIFrameElement), // iframe
+            expect.objectContaining({ // message
+                action: "createAchToken",
+                params: {
+                    nameOnAccount: "John Smith",
+                    accountHolder: {
+                        type: "INDIVIDUAL",
+                        firstName: "John",
+                        lastName: "Smith"
+                    }
+                }
+            }),
+            expect.anything() // vf origin
+        );
+    });
 
 });
+
+const createRd2EntryForm = () => {
+    const element = createElement('c-rd2-entry-form', {is: Rd2EntryForm});
+    document.body.appendChild(element);
+    return element;
+}
+
+const setInputFieldDefaultValues = () => {
+    mockGetInputFieldValue.mockImplementation(field => {
+        switch (field.fieldName) {
+            case FIELD_RECURRING_TYPE.fieldApiName:
+                return 'Open';
+            case FIELD_DATE_ESTABLISHED.fieldApiName:
+                return '2021-02-03';
+            case FIELD_START_DATE.fieldApiName:
+                return '2021-02-03';
+            default:
+                return field._value;
+        }
+    });
+}
 
 const selectSaveButton = (element) => {
     return element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
@@ -122,8 +209,8 @@ const selectPaymentMethodField = (element) => {
     return element.shadowRoot.querySelector('lightning-input-field[data-id="paymentMethod"]');
 }
 
-const selectScheduleSection = (element) => {
-    return element.shadowRoot.querySelector('c-rd2-entry-form-schedule-section');
+const selectDonorSection = (element) => {
+    return element.shadowRoot.querySelector('c-rd2-entry-form-donor-section');
 }
 
 const selectElevateWidget = (element) => {
@@ -154,6 +241,14 @@ const setupWireMocksForElevate = async () => {
     getPicklistValues.emit(dayOfMonthPicklistValues, config => {
         return config.fieldApiName.fieldApiName === FIELD_DAY_OF_MONTH.fieldApiName;
     });
+
+    getRecord.emit(accountGetRecord, config => {
+        return config.recordId === '001fakeAccountId';
+    })
+
+    getRecord.emit(contactGetRecord, config => {
+        return config.recordId === '001fakeContactId';
+    })
 
     await flushPromises();
 }
