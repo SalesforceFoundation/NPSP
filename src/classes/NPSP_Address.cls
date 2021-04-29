@@ -294,27 +294,27 @@ public inherited sharing class NPSP_Address implements IAddress {
     public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
         //todo: remove
         Address__c addrOld = (Address__c) other.getRecord();
-        if (addr == null || addrOld == null) {
+        if (addr == null || other == null) {
             return false;
         }
         if (includeAddressType) {
             if (!addressService.equalsCaseSensitive(
-                    addr.Address_Type__c, addrOld.Address_Type__c)) {
+                    getType(), other.getType())) {
                 return false;
             }
         }
         return (addressService.equalsCaseSensitive(
-                addr.MailingStreet__c, addrOld.MailingStreet__c) &&
+                street(), other.street()) &&
                 addressService.equalsCaseSensitive(
                         addr.MailingStreet2__c, addrOld.MailingStreet2__c) &&
                 addressService.equalsCaseSensitive(
-                        addr.MailingCity__c, addrOld.MailingCity__c) &&
+                        city(), other.city()) &&
                 addressService.equalsCaseSensitive(
-                        addr.MailingState__c, addrOld.MailingState__c) &&
+                        state(), other.state()) &&
                 addressService.equalsCaseSensitive(
-                        addr.MailingPostalCode__c, addrOld.MailingPostalCode__c) &&
+                        postalCode(), other.postalCode()) &&
                 addressService.equalsCaseSensitive(
-                        addr.MailingCountry__c, addrOld.MailingCountry__c));
+                        country(), other.country()));
     }
 
     /*******************************************************************************************************
