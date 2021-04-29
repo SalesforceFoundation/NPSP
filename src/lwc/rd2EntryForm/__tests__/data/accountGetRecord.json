@@ -1,0 +1,22 @@
+{
+  "apiName": "Account",
+  "childRelationships": {},
+  "id": "001fakeAccountId",
+  "lastModifiedById": "00563000007oQ64AAE",
+  "lastModifiedDate": "2021-04-26T16:41:53.000Z",
+  "recordTypeId": "01263000002IHJZAA4",
+  "recordTypeInfo": {
+    "available": true,
+    "defaultRecordTypeMapping": false,
+    "master": false,
+    "name": "Household Account",
+    "recordTypeId": "01263000002IHJZAA4"
+  },
+  "systemModstamp": "2021-04-26T16:41:53.000Z",
+  "fields": {
+    "Name": {
+      "displayValue": null,
+      "value": "Smith Household"
+    }
+  }
+}

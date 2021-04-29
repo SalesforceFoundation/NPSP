@@ -58,12 +58,17 @@
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
-
-                                <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}
-                                    parent-s-object-type={rdSettings.parentSObjectType} data-id="donorComponent"
-                                    onerrorevent={handleChildComponentError} oncontactchange={handleContactChange} if:true={isSettingReady}>
+                                <c-rd2-entry-form-donor-section
+                                        record-id={recordId}
+                                        parent-id={parentId}
+                                        parent-s-object-type={rdSettings.parentSObjectType}
+                                        data-id="donorComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        oncontactchange={handleContactChange}
+                                        onaccountchange={handleAccountChange}
+                                        if:true={isSettingReady}
+                                >
                                 </c-rd2-entry-form-donor-section>
-
                             </div>
                         </div>
 
@@ -101,7 +106,11 @@
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
                                         if:true={fields.amount}>
-                                        <lightning-input-field field-name={fields.amount.apiName} required>
+                                        <lightning-input-field
+                                                field-name={fields.amount.apiName}
+                                                data-id="amountField"
+                                                required
+                                        >
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
