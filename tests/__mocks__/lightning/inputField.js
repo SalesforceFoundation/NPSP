@@ -9,6 +9,13 @@ export const mockGetInputFieldValue = jest.fn().mockImplementation((field) => {
     return field._value;
 });
 
+export const mockReportValidity = jest.fn().mockImplementation(function () {
+    if (this.required && (this.value === undefined || this.value === null || this.value === '')) {
+        return false;
+    }
+    return true;
+});
+
 export default class InputField extends LightningElement {
     @api dirty;
     @api disabled;
@@ -20,10 +27,11 @@ export default class InputField extends LightningElement {
     }
     set value(v) {
         this._value = v;
+        this.dispatchEvent(new CustomEvent('change', { detail: { value: v }} ));
     }
     @api variant;
     @api clean() {}
-    @api reportValidity() {}
+    @api reportValidity = mockReportValidity;
     @api reset() {}
     @api setErrors() {}
     @api updateDependentField() {}
