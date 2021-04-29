@@ -87,12 +87,21 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * @return Boolean
     */
     public static Boolean isElevateEvent(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
-        String elevateEvent = rd.getSObject().LastElevateEventPlayed__c;
+        Integer newElevateEventVersion = returnElevateVersionAsInteger(rd);
+        Integer oldElevateEventVersion = returnElevateVersionAsInteger(oldRd);
 
-        Boolean isElevateEventChanged = String.isNotBlank(elevateEvent)
-            && elevateEvent != oldRd.getSObject().LastElevateEventPlayed__c;
+        Boolean isElevateEventChanged = newElevateEventVersion > oldElevateEventVersion;
 
         return isElevateEventChanged;
+    }
+
+    /***
+    * @description Returns the Last Elevate Version Played as an Integer. If null, return -1
+    * @return Integer
+    */
+    private static Integer returnElevateVersionAsInteger (RD2_RecurringDonation rd){
+        return rd.getSObject().LastElevateVersionPlayed__c != null 
+            ? Integer.valueOf(rd.getSObject().LastElevateVersionPlayed__c) : -1;
     }
 
     /***
