@@ -87,7 +87,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.batchTotals = await BatchTotals(this.batchId);
 
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
-            this.displayExpiredAuthorizationWarningModal();
+            this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
     }
 
@@ -224,7 +224,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
-        return this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+        return this.isElevateCustomer
+            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }
 
@@ -251,14 +252,28 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    handleProcessBatch() {
-        if (this.isProcessable) {
-            this.navigateToDataImportProcessingPage();
-        } else {
-            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-                handleError(geBatchGiftsExpectedTotalsMessage);
+    async handleProcessBatch() {
+        // TODO refresh batch totals here
+        this._hasDisplayedExpiredAuthorizationWarning = false;
+        try {
+            if(this.isElevateCustomer) {
+                this.batchTotals = await BatchTotals(this.batchId);
+            }
+        } catch (error) {
+            handleError(error);
+        } finally {
+            if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                this.displayExpiredAuthorizationWarningModalForProcessAndDryRun();
             } else {
-                handleError(geBatchGiftsExpectedCountOrTotalMessage);
+                if (this.isProcessable) {
+                    this.navigateToDataImportProcessingPage();
+                } else {
+                    if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+                        handleError(geBatchGiftsExpectedTotalsMessage);
+                    } else {
+                        handleError(geBatchGiftsExpectedCountOrTotalMessage);
+                    }
+                }
             }
         }
     }
@@ -389,22 +404,49 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }));
     }
 
-    displayExpiredAuthorizationWarningModal() {
+    displayModalPrompt(componentProperties) {
         const detail = {
             modalProperties: {
                 componentName: 'geModalPrompt',
                 showCloseButton: false
             },
-            componentProperties: {
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));      
+    }
+
+    displayExpiredAuthorizationWarningModalForPageLoad() {
+        this.displayModalPrompt ({
                 'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
-                'buttonText': this.CUSTOM_LABELS.commonOkay
-            },
-        };
-        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
-        this._hasDisplayedExpiredAuthorizationWarning = true;        
+                'button1Text': this.CUSTOM_LABELS.commonOkay
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
     }
+
+    displayExpiredAuthorizationWarningModalForProcessAndDryRun() {
+        this.displayModalPrompt ({
+                'variant': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'button1Text': 'Proceed Anyway',
+                'button1Action': () => {
+                    let url = '/apex/' + this.bdiDataImportPageName +
+                        '?batchId=' + this.recordId + '&retURL=' + this.recordId;
+
+                    this[NavigationMixin.Navigate]({
+                        type: 'standard__webPage',
+                        attributes: {
+                            url: url
+                        }
+                    },
+                    true);
+                },
+                'button2Text': this.CUSTOM_LABELS.commonCancel
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
+    }    
 
     buildModalConfigSelectColumns(available, selected) {
         const modalConfig = {

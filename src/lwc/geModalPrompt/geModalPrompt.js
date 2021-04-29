@@ -7,7 +7,26 @@ export default class geModalPrompt extends LightningElement {
     @api variant = '';
     @api title;
     @api message;
-    @api buttonText;
+    @api button1Text;
+    @api button1Action;
+    @api button2Text;
+    @api button2Action;
+
+    handleButton1Click() {
+        if (!isEmpty(this.button1Action)) {
+            this.button1Action();
+        } else {
+            this.handleCloseModal();
+        }
+    }
+
+    handleButton2Click() {
+        if (!isEmpty(this.button2Action)) {
+            this.button2Action();
+        } else {
+            this.handleCloseModal();
+        }
+    }    
 
     handleCloseModal() {
         fireEvent(this.pageRef, 'geModalCloseEvent', {});
