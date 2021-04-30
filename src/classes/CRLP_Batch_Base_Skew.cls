@@ -256,6 +256,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * @description Build the Skew Mode Query string for the current job
      * @return SOQL
      */
+    @TestVisible
     private String buildQueryLocatorAsSOQL() {
         // TODO Refactor this to use the CRLP_QueryBuilder class
         // Not including OppPayment as the child object because including the sub-query in an LDV org
