@@ -15,7 +15,8 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
-import {isNull} from "c/util";
+import {isNull} from 'c/util';
+import { ACCOUNT_HOLDER_BANK_TYPES } from 'c/geConstants';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -247,7 +248,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                 accountHolder: {
                     firstName: this.payerFirstName,
                     lastName: this.payerLastName,
-                    type: this.achAccountType
+                    type: this.achAccountType,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
                 nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
             };

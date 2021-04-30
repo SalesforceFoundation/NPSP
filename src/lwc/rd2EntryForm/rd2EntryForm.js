@@ -381,7 +381,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if the Credit Card widget should be displayed on Edit
+    * @description Checks if the Elevate Widget should be displayed on Edit
     */
     evaluateElevateEditWidget(paymentMethod) {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
@@ -413,7 +413,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if the credit card widget should be displayed.
+    * @description Checks if the Elevate widget should be displayed.
     * The Elevate widget is applicable to new RDs only for now.
     * @param paymentMethod Payment method
     */
