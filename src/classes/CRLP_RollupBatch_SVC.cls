@@ -127,10 +127,9 @@ public class CRLP_RollupBatch_SVC {
      * @return True or False
      */
     public static Boolean doesRecordNeedSkewRollupMethod(Id recordId, CRLP_RollupProcessingOptions.RollupType jobType) {
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations)
+        {
             String objName = recordId.getSobjectType().getDescribe().getName();
             String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID AND ('
                 + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c')
