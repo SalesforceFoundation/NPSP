@@ -156,18 +156,26 @@ describe('c-rd2-entry-form', () => {
 
         await flushPromises();
 
+        const EXPECTED_PARAMS = {
+            nameOnAccount: "John Smith",
+            accountHolder: {
+                type: "INDIVIDUAL",
+                firstName: "John",
+                lastName: "Smith"
+            }
+        };
+
+        expect(mockGetIframeReply).toHaveBeenCalled();
+        const actualMessage = mockGetIframeReply.mock.calls[0][1];
+        const serializedParams = actualMessage.params;
+        const deserializedParams = JSON.parse(serializedParams);
+        expect(deserializedParams).toMatchObject(EXPECTED_PARAMS);
+
         expect(mockGetIframeReply).toHaveBeenCalledWith(
             expect.any(HTMLIFrameElement), // iframe
-            expect.objectContaining({ // message
+            expect.objectContaining({
                 action: "createAchToken",
-                params: {
-                    nameOnAccount: "John Smith",
-                    accountHolder: {
-                        type: "INDIVIDUAL",
-                        firstName: "John",
-                        lastName: "Smith"
-                    }
-                }
+                params: expect.any(String)
             }),
             undefined
         );
@@ -216,18 +224,26 @@ describe('c-rd2-entry-form', () => {
 
         await flushPromises();
 
+        const EXPECTED_PARAMS = {
+            nameOnAccount: "Donor Organization",
+            accountHolder: {
+                type: "BUSINESS",
+                businessName: "Anthropy",
+                accountName: "Donor Organization"
+            }
+        };
+
+        expect(mockGetIframeReply).toHaveBeenCalled();
+        const actualMessage = mockGetIframeReply.mock.calls[0][1];
+        const serializedParams = actualMessage.params;
+        const deserializedParams = JSON.parse(serializedParams);
+        expect(deserializedParams).toMatchObject(EXPECTED_PARAMS);
+
         expect(mockGetIframeReply).toHaveBeenCalledWith(
             expect.any(HTMLIFrameElement), // iframe
             expect.objectContaining({ // message
                 action: "createAchToken",
-                params: {
-                    nameOnAccount: "Donor Organization",
-                    accountHolder: {
-                        type: "BUSINESS",
-                        businessName: "Anthropy",
-                        accountName: "Donor Organization"
-                    }
-                }
+                params: expect.any(String)
             }),
             undefined
         );

@@ -180,7 +180,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     requestAchToken(iframe) {
-        const params = this.getAchParams();
+        const params = JSON.stringify(this.getAchParams());
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
