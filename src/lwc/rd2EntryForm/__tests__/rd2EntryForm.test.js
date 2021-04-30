@@ -135,17 +135,22 @@ describe('c-rd2-entry-form', () => {
         await setupWireMocksForElevate();
 
         controller.setDefaultInputFieldValues();
-
-        controller.paymentMethod().changeValue('ACH');
-
         controller.contactLookup().changeValue('001fakeContactId');
+        await flushPromises();
+
+        getRecord.emit(contactGetRecord, config => {
+            return config.recordId === '001fakeContactId';
+        });
+
         controller.amount().changeValue(1.00);
+        controller.paymentMethod().changeValue('ACH');
 
         await flushPromises();
 
         const elevateWidget = controller.elevateWidget();
         expect(elevateWidget).toBeTruthy();
         expect(elevateWidget.payerFirstName).toBe('John');
+        expect(elevateWidget.payerLastName).toBe('Smith');
 
         const saveButton = selectSaveButton(element);
         saveButton.click();
@@ -165,7 +170,7 @@ describe('c-rd2-entry-form', () => {
                     }
                 }
             }),
-            expect.anything() // vf origin
+            undefined
         );
     });
 
@@ -202,15 +207,7 @@ const setupWireMocksForElevate = async () => {
         return config.fieldApiName.fieldApiName === FIELD_DAY_OF_MONTH.fieldApiName;
     });
 
-    getRecord.emit(accountGetRecord, config => {
-        return config.recordId === '001fakeAccountId';
-    });
-
-    getRecord.emit(contactGetRecord, config => {
-        return config.recordId === '001fakeContactId';
-    });
-
-    await flushPromises();
+     await flushPromises();
 }
 
 

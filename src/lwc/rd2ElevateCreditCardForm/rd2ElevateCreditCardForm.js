@@ -55,6 +55,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api cardLastFourLabel;
     @api cardExpDate;
 
+    @api payerOrganizationName;
+    @api payerFirstName;
+    @api payerLastName;
+
     @api
     get paymentMethod() {
         return this._paymentMethod;
@@ -157,11 +161,36 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-        const params = { nameOnCard : this.getCardholderName() };
+        if(this.paymentMethod === 'Credit Card') {
+            return this.requestCardToken(iframe);
+        } else if(this.paymentMethod === 'ACH') {
+            return this.requestAchToken(iframe);
+        }
+    }
+
+    requestCardToken(iframe) {
+        const params = {nameOnCard: this.getCardholderName()};
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
-            eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+            eventAction: CREATE_TOKEN_ACTION,
+            handleError: this.handleError,
+        });
+    }
+
+    requestAchToken(iframe) {
+        const params = {
+            accountHolder: {
+                firstName: this.payerFirstName,
+                lastName: this.payerLastName,
+                type: "INDIVIDUAL"
+            },
+            nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
+        };
+        return tokenHandler.requestToken({
+            iframe: iframe,
+            tokenizeParameters: params,
+            eventAction: CREATE_ACH_TOKEN_ACTION,
             handleError: this.handleError,
         });
     }
