@@ -78,6 +78,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this._isEditPayment = value;
     }
 
+    get isAchPayment() {
+        return this._paymentMethod === 'ACH';
+    }
+
     get nextPaymentDonationDateMessage() {
         return (this.nextDonationDate == null)
         ? ''
