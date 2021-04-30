@@ -283,7 +283,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals('WEB', achData.achCode, 'ACH Code should be WEB');
         System.assertEquals('INDIVIDUAL', achData.type, 'AchData type should be INDIVIDUAL');
         System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
-
+        System.assertEquals(contact.firstName + ' ' + contact.lastName, requestBody.accountName);
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
@@ -312,7 +312,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         insert rdCampaign;
 
         Contact contact = getContact();
-        Account account = getAccount();
+        Account account = getOrganizationAccount(contact.Id);
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
                 .withAccount(account.Id)
                 .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
@@ -323,14 +323,15 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_CommitmentRequest request = new PS_CommitmentRequest();
         PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
 
-        System.assertEquals(account.Name, requestBody.firstName, 'First Name should match');
-        System.assertEquals(account.Name, requestBody.lastName, 'Last Name should match');
+        System.assertEquals(account.Name, requestBody.firstName, 'First Name should be company name');
+        System.assertEquals(account.Name, requestBody.lastName, 'Last Name should be company name');
+        System.assertEquals(account.Name, requestBody.accountName, 'Commitment request account name should be company name');
         System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
         System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
         PS_CommitmentRequest.AchData achData = requestBody.achData;
 
         System.assertEquals('WEB', achData.achCode, 'AchData Code should be WEB');
-        System.assertEquals('BUSINESS', achData.type, 'AchData type should be INDIVIDUAL');
+        System.assertEquals('BUSINESS', achData.type, 'AchData type should be BUSINESS');
         System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
     }
 
@@ -353,10 +354,12 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withDayOfMonth(String.valueOf(DAY_OF_MONTH));
     }
 
-    private static Account getAccount() {
+    private static Account getOrganizationAccount(Id contactId) {
         return [
                 SELECT Name, npe01__One2OneContact__c
                 FROM Account
+                WHERE npe01__One2OneContact__c = :contactId
+                AND npe01__SYSTEMIsIndividual__c = false
                 LIMIT 1
         ];
     }

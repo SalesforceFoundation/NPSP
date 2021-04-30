@@ -363,6 +363,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String id;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String merchantId;
         public String gatewayId;
         public String type;
@@ -454,7 +455,18 @@ public inherited sharing class PS_CommitmentRequest {
             this.achData.bankType = 'CHECKING';
             this.achData.consent = 'true';
             this.achData.type = accountHolderType.name();
+            this.accountName = getAccountName(accountHolderType);
             return this;
+        }
+
+        private String getAccountName(DonorType accountHolderType) {
+            if (accountHolderType == DonorType.INDIVIDUAL) {
+                return String.format('{0} {1}', new List<String>{
+                        this.firstName, this.lastName
+                });
+            } else {
+                return this.lastName;
+            }
         }
 
         /**
