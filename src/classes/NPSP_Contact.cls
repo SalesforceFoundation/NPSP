@@ -74,8 +74,8 @@ public inherited sharing class NPSP_Contact {
         return this.contact;
     }
 
-    public void currentAddress(NPSP_Address npspAddress) {
-        contact.Current_Address__c = npspAddress.getRecord().Id;
+    public void currentAddress(IAddress npspAddress) {
+        contact.Current_Address__c = npspAddress.getRecord()?.Id;
         mailingAddress(npspAddress);
     }
 
@@ -127,19 +127,19 @@ public inherited sharing class NPSP_Contact {
         return accountChanged() && !isAddressEmpty();
     }
 
-    public void mailingAddress(NPSP_Address npspAddress) {
+    public void mailingAddress(IAddress anAddress) {
         addressService.copyOntoSObject(
-                npspAddress, contact, 'Mailing',
+                anAddress, contact, 'Mailing',
                 'npe01__Primary_Address_Type__c');
-        this.mailingAddress = npspAddress;
+        this.mailingAddress = anAddress;
     }
 
     public IAddress mailingAddress() {
         return mailingAddress;
     }
 
-    public Boolean mailingAddressIsDifferentFrom(NPSP_Address npspAddress) {
-       return addressService.isSObjectAddressDifferent(contact, npspAddress.getRecord());
+    public Boolean mailingAddressIsDifferentFrom(IAddress anAddress) {
+       return addressService.isSObjectAddressDifferent(contact, anAddress);
     }
 
 }

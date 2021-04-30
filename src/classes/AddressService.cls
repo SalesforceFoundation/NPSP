@@ -74,7 +74,8 @@ public inherited sharing class AddressService {
     * @param addr Address
     * @return boolean. true if any of the Address fields on the Contact are different from this Address record
     */
-    public Boolean isSObjectAddressDifferent(SObject sObj, Address__c addr) {
+    public Boolean isSObjectAddressDifferent(SObject sObj, IAddress anAddress) {
+        Address__c addr = (Address__c) anAddress.getRecord();
         if (sObj == null || addr == null) {
             return false;
         }
