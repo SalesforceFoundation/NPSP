@@ -132,7 +132,7 @@ public with sharing class HH_Households_TEST {
     static testMethod void testNewAndUpdateContactWithHHNaming() {
 
         setupHouseholdSettings();
-        setContactSettingsToOneToOne();
+        setOrgContactSettingsToOneToOne();
         setupHouseholdNamingSettings();
 
         Contact con = dummyContact();
@@ -166,12 +166,6 @@ public with sharing class HH_Households_TEST {
     private static void setupHouseholdNamingSettings() {
         UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
                 dummyHouseholdNamingSettings());
-    }
-
-    private static void setContactSettingsToOneToOne() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (
-                        npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
     }
 
     private static void setupHouseholdSettings() {
