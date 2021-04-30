@@ -50,6 +50,11 @@ public inherited sharing class PS_CommitmentRequest {
         ACH
     }
 
+    public enum DonorType {
+        INDIVIDUAL,
+        BUSINESS
+    }
+
     /***
      * @description Commitment Status
      * Commitments start in the NEW state, then transition to ACTIVE after the first payment.
@@ -200,7 +205,11 @@ public inherited sharing class PS_CommitmentRequest {
             .withMetadata(metadata)
             .withProductMetaData(productMetaData);
 
-        setDonorInfo(reqBody, rd);
+
+        DonorType accountHolderType = setDonorInfo(reqBody, rd);
+        if(reqBody.isACH()) {
+            reqBody.withACHAccountHolder(accountHolderType);
+        }
         setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
 
         return reqBody;
@@ -227,24 +236,27 @@ public inherited sharing class PS_CommitmentRequest {
     * @return void
     */
     @TestVisible
-    private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+    private DonorType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
         Contact contactDonor = rd.npe03__Contact__c != null
             ? getContact(rd.npe03__Contact__c)
             : null;
 
-        Boolean isHouseholdDonor = contactDonor != null
-            && (
-                rd.npe03__Organization__c == null
-                || rd.npe03__Organization__c == contactDonor.AccountId
-            );
+        Boolean isHouseholdDonor = donorIsInHousehold(contactDonor, rd.npe03__Organization__c);
 
         if (isHouseholdDonor) {
             reqBody.withDonor(contactDonor);
-
+            return DonorType.INDIVIDUAL;
         } else {
             Account organization = getAccount(rd.npe03__Organization__c);
             reqBody.withDonor(organization);
+            return DonorType.BUSINESS;
         }
+    }
+
+    private Boolean donorIsInHousehold(Contact contactDonor, Id rdAccountId) {
+        Boolean isHouseholdDonor = contactDonor != null
+                && ( rdAccountId == null || rdAccountId == contactDonor.AccountId);
+        return isHouseholdDonor;
     }
 
     /**
@@ -333,6 +345,12 @@ public inherited sharing class PS_CommitmentRequest {
         return accounts.isEmpty() ? null : accounts[0];
     }
 
+    public with sharing class AchData {
+        public String achCode;
+        public String consent;
+        public String type;
+        public String bankType;
+    }
 
 
     /***
@@ -352,7 +370,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String paymentMethodToken;
         public String currencyCode;
         public List<Schedule> schedules;
-
+        public AchData achData;
         /***
          * Optional properties
          */
@@ -427,6 +445,15 @@ public inherited sharing class PS_CommitmentRequest {
                     this.paymentMethodType = PaymentMethod.CARD.name();
                 }
             }
+            return this;
+        }
+
+        public RequestBody withACHAccountHolder(DonorType accountHolderType) {
+            this.achData = new AchData();
+            this.achData.achCode = 'WEB';
+            this.achData.bankType = 'CHECKING';
+            this.achData.consent = 'true';
+            this.achData.type = accountHolderType.name();
             return this;
         }
 
@@ -507,6 +534,10 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public String getAsJson() {
             return JSON.serialize(this);
+        }
+
+        public Boolean isACH() {
+            return this.paymentMethodType == PaymentMethod.ACH.name();
         }
     }
 

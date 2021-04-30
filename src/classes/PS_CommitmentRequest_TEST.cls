@@ -59,6 +59,10 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
+
+        Account account = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        account.npe01__One2OneContact__c = contact.Id;
+        insert account;
     }
 
     /****
@@ -75,7 +79,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         insert rdCampaign;
 
         Contact contact = getContact();
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCampaign(rdCampaign.Id)
             .withPaymentMethod('Credit Card')
@@ -124,8 +129,9 @@ private with sharing class PS_CommitmentRequest_TEST {
         RD2_ScheduleService.currentDate = CURRENT_DATE;
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
+        Contact contact = getContact();
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(contact.Id)
             .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
             .withInstallmentFrequency(1)
             .withDayOfMonth(null)
@@ -248,34 +254,111 @@ private with sharing class PS_CommitmentRequest_TEST {
                 'Expected payment method to be ACH');
     }
 
+    @isTest
+    private static void shouldBuildContactACHCommitmentRequestBody() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
+        Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+                .withContact(contact.Id)
+                .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+                .withCampaign(rdCampaign.Id)
+                .withPaymentMethod('ACH')
+                .build();
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+
+        System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
+        System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
+        System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
+        PS_CommitmentRequest.AchData achData = requestBody.achData;
+
+        System.assertEquals('WEB', achData.achCode, 'ACH Code should be WEB');
+        System.assertEquals('INDIVIDUAL', achData.type, 'AchData type should be INDIVIDUAL');
+        System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
+
+        System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
+        System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
+
+        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.productMetaData.origin.type,
+                'Product Metadata origin type should be CRM');
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.productMetaData.campaign.id,
+                'Product Metadata campaign id should be set to RD campaign');
+
+        System.assertEquals(1, requestBody.schedules.size(),
+                'One schedule should be passed to the API: ' + requestBody.schedules);
+
+        PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.recurringPaymentAmount, 'Recurring Amount should match');
+        System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
+        System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
+        System.assertEquals(FIRST_PAYMENT_DATE.format('yyyy-MM-dd'), schedule.firstOccurrenceOn, 'First Payment Date should match');
+    }
+
+    @isTest
+    private static void shouldBuildAccountACHCommitmentRequestBody() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
+        Contact contact = getContact();
+        Account account = getAccount();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+                .withAccount(account.Id)
+                .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+                .withCampaign(rdCampaign.Id)
+                .withPaymentMethod('ACH')
+                .build();
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+
+        System.assertEquals(account.Name, requestBody.firstName, 'First Name should match');
+        System.assertEquals(account.Name, requestBody.lastName, 'Last Name should match');
+        System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
+        PS_CommitmentRequest.AchData achData = requestBody.achData;
+
+        System.assertEquals('WEB', achData.achCode, 'AchData Code should be WEB');
+        System.assertEquals('BUSINESS', achData.type, 'AchData type should be INDIVIDUAL');
+        System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
+    }
 
     // Helpers
     ///////////////
-
-    /**
-     * @description Build open Recurring Donation
-     * @return TEST_RecurringDonationBuilder instance
-     */
-    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
-        return getRecurringDonationBuilder(getContact().Id);
-    }
 
     /**
      * @description Base common Recurring Donation record
      * @param contactId Contact Id
      * @return TEST_RecurringDonationBuilder instance
      */
-    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder(Id contactId) {
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
-            .withContact(contactId)
             .withAmount(AMOUNT)
             .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .withPaymentMethod(PAYMENT_CHECK)
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withDayOfMonth(String.valueOf(DAY_OF_MONTH));
+    }
+
+    private static Account getAccount() {
+        return [
+                SELECT Name, npe01__One2OneContact__c
+                FROM Account
+                LIMIT 1
+        ];
     }
 
     /****
