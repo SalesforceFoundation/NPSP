@@ -292,11 +292,38 @@ describe('c-rd2-entry-form', () => {
         await setupWireMocksForElevate();
         const elevateWidget = controller.elevateWidget();
 
-        expect(elevateWidget).toMatchSnapshot();
-        expect(controller.last4Card().value).toBe('1212');
+        expect(controller.last4().value).toBe('1212');
         expect(controller.cardExpriation().value).toBe('02/2023');
 
     });
+
+
+    it('rd2 record with ACH payment, when editing, displays ACH last 4', async () => {
+        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+            // if message action is "createToken", reply with dummy token immediately
+            // instead of trying to hook into postMessage
+            // see sendIframeMessage in mocked psElevateTokenHandler
+            if (message.action === 'createToken' || message.action === 'createAchToken') {
+                return {"type": "post__npsp", "token": "a_dummy_token"};
+            }
+        });
+
+        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
+
+        const element = createRd2EditForm(FAKE_ACH_RD2_ID);
+        const controller = new RD2FormController(element);
+        await flushPromises();
+
+        getRecord.emit(rd2WithACHCommitment, config => {
+            return config.recordId === FAKE_ACH_RD2_ID;
+        });
+
+        await setupWireMocksForElevate();
+
+        expect(controller.last4().value).toBe('1111');
+
+    });
+
 
 });
 
@@ -401,7 +428,7 @@ class RD2FormController {
         return new RD2FormField(field);
     }
 
-    last4Card() {
+    last4() {
         const widget = this.elevateWidget();
         return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Last Four Digits"]');
     }
@@ -435,8 +462,12 @@ class RD2FormField {
         this.element = element;
     }
 
-    changeValue(value) {
+    setValue(value) {
         this.element.value = value;
+    }
+
+    changeValue(value) {
+        this.setValue(value);
         this.dispatchChangeEvent();
     }
 

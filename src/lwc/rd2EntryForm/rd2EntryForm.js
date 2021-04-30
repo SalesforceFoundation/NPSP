@@ -132,6 +132,7 @@ export default class rd2EntryForm extends LightningElement {
     isElevateCustomer = false;
     commitmentId = null;
     paymentMethodToken;
+    _paymentMethod;
 
     contactId;
     organizationAccountId;
@@ -166,9 +167,15 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Get the Label for the Card Last 4 field
     */
-    @api
-    get cardLastFourLabel(){
+    get cardLastFourLabel() {
         return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : '';
+    }
+
+    /***
+     * @description Get the Label for the Card Last 4 field
+     */
+    get achLastFourLabel() {
+        return (this.fields.achLastFour) ? this.fields.achLastFour.label : '';
     }
 
     /***
@@ -262,6 +269,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
         this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
+        this.fields.achLastFour = extractFieldInfo(fieldInfos, FIELD_ACH_LAST4.fieldApiName);
     }
 
     /***
@@ -274,9 +282,9 @@ export default class rd2EntryForm extends LightningElement {
             this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
             this.isRecordReady = true;
             this.isEdit = true;
-
-            this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
-            this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+            this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            this.evaluateElevateEditWidget(this._paymentMethod);
+            this.evaluateElevateWidget(this._paymentMethod);
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -352,6 +360,7 @@ export default class rd2EntryForm extends LightningElement {
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
         this.hasUserDisabledElevateWidget = false;
+        this._paymentMethod = event.detail.value;
         this.evaluateElevateWidget(event.detail.value);
     }
 
@@ -401,7 +410,7 @@ export default class rd2EntryForm extends LightningElement {
 
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-
+            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
             this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
                 && this.isEdit 
                 && (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH)
@@ -905,9 +914,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Returns value of the Payment Method field
      */
     get paymentMethod() {
-        const paymentMethod = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
-
-        return paymentMethod ? paymentMethod.value : null;
+        return this._paymentMethod;
     }
 
     /***

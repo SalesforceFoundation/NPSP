@@ -52,7 +52,7 @@
 
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
                         <template if:true={isDisabled}>
-                            <template if:true={isEditMode}>
+                            <template if:true={isEditCard}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
@@ -75,6 +75,21 @@
                                             value={cardExpDate}
                                             data-qa-locator={qaLocatorExpirationDate}
                                             aria-labelledby="expirationDateLabel">
+                                        </lightning-formatted-text>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                            <template if:true={isEditAch}>
+                                <lightning-layout vertical-align='center' multiple-rows='true'>
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                        <label for="last4ACH"
+                                               class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                            {achLastFourLabel}
+                                        </label><br/>
+                                        <lightning-formatted-text
+                                                id="last4ACH"
+                                                value={achLastFour}
+                                                data-qa-locator={qaLocatorLastFourDigits}>
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
                                 </lightning-layout>

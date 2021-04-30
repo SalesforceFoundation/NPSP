@@ -274,7 +274,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      * @description Does the user have perms to show the Expiration Date fields?
      */
     shouldShowExpirationDate() {
-        return this.isTrue(this.permissions.showExpirationDate);
+        return this.isTrue(this.permissions.showExpirationDate) && !this.shouldShowLastFourACH();
     }
 
     /***

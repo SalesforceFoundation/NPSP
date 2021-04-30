@@ -59,6 +59,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api cardLastFour;
     @api cardLastFourLabel;
     @api cardExpDate;
+    @api achLastFourLabel;
+    @api achLastFour;
 
     @api payerOrganizationName;
     @api payerFirstName;
@@ -109,8 +111,15 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return this.paymentMethod === 'Credit Card';
     }
 
+    get isEditAch() {
+        return this.isEditMode && this.isAchPayment;
+    }
+
+    get isEditCard() {
+        return this.isEditMode && this.isCardPayment;
+    }
+
     isElevatePaymentMethod(paymentMethod) {
-        console.log(paymentMethod);
         return ELEVATE_PAYMENT_METHODS.includes(paymentMethod);
     }
 
