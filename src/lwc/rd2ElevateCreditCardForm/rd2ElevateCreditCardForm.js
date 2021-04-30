@@ -9,6 +9,7 @@ import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
+import nextACHPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextACHPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
@@ -41,6 +42,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         updatePaymentButtonLabel,
         cancelButtonLabel,
         nextPaymentDonationDateMessage,
+        nextACHPaymentDonationDateMessage,
         commonExpirationDate
     };
 
@@ -122,6 +124,12 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return (this.nextDonationDate == null)
         ? ''
         : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
+    }
+
+    get nextACHPaymentDonationDateMessage() {
+        return (this.nextDonationDate == null)
+            ? ''
+            : this.labels.nextACHPaymentDonationDateMessage.replace('{{DATE}}', ' ');
     }
 
     @api 
