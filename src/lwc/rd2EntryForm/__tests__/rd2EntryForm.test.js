@@ -1,6 +1,7 @@
 import {createElement} from 'lwc';
 import Rd2EntryForm from 'c/rd2EntryForm';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import RD2_EntryFormMissingPermissions from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
@@ -21,8 +22,14 @@ const contactPartialDescribe = require('./data/contactPartialDescribe.json');
 const accountPartialDescribe = require('./data/accountPartialDescribe.json');
 const contactGetRecord = require('./data/contactGetRecord.json');
 const accountGetRecord = require('./data/accountGetRecord.json');
+const rd2WithCardCommitment = require('./data/rd2WithCardCommitment.json');
+const rd2WithACHCommitment = require('./data/rd2WithACHCommitment.json');
+const recurringDataAccountResponse = require('./data/recurringDataAccountResponse.json');
 
 const mockScrollIntoView = jest.fn();
+
+const FAKE_ACH_RD2_ID = 'a0963000008pebAAAQ';
+const FAKE_CARD_RD2_ID = 'a0963000008oxZnAAI';
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings',
     () => {
@@ -32,6 +39,13 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings',
 );
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions',
+    () => {
+        return { default: jest.fn() }
+    },
+    { virtual: true }
+);
+
+jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
     () => {
         return { default: jest.fn() }
     },
@@ -252,12 +266,49 @@ describe('c-rd2-entry-form', () => {
             undefined
         );
 
-    })
+    });
+
+
+    it('rd2 record with card payment, when editing, displays card information', async () => {
+        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+            // if message action is "createToken", reply with dummy token immediately
+            // instead of trying to hook into postMessage
+            // see sendIframeMessage in mocked psElevateTokenHandler
+            if (message.action === 'createToken' || message.action === 'createAchToken') {
+                return {"type": "post__npsp", "token": "a_dummy_token"};
+            }
+        });
+
+        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
+
+        const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+        const controller = new RD2FormController(element);
+        await flushPromises();
+
+        getRecord.emit(rd2WithCardCommitment, config => {
+            return config.recordId === FAKE_CARD_RD2_ID;
+        });
+
+        await setupWireMocksForElevate();
+        const elevateWidget = controller.elevateWidget();
+
+        expect(elevateWidget).toMatchSnapshot();
+        expect(controller.last4Card().value).toBe('1212');
+        expect(controller.cardExpriation().value).toBe('02/2023');
+
+    });
 
 });
 
 const createRd2EntryForm = () => {
     const element = createElement('c-rd2-entry-form', {is: Rd2EntryForm});
+    document.body.appendChild(element);
+    return element;
+}
+
+const createRd2EditForm = (recordId) => {
+    const element = createElement('c-rd2-entry-form', {is: Rd2EntryForm});
+    element.recordId = recordId;
     document.body.appendChild(element);
     return element;
 }
@@ -350,6 +401,16 @@ class RD2FormController {
         return new RD2FormField(field);
     }
 
+    last4Card() {
+        const widget = this.elevateWidget();
+        return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Last Four Digits"]');
+    }
+
+    cardExpriation() {
+        const widget = this.elevateWidget();
+        return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Expiration Date"]');
+    }
+
     recurringType() {
         const scheduleSection = this.scheduleSection();
         const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="RecurringType__c"]');
@@ -365,6 +426,7 @@ class RD2FormController {
     saveButton() {
         return this.element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
     }
+
 }
 
 class RD2FormField {

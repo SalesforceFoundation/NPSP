@@ -17,6 +17,7 @@ import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
+import FIELD_ACH_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
 import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
@@ -657,7 +658,7 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         if(achData) {
-            // populate ACH commitment fields
+            allFields[FIELD_ACH_LAST4.fieldApiName] = achData.last4;
         }
     }
 
