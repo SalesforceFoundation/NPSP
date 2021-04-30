@@ -6600,6 +6600,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
     </labels>
     <labels>
+        <fullName>geBodyPaymentProcessedDuringBatchProcessing</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating that </shortDescription>
+        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
+    </labels>
+    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

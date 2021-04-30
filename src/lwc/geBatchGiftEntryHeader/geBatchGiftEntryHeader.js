@@ -56,7 +56,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorBatchDryRun() {
         return `button ${this.LABELS.bgeBatchDryRun}`;
     }
-    get qaLocatorProcessBatch() { // TODO: Ask Deepa about this
+    get qaLocatorProcessBatch() {
         return `button ${this.LABELS.bgeProcessBatch}`;
     }
     get qaLocatorEditBatchInfo() {
@@ -70,5 +70,9 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         }
         
         return buttonName;
+    }
+
+    get processBatchButtonAltName() {
+        return `${this.processBatchButtonName} button`; 
     }
 }

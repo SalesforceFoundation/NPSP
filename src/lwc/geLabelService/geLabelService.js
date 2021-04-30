@@ -94,6 +94,7 @@ import geBodyMatchingPendingDonation from '@salesforce/label/c.geBodyMatchingPen
 import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelectRecord';
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
 import geBodyPaymentNotProcessingTransaction from '@salesforce/label/c.geBodyPaymentNotProcessingTransaction';
+import geBodyPaymentProcessedDuringBatchProcessing from '@salesforce/label/c.geBodyPaymentProcessedDuringBatchProcessing';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
 import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
@@ -336,6 +337,7 @@ class GeLabelService {
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
         geBodyPaymentNotProcessingTransaction,
+        geBodyPaymentProcessedDuringBatchProcessing,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
         geBodyWidgetFields,
