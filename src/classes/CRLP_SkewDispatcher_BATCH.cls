@@ -85,10 +85,32 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
      */
     public Database.QueryLocator start(Database.BatchableContext bc) {
         String query;
-
         try {
-            query = buildSkewModeQuery();
-            return Database.getQueryLocator(buildSkewModeQuery());
+
+            Boolean hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(jobType);
+
+            // Build a query string of the target Summary object.
+            query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
+            String skewFilter = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!String.isEmpty(skewFilter)) {
+                query += ' WHERE ' + skewFilter;
+            }
+
+            if (hasActiveRollups == true) {
+                // Chunking logic: Filter for Id greater than the last Id processed, sort by Id, and limit the number of records
+                if (this.lastIdProcessed != null) {
+                    query += (query.contains(' WHERE ') ? ' AND' : ' WHERE') + ' Id > \'' + this.lastIdProcessed + '\'';
+                }
+                query += ' ORDER BY Id ASC';
+
+                // If there are no active rollups for the object type, then force the query to return zero records.
+                query += ' LIMIT ' + BATCH_SIZE;
+            } else {
+                // This is needed because can't return null as a valid iterator.
+                query += ' LIMIT 0';
+            }
+
+            return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
             ex.setMessage(ex.getMessage() + '\n' + query);
@@ -96,40 +118,6 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
         }
 
         return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]); // return a generic empty data set rather than null
-    }
-
-    /**
-     * @description Build the SOQL query for records to be rolled up using Skew Mode
-     * @return String SOQL query for QueryLocator
-     */
-    @TestVisible
-    private String buildSkewModeQuery() {
-        String query;
-
-        Boolean hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(jobType);
-
-        // Build a query string of the target Summary object.
-        query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
-        String skewFilter = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-        if (!String.isEmpty(skewFilter)) {
-            query += ' WHERE ' + skewFilter;
-        }
-
-        if (hasActiveRollups == true) {
-            // Chunking logic: Filter for Id greater than the last Id processed, sort by Id, and limit the number of records
-            if (this.lastIdProcessed != null) {
-                query += (query.contains(' WHERE ') ? ' AND' : ' WHERE') + ' Id > \'' + this.lastIdProcessed + '\'';
-            }
-            query += ' ORDER BY Id ASC';
-
-            // If there are no active rollups for the object type, then force the query to return zero records.
-            query += ' LIMIT ' + BATCH_SIZE;
-        } else {
-            // This is needed because can't return null as a valid iterator.
-            query += ' LIMIT 0';
-        }
-
-        return query;
     }
 
     /**
