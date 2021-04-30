@@ -36,6 +36,7 @@ public inherited sharing class NPSP_Contact {
 
     private Contact contact;
     private Contact oldContact;
+    private IAddress mailingAddress;
 
     @TestVisible
     private ContactService contactService {
@@ -59,13 +60,14 @@ public inherited sharing class NPSP_Contact {
         set;
     }
 
+    public NPSP_Contact(Contact contact) {
+        this(contact, null);
+    }
+
     public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
-    }
-
-    public NPSP_Contact(Contact contact) {
-        this.contact = contact;
+        this.mailingAddress = new NPSP_Address(contact);
     }
 
     public Contact getRecord() {
@@ -127,10 +129,11 @@ public inherited sharing class NPSP_Contact {
 
     public void mailingAddress(NPSP_Address npspAddress) {
         npspAddress.copyOntoSObject(contact, 'Mailing','npe01__Primary_Address_Type__c');
+        this.mailingAddress = npspAddress;
     }
 
-    public NPSP_Address mailingAddress() {
-        return new NPSP_Address(contact);
+    public IAddress mailingAddress() {
+        return mailingAddress;
     }
 
     public Boolean mailingAddressIsDifferentFrom(NPSP_Address npspAddress) {
