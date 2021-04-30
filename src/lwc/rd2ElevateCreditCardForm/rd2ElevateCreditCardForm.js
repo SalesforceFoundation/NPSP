@@ -251,6 +251,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                     type: this.achAccountType,
                     bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
+                achCode: 'WEB',
                 nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
             };
         } else {
@@ -258,8 +259,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                 accountHolder: {
                     businessName: this.payerLastName,
                     accountName: this.payerOrganizationName,
-                    type: this.achAccountType
+                    type: this.achAccountType,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
+                achCode: 'WEB',
                 nameOnAccount: this.payerOrganizationName
             };
         }

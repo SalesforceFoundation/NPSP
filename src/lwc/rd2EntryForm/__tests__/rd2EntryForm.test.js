@@ -161,8 +161,10 @@ describe('c-rd2-entry-form', () => {
             accountHolder: {
                 type: "INDIVIDUAL",
                 firstName: "John",
-                lastName: "Smith"
-            }
+                lastName: "Smith",
+                bankType: "CHECKING"
+            },
+            achCode: 'WEB'
         };
 
         expect(mockGetIframeReply).toHaveBeenCalled();
@@ -229,8 +231,10 @@ describe('c-rd2-entry-form', () => {
             accountHolder: {
                 type: "BUSINESS",
                 businessName: "Anthropy",
-                accountName: "Donor Organization"
-            }
+                accountName: "Donor Organization",
+                bankType: "CHECKING"
+            },
+            achCode: 'WEB'
         };
 
         expect(mockGetIframeReply).toHaveBeenCalled();
