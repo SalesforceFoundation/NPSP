@@ -66,6 +66,7 @@
                                         onerrorevent={handleChildComponentError}
                                         oncontactchange={handleContactChange}
                                         onaccountchange={handleAccountChange}
+                                        ondonortypechange={handleDonorTypeChange}
                                         if:true={isSettingReady}
                                 >
                                 </c-rd2-entry-form-donor-section>
@@ -156,6 +157,7 @@
                                             payer-organization-name={organizationAccountName}
                                             payer-first-name={contactFirstName}
                                             payer-last-name={contactLastName}
+                                            ach-account-type={donorType}
                                             payment-method={paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>

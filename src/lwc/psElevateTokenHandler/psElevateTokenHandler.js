@@ -1,7 +1,7 @@
 
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilCommon';
-
+import {ACCOUNT_HOLDER_BANK_TYPES, ACCOUNT_HOLDER_TYPES} from 'c/geConstants';
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
@@ -15,6 +15,8 @@ const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 const MOUNT_IFRAME_EVENT_ACTION = 'mount';
 
 const SET_PAYMENT_METHOD_EVENT_ACTION = 'setPaymentMethod';
+const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 
 /***
 * @description Max number of ms to wait for the response containing a token or an error

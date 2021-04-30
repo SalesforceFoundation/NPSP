@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isUndefined, isEmpty } from 'c/utilCommon';
-import { HTTP_CODES } from 'c/geConstants';
+import { HTTP_CODES, ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -59,6 +59,7 @@ import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 import CONTACT_FIRST_NAME from '@salesforce/schema/Contact.FirstName';
 import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
 import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
+import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01__One2OneContact__r.LastName';
 
 
 const STATUS_CLOSED = 'Closed';
@@ -132,7 +133,10 @@ export default class rd2EntryForm extends LightningElement {
     paymentMethodToken;
 
     contactId;
-    donorAccountId;
+    organizationAccountId;
+    organizationAccountName;
+    donorType;
+
     contact = {
         MailingCountry: null
     };
@@ -294,6 +298,16 @@ export default class rd2EntryForm extends LightningElement {
         this.organizationAccountId = event.detail;
     }
 
+    handleDonorTypeChange(event) {
+        if(event.detail === 'Contact') {
+            this.donorType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
+        } else if(event.detail === 'Account') {
+            this.donorType = ACCOUNT_HOLDER_TYPES.BUSINESS;
+        } else {
+            this.donorType = null;
+        }
+    }
+
     /**
      * @description Retrieves the contact data whenever a contact is changed.
      * Data is not refreshed when the contact Id is null.
@@ -319,11 +333,12 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     @wire(getRecord, {
-        recordId: '$organizationAccountId', fields: [ACCOUNT_NAME]
+        recordId: '$organizationAccountId', fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
     })
     wiredGetDonorAccount({error, data}) {
         if(data) {
             this.organizationAccountName = getFieldValue(data, ACCOUNT_NAME);
+            this.contactLastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
         } else if(error) {
             this.handleError(error);
         }

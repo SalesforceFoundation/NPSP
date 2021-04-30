@@ -59,14 +59,13 @@ export default class rd2EntryFormDonorSection extends LightningElement {
         if (!isNull(this.recordId)) {
             getRecurringData({ recordId: this.recordId })
                 .then(response => {
-                    this.donorType = response.DonorType;
-                    this.updateDonorFields(this.donorType);
+                    this.changeDonorType(response.DonorType);
                 })
                 .catch((error) => {
                     this.dispatchEvent(new CustomEvent('errorevent', { detail: error }));
                 });
         } else {
-            this.donorType = this.DEFAULT_DONOR_TYPE;
+            this.changeDonorType(this.DEFAULT_DONOR_TYPE);
             this.handleParentIdType(this.parentSObjectType);
         }
     }
@@ -89,11 +88,12 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
         if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
             this.accountId = this.parentId;
-            this.donorType = 'Account';
+            this.changeDonorType('Account');
+            this.dispatchChangeEvent('accountchange', this.accountId);
         } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
             this.contactId = this.parentId;
-            this.donorType = 'Contact';
-            this.dispatchContactChangeEvent(this.contactId);
+            this.changeDonorType('Contact');
+            this.dispatchChangeEvent('contactchange', this.contactId);
         }
     }
 
@@ -166,8 +166,13 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Handles the page updates when the Donor Type picklist is updated
      */
     handleDonorTypeChange(event) {
-        this.donorType = event.target.value;
+        this.changeDonorType(event.target.value);
         this.updateDonorFields(this.donorType);
+    }
+
+    changeDonorType(donorType) {
+        this.donorType = donorType;
+        this.dispatchDonorTypeChange();
     }
 
     /**
@@ -176,17 +181,21 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * the contact lookup value change itself.
      */
     handleContactChange(event) {
-        this.dispatchLookupChangeEvent('contactchange', event.target.value);
+        this.dispatchChangeEvent('contactchange', event.target.value);
     }
 
     handleAccountChange(event) {
-        this.dispatchLookupChangeEvent('accountchange', event.target.value);
+        this.dispatchChangeEvent('accountchange', event.target.value);
     }
 
-    dispatchLookupChangeEvent(eventName, recordId) {
+    dispatchDonorTypeChange() {
+        this.dispatchChangeEvent('donortypechange', this.donorType);
+    }
+
+    dispatchChangeEvent(eventName, value) {
         this.dispatchEvent(new CustomEvent(
             eventName,
-            { detail: recordId }
+            { detail: value }
         ))
     }
 
@@ -194,15 +203,15 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Update the properties to configure the Donor Type fields visibility and requirement settings
      * based on the value of the DonorType picklist.
      */
-    updateDonorFields(donorType) {
-        if (donorType === 'Account') {
+    updateDonorFields() {
+        if (this.donorType === 'Account') {
             this.accountRequired = true;
             this.contactRequired = false;
         } else {
             this.accountRequired = false;
             this.contactRequired = true;
         }
-        this.dispatchLookupChangeEvent('contactchange', null);
+        this.dispatchChangeEvent('contactchange', null);
     }
 
     /**

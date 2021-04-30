@@ -58,6 +58,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerOrganizationName;
     @api payerFirstName;
     @api payerLastName;
+    @api achAccountType;
 
     @api
     get paymentMethod() {
@@ -179,20 +180,35 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     requestAchToken(iframe) {
-        const params = {
-            accountHolder: {
-                firstName: this.payerFirstName,
-                lastName: this.payerLastName,
-                type: "INDIVIDUAL"
-            },
-            nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
-        };
+        const params = this.getAchParams();
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
             eventAction: CREATE_ACH_TOKEN_ACTION,
             handleError: this.handleError,
         });
+    }
+
+    getAchParams() {
+        if(this.achAccountType === 'INDIVIDUAL') {
+            return {
+                accountHolder: {
+                    firstName: this.payerFirstName,
+                    lastName: this.payerLastName,
+                    type: this.achAccountType
+                },
+                nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
+            };
+        } else {
+            return {
+                accountHolder: {
+                    businessName: this.payerLastName,
+                    accountName: this.payerOrganizationName,
+                    type: this.achAccountType
+                },
+                nameOnAccount: this.payerOrganizationName
+            };
+        }
     }
 
     /***

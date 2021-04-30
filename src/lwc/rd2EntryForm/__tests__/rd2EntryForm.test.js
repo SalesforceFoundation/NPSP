@@ -117,7 +117,7 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget).toBeTruthy();
     });
 
-    it('contact name is used for account holder name when tokenizing an ACH payment', async () => {
+    it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
         mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
             // if message action is "createToken", reply with dummy token immediately
             // instead of trying to hook into postMessage
@@ -152,8 +152,7 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget.payerFirstName).toBe('John');
         expect(elevateWidget.payerLastName).toBe('Smith');
 
-        const saveButton = selectSaveButton(element);
-        saveButton.click();
+        controller.saveButton().click();
 
         await flushPromises();
 
@@ -173,6 +172,67 @@ describe('c-rd2-entry-form', () => {
             undefined
         );
     });
+
+    it('organization donor, account name is used when tokenizing an ACH payment', async () => {
+        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+            // if message action is "createToken", reply with dummy token immediately
+            // instead of trying to hook into postMessage
+            // see sendIframeMessage in mocked psElevateTokenHandler
+            if (message.action === 'createToken' || message.action === 'createAchToken') {
+                return {"type": "post__npsp", "token": "a_dummy_token"};
+            }
+        });
+
+        const element = createRd2EntryForm();
+        const controller = new RD2FormController(element);
+
+        await flushPromises();
+
+        await setupWireMocksForElevate();
+
+        controller.setDefaultInputFieldValues();
+        controller.donorType().changeValue('Account');
+        controller.paymentMethod().changeValue('ACH');
+        await flushPromises();
+
+
+        controller.accountLookup().changeValue('001fakeAccountId');
+        await flushPromises();
+
+        getRecord.emit(accountGetRecord, config => {
+            return config.recordId === '001fakeAccountId';
+        });
+        await flushPromises();
+        controller.amount().changeValue(1.00);
+
+        await flushPromises();
+
+
+        const elevateWidget = controller.elevateWidget();
+        expect(elevateWidget).toBeTruthy();
+        expect(elevateWidget.payerOrganizationName).toBe("Donor Organization");
+
+        controller.saveButton().click();
+
+        await flushPromises();
+
+        expect(mockGetIframeReply).toHaveBeenCalledWith(
+            expect.any(HTMLIFrameElement), // iframe
+            expect.objectContaining({ // message
+                action: "createAchToken",
+                params: {
+                    nameOnAccount: "Donor Organization",
+                    accountHolder: {
+                        type: "BUSINESS",
+                        businessName: "Anthropy",
+                        accountName: "Donor Organization"
+                    }
+                }
+            }),
+            undefined
+        );
+
+    })
 
 });
 
@@ -207,7 +267,7 @@ const setupWireMocksForElevate = async () => {
         return config.fieldApiName.fieldApiName === FIELD_DAY_OF_MONTH.fieldApiName;
     });
 
-     await flushPromises();
+    await flushPromises();
 }
 
 
@@ -247,15 +307,27 @@ class RD2FormController {
         return new RD2FormField(field);
     }
 
+    donorType() {
+        const donorSection = this.donorSection();
+        const field = donorSection.shadowRoot.querySelector('lightning-combobox[data-id="donorType"]');
+        return new RD2FormField(field);
+    }
+
     contactLookup() {
         const donorSection = this.donorSection();
         const field = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="contactLookup"]');
         return new RD2FormField(field);
     }
 
+    accountLookup() {
+        const donorSection = this.donorSection();
+        const field = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="accountLookup"]');
+        return new RD2FormField(field);
+    }
+
     paymentMethod() {
-        const paymentMethod = this.element.shadowRoot.querySelector('lightning-input-field[data-id="paymentMethod"]');
-        return new RD2FormField(paymentMethod);
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="paymentMethod"]');
+        return new RD2FormField(field);
     }
 
     recurringType() {
@@ -271,7 +343,7 @@ class RD2FormController {
     }
 
     saveButton() {
-        return element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
+        return this.element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
     }
 }
 
