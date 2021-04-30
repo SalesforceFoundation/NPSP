@@ -116,23 +116,32 @@ public with sharing class HH_Households_TEST {
     /*********************************************************************************************************
     * @description Test insert and update a contact and see household object naming change
     */
+    //Todo: replace with instance to validate name
     static testMethod void testNewAndUpdateContactWithHHNaming() {
 
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true));
+        npo02__Households_Settings__c householdSettingsForTests =
+                UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                        new npo02__Households_Settings__c (
+                                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                                npo02__Advanced_Household_Naming__c = true));
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests =
+                UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                        new npe01__Contacts_and_Orgs_Settings__c (
+                                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
 
-        Household_Naming_Settings__c hhNamingSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
-        	new Household_Naming_Settings__c(
-                Household_Name_Format__c = '{!LastName} Household',
-                Formal_Greeting_Format__c = '{!{!Title}} {!LastName}',
-                Informal_Greeting_Format__c = '{!{!FirstName}}',
-        		Name_Connector__c = label.npo02.HouseholdNameConnector,
-       			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
-        		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_INamingImpl'
-            )
-        );
+        Household_Naming_Settings__c hhNamingSettingsForTests =
+                UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+                        new Household_Naming_Settings__c(
+                                Household_Name_Format__c = '{!LastName} Household',
+                                Formal_Greeting_Format__c = '{!{!Title}} {!LastName}',
+                                Informal_Greeting_Format__c = '{!{!FirstName}}',
+                                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                                Contact_Overrun_Count__c = 9,
+                                Implementing_Class__c = 'HH_INamingImpl'
+                        )
+                );
 
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
