@@ -128,7 +128,9 @@ public inherited sharing class NPSP_Contact {
     }
 
     public void mailingAddress(NPSP_Address npspAddress) {
-        npspAddress.copyOntoSObject(contact, 'Mailing','npe01__Primary_Address_Type__c');
+        addressService.copyOntoSObject(
+                npspAddress, contact, 'Mailing',
+                'npe01__Primary_Address_Type__c');
         this.mailingAddress = npspAddress;
     }
 
