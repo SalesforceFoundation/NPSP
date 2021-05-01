@@ -12,4 +12,6 @@ public interface IAddress {
 
     String getType();
 
+    Decimal latitude();
+    Decimal longitude();
 }

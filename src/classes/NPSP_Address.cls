@@ -442,4 +442,12 @@ public inherited sharing class NPSP_Address implements IAddress {
         return addr.MailingCountry__c;
     }
 
+    public Decimal longitude() {
+        return addr.Geolocation__Longitude__s;
+    }
+
+    public Decimal latitude() {
+        return addr.Geolocation__Latitude__s;
+    }
+
 }

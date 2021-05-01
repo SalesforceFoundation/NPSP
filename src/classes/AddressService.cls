@@ -89,15 +89,24 @@ public inherited sharing class AddressService {
                         !equalsCaseSensitive((String) sObj.get(prefix + 'State'), other.state()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), other.postalCode()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), other.country()) ||
-                        (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
-                        (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
+                        (Decimal) sObj.get(prefix + 'Latitude') != other.latitude() ||
+                        (Decimal) sObj.get(prefix + 'Longitude') != other.longitude() ||
+
                         (isContact &&
-                                (!equalsCaseSensitive((String) sObj.get
-                                        ('npe01__Primary_Address_Type__c'), other.getType()) ||
-                                        !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
+                                (!equalsCaseSensitive(primaryAddressType(sObj), other.getType()) ||
+                                        !equalsCaseSensitive((String) currentAddress(sObj), addr.Id))
                         )
         );
         return isDifferent;
+    }
+
+    private Object currentAddress(SObject sObj) {
+        return sObj.get('Current_Address__c');
+    }
+
+    private String primaryAddressType(SObject sObj) {
+        return (String) sObj.get
+                ('npe01__Primary_Address_Type__c');
     }
 
     /*******************************************************************************************************
