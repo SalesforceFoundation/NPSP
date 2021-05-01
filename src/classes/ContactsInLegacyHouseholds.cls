@@ -37,6 +37,10 @@
 */
 public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
 
+    public static ContactsInLegacyHouseholds newInstance(List<Contact> records){
+        return new ContactsInLegacyHouseholds(records);
+    }
+
     @TestVisible
     private HouseholdSettings householdSettings {
         get {
