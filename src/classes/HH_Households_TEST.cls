@@ -150,7 +150,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals('Handy Man '+CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,updatedContacts[0].npo02__household__r.npo02__Formal_Greeting__c  );
     }
 
-    private static void setupHouseholdNamingSettings() {
+    public static void setupHouseholdNamingSettings() {
         UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
                 dummyHouseholdNamingSettings());
     }

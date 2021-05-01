@@ -15,4 +15,17 @@ public class ContactBuilder {
         return con;
     }
 
+    @TestVisible
+    private static Contacts dummyContacts() {
+        List<Contact> contacts = dummyContactList();
+        Contacts dummyContacts = new Contacts(contacts);
+        return dummyContacts;
+    }
+
+    private static List<Contact> dummyContactList() {
+        List<Contact> contacts = new List<Contact>();
+        contacts.add(ContactBuilder.dummyContact());
+        return contacts;
+    }
+
 }
