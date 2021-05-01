@@ -138,8 +138,9 @@ public inherited sharing class NPSP_Contact {
         return mailingAddress;
     }
 
-    public Boolean mailingAddressIsDifferentFrom(IAddress anAddress) {
-       return addressService.isSObjectAddressDifferent(contact, anAddress);
+    public Boolean mailingAddressIsDifferentFrom(IAddress other) {
+//        return !mailingAddress().isEqualTo(other);
+       return addressService.isSObjectAddressDifferent(contact, other);
     }
 
 }

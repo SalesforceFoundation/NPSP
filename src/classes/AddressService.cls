@@ -74,8 +74,9 @@ public inherited sharing class AddressService {
     * @param addr Address
     * @return boolean. true if any of the Address fields on the Contact are different from this Address record
     */
-    public Boolean isSObjectAddressDifferent(SObject sObj, IAddress anAddress) {
-        Address__c addr = (Address__c) anAddress.getRecord();
+    //Todo: includes lat and long, wBilling, compares HHAcct not HH?
+    public Boolean isSObjectAddressDifferent(SObject sObj, IAddress other) {
+        Address__c addr = (Address__c) other.getRecord();
         if (sObj == null || addr == null) {
             return false;
         }
@@ -84,14 +85,15 @@ public inherited sharing class AddressService {
 
         Boolean isDifferent = (
                 !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), other.city()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), other.state()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), other.postalCode()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), other.country()) ||
                         (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
                         (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
                         (isContact &&
-                                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
+                                (!equalsCaseSensitive((String) sObj.get
+                                        ('npe01__Primary_Address_Type__c'), other.getType()) ||
                                         !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
                         )
         );

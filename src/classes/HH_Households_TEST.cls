@@ -135,7 +135,7 @@ public with sharing class HH_Households_TEST {
         setOrgContactSettingsToOneToOne();
         setupHouseholdNamingSettings();
 
-        Contact con = dummyContact();
+        Contact con = ContactBuilder.dummyContact();
         Test.startTest();
         insert con;
         Test.stopTest();
@@ -148,19 +148,6 @@ public with sharing class HH_Households_TEST {
 
         Contact[] updatedContacts = [select npo02__household__r.npo02__Formal_Greeting__c  from Contact where id=:con.id];
         system.assertEquals('Handy Man '+CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,updatedContacts[0].npo02__household__r.npo02__Formal_Greeting__c  );
-    }
-
-    private static Contact dummyContact() {
-        Contact con = new Contact(
-                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                Title = 'Doctor',
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
-        return con;
     }
 
     private static void setupHouseholdNamingSettings() {
