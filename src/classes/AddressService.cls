@@ -82,8 +82,13 @@ public inherited sharing class AddressService {
         }
         String prefix = ((sObj.getSObjectType() == Contact.SObjectType) ? 'Mailing' : 'Billing');
 
+        Boolean isDifferent = isDifferentIncludingLatLong(sObj, prefix, other);
+        return isDifferent;
+    }
+
+    private Boolean isDifferentIncludingLatLong(SObject sObj, String prefix, IAddress other) {
         Boolean isDifferent = (
-                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
+                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), other.multilineStreet()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'City'), other.city()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'State'), other.state()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), other.postalCode()) ||
@@ -111,19 +116,6 @@ public inherited sharing class AddressService {
     }
 
     /*******************************************************************************************************
-    * @description utility to combine mailing street fields into a single string with embedded CR LF
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public String getMultilineStreet(Address__c addr) {
-        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
-        if (isOneLineStreetAddress) {
-            return addr.MailingStreet__c;
-        }
-        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
-    }
-
-    /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.
     * @param addr the Address object to copy from
@@ -136,7 +128,7 @@ public inherited sharing class AddressService {
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
 
-        sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
+        sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);

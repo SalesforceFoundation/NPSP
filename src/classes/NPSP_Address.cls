@@ -245,6 +245,14 @@ public inherited sharing class NPSP_Address implements IAddress {
         );
     }
 
+    public Boolean isDifferentIncludingLatLong(IAddress other) {
+        Boolean isDifferent = (
+                        !isEqualTo(other, false) ||
+                        latitude() != other.latitude() ||
+                        longitude() != other.longitude()
+        );
+        return isDifferent;
+    }
     /*******************************************************************************************************
     * @description Utility to copy Address fields between two Address objects.
     * @param addrSrc the source Address
@@ -448,6 +456,19 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public Decimal latitude() {
         return addr.Geolocation__Latitude__s;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to combine mailing street fields into a single string with embedded CR LF
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public String multilineStreet() {
+        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        if (isOneLineStreetAddress) {
+            return addr.MailingStreet__c;
+        }
+        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
 
 }

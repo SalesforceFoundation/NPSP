@@ -14,4 +14,7 @@ public interface IAddress {
 
     Decimal latitude();
     Decimal longitude();
+    String multilineStreet();
+
+    Boolean isDifferentIncludingLatLong(IAddress other);
 }
