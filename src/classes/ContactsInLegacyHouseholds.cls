@@ -37,8 +37,14 @@
 */
 public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
 
+    private static ContactsInLegacyHouseholds mock;
+    @TestVisible
+    private static void setMock(ContactsInLegacyHouseholds mockInstance) {
+        mock = mockInstance;
+    }
+
     public static ContactsInLegacyHouseholds newInstance(List<Contact> records){
-        return new ContactsInLegacyHouseholds(records);
+        return mock != null ? mock : new ContactsInLegacyHouseholds(records);
     }
 
     @TestVisible
