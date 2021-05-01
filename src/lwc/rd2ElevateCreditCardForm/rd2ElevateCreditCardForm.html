@@ -117,7 +117,7 @@
                             </div>
                             <template if:true={isEditPayment}>
                                 <div class="slds-p-bottom_medium">
-                                    <c-formatted-text-with-date value={nextPaymentDonationDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
+                                    <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
                             <template if:true={isCardPayment}>
@@ -125,12 +125,6 @@
                                     <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
                                                      data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
                                     </lightning-input>
-                                </div>
-                            </template>
-
-                            <template if:true={isAchPayment}>
-                                <div class="slds-p-bottom_medium">
-                                    <c-formatted-text-with-date date={nextDonationDate} value={nextACHPaymentDonationDateMessage}></c-formatted-text-with-date>
                                 </div>
                             </template>
 

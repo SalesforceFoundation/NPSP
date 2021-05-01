@@ -2,7 +2,7 @@ import {createElement} from 'lwc';
 import FormattedTextWithDate from 'c/formattedTextWithDate';
 const PLACEHOLDER_DATE = '2021-05-04';
 
-describe('c-slottable-formatted-text', () => {
+describe('c-formatted-text-with-date', () => {
     it('renders a string with a date in the middle', () => {
         const element = createElement('c-formatted-text-with-date', { is: FormattedTextWithDate });
         element.value = 'Some text about a day: {{DATE}}. And some follow-up text';

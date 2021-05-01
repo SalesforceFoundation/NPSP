@@ -119,6 +119,14 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return this.isEditMode && this.isCardPayment;
     }
 
+    get nextPaymentDateMessage() {
+        if(this.isAchPayment) {
+            return this.labels.nextACHPaymentDonationDateMessage;
+        } else if(this.isCardPayment) {
+            return this.labels.nextPaymentDonationDateMessage;
+        }
+    }
+
     isElevatePaymentMethod(paymentMethod) {
         return ELEVATE_PAYMENT_METHODS.includes(paymentMethod);
     }
@@ -128,18 +136,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         const changed = oldPaymentMethod !== newPaymentMethod;
         const newMethodValidForElevate = this.isElevatePaymentMethod(newPaymentMethod);
         return changed && newMethodValidForElevate;
-    }
-
-    get nextPaymentDonationDateMessage() {
-        return (this.nextDonationDate == null)
-        ? ''
-        : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
-    }
-
-    get nextACHPaymentDonationDateMessage() {
-        return (this.nextDonationDate == null)
-            ? ''
-            : this.labels.nextACHPaymentDonationDateMessage.replace('{{DATE}}', ' ');
     }
 
     @api 
