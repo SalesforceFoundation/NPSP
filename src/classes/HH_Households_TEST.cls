@@ -150,6 +150,65 @@ public with sharing class HH_Households_TEST {
         system.assertEquals('Handy Man '+CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,updatedContacts[0].npo02__household__r.npo02__Formal_Greeting__c  );
     }
 
+    @IsTest
+    static void givenIsAfterInsertAndHHSettingsAll_thenContactsInLegacyHHOnAfterInsertCalled
+            () {
+        //Given
+        setHouseholdSettingsToAll();
+        //Then
+        validateThat_ContactsInLegacyHouseholds_OnAfterInsert_CalledOnContactInsert();
+    }
+
+    @IsTest
+    static void
+    givenIsAfterInsertAndHHSettingsAllIndividuals_thenContactsInLegacyHHOnAfterInsertCalled
+            () {
+        //Given
+        setHouseholdSettingsToAllIndividuals();
+        //Then
+        validateThat_ContactsInLegacyHouseholds_OnAfterInsert_CalledOnContactInsert();
+    }
+
+    private static void validateThat_ContactsInLegacyHouseholds_OnAfterInsert_CalledOnContactInsert() {
+        HH_Households_TDTM householdsTDTM = new HH_Households_TDTM();
+        ContactsInLegacyHouseholdsMock mock = new ContactsInLegacyHouseholdsMock();
+        ContactsInLegacyHouseholds stub = (ContactsInLegacyHouseholds) Test.createStub(
+                ContactsInLegacyHouseholds.class,
+                mock
+        );
+        System.assert(!mock.onAfterInsertCalled);
+        ContactsInLegacyHouseholds.setMock(stub);
+
+        //When
+        householdsTDTM.run(
+                ContactBuilder.dummyContactList(),
+                null,
+                TDTM_Runnable.Action.AfterInsert,
+                null);
+
+        //Then
+        System.assert(mock.onAfterInsertCalled);
+    }
+
+    public class ContactsInLegacyHouseholdsMock implements StubProvider {
+        public Boolean onAfterInsertCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'onAfterInsert' {
+                    onAfterInsertCalled = true;
+                }
+            }
+            return null;
+        }
+    }
+
     public static void setupHouseholdNamingSettings() {
         UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
                 dummyHouseholdNamingSettings());
