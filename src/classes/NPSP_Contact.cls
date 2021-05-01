@@ -138,9 +138,31 @@ public inherited sharing class NPSP_Contact {
         return mailingAddress;
     }
 
-    public Boolean mailingAddressIsDifferentFrom(IAddress other) {
-//        return !mailingAddress().isEqualTo(other);
-       return addressService.isSObjectAddressDifferent(contact, other);
+    public Boolean mailingAddressIsDifferentFrom(IAddress anAddress) {
+       return addressService.isSObjectAddressDifferent(contact, anAddress) ||
+               isCurrentAddressDifferent(anAddress) ||
+               isAddressTypeDifferent(anAddress);
+    }
+
+    private Boolean isCurrentAddressDifferent(IAddress anAddress) {
+        return !addressService.equalsCaseSensitive(
+                (String) currentAddress(contact),
+                anAddress.getRecord().Id);
+    }
+
+    private Boolean isAddressTypeDifferent(IAddress anAddress) {
+        return !addressService.equalsCaseSensitive(
+                primaryAddressType(contact),
+                anAddress.getType());
+    }
+
+    private Object currentAddress(SObject sObj) {
+        return sObj.get('Current_Address__c');
+    }
+
+    private String primaryAddressType(SObject sObj) {
+        return (String) sObj.get
+                ('npe01__Primary_Address_Type__c');
     }
 
 }
