@@ -22,6 +22,7 @@ public class ContactBuilder {
         return dummyContacts;
     }
 
+    @TestVisible
     private static List<Contact> dummyContactList() {
         List<Contact> contacts = new List<Contact>();
         contacts.add(ContactBuilder.dummyContact());
