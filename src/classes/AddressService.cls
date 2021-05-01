@@ -80,8 +80,7 @@ public inherited sharing class AddressService {
         if (sObj == null || addr == null) {
             return false;
         }
-        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
-        String prefix = (isContact ? 'Mailing' : 'Billing');
+        String prefix = ((sObj.getSObjectType() == Contact.SObjectType) ? 'Mailing' : 'Billing');
 
         Boolean isDifferent = (
                 !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
@@ -92,12 +91,20 @@ public inherited sharing class AddressService {
                         (Decimal) sObj.get(prefix + 'Latitude') != other.latitude() ||
                         (Decimal) sObj.get(prefix + 'Longitude') != other.longitude() ||
 
-                        (isContact &&
-                                (!equalsCaseSensitive(primaryAddressType(sObj), other.getType()) ||
-                                        !equalsCaseSensitive((String) currentAddress(sObj), addr.Id))
+                        ((sObj.getSObjectType() == Contact.SObjectType) &&
+                                (isAddressTypeDifferent(sObj, other) ||
+                                        isCurrentAddressDifferent(sObj, addr))
                         )
         );
         return isDifferent;
+    }
+
+    private Boolean isCurrentAddressDifferent(SObject sObj, Address__c addr) {
+        return !equalsCaseSensitive((String) currentAddress(sObj), addr.Id);
+    }
+
+    private Boolean isAddressTypeDifferent(SObject sObj, IAddress other) {
+        return !equalsCaseSensitive(primaryAddressType(sObj), other.getType());
     }
 
     private Object currentAddress(SObject sObj) {
