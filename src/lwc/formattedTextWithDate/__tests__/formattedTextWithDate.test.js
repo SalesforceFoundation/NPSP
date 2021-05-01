@@ -32,4 +32,14 @@ describe('c-formatted-text-with-date', () => {
         const textElements = element.shadowRoot.querySelectorAll('lightning-formatted-text');
         expect(textElements).toHaveLength(1);
     });
+
+    it('renders nothing when passed nothing', () => {
+        const element = createElement('c-formatted-text-with-date', { is: FormattedTextWithDate });
+        document.body.appendChild(element);
+
+        const textElements = element.shadowRoot.querySelectorAll('lightning-formatted-text');
+        const dateElements = element.shadowRoot.querySelectorAll('lightning-formatted-date-time');
+        expect(textElements).toHaveLength(0);
+        expect(dateElements).toHaveLength(1);
+    });
 })

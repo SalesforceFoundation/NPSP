@@ -18,10 +18,14 @@ export default class FormattedTextWithDate extends LightningElement {
     }
 
     get hasSecondHalf() {
-        return !isBlank(this.secondHalf);
+        return this.hasText && !isBlank(this.secondHalf);
     }
 
     get hasFirstHalf() {
-        return !isBlank(this.firstHalf);
+        return this.hasText && !isBlank(this.firstHalf);
+    }
+
+    get hasText() {
+        return !isBlank(this.value);
     }
 }
