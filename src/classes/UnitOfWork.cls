@@ -36,13 +36,21 @@ public inherited sharing class UnitOfWork {
 
     @TestVisible
     private List<SObject> objectsToInsert = new List<SObject>();
+    private List<SObject> objectsToUpdate = new List<SObject>();
 
     public Database.SaveResult[] save() {
-        return UTIL_DMLService.insertRecords(objectsToInsert, false);
+        List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
+        saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
+        saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
+        return saveResults;
     }
 
-    public void registerNew(List<SObject> records) {
-        objectsToInsert.addAll(records);
+    public void registerNew(List<SObject> sObjects) {
+        objectsToInsert.addAll(sObjects);
+    }
+
+    public void registerDirty(List<SObject> sObjects) {
+       objectsToUpdate.addAll(sObjects);
     }
 
 }

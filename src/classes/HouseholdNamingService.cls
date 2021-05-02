@@ -39,6 +39,28 @@ public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
 
+    @TestVisible
+    private ContactSelector selector {
+        get {
+            if (selector == null) {
+                selector = new ContactSelector();
+            }
+            return selector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWorkInst {
+        get {
+            if (unitOfWorkInst == null) {
+                unitOfWorkInst = new UnitOfWork();
+            }
+            return unitOfWorkInst;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -85,7 +107,8 @@ public without sharing class HouseholdNamingService {
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
         setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-        save(householdsOrAccounts);
+        unitOfWorkInst.registerDirty(householdsOrAccounts);
+        unitOfWorkInst.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
@@ -122,7 +145,8 @@ public without sharing class HouseholdNamingService {
     }
 
     private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
-        return householdMembersByHouseholdId(householdMembersFor(householdOrAccountIds));
+        return householdMembersByHouseholdId(
+                selector.householdMembersFor(householdOrAccountIds));
     }
 
     private List<SObject> householdsOrAccountsFor(List<Id> householdOrAccountIds) {
@@ -167,40 +191,13 @@ public without sharing class HouseholdNamingService {
         return hhIDContactMap;
     }
 
-    /*******************************************************************************************************
-    * @description Returns Contacts for specified Accounts or Households.
-    * Private Contacts or records not belonging to the specified Accounts/Households are not selected.
-    * @param householdOrAccountIds The list of Household Id's (either Household__c or Account Id's)
-    * @return List<Contact>
-    */
-    @TestVisible
-    private List<Contact> householdMembersFor(List<Id> householdOrAccountIds) {
-        Set<Id> queryHHIds = householdOrAccountIds == null ? new Set<Id>() : new Set<Id>(householdOrAccountIds);
-        queryHHIds.remove(null);
-
-        if (queryHHIds.isEmpty()) {
-            return new List<Contact>();
-        }
-
-        return Database.Query(householdMembersQueryFor(queryHHIds));
-    }
-
-    private String householdMembersQueryFor(Set<Id> queryHHIds) {
-        //get all of the contacts and their associated households
-        //return them in the order of household and then household naming order
-        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        String strSoql = getQueryForContactNamingFields();
-        String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-        strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
-                ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
-        return strSoql;
-    }
 
     /*******************************************************************************************************
     * @description Returns Contact fields specified in the Household Naming Settings format fields.
     * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names;
     * otherwise, an empty set
     */
+    //Todo: move to Household Settings?
     public Set<String> getHouseholdNamingContactFields() {
         if (!settings.isAdvancedHouseholdNaming()
                 || householdNamingImpl.setHouseholdNameFieldsOnContact() == null) {
@@ -246,29 +243,6 @@ public without sharing class HouseholdNamingService {
 
     private static Integer getBatchSize() {
         return 200;
-    }
-
-    /*******************************************************************************************************
-    * @description the soql select String to use which includes any fields we use or are referred to in
-    * any of the naming specifications.
-    */
-    private String queryForContactNamingFields;
-    @TestVisible
-    private String getQueryForContactNamingFields() {
-        if (queryForContactNamingFields == null) {
-            //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-            String[] selectFields = new String[]{
-                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
-            };
-            selectFields.addAll(getHouseholdNamingContactFields());
-
-            queryForContactNamingFields = new UTIL_Query()
-                    .withSelectFields(selectFields)
-                    .withToLabelSalutation()
-                    .withFrom('Contact')
-                    .build();
-        }
-        return queryForContactNamingFields;
     }
 
     private Boolean needsNamingFieldsUpdated(SObject household, SObject oldRecord) {
