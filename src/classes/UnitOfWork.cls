@@ -30,39 +30,19 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household naming tests in NPSP.
+* @description Unit of Work in NPSP.
 */
-@IsTest
-private class HouseholdNaming_TEST {
+public inherited sharing class UnitOfWork {
 
-    @IsTest
-    static void formalGreetingIsCorrectForDummyContact() {
-        Contacts dummyContact = ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(dummyContact);
-        System.assertEquals(
-                'test Contact_forTests',
-                householdName.asFormalGreeting());
+    @TestVisible
+    private List<SObject> objectsToInsert = new List<SObject>();
+
+    public Database.SaveResult[] save() {
+        return UTIL_DMLService.insertRecords(objectsToInsert, false);
     }
 
-    @IsTest
-    static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact() {
-        HH_Households_TEST.setupHouseholdNamingSettings();
-        Contacts dummyContact = ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(dummyContact);
-        System.assertEquals(
-                'Doctor Contact_forTests',
-                householdName.asFormalGreeting());
-    }
-
-    @IsTest
-    static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact_newTitle
-            () {
-        HH_Households_TEST.setupHouseholdNamingSettings();
-        Contacts dummyContact = ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(dummyContact);
-        System.assertEquals(
-                'Doctor Contact_forTests',
-                householdName.asFormalGreeting());
+    public void registerNew(List<SObject> records) {
+        objectsToInsert.addAll(records);
     }
 
 }
