@@ -40,23 +40,66 @@ private class ContactsInLegacyHouseholds_TEST {
         //Given
         ContactsInLegacyHouseholds contactsInLegacyHouseholds =
                 new ContactsInLegacyHouseholds(ContactBuilder.dummyContactList());
+
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
-        HouseholdService s = (HouseholdService) Test.createStub(
-                HouseholdService.class,
-                householdServiceMock
-        );
-        System.assert(!householdServiceMock.createHouseholdsCalled);
-        contactsInLegacyHouseholds.householdService = s;
+        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
 
         //When
         contactsInLegacyHouseholds.onAfterInsert();
 
         //Then
         System.assert(householdServiceMock.createHouseholdsCalled);
+        Contact contactInQueue =
+                (Contact) householdServiceMock.contactsQueuedForHouseholdCreation.getRecords()[0];
+        System.assert(isDummyContact(contactInQueue), 'The dummy Contact should be queued for ' +
+                'Household creation after insert.');
+    }
+
+    @IsTest
+    static void whenOnAfterUpdate_thenUpdateHouseholdNameCalled() {
+        //Given
+        Contact dummyContactWithTitleChanged = ContactBuilder.dummyContactWithId();
+        String newTitle = 'Handy Man';
+        dummyContactWithTitleChanged.Title = newTitle;
+        ContactsInLegacyHouseholds contactsInLegacyHouseholds =
+                new ContactsInLegacyHouseholds(
+                        new List<Contact>{
+                                dummyContactWithTitleChanged
+                        },
+                        new Map<Id, Contact>(ContactBuilder.dummyContactListWithIds())
+                );
+        HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
+        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
+
+        //When
+        contactsInLegacyHouseholds.onAfterUpdate();
+
+        //Then
+        System.assert(householdServiceMock.updateHouseholdNamesCalled);
+        Contact contactInQueue =
+                (Contact) householdServiceMock.contactsQueuedForHouseholdNameUpdate.getRecords()[0];
+        System.assert(isDummyContact(contactInQueue), 'The dummy Contact should be queued for ' +
+                'Household renaming since its Title changed.');
+    }
+
+    private static HouseholdService stubFor(HouseholdServiceMock householdServiceMock) {
+        return (HouseholdService) Test.createStub(
+                HouseholdService.class,
+                householdServiceMock
+        );
+    }
+
+    private static Boolean isDummyContact(Contact con) {
+        return con.FirstName == ContactBuilder.dummyContact().FirstName &&
+                con.LastName == ContactBuilder.dummyContact().LastName &&
+                con.npe01__WorkEmail__c == ContactBuilder.dummyContact().npe01__WorkEmail__c;
     }
 
     public class HouseholdServiceMock implements StubProvider {
         public Boolean createHouseholdsCalled = false;
+        public ContactsInLegacyHouseholds contactsQueuedForHouseholdCreation;
+        public Boolean updateHouseholdNamesCalled = false;
+        public ContactsInLegacyHouseholds contactsQueuedForHouseholdNameUpdate;
 
         public Object handleMethodCall(Object stubbedObject,
                 String stubbedMethodName,
@@ -68,6 +111,13 @@ private class ContactsInLegacyHouseholds_TEST {
             switch on (stubbedMethodName) {
                 when 'createHouseholdsFor' {
                     createHouseholdsCalled = true;
+                    contactsQueuedForHouseholdCreation =
+                            (ContactsInLegacyHouseholds) listOfArgs[0];
+                }
+                when 'updateHouseholdNamesFor' {
+                    updateHouseholdNamesCalled = true;
+                    contactsQueuedForHouseholdNameUpdate =
+                            (ContactsInLegacyHouseholds) listOfArgs[0];
                 }
             }
             return null;

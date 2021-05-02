@@ -51,16 +51,24 @@ public class ContactBuilder {
 
     @TestVisible
     private static Contacts dummyContacts() {
-        List<Contact> contacts = dummyContactList();
-        Contacts dummyContacts = new Contacts(contacts);
-        return dummyContacts;
+        return new Contacts(dummyContactList());
     }
 
     @TestVisible
     private static List<Contact> dummyContactList() {
-        List<Contact> contacts = new List<Contact>();
-        contacts.add(ContactBuilder.dummyContact());
-        return contacts;
+        return new List<Contact>{dummyContact()};
+    }
+
+    @TestVisible
+    private static Contact dummyContactWithId() {
+        Contact con = dummyContact();
+        con.Id = fflib_IDGenerator.generate(Contact.SObjectType);
+        return con;
+    }
+
+    @TestVisible
+    private static List<Contact> dummyContactListWithIds() {
+        return new List<Contact>{dummyContactWithId()};
     }
 
 }
