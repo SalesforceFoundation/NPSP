@@ -58,10 +58,12 @@ private class HouseholdNaming_TEST {
     static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact_newTitle
             () {
         HH_Households_TEST.setupHouseholdNamingSettings();
-        Contacts dummyContact = ContactBuilder.dummyContacts();
+        Contact handyMan = ContactBuilder.dummyContact();
+        handyMan.Title = 'Handy Man';
+        Contacts dummyContact = new Contacts(new List<Contact>{handyMan});
         HouseholdName householdName = new HouseholdName(dummyContact);
         System.assertEquals(
-                'Doctor Contact_forTests',
+                'Handy Man Contact_forTests',
                 householdName.asFormalGreeting());
     }
 
