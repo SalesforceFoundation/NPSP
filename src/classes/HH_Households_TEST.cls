@@ -268,11 +268,6 @@ public with sharing class HH_Households_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
 
 
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -448,11 +443,6 @@ public with sharing class HH_Households_TEST {
         );
         insert acct;
 
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -517,11 +507,6 @@ public with sharing class HH_Households_TEST {
         );
         insert acct;
 
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -734,11 +719,6 @@ public with sharing class HH_Households_TEST {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
 
-        String street = '2345 Elm St.';
-        String city = 'Seattle';
-        String state = 'Washington';
-        String zip = '88777';
-        String country = 'United States';
         String lastname = 'SmithForTest99';
 
         List<Contact> cons = new List<contact>();
