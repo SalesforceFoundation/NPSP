@@ -1041,11 +1041,11 @@ public with sharing class ADDR_Addresses_TEST {
 
         NPSP_Address npspAddressEmptyCountry = new NPSP_Address(addressEmptyCountry);
         npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
-        System.assertEquals(null, npspAddressEmptyCountry.mailingCountry());
+        System.assertEquals(null, npspAddressEmptyCountry.country());
 
         con.put('MailingCountryCode', countryCode);
         npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
-        System.assertEquals(country, npspAddressEmptyCountry.mailingCountry());
+        System.assertEquals(country, npspAddressEmptyCountry.country());
 
         Test.stopTest();
     }
@@ -1077,15 +1077,15 @@ public with sharing class ADDR_Addresses_TEST {
 
         NPSP_Address npspAddressEmptyState = new NPSP_Address(addressEmptyState);
         npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
-        System.assertEquals(null, npspAddressEmptyState.mailingState());
+        System.assertEquals(null, npspAddressEmptyState.state());
 
         con.put('MailingStateCode', stateCode);
         npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
-        System.assertEquals(stateCode, npspAddressEmptyState.mailingState());
+        System.assertEquals(stateCode, npspAddressEmptyState.state());
 
-        npspAddressEmptyState.mailingState('NY');
+        npspAddressEmptyState.state('NY');
         npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
-        System.assertEquals(stateCode, npspAddressEmptyState.mailingState());
+        System.assertEquals(stateCode, npspAddressEmptyState.state());
 
         Test.stopTest();
     }
@@ -1113,13 +1113,13 @@ public with sharing class ADDR_Addresses_TEST {
         String stateCode = 'CA';
 
         NPSP_Address npspAddressMatch = new NPSP_Address(addressMatch);
-        npspAddressMatch.mailingState(null);
+        npspAddressMatch.state(null);
         System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
 
-        npspAddressMatch.mailingState('Hawaii');
+        npspAddressMatch.state('Hawaii');
         System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
 
-        npspAddressMatch.mailingState('California');
+        npspAddressMatch.state('California');
         System.assertEquals(true, npspAddressMatch.isMatchingStateCode(stateCode));
 
         Test.stopTest();

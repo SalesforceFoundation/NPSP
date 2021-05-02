@@ -422,7 +422,7 @@ public inherited sharing class NPSP_Address implements IAddress {
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
 
-    public void mailingState(String state) {
+    public void state(String state) {
         addr.MailingState__c = state;
     }
 
