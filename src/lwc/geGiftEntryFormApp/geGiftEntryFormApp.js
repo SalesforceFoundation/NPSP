@@ -435,7 +435,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
                 'buttons': 
                     [{
-                        label: this.CUSTOM_LABELS.geProceedAnyway,
+                        label: this.CUSTOM_LABELS.geProcessAnyway,
                         variant: 'neutral',
                         action: () => { this.navigateToDataImportProcessingPage(); }
                     },
