@@ -30,41 +30,45 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Batch entity class in NPSP.
+* @description Gifts entity class in NPSP.
 */
 
-public inherited sharing class NPSP_Batch {
+public with sharing class Gifts {
 
-    private Id batchId;
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
+    private Set<String> captureGroupIds;
+    private List<DataImport__c> dataImports;
+
+    public Gifts(List<DataImport__c> dataImports) {
+        this.dataImports = dataImports;
+        setCaptureGroupIds(dataImports);
+    }
+
+    private void setCaptureGroupIds(List<DataImport__c> dataImports) {
+        captureGroupIds = new Set<String>();
+        for (DataImport__c dataImport : dataImports) {
+            captureGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
         }
-        set;
     }
 
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
+    public Set<String> captureGroupIds() {
+        return captureGroupIds;
+    }
+
+    public void updatePaymentStatusesFor(List<ElevateCaptureGroupResponse> captureGroupResponses) {
+        for (DataImport__c dataImport : dataImports) {
+            for (ElevateCaptureGroupResponse response : captureGroupResponses) {
+                if(isValidCaptureResponse(response, dataImport)) {
+                    if (response.status == System.Label.BatchProgressStatusProcessing) {
+                        dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
+                    }
+                }
             }
-            return captureGroupService;
         }
-        set;
+        update dataImports;
     }
 
-    public NPSP_Batch(Id batchId) {
-        this.batchId = batchId;
-    }
-
-    public void processPayments() {
-        Gifts authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(batchId));
-        List<ElevateCaptureGroupResponse> captureGroupResponses =
-                captureGroupService.capture(authorizedGifts.captureGroupIds());
-        authorizedGifts.updatePaymentStatusesFor(captureGroupResponses);
+    private Boolean isValidCaptureResponse (ElevateCaptureGroupResponse response, DataImport__c dataImport) {
+        return response.id.equals(dataImport.Payment_Elevate_Batch_ID__c) && response.errors == null;
     }
 
 

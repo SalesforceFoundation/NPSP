@@ -30,42 +30,17 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Batch entity class in NPSP.
+* @description Gift Selector Class in NPSP.
 */
 
-public inherited sharing class NPSP_Batch {
+public with sharing class GiftSelector {
 
-    private Id batchId;
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
-        }
-        set;
+    public List<DataImport__c> getAuthorizedGiftsFor(Id batchId) {
+        return [
+                SELECT Payment_Elevate_Batch_ID__c, Id
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c =: batchId
+                AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
+        ];
     }
-
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
-            }
-            return captureGroupService;
-        }
-        set;
-    }
-
-    public NPSP_Batch(Id batchId) {
-        this.batchId = batchId;
-    }
-
-    public void processPayments() {
-        Gifts authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(batchId));
-        List<ElevateCaptureGroupResponse> captureGroupResponses =
-                captureGroupService.capture(authorizedGifts.captureGroupIds());
-        authorizedGifts.updatePaymentStatusesFor(captureGroupResponses);
-    }
-
-
 }

@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import {validateJSONString, format, getNamespace, showToast} from 'c/utilCommon';
+import { validateJSONString, format, getNamespace } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -254,7 +254,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleProcessBatch() {
         if (this.isProcessable()) {
-            await this.chargeCaptureGroup();
+            await this.processPayments();
             this.navigateToDataImportProcessingPage();
         } else {
             if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
@@ -265,9 +265,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    async chargeCaptureGroup() {
+    async processPayments() {
         await processPayments({
                 batchId: this.batchId
+        }).catch(error => {
+            handleError(error);
         });
     }
 

@@ -216,7 +216,7 @@ public with sharing class GE_GiftEntryController {
            NPSP_Batch batch = new NPSP_Batch(batchId);
            batch.processPayments();
        } catch (AuraHandledException ex) {
-           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+          throw new AuraHandledException(ex.getMessage());
        }
     }
 

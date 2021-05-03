@@ -48,7 +48,7 @@ public virtual with sharing class ElevateCaptureGroupService {
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
     }
 
-    public ElevateCaptureGroup sendCreateRequest() {
+    public ElevateCaptureGroup getCaptureGroup() {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 createRequest()
         );
@@ -57,7 +57,7 @@ public virtual with sharing class ElevateCaptureGroupService {
         return new ElevateCaptureGroup(captureGroupResponse);
     }
 
-    public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withCaptureGroupId(groupId)
@@ -66,11 +66,11 @@ public virtual with sharing class ElevateCaptureGroupService {
                 .build();
     }
 
-    public List<ElevateCaptureGroupResponse> sendChargeRequest(List<String> groupIds) {
+    public List<ElevateCaptureGroupResponse> capture(Set<String> captureGroupIds) {
         List<ElevateCaptureGroupResponse> elevateCaptureGroupResponses = new List<ElevateCaptureGroupResponse>();
-        for (String elevateBatchId : groupIds) {
+        for (String elevateBatchId : captureGroupIds) {
             UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                    chargeRequest(elevateBatchId)
+                    captureRequest(elevateBatchId)
             );
             ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
                     response.body, ElevateCaptureGroupResponse.class);
@@ -82,7 +82,7 @@ public virtual with sharing class ElevateCaptureGroupService {
     @TestVisible
     private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
+            throw new AuraHandledException(authorizedGiftResponse.errors()[0].message);
         }
     }
 
@@ -94,7 +94,7 @@ public virtual with sharing class ElevateCaptureGroupService {
     @TestVisible
     private void checkForCaptureGroupErrorsIn(ElevateCaptureGroupResponse captureGroupResponse) {
         if (hasCaptureGroupErrors(captureGroupResponse)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroupResponse.errors()[0].message);
+            throw new AuraHandledException(captureGroupResponse.errors()[0].message);
         }
     }
 
@@ -111,7 +111,7 @@ public virtual with sharing class ElevateCaptureGroupService {
                 .build();
     }
 
-    private HttpRequest chargeRequest(String groupId) {
+    private HttpRequest captureRequest(String groupId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withCaptureGroupId(groupId)
