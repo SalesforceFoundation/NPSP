@@ -460,7 +460,7 @@ export default class rd2EntryForm extends LightningElement {
     handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
-        this.changeLoadingTextTo(this.customLabels.waitMessage);
+        this.loadingText = this.customLabels.waitMessage;
         this.isSaveButtonDisabled = true;
 
         if (this.isFormValid()) {
@@ -486,7 +486,7 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.changeLoadingTextTo(this.customLabels.validatingCardMessage);
+                this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
@@ -497,7 +497,7 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.changeLoadingTextTo(this.customLabels.savingCommitmentMessage);
+        this.loadingText = this.customLabels.savingCommitmentMessage;
 
         try {//ensure all errors are handled and displayed to the user
             const rd = this.constructRecurringDonation(allFields);
@@ -621,7 +621,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     processSubmit(allFields) {
         try {
-            this.changeLoadingTextTo(this.customLabels.savingRDMessage);
+            this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
 
         } catch (error) {
@@ -811,14 +811,6 @@ export default class rd2EntryForm extends LightningElement {
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
         }
-    }
-
-    /**
-     * @description Set the loading text to the specific text
-     * @param newLoadingText New loading text to be set to
-     */
-    changeLoadingTextTo(newLoadingText) {
-        this.loadingText = newLoadingText;
     }
 
     /**
