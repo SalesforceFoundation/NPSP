@@ -40,8 +40,12 @@ public inherited sharing class UnitOfWork {
 
     public Database.SaveResult[] save() {
         List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-        saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
-        saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
+        if (!objectsToInsert.isEmpty()) {
+            saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
+        }
+        if (!objectsToUpdate.isEmpty()) {
+            saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
+        }
         return saveResults;
     }
 
@@ -50,7 +54,21 @@ public inherited sharing class UnitOfWork {
     }
 
     public void registerDirty(List<SObject> sObjects) {
-       objectsToUpdate.addAll(sObjects);
+        Map<Id, SObject> sObjectMap = new Map<Id, SObject>(objectsToUpdate);
+        for (SObject sobj : sObjects) {
+            SObject inMap = sObjectMap.get(sobj.Id);
+            if (inMap != null) {
+                for (String field : sobj.getPopulatedFieldsAsMap().keySet()) {
+                    Object newVal = sobj.get(field);
+                    Object val = inMap.get(field);
+                    if (!val.equals(newVal)) {
+                        inMap.put(field, newVal);
+                    }
+                }
+            } else {
+                objectsToUpdate.add(sobj);
+            }
+        }
     }
 
 }
