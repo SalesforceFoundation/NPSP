@@ -395,6 +395,11 @@ export default class rd2EntryForm extends LightningElement {
             && this.hasUserDisabledElevateWidget !== true;
     }
 
+    hasElevateFieldsChange(allFields) {
+        let amount = getFieldValue(this.record, FIELD_AMOUNT);
+        return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
+    }
+
     /***
     * @description Prepopulates the card holder name field on the Elevate credit card widget
     */
@@ -455,13 +460,12 @@ export default class rd2EntryForm extends LightningElement {
     handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
-        this.loadingText = this.customLabels.waitMessage;
+        this.changeLoadingTextTo(this.customLabels.waitMessage);
         this.isSaveButtonDisabled = true;
 
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
-
-            if (this.isCommitment()) {
+            if (this.shouldSendToElevate(allFields)) {
                 this.processCommitmentSubmit(allFields);
 
             } else {
@@ -482,7 +486,7 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.customLabels.validatingCardMessage;
+                this.changeLoadingTextTo(this.customLabels.validatingCardMessage);
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
@@ -493,7 +497,7 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.loadingText = this.customLabels.savingCommitmentMessage;
+        this.changeLoadingTextTo(this.customLabels.savingCommitmentMessage);
 
         try {//ensure all errors are handled and displayed to the user
             const rd = this.constructRecurringDonation(allFields);
@@ -530,14 +534,14 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Determines if new or existing Recurring Donation is an Elevate recurring commitment
     */
-    isCommitment() {
+    shouldSendToElevate(allFields) {
         if (!this.isElevateCustomer) {
             return false;
         }
 
         // A new Recurring Donation will be a new Elevate recurring commitment
         // when the Elevate widget is displayed on the entry form.
-        return this.isElevateWidgetDisplayed();
+        return this.isElevateWidgetDisplayed() || this.hasElevateFieldsChange(allFields);
     }
 
     /***
@@ -617,7 +621,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     processSubmit(allFields) {
         try {
-            this.loadingText = this.customLabels.savingRDMessage;
+            this.changeLoadingTextTo(this.customLabels.savingRDMessage);
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
 
         } catch (error) {
@@ -807,6 +811,14 @@ export default class rd2EntryForm extends LightningElement {
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
         }
+    }
+
+    /**
+     * @description Set the loading text to the specific text
+     * @param newLoadingText New loading text to be set to
+     */
+    changeLoadingTextTo(newLoadingText) {
+        this.loadingText = newLoadingText;
     }
 
     /**
