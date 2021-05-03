@@ -58,15 +58,19 @@ public inherited sharing class UnitOfWork {
         for (SObject sobj : sObjects) {
             SObject inMap = sObjectMap.get(sobj.Id);
             if (inMap != null) {
-                for (String field : sobj.getPopulatedFieldsAsMap().keySet()) {
-                    Object newVal = sobj.get(field);
-                    Object val = inMap.get(field);
-                    if (!val.equals(newVal)) {
-                        inMap.put(field, newVal);
-                    }
-                }
+                updateFields(sobj, inMap);
             } else {
                 objectsToUpdate.add(sobj);
+            }
+        }
+    }
+
+    private void updateFields(SObject sobj, SObject inMap) {
+        for (String field : sobj.getPopulatedFieldsAsMap().keySet()) {
+            Object newVal = sobj.get(field);
+            Object val = inMap.get(field);
+            if (!val.equals(newVal)) {
+                inMap.put(field, newVal);
             }
         }
     }
