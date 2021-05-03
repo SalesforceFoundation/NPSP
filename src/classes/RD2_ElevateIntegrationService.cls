@@ -125,7 +125,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
         // Check if any of the restricted fields has been changed
         Boolean isChanged = rd.npe03__Contact__c != oldRd.npe03__Contact__c
             || rd.npe03__Organization__c != oldRd.npe03__Organization__c
-            || rd.npe03__Amount__c != oldRd.npe03__Amount__c
             || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c
             || rd.npe03__Installments__c != oldRd.npe03__Installments__c
             || rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c
