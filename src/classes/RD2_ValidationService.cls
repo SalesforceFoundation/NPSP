@@ -413,7 +413,7 @@ public with sharing class RD2_ValidationService {
     private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)) {
-            if( rd.StartDate__c > currentDate) {
+            if (rd.StartDate__c > currentDate) {
                 errorCollection.addError(System.Label.RD2_ElevateRDEffectiveDateMustBeValid);
             }
         }
