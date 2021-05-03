@@ -60,10 +60,10 @@ public inherited sharing class PS_CommitmentRequest {
      * Commitments start in the NEW state, then transition to ACTIVE after the first payment.
      * The Status cannot be an enum since NEW is a reserved keyword.
      */
-    public static String STATUS_NEW = 'NEW';
-    public static String STATUS_ACTIVE = 'ACTIVE';
-    public static String STATUS_INACTIVE = 'INACTIVE';
-    public static String STATUS_FAILING = 'FAILING';
+    public static final String STATUS_NEW = 'NEW';
+    public static final String STATUS_ACTIVE = 'ACTIVE';
+    public static final String STATUS_INACTIVE = 'INACTIVE';
+    public static final String STATUS_FAILING = 'FAILING';
 
     /***
      * @description Commitment Status Reason
@@ -89,7 +89,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
@@ -100,19 +100,23 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
      */
-    private static Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
+    private static final Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
         'USD' => 100
     };
 
     /***
      * @description Default currency multiplier
      */
-    private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+    private static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
      * @description Contains max length for a first/last name passed to the Elevate commitment request
      */
-    private static Integer MAX_NAME_LENGTH = 60;
+    private static final Integer MAX_NAME_LENGTH = 60;
+
+    private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
+    private static final String ACH_CODE_WEB = 'WEB';
+    private static final String ACH_CONSENT_MESSAGE = 'true';
 
     /***
      * @description Payment Services configuration
@@ -451,9 +455,9 @@ public inherited sharing class PS_CommitmentRequest {
 
         public RequestBody withACHAccountHolder(DonorType accountHolderType) {
             this.achData = new AchData();
-            this.achData.achCode = 'WEB';
-            this.achData.bankType = 'CHECKING';
-            this.achData.consent = 'true';
+            this.achData.achCode = ACH_CODE_WEB;
+            this.achData.bankType = ACH_BANK_TYPE_CHECKING;
+            this.achData.consent = ACH_CONSENT_MESSAGE;
             this.achData.type = accountHolderType.name();
             this.accountName = getAccountName(accountHolderType);
             return this;
