@@ -4251,6 +4251,7 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
+        <members>formattedTextWithDate</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>

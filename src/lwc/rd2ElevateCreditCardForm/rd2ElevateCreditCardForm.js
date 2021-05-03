@@ -1,7 +1,7 @@
 import { api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
 
-import tokenHandler from 'c/psElevateTokenHandler';
+import tokenHandler, { TOKENIZE_CREDIT_CARD_EVENT_ACTION, TOKENIZE_ACH_EVENT_ACTION } from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
@@ -15,8 +15,8 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
-import {isNull} from 'c/util';
-import { ACCOUNT_HOLDER_BANK_TYPES } from 'c/geConstants';
+import { isNull } from 'c/util';
+import { ACCOUNT_HOLDER_BANK_TYPES, ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -24,9 +24,10 @@ import { ACCOUNT_HOLDER_BANK_TYPES } from 'c/geConstants';
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
-const CREATE_TOKEN_ACTION = 'createToken';
-const CREATE_ACH_TOKEN_ACTION = 'createAchToken';
-const ELEVATE_PAYMENT_METHODS = ['ACH', 'Credit Card'];
+export const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
+export const PAYMENT_METHOD_ACH = 'ACH';
+const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
+const DEFAULT_ACH_CODE = 'WEB';
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
@@ -104,11 +105,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get isAchPayment() {
-        return this.paymentMethod === 'ACH';
+        return this.paymentMethod === PAYMENT_METHOD_ACH;
     }
 
     get isCardPayment() {
-        return this.paymentMethod === 'Credit Card';
+        return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     get isEditAch() {
@@ -216,9 +217,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.selectIframe();
-        if(this.paymentMethod === 'Credit Card') {
+        if(this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             return this.requestCardToken(iframe);
-        } else if(this.paymentMethod === 'ACH') {
+        } else if(this.paymentMethod === PAYMENT_METHOD_ACH) {
             return this.requestAchToken(iframe);
         }
     }
@@ -232,7 +233,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
-            eventAction: CREATE_TOKEN_ACTION,
+            eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
             handleError: this.handleError,
         });
     }
@@ -242,13 +243,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
-            eventAction: CREATE_ACH_TOKEN_ACTION,
+            eventAction: TOKENIZE_ACH_EVENT_ACTION,
             handleError: this.handleError,
         });
     }
 
     getAchParams() {
-        if(this.achAccountType === 'INDIVIDUAL') {
+        if(this.achAccountType === ACCOUNT_HOLDER_TYPES.INDIVIDUAL) {
             return {
                 accountHolder: {
                     firstName: this.payerFirstName,
@@ -256,10 +257,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                     type: this.achAccountType,
                     bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
-                achCode: 'WEB',
+                achCode: DEFAULT_ACH_CODE,
                 nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
             };
-        } else {
+        } else if(this.achAccountType === ACCOUNT_HOLDER_TYPES.BUSINESS) {
             return {
                 accountHolder: {
                     businessName: this.payerLastName,
@@ -267,7 +268,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                     type: this.achAccountType,
                     bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
-                achCode: 'WEB',
+                achCode: DEFAULT_ACH_CODE,
                 nameOnAccount: this.payerOrganizationName
             };
         }

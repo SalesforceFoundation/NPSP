@@ -3,6 +3,7 @@ import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isUndefined, isEmpty } from 'c/utilCommon';
 import { HTTP_CODES, ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
+import { PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/rd2ElevateCreditCardForm';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -65,8 +66,6 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01_
 
 const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
-const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
-const PAYMENT_METHOD_ACH = 'ACH';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 

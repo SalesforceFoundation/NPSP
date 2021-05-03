@@ -1,6 +1,6 @@
 import { api, LightningElement, wire } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import tokenHandler from 'c/psElevateTokenHandler';
+import tokenHandler, { TOKENIZE_CREDIT_CARD_EVENT_ACTION, TOKENIZE_ACH_EVENT_ACTION } from 'c/psElevateTokenHandler';
 import { apiNameFor, format, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { getFieldValue, getRecord } from "lightning/uiRecordApi";
@@ -31,8 +31,6 @@ import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 
-const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
-const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 const CONTACT_DONOR_TYPE = 'Contact1';
 
 const MODES = Object.freeze({
