@@ -423,7 +423,7 @@ private with sharing class RD2_EntryFormController_TEST {
         }
         Test.stopTest();
 
-        System.assertEquals(System.Label.RD2_ElevateAmountMustBeValid, errorMessage,
+        System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorMessage,
             'RD should be pre-validate before the Elevate Commitment API is called');
     }
     

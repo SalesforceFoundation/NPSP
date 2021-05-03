@@ -236,6 +236,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd, errorCollection);
             validateInstallmentFrequency(rd, errorCollection);
             validateCurrencyChange(rd, oldRd, errorCollection);
+            validateElevateRDScheduleCannotBeInTheFuture(rd, errorCollection);
             validateRecurringDonationEndDate(rd, errorCollection);
             validateStatus(rd, errorCollection);
 
@@ -303,7 +304,7 @@ public with sharing class RD2_ValidationService {
             && String.isNotBlank(rd.CommitmentId__c)
             && (rd.npe03__Amount__c == null || rd.npe03__Amount__c < 1)) {
 
-             errorCollection.addError(System.Label.RD2_ElevateAmountMustBeValid);
+             errorCollection.addError(System.Label.RD2_ElevateRDAmountMustBeValid);
 
         } else if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             errorCollection.addError(System.Label.RD2_AmountMustBeValid);
@@ -406,6 +407,15 @@ public with sharing class RD2_ValidationService {
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
             errorCollection.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
+        }
+    }
+
+    private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)) {
+            if( rd.StartDate__c > currentDate) {
+                errorCollection.addError(System.Label.RD2_ElevateRDEffectiveDateMustBeValid);
+            }
         }
     }
 
