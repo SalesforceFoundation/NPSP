@@ -201,7 +201,7 @@ import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWar
 import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
-import geProceedAnyway from '@salesforce/label/c.geProceedAnyway';
+import geProcessAnyway from '@salesforce/label/c.geProcessAnyway';
 import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
@@ -444,7 +444,7 @@ class GeLabelService {
         gePaymentProcessError,
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
-        geProceedAnyway,
+        geProcessAnyway,
         geProcessingErrors,
         geSearchPlaceholder,
         geSelectBatchTableColumns,
