@@ -281,8 +281,8 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.evaluateElevateEditWidget(this._paymentMethod);
-            this.evaluateElevateWidget(this._paymentMethod);
+            this.evaluateElevateEditWidget();
+            this.evaluateElevateWidget();
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -359,7 +359,7 @@ export default class rd2EntryForm extends LightningElement {
         //reset the widget and the form related to the payment method
         this.hasUserDisabledElevateWidget = false;
         this._paymentMethod = event.detail.value;
-        this.evaluateElevateWidget(event.detail.value);
+        this.evaluateElevateWidget();
     }
 
     /***
@@ -384,14 +384,14 @@ export default class rd2EntryForm extends LightningElement {
     */
     handleElevateWidgetDisplay() {
         if (this.isElevateCustomer) {
-            this.evaluateElevateWidget(this.paymentMethod);
+            this.evaluateElevateWidget();
         }
     }
 
     /***
     * @description Checks if the Elevate Widget should be displayed on Edit
     */
-    evaluateElevateEditWidget(paymentMethod) {
+    evaluateElevateEditWidget() {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
         this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
@@ -411,7 +411,7 @@ export default class rd2EntryForm extends LightningElement {
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
             this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
                 && this.isEdit 
-                && (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH)
+                && this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
@@ -425,9 +425,9 @@ export default class rd2EntryForm extends LightningElement {
     * The Elevate widget is applicable to new RDs only for now.
     * @param paymentMethod Payment method
     */
-    evaluateElevateWidget(paymentMethod) {
+    evaluateElevateWidget() {
         const isOpenSchedule = (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN);
-        const isValidPaymentMethod = (paymentMethod === PAYMENT_METHOD_CREDIT_CARD || paymentMethod === PAYMENT_METHOD_ACH);
+        const isValidPaymentMethod = this.isElevatePaymentMethod();
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
@@ -439,6 +439,10 @@ export default class rd2EntryForm extends LightningElement {
             && countrySupported);
 
         this.populateCardHolderName();
+    }
+
+    isElevatePaymentMethod() {
+        return this._paymentMethod === PAYMENT_METHOD_CREDIT_CARD || this._paymentMethod === PAYMENT_METHOD_ACH;
     }
 
     /***
@@ -992,7 +996,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Close the modal when Escape key is pressed
+     * @description Close the modal when Escsape key is pressed
      */
     handleKeyUp(event) {
         if (event.keyCode === 27 || event.code === 'Escape') {
