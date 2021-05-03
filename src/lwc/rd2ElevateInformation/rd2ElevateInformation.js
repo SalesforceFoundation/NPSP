@@ -131,8 +131,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
     }
 
-    get paymentMethod() {
-        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+    get canEditPaymentInformation() {
+        return this.isElevateCustomer
+            && this.permissions.hasKeyFieldsUpdateAccess
+            && this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     /***
