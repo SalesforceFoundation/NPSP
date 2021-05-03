@@ -148,7 +148,8 @@ private with sharing class PS_Request_TEST {
                 ) {
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
             } else if (endpoint == PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP
-                || endpoint == PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP) {
+                || endpoint == PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP
+                    || endpoint == PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
                 roles = PS_Request.ROLE_PAYMENT_BATCH;
             }
 
