@@ -36,6 +36,7 @@
 public inherited sharing class NPSP_Batch {
 
     private Id batchId;
+    private Gifts authorizedGifts;
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
@@ -58,14 +59,24 @@ public inherited sharing class NPSP_Batch {
 
     public NPSP_Batch(Id batchId) {
         this.batchId = batchId;
+        this.authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
     }
 
     public void processPayments() {
         Gifts authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(batchId));
         List<ElevateCaptureGroupResponse> captureGroupResponses =
                 captureGroupService.capture(authorizedGifts.captureGroupIds());
-        authorizedGifts.updatePaymentStatusesFor(captureGroupResponses);
+        handleCaptureGroupResponses(captureGroupResponses);
     }
 
-
+    private void handleCaptureGroupResponses(List<ElevateCaptureGroupResponse> captureGroupResponses) {
+        for (DataImport__c dataImport : authorizedGifts.dataImports()) {
+            for (ElevateCaptureGroupResponse response : captureGroupResponses) {
+                if(response.isValidCaptureResponse(dataImport)) {
+                    dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
+                }
+            }
+        }
+        update authorizedGifts.dataImports();
+    }
 }

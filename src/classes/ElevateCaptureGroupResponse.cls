@@ -48,4 +48,10 @@ public with sharing class ElevateCaptureGroupResponse {
     public List<Errors> errors() {
         return errors;
     }
+
+    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
+        return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
+                && errors == null
+                && status == System.Label.BatchProgressStatusProcessing;
+    }
 }

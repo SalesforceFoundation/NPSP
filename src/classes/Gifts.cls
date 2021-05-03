@@ -54,22 +54,7 @@ public with sharing class Gifts {
         return captureGroupIds;
     }
 
-    public void updatePaymentStatusesFor(List<ElevateCaptureGroupResponse> captureGroupResponses) {
-        for (DataImport__c dataImport : dataImports) {
-            for (ElevateCaptureGroupResponse response : captureGroupResponses) {
-                if(isValidCaptureResponse(response, dataImport)) {
-                    if (response.status == System.Label.BatchProgressStatusProcessing) {
-                        dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-                    }
-                }
-            }
-        }
-        update dataImports;
+    public List<DataImport__c> dataImports() {
+        return dataImports;
     }
-
-    private Boolean isValidCaptureResponse (ElevateCaptureGroupResponse response, DataImport__c dataImport) {
-        return response.id.equals(dataImport.Payment_Elevate_Batch_ID__c) && response.errors == null;
-    }
-
-
 }
