@@ -162,12 +162,12 @@ public inherited sharing class PS_CommitmentRequest {
     * @param token Payment Method Token
     * @return RequestBody
     */
-    public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
+    public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String token) {
         Boolean isCreateCommitment = String.isBlank(rd.CommitmentId__c);
 
         return isCreateCommitment
             ? getCreateRequestBody(rd, token)
-            : getUpdateRequestBody(rd, token);
+            : getUpdateRequestBody(rd, oldRd, token);
     }
 
     /***
@@ -209,12 +209,34 @@ public inherited sharing class PS_CommitmentRequest {
     * @param token Payment Method Token
     * @return RequestBody
     */
-    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, String token) {
+    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String token) {
         RequestBody reqBody = new RequestBody()
             .withCommitmentId(rd.CommitmentId__c)
             .withPaymentMethodToken(token);
 
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+
+        if (isElevateScheduleFieldsChanged(rd, oldRd)) {
+            reqBody.deactivateOldSchedules();
+            setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
+        }
+        
         return reqBody;
+    }
+
+    /**
+    * @description Check if Elevate schedule needs to be update
+    * @param rd new Recurring Donation
+    * @param oldRd old Recurring Donation
+    */
+    public Boolean isElevateScheduleFieldsChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (oldRd == null) {
+            return false;
+        }
+
+        return rd.npe03__Amount__c != oldRd.npe03__Amount__c;
     }
 
     /**
@@ -348,6 +370,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String paymentMethodType;
         public String paymentMethodToken;
         public String currencyCode;
+        public Boolean deactivateAllExistingSchedules;
         public List<Schedule> schedules;
 
         /***
@@ -366,6 +389,14 @@ public inherited sharing class PS_CommitmentRequest {
             paymentMethodType = PaymentMethod.CARD.name();
         }
 
+        /***
+        * @description Set boolean to de activate all existing schedule
+        * @return RequestBody This request body instance 
+        */
+        public RequestBody deactivateOldSchedules() {
+            this.deactivateAllExistingSchedules = true;
+            return this;
+        }
         /**
          * @description Sets merchant Id
          * @param commitmentId Recurring commitment Id
@@ -412,7 +443,9 @@ public inherited sharing class PS_CommitmentRequest {
          * @return RequestBody This request body instance
          */
         public RequestBody withPaymentMethodToken(String token) {
-            this.paymentMethodToken = token;
+            if (String.isNotBlank(token)) {
+                this.paymentMethodToken = token;
+            }
             return this;
         }
 
@@ -500,10 +533,11 @@ public inherited sharing class PS_CommitmentRequest {
      * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
      */
     public class Schedule {
-        public Integer recurringPaymentAmount;
+        public Integer amount;
         public String frequency;
         public Integer frequencyInterval;
-        public String firstOccurrenceOn;
+        public String firstOccurrenceOnTimestamp;
+        public String operation;
 
         /**
          * @description Schedule constructor
@@ -512,14 +546,16 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
             Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
-            this.recurringPaymentAmount = amount == null ? null : Integer.valueOf(amount);
+            this.amount = amount == null ? null : Integer.valueOf(amount);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = rdSchedule.InstallmentFrequency__c == null
                 ? null
                 : Integer.valueOf(rdSchedule.InstallmentFrequency__c);
 
-            this.firstOccurrenceOn = getNextDonationDate(rdSchedule);
+            this.firstOccurrenceOnTimestamp = getNextDonationDate(rdSchedule);
+
+            this.operation = 'CREATE';
         }
 
         /***
@@ -531,8 +567,11 @@ public inherited sharing class PS_CommitmentRequest {
             Date donationDate = new RD2_ScheduleService()
                 .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
 
-            DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            return donationDatetime.format('yyyy-MM-dd');
+            Datetime donationDatetime = donationDate == Datetime.now().date()
+                ? Datetime.now()
+                : Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
+            
+            return donationDatetime.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
 
