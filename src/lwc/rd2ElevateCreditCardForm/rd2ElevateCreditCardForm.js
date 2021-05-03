@@ -1,7 +1,7 @@
 import { api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
 
-import tokenHandler, { TOKENIZE_CREDIT_CARD_EVENT_ACTION, TOKENIZE_ACH_EVENT_ACTION } from 'c/psElevateTokenHandler';
+import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
@@ -16,7 +16,14 @@ import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInfor
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 import { isNull } from 'c/util';
-import { ACCOUNT_HOLDER_BANK_TYPES, ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
+import {
+    ACCOUNT_HOLDER_BANK_TYPES,
+    ACCOUNT_HOLDER_TYPES,
+    PAYMENT_METHOD_ACH,
+    PAYMENT_METHOD_CREDIT_CARD,
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+    TOKENIZE_ACH_EVENT_ACTION
+} from 'c/geConstants';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -24,8 +31,6 @@ import { ACCOUNT_HOLDER_BANK_TYPES, ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
-export const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
-export const PAYMENT_METHOD_ACH = 'ACH';
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
 const DEFAULT_ACH_CODE = 'WEB';
 

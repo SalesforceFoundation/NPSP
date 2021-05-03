@@ -1,6 +1,6 @@
 import { api, LightningElement, wire } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import tokenHandler, { TOKENIZE_CREDIT_CARD_EVENT_ACTION, TOKENIZE_ACH_EVENT_ACTION } from 'c/psElevateTokenHandler';
+import tokenHandler from 'c/psElevateTokenHandler';
 import { apiNameFor, format, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { getFieldValue, getRecord } from "lightning/uiRecordApi";
@@ -11,7 +11,9 @@ import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
     PAYMENT_METHOD_CREDIT_CARD,
-    PAYMENT_METHODS
+    PAYMENT_METHODS,
+    TOKENIZE_ACH_EVENT_ACTION,
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION
 } from 'c/geConstants';
 
 import GeFormService from 'c/geFormService';

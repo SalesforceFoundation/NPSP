@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, getNamespace } from 'c/utilCommon';
-import { PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/rd2ElevateCreditCardForm';
+import { PAYMENT_METHOD_CREDIT_CARD, PAYMENT_METHOD_ACH } from 'c/geConstants';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';

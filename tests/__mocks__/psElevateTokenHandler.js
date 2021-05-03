@@ -16,8 +16,6 @@ const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 const MOUNT_IFRAME_EVENT_ACTION = 'mount';
 
 const SET_PAYMENT_METHOD_EVENT_ACTION = 'setPaymentMethod';
-export const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
-export const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 
 /***
  * @description Max number of ms to wait for the response containing a token or an error
