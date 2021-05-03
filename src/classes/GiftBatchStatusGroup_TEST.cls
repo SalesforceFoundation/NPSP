@@ -86,6 +86,7 @@ private with sharing class GiftBatchStatusGroup_TEST {
 
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(statusGroup.isPaymentFailed());
+        System.assert(!statusGroup.isPaymentAuthorized());
         System.assertEquals(7, statusGroup.recordCount());
     }
 
@@ -99,4 +100,18 @@ private with sharing class GiftBatchStatusGroup_TEST {
         GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
         System.assert(!statusGroup.isPaymentFailed());
     }
+
+    @isTest
+    private static void shouldReturnTrueWithCorrectRecordCountForAuthorizedStatusGroup() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+            .withAliasAndValue(
+                String.valueOf(DataImport__c.fields.Payment_Status__c), 
+                ElevateTransactionStatus.AUTHORIZED.name())
+            .withAliasAndValue('recordCount', 3);
+
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(statusGroup.isPaymentAuthorized());
+        System.assertEquals(3, statusGroup.recordCount());
+    }
+
 }
