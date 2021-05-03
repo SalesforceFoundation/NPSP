@@ -82,7 +82,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -132,10 +132,13 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         insert rd;
 
+        npe03__Recurring_Donation__c oldRd = rd.clone();
+        oldRd.npe03__Amount__c = rd.npe03__Amount__c + 1;
+
         PS_CommitmentRequest request = new PS_CommitmentRequest();
 
         Test.startTest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, oldRd, PAYMENT_TOKEN);
         Test.stopTest();
 
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
@@ -157,7 +160,7 @@ private with sharing class PS_CommitmentRequest_TEST {
     * @description Verifies that the update request body should not set new schedules if there is no data
     */
     @isTest
-    private static void shouldBuildLeanUpdateCommitmentRequestBodyIfScheduleDataMissing() {
+    private static void shouldBuildLeanUpdateCommitmentRequestBodyIfScheduleDataIsNotChanged() {
         RD2_ScheduleService.currentDate = CURRENT_DATE;
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -169,8 +172,9 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
 
+
         Test.startTest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
         Test.stopTest();
 
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
