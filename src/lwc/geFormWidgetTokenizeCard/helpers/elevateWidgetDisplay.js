@@ -1,4 +1,4 @@
-class ElevateWidgetStateMachine {
+class ElevateWidgetDisplay {
     _state = DISPLAY_DEFINITIONS.initialState;
     componentContext;
 
@@ -270,4 +270,4 @@ const DISPLAY_DEFINITIONS = Object.freeze({
     }
 });
 
-export default ElevateWidgetStateMachine;
+export default ElevateWidgetDisplay;
