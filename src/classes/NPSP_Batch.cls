@@ -57,13 +57,24 @@ public inherited sharing class NPSP_Batch {
         set;
     }
 
+    @TestVisible
+    private NPSP_Batch(Gifts authorizedGifts) {
+        this.authorizedGifts = authorizedGifts;
+    }
+
     public NPSP_Batch(Id batchId) {
         this.batchId = batchId;
-        this.authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
+        this.authorizedGifts = authorizedGifts();
+    }
+
+    private Gifts authorizedGifts() {
+        if (authorizedGifts != null) {
+            return authorizedGifts;
+        }
+        return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
     }
 
     public void processPayments() {
-        Gifts authorizedGifts = new Gifts(giftSelector.getAuthorizedGiftsFor(batchId));
         List<ElevateCaptureGroupResponse> captureGroupResponses =
                 captureGroupService.capture(authorizedGifts.captureGroupIds());
         handleCaptureGroupResponses(captureGroupResponses);

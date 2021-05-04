@@ -82,7 +82,7 @@ public virtual with sharing class ElevateCaptureGroupService {
     @TestVisible
     private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
-            throw new AuraHandledException(authorizedGiftResponse.errors()[0].message);
+            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
         }
     }
 
@@ -94,7 +94,7 @@ public virtual with sharing class ElevateCaptureGroupService {
     @TestVisible
     private void checkForCaptureGroupErrorsIn(ElevateCaptureGroupResponse captureGroupResponse) {
         if (hasCaptureGroupErrors(captureGroupResponse)) {
-            throw new AuraHandledException(captureGroupResponse.errors()[0].message);
+            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroupResponse.errors()[0].message);
         }
     }
 

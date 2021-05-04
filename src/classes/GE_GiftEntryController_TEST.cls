@@ -78,6 +78,31 @@ private with sharing class GE_GiftEntryController_TEST {
                 'populated on a successful response.');
     }
 
+    @isTest static void chargeCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        AuraHandledException auraException;
+        List<DataImport__c> dataImports = new List<DataImport__c>{
+          new DataImport__c(
+                  Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                  Payment_Elevate_Batch_ID__c = 'test-valid-group-id')
+        };
+        insert dataImports;
+        Test.startTest();
+        try {
+            NPSP_Batch batch = new NPSP_Batch(new Gifts(dataImports));
+            String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
+            UTIL_Http_TEST.mockChargeCaptureGroup(validResponse);
+            batch.processPayments();
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+        List<DataImport__c> updatedDataImports = [
+                SELECT Payment_Status__c FROM DataImport__c WHERE Id =: dataImports[0].Id
+        ];
+        System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(),updatedDataImports[0].Payment_Status__c);
+    }
+
     @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {
         GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
         AuraHandledException auraException;

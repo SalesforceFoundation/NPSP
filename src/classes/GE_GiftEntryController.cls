@@ -199,7 +199,7 @@ public with sharing class GE_GiftEntryController {
         try {
             authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
         } catch (AuraHandledException ex) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
     }
