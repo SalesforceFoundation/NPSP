@@ -226,7 +226,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         return addr.Seasonal_Start_Month__c;
     }
 
-
     public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
         if (addr == null || other == null) {
             return false;
@@ -253,23 +252,24 @@ public inherited sharing class NPSP_Address implements IAddress {
         );
         return isDifferent;
     }
+
     /*******************************************************************************************************
     * @description Utility to copy Address fields between two Address objects.
     * @param addrSrc the source Address
     * @param addrDst the destination Address
     * @return void
     */
-    public void copyFrom(NPSP_Address other) {
-        addr.MailingStreet__c = other.getRecord().MailingStreet__c;
-        addr.MailingStreet2__c = other.getRecord().MailingStreet2__c;
-        addr.MailingCity__c = other.getRecord().MailingCity__c;
-        addr.MailingState__c = other.getRecord().MailingState__c;
-        addr.MailingPostalCode__c = other.getRecord().MailingPostalCode__c;
-        addr.MailingCountry__c = other.getRecord().MailingCountry__c;
-        addr.Geolocation__Latitude__s = other.getRecord().Geolocation__Latitude__s;
-        addr.Geolocation__Longitude__s = other.getRecord().Geolocation__Longitude__s;
-        if (other.getRecord().Address_Type__c != null)
-            addr.Address_Type__c = other.getRecord().Address_Type__c;
+    public void copyFrom(IAddress other) {
+        addr.MailingStreet__c = other.street();
+        addr.MailingStreet2__c = other.street2();
+        addr.MailingCity__c = other.city();
+        addr.MailingState__c = other.state();
+        addr.MailingPostalCode__c = other.postalCode();
+        addr.MailingCountry__c = other.country();
+        addr.Geolocation__Latitude__s = other.latitude();
+        addr.Geolocation__Longitude__s = other.longitude();
+        if (other.getType() != null)
+            addr.Address_Type__c = other.getType();
     }
 
     public Boolean isDefault() {
