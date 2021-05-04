@@ -14,7 +14,7 @@
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
                                     <template if:true={isEditMode}>
-                                        <template if:true={isDisabled}>
+                                        <template if:true={isEditCard}>
                                             <lightning-button variant="base" 
                                                 label={labels.updatePaymentButtonLabel}
                                                 onclick={handleUserEnabledWidget}
@@ -52,14 +52,15 @@
 
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
                         <template if:true={isDisabled}>
-                            <template if:true={isEditMode}>
+                            <template if:true={isEditCard}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {cardLastFourLabel}
                                         </label><br/>
-                                        <lightning-formatted-text id="last4CreditCard"
+                                        <lightning-formatted-text
+                                            id="last4CreditCard"
                                             value={cardLastFour}
                                             data-qa-locator={qaLocatorLastFourDigits}
                                             aria-labelledby="creditCardLast4Label">
@@ -74,6 +75,21 @@
                                             value={cardExpDate}
                                             data-qa-locator={qaLocatorExpirationDate}
                                             aria-labelledby="expirationDateLabel">
+                                        </lightning-formatted-text>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                            <template if:true={isEditAch}>
+                                <lightning-layout vertical-align='center' multiple-rows='true'>
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                        <label for="last4ACH"
+                                               class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
+                                            {achLastFourLabel}
+                                        </label><br/>
+                                        <lightning-formatted-text
+                                                id="last4ACH"
+                                                value={achLastFour}
+                                                data-qa-locator={qaLocatorLastFourDigits}>
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
                                 </lightning-layout>
@@ -101,21 +117,16 @@
                             </div>
                             <template if:true={isEditPayment}>
                                 <div class="slds-p-bottom_medium">
-                                    <lightning-formatted-text class="slds-text-title_bold" value={nextPaymentDonationDateMessage} >
-                                    </lightning-formatted-text>
-                                    <lightning-formatted-date-time class="slds-text-title_bold" 
-                                        year="numeric"
-                                        month="2-digit"
-                                        day="2-digit"
-                                        value={nextDonationDate}>
-                                    </lightning-formatted-date-time>
+                                    <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
-                            <div class="slds-col slds-size_1-of-2">
-                                <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
-                                                 data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
-                                </lightning-input>
-                            </div>
+                            <template if:true={isCardPayment}>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
+                                                     data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
+                                    </lightning-input>
+                                </div>
+                            </template>
 
                             <div class='iframe-container' data-qa-locator='iframe Elevate'>
                                 <template if:true={isLoading}>
