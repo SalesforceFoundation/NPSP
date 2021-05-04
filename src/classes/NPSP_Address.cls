@@ -65,10 +65,22 @@ public inherited sharing class NPSP_Address implements IAddress {
     public NPSP_Address(Contact con) {
         this.addr = new Address__c();
         addr.Household_Account__c = con.AccountId;
-        addr.Default_Address__c = !con.is_Address_Override__c;
+        if (con.getPopulatedFieldsAsMap().keySet().contains(
+                String.valueOf(Contact.is_Address_Override__c)
+        )) {
+            addr.Default_Address__c = !con.is_Address_Override__c;
+        }
         addr.Latest_Start_Date__c = System.today();
         addr.Latest_End_Date__c = null;
-        copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+        if (con.getPopulatedFieldsAsMap().keySet().contains(
+                String.valueOf(Contact.npe01__Primary_Address_Type__c)
+        )) {
+            copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+        } else {
+            //Todo: add test for when PrimAddr not populated
+            copyFromSObject(con, 'Mailing', 'Mailing');
+
+        }
     }
 
     public NPSP_Address(Account acc) {
@@ -294,14 +306,14 @@ public inherited sharing class NPSP_Address implements IAddress {
     * @return void
     */
     public void copyFromSObject(SObject sobjSrc, String fieldPrefixSrc, String addrType) {
-        addr.MailingStreet__c = (String) sobjSrc.get(fieldPrefixSrc + 'Street');
+        addr.MailingStreet__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Street');
         Addresses.handleMultilineStreet(addr);
-        addr.MailingCity__c = (String) sobjSrc.get(fieldPrefixSrc + 'City');
-        addr.MailingPostalCode__c = (String) sobjSrc.get(fieldPrefixSrc + 'PostalCode');
-        addr.MailingState__c = (String) sobjSrc.get(fieldPrefixSrc + 'State');
-        addr.MailingCountry__c = (String) sobjSrc.get(fieldPrefixSrc + 'Country');
-        addr.Geolocation__Latitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Latitude');
-        addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
+        addr.MailingCity__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'City');
+        addr.MailingPostalCode__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'PostalCode');
+        addr.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'State');
+        addr.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Country');
+        addr.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
+        addr.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
@@ -319,7 +331,17 @@ public inherited sharing class NPSP_Address implements IAddress {
         }
     }
 
-    public void checkForPartialSeasonalErrors(){
+    private Object getSObjectField(SObject sobjSrc, String fieldPrefixSrc, String field) {
+        if (sobjSrc.getPopulatedFieldsAsMap().keySet().contains(
+                fieldPrefixSrc + field
+        )) {
+            return sobjSrc.get(fieldPrefixSrc + field);
+        } else {
+            return null;
+        }
+    }
+
+    public void checkForPartialSeasonalErrors() {
         if (isPartialSeasonalAddr()) {
             this.addr.addError(Label.addrSeasonalPartial);
         }
