@@ -115,22 +115,6 @@ describe('c-rd2-entry-form', () => {
         expect(elevateWidget).toBeTruthy();
     });
 
-    it('elevate customer selects ACH payment method then widget displayed', async () => {
-        const element = createRd2EntryForm();
-        const controller = new RD2FormController(element);
-        await flushPromises();
-
-        await setupWireMocksForElevate();
-        controller.setDefaultInputFieldValues();
-
-        controller.paymentMethod().changeValue('ACH');
-
-        await flushPromises();
-
-        const elevateWidget = controller.elevateWidget();
-        expect(elevateWidget).toBeTruthy();
-    });
-
     it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
         mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
             // if message action is "createToken", reply with dummy token immediately
