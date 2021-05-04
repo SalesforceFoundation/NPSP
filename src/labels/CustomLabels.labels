@@ -5090,7 +5090,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to process a batch that contains Elevate payments.</shortDescription>
-        <value>Process Batch and Payments</value>
+        <value>Process Batch &amp; Payments</value>
     </labels>
     <labels>
         <fullName>bgeRetirementWarningBody</fullName>
