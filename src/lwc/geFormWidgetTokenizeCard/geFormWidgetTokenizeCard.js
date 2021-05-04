@@ -56,7 +56,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     constructor() {
         super();
         this.display = new ElevateWidgetDisplay();
-        this.display.componentContext = this;
+        this.display.init(this);
         this._displayState = this.display.currentState();
         registerListener('resetElevateWidget', this.handleElevateWidgetReset, this);
     }
@@ -86,7 +86,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     wiredDataImportRecord({data, error}) {
         if (data) {
             this.setReadOnlyData(data);
-            this.display.transitionTo('readOnly');
         } else if (error) {
             this.handleError(error);
         }
@@ -321,6 +320,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this._cardLast4 = getFieldValue(data, PAYMENT_LAST_4);
         this._cardExpirationDate = getFieldValue(data, PAYMENT_EXPIRATION_MONTH) + '/' +
             getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        if (this._cardLast4 && this._cardExpirationDate) {
+            this.display.transitionTo('readOnly');
+        }
     }
 
     setCurrentPaymentMethod() {
