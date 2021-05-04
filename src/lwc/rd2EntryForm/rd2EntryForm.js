@@ -46,6 +46,7 @@ import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import waitMessage from '@salesforce/label/c.commonWaitMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
 import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
+import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
 import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
 import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
@@ -96,6 +97,7 @@ export default class rd2EntryForm extends LightningElement {
         waitMessage,
         savingRDMessage,
         validatingCardMessage,
+        validatingACHMessage,
         savingCommitmentMessage,
         commitmentFailedMessage,
         contactAdminMessage,
@@ -541,7 +543,7 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.customLabels.validatingCardMessage;
+                this.loadingText = this.getPaymentProcessingMessage();
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
@@ -583,6 +585,14 @@ export default class rd2EntryForm extends LightningElement {
 
         } catch (error) {
             this.handleSaveError(error);
+        }
+    }
+
+    getPaymentProcessingMessage() {
+        if(this._paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
+            return this.customLabels.validatingCardMessage;
+        } else if(this._paymentMethod === PAYMENT_METHOD_ACH) {
+            return this.customLabels.validatingACHMessage;
         }
     }
 

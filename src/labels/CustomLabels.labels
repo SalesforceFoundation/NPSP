@@ -2237,6 +2237,14 @@
         You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveACHMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
