@@ -991,6 +991,7 @@ export default class GeFormRenderer extends LightningElement{
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.initializeFormState();
+        fireEvent(this, 'resetElevateWidget', {});
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
