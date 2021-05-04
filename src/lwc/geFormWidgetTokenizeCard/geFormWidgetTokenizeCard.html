@@ -18,30 +18,35 @@
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
                                     <template if:true={isCharge}>
-                                        <lightning-button variant="base"
-                                                          label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                                          icon-name='utility:close'
-                                                          icon-position="right"
-                                                          onclick={handleUserDoNotCharge}
-                                                          class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                          data-qa-locator={qaLocatorDoNotChargeButton}>
-                                        </lightning-button>
+                                        <template if:false={isEdit}>
+                                            <lightning-button variant="base"
+                                                            label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
+                                                            icon-name='utility:close'
+                                                            icon-position="right"
+                                                            onclick={handleUserDoNotCharge}
+                                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                            data-qa-locator={qaLocatorDoNotChargeButton}>
+                                            </lightning-button>
+                                        </template>
                                     </template>
                                     <template if:true={isExpiredTransaction}>
-                                        <lightning-button variant="base"
-                                                          label={CUSTOM_LABELS.commonEditPaymentInformation}
-                                                          icon-name='utility:close'
-                                                          icon-position="right"
-                                                          onclick={handleUserEdit}
-                                                          class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                          data-qa-locator={qaLocatorEditPaymentInformation}>
-                                        </lightning-button>
+                                        <template if:false={isEdit}>
+                                            <lightning-button variant="base"
+                                                            label={CUSTOM_LABELS.commonEditPaymentInformation}
+                                                            icon-name='utility:close'
+                                                            icon-position="right"
+                                                            onclick={handleUserEditExpired}
+                                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                            data-qa-locator={qaLocatorEditPaymentInformation}>
+                                            </lightning-button>
+                                        </template>
                                     </template>
                                     <template if:true={isEdit}>
                                         <lightning-button variant="base"
                                                           label={CUSTOM_LABELS.commonCancel}
                                                           icon-name='utility:close'
                                                           icon-position="right"
+                                                          onclick={handleUserCancelEdit}
                                                           class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
                                                           data-qa-locator={qaLocatorCancelEditPaymentInformation}>
                                         </lightning-button>
@@ -53,9 +58,6 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
-                        <template if:true={isLoading}>
-                        </template>
-
                         <template if:true={isCharge}>
                             <c-util-alert-banner if:true={alert.show}
                                                  theme={alert.theme}
@@ -135,7 +137,7 @@
                         </template>
 
                         <template if:true={isDoNotCharge}>
-                            <p class='fade-in'>
+                            <p class='fade-in slds-p-vertical_medium'>
                                 <span class='slds-content-message'>
                                     {deactivatedWidgetMessage}
                                 </span>
@@ -151,7 +153,7 @@
                         </template>
 
                         <template if:true={isCriticalError}>
-                            <p class='fade-in'>
+                            <p class='fade-in slds-p-vertical_medium'>
                                 <span class='slds-content-message'>
                                     {criticalErrorMessage}
                                 </span>
