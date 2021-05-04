@@ -410,6 +410,12 @@ public with sharing class RD2_ValidationService {
         }
     }
 
+    /**
+    * @description Validate the Elevate RD Effective date cannot be in the future during update
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    * @return void
+    */
     private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)) {
