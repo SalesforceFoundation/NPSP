@@ -60,14 +60,13 @@ public inherited sharing class NPSP_Contact {
         set;
     }
 
-    public NPSP_Contact(Contact contact) {
-        this(contact, null);
-    }
-
     public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
-        this.mailingAddress = new NPSP_Address(contact);
+    }
+
+    public NPSP_Contact(Contact contact) {
+        this.contact = contact;
     }
 
     public Contact getRecord() {
