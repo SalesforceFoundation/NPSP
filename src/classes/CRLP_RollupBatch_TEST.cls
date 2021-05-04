@@ -42,13 +42,8 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assert(whereClause.contains('npo02__NumberOfMembershipOpps__c'),
-            'Expected field npo02__NumberOfMembershipOpps__c missing from skew mode where clause');
-        System.assertEquals(2, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
+            'npo02__NumberOfMembershipOpps__c', 2, '>=');
     }
 
     @IsTest
@@ -57,13 +52,8 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assert(whereClause.contains('npo02__NumberOfMembershipOpps__c'),
-            'Expected field npo02__NumberOfMembershipOpps__c missing from skew mode where clause');
-        System.assertEquals(2, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
+            'npo02__NumberOfMembershipOpps__c', 2, '<');
     }
 
     @IsTest
@@ -72,13 +62,8 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assert(whereClause.contains('npo02__NumberOfMembershipOpps__c'),
-            'Expected field npo02__NumberOfMembershipOpps__c missing from skew mode where clause');
-        System.assertEquals(2, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
+            'npo02__NumberOfMembershipOpps__c', 2, '>=');
     }
 
     @IsTest
@@ -87,13 +72,8 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assert(whereClause.contains('npo02__NumberOfMembershipOpps__c'),
-            'Expected field npo02__NumberOfMembershipOpps__c missing from skew mode where clause');
-        System.assertEquals(2, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
+            'npo02__NumberOfMembershipOpps__c', 2, '<');
     }
 
     @IsTest
@@ -102,11 +82,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('Number_of_Soft_Credits__c'),
-            'Expected field Number_of_Soft_Credits__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'Number_of_Soft_Credits__c', 1, '>=');
     }
 
     @IsTest
@@ -115,11 +91,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-
-        System.assert(whereClause.contains('Number_of_Soft_Credits__c'),
-            'Expected field Number_of_Soft_Credits__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'Number_of_Soft_Credits__c', 1, '<');
     }
 
     @IsTest
@@ -128,11 +100,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '>=');
     }
 
     @IsTest
@@ -141,11 +109,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '<');
     }
 
     @IsTest
@@ -154,11 +118,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '>=');
     }
 
     @IsTest
@@ -167,11 +127,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-
-        System.assert(whereClause.contains('npo02__NumberOfClosedOpps__c'),
-            'Expected field npo02__NumberOfClosedOpps__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '<');
     }
 
     @IsTest
@@ -180,11 +136,8 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.GAU,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assertEquals(0, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
-        System.assertEquals(0, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+        System.assertEquals(0, whereClause.countMatches('>='), 'Expected >= missing from skew mode where clause');
+        System.assertEquals(0, whereClause.countMatches('<'), 'Expected < missing from skew mode where clause');
     }
 
     @IsTest
@@ -193,11 +146,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-
-        System.assert(whereClause.contains('npe03__Total_Paid_Installments__c'),
-            'Expected field npe03__Total_Paid_Installments__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('>='),
-            'Expected >= missing from skew mode where clause');
+        assertFieldsAndComparisonOperators(whereClause, 'npe03__Total_Paid_Installments__c', 1, '>=');
     }
 
     @IsTest
@@ -206,10 +155,23 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
+        assertFieldsAndComparisonOperators(whereClause, 'npe03__Total_Paid_Installments__c', 1, '<');
+    }
 
-        System.assert(whereClause.contains('npe03__Total_Paid_Installments__c'),
-            'Expected field npe03__Total_Paid_Installments__c missing from skew mode where clause');
-        System.assertEquals(1, whereClause.countMatches('<'),
-            'Expected < missing from skew mode where clause');
+    // *** Helpers
+
+    private static void assertFieldsAndComparisonOperators(String whereClause, String apiName, Integer count, String symbol) {
+        assertFieldsAndComparisonOperators(whereClause, apiName, null, count, symbol);
+    }
+
+    private static void assertFieldsAndComparisonOperators(String whereClause, String apiName1, String apiName2,
+        Integer count, String symbol)
+    {
+        System.assert(whereClause.contains(apiName1), 'Expected field ' + apiName1 + ' missing from skew mode where clause');
+        System.assertEquals(count, whereClause.countMatches(symbol), 'Expected ' + symbol + ' missing from skew mode where clause');
+
+        if (count > 1) {
+            System.assert(whereClause.contains(apiName2), 'Expected field ' + apiName2 + ' missing from skew mode where clause');
+        }
     }
 }
