@@ -397,6 +397,7 @@ public inherited sharing class PS_CommitmentRequest {
             this.deactivateAllExistingSchedules = true;
             return this;
         }
+
         /**
          * @description Sets merchant Id
          * @param commitmentId Recurring commitment Id

@@ -842,7 +842,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /**
-    * @description Verifies that Elevate RD cannot have amount less than 1 dollar
+    * @description Verifies that Elevate RD update will fail when effective date is in the future
     */
     @isTest
     private static void shouldNotAllowElevateRDUpdateWhenEffectiveDateIsInTheFuture() {

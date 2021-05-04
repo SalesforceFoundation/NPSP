@@ -387,7 +387,7 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
         System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
             'The response status code should match: ' + response);
-            System.assertEquals(UTIL_Http.STATUS_OK, status,
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
             'The response status should match: ' + response);
     }
 
