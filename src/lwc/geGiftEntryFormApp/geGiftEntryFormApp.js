@@ -134,6 +134,25 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleBatchDryRun() {
+        try {
+            this.refreshBatchTotals();
+        } catch (error) {
+            handleError(error);
+        } finally {
+            if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                    () => { 
+                        this.callBatchDryRun(); 
+                        this.dispatchEvent(new CustomEvent('closemodal')); 
+                    } 
+                );
+            } else {
+                this.callBatchDryRun();
+            }
+        }
+    }
+    
+    callBatchDryRun() {
         //toggle the spinner on the form
         const form = this.template.querySelector('c-ge-form-renderer');
         const toggleSpinner = function () {
@@ -252,18 +271,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    async handleProcessBatch() {
+    handleProcessBatch() {
         if (this.isProcessable) {
             try {
-                if(this.isElevateCustomer) {
-                    this._hasDisplayedExpiredAuthorizationWarning = false;
-                    this.batchTotals = await BatchTotals(this.batchId);
-                }
+                this.refreshBatchTotals();
             } catch (error) {
                 handleError(error);
             } finally {
                 if (this.shouldDisplayExpiredAuthorizationWarning()) {
-                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun();
+                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                        () => { this.navigateToDataImportProcessingPage() } 
+                    );
                 } else {
                     this.navigateToDataImportProcessingPage();
                 }
@@ -289,6 +307,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             },
             true
         );
+    }
+
+    async refreshBatchTotals() {
+        if(this.isElevateCustomer) {
+            this._hasDisplayedExpiredAuthorizationWarning = false;
+            this.batchTotals = await BatchTotals(this.batchId);
+        }        
     }
 
     get bdiDataImportPageName() {
@@ -428,7 +453,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this._hasDisplayedExpiredAuthorizationWarning = true;
     }
 
-    displayExpiredAuthorizationWarningModalForProcessAndDryRun() {
+    displayExpiredAuthorizationWarningModalForProcessAndDryRun(actionOnProceed) {
         this.displayModalPrompt ({
                 'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
@@ -437,7 +462,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     [{
                         label: this.CUSTOM_LABELS.geProcessAnyway,
                         variant: 'neutral',
-                        action: () => { this.navigateToDataImportProcessingPage(); }
+                        action: actionOnProceed
                     },
                     {
                         label: this.CUSTOM_LABELS.commonCancel,
