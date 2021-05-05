@@ -337,7 +337,6 @@ private with sharing class PS_CommitmentRequest_TEST {
 
     /**
      * @description Base common Recurring Donation record
-     * @param contactId Contact Id
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
