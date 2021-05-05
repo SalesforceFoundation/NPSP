@@ -282,7 +282,7 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
-        registerListener('nullPaymenetFieldsInFormState', this.handleNullPaymenetFieldsInFormState, this);
+        registerListener('nullPaymenetFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -324,7 +324,7 @@ export default class GeFormRenderer extends LightningElement{
         });
     }
 
-    handleNullPaymenetFieldsInFormState(event) {
+    handleNullPaymentFieldsInFormState() {
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
             apiNameFor(PAYMENT_DECLINED_REASON),
