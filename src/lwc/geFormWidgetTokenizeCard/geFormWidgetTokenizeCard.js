@@ -285,6 +285,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleElevateWidgetReset() {
         this.display.transitionTo('loading');
         this.clearError();
+        this._cardLast4 = undefined;
+        this._cardExpirationDate = undefined;
         this.updateDisplayState();
     }
 
