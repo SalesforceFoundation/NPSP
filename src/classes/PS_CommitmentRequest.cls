@@ -441,14 +441,11 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        public RequestBody withPaymentMethodType(String paymentMethodType) {
-            switch on paymentMethodType {
-                when 'ACH' {
-                    this.paymentMethodType = PaymentMethod.ACH.name();
-                }
-                when 'Credit Card' {
-                    this.paymentMethodType = PaymentMethod.CARD.name();
-                }
+        public RequestBody withPaymentMethodType(String paymentMethodPicklistValue) {
+            if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH) {
+                this.paymentMethodType = PaymentMethod.ACH.name();
+            } else if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
+                this.paymentMethodType = PaymentMethod.CARD.name();
             }
             return this;
         }

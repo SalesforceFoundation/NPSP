@@ -159,7 +159,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
-        if(this.isEditMode){
+        if(this.isEditMode) {
             this.isDisabled = true;
         }
 

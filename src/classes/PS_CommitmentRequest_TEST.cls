@@ -83,7 +83,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withContact(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCampaign(rdCampaign.Id)
-            .withPaymentMethod('Credit Card')
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
@@ -233,9 +233,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 commitmentBody.paymentMethodType,
                 'Expected payment method for new RequestBody to be empty');
 
-        String CARD_PICKLIST_API_VALUE = 'Credit Card';
-
-        commitmentBody.withPaymentMethodType(CARD_PICKLIST_API_VALUE);
+        commitmentBody.withPaymentMethodType(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD);
 
         System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(),
                 commitmentBody.paymentMethodType,
@@ -245,9 +243,8 @@ private with sharing class PS_CommitmentRequest_TEST {
     @IsTest
     private static void requestBodyCanSetPaymentMethodACH() {
         PS_CommitmentRequest.RequestBody commitmentBody = new PS_CommitmentRequest.RequestBody();
-        String ACH_PICKLIST_API_VALUE = 'ACH';
 
-        commitmentBody.withPaymentMethodType(ACH_PICKLIST_API_VALUE);
+        commitmentBody.withPaymentMethodType(RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH);
 
         System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(),
                 commitmentBody.paymentMethodType,
@@ -268,7 +265,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .withContact(contact.Id)
                 .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
                 .withCampaign(rdCampaign.Id)
-                .withPaymentMethod('ACH')
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH)
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
@@ -317,7 +314,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .withAccount(account.Id)
                 .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
                 .withCampaign(rdCampaign.Id)
-                .withPaymentMethod('ACH')
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH)
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
@@ -340,7 +337,6 @@ private with sharing class PS_CommitmentRequest_TEST {
 
     /**
      * @description Base common Recurring Donation record
-     * @param contactId Contact Id
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {

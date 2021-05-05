@@ -1884,6 +1884,7 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveACHMessage</members>
         <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
         <members>RD2_EntryFormSaveCommitmentMessage</members>
         <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
