@@ -193,6 +193,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         }
     }
 
+    requestParentNullPaymentFieldsInFormState() {
+        this.dispatchApplicationEvent('nullPaymenetFieldsInFormState', {});
+    }
+
     isNewRow(widgetState) {
         if (isEmpty(this._widgetDataFromState)) return false;
         return this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)] !== widgetState[apiNameFor(DATA_IMPORT_ID)];

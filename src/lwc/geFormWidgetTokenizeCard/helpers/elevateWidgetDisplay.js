@@ -42,19 +42,15 @@ const DISPLAY_DEFINITIONS = Object.freeze({
         transitions: {
             charge: {
                 target: 'charge',
-                action() {},
             },
             deactivated: {
                 target: 'deactivated',
-                action() {},
             },
             readOnly: {
                 target: 'readOnly',
-                action() {},
             },
             criticalError: {
                 target: 'criticalError',
-                action() {},
             }
         },
     },
@@ -89,6 +85,7 @@ const DISPLAY_DEFINITIONS = Object.freeze({
         actions: {
             onEnter() {
                 this._componentContext.dismount();
+                this._componentContext.requestParentNullPaymentFieldsInFormState();
             },
             onExit() {},
         },
@@ -108,6 +105,7 @@ const DISPLAY_DEFINITIONS = Object.freeze({
         actions: {
             onEnter() {
                 this._componentContext.dismount();
+                this._componentContext.requestParentNullPaymentFieldsInFormState();
             },
             onExit() {},
         },
@@ -117,9 +115,6 @@ const DISPLAY_DEFINITIONS = Object.freeze({
             },
             userOriginatedCharge: {
                 target: 'charge'
-            },
-            deactivated: {
-                target: 'deactivated'
             },
         },
     },
@@ -160,6 +155,7 @@ const DISPLAY_DEFINITIONS = Object.freeze({
                 if (!this._componentContext.isMounted) {
                     this._componentContext.loadingOn();
                 }
+                this._componentContext.requestParentNullPaymentFieldsInFormState();
             },
             onExit() {},
         },
