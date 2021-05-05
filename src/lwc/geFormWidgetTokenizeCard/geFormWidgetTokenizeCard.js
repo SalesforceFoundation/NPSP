@@ -116,9 +116,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.updateDisplayState();
     }
 
-    get isLoading() {
-        return this._displayState === 'loading' 
-            || this._showSpinner === true;
+    get showSpinner() {
+        return this._showSpinner === true;
     }
 
     get isCharge() {
