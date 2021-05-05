@@ -2415,7 +2415,8 @@ export default class GeFormRenderer extends LightningElement{
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
                 'buttons': 
                     [{
-                        label: this.CUSTOM_LABELS.commonReviewForm        
+                        label: this.CUSTOM_LABELS.commonReviewForm,
+                        action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
                     }]
             });
 

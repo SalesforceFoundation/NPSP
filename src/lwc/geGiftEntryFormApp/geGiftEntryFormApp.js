@@ -447,7 +447,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'buttons': 
                     [{
                         label: this.CUSTOM_LABELS.commonOkay,
-                        variant: 'neutral'
+                        variant: 'neutral',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
                     }]
             });
         this._hasDisplayedExpiredAuthorizationWarning = true;
@@ -466,7 +467,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     },
                     {
                         label: this.CUSTOM_LABELS.commonCancel,
-                        variant: 'brand'      
+                        variant: 'brand',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
                     }]
             });
         this._hasDisplayedExpiredAuthorizationWarning = true;

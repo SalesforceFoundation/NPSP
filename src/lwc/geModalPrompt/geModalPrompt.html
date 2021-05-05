@@ -6,7 +6,7 @@
         <section class='slds-p-horizontal_large slds-p-vertical_small'>
             <h2 class='slds-text-body_small'>{message}</h2>
             <div class='slds-align_absolute-center slds-m-top_large'>
-                <template for:each={enrichedButtons} for:item='button'>
+                <template for:each={buttons} for:item='button'>
                     <lightning-button key={button.label}
                                     class='slds-m-horizontal_xx-small'
                                     label={button.label}

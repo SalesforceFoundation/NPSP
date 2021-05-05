@@ -1,5 +1,4 @@
-import { LightningElement, api, track } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { LightningElement, api } from 'lwc';
 import { isEmpty } from 'c/utilCommon';
 
 export default class geModalPrompt extends LightningElement {
@@ -8,22 +7,6 @@ export default class geModalPrompt extends LightningElement {
     @api title;
     @api message;
     @api buttons = [];
-
-    @track enrichedButtons = [];
-
-    connectedCallback() {
-        for (const button of this.buttons) {
-            let enrichedButton = { ...button };
-            if (isEmpty(enrichedButton.action)) {
-                enrichedButton.action = this.handleCloseModal;
-            }
-            this.enrichedButtons.push(enrichedButton);
-        }
-    }  
-
-    handleCloseModal() {
-        fireEvent(this.pageRef, 'geModalCloseEvent', {});
-    }
 
     get titleSectionComputedClass() {
 
