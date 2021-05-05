@@ -156,10 +156,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
     }
 
-    get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnlyMode && !this.isPaymentCaptured();
-    }
-
     get tokenizeCardPageUrl() {
         return tokenHandler.getTokenizeCardPageURL();
     }
