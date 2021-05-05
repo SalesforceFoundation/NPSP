@@ -67,7 +67,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingState = 'California';
         contact.MailingPostalCode = '95014'; 
         contact.MailingCountry = 'United States';
+        System.debug(LoggingLevel.ERROR, '*** ##### SATRT ######');
         insert contact;
+        System.debug(LoggingLevel.ERROR, '*** ##### STOP ######');
 
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -77,6 +79,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
         //check address record got created for household
         Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + av);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ av ^^^^^^');
         System.assertEquals(1, av.size());
         System.assertEquals('single-address', av[0].MailingStreet__c);
         System.assertEquals('California', av[0].MailingState__c);

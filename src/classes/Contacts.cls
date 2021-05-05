@@ -445,6 +445,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listAddrInsertDefault.size() > 0) {
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + listAddrInsertDefault);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ listAddrInsertDefault ^^^^^^');
             dmlWrapper.objectsToInsert.addAll((List<SObject>) listAddrInsertDefault);
         }
     }
@@ -750,8 +752,20 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
+    static Integer timesRun = 0;
     private Set<Contact> getAddressCreationQueue() {
+        System.debug(LoggingLevel.ERROR, '*** ##### running Contacts.getAddressCreationQueue######');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + timesRun);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ timesRun already^^^^^^');
+        timesRun++;
+
         Set<Contact> addressCreationQueue = new Set<Contact>();
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + isRecursive());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ isRecursive() ^^^^^^');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + isRecursiveFromContact());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ isRecursiveFromContact() ^^^^^^');
+//       System.debug(LoggingLevel.ERROR, '*** variable value: ' + getRecords());
+//       System.debug(LoggingLevel.ERROR, '^^^^^^ getRecords() ^^^^^^');
         if (isRecursive() || isRecursiveFromContact()) {
             if (isRecursive()) {
                 UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
@@ -835,15 +849,23 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (SObject so : thatHaveAccounts().getRecords()) {
             Contact con = (Contact) so;
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + npspContact);
+//            System.debug(LoggingLevel.ERROR, '^^^^^^ npspContact ^^^^^^');
 
             if (npspContact.householdAndAccountDiffer()) {
                 continue;
             }
 
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + npspContact.isAddressChanged());
+            System.debug(LoggingLevel.ERROR, '^^^^^^ npspContact.isAddressChanged() ^^^^^^');
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + npspContact.isMovingToANewHousehold());
+            System.debug(LoggingLevel.ERROR, '^^^^^^ npspContact.isMovingToANewHousehold() ^^^^^^');
             if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
                 addressCreationQueue.add(con);
             }
         }
+//        System.debug(LoggingLevel.ERROR, '*** variable value: ' + addressCreationQueue);
+//        System.debug(LoggingLevel.ERROR, '^^^^^^ addressCreationQueue ^^^^^^');
         return addressCreationQueue;
     }
 
@@ -968,7 +990,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + addressCreationQueue.size());
+            System.debug(LoggingLevel.ERROR, '^^^^^^ a ^^^^^^');
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + addressCreationQueue);
+//            System.debug(LoggingLevel.ERROR, '^^^^^^ addressCreationQueue ^^^^^^');
+
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
