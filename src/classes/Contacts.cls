@@ -990,11 +990,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + addressCreationQueue.size());
-            System.debug(LoggingLevel.ERROR, '^^^^^^ a ^^^^^^');
-//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + addressCreationQueue);
-//            System.debug(LoggingLevel.ERROR, '^^^^^^ addressCreationQueue ^^^^^^');
-
+            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
