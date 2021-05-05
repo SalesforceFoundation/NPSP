@@ -46,7 +46,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     isMounted = false;
 
     _displayState;
-    _isLoading = true;
+    _showSpinner = true;
     _currentPaymentMethod = undefined;
     _cardLast4;
     _cardExpirationDate;
@@ -118,7 +118,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get isLoading() {
         return this._displayState === 'loading' 
-            || this._isLoading === true;
+            || this._showSpinner === true;
     }
 
     get isCharge() {
@@ -286,13 +286,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     loadingOn() {
-        this._isLoading = true;
+        this._showSpinner = true;
     }
 
     loadingOff() {
-        this._isLoading = false;
+        this._showSpinner = false;
     }
-    
+
     dismount() {
         this.clearError();
         this.isMounted = false;
@@ -365,7 +365,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestSetPaymentMethod() {
-        this._isLoading = true;
+        this._showSpinner = true;
         tokenHandler.setPaymentMethod(
             this.iframe(), this._currentPaymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
@@ -375,7 +375,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveSetPaymentMethod = () => {
-        this._isLoading = false;
+        this._showSpinner = false;
     }
 
     /***
@@ -392,7 +392,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveMount = () => {
-        this._isLoading = false;
+        this._showSpinner = false;
         this.isMounted = true;
     }
 
