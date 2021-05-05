@@ -116,6 +116,9 @@ const DISPLAY_DEFINITIONS = Object.freeze({
             userOriginatedCharge: {
                 target: 'charge'
             },
+            userOriginatedDeactivated: {
+                target: 'deactivated'
+            }
         },
     },
     readOnly: {
