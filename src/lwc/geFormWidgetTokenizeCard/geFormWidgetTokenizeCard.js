@@ -246,6 +246,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.dispatchApplicationEvent('doNotChargeState', {
             isElevateWidgetDisabled: false
         });
+        if (this.isInBatchGiftEntry() && !this.isPaymentMethodCreditCard()) {
+            return;
+        }
         this.display.transitionTo('userOriginatedCharge');
     }
 
