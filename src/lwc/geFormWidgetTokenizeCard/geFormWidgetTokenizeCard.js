@@ -47,7 +47,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     _displayState;
     _isLoading = true;
-    _disabledMessage;
     _currentPaymentMethod = undefined;
     _cardLast4;
     _cardExpirationDate;
@@ -150,22 +149,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.paymentStatus() === 'EXPIRED';
     }
 
-    get shouldDisplayEnableButton() {
-        if (!this.hasPaymentMethodFieldInForm) return true;
-        return !!(this.hasPaymentMethodFieldInForm && this.hasValidPaymentMethod());
-
-    }
-
     get criticalErrorMessage() {
         return this._criticalErrorMessage;
     }
 
-    get deactivatedWidgetMessage() {
-        if (this.shouldDisplayEnableButton) {
-            return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
-        }
-        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
-            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
+    get doNotChargeMessage() {
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
     }
 
     get shouldDisplayEditPaymentInformation() {
@@ -191,8 +180,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._cardExpirationDate;
     }
 
-    get disabledMessage() {
-        return this._disabledMessage;
+    get deactivatedMessage() {
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
     }
 
     async handleMessage(message) {

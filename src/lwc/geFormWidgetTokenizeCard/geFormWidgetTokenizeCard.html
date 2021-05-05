@@ -99,7 +99,7 @@
                         <template if:true={isDeactivated}>
                             <p class='fade-in slds-p-vertical_medium'>
                                 <span class='slds-content-message'>
-                                    {deactivatedWidgetMessage}
+                                    {deactivatedMessage}
                                 </span>
                             </p>
                         </template>
@@ -139,16 +139,14 @@
                         <template if:true={isDoNotCharge}>
                             <p class='fade-in slds-p-vertical_medium'>
                                 <span class='slds-content-message'>
-                                    {deactivatedWidgetMessage}
+                                    {doNotChargeMessage}
                                 </span>
-                                <template if:true={shouldDisplayEnableButton}>
-                                    <lightning-button variant='base'
-                                                      label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                      title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                      onclick={handleUserEnterPaymentInformation}
-                                                      class='slds-m-left_xx-small'>
-                                    </lightning-button>
-                                </template>
+                                <lightning-button variant='base'
+                                                    label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                    title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                    onclick={handleUserEnterPaymentInformation}
+                                                    class='slds-m-left_xx-small'>
+                                </lightning-button>
                             </p>
                         </template>
 
