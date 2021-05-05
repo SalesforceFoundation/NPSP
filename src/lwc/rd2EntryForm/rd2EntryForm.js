@@ -24,6 +24,8 @@ import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_LAST_ELEVATE_VERSION from '@salesforce/schema/npe03__Recurring_Donation__c.LastElevateVersionPlayed__c';
+import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
+import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -284,6 +286,8 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
+            this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
 
@@ -360,8 +364,9 @@ export default class rd2EntryForm extends LightningElement {
     */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
-        this.hasUserDisabledElevateWidget = false;
+        this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
         this._paymentMethod = event.detail.value;
+        this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
     }
 
@@ -397,7 +402,7 @@ export default class rd2EntryForm extends LightningElement {
     evaluateElevateEditWidget() {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
         this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
-        this.isCommitmentEdit = this.commitmentId !== null;
+        this.isCommitmentEdit = !isNull(this.commitmentId);
 
         if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
             // On load, we can't rely on the schedule component, but we should when detecting changes
