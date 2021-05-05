@@ -71,8 +71,5 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         
         return buttonName;
     }
-
-    get processBatchButtonAltName() {
-        return `${this.processBatchButtonName} button`; 
-    }
+    
 }
