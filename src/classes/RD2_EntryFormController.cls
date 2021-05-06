@@ -216,7 +216,7 @@ public with sharing class RD2_EntryFormController {
     * @return List<CustomField>
     */
     @TestVisible
-    private static List<CustomField> getCustomFieldSectionFields () {
+    private static List<CustomField> getCustomFieldSectionFields() {
         List<CustomField> fields = new List<CustomField>();
         List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
 
@@ -267,8 +267,10 @@ public with sharing class RD2_EntryFormController {
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
 
-            commitmentService.adjustAndValidateRD(rd);
-            UTIL_Http.Response response = commitmentService.handleCommitment(rd, paymentMethodToken);
+            npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(rd.Id);
+
+            commitmentService.adjustAndValidateRD(rd, oldRd);
+            UTIL_Http.Response response = commitmentService.handleCommitment(rd, oldRd, paymentMethodToken);
 
             return JSON.serialize(response);
 
@@ -292,7 +294,7 @@ public with sharing class RD2_EntryFormController {
             npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
-            UTIL_Http.Response response = commitmentService.handleCommitment(rd, paymentMethodToken);
+            UTIL_Http.Response response = commitmentService.handleCommitment(rd, null, paymentMethodToken);
 
             return JSON.serialize(response);
 
@@ -313,6 +315,24 @@ public with sharing class RD2_EntryFormController {
         commitmentService.logError(recordId, errorMessage);
     }
 
+
+    /**
+    * @description Retrives Recurring Donation from database
+    * @param recordId Recurring Donation Id
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
+        npe03__Recurring_Donation__c oldRd = null;
+
+        if (recordId != null) {
+            List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
+            if (oldRds != null && !oldRds.isEmpty()) {
+                oldRd = oldRds[0];
+            }
+        }
+
+        return oldRd;
+    }
 
     /**
     * @description Handles sending commitment create and edit requests
@@ -348,14 +368,15 @@ public with sharing class RD2_EntryFormController {
         /**
         * @description Handles validation and Elevate recurring commitment creation
         * @param rd Recurring Donation
+        * @param oldRd oldRecurring Donation
         * @param paymentMethodToken Payment Method Token
         * @return UTIL_Http.Response Payments API response
         */
-        public UTIL_Http.Response handleCommitment(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
+        public UTIL_Http.Response handleCommitment(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
             UTIL_Http.Response response;
 
-            if (shouldSendToElevate(rd, paymentMethodToken)) {
-                PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, paymentMethodToken);
+            if (shouldSendToElevate(rd, oldRd, paymentMethodToken)) {
+                PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, oldRd, paymentMethodToken);
 
                 response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody));
 
@@ -370,9 +391,10 @@ public with sharing class RD2_EntryFormController {
         * updates defaults that are otherwise updated in the trigger context, and
         * validates user entered values for a new or existing RD record.
         * @param rd Modified Recurring Donation record that is not created/updated in DB yet
+        * @param oldRd oldRecurring Donation
         * @return void
         */
-        private void adjustAndValidateRD(npe03__Recurring_Donation__c rd) {
+        private void adjustAndValidateRD(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
             // Populate defaults otherwise applied by the DML operation and available in the trigger context
             if (String.isBlank(rd.Status__c)) {
                 rd.Status__c = UTIL_Describe.getDefaultSelectOption(
@@ -383,14 +405,17 @@ public with sharing class RD2_EntryFormController {
             List<npe03__Recurring_Donation__c> newRds = new List<npe03__Recurring_Donation__c>{rd};
             List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>();
             if (rd.Id != null) {
-                oldRds.add(getOldRecurringDonation(rd.Id));
+                oldRds.add(oldRd);
             }
 
-            new RD2_DataRegulationService()
-                .adjust(newRds, oldRds);
+            RD2_DataRegulationService regulationService = new RD2_DataRegulationService();
+            regulationService.adjust(newRds, oldRds);
+            regulationService.markRDsAsElevate(newRds);
             
             List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
                 .validate();
+
+            regulationService.removeElevateMarker(newRds);
             
             if (!errorRds.isEmpty()) {
                 UTIL_AuraEnabledCommon.throwAuraHandledException(
@@ -400,49 +425,19 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
-        * @description Retrives Recurring Donation from database
-        * @param recordId Recurring Donation Id
-        * @return npe03__Recurring_Donation__c
-        */
-        private npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
-            npe03__Recurring_Donation__c oldRd = null;
-
-            if (recordId != null) {
-                List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
-                if (oldRds != null && !oldRds.isEmpty()) {
-                    oldRd = oldRds[0];
-                }
-            }
-
-            return oldRd;
-
-        }
-
-        /**
         * @description Checks if the commitment record should be sent to Elevate
         * @param rd Recurring Donation record
-        * @param paymentMethodToken Payment Method Token
+        * @param oldRd oldRecurring Donation
         * @return Boolean
         */
-        private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, String paymentMethodToken) {
-            // Data should be sent to Elevate to either create or edit commitment depending if commitment Id is provided
-            // when a new Recurring Donation is being created
-            if (rd.Id == null) {
-                return true;
-            }
-
-            // If a Recurring Donation is just being closed or has been closed,
-            // do not send update commitment request.
-            // The commitment cancel will be handled from the RD2 trigger on update DML.
-            if (new RD2_RecurringDonation(rd).isClosed()) {
+        private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
+            if(new RD2_RecurringDonation(rd).isClosed()) {
                 return false;
             }
 
-            // Data should be sent to Elevate on Recurring Donation update when:
-            // a credit card has been changed, or
-            // the default to true on edit regardless if the the amount or the schedule has been changed
-            //TODO when implementing the Edit commitment functionality
-            return String.isNotBlank(paymentMethodToken);
+            return rd.Id == null
+                || (new PS_CommitmentRequest().isElevateScheduleFieldsChanged(rd, oldRd) && rd.CommitmentId__c != null)
+                || String.isNotBlank(paymentMethodToken);
         }
 
         /**
