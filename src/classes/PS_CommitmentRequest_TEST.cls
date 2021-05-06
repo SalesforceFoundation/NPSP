@@ -342,7 +342,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -391,7 +391,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(account.Name, requestBody.firstName, 'First Name should be company name');
         System.assertEquals(account.Name, requestBody.lastName, 'Last Name should be company name');
