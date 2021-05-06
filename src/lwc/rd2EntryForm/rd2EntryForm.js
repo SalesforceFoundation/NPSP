@@ -457,6 +457,14 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
+    * @description Returns true if Schedule fields has updated
+    */
+    hasElevateFieldsChange(allFields) {
+        let amount = getFieldValue(this.record, FIELD_AMOUNT);
+        return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
+    }
+
+    /***
     * @description Prepopulates the card holder name field on the Elevate credit card widget
     */
     populateCardHolderName() {
@@ -521,8 +529,7 @@ export default class rd2EntryForm extends LightningElement {
 
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
-
-            if (this.isCommitment()) {
+            if (this.shouldSendToElevate(allFields)) {
                 this.processCommitmentSubmit(allFields);
 
             } else {
@@ -599,14 +606,13 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Determines if new or existing Recurring Donation is an Elevate recurring commitment
     */
-    isCommitment() {
+    shouldSendToElevate(allFields) {
         if (!this.isElevateCustomer) {
             return false;
         }
 
-        // A new Recurring Donation will be a new Elevate recurring commitment
-        // when the Elevate widget is displayed on the entry form.
-        return this.isElevateWidgetDisplayed();
+        return this.isElevateWidgetDisplayed()
+            || (this.hasElevateFieldsChange(allFields) && !isEmpty(this.getCommitmentId()));
     }
 
     /***
