@@ -7,6 +7,7 @@ import { mockGetIframeReply } from "c/psElevateTokenHandler";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
+import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
 import RD2_EntryFormMissingPermissions from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
@@ -71,6 +72,13 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions'
 );
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
+    () => {
+        return { default: jest.fn() }
+    },
+    { virtual: true }
+);
+
+jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
     () => {
         return { default: jest.fn() }
     },
@@ -179,6 +187,18 @@ describe('c-rd2-entry-form', () => {
 
             await flushPromises();
             validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "6",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "npe03__Amount__c": 1,
+                "InstallmentFrequency__c": 1
+            };
+            validateCommitmentMessage(EXPECTED_RECORD);
         });
 
         it('organization donor, account name is used when tokenizing an ACH payment', async () => {
@@ -218,6 +238,18 @@ describe('c-rd2-entry-form', () => {
             expect(mockGetIframeReply).toHaveBeenCalled();
 
             validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_BUSINESS_ACH_PARAMS);
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "6",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Organization__c": "001fakeAccountId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "npe03__Amount__c": 1,
+                "InstallmentFrequency__c": 1
+            };
+            validateCommitmentMessage(EXPECTED_RECORD);
         });
     });
 
@@ -342,6 +374,7 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
 
             controller.saveButton().click();
 
@@ -350,6 +383,22 @@ describe('c-rd2-entry-form', () => {
             expect(mockGetIframeReply).toHaveBeenCalled();
             expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
             validateIframeMessage(mockGetIframeReply.mock.calls[1], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "5",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "Status__c": "Active",
+                "npe03__Amount__c": 0.5,
+                "Id": "a0963000008oxZnAAI",
+                "InstallmentFrequency__c": 1
+            };
+
+            validateCommitmentMessage(EXPECTED_RECORD);
         })
 
     })
@@ -397,6 +446,15 @@ const setupIframeReply = () => {
             return { type };
         }
     });
+}
+
+const validateCommitmentMessage = (expectedParams) => {
+    expect(handleCommitment).toHaveBeenCalled();
+    const { jsonRecord, paymentMethodToken } = handleCommitment.mock.calls[0][0];
+    debugger;
+    const deserialized = JSON.parse(jsonRecord);
+    expect(deserialized).toMatchObject(expectedParams);
+    expect(paymentMethodToken).toBe('a_dummy_token');
 }
 
 const validateIframeMessage = (tokenizeMockCall, expectedParams) => {
@@ -549,6 +607,10 @@ class RD2FormController {
 
     saveButton() {
         return this.element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
+    }
+
+    disableElevateButton() {
+        return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Do Not Use Elevate"]');
     }
 
 }
