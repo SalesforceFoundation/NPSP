@@ -83,7 +83,10 @@
 
                                     <lightning-layout horizontal-align="spread" multiple-rows="true">
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
-                                            <lightning-input-field field-name={fields.status.apiName} required>
+                                            <lightning-input-field
+                                                    data-id="status"
+                                                    field-name={fields.status.apiName}
+                                                    required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
 

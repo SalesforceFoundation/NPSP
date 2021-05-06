@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
 
-import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';

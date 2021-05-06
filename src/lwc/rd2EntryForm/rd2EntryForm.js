@@ -211,7 +211,7 @@ export default class rd2EntryForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
-                this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+                this.evaluateElevateEditWidget();
             });
 
         /*
@@ -288,6 +288,12 @@ export default class rd2EntryForm extends LightningElement {
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
             this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
+            this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
+            this.isCommitmentEdit = !isNull(this.commitmentId);
+            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
+            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
+            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
+
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
 
@@ -401,26 +407,19 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateEditWidget() {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
-        this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
-        this.isCommitmentEdit = !isNull(this.commitmentId);
 
         if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
+            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
                 recurringType = this.scheduleComponent.getRecurringType();
             }
 
             // Since the widget requires interaction to Edit, this should start as true
-            this.isDisabled = true;
-            this.hasUserDisabledElevateWidget = true;
+            // but if a commitment is not present, the widget is active (false)
+            this.hasUserDisabledElevateWidget = !this.isCommitmentEdit;
 
-            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
-            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
-            this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
-                && this.isEdit 
-                && this.isElevatePaymentMethod()
+            this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
