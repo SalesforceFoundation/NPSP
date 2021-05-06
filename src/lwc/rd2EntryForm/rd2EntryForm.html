@@ -58,12 +58,18 @@
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
-
-                                <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}
-                                    parent-s-object-type={rdSettings.parentSObjectType} data-id="donorComponent"
-                                    onerrorevent={handleChildComponentError} oncontactchange={handleContactChange} if:true={isSettingReady}>
+                                <c-rd2-entry-form-donor-section
+                                        record-id={recordId}
+                                        parent-id={parentId}
+                                        parent-s-object-type={rdSettings.parentSObjectType}
+                                        data-id="donorComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        oncontactchange={handleContactChange}
+                                        onaccountchange={handleAccountChange}
+                                        ondonortypechange={handleDonorTypeChange}
+                                        if:true={isSettingReady}
+                                >
                                 </c-rd2-entry-form-donor-section>
-
                             </div>
                         </div>
 
@@ -101,7 +107,11 @@
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
                                         if:true={fields.amount}>
-                                        <lightning-input-field field-name={fields.amount.apiName} required>
+                                        <lightning-input-field
+                                                field-name={fields.amount.apiName}
+                                                data-id="amountField"
+                                                required
+                                        >
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
@@ -141,9 +151,15 @@
                                             is-edit-mode={isEdit}
                                             card-exp-date={cardExpDate}
                                             card-last-four-label={cardLastFourLabel}
+                                            ach-last-four-label={achLastFourLabel}
                                             card-last-four={cardLastFour}
+                                            ach-last-four={achLastFour}
                                             is-edit-payment={isEdit}
                                             next-donation-date={nextDonationDate}
+                                            payer-organization-name={organizationAccountName}
+                                            payer-first-name={contactFirstName}
+                                            payer-last-name={contactLastName}
+                                            ach-account-type={donorType}
                                             payment-method={paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>

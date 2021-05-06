@@ -107,7 +107,7 @@
                         </template>
                         <template if:true={showLastFourACH}>
                             <lightning-layout-item size="4" flexibility="auto"
-                                                class="slds-dl_horizontal__label slds-text-color_weak" slds-m-bottom_x-small>
+                                                class="slds-dl_horizontal__label slds-text-color_weak slds-m-bottom_x-small">
                                 <label class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none"
                                         for="last4ach" id="achlast4Label">{fields.ach_last_four.label}</label>
                             </lightning-layout-item>
@@ -155,13 +155,11 @@
                     </lightning-layout>
 
                     <div class="slds-card__footer slds-m-top_none slds-p-around_none slds-m-horizontal--medium">
-                        <template if:true={isElevateCustomer}>
-                            <template if:true={permissions.hasKeyFieldsUpdateAccess}>
-                                <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small slds-p-right_medium"
-                                    label={labels.updatePaymentInformation} onclick={openUpdatePaymentInformationModal}
-                                    data-qa-locator={qaLocatorUpdatePaymentInformation}>
-                                </lightning-button>
-                            </template>
+                        <template if:true={canEditPaymentInformation}>
+                            <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small slds-p-right_medium"
+                                label={labels.updatePaymentInformation} onclick={openUpdatePaymentInformationModal}
+                                data-qa-locator={qaLocatorUpdatePaymentInformation}>
+                            </lightning-button>
                         </template>
                         <lightning-button variant="base" class="slds-button slds-button_small slds-p-top_small"
                             label={labels.viewErrorLogLabel} onclick={navigateToErrorLog}
