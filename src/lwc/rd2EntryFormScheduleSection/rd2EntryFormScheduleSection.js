@@ -2,8 +2,8 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
 
-import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
+import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 import picklistLabelAdvanced from '@salesforce/label/c.RD2_EntryFormPeriodAdvanced';
 import customPeriodHelpText from '@salesforce/label/c.RD2_EntryFormPeriodHelpText';
