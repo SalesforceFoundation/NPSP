@@ -366,7 +366,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 'One schedule should be passed to the API: ' + requestBody.schedules);
 
         PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
-        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.recurringPaymentAmount, 'Recurring Amount should match');
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
         System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
         System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
         System.assertEquals(FIRST_PAYMENT_DATE.format('yyyy-MM-dd'), schedule.firstOccurrenceOn, 'First Payment Date should match');
