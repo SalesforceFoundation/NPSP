@@ -228,6 +228,7 @@ public inherited sharing class PS_CommitmentRequest {
     private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String token) {
         RequestBody reqBody = new RequestBody()
             .withCommitmentId(rd.CommitmentId__c)
+            .withPaymentMethodType(rd.PaymentMethod__c)
             .withPaymentMethodToken(token);
 
         String currencyCode = UserInfo.isMultiCurrencyOrganization()

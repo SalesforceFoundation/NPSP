@@ -135,6 +135,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withContact(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
 
         insert rd;
@@ -150,7 +151,7 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'First Name should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(true, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should set to true');
         System.assertEquals(1, requestBody.schedules.size(),
@@ -174,18 +175,19 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Contact contact = getContact();
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            CommitmentId__c = COMMITMENT_ID
+            CommitmentId__c = COMMITMENT_ID,
+            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD
         );
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
 
 
         Test.startTest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, rd.clone(), PAYMENT_TOKEN);
         Test.stopTest();
 
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'First Name should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(null, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should not be set');
         System.assertEquals(null, requestBody.schedules,
