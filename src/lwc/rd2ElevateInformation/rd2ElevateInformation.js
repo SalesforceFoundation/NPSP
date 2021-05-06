@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, getNamespace } from 'c/utilCommon';
+import { PAYMENT_METHOD_CREDIT_CARD, PAYMENT_METHOD_ACH } from 'c/geConstants';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
@@ -58,8 +59,6 @@ const OPTIONAL_FIELDS = [
 ];
 const TEMP_PREFIX = '_PENDING_';
 const STATUS_SUCCESS = 'success';
-const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
-const PAYMENT_METHOD_ACH = 'ACH';
 
 export default class rd2ElevateInformation extends NavigationMixin(LightningElement) {
 
@@ -132,8 +131,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         return this.getValue(FIELD_NEXT_DONATION_DATE.fieldApiName);
     }
 
-    get paymentMethod() {
-        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+    get canEditPaymentInformation() {
+        return this.isElevateCustomer
+            && this.permissions.hasKeyFieldsUpdateAccess
+            && this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     /***
@@ -274,7 +275,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      * @description Does the user have perms to show the Expiration Date fields?
      */
     shouldShowExpirationDate() {
-        return this.isTrue(this.permissions.showExpirationDate);
+        return this.isTrue(this.permissions.showExpirationDate) && this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     /***

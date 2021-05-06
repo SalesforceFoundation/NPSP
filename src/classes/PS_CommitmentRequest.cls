@@ -43,10 +43,16 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-     * @description Commitment payment method. Currently only credit card is supported.
+     * @description Commitment payment method.
      */
     public enum PaymentMethod {
-        CARD
+        CARD,
+        ACH
+    }
+
+    public enum DonorType {
+        INDIVIDUAL,
+        BUSINESS
     }
 
     /***
@@ -54,10 +60,10 @@ public inherited sharing class PS_CommitmentRequest {
      * Commitments start in the NEW state, then transition to ACTIVE after the first payment.
      * The Status cannot be an enum since NEW is a reserved keyword.
      */
-    public static String STATUS_NEW = 'NEW';
-    public static String STATUS_ACTIVE = 'ACTIVE';
-    public static String STATUS_INACTIVE = 'INACTIVE';
-    public static String STATUS_FAILING = 'FAILING';
+    public static final String STATUS_NEW = 'NEW';
+    public static final String STATUS_ACTIVE = 'ACTIVE';
+    public static final String STATUS_INACTIVE = 'INACTIVE';
+    public static final String STATUS_FAILING = 'FAILING';
 
     /***
      * @description Commitment Status Reason
@@ -83,7 +89,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
@@ -94,19 +100,23 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
      */
-    private static Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
+    private static final Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
         'USD' => 100
     };
 
     /***
      * @description Default currency multiplier
      */
-    private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+    private static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
      * @description Contains max length for a first/last name passed to the Elevate commitment request
      */
-    private static Integer MAX_NAME_LENGTH = 60;
+    private static final Integer MAX_NAME_LENGTH = 60;
+
+    private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
+    private static final String ACH_CODE_WEB = 'WEB';
+    private static final String ACH_CONSENT_MESSAGE = 'true';
 
     /***
      * @description Payment Services configuration
@@ -182,6 +192,7 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
+
         Metadata metadata = new Metadata()
             .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
 
@@ -193,11 +204,16 @@ public inherited sharing class PS_CommitmentRequest {
             .withMerchantId(configService.getMerchantIds())
             .withGatewayId(configService.getGatewayIds())
             .withPaymentMethodToken(token)
+            .withPaymentMethodType(rd.PaymentMethod__c)
             .withCurrency(currencyCode)
             .withMetadata(metadata)
             .withProductMetaData(productMetaData);
 
-        setDonorInfo(reqBody, rd);
+
+        DonorType accountHolderType = setDonorInfo(reqBody, rd);
+        if(reqBody.isACH()) {
+            reqBody.withACHAccountHolder(accountHolderType);
+        }
         setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
 
         return reqBody;
@@ -224,24 +240,27 @@ public inherited sharing class PS_CommitmentRequest {
     * @return void
     */
     @TestVisible
-    private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+    private DonorType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
         Contact contactDonor = rd.npe03__Contact__c != null
             ? getContact(rd.npe03__Contact__c)
             : null;
 
-        Boolean isHouseholdDonor = contactDonor != null
-            && (
-                rd.npe03__Organization__c == null
-                || rd.npe03__Organization__c == contactDonor.AccountId
-            );
+        Boolean isHouseholdDonor = donorIsInHousehold(contactDonor, rd.npe03__Organization__c);
 
         if (isHouseholdDonor) {
             reqBody.withDonor(contactDonor);
-
+            return DonorType.INDIVIDUAL;
         } else {
             Account organization = getAccount(rd.npe03__Organization__c);
             reqBody.withDonor(organization);
+            return DonorType.BUSINESS;
         }
+    }
+
+    private Boolean donorIsInHousehold(Contact contactDonor, Id rdAccountId) {
+        Boolean isHouseholdDonor = contactDonor != null
+                && ( rdAccountId == null || rdAccountId == contactDonor.AccountId);
+        return isHouseholdDonor;
     }
 
     /**
@@ -330,6 +349,12 @@ public inherited sharing class PS_CommitmentRequest {
         return accounts.isEmpty() ? null : accounts[0];
     }
 
+    public with sharing class AchData {
+        public String achCode;
+        public String consent;
+        public String type;
+        public String bankType;
+    }
 
 
     /***
@@ -342,6 +367,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String id;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String merchantId;
         public String gatewayId;
         public String type;
@@ -349,7 +375,7 @@ public inherited sharing class PS_CommitmentRequest {
         public String paymentMethodToken;
         public String currencyCode;
         public List<Schedule> schedules;
-
+        public AchData achData;
         /***
          * Optional properties
          */
@@ -363,7 +389,6 @@ public inherited sharing class PS_CommitmentRequest {
             //set defaults
             currencyCode = UserInfo.getDefaultCurrency();
             type = CommitmentType.SUSTAINER.name();
-            paymentMethodType = PaymentMethod.CARD.name();
         }
 
         /**
@@ -414,6 +439,35 @@ public inherited sharing class PS_CommitmentRequest {
         public RequestBody withPaymentMethodToken(String token) {
             this.paymentMethodToken = token;
             return this;
+        }
+
+        public RequestBody withPaymentMethodType(String paymentMethodPicklistValue) {
+            if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH) {
+                this.paymentMethodType = PaymentMethod.ACH.name();
+            } else if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
+                this.paymentMethodType = PaymentMethod.CARD.name();
+            }
+            return this;
+        }
+
+        public RequestBody withACHAccountHolder(DonorType accountHolderType) {
+            this.achData = new AchData();
+            this.achData.achCode = ACH_CODE_WEB;
+            this.achData.bankType = ACH_BANK_TYPE_CHECKING;
+            this.achData.consent = ACH_CONSENT_MESSAGE;
+            this.achData.type = accountHolderType.name();
+            this.accountName = getAccountName(accountHolderType);
+            return this;
+        }
+
+        private String getAccountName(DonorType accountHolderType) {
+            if (accountHolderType == DonorType.INDIVIDUAL) {
+                return String.format('{0} {1}', new List<String>{
+                        this.firstName, this.lastName
+                });
+            } else {
+                return this.lastName;
+            }
         }
 
         /**
@@ -493,6 +547,10 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public String getAsJson() {
             return JSON.serialize(this);
+        }
+
+        public Boolean isACH() {
+            return this.paymentMethodType == PaymentMethod.ACH.name();
         }
     }
 

@@ -6,6 +6,12 @@
 import { LightningElement, api } from 'lwc';
 
 export const mockCheckComboboxValidity = jest.fn();
+export const mockReportComboboxValidity = jest.fn().mockImplementation(function () {
+    if (this.required && (this.value === undefined || this.value === null || this.value === '')) {
+        return false;
+    }
+    return true;
+});
 
 export default class Combobox extends LightningElement {
     @api disabled;
@@ -23,7 +29,7 @@ export default class Combobox extends LightningElement {
     @api value;
     @api variant;
     @api checkValidity = mockCheckComboboxValidity
-    @api reportValidity() {}
+    @api reportValidity = mockReportComboboxValidity;
     @api setCustomValidity() {}
     @api showHelpMessageIfInvalid() {}
 }
