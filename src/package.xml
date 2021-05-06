@@ -1825,7 +1825,9 @@
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDAmountMustBeValid</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>

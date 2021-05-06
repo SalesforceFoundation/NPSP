@@ -37,6 +37,7 @@
 private with sharing class PS_CommitmentRequest_TEST {
 
     private static final String PAYMENT_TOKEN = 'token-abcd-efgh-ijkl-mnop-qrst';
+    private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
     private static final Integer USD_CURRENCY_MULTIPLIER = 100;
 
     private static final Integer DAY_OF_MONTH = 20;
@@ -87,7 +88,7 @@ private with sharing class PS_CommitmentRequest_TEST {
             .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -114,10 +115,83 @@ private with sharing class PS_CommitmentRequest_TEST {
             'One schedule should be passed to the API: ' + requestBody.schedules);
 
         PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
-        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.recurringPaymentAmount, 'Recurring Amount should match');
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
         System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
         System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
-        System.assertEquals(FIRST_PAYMENT_DATE.format('yyyy-MM-dd'), schedule.firstOccurrenceOn, 'First Payment Date should match');
+        System.assertEquals(FIRST_PAYMENT_DATE.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''), schedule.firstOccurrenceOnTimestamp, 'First Payment Date should match');
+    }
+
+    /**
+    * @description Verifies that the update request body is built based on the Recurring Donation fields
+    */
+    @isTest
+    private static void shouldBuildUpdateCommitmentRequestBody() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+
+        insert rd;
+
+        npe03__Recurring_Donation__c oldRd = rd.clone();
+        oldRd.npe03__Amount__c = rd.npe03__Amount__c + 1;
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+        Test.startTest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, oldRd, PAYMENT_TOKEN);
+        Test.stopTest();
+
+        System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
+        System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
+        System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
+        System.assertEquals(true, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should set to true');
+        System.assertEquals(1, requestBody.schedules.size(),
+            'One schedule should be passed to the API: ' + requestBody.schedules);
+
+        PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
+        System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
+        System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
+        System.assertEquals(FIRST_PAYMENT_DATE.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''), schedule.firstOccurrenceOnTimestamp, 'First Payment Date should match');
+    }
+
+    /**
+    * @description Verifies that the update request body should not set new schedules if there is no data
+    */
+    @isTest
+    private static void shouldBuildLeanUpdateCommitmentRequestBodyIfScheduleDataIsNotChanged() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            CommitmentId__c = COMMITMENT_ID,
+            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD
+        );
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+
+        Test.startTest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, rd.clone(), PAYMENT_TOKEN);
+        Test.stopTest();
+
+        System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
+        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
+        System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
+        System.assertEquals(null, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should not be set');
+        System.assertEquals(null, requestBody.schedules,
+            'no schedule should be set on the request body');
     }
 
     /****
@@ -145,14 +219,15 @@ private with sharing class PS_CommitmentRequest_TEST {
             'Two schedules should be passed to the API: ' + requestBody.schedules);
 
         for (PS_CommitmentRequest.Schedule schedule : requestBody.schedules) {
-            System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.recurringPaymentAmount, 'Recurring Amount should match');
+            System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
             System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
             System.assertEquals(1, schedule.frequencyInterval, 'Donation should be made every month');
         }
-
-        System.assertEquals('2019-04-01', requestBody.schedules[0].firstOccurrenceOn,
+        String firstScheduleDate = Datetime.newInstance(2019, 04, 01).formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        String secondDonationDate = Datetime.newInstance(2019, 04, 15).formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        System.assertEquals(firstScheduleDate, requestBody.schedules[0].firstOccurrenceOnTimestamp,
             'First Payment Date on the 1st schedule should match');
-        System.assertEquals('2019-04-15', requestBody.schedules[1].firstOccurrenceOn,
+        System.assertEquals(secondDonationDate, requestBody.schedules[1].firstOccurrenceOnTimestamp,
             'First Payment Date on the 15th schedule should match');
     }
 
@@ -269,7 +344,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
@@ -293,10 +368,10 @@ private with sharing class PS_CommitmentRequest_TEST {
                 'One schedule should be passed to the API: ' + requestBody.schedules);
 
         PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
-        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.recurringPaymentAmount, 'Recurring Amount should match');
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
         System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
         System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
-        System.assertEquals(FIRST_PAYMENT_DATE.format('yyyy-MM-dd'), schedule.firstOccurrenceOn, 'First Payment Date should match');
+        System.assertEquals(FIRST_PAYMENT_DATE.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''), schedule.firstOccurrenceOnTimestamp, 'First Payment Date should match');
     }
 
     @isTest
@@ -318,7 +393,7 @@ private with sharing class PS_CommitmentRequest_TEST {
                 .build();
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, null, PAYMENT_TOKEN);
 
         System.assertEquals(account.Name, requestBody.firstName, 'First Name should be company name');
         System.assertEquals(account.Name, requestBody.lastName, 'Last Name should be company name');
