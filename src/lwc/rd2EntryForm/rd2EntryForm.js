@@ -416,8 +416,7 @@ export default class rd2EntryForm extends LightningElement {
             }
 
             // Since the widget requires interaction to Edit, this should start as true
-            // but if a commitment is not present, the widget is active (false)
-            this.hasUserDisabledElevateWidget = !this.isCommitmentEdit;
+            this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
 
             this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
