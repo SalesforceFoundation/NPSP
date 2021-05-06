@@ -35,6 +35,7 @@ public enum ElevateTransactionStatus {
     DECLINED,
     EXPIRED,
     NONRETRYABLEERROR,
+    PAYMENTPROCESSING,
     RETRYABLEERROR,
     REFUNDISSUED,
     SETTLED,

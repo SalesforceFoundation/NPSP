@@ -16,6 +16,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import processPayments from '@salesforce/apex/GE_GiftEntryController.processPaymentsFor';
 
 /*******************************************************************************
 * @description Schema imports
@@ -272,7 +273,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleProcessBatch() {
-        if (this.isProcessable) {
+        if (this.isProcessable()) {
             try {
                 await this.refreshBatchTotals();
             } catch (error) {
@@ -280,10 +281,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             } finally {
                 if (this.shouldDisplayExpiredAuthorizationWarning()) {
                     this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
-                        () => { this.navigateToDataImportProcessingPage() } 
+                        async () => {
+                            await this.processBatch();
+                        } 
                     );
                 } else {
-                    this.navigateToDataImportProcessingPage();
+                    await this.processBatch();
                 }
             }
         } else {
@@ -295,8 +298,21 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    async processBatch() {
+        await this.processPayments();
+        this.navigateToDataImportProcessingPage(); 
+    }
+
+    async processPayments() {
+        await processPayments({
+                batchId: this.batchId
+        }).catch(error => {
+            handleError(error);
+        });
+    }
+
     navigateToDataImportProcessingPage() {
-        let url = '/apex/' + this.bdiDataImportPageName +
+        let url = '/apex/' + this.bdiDataImportPageName() +
             '?batchId=' + this.recordId + '&retURL=' + this.recordId;
 
         this[NavigationMixin.Navigate]({
@@ -316,17 +332,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }        
     }
 
-    get bdiDataImportPageName() {
+    bdiDataImportPageName() {
         return this.namespace ?
             `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
             BDI_DATA_IMPORT_PAGE;
     };
 
-    get requireTotalMatch() {
+    requireTotalMatch() {
         return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
     }
 
-    get totalsMatch() {
+    totalsMatch() {
         if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
             return this.countMatches && this.amountMatches;
         } else if (this.expectedCountOfGifts) {
@@ -344,14 +360,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return this.total === this.expectedTotalBatchAmount;
     }
 
-    get isProcessable() {
-        if (this.totalsMatch) {
-            return true;
-        } else if (this.requireTotalMatch) {
-            return false;
-        } else {
+    isProcessable() {
+        if (this.totalsMatch()) {
             return true;
         }
+        return !this.requireTotalMatch();
     }
 
     handleDelete(event) {
