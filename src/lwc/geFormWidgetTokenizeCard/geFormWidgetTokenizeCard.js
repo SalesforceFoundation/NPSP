@@ -11,7 +11,9 @@ import {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
     PAYMENT_METHOD_CREDIT_CARD,
-    PAYMENT_METHODS
+    PAYMENT_METHODS,
+    TOKENIZE_ACH_EVENT_ACTION,
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION
 } from 'c/geConstants';
 
 import GeFormService from 'c/geFormService';
@@ -31,8 +33,6 @@ import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 
-const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
-const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
 const CONTACT_DONOR_TYPE = 'Contact1';
 
 const MODES = Object.freeze({
