@@ -395,6 +395,9 @@ export default class rd2EntryForm extends LightningElement {
             && this.hasUserDisabledElevateWidget !== true;
     }
 
+    /***
+    * @description Returns true if Schedule fields has updated
+    */
     hasElevateFieldsChange(allFields) {
         let amount = getFieldValue(this.record, FIELD_AMOUNT);
         return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
@@ -539,9 +542,8 @@ export default class rd2EntryForm extends LightningElement {
             return false;
         }
 
-        // A new Recurring Donation will be a new Elevate recurring commitment
-        // when the Elevate widget is displayed on the entry form.
-        return this.isElevateWidgetDisplayed() || this.hasElevateFieldsChange(allFields);
+        return this.isElevateWidgetDisplayed()
+            || (this.hasElevateFieldsChange(allFields) && !isEmpty(this.getCommitmentId()));
     }
 
     /***

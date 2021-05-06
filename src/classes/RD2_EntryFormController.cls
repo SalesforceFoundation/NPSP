@@ -408,11 +408,14 @@ public with sharing class RD2_EntryFormController {
                 oldRds.add(oldRd);
             }
 
-            new RD2_DataRegulationService()
-                .adjust(newRds, oldRds);
+            RD2_DataRegulationService regulationService = new RD2_DataRegulationService();
+            regulationService.adjust(newRds, oldRds);
+            regulationService.markRDsAsElevate(newRds);
             
             List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
                 .validate();
+
+            regulationService.removeElevateMarker(newRds);
             
             if (!errorRds.isEmpty()) {
                 UTIL_AuraEnabledCommon.throwAuraHandledException(
@@ -433,7 +436,7 @@ public with sharing class RD2_EntryFormController {
             }
 
             return rd.Id == null
-                || new PS_CommitmentRequest().isElevateScheduleFieldsChanged(rd, oldRd)
+                || (new PS_CommitmentRequest().isElevateScheduleFieldsChanged(rd, oldRd) && rd.CommitmentId__c != null)
                 || String.isNotBlank(paymentMethodToken);
         }
 
