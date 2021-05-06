@@ -51,7 +51,7 @@ public with sharing class ElevateCaptureGroup implements CaptureGroup {
     }
 
     public ElevateCaptureGroup create() {
-        return captureGroupService.sendCreateRequest();
+        return captureGroupService.getCaptureGroup();
     }
 
     public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {

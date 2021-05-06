@@ -48,6 +48,37 @@ public virtual with sharing class ElevateCaptureGroupService {
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
     }
 
+    public ElevateCaptureGroup getCaptureGroup() {
+        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
+                createRequest()
+        );
+        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
+                response.body, ElevateCaptureGroupResponse.class);
+        return new ElevateCaptureGroup(captureGroupResponse);
+    }
+
+    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                .withBody(JSON.serialize(tokenizedGift))
+                .build();
+    }
+
+    public List<ElevateCaptureGroupResponse> capture(Set<String> captureGroupIds) {
+        List<ElevateCaptureGroupResponse> elevateCaptureGroupResponses = new List<ElevateCaptureGroupResponse>();
+        for (String elevateBatchId : captureGroupIds) {
+            UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
+                    captureRequest(elevateBatchId)
+            );
+            ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
+                    response.body, ElevateCaptureGroupResponse.class);
+            elevateCaptureGroupResponses.add(captureGroupResponse);
+        }
+        return elevateCaptureGroupResponses;
+    }
+
     @TestVisible
     private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
@@ -58,15 +89,6 @@ public virtual with sharing class ElevateCaptureGroupService {
     private Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         return authorizedGiftResponse.errors() != null &&
                !authorizedGiftResponse.errors().isEmpty();
-    }
-
-    public ElevateCaptureGroup sendCreateRequest() {
-        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                createRequest()
-        );
-        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
-                response.body, ElevateCaptureGroupResponse.class);
-        return new ElevateCaptureGroup(captureGroupResponse);
     }
 
     @TestVisible
@@ -81,20 +103,19 @@ public virtual with sharing class ElevateCaptureGroupService {
                !captureGroupResponse.errors().isEmpty();
     }
 
-    public HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withCaptureGroupId(groupId)
-                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
-                .withBody(JSON.serialize(tokenizedGift))
-                .build();
-    }
-
     private HttpRequest createRequest() {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
                 .withBody(createRequestBody())
+                .build();
+    }
+
+    private HttpRequest captureRequest(String groupId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withCaptureGroupId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
                 .build();
     }
 
