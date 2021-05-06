@@ -2313,6 +2313,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         return rd;
     }
 
+    /****
+    * @description Sets up Elevate environment
+    * @param configStub Elevate Integration Service configuration stub
+    */
     private static void setUpElevateIntegration(PS_IntegrationServiceConfig_TEST.Stub configStub) {
         RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
     }
