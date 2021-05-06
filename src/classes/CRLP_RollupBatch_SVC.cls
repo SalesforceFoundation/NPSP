@@ -91,7 +91,9 @@ public class CRLP_RollupBatch_SVC {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
 
-        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)) {
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+            jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+
             // TODO -- How to get Accounts that require using this method for Soft Credits??
             // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
             String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
@@ -125,10 +127,9 @@ public class CRLP_RollupBatch_SVC {
      * @return True or False
      */
     public static Boolean doesRecordNeedSkewRollupMethod(Id recordId, CRLP_RollupProcessingOptions.RollupType jobType) {
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations)
+        {
             String objName = recordId.getSobjectType().getDescribe().getName();
             String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID AND ('
                 + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c')
