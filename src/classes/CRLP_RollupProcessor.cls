@@ -501,8 +501,7 @@ public inherited sharing class CRLP_RollupProcessor {
         // Determine status of force skew mode field
         initForceSkewModeValues(parent.getSObjectType());
         Boolean isForceSkewModeTrue = false;
-        if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField))
-        {
+        if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField)) {
             isForceSkewModeTrue = (Boolean) parent.get(this.qualifiedSkewField);
         }
 
@@ -522,6 +521,11 @@ public inherited sharing class CRLP_RollupProcessor {
         // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
         if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
             updatedRecord.put(this.qualifiedSkewField, true);
+            needsUpdate = true;
+
+        // Reset any flags erroneously set for NonSkewMode records
+        } else if (mode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode && this.useForceSkewModeField && isForceSkewModeTrue) {
+            updatedRecord.put(this.qualifiedSkewField, false);
             needsUpdate = true;
         }
 
