@@ -41,7 +41,8 @@ public inherited sharing class PS_Request {
         COMMITMENT,
         COMMITMENT_CANCEL,
         CREATE_CAPTURE_GROUP,
-        ADD_TO_CAPTURE_GROUP
+        ADD_TO_CAPTURE_GROUP,
+        CHARGE_CAPTURE_GROUP
     }
 
     public enum ProductType {
@@ -74,6 +75,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_CREATE_CAPTURE_GROUP = '/v1/payments/verified/batch';
     public static String ENDPOINT_ADD_TO_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_CHARGE_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/capture';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -258,6 +260,13 @@ public inherited sharing class PS_Request {
                         captureGroupId
                     }
                 );
+            } else if (endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
+                value = String.format(
+                        ENDPOINT_CHARGE_CAPTURE_GROUP,
+                        new String[] {
+                                captureGroupId
+                        }
+                );
             }
 
             return String.isBlank(value)
@@ -349,27 +358,43 @@ public inherited sharing class PS_Request {
         * @return void 
         */
         private void setRoles(JSONGenerator generator) {
+            String role = getRole();
+            if (String.isNotBlank(role)) {
+                generator.writeStringField(JWT_ROLES_PARAM, role);
+            }
+        }
+
+        private String getRole () {
             String value = '';
-
-            if (endpoint == ElevateEndpoint.TOKENIZE) {
+            if (isTokenizeEndpoint()) {
                 value = ROLE_PAYMENT_TOKENS;
-
-            } else if (endpoint == ElevateEndpoint.PURCHASE) {
+            } else if (isPurchaseEndpoint()) {
                 value = ROLE_PAYMENT_PURCHASE;
-
-            } else if (endpoint == ElevateEndpoint.COMMITMENT
-                || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
-            ) {
+            } else if (isCommitmentEndpoint()) {
                 value = ROLE_PAYMENT_COMMITMENTS;
-            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
-                || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
-
+            } else if (isCaptureGroupEndpoint()) {
                 value = ROLE_PAYMENT_BATCH;
             }
+            return value;
+        }
 
-            if (String.isNotBlank(value)) {
-                generator.writeStringField(JWT_ROLES_PARAM, value);
-            }
+        private Boolean isTokenizeEndpoint() {
+            return endpoint == ElevateEndpoint.TOKENIZE;
+        }
+
+        private Boolean isPurchaseEndpoint() {
+            return endpoint == ElevateEndpoint.PURCHASE;
+        }
+
+        private Boolean isCaptureGroupEndpoint() {
+            return endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
+                    || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP
+                    || endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP;
+        }
+
+        private Boolean isCommitmentEndpoint () {
+            return endpoint == ElevateEndpoint.COMMITMENT
+                    || endpoint == ElevateEndpoint.COMMITMENT_CANCEL;
         }
     }
 }
