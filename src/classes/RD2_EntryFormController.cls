@@ -287,7 +287,7 @@ public with sharing class RD2_EntryFormController {
     * @return String Commitment API response
     */
     @AuraEnabled
-    public static String handleUpdatePaymentCommitment(String jsonRecord, String paymentMethodToken){
+    public static String handleUpdatePaymentCommitment(String jsonRecord, String paymentMethodToken) {
         try {
             npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
