@@ -30,6 +30,7 @@
 public with sharing class ElevateCaptureGroupResponse {
     public String id;
     public List<Errors> errors;
+    public String status;
 
     public class Errors {
         public String message;
@@ -40,7 +41,17 @@ public with sharing class ElevateCaptureGroupResponse {
         return id;
     }
 
+    public String status() {
+        return status;
+    }
+
     public List<Errors> errors() {
         return errors;
+    }
+
+    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
+        return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
+                && errors == null
+                && status == System.Label.BatchProgressStatusProcessing;
     }
 }
