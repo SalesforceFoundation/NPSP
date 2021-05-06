@@ -133,9 +133,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         table.sections = formSections;
     }
 
-    handleBatchDryRun() {
+    async handleBatchDryRun() {
         try {
-            this.refreshBatchTotals();
+            await this.refreshBatchTotals();
         } catch (error) {
             handleError(error);
         } finally {
@@ -271,10 +271,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    handleProcessBatch() {
+    async handleProcessBatch() {
         if (this.isProcessable) {
             try {
-                this.refreshBatchTotals();
+                await this.refreshBatchTotals();
             } catch (error) {
                 handleError(error);
             } finally {
