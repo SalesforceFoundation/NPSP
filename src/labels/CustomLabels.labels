@@ -1697,6 +1697,14 @@
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
+        <labels>
+        <fullName>RD2_ElevateRDAmountMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if an Elevate Recurring Donation&apos;s amount is valid or not</shortDescription>
+        <value>Please enter a valid Amount. The Amount cannot be less than 1.</value>
+    </labels>
     <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1704,6 +1712,14 @@
         <protected>true</protected>
         <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDEffectiveDateMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Effective Date is valid or not</shortDescription>
+        <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donations cannot be in the future.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRecordCreateFailed</fullName>
