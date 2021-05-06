@@ -131,7 +131,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(contact.Id)
             .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
             .withCommitmentId(COMMITMENT_ID)
             .build();
