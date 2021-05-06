@@ -230,6 +230,7 @@
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
+        <members>CRLP_RollupBatch_TEST</members>
         <members>CRLP_RollupCMT</members>
         <members>CRLP_RollupCMT_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
