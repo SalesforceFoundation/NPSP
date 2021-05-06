@@ -200,8 +200,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Amount
-    * @param amount Amount
+    * @description Sets Payment Method
+    * @param payMethod Payment Method
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withPaymentMethod(String payMethod) {
@@ -572,6 +572,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withFirstInstallmentDisabled() {
         validateMode(Mode.Enhanced);
         valuesByFieldName.put('DisableFirstInstallment__c', true);
+        return this;
+    }
+
+    /***
+    * @description Set LastElevateVersionPlayed
+    * @param version Integer for the 'Last Elevate Version Played'
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withLastElevateVersionPlayed(Integer version) {
+        valuesByFieldName.put('LastElevateVersionPlayed__c', version);
         return this;
     }
 
