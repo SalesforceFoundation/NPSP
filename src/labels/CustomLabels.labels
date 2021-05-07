@@ -8710,6 +8710,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64 format is invalid. The number of characters must be a multiple of 4 and can only contain these characters: [a-z A-Z 0-9 + / =]</value>
     </labels>
     <labels>
+        <fullName>geProcessAnyway</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to Process Anyway</shortDescription>
+        <value>Process Anyway</value>
+    </labels>
+    <labels>
         <fullName>geProcessingErrors</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

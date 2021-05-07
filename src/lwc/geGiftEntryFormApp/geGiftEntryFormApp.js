@@ -88,7 +88,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.batchTotals = await BatchTotals(this.batchId);
 
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
-            this.displayExpiredAuthorizationWarningModal();
+            this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
     }
 
@@ -134,7 +134,26 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         table.sections = formSections;
     }
 
-    handleBatchDryRun() {
+    async handleBatchDryRun() {
+        try {
+            await this.refreshBatchTotals();
+        } catch (error) {
+            handleError(error);
+        } finally {
+            if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                    () => { 
+                        this.callBatchDryRun(); 
+                        this.dispatchEvent(new CustomEvent('closemodal')); 
+                    } 
+                );
+            } else {
+                this.callBatchDryRun();
+            }
+        }
+    }
+    
+    callBatchDryRun() {
         //toggle the spinner on the form
         const form = this.template.querySelector('c-ge-form-renderer');
         const toggleSpinner = function () {
@@ -225,7 +244,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
-        return this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+        return this.isElevateCustomer
+            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }
 
@@ -254,8 +274,21 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleProcessBatch() {
         if (this.isProcessable()) {
-            await this.processPayments();
-            this.navigateToDataImportProcessingPage();
+            try {
+                await this.refreshBatchTotals();
+            } catch (error) {
+                handleError(error);
+            } finally {
+                if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                        async () => {
+                            await this.processBatch();
+                        } 
+                    );
+                } else {
+                    await this.processBatch();
+                }
+            }
         } else {
             if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
                 handleError(geBatchGiftsExpectedTotalsMessage);
@@ -263,6 +296,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 handleError(geBatchGiftsExpectedCountOrTotalMessage);
             }
         }
+    }
+
+    async processBatch() {
+        await this.processPayments();
+        this.navigateToDataImportProcessingPage(); 
     }
 
     async processPayments() {
@@ -285,6 +323,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             },
             true
         );
+    }
+
+    async refreshBatchTotals() {
+        if(this.isElevateCustomer) {
+            this._hasDisplayedExpiredAuthorizationWarning = false;
+            this.batchTotals = await BatchTotals(this.batchId);
+        }        
     }
 
     bdiDataImportPageName() {
@@ -354,7 +399,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
                 JSON.stringify(event.payload.values);
 
-            const recordInput = {fields};
+            const recordInput = { fields };
             const lastModifiedDate =
                 this.batch.data.lastModifiedDate;
             const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
@@ -396,22 +441,51 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }));
     }
 
-    displayExpiredAuthorizationWarningModal() {
+    displayModalPrompt(componentProperties) {
         const detail = {
             modalProperties: {
                 componentName: 'geModalPrompt',
-                showCloseButton: false
+                showCloseButton: true
             },
-            componentProperties: {
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));      
+    }
+
+    displayExpiredAuthorizationWarningModalForPageLoad() {
+        this.displayModalPrompt ({
                 'variant': 'warning',
                 'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
                 'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
-                'buttonText': this.CUSTOM_LABELS.commonOkay
-            },
-        };
-        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
-        this._hasDisplayedExpiredAuthorizationWarning = true;        
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonOkay,
+                        variant: 'neutral',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                    }]
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
     }
+
+    displayExpiredAuthorizationWarningModalForProcessAndDryRun(actionOnProceed) {
+        this.displayModalPrompt ({
+                'variant': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.geProcessAnyway,
+                        variant: 'neutral',
+                        action: actionOnProceed
+                    },
+                    {
+                        label: this.CUSTOM_LABELS.commonCancel,
+                        variant: 'brand',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                    }]
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
+    }    
 
     buildModalConfigSelectColumns(available, selected) {
         const modalConfig = {
