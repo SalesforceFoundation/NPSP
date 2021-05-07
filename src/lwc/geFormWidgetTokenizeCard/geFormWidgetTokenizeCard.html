@@ -52,6 +52,13 @@
                         </div>
                     </lightning-layout-item>
 
+                    <lightning-layout-item size='12' 
+                                           padding='around-small' 
+                                           if:true={shouldDisplayCardProcessingGuidanceMessage}>
+                        <div class='slds-text-body_regular'>
+                            <b>{CUSTOM_LABELS.geBodyPaymentProcessedDuringBatchProcessing}</b>
+                        </div>
+                    </lightning-layout-item>
                     <lightning-layout-item size='12'
                                            padding='around-small'>
                         <template if:true={isDisabled}>
