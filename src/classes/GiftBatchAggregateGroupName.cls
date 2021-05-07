@@ -36,6 +36,7 @@ public enum GiftBatchAggregateGroupName {
     TOTAL,
     PROCESSED,
     FAILED,
+    AUTHORIZED_PAYMENT,
     FAILED_PAYMENT,
     EXPIRED_PAYMENT
 }
