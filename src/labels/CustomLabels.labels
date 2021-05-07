@@ -5118,6 +5118,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch</value>
     </labels>
     <labels>
+        <fullName>bgeProcessBatchAndPayments</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch and payments through {0}</shortDescription>
+        <value>Process Batch &amp; Payments</value>
+    </labels>
+    <labels>
         <fullName>bgeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
@@ -6623,6 +6630,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Text indicating payment isn't being charged</shortDescription>
         <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyPaymentProcessedDuringBatchProcessing</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit card(s) will not be processed until batch is processed</shortDescription>
+        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>

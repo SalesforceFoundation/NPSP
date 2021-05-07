@@ -157,7 +157,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     isInBatchGiftEntry() {
-        return this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
+        return this.widgetDataFromState &&
+               this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
     }
 
     iframe() {
@@ -180,6 +181,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get shouldDisplayEditPaymentInformation() {
         return this.isReadOnlyMode && !this.isPaymentCaptured();
+    }
+
+    get shouldDisplayCardProcessingGuidanceMessage() {
+        return !this.isReadOnlyMode && this.isInBatchGiftEntry() && this.hasValidPaymentMethod() && this.isMounted;
     }
 
     isPaymentCaptured() {

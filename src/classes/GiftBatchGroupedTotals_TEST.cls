@@ -90,6 +90,7 @@ private with sharing class GiftBatchGroupedTotals_TEST {
         System.assertEquals(2 + 4, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED.name()));
         System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));
         System.assertEquals(4, totalsForBatch0.get(GiftBatchAggregateGroupName.EXPIRED_PAYMENT.name()));
+        System.assertEquals(3, totalsForBatch0.get(GiftBatchAggregateGroupName.AUTHORIZED_PAYMENT.name()));
         System.assertEquals(1 + 2 + 3 + 4, totalsForBatch0.get(GiftBatchAggregateGroupName.TOTAL.name()));
 
         Map<String, Integer> totalsForBatch1 = batchTotals.totalsFor(DUMMY_BATCH_ID_1);
