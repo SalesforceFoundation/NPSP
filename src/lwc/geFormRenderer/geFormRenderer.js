@@ -2032,6 +2032,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+
         return dataImportRecord;
     }
 
@@ -2413,7 +2414,11 @@ export default class GeFormRenderer extends LightningElement{
                 'variant': 'error',
                 'title': this.CUSTOM_LABELS.commonCriticalError,
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-                'buttonText': this.CUSTOM_LABELS.commonReviewForm
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonReviewForm,
+                        action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
+                    }]
             });
 
         const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);

@@ -1,5 +1,4 @@
 import { LightningElement, api } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
 import { isEmpty } from 'c/utilCommon';
 
 export default class geModalPrompt extends LightningElement {
@@ -7,11 +6,7 @@ export default class geModalPrompt extends LightningElement {
     @api variant = '';
     @api title;
     @api message;
-    @api buttonText;
-
-    handleCloseModal() {
-        fireEvent(this.pageRef, 'geModalCloseEvent', {});
-    }
+    @api buttons = [];
 
     get titleSectionComputedClass() {
 

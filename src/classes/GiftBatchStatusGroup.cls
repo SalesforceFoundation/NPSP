@@ -66,4 +66,8 @@ public inherited sharing class GiftBatchStatusGroup {
     public Boolean isPaymentAuthorizationExpired() {
       return paymentStatus == ElevateTransactionStatus.EXPIRED.name();
     }
+
+    public Boolean isPaymentAuthorized() {
+      return paymentStatus == ElevateTransactionStatus.AUTHORIZED.name();
+    }
 }

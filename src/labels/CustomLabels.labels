@@ -1697,6 +1697,14 @@
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
+        <labels>
+        <fullName>RD2_ElevateRDAmountMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if an Elevate Recurring Donation&apos;s amount is valid or not</shortDescription>
+        <value>Please enter a valid Amount. The Amount cannot be less than 1.</value>
+    </labels>
     <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1704,6 +1712,14 @@
         <protected>true</protected>
         <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDEffectiveDateMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Effective Date is valid or not</shortDescription>
+        <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donations cannot be in the future.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRecordCreateFailed</fullName>
@@ -2237,6 +2253,14 @@
         You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveACHMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2331,6 +2355,14 @@
         <protected>true</protected>
         <shortDescription>Detail for the next payment charging date</shortDescription>
         <value>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NextACHPaymentDonationDateInfo</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Detail for the next payment charging date</shortDescription>
+        <value>The donor&apos;s ACH payment information will be sent to their bank on {{DATE}}. Payments begin after the bank verifies and processes the information.</value>
     </labels>
     <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
@@ -5086,6 +5118,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch</value>
     </labels>
     <labels>
+        <fullName>bgeProcessBatchAndPayments</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch and payments through {0}</shortDescription>
+        <value>Process Batch &amp; Payments</value>
+    </labels>
+    <labels>
         <fullName>bgeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
@@ -6591,6 +6630,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Text indicating payment isn't being charged</shortDescription>
         <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyPaymentProcessedDuringBatchProcessing</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit card(s) will not be processed until batch is processed</shortDescription>
+        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
@@ -8661,6 +8708,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message if an invalid base64 string was provided</shortDescription>
         <value>The base64 format is invalid. The number of characters must be a multiple of 4 and can only contain these characters: [a-z A-Z 0-9 + / =]</value>
+    </labels>
+    <labels>
+        <fullName>geProcessAnyway</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to Process Anyway</shortDescription>
+        <value>Process Anyway</value>
     </labels>
     <labels>
         <fullName>geProcessingErrors</fullName>

@@ -307,4 +307,13 @@ public with sharing class UTIL_Http_TEST {
         Test.setMock(HttpCalloutMock.class, callout);
     }
 
+    public static void mockChargeCaptureGroup(String responseBody){
+        CalloutMock callout = new CalloutMock()
+                .withStatusCode(UTIL_Http.STATUS_CODE_OK)
+                .withStatus(UTIL_Http.STATUS_OK)
+                .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
 }
