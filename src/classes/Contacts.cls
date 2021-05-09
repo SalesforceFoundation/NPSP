@@ -74,6 +74,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * this method will be removed.
      */
     public void onBeforeInsert_FromAddrContactTDTM() {
+    System.debug(LoggingLevel.ERROR, '*** ##### Contacts.onBeforeInsert_FromAddrContactTDTM ######');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + getRecords());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ getRecords() ^^^^^^');
         normalizeLineBreaks();
 
         if (consThatHaveARelatedAddress().size() > 0) {
@@ -154,9 +157,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
+        isUpdate = true;
         createAddressesForContacts();
     }
 
+    private Boolean isUpdate = false;
     public void onAfterInsert() {
         createAddressesForContacts();
     }
@@ -410,7 +415,22 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         for (Contact con : listCon) {
             Address__c addrNew = mapConAddr.get(con);
-            Address__c addrDup = mapAddrDupAddr.get(addrNew);
+            NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
+
+//            Address__c addrDup = mapAddrDupAddr.get(addrNew); // CULPRIT?? Obj as Key?
+            IAddress compare = npspAddressNew;
+            if (isUpdate) {
+                NPSP_Contact oldCon = new NPSP_Contact(oldVersionOf(con));
+                compare = oldCon.mailingAddress();
+            }
+            Address__c addrDup = npspAddressNew.isEqualTo(
+                    compare, false) ?
+                    npspAddressNew.getRecord() : null;
+
+            System.debug(LoggingLevel.ERROR, '*** addr dup: ' + addrDup);
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + addrNew);
+//            System.debug(LoggingLevel.ERROR, '^^^^^^ addrNew ^^^^^^');
+//            System.debug(LoggingLevel.ERROR, '*** addr dup now value: ' + addrDup);
 
             // if found a match
             if (addrDup != null) {

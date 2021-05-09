@@ -722,7 +722,7 @@ public with sharing class HH_Households_TEST {
         String lastname = 'SmithForTest99';
 
         List<Contact> cons = new List<contact>();
-        Integer conCount = 200;
+        Integer conCount = 1;
         for(Integer i=0;i<conCount;i++){
             Contact con = new Contact(
                 FirstName='test',

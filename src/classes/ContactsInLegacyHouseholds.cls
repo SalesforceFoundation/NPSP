@@ -75,8 +75,11 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void onAfterUpdate() {
         householdService.createHouseholdsFor(this);
+
         householdService.fireHouseholdRollupsFor(this);
+
         householdService.updateHouseholdNamesFor(this);
+
         householdService.deleteEmptyHouseholdsFor(this);
     }
 

@@ -1853,6 +1853,46 @@ public with sharing class ADDR_Addresses_TEST {
         }
     }
 
+    @IsTest
+    private static void
+    addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls2() {
+        Integer totalHH = 210;
+        Integer totalContactPerHH = 1;
+
+        UTIL_Debug.disableDebugLogging();
+        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+
+        createHHTestData(totalHH, totalContactPerHH);
+
+        // verify that the HH and Contacts share the same address
+        Map<Id, Account> accountById = new Map<Id, Account>([
+                SELECT Id, Name, BillingStreet, BillingCity,
+                        BillingState, BillingPostalCode, BillingCountry,
+                        BillingLatitude, BillingLongitude
+                FROM Account]);
+        List<Contact> contacts = getContacts();
+        System.assertEquals(totalHH * totalContactPerHH, contacts.size());
+
+        for (Contact con : contacts) {
+            Account acc = accountById.get(con.AccountId);
+
+            //Todo: use NPSP_Contact and IAddress
+            System.assertEquals(true, isMatchAddressAccCon(acc, con));
+            // AKA:
+            //Given a new Contact
+            //When it is Saved
+            //And its HouseholdAccount is auto-Saved
+            //Then its HouseholdAccount's Address is the same as
+            //it's Address
+
+
+            System.assertEquals(false, con.is_Address_Override__c);
+            System.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
     /*********************************************************************************************************
     @description
         Insert more than 200 addresses to require multiple trigger calls, and to ensure our static counters
@@ -1862,7 +1902,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
-        Integer totalHH = 210;
+//        Integer totalHH = 210;
+        Integer totalHH = 10;
         Integer totalContactPerHH = 1;
 
         UTIL_Debug.disableDebugLogging();

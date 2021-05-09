@@ -123,4 +123,14 @@ private class ContactsInLegacyHouseholds_TEST {
             return null;
         }
     }
+
+    @IsTest
+    static void testCreateHouseholdsFor() {
+//        settings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
+        ContactsInLegacyHouseholds c = new ContactsInLegacyHouseholds(
+                ContactBuilder.dummyContactList()
+        );
+        HouseholdService h = new HouseholdService();
+        h.createHouseholdsFor(c);
+    }
 }

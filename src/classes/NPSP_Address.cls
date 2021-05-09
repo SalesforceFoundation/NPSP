@@ -64,7 +64,12 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public NPSP_Address(Contact con) {
         this.addr = new Address__c();
-        addr.Household_Account__c = con.AccountId;
+        try {
+            addr.Household_Account__c = con.AccountId;
+        } catch (NullPointerException npe) {
+
+            System.debug(LoggingLevel.ERROR, '*** ##### npe on npsp addr doing nothing ######');
+        }
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.is_Address_Override__c)
         )) {
@@ -332,13 +337,22 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     private Object getSObjectField(SObject sobjSrc, String fieldPrefixSrc, String field) {
-        if (sobjSrc.getPopulatedFieldsAsMap().keySet().contains(
-                fieldPrefixSrc + field
-        )) {
-            return sobjSrc.get(fieldPrefixSrc + field);
-        } else {
-            return null;
+        Object val = null;
+//        if (sobjSrc.getPopulatedFieldsAsMap().keySet().contains(
+//                fieldPrefixSrc + field
+//        )) {
+//            return sobjSrc.get(fieldPrefixSrc + field);
+//        } else {
+//            return null;
+//        }
+        try {
+            val = sobjSrc.get(fieldPrefixSrc + field);
+        } catch (Exception e) {
+           System.debug(LoggingLevel.ERROR, '*** variable value: ' + e.getMessage());
+           System.debug(LoggingLevel.ERROR, '^^^^^^ e.getMessage() ^^^^^^');
+            val = null;
         }
+        return val;
     }
 
     public void checkForPartialSeasonalErrors() {
