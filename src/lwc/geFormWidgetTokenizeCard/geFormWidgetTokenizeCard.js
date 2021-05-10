@@ -332,7 +332,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     isInBatchGiftEntry() {
-        return this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
+        return this.widgetDataFromState &&
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
     }
 
     iframe() {
