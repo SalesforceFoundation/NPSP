@@ -62,6 +62,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _isEditPayment = false;
     
     @api isEditMode;
+    @api isCommitmentEdit;
     @api cardLastFour;
     @api cardLastFourLabel;
     @api cardExpDate;
@@ -118,11 +119,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get isEditAch() {
-        return this.isEditMode && this.isAchPayment;
+        return this.isCommitmentEdit && this.isAchPayment;
     }
 
     get isEditCard() {
-        return this.isEditMode && this.isCardPayment;
+        return this.isCommitmentEdit && this.isCardPayment;
     }
 
     get nextPaymentDateMessage() {
