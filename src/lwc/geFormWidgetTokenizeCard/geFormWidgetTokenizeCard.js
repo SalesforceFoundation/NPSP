@@ -180,6 +180,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
     }
 
+    get shouldDisplayCardProcessingGuidanceMessage() {
+        return !this.isReadOnly && this.isInBatchGiftEntry() && this.hasValidPaymentMethod() && this.isMounted;
+    }
+
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
