@@ -135,12 +135,12 @@ const DISPLAY_DEFINITIONS = Object.freeze({
             editExpiredTransaction: {
                 target: 'edit'
             },
-            charge: {
+            resetToCharge: {
                 target: 'charge'
             },
-            deactivated: {
+            resetToDeactivated: {
                 target: 'deactivated'
-            },
+            }
         },
     },
     criticalError: {

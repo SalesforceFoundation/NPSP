@@ -235,6 +235,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.dispatchApplicationEvent('doNotChargeState', {
             isElevateWidgetDisabled: true
         });
+
         this.display.transitionTo('userOriginatedDoNotCharge');
     }
 
@@ -242,6 +243,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.dispatchApplicationEvent('doNotChargeState', {
             isElevateWidgetDisabled: false
         });
+
         if (this.isInBatchGiftEntry() && !this.isPaymentMethodCreditCard()) {
             this.display.transitionTo('userOriginatedDeactivated');
         } else {
@@ -279,11 +281,37 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     handleElevateWidgetReset() {
-        this.display.transitionTo('loading');
         this.clearError();
+        this.clearPaymentInformation();
+
+        if (this.isInBatchGiftEntry) {
+            if (this.isReadOnly) {
+                this.resetForBatchFromReadOnly();
+            } else if (this.isDoNotCharge) {
+                this.resetForBatchFromDoNotCharge();
+            }
+        } else {
+            this.updateDisplayState();
+        }
+    }
+
+    resetForBatchFromReadOnly() {
+        if (this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('resetToCharge');
+        } else {
+            this.display.transitionTo('resetToDeactivated');
+        }
+    }
+
+    resetForBatchFromDoNotCharge() {
+        if (this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('userOriginatedCharge');
+        }
+    }
+
+    clearPaymentInformation() {
         this._cardLast4 = undefined;
         this._cardExpirationDate = undefined;
-        this.updateDisplayState();
     }
 
     loadingOn() {
