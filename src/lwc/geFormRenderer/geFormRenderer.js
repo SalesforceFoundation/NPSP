@@ -2043,6 +2043,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+
         return dataImportRecord;
     }
 

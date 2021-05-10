@@ -87,7 +87,10 @@
 
                     <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
                                            if:true={fields.startDate}>
-                        <lightning-input-field field-name={fields.startDate.apiName} required>
+                        <lightning-input-field
+                                field-name={fields.startDate.apiName}
+                                data-id="startDate"
+                                required>
                         </lightning-input-field>
                     </lightning-layout-item>
 

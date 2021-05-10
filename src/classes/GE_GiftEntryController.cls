@@ -199,7 +199,7 @@ public with sharing class GE_GiftEntryController {
         try {
             authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
         } catch (AuraHandledException ex) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
     }
@@ -208,6 +208,16 @@ public with sharing class GE_GiftEntryController {
     public static ElevateCaptureGroup createCaptureGroup() {
         ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
         return captureGroup;
+    }
+
+    @AuraEnabled
+    public static void processPaymentsFor(Id batchId) {
+       try {
+           NPSP_Batch batch = new NPSP_Batch(batchId);
+           batch.processPayments();
+       } catch (Exception ex) {
+          throw new AuraHandledException(ex.getMessage());
+       }
     }
 
     /**
