@@ -100,8 +100,8 @@ public with sharing class GE_PaymentServices {
      * @description Returns Elevate Product Id to payments services tokenize card iframe
      * @return String
      */
-    public String getProductId() {
-        return configService.getProductId();
+    public String getClientId() {
+        return configService.getClientId();
     }
 
     /**
