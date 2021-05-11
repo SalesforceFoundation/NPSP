@@ -211,6 +211,7 @@ describe('c-rd2-entry-form', () => {
             await setupWireMocksForElevate();
 
             controller.setDefaultInputFieldValues();
+            controller.dayOfMonth().setValue('6');
             controller.donorType().changeValue('Account');
             controller.paymentMethod().changeValue('ACH');
             await flushPromises();
@@ -386,7 +387,7 @@ describe('c-rd2-entry-form', () => {
 
             const EXPECTED_RECORD = {
                 "RecurringType__c": "Open",
-                "Day_of_Month__c": "5",
+                "Day_of_Month__c": "6",
                 "StartDate__c": "2021-02-03",
                 "npe03__Installment_Period__c": "Monthly",
                 "npe03__Contact__c": "001fakeContactId",
@@ -511,13 +512,13 @@ class RD2FormController {
         this.recurringType().changeValue('Open');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
+        this.dayOfMonth().setValue('6');
     }
 
     setDefaultInputFieldValuesEdit() {
         this.setDefaultInputFieldValues();
         this.status().setValue('Active');
         this.amount().setValue(0.50);
-        this.dayOfMonth().setValue('5');
         this.contactLookup().setValue('001fakeContactId');
     }
 
