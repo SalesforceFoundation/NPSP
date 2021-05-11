@@ -1185,9 +1185,16 @@ public with sharing class ADDR_Addresses_TEST {
             System.assertNotEquals(null, con.Current_Address__c);
         }
 
-        // verify that no new address was created
-        List<Address__c> listAddr = [SELECT Id, Default_Address__c, MailingStreet__c, Household_Account__c FROM Address__c];
-        System.assertEquals(cHH, listAddr.size());
+        List<Address__c> listAddr = [
+                SELECT Id,
+                        Default_Address__c,
+                        MailingStreet__c,
+                        Household_Account__c
+                FROM Address__c
+        ];
+        System.assertEquals(cHH, listAddr.size(),
+                'Whitespace and casing should not count as a real edit, so this test should' +
+                        ' verify that no new address was created');
         for (Address__c addr : listAddr) {
             System.assertEquals('direct street  edit', addr.MailingStreet__c);
         }
