@@ -602,7 +602,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 for (Address__c addrHH : listAddrHH) {
                     NPSP_Address npspAddressHH = new NPSP_Address(addrHH);
                     // only include address type in the test if the new one isn't empty.
-                    if (npspAddress.isEqualTo(npspAddressHH, npspAddress.getType() != null)) {
+                    if (isMatch(npspAddress, npspAddressHH)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
@@ -624,6 +624,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         return mapAddrDupAddr;
+    }
+
+    private static Boolean isMatch(NPSP_Address npspAddress, NPSP_Address npspAddressHH) {
+        return !npspAddress.isAddressChanged(npspAddressHH.getRecord(), false);
     }
 
     /*******************************************************************************************************

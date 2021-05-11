@@ -507,4 +507,26 @@ public inherited sharing class NPSP_Address implements IAddress {
         return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
 
+    /*******************************************************************************************************
+    * @description utility to compare two address objects address fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @param includeAddressType whether to include comparing the AddressType field
+    * @return boolean. true if any of the fields fields have changed on the Address
+    */
+    public Boolean isAddressChanged(Address__c addrOld, Boolean includeAddressType) {
+        if (addr == null || addrOld == null) {
+            return false;
+        }
+        return (!AddressService.equalsCaseSensitive(addr.MailingStreet__c, addrOld.MailingStreet__c) ||
+                !AddressService.equalsCaseSensitive(addr.MailingStreet2__c, addrOld.MailingStreet2__c) ||
+                !AddressService.equalsCaseSensitive(addr.MailingCity__c, addrOld.MailingCity__c) ||
+                !AddressService.equalsCaseSensitive(addr.MailingState__c, addrOld.MailingState__c) ||
+                !AddressService.equalsCaseSensitive(addr.MailingPostalCode__c, addrOld
+                        .MailingPostalCode__c) ||
+                !AddressService.equalsCaseSensitive(addr.MailingCountry__c, addrOld.MailingCountry__c) ||
+                (includeAddressType && (!AddressService.equalsCaseSensitive(addr.Address_Type__c, addrOld
+                        .Address_Type__c))));
+    }
+
 }
