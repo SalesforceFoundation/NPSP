@@ -230,6 +230,7 @@
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
+        <members>CRLP_RollupBatch_TEST</members>
         <members>CRLP_RollupCMT</members>
         <members>CRLP_RollupCMT_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
@@ -1825,7 +1826,9 @@
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDAmountMustBeValid</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
@@ -2270,6 +2273,7 @@
         <members>bgeNotSupportedBody</members>
         <members>bgeNotSupportedHeader</members>
         <members>bgeProcessBatch</members>
+        <members>bgeProcessBatchAndPayments</members>
         <members>bgeRetirementWarningBody</members>
         <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
@@ -2438,6 +2442,7 @@
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
         <members>geBodyPaymentNotProcessingTransaction</members>
+        <members>geBodyPaymentProcessedDuringBatchProcessing</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2553,6 +2558,7 @@
         <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
+        <members>geProcessAnyway</members>
         <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>

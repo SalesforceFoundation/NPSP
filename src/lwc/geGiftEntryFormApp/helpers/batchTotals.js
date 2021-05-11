@@ -2,7 +2,7 @@ import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGif
 
 const BatchTotals = async (batchId) => {
     const totals = await getGiftBatchTotalsBy({ batchId: batchId });
-    const { PROCESSED, FAILED, FAILED_PAYMENT, EXPIRED_PAYMENT, TOTAL } = totals;
+    const { PROCESSED, FAILED, FAILED_PAYMENT, EXPIRED_PAYMENT, AUTHORIZED_PAYMENT, TOTAL } = totals;
 
     return ({
         get processedGiftsCount() {
@@ -16,7 +16,10 @@ const BatchTotals = async (batchId) => {
         },
         get expiredPaymentsCount() {
             return EXPIRED_PAYMENT;
-        },                
+        },             
+        get authorizedPaymentsCount() {
+            return AUTHORIZED_PAYMENT;
+        },    
         get totalGiftsCount() {
             return TOTAL;
         },
@@ -25,7 +28,7 @@ const BatchTotals = async (batchId) => {
         },
         get hasPaymentsWithExpiredAuthorizations() {
             return Number(EXPIRED_PAYMENT) > 0;
-        },        
+        }      
     });
 }
 

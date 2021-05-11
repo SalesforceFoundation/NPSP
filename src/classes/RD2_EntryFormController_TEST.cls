@@ -235,7 +235,7 @@ private with sharing class RD2_EntryFormController_TEST {
 
         RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
 
-        UTIL_Http.Response response = service.handleCommitment(rd, PAYMENT_METHOD_TOKEN);
+        UTIL_Http.Response response = service.handleCommitment(rd, null, PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
@@ -344,15 +344,72 @@ private with sharing class RD2_EntryFormController_TEST {
             'The response status should match: ' + response);
     }
 
+     /**
+    * @description Verifies commitment success response is returned upon successful schedule update 
+    */
+    @isTest
+    private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleAmount() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        insert rd;
+
+        rd = new npe03__Recurring_Donation__c(
+            Id = rd.Id,
+            CommitmentId__c = COMMITMENT_ID,
+            npe03__Amount__c = rd.npe03__Amount__c + 10);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+
+        String response = 
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            } 
+        }
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+            'The response status code should match: ' + response);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+            'The response status should match: ' + response);
+    }
+
     /***
     * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
     */
     @isTest
     private static void shouldThrowExceptionWhenRDFieldValueIsInvalid() {
-        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+        .withIsIntegrationEnabled(true)
+        .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
-        rd.npe03__Amount__c = -100;
+
+        rd.CommitmentId__c = COMMITMENT_ID;
+        rd.npe03__Amount__c = 0.9;
 
         String errorMessage;
 
@@ -366,10 +423,10 @@ private with sharing class RD2_EntryFormController_TEST {
         }
         Test.stopTest();
 
-        System.assertEquals(System.Label.RD2_AmountMustBeValid, errorMessage,
+        System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorMessage,
             'RD should be pre-validate before the Elevate Commitment API is called');
     }
-    
+ 
 
     // Helpers
     ////////////////

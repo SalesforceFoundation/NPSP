@@ -757,7 +757,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         try {
             Test.startTest();
-            rd.npe03__Amount__c += 10;
+            rd.InstallmentFrequency__c = 2;
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -794,7 +794,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         try {
             Test.startTest();
-            rd.npe03__Amount__c += 10;
+            rd.InstallmentFrequency__c = 2;
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -804,6 +804,79 @@ private with sharing class RD2_ValidationService_TEST {
         System.assert(String.isBlank(errMessage),
             'RD update should succeed when Elevate user attempts to change a restricted field: ' + errMessage
         );
+    }
+
+    /**
+    * @description Verifies that Elevate RD cannot have amount less than 1 dollar
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenAmountIsNotValid() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(0.1)
+            .build();
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorRecords[0].getFirstError(),
+            'Elvate RD should not be updated when Amount is less than 1.');
+    }
+
+    /**
+    * @description Verifies that Elevate RD update will fail when effective date is in the future
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenEffectiveDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(10)
+            .withStartDate(today.addDays(1))
+            .build();
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDEffectiveDateMustBeValid, errorRecords[0].getFirstError(),
+            'Elvate RD cannot update to future Effective Date.');
     }
 
     /***
