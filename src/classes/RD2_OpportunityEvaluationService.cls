@@ -391,7 +391,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService
             .createOpportunities(newOppRDs)
             .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
-            .voidOpenOpportunitiesFor(closeOppRds);
+            .voidOpenOpportunities(closeOppRds);
 
         handleOutdatedRecurringDonations(rdRecords);
 

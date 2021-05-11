@@ -493,52 +493,24 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-     * @description process to update installment opps for rds with opps to void
-     * @param rds Recurring Donations where the opp will be void
+     * @description Updates or deletes closed RD open Installment Opportunities based on the settings
+     * @param opps Opportunities
      * @return RD2_OpportunityService This Opportunity Service instance
      */
-    public RD2_OpportunityService voidOpenOpportunitiesFor(List<npe03__Recurring_Donation__c> rds) {
+    public RD2_OpportunityService voidOpenOpportunities(List<npe03__Recurring_Donation__c> rds) {
         if (rds.isEmpty() || rdSettings.isCloseActionNoAction()) {
             return this;
         }
 
-        List<Opportunity> oppsToVoid = new List<Opportunity>();
-
+        List<Opportunity> openOppsToVoid = new List<Opportunity>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
-
-            if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rdRecord.isElevateRecord()) {
-                oppsToVoid.addAll(rdRecord.getMatchingOpportunities(currentDate));
-
-            } else {
-                for (Opportunity opp : rd.npe03__Donations__r) {
-                    if (opp.IsClosed == false) {
-                        oppsToVoid.add(opp);
-                    }
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false) {
+                    openOppsToVoid.add(opp);
                 }
             }
         }
-        voidOpenOpportunities(oppsToVoid);
-        return this;
-    }
 
-    /**
-     * @description Updates or deletes closed RD open Installment Opportunities based on the settings
-     * @param opps oppps to void
-     * @return Void
-     */
-    private void voidOpenOpportunities(List<Opportunity> opps) {
-        if (opps.isEmpty() || rdSettings.isCloseActionNoAction()) {
-            return;
-        }
-
-        List<Opportunity> openOppsToVoid = new List<Opportunity>();
-        for (Opportunity opp : opps) {
-            if (opp.IsClosed == false) {
-                openOppsToVoid.add(opp);
-            }
-        }
-        
         if (rdSettings.isCloseActionDeletion()) {
             dbService.deleteRecords(openOppsToVoid);
 
@@ -554,5 +526,7 @@ public with sharing class RD2_OpportunityService {
 
             dbService.updateRecords(oppsToUpdate);
         }
+
+        return this;
     }
 }

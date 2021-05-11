@@ -493,47 +493,4 @@ public inherited sharing class RD2_RecurringDonation {
        return String.isNotBlank(rd.CommitmentId__c);
     }
 
-    /**
-    * @description Return all Opportunities which matches the future schedule installments
-    * @param currentDate Cut off date to be used to calculate future
-    * @return List<Opportunity> 
-    */
-    public List<Opportunity> getMatchingOpportunities(Date currentDate) {
-        List<Opportunity> matchingOpps = new List<Opportunity>();
-
-        if (getOpportunities() == null) {
-            return matchingOpps;
-        }
-
-        Date latestClosedDate = getLatestOpportunityCloseDate();
-
-        List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
-            currentDate, latestClosedDate, rd.RecurringDonationSchedules__r
-        );
-
-        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(currentDate)
-            .includeCurrent(getOpportunities())
-            .match(installments)
-            .getRecords();
-
-        for (RD2_OpportunityMatcher.Record record : records) {
-            if (record.getOpportunity() != null && record.getInstallment() != null) {
-                matchingOpps.add(record.getOpportunity());
-            }
-        }
-
-        return matchingOpps;
-    }
-
-    private Date getLatestOpportunityCloseDate() {
-        Date latestCloseDate;
-        for (Opportunity opp : getOpportunities()) {
-            if (latestCloseDate == null || latestCloseDate < opp.CloseDate) {
-                latestCloseDate = opp.CloseDate;
-            }
-        }
-
-        return latestCloseDate;
-    }
-
 }
