@@ -67,7 +67,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingState = 'California';
         contact.MailingPostalCode = '95014'; 
         contact.MailingCountry = 'United States';
+        System.debug(LoggingLevel.ERROR, '*** ##### SATRT ######');
         insert contact;
+        System.debug(LoggingLevel.ERROR, '*** ##### STOP ######');
 
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -77,6 +79,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
         //check address record got created for household
         Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + av);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ av ^^^^^^');
         System.assertEquals(1, av.size());
         System.assertEquals('single-address', av[0].MailingStreet__c);
         System.assertEquals('California', av[0].MailingState__c);
@@ -197,11 +201,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertNotEquals(null, accountId);
         
         //check address record got created for household
-        Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
+        Address__c[] addresses = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('90210', av[0].MailingPostalCode__c);
-        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(1, addresses.size());
+        System.assertEquals('90210', addresses[0].MailingPostalCode__c);
+        System.assertEquals(false, addresses[0].Verified__c);
         
         //run batch address verification
         TDTM_DefaultConfig.stopTestDataInit();
@@ -211,13 +215,13 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Test.stopTest();
         
         //check address record was verified
-        av = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c 
+        addresses = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c
                 from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('98236', av[0].MailingPostalCode__c);
-        System.assertEquals('Clinton', av[0].MailingCity__c);
-        System.assertEquals('WA', av[0].MailingState__c);
-        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(1, addresses.size());
+        System.assertEquals('98236', addresses[0].MailingPostalCode__c);
+        System.assertEquals('Clinton', addresses[0].MailingCity__c);
+        System.assertEquals('WA', addresses[0].MailingState__c);
+        System.assertEquals(true, addresses[0].Verified__c);
     }
     
     public static testmethod void multipleValidZipcodes() {

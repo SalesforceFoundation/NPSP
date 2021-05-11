@@ -154,9 +154,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
+        isUpdate = true;
         createAddressesForContacts();
     }
 
+    private Boolean isUpdate = false;
     public void onAfterInsert() {
         createAddressesForContacts();
     }
@@ -410,7 +412,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         for (Contact con : listCon) {
             Address__c addrNew = mapConAddr.get(con);
+            NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
+
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
+
 
             // if found a match
             if (addrDup != null) {
@@ -445,6 +450,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         if (listAddrInsertDefault.size() > 0) {
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + listAddrInsertDefault);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ listAddrInsertDefault ^^^^^^');
             dmlWrapper.objectsToInsert.addAll((List<SObject>) listAddrInsertDefault);
         }
     }
