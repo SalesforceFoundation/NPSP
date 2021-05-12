@@ -465,8 +465,8 @@ export default class rd2EntryForm extends LightningElement {
         let frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
         let period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
         return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
-            || frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]
-            || period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
+            || frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName])
+            || period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
     }
 
     /***
