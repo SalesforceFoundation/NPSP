@@ -213,25 +213,13 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
-    private Boolean isElevateRecurringDonationPaymentMethodChanged(
-                    RD2_RecurringDonation recurringDonation,
-                    RD2_RecurringDonation oldRecurringDonation
-    ) {
-        return recurringDonation.isElevateRecord() &&
-                isPaymentMethodChanged(oldRecurringDonation, recurringDonation) &&
-                !isElevatePaymentMethod(recurringDonation);
+    private Boolean isValidElevateRecurringDonationPaymentMethod(RD2_RecurringDonation recurringDonation) {
+        return isElevatePaymentMethod(recurringDonation);
     }
 
     private Boolean isElevatePaymentMethod(RD2_RecurringDonation recurringDonation) {
-        Set<String> elevatePaymentMethods = new Set<String>();
-        for (ElevatePaymentMethod paymentMethod : ElevatePaymentMethod.values()) {
-            elevatePaymentMethods.add(paymentMethod.name());
-        }
-        return elevatePaymentMethods.contains(recurringDonation.paymentMethod());
-    }
-
-    private Boolean isPaymentMethodChanged(RD2_RecurringDonation oldRecurringDonation, RD2_RecurringDonation recurringDonation) {
-        return oldRecurringDonation.paymentMethod() != recurringDonation.paymentMethod();
+        return recurringDonation.paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
+               recurringDonation.paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
     }
 
     /**
@@ -253,9 +241,9 @@ public with sharing class RD2_ValidationService {
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevatePermissionRequired);
             }
-
-            if (isElevateRecurringDonationPaymentMethodChanged(new RD2_RecurringDonation(rd),
-                                                               new RD2_RecurringDonation(oldRd))) {
+            RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
+            if (recurringDonation.isElevateRecord() &&
+                !isValidElevateRecurringDonationPaymentMethod(recurringDonation)) {
 
                 errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
             }
