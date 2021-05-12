@@ -2044,7 +2044,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * All mathcing installments should be set to Closed Lost when RD is converted to Elevate
     */
     @isTest
-    private static void shouldCloseInstallmentMatchingOppsForConvertedElevateRDWhenAutoSettingIsClosed() {
+    private static void shouldCloseAllOpportunitiesForConvertedElevateRDWhenAutoSettingIsClosed() {
         RD2_ScheduleService.currentDate = START_DATE;
 
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
@@ -2058,12 +2058,13 @@ private class RD2_OpportunityEvaluationService_TEST {
         setUpElevateIntegration(configStub);
         
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+        npe03__Recurring_Donation__c recurringDonation
+                = getRecurringDonationBuilder(getContact())
             .withDayOfMonth(String.valueOf(START_DATE.day()))
             .build();
-        insert rd;
+        insert recurringDonation;
 
-        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(recurringDonation);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -2083,15 +2084,17 @@ private class RD2_OpportunityEvaluationService_TEST {
         };
         insert opps;
 
-        rd.CommitmentId__c = MOCK_COMMITMENT_ID;
+        recurringDonation.CommitmentId__c = MOCK_COMMITMENT_ID;
 
         Test.startTest();
-        update rd;
+        update recurringDonation;
         Test.stopTest();
 
-        List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
+        List<Opportunity> queriedOpps = oppGateway.getRecords(recurringDonation);
 
         System.assertEquals(4, queriedOpps.size(), 'There should be total of 3 future opps on the RD');
+
+
         
         System.assertEquals('Closed Lost', queriedOpps[0].StageName,
             'The matching installment opportunity should be mark as close lost');
