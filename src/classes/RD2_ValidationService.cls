@@ -257,7 +257,7 @@ public with sharing class RD2_ValidationService {
             if (isElevateRecurringDonationPaymentMethodChanged(new RD2_RecurringDonation(rd),
                                                                new RD2_RecurringDonation(oldRd))) {
 
-                errorCollection.addError(System.Label.RD2_ErrorChangingElevatePaymentMethod);
+                errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
             }
 
             validateActiveRecurringDonation(rd, errorCollection);
