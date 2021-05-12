@@ -172,4 +172,12 @@ public inherited sharing class NPSP_Contact {
         return (addressOverrideChanged() && !hasAddressOverride());
     }
 
+    public Boolean hadAnAddress() {
+        return oldVersion().currentAddress() != null;
+    }
+
+    public Boolean noAddressFieldsChanged() {
+        return !isAddressChanged() && hadAnAddress();
+    }
+
 }
