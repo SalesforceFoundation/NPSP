@@ -314,6 +314,7 @@
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
         <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevatePaymentMethod</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
