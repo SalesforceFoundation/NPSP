@@ -1727,7 +1727,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Checks if Elevate Recurring Donation&apos;s Campaign update is valid or not</shortDescription>
-        <value>Please enter a Campaign. The Campagin for an Elevate Recurring Donations already assoicate to a Campaign cannot be remove.</value>
+        <value>Please enter a Campaign. The Campagin for an Elevate Recurring Donations cannot update to null.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRecordCreateFailed</fullName>
