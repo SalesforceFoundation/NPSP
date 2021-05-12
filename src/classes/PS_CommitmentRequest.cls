@@ -238,7 +238,7 @@ public inherited sharing class PS_CommitmentRequest {
         
 
 
-        if (rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c) {
+        if (isElevateCampaignChanged(rd, oldRd)) {
             ProductMetadata productMetadata = new ProductMetadata()
                 .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
             
@@ -262,6 +262,9 @@ public inherited sharing class PS_CommitmentRequest {
         return rd.npe03__Amount__c != oldRd.npe03__Amount__c;
     }
 
+    public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return rd.npe03__Recurring_Donation_Campaign__c != oldRd?.npe03__Recurring_Donation_Campaign__c;
+    }
     /**
     * @description Sets donor info on the commitment request body
     * @param reqBody RequestBody

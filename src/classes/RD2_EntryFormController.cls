@@ -434,10 +434,13 @@ public with sharing class RD2_EntryFormController {
             if(new RD2_RecurringDonation(rd).isClosed()) {
                 return false;
             }
+            PS_CommitmentRequest request = new PS_CommitmentRequest();
+            Boolean isElevatedFieldsChanged = request.isElevateScheduleFieldsChanged(rd, oldRd)
+                || request.isElevateCampaignChanged(rd, oldRd);
+
 
             return rd.Id == null
-                || (new PS_CommitmentRequest().isElevateScheduleFieldsChanged(rd, oldRd) && rd.CommitmentId__c != null)
-                || rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
+                || (isElevatedFieldsChanged && rd.CommitmentId__c != null)
                 || String.isNotBlank(paymentMethodToken);
         }
 
