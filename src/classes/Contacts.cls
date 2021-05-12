@@ -483,15 +483,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    public List<NPSP_Contact> npspContacts(){
-        List<NPSP_Contact> npspContacts = new List<NPSP_Contact>();
-        for (Contact so : (List<Contact>)getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(so, oldVersionOf(so));
-            npspContacts.add(npspContact);
-        }
-        return npspContacts;
-    }
-
     public Contacts contactsInHouseholdAccounts() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
         for (SObject so : getRecords()) {
@@ -587,7 +578,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
         List<Contact> addressRefreshQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
             if (shouldUseAccountAddress(npspContact)) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 addressRefreshQueue.add(npspContact.getRecord());
@@ -609,7 +600,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private List<Contact> consThatHaveARelatedAddress() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
             if (hasCurrentAddress(npspContact)) {
                 // remember which contacts will need their address set
                 useCurrentAddressQueue.add(npspContact.getRecord());
