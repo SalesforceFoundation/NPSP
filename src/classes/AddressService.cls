@@ -86,7 +86,7 @@ public inherited sharing class AddressService {
     }
 
     private Boolean isDifferentIncludingLatLong(SObject sObj, String prefix, IAddress other) {
-        Boolean isDifferent = (
+        return (
                 !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), other.multilineStreet()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'City'), other.city()) ||
                         !equalsCaseSensitive((String) sObj.get(prefix + 'State'), other.state()) ||
@@ -95,7 +95,6 @@ public inherited sharing class AddressService {
                         (Decimal) sObj.get(prefix + 'Latitude') != other.latitude() ||
                         (Decimal) sObj.get(prefix + 'Longitude') != other.longitude()
         );
-        return isDifferent;
     }
 
     /*******************************************************************************************************
