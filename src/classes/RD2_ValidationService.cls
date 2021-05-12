@@ -213,6 +213,27 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
+    private Boolean isElevateRecurringDonationPaymentMethodChanged(
+                    RD2_RecurringDonation recurringDonation,
+                    RD2_RecurringDonation oldRecurringDonation
+    ) {
+        return recurringDonation.isElevateRecord() &&
+                isPaymentMethodChanged(oldRecurringDonation, recurringDonation) &&
+                !isElevatePaymentMethod(recurringDonation);
+    }
+
+    private Boolean isElevatePaymentMethod(RD2_RecurringDonation recurringDonation) {
+        Set<String> elevatePaymentMethods = new Set<String>();
+        for (ElevatePaymentMethod paymentMethod : ElevatePaymentMethod.values()) {
+            elevatePaymentMethods.add(paymentMethod.name());
+        }
+        return elevatePaymentMethods.contains(recurringDonation.paymentMethod());
+    }
+
+    private Boolean isPaymentMethodChanged(RD2_RecurringDonation oldRecurringDonation, RD2_RecurringDonation recurringDonation) {
+        return oldRecurringDonation.paymentMethod() != recurringDonation.paymentMethod();
+    }
+
     /**
     * @description Validates Recurring Donation on update DML
     * @return void
@@ -231,6 +252,12 @@ public with sharing class RD2_ValidationService {
 
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevatePermissionRequired);
+            }
+
+            if (isElevateRecurringDonationPaymentMethodChanged(new RD2_RecurringDonation(rd),
+                                                               new RD2_RecurringDonation(oldRd))) {
+
+                errorCollection.addError(System.Label.RD2_ErrorChangingElevatePaymentMethod);
             }
 
             validateActiveRecurringDonation(rd, errorCollection);

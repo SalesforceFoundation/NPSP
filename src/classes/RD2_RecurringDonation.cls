@@ -393,6 +393,10 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Total_Paid_Installments__c.intValue();
     }
 
+    public String paymentMethod() {
+        return rd.PaymentMethod__c;
+    }
+
     /**
     * @description Return the state of the Recurring Donation.
     * @return String 
