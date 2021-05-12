@@ -74,7 +74,6 @@ public inherited sharing class AddressService {
     * @param addr Address
     * @return boolean. true if any of the Address fields on the Contact are different from this Address record
     */
-    //Todo: includes lat and long, wBilling, compares HHAcct not HH?
     public Boolean isSObjectAddressDifferent(SObject sObj, IAddress other) {
         Address__c addr = (Address__c) other.getRecord();
         if (sObj == null || addr == null) {

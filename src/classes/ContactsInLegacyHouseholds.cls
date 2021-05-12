@@ -75,11 +75,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void onAfterUpdate() {
         householdService.createHouseholdsFor(this);
-
         householdService.fireHouseholdRollupsFor(this);
-
         householdService.updateHouseholdNamesFor(this);
-
         householdService.deleteEmptyHouseholdsFor(this);
     }
 
@@ -266,7 +263,6 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdIdFor(con) != oldHouseholdIdFor(con);
     }
 
-    //Todo: returns a String no matter what field name is given?
     private String getOldFieldValue(Contact con, String fieldName) {
         String strNameOld = String.valueOf(oldVersionOf(con).get(fieldName));
         return strNameOld == null ? '' : strNameOld;
