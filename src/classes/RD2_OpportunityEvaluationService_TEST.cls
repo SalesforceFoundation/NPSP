@@ -2065,7 +2065,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert recurringDonation;
 
         TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(recurringDonation);
-        List<Opportunity> opps = new List<Opportunity>{
+        List<Opportunity> opportunities = new List<Opportunity>{
             oppBuilder
                 .withName()
                 .withCloseDate(START_DATE.addMonths(1)) //match nex month installment
@@ -2082,7 +2082,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withOpenStage()
                 .build()
         };
-        insert opps;
+        insert opportunities;
 
         recurringDonation.CommitmentId__c = MOCK_COMMITMENT_ID;
 
@@ -2090,20 +2090,14 @@ private class RD2_OpportunityEvaluationService_TEST {
         update recurringDonation;
         Test.stopTest();
 
-        List<Opportunity> queriedOpps = oppGateway.getRecords(recurringDonation);
+        List<Opportunity> queriedOpportunities = oppGateway.getRecords(recurringDonation);
 
-        System.assertEquals(4, queriedOpps.size(), 'There should be total of 3 future opps on the RD');
+        System.assertEquals(4, queriedOpportunities.size(), 'There should be total of 3 future opps on the RD');
 
-
-        
-        System.assertEquals('Closed Lost', queriedOpps[0].StageName,
-            'The matching installment opportunity should be mark as close lost');
-        System.assertEquals('Closed Lost', queriedOpps[1].StageName,
-            'The matching installment opportunity should be mark as close lost');
-        System.assertEquals(opps[1].StageName, queriedOpps[2].StageName,
-            'The non matching installment opportunity should stay open');
-        System.assertEquals(opps[2].StageName, queriedOpps[3].StageName,
-            'The non matching installment opportunity should stay open');
+        for (Opportunity queriedOpportunity : queriedOpportunities) {
+            System.assertEquals('Closed Lost', queriedOpportunity.StageName,
+                'The matching installment opportunity should be mark as close lost');
+        }
     }
 
     /**
@@ -2111,7 +2105,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * All matching installments should be Delete when RD is converted to Elevate
     */
     @isTest
-    private static void shouldDeleteInstallmentMatchingOppsForConvertedElevateRDWhenAutoSettingIsDelete() {
+    private static void shouldDeleteAllOpportunitiesForConvertedElevateRDWhenAutoSettingIsDelete() {
         RD2_ScheduleService.currentDate = START_DATE;
 
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
@@ -2158,12 +2152,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
 
-        System.assertEquals(2, queriedOpps.size(), 'There should be total of 2 opps left on the RD');
-        
-        System.assertEquals(opps[1].StageName, queriedOpps[0].StageName,
-            'The non matching installment opportunity should stay open');
-        System.assertEquals(opps[2].StageName, queriedOpps[1].StageName,
-            'The non matching installment opportunity should stay open');
+        System.assertEquals(0, queriedOpps.size(), 'There should be no opportunities left on the RD');
     }
 
     /**
