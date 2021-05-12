@@ -437,6 +437,7 @@ public with sharing class RD2_EntryFormController {
 
             return rd.Id == null
                 || (new PS_CommitmentRequest().isElevateScheduleFieldsChanged(rd, oldRd) && rd.CommitmentId__c != null)
+                || rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
                 || String.isNotBlank(paymentMethodToken);
         }
 

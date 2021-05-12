@@ -240,6 +240,21 @@ public inherited sharing class PS_CommitmentRequest {
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
         }
         
+        
+
+
+        if (rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c) {
+            ProductMetaData productMetaData = new ProductMetaData()
+                .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
+            Metadata metadata = new Metadata()
+                .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
+            
+            reqBody
+                .withMetadata(metadata)
+                .withProductMetaData(productMetaData);
+        }
+
+        
         return reqBody;
     }
 
@@ -732,7 +747,10 @@ public inherited sharing class PS_CommitmentRequest {
          * @return productMetaData This product metadata instance
          */
         public Metadata withCampaignCode(Id campaignId) {
-            this.campaignCode = campaignId;
+            if (campaignId != null) {
+                this.campaignCode = campaignId;
+            }
+
             return this;
         }
     }
@@ -760,7 +778,10 @@ public inherited sharing class PS_CommitmentRequest {
         * @return productMetaData This product metadata instance
         */
         public ProductMetaData withCampaign(Id campaignId) {
-            this.campaign = new Campaign(campaignId);
+            if (campaignId != null) {
+                this.campaign = new Campaign(campaignId);
+            }
+
             return this;
         }
     }
