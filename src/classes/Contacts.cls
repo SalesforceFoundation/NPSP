@@ -497,7 +497,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<NPSP_Contact> npspContactsInHouseholdAccounts() {
         List<NPSP_Contact> contactsInHouseholdAccounts = new List<NPSP_Contact>();
         for (SObject so : getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
+            NPSP_Contact npspContact = new NPSP_Contact((Contact) so, oldVersionOf(
+                    (Contact) so));
             if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
                 contactsInHouseholdAccounts.add(npspContact);
             }
@@ -870,9 +871,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
-            NPSP_Contact npspContactOld = new NPSP_Contact(oldVersionOf(con));
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
 
             // new highest priority! if Account changes...
             if (!npspContact.accountChanged()) {
@@ -880,7 +879,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
                         !npspContact.isAddressChanged() && npspContactOld.currentAddress() != null) {
                     // track which address's need their dates updated
-                    isOverrideByAddressId.put(npspContactOld.currentAddress(), false);
+                    isOverrideByAddressId.put(npspContact.oldVersion().currentAddress(), false);
                 }
 
                 // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.

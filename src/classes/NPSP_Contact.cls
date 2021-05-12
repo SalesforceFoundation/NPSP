@@ -164,4 +164,8 @@ public inherited sharing class NPSP_Contact {
                 ('npe01__Primary_Address_Type__c');
     }
 
+    public NPSP_Contact oldVersion() {
+        return new NPSP_Contact(oldContact);
+    }
+
 }
