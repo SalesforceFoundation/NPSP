@@ -757,7 +757,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         try {
             Test.startTest();
-            rd.InstallmentFrequency__c = 2;
+            rd.StartDate__c = rd.StartDate__c.addDays(-1);
             update rd;
             Test.stopTest();
         } catch (Exception e) {
