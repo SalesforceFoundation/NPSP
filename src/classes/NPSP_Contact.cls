@@ -63,12 +63,10 @@ public inherited sharing class NPSP_Contact {
     public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
-        this.mailingAddress = new NPSP_Address(contact);
     }
 
     public NPSP_Contact(Contact contact) {
         this.contact = contact;
-        this.mailingAddress = new NPSP_Address(contact);
     }
 
     public Contact getRecord() {
@@ -136,7 +134,7 @@ public inherited sharing class NPSP_Contact {
     }
 
     public IAddress mailingAddress() {
-        return mailingAddress;
+        return mailingAddress != null ? mailingAddress : new NPSP_Address(contact);
     }
 
     public Boolean mailingAddressIsDifferentFrom(IAddress other) {

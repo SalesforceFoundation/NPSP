@@ -503,16 +503,30 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return new Contacts(contactsInHouseholdAccounts);
     }
 
-    public Contacts thatHaveAccounts() {
-        List<Contact> contacts = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact(con);
-            if (!npspContact.hasAccount()) {
-                continue;
+    private List<NPSP_Contact> npspContactsInHouseholdAccounts() {
+        List<NPSP_Contact> contactsInHouseholdAccounts = new List<NPSP_Contact>();
+        for (SObject so : getRecords()) {
+            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
+            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
+                contactsInHouseholdAccounts.add(npspContact);
             }
-            contacts.add(con);
         }
-        return new Contacts(contacts);
+        return contactsInHouseholdAccounts;
+    }
+
+    private List<Contact> thatHaveAccounts;
+    public Contacts thatHaveAccounts() {
+        if (thatHaveAccounts==null) {
+            thatHaveAccounts = new List<Contact>();
+            for (Contact con : (List<Contact>) getRecords()) {
+                NPSP_Contact npspContact = new NPSP_Contact(con);
+                if (!npspContact.hasAccount()) {
+                    continue;
+                }
+                thatHaveAccounts.add(con);
+            }
+        }
+        return new Contacts(thatHaveAccounts);
     }
 
     public Set<Id> accountIds() {
@@ -584,7 +598,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
-        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
             if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
                 // track which address's need their dates updated
                 isOverrideByAddressId.put(npspContact.currentAddress(), true);
