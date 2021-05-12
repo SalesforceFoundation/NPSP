@@ -77,6 +77,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_ADD_TO_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/add';
     public static String ENDPOINT_CHARGE_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/capture';
 
+    public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
     /***
