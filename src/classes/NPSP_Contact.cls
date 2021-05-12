@@ -180,4 +180,12 @@ public inherited sharing class NPSP_Contact {
         return !isAddressChanged() && hadAnAddress();
     }
 
+    public Boolean isChangingToANewCurrentAddress() {
+        return isCurrentAddressChanged() && hasAddressOverride();
+    }
+
+    public Boolean isCurrentAddressChanged() {
+        return currentAddressChanged() && currentAddress() != null;
+    }
+
 }

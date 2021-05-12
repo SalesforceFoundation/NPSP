@@ -892,7 +892,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // new highest priority! if Account changes...
             if (!npspContact.accountChanged()) {
                 // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
-                if (npspContact.addressOverrideChanged() && !npspContact.hasAddressOverride() &&
+                if (npspContact.isClearingAddressOverride() &&
                         !npspContact.isAddressChanged()) {
                     addressRefreshQueue.add(npspContact.getRecord());
                 }
@@ -912,7 +912,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // new highest priority! if Account changes...
             if (!npspContact.accountChanged()) {
                 // highest priority. if they are changing to a new Current Address, refill from it.
-                if (addressChangedFor(npspContact)) {
+                if (npspContact.isCurrentAddressChanged()) {
                     useCurrentAddressQueue.add(npspContact.getRecord());
                 }
             }
@@ -928,18 +928,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // new highest priority! if Account changes...
             if (!npspContact.accountChanged()) {
                 // highest priority. if they are changing to a new Current Address, refill from it.
-                if (addressChangedFor(npspContact) && npspContact.hasAddressOverride()) {
+                if (npspContact.isChangingToANewCurrentAddress()) {
                     // track which address's need their dates updated
                     isOverrideByAddressId.put(npspContact.currentAddress(), true);
                 }
             }
         }
         return isOverrideByAddressId;
-    }
-
-    private Boolean addressChangedFor(NPSP_Contact npspContact) {
-        return npspContact.currentAddressChanged() &&
-                npspContact.currentAddress() != null;
     }
 
     private List<Contact> consWhoseAccountChangedAndDontHaveAddressOverrides() {
