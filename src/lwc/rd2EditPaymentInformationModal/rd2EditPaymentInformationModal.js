@@ -14,19 +14,16 @@ import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccess
 import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
 import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
-import FIELD_ID from '@salesforce/schema/npe03__Recurring_Donation__c.Id';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_LAST_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
-import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
-import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
-import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
+import { Rd2Service } from 'c/rd2Service';
 
-export default class Rd2EditCreditCardModal extends LightningElement {
+export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
 
     labels = Object.freeze({
@@ -44,10 +41,11 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         updateSuccessMessage
     });
 
-    @track isSaving = false;
-    @track loadingText = this.labels.loadingMessage;
+    isSaving = false;
+    loadingText = this.labels.loadingMessage;
     @track error = {};
-    @track isSaveButtonDisabled = false;
+    isSaveButtonDisabled = false;
+    rd2Service = new Rd2Service();
 
     /**
     * @description Dynamically render the payment edit form via CSS to show/hide based on the status of
@@ -125,22 +123,24 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         this.loadingText = this.labels.savingCommitmentMessage;
 
         try {
+            const rd = this.rd2Service.constructRecurringDonation(this.rdRecord.id, this.commitmentId);
             handleUpdatePaymentCommitment({
-                jsonRecord: JSON.stringify(this.constructRecurringDonation()),
+                jsonRecord: rd.asJSON(),
                 paymentMethodToken: this.paymentMethodToken
             })
                 .then(jsonResponse => {
-                    let response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    let isSuccess = isNull(response)
+                    const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+                    const isSuccess = isNull(response)
                         || response.statusCode === HTTP_CODES.Created
                         || response.statusCode === HTTP_CODES.OK;
 
                     if (isSuccess) {
                         this.loadingText = this.labels.savingRDMessage;
-                        this.updateRecurringDonation(this.constructRecurringDonation(response));
+                        rd.withCommitmentResponseBody(response.body);
+                        this.updateRecurringDonation(rd.record);
 
                     } else {
-                        let message = this.getCommitmentError(response);
+                        const message = this.rd2Service.getCommitmentError(response);
                         this.handleSaveError(message);
                     }
                 })
@@ -178,56 +178,6 @@ export default class Rd2EditCreditCardModal extends LightningElement {
         this.handleClose();
     }
 
-    /**
-    * @description Convert LWC RD record into recognizable form and consume the api response if exist
-    */
-    constructRecurringDonation(response) {
-        let rd = {};
-        rd[FIELD_ID.fieldApiName] = this.rdRecord.id;
-        rd[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
-        if (!isNull(response) && !isUndefined(response)
-            && !isNull(response.body) && !isUndefined(response.body)
-        ) {
-            const responseBody = JSON.parse(response.body);
-            const cardData = responseBody.cardData;
-
-            if (!isNull(cardData) && !isUndefined(cardData)) {
-                rd[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
-                rd[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
-                rd[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
-            } 
-        }
-
-        return rd;
-    }
-
-    /**
-    * @description Displays errors extracted from the error response
-    * returned from the Elevate API when the Commitment cannot be created
-    */
-    getCommitmentError(response) {
-        if (response.body) {
-            // Errors returned in the response body can contain a single quote, for example:
-            // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
-            // However, the JSON parser does not work with a single quote,
-            // so need to replace it with the double quote but after
-            // replacing \" with an empty string, otherwise the message content
-            // will be misformatted.
-            if (JSON.stringify(response.body).includes("'errors'")) {
-                response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
-            }
-
-            //parse the error response
-            try {
-                response.body = JSON.parse(response.body);
-            } catch (error) { }
-        }
-
-        let errors = this.getErrors(response);
-
-        return format('{0}', [errors]);
-    }
-
     /***
     * @description Handle component display when an error on the save action occurs.
     * Keep Save button enabled so user can correct a value and save again.
@@ -246,25 +196,6 @@ export default class Rd2EditCreditCardModal extends LightningElement {
     handleLogError() {
         logError({ recordId: this.rdRecord.id, errorMessage: this.error.detail })
             .catch((error) => { });
-    }
-
-    /***
-    * @description Get the message or errors from a failed API call.
-    * @param {object} response: Http response object
-    * @return {string}: Message from a failed API call response
-    */
-    getErrors(response) {
-        if (response.body && response.body.errors) {
-            return response.body.errors.map(error => error.message).join('\n ');
-        }
-
-        // For some reason the key in the body object for 'Message'
-        // in the response we receive from Elevate is capitalized.
-        // Also checking for lowercase M in message in case they fix it.
-        return response.body.Message
-            || response.body.message
-            || response.errorMessage
-            || JSON.stringify(response.body);
     }
 
     /**
