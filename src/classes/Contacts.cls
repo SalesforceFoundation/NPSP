@@ -492,7 +492,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return npspContacts;
     }
 
-    public Contacts contactsInAccountsOfTypeHousehold() {
+    public Contacts contactsInHouseholdAccounts() {
         List<Contact> contactsInHouseholdAccounts = new List<Contact>();
         for (SObject so : getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
@@ -573,7 +573,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
         List<Contact> addressRefreshQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
             if (shouldUseAccountAddress(npspContact)) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 addressRefreshQueue.add(npspContact.getRecord());
@@ -584,7 +584,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
             if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
                 // track which address's need their dates updated
                 isOverrideByAddressId.put(npspContact.currentAddress(), true);
@@ -595,7 +595,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private List<Contact> consThatHaveARelatedAddress() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
-        for (NPSP_Contact npspContact : contactsInAccountsOfTypeHousehold().npspContacts()) {
+        for (NPSP_Contact npspContact : contactsInHouseholdAccounts().npspContacts()) {
             if (hasCurrentAddress(npspContact)) {
                 // remember which contacts will need their address set
                 useCurrentAddressQueue.add(npspContact.getRecord());
@@ -865,7 +865,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
             NPSP_Contact npspContactOld = new NPSP_Contact(oldVersionOf(con));
 
@@ -888,7 +888,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Contact> consHavingAddressOverridesRemoved() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
             // new highest priority! if Account changes...
@@ -909,7 +909,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Contact> consWhoseAddressChanged() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
             // new highest priority! if Account changes...
@@ -926,7 +926,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Map<Id, Boolean> getIsOverrideByAddressId() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
             // new highest priority! if Account changes...
@@ -949,7 +949,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Contact> consWhoseAccountChangedAndDontHaveAddressOverrides() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
-        for (Contact con : (List<Contact>) contactsInAccountsOfTypeHousehold().getRecords()) {
+        for (Contact con : (List<Contact>) contactsInHouseholdAccounts().getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
 
             // new highest priority! if Account changes...
