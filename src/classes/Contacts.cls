@@ -876,7 +876,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // new highest priority! if Account changes...
             if (!npspContact.accountChanged()) {
                 // second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
-                if (isClearingAddressOverride(npspContact) &&
+                if (npspContact.isClearingAddressOverride() &&
                         !npspContact.isAddressChanged() && npspContact.oldVersion().currentAddress() != null) {
                     // track which address's need their dates updated
                     isOverrideByAddressId.put(npspContact.oldVersion().currentAddress(), false);
@@ -887,11 +887,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return isOverrideByAddressId;
-    }
-
-    private Boolean isClearingAddressOverride(NPSP_Contact npspContact) {
-        return (npspContact.addressOverrideChanged() && !npspContact
-                .hasAddressOverride());
     }
 
     private List<Contact> consHavingAddressOverridesRemoved() {

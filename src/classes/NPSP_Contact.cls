@@ -168,4 +168,8 @@ public inherited sharing class NPSP_Contact {
         return new NPSP_Contact(oldContact);
     }
 
+    public Boolean isClearingAddressOverride() {
+        return (addressOverrideChanged() && !hasAddressOverride());
+    }
+
 }
