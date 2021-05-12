@@ -126,7 +126,6 @@ private class ContactsInLegacyHouseholds_TEST {
 
     @IsTest
     static void testCreateHouseholdsFor() {
-//        settings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR;
         ContactsInLegacyHouseholds c = new ContactsInLegacyHouseholds(
                 ContactBuilder.dummyContactList()
         );
