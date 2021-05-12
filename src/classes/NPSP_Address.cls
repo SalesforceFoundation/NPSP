@@ -337,19 +337,10 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     private Object getSObjectField(SObject sobjSrc, String fieldPrefixSrc, String field) {
-        Object val = null;
-//        if (sobjSrc.getPopulatedFieldsAsMap().keySet().contains(
-//                fieldPrefixSrc + field
-//        )) {
-//            return sobjSrc.get(fieldPrefixSrc + field);
-//        } else {
-//            return null;
-//        }
+        Object val;
         try {
             val = sobjSrc.get(fieldPrefixSrc + field);
         } catch (Exception e) {
-           System.debug(LoggingLevel.ERROR, '*** variable value: ' + e.getMessage());
-           System.debug(LoggingLevel.ERROR, '^^^^^^ e.getMessage() ^^^^^^');
             val = null;
         }
         return val;

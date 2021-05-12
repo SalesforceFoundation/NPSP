@@ -166,16 +166,8 @@ public inherited sharing class HouseholdService {
 
     private void putHouseholdIdOntoContacts(List<Contact> contacts,
             Database.SaveResult[] householdSaveResults) {
-        System.debug(LoggingLevel.ERROR, '*** ##### HouseholdService.putHouseholdIdOntoContacts ######');
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + contacts);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ contacts ^^^^^^');
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + householdSaveResults);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ householdSaveResults ^^^^^^');
         List<Contact> contactsToBeUpdatedWithHouseholdId =
                 getContactsToBeUpdatedWithNewHouseholdId(contacts, householdSaveResults);
-        System.debug(LoggingLevel.ERROR, '*** ##### updating: ######');
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + contactsToBeUpdatedWithHouseholdId);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ contactsToBeUpdatedWithHouseholdId ^^^^^^');
         update contactsToBeUpdatedWithHouseholdId;
     }
 
