@@ -497,4 +497,15 @@ public inherited sharing class RD2_RecurringDonation {
        return String.isNotBlank(rd.CommitmentId__c);
     }
 
+    public Boolean hasValidRecurringDonationPaymentMethod() {
+        if (isElevateRecord()) {
+            return isValidElevatePaymentMethod();
+        }
+        return true;
+    }
+
+    private Boolean isValidElevatePaymentMethod() {
+        return paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
+               paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
+    }
 }
